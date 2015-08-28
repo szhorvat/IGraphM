@@ -16,16 +16,26 @@ BeginPackage["IGraphM`"]
 
 Get["LTemplate`LTemplatePrivate`"]
 
-IGVersion::usage = "";
+IGVersion::usage = "IGVersion[]";
 
+IGBetweenness::usage = "IGBetweenness[graph]";
+IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph]";
+IGCloseness::usage = "IGCloseness[graph, normalized]";
+
+IGRewire::usage = "IGRewire[graph, n, loopsAllowed]";
+
+IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph]";
+IGConnectedQ::usage = "IGConnectedQ[graph]";
 
 Begin["`Private`"]
+
+(***** Package variables *****)
 
 $packageDirectory = DirectoryName[$InputFileName];
 $libraryDirectory = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
 $sourceDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
 
-
+(* Add to $LibraryPath in case package is not installed in Applications *)
 If[Not@MemberQ[$LibraryPath, $libraryDirectory],
   AppendTo[$LibraryPath, $libraryDirectory]
 ]
@@ -36,25 +46,36 @@ template = LTemplate["IGraphM",
     LClass["IGlobal",
       {
         LFun["init", {}, "Void"],
+        LFun["seedRandom", {Integer}, "Void"],
         LFun["version", {}, "UTF8String"]
       }
     ],
-
     LClass["IG",
       {
-        LFun["fromEdgeList", {{Real, 2}, Integer, True | False}, "Void"],
+        LFun["fromEdgeList", {{Real, 2} (* edges *), Integer (* vertex count *), True | False (* directed *)}, "Void"],
+
         LFun["edgeCount", {}, Integer],
         LFun["vertexCount", {}, Integer],
+
         LFun["edgeList", {}, {Real, 2}],
+
+        LFun["betweenness", {}, {Real, 1}],
+        LFun["edgeBetweenness", {}, {Real, 1}],
+        LFun["closeness", {True | False (* normalized *)}, {Real, 1}],
+
         LFun["directedQ", {}, True | False],
         LFun["dagQ", {}, True | False],
         LFun["simpleQ", {}, True | False],
-        LFun["connectedQ", {}, True | False]
+        LFun["connectedQ", {}, True | False],
+
+        LFun["rewire", {Integer, True | False}, "Void"]
       }
     ]
   }
 ];
 
+
+(***** Compilation and loading *****)
 
 recompileLibrary[] :=
   Block[{$CCompiler},
@@ -80,21 +101,60 @@ recompileLibrary[] :=
 
 
 If[LoadTemplate[template] === $Failed,
-  Print["Loading failed, trying to recompile ..."];
+  Print[Style["Loading failed, trying to recompile ...", Red]];
   recompileLibrary[];
-  If[LoadTemplate[template] === $Failed,
+  If[LoadTemplate[template] === $Failed
+    ,
     Print[Style["Cannot load or compile library.  Aborting.", Red]];
     Abort[]
+    ,
+    Print[Style["Successfully compiled and loaded the library.", Red]];
   ]
 ]
 
+
+(***** Initialize library *****)
 
 igraphGlobal = Make["IGlobal"]; (* there should only be a single object of this type *)
 igraphGlobal@"init"[] (* Run initialization *)
 
 
+(***** Function definitions *****)
+
+igEdgeList[g_?GraphQ] :=
+    Developer`ToPackedArray@N[List @@@ EdgeList[g] /.
+            Dispatch@Thread[VertexList[g] -> Range@VertexCount[g] - 1]]
+
+igDirectedQ[g_?GraphQ] := DirectedGraphQ[g] && Not@EmptyGraphQ[g]
+
+igMake[g_?GraphQ] :=
+    With[{ig = Make["IG"]},
+      ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
+      ig
+    ]
+
+igToGraph[ig_] :=
+    Graph[
+      Range[ig@"vertexCount"[]],
+      Round[1 + ig@"edgeList"[]],
+      DirectedEdges -> ig@"directedQ"[]
+    ]
+
+
+
 IGVersion[] := igraphGlobal@"version"[]
 
+IGBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"betweenness"[]]
+
+IGEdgeBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"edgeBetwenness"[]]
+
+IGRewire[g_?GraphQ, n_Integer, loops_ : False] := Module[{ig = igMake[g]}, ig@"rewire"[n, loops]; igToGraph[ig]]
+
+IGDirectedAcyclicGraphQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"dagQ"[]]
+
+IGConnectedQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"connectedQ"[]]
+
+IGCloseness[g_?GraphQ, normalized_ : False] := Module[{ig = igMake[g]}, ig@"closeness"[normalized]]
 
 End[] (* `Private` *)
 
