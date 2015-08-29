@@ -115,6 +115,21 @@ public:
             throw mma::LibraryError("igraph rewire: Requested number rewiring trials too large.");
         igCheck(igraph_rewire(&graph, n, loops ? IGRAPH_REWIRING_SIMPLE_LOOPS : IGRAPH_REWIRING_SIMPLE));
     }
+
+    // Isomorphism
+
+    bool isomorphic(IG &ig) {
+        igraph_bool_t res;
+        igraph_isomorphic(&graph, &ig.graph, &res);
+        return res;
+    }
+
+    bool subisomorphic(IG &ig) {
+        igraph_bool_t res;
+        igraph_subisomorphic(&graph, &ig.graph, &res);
+        return res;
+    }
+    }
 };
 
 #endif // IG_H

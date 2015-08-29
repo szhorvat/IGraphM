@@ -27,6 +27,9 @@ IGRewire::usage = "IGRewire[graph, n, loopsAllowed]";
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph]";
 IGConnectedQ::usage = "IGConnectedQ[graph]";
 
+IGIsomorphic::usage = "IGIsomorphic[graph1, graph2]";
+IGSubisomorphic::usage = "IGSubisomorphic[graph, subgraph]";
+
 Begin["`Private`"]
 
 (***** Package variables *****)
@@ -68,7 +71,10 @@ template = LTemplate["IGraphM",
         LFun["simpleQ", {}, True | False],
         LFun["connectedQ", {}, True | False],
 
-        LFun["rewire", {Integer, True | False}, "Void"]
+        LFun["rewire", {Integer, True | False}, "Void"],
+
+        LFun["isomorphic", {LExpressionID["IG"]}, True|False],
+        LFun["subisomorphic", {LExpressionID["IG"]}, True|False]
       }
     ]
   }
@@ -155,6 +161,10 @@ IGDirectedAcyclicGraphQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"dagQ"[]]
 IGConnectedQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"connectedQ"[]]
 
 IGCloseness[g_?GraphQ, normalized_ : False] := Module[{ig = igMake[g]}, ig@"closeness"[normalized]]
+
+IGIsomorphic[g1_?GraphQ, g2_?GraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
+
+IGSubisomorphic[graph_?GraphQ, subgraph_?GraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
 End[] (* `Private` *)
 
