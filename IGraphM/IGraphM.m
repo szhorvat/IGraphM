@@ -30,6 +30,10 @@ IGConnectedQ::usage = "IGConnectedQ[graph]";
 IGIsomorphic::usage = "IGIsomorphic[graph1, graph2]";
 IGSubisomorphic::usage = "IGSubisomorphic[graph, subgraph]";
 
+IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order.";
+
+IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
+
 Begin["`Private`"]
 
 (***** Package variables *****)
@@ -86,7 +90,12 @@ template = LTemplate["IGraphM",
         (* Isomorphism *)
 
         LFun["isomorphic", {LExpressionID["IG"]}, True|False],
-        LFun["subisomorphic", {LExpressionID["IG"]}, True|False]
+        LFun["subisomorphic", {LExpressionID["IG"]}, True|False],
+
+        (* Topological sorting and directed acylic graphs *)
+
+        LFun["topologicalSorting", {}, {Real, 1}],
+        LFun["feedbackArcSet", {True|False}, {Real, 1}]
       }
     ]
   }
@@ -145,6 +154,9 @@ igEdgeList[g_?GraphQ] :=
     Developer`ToPackedArray@N[List @@@ EdgeList[g] /.
             Dispatch@Thread[VertexList[g] -> Range@VertexCount[g] - 1]]
 
+igVec[vec_?VectorQ] := 1 + Round[vec]
+igVec[expr_] := expr
+
 igDirectedQ[g_?GraphQ] := DirectedGraphQ[g] && Not@EmptyGraphQ[g]
 
 igMake[g_?GraphQ] :=
@@ -156,7 +168,7 @@ igMake[g_?GraphQ] :=
 igToGraph[ig_] :=
     Graph[
       Range[ig@"vertexCount"[]],
-      Round[1 + ig@"edgeList"[]],
+      igVec[ig@"edgeList"[]],
       DirectedEdges -> ig@"directedQ"[]
     ]
 
@@ -181,6 +193,13 @@ IGIsomorphic[g1_?GraphQ, g2_?GraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2
 
 IGSubisomorphic[graph_?GraphQ, subgraph_?GraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
+IGTopologicalOrdering[graph_?GraphQ] := Block[{ig = igMake[graph]}, igVec@ig@"topologicalSorting"[]]
+
+Options[IGFeedbackArcSet] = { "Exact" -> True };
+IGFeedbackArcSet[graph_?GraphQ, opt : OptionsPattern[]] :=
+  Block[{ig = igMake[graph]},
+    Part[EdgeList[graph], igVec@ig@"feedbackArcSet"[OptionValue["Exact"]]]
+  ]
 
 End[] (* `Private` *)
 

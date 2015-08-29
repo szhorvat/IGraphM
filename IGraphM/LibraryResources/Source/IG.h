@@ -20,6 +20,15 @@ struct igVector {
 
     igraph_real_t *begin() { return &(VECTOR(vec)[0]); }
     igraph_real_t *end() { return begin() + length(); }
+
+    const igraph_real_t *begin() const { return &(VECTOR(vec)[0]); }
+    const igraph_real_t *end() const { return begin() + length(); }
+
+    mma::RealTensorRef makeMTensor() const {
+        mma::RealTensorRef res = mma::makeVector<double>(length());
+        std::copy(begin(), end(), res.begin());
+        return res;
+    }
 };
 
 
@@ -139,6 +148,22 @@ public:
         igraph_bool_t res;
         igraph_subisomorphic(&graph, &ig.graph, &res);
         return res;
+    }
+
+    // Topologicl sorting, directed acylic graphs
+
+    // see dagQ() under Testing
+
+    mma::RealTensorRef topologicalSorting() const {
+        igVector vec;
+        igCheck(igraph_topological_sorting(&graph, &vec.vec, IGRAPH_OUT));
+        return vec.makeMTensor();
+    }
+
+    mma::RealTensorRef feedbackArcSet(bool exact) const {
+        igVector vec;
+        igCheck(igraph_feedback_arc_set(&graph, &vec.vec, NULL, exact ? IGRAPH_FAS_EXACT_IP : IGRAPH_FAS_APPROX_EADES));
+        return vec.makeMTensor();
     }
 };
 
