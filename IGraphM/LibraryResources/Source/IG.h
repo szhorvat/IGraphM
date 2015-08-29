@@ -2,7 +2,7 @@
 #define IG_H
 
 
-extern "C" {
+extern "C" { // workaround for igraph_version() C++ compatibility bug
 #include <igraph/igraph.h>
 }
 
@@ -48,11 +48,15 @@ public:
         igraph_destroy(&graph);
     }
 
+    // Create
+
     void fromEdgeList(mma::RealTensorRef v, mint n, bool directed) {
         igraph_destroy(&graph);
         igraph_vector_t edgelist = ig_view(v);
         igraph_create(&graph, &edgelist, n, directed); // check for error manually
     }
+
+    // Structure
 
     mma::RealTensorRef edgeList() const {
         igVector vec;
@@ -65,6 +69,8 @@ public:
     mint edgeCount() const { return igraph_ecount(&graph); }
 
     mint vertexCount() const { return igraph_vcount(&graph); }
+
+    // Testing
 
     bool directedQ() const { return igraph_is_directed(&graph); }
 
@@ -80,11 +86,14 @@ public:
         return res;
     }
 
+    // TODO handle strong/weak for directed
     bool connectedQ() const {
         igraph_bool_t res;
         igCheck(igraph_is_connected(&graph, &res, IGRAPH_STRONG));
         return res;
     }
+
+    // Centrality measures
 
     mma::RealTensorRef betweenness() const {
         igVector vec;
@@ -110,6 +119,8 @@ public:
         return res;
     }
 
+    // Randomize
+
     void rewire(mint n, bool loops) {
         if (n > std::numeric_limits<igraph_integer_t>::max())
             throw mma::LibraryError("igraph rewire: Requested number rewiring trials too large.");
@@ -128,7 +139,6 @@ public:
         igraph_bool_t res;
         igraph_subisomorphic(&graph, &ig.graph, &res);
         return res;
-    }
     }
 };
 
