@@ -62,7 +62,7 @@ public:
     void fromEdgeList(mma::RealTensorRef v, mint n, bool directed) {
         igraph_destroy(&graph);
         igraph_vector_t edgelist = ig_view(v);
-        igraph_create(&graph, &edgelist, n, directed); // check for error manually
+        igraph_create(&graph, &edgelist, n, directed); // TODO check for error manually
     }
 
     // Structure
@@ -107,25 +107,19 @@ public:
     mma::RealTensorRef betweenness() const {
         igVector vec;
         igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, NULL, true));
-        mma::RealTensorRef res = mma::makeVector<double>(vec.length());
-        std::copy(vec.begin(), vec.end(), res.begin());
-        return res;
+        return vec.makeMTensor();
     }
 
     mma::RealTensorRef closeness(bool normalized) const {
         igVector vec;
         igCheck(igraph_closeness(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, NULL, normalized));
-        mma::RealTensorRef res = mma::makeVector<double>(vec.length());
-        std::copy(vec.begin(), vec.end(), res.begin());
-        return res;
+        return vec.makeMTensor();
     }
 
     mma::RealTensorRef edgeBetweenness() const {
         igVector vec;
         igCheck(igraph_edge_betweenness(&graph, &vec.vec, true, NULL));
-        mma::RealTensorRef res = mma::makeVector<double>(vec.length());
-        std::copy(vec.begin(), vec.end(), res.begin());
-        return res;
+        return vec.makeMTensor();
     }
 
     // Randomize
@@ -140,19 +134,19 @@ public:
 
     bool isomorphic(IG &ig) {
         igraph_bool_t res;
-        igraph_isomorphic(&graph, &ig.graph, &res);
+        igCheck(igraph_isomorphic(&graph, &ig.graph, &res));
         return res;
     }
 
     bool subisomorphic(IG &ig) {
         igraph_bool_t res;
-        igraph_subisomorphic(&graph, &ig.graph, &res);
+        igCheck(igraph_subisomorphic(&graph, &ig.graph, &res));
         return res;
     }
 
-    // Topologicl sorting, directed acylic graphs
+    // Topological sorting, directed acylic graphs
 
-    // see dagQ() under Testing
+    // see also dagQ() under Testing
 
     mma::RealTensorRef topologicalSorting() const {
         igVector vec;
