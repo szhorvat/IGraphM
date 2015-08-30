@@ -159,6 +159,24 @@ public:
         igCheck(igraph_feedback_arc_set(&graph, &vec.vec, NULL, exact ? IGRAPH_FAS_EXACT_IP : IGRAPH_FAS_APPROX_EADES));
         return vec.makeMTensor();
     }
+
+    // Motifs and subgraph counts
+
+    mma::IntTensorRef dyadCensus() const {
+        igraph_integer_t mut, asym, none;
+        igCheck(igraph_dyad_census(&graph, &mut, &asym, &none));
+        mma::IntTensorRef res = mma::makeVector<mint>(3);
+        res[0] = mut;
+        res[1] = asym;
+        res[2] = none;
+        return res;
+    }
+
+    mma::RealTensorRef triadCensus() const {
+        igVector vec;
+        igCheck(igraph_triad_census(&graph, &vec.vec));
+        return vec.makeMTensor();
+    }
 };
 
 #endif // IG_H

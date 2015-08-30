@@ -34,6 +34,9 @@ IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutati
 
 IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 
+IGDyadCensus::usage = "IGDyadCensus[graph]";
+IGTriadCensus::usage = "IGTriadCensus[graph]";
+
 Begin["`Private`"]
 
 (***** Package variables *****)
@@ -95,7 +98,12 @@ template = LTemplate["IGraphM",
         (* Topological sorting and directed acylic graphs *)
 
         LFun["topologicalSorting", {}, {Real, 1}],
-        LFun["feedbackArcSet", {True|False}, {Real, 1}]
+        LFun["feedbackArcSet", {True|False}, {Real, 1}],
+
+        (* Motifs and subgraph counts *)
+
+        LFun["dyadCensus", {}, {Integer, 1}],
+        LFun["triadCensus", {}, {Real, 1}]
       }
     ]
   }
@@ -200,6 +208,10 @@ IGFeedbackArcSet[graph_?GraphQ, opt : OptionsPattern[]] :=
   Block[{ig = igMake[graph]},
     Part[EdgeList[graph], igVec@ig@"feedbackArcSet"[OptionValue["Exact"]]]
   ]
+
+IGDyadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"dyadCensus"[]]
+
+IGTriadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, Round[ig@"triadCensus"[]]]
 
 End[] (* `Private` *)
 
