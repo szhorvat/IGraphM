@@ -22,7 +22,8 @@ IGBetweenness::usage = "IGBetweenness[graph]";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph]";
 IGCloseness::usage = "IGCloseness[graph, normalized]";
 
-IGRewire::usage = "IGRewire[graph, n, loopsAllowed]";
+IGRewire::usage = "IGRewire[graph, n, options]";
+IGRewireEdges::usage = "IGRewireEdges[graph, p, options]";
 
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph]";
 IGConnectedQ::usage = "IGConnectedQ[graph]";
@@ -88,7 +89,8 @@ template = LTemplate["IGraphM",
 
         (* Randomize *)
 
-        LFun["rewire", {Integer, True|False}, "Void"],
+        LFun["rewire", {Integer (* n_trials *), True|False (* loops *)}, "Void"],
+        LFun["rewireEdges", {Real (* probability *), True|False (* loops *), True|False (* multiple *)}, "Void"],
 
         (* Isomorphism *)
 
@@ -191,7 +193,19 @@ IGBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"betweenness"[]]
 
 IGEdgeBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"edgeBetwenness"[]]
 
-IGRewire[g_?GraphQ, n_Integer, loops_ : False] := Module[{ig = igMake[g]}, ig@"rewire"[n, loops]; igToGraph[ig]]
+Options[IGRewire] = { "AllowLoops" -> False };
+IGRewire[g_?GraphQ, n_Integer, opt : OptionsPattern[]] :=
+    Module[{ig = igMake[g]},
+      ig@"rewire"[n, OptionValue["AllowLoops"]];
+      igToGraph[ig]
+    ]
+
+Options[IGRewireEdges] = { "AllowLoops" -> False, "AllowMultipleEdges" -> False };
+IGRewireEdges[g_?GraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]] :=
+    Module[{ig = igMake[g]},
+      ig@"rewireEdges"[p, OptionValue["AllowLoops"], OptionValue["AllowMultipleEdges"]];
+      igToGraph[ig]
+    ]
 
 IGDirectedAcyclicGraphQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"dagQ"[]]
 

@@ -130,6 +130,10 @@ public:
         igCheck(igraph_rewire(&graph, n, loops ? IGRAPH_REWIRING_SIMPLE_LOOPS : IGRAPH_REWIRING_SIMPLE));
     }
 
+    void rewireEdges(double prob, bool loops, bool multiple) {
+        igCheck(igraph_rewire_edges(&graph, prob, loops, multiple));
+    }
+
     // Isomorphism
 
     bool isomorphic(IG &ig) {
