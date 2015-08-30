@@ -16,6 +16,8 @@ BeginPackage["IGraphM`"]
 
 Get["LTemplate`LTemplatePrivate`"]
 
+RecompileIGraphM::usage = "RecompileIGraphM[]";
+
 IGVersion::usage = "IGVersion[] returns the version of the igraph library in use.";
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
@@ -55,9 +57,10 @@ Begin["`Private`"]
 
 (***** Package variables *****)
 
-$packageDirectory = DirectoryName[$InputFileName];
-$libraryDirectory = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
-$sourceDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
+$packageDirectory  = DirectoryName[$InputFileName];
+$libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
+$sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
+$buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}]
 
 (* Add to $LibraryPath in case package is not installed in Applications *)
 If[Not@MemberQ[$LibraryPath, $libraryDirectory],
@@ -137,39 +140,54 @@ template = LTemplate["IGraphM",
 ];
 
 
-(***** Compilation and loading *****)
+(***** Compilation, loading and initialization *****)
 
-(* TODO: separate compilation into a dedicated build file *)
+packageAbort[] := (End[]; EndPackage[]; Abort[]) (* abort loading and leave a clean $ContextPath behind *)
 
-packageAbort[] := (End[]; EndPackage[]; Abort[])
 
-recompileLibrary[] :=
-  Block[{$CCompiler},
+$buildSettings = None;
+If[FileExistsQ[$buildSettingsFile], Get[$buildSettingsFile] ]
+
+
+RecompileIGraphM::build = "No build settings found. Please check BuildSettings.m."
+
+RecompileIGraphM[] :=
+  Module[{},
+    If[$buildSettings === None,
+      Message[RecompileIGraphM::build];
+      Return[$Failed]
+    ];
     If[Not@DirectoryQ[$libraryDirectory],
       CreateDirectory[$libraryDirectory]
     ];
-    $CCompiler = {
-      "Compiler" -> CCompilerDriver`GenericCCompiler`GenericCCompiler,
-      "CompilerName" -> "g++-mp-5",
-      "CompilerInstallation" -> "/opt/local/bin",
-      "SystemCompileOptions" -> {"-std=c++11", "-m64", "-fPIC", "-O2", "-framework Foundation", "-framework \"mathlink\""}
-    };
     SetDirectory[$sourceDirectory];
+    Quiet@UnloadTemplate[template];
     CompileTemplate[template, {"IGlobal.cpp"},
-      "IncludeDirectories" -> {"$HOME/local/include"},
-      "LibraryDirectories" -> {"$HOME/local/lib"},
       "CompileOptions" -> {"-ligraph"},
       "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
-      "TargetDirectory" -> $libraryDirectory
+      "TargetDirectory" -> $libraryDirectory,
+      Sequence @@ $buildSettings
     ];
-    ResetDirectory[]
+    ResetDirectory[];
+    LoadIGraphM[]
   ]
 
 
-If[LoadTemplate[template] === $Failed,
+igraphGlobal (* there should only be a single object of this type, it's set in LoadIGraphM *)
+
+LoadIGraphM[] :=
+    If[LoadTemplate[template] === $Failed,
+      $Failed
+      ,
+      igraphGlobal = Make["IGlobal"];
+      igraphGlobal@"init"[];
+    ]
+
+
+(* Load library, compile if necessary *)
+If[LoadIGraphM[] === $Failed,
   Print[Style["Loading failed, trying to recompile ...", Red]];
-  recompileLibrary[];
-  If[LoadTemplate[template] === $Failed
+  If[RecompileIGraphM[] === $Failed
     ,
     Print[Style["Cannot load or compile library. \[FreakedSmiley] Aborting.", Red]];
     packageAbort[]
@@ -177,12 +195,6 @@ If[LoadTemplate[template] === $Failed,
     Print[Style["Successfully compiled and loaded the library. \[HappySmiley]", Red]];
   ]
 ]
-
-
-(***** Initialize library *****)
-
-igraphGlobal = Make["IGlobal"]; (* there should only be a single object of this type *)
-igraphGlobal@"init"[] (* Run initialization *)
 
 
 (***** Helper functions *****)
