@@ -230,6 +230,8 @@ IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : 
         igToGraph[ig]
         ,
         $Failed
+        ,
+        {LTemplate::error}
       ]
     ]
 
