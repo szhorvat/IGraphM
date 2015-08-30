@@ -28,6 +28,9 @@ IGRewireEdges::usage = "IGRewireEdges[graph, p, options]";
 
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph]";
 IGConnectedQ::usage = "IGConnectedQ[graph]";
+IGGraphicalQ::usage =
+    "IGGraphicalQ[degrees] tests if a degree sequence for an undirected simple graph is graphical.\n" <>
+    "IGGraphicalQ[indegrees, outdegrees] tests if a degree sequence for a directed simple graph is graphical.";
 
 IGIsomorphic::usage = "IGIsomorphic[graph1, graph2]";
 IGSubisomorphic::usage = "IGSubisomorphic[graph, subgraph]";
@@ -68,7 +71,11 @@ template = LTemplate["IGraphM",
       {
         LFun["init", {}, "Void"],
         LFun["seedRandom", {Integer}, "Void"],
-        LFun["version", {}, "UTF8String"]
+        LFun["version", {}, "UTF8String"],
+
+        (* Graph related functions that do not use the graph data structure *)
+
+        LFun["graphicalQ", {{Real, 1} (* outdeg *), {Real, 1} (* indeg *)}, True|False]
       }
     ],
     LClass["IG",
@@ -240,6 +247,9 @@ IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : 
 IGDirectedAcyclicGraphQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"dagQ"[]]
 
 IGConnectedQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"connectedQ"[]]
+
+IGGraphicalQ[degrees_?nonNegIntVecQ] := IGGraphicalQ[{}, degrees]
+IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := igraphGlobal@"graphicalQ"[outdeg, indeg]
 
 (* Centrality *)
 

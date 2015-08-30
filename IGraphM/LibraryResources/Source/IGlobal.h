@@ -29,7 +29,20 @@ public:
     }
 
     void seedRandom(mint s) {
-        igraph_rng_seed(igraph_rng_default(), s);
+        igCheck(igraph_rng_seed(igraph_rng_default(), s));
+    }
+
+    // Graph related functions that do not use the graph data structure
+
+    bool graphicalQ(mma::RealTensorRef outdeg, mma::RealTensorRef indeg) {
+        igraph_vector_t ig_outdeg = igVectorView(outdeg);
+        igraph_vector_t ig_indeg  = igVectorView(indeg);
+        igraph_bool_t res;
+        if (indeg.length() == 0)
+            igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, NULL, &res));
+        else
+            igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, &ig_indeg, &res));
+        return res;
     }
 };
 
