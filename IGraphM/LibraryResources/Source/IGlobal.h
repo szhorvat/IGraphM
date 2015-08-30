@@ -17,14 +17,14 @@ public:
         igraph_set_error_handler(igErrorHandler);
         igraph_set_warning_handler(igWarningHandler);
         igraph_set_interruption_handler(igInterruptionHandler);
-        igraph_rng_seed(igraph_rng_default(), std::random_device()());
+        igCheck(igraph_rng_seed(igraph_rng_default(), std::random_device()()));
     }
 
     ~IGlobal() { }
 
     const char *version() {
         const char *ver;
-        igraph_version(&ver, NULL, NULL, NULL);
+        igCheck(igraph_version(&ver, NULL, NULL, NULL));
         return ver;
     }
 

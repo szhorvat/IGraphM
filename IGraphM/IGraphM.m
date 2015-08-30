@@ -16,7 +16,8 @@ BeginPackage["IGraphM`"]
 
 Get["LTemplate`LTemplatePrivate`"]
 
-IGVersion::usage = "IGVersion[]";
+IGVersion::usage = "IGVersion[] returns the version of the igraph library in use.";
+IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
 IGBetweenness::usage = "IGBetweenness[graph]";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph]";
@@ -209,6 +210,8 @@ nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 (* General (global) *)
 
 IGVersion[] := igraphGlobal@"version"[]
+
+IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := igraphGlobal@"seedRandom"[seed]
 
 (* Create (games) *)
 
