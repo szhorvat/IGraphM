@@ -45,7 +45,7 @@ IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 IGDyadCensus::usage = "IGDyadCensus[graph]";
 IGTriadCensus::usage = "IGTriadCensus[graph]";
 IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass for motif ordering.";
-IGMotifTotalCount::usage = "IGMotifTotalCount[graph, motifSize]";
+IGMotifsTotalCount::usage = "IGMotifsTotalCount[graph, motifSize]";
 IGMotifsEstimateTotalCount::usage = "IGMotifsEstimate[graph, motifSize, sampleSize]";
 
 IGDegreeSequenceGame::usage =
@@ -321,7 +321,7 @@ IGMotifs[graph_?GraphQ, size_?Internal`PositiveIntegerQ] :=
       Round@Developer`FromPackedArray@ig@"motifs"[size, ConstantArray[0, size]]
     ]
 
-IGMotifTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ] :=
+IGMotifsTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMake[graph]}, ig@"motifsNo"[size, ConstantArray[0, size]] ]
 
 IGMotifsEstimateTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
