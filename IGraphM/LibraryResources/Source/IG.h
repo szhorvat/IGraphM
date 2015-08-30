@@ -126,7 +126,7 @@ public:
 
     void rewire(mint n, bool loops) {
         if (n > std::numeric_limits<igraph_integer_t>::max())
-            throw mma::LibraryError("igraph rewire: Requested number rewiring trials too large.");
+            throw mma::LibraryError("igraph rewire: Requested number of rewiring trials too large.");
         igCheck(igraph_rewire(&graph, n, loops ? IGRAPH_REWIRING_SIMPLE_LOOPS : IGRAPH_REWIRING_SIMPLE));
     }
 

@@ -126,9 +126,9 @@ recompileLibrary[] :=
       "SystemCompileOptions" -> {"-std=c++11", "-m64", "-fPIC", "-O2", "-framework Foundation", "-framework \"mathlink\""}
     };
     SetDirectory[$sourceDirectory];
-    CompileTemplate[template,
-      "IncludeDirectories" -> {"/opt/local/include"},
-      "LibraryDirectories" -> {"/opt/local/lib"},
+    CompileTemplate[template, {"IGlobal.cpp"},
+      "IncludeDirectories" -> {"$HOME/local/include"},
+      "LibraryDirectories" -> {"$HOME/local/lib"},
       "CompileOptions" -> {"-ligraph"},
       "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
       "TargetDirectory" -> $libraryDirectory
@@ -162,8 +162,8 @@ igEdgeList[g_?GraphQ] :=
     Developer`ToPackedArray@N[List @@@ EdgeList[g] /.
             Dispatch@Thread[VertexList[g] -> Range@VertexCount[g] - 1]]
 
-igVec[vec_?VectorQ] := 1 + Round[vec]
-igVec[expr_] := expr
+igIndexVec[vec_?ArrayQ] := 1 + Round[vec]
+igIndexVec[expr_] := expr
 
 igDirectedQ[g_?GraphQ] := DirectedGraphQ[g] && Not@EmptyGraphQ[g]
 
@@ -176,7 +176,7 @@ igMake[g_?GraphQ] :=
 igToGraph[ig_] :=
     Graph[
       Range[ig@"vertexCount"[]],
-      igVec[ig@"edgeList"[]],
+      igIndexVec[ig@"edgeList"[]],
       DirectedEdges -> ig@"directedQ"[]
     ]
 
@@ -201,12 +201,12 @@ IGIsomorphic[g1_?GraphQ, g2_?GraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2
 
 IGSubisomorphic[graph_?GraphQ, subgraph_?GraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
-IGTopologicalOrdering[graph_?GraphQ] := Block[{ig = igMake[graph]}, igVec@ig@"topologicalSorting"[]]
+IGTopologicalOrdering[graph_?GraphQ] := Block[{ig = igMake[graph]}, igIndexVec@ig@"topologicalSorting"[]]
 
 Options[IGFeedbackArcSet] = { "Exact" -> True };
 IGFeedbackArcSet[graph_?GraphQ, opt : OptionsPattern[]] :=
   Block[{ig = igMake[graph]},
-    Part[EdgeList[graph], igVec@ig@"feedbackArcSet"[OptionValue["Exact"]]]
+    Part[EdgeList[graph], igIndexVec@ig@"feedbackArcSet"[OptionValue["Exact"]]]
   ]
 
 IGDyadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"dyadCensus"[]]
