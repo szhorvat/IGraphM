@@ -30,6 +30,7 @@ IGConnectedQ::usage = "IGConnectedQ[graph]";
 
 IGIsomorphic::usage = "IGIsomorphic[graph1, graph2]";
 IGSubisomorphic::usage = "IGSubisomorphic[graph, subgraph]";
+IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions.";
 
 IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order.";
 
@@ -37,7 +38,7 @@ IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 
 IGDyadCensus::usage = "IGDyadCensus[graph]";
 IGTriadCensus::usage = "IGTriadCensus[graph]";
-IGMotifs::usage = "IGMotifs[graph, motifSize]";
+IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass for motif ordering.";
 IGMotifTotalCount::usage = "IGMotifTotalCount[graph, motifSize]";
 IGMotifsEstimateTotalCount::usage = "IGMotifsEstimate[graph, motifSize, sampleSize]";
 
@@ -108,6 +109,7 @@ template = LTemplate["IGraphM",
 
         LFun["isomorphic", {LExpressionID["IG"]}, True|False],
         LFun["subisomorphic", {LExpressionID["IG"]}, True|False],
+        LFun["isoclass", {}, Integer],
 
         (* Topological sorting and directed acylic graphs *)
 
@@ -233,6 +235,7 @@ IGIsomorphic[g1_?GraphQ, g2_?GraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2
 
 IGSubisomorphic[graph_?GraphQ, subgraph_?GraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
+IGIsoclass[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"isoclass"[]]
 IGTopologicalOrdering[graph_?GraphQ] := Block[{ig = igMake[graph]}, igIndexVec@ig@"topologicalSorting"[]]
 
 Options[IGFeedbackArcSet] = { "Exact" -> True };

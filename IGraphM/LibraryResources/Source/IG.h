@@ -178,6 +178,12 @@ public:
         return res;
     }
 
+    mint isoclass() const {
+        igraph_integer_t res;
+        igCheck(igraph_isoclass(&graph, &res));
+        return res;
+    }
+
     // Topological sorting, directed acylic graphs
 
     // see also dagQ() under Testing
