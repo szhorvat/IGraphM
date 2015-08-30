@@ -114,6 +114,8 @@ template = LTemplate["IGraphM",
 
 (* TODO: separate compilation into a dedicated build file *)
 
+packageAbort[] := (End[]; EndPackage[]; Abort[])
+
 recompileLibrary[] :=
   Block[{$CCompiler},
     If[Not@DirectoryQ[$libraryDirectory],
@@ -143,7 +145,7 @@ If[LoadTemplate[template] === $Failed,
   If[LoadTemplate[template] === $Failed
     ,
     Print[Style["Cannot load or compile library. \[FreakedSmiley] Aborting.", Red]];
-    Abort[]
+    packageAbort[]
     ,
     Print[Style["Successfully compiled and loaded the library. \[HappySmiley]", Red]];
   ]
