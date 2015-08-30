@@ -40,8 +40,8 @@ inline igraph_vector_t ig_view(mma::RealTensorRef &t) {
 
 
 inline void igCheck(int err) {
-    if (err)
-        throw mma::LibraryError(igraph_strerror(err));
+    if (! err) return;
+    throw mma::LibraryError(igraph_strerror(err));
 }
 
 
@@ -49,20 +49,50 @@ class IG {
     igraph_t graph;
 
 public:
-    IG() {
-        igraph_empty(&graph, 0, false);
-    }
+    IG() { empty(); }
 
     ~IG() {
         igraph_destroy(&graph);
     }
 
-    // Create
+    // Helpers
+
+    void igConstructorCheck(int err) {
+        if (! err) return;
+        empty(); // make sure 'graph' is not left uninitialized
+        throw mma::LibraryError(igraph_strerror(err));
+    }
+
+    // Create (basic)
+
+    void empty() { igraph_empty(&graph, 0, false); }
 
     void fromEdgeList(mma::RealTensorRef v, mint n, bool directed) {
         igraph_destroy(&graph);
         igraph_vector_t edgelist = ig_view(v);
-        igraph_create(&graph, &edgelist, n, directed); // TODO check for error manually
+        igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
+    }
+
+    // Create (games)
+
+    void degreeSequenceGame(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, mint method) {
+        igraph_vector_t ig_indeg = ig_view(indeg);
+        igraph_vector_t ig_outdeg = ig_view(outdeg);
+        igraph_degseq_t ig_method;
+        switch (method) {
+        case 0: ig_method = IGRAPH_DEGSEQ_SIMPLE; break;
+        case 1: ig_method = IGRAPH_DEGSEQ_SIMPLE_NO_MULTIPLE; break;
+        case 2: ig_method = IGRAPH_DEGSEQ_VL; break;
+        default: throw mma::LibraryError("degreeSequenceGame: unknown method option.");
+        }
+
+        igraph_destroy(&graph);
+        int err;
+        if (indeg.length() == 0)
+            err = igraph_degree_sequence_game(&graph, &ig_outdeg, NULL, ig_method);
+        else
+            err = igraph_degree_sequence_game(&graph, &ig_outdeg, &ig_indeg, ig_method);
+        igConstructorCheck(err);
     }
 
     // Structure

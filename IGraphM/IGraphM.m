@@ -38,6 +38,11 @@ IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 IGDyadCensus::usage = "IGDyadCensus[graph]";
 IGTriadCensus::usage = "IGTriadCensus[graph]";
 
+IGDegreeSequenceGame::usage =
+    "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
+    "IGDegreeSequenceGame[indegrees, outdegrees, options] generates a directed random graph with the given in- and out-degree sequences.";
+
+
 Begin["`Private`"]
 
 (***** Package variables *****)
@@ -66,6 +71,10 @@ template = LTemplate["IGraphM",
         (* Create *)
 
         LFun["fromEdgeList", {{Real, 2} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
+
+        (* Games *)
+
+        LFun["degreeSequenceGame", {{Real, 1} (* outdeg *), {Real, 1} (* indeg *), Integer (* method *)}, "Void"],
 
         (* Structure *)
 
@@ -184,6 +193,7 @@ igToGraph[ig_] :=
       DirectedEdges -> ig@"directedQ"[]
     ]
 
+nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 
 (***** Public functions *****)
 
@@ -228,6 +238,24 @@ IGFeedbackArcSet[graph_?GraphQ, opt : OptionsPattern[]] :=
 IGDyadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"dyadCensus"[]]
 
 IGTriadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, Round[ig@"triadCensus"[]]]
+
+Options[IGDegreeSequenceGame] = {Method -> "SimpleNoMultiple"}
+
+igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>
+
+IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <> StringTemplate[" Available methods: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
+
+IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[]] := IGDegreeSequenceGame[{}, degrees, opt]
+
+IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : OptionsPattern[]] :=
+    Block[{ig = Make["IG"]},
+      Check[
+        ig@"degreeSequenceGame"[outdegrees, indegrees, Lookup[igDegreeSequenceGameMethods, OptionValue[Method], -1]];
+        igToGraph[ig]
+        ,
+        $Failed
+      ]
+    ]
 
 End[] (* `Private` *)
 
