@@ -37,6 +37,9 @@ IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 
 IGDyadCensus::usage = "IGDyadCensus[graph]";
 IGTriadCensus::usage = "IGTriadCensus[graph]";
+IGMotifs::usage = "IGMotifs[graph, motifSize]";
+IGMotifTotalCount::usage = "IGMotifTotalCount[graph, motifSize]";
+IGMotifsEstimateTotalCount::usage = "IGMotifsEstimate[graph, motifSize, sampleSize]";
 
 IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
@@ -114,7 +117,10 @@ template = LTemplate["IGraphM",
         (* Motifs and subgraph counts *)
 
         LFun["dyadCensus", {}, {Integer, 1}],
-        LFun["triadCensus", {}, {Real, 1}]
+        LFun["triadCensus", {}, {Real, 1}],
+        LFun["motifs", {Integer (* size *), {Real, 1} (* cut_prob *)}, {Real, 1}],
+        LFun["motifsNo", {Integer (* size *), {Real, 1} (* cut_prob *)}, Integer],
+        LFun["motifsEstimate", {Integer (* size *), {Real, 1} (* cut_prob *), Integer (* sample_size *)}, Integer]
       }
     ]
   }
@@ -235,9 +241,24 @@ IGFeedbackArcSet[graph_?GraphQ, opt : OptionsPattern[]] :=
     Part[EdgeList[graph], igIndexVec@ig@"feedbackArcSet"[OptionValue["Exact"]]]
   ]
 
+(* Motifs and subgraph counts *)
+
 IGDyadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"dyadCensus"[]]
 
 IGTriadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, Round[ig@"triadCensus"[]]]
+
+IGMotifs[graph_?GraphQ, size_?Internal`PositiveIntegerQ] :=
+    Block[{ig = igMake[graph]},
+      Round@Developer`FromPackedArray@ig@"motifs"[size, ConstantArray[0, size]]
+    ]
+
+IGMotifTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ] :=
+    Block[{ig = igMake[graph]}, ig@"motifsNo"[size, ConstantArray[0, size]] ]
+
+IGMotifsEstimateTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
+    Block[{ig = igMake[graph]}, ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize] ]
+
+(* Games *)
 
 Options[IGDegreeSequenceGame] = {Method -> "SimpleNoMultiple"}
 

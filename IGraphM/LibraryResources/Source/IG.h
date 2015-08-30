@@ -211,6 +211,27 @@ public:
         igCheck(igraph_triad_census(&graph, &vec.vec));
         return vec.makeMTensor();
     }
+
+    mma::RealTensorRef motifs(mint size, mma::RealTensorRef cut_prob) const {
+        igVector vec;
+        igraph_vector_t ig_cut_prob = ig_view(cut_prob);
+        igCheck(igraph_motifs_randesu(&graph, &vec.vec, size, &ig_cut_prob));
+        return vec.makeMTensor();
+    }
+
+    mint motifsNo(mint size, mma::RealTensorRef cut_prob) const {
+        igraph_integer_t res;
+        igraph_vector_t ig_cut_prob = ig_view(cut_prob);
+        igCheck(igraph_motifs_randesu_no(&graph, &res, size, &ig_cut_prob));
+        return res;
+    }
+
+    mint motifsEstimate(mint size, mma::RealTensorRef cut_prob, mint sample_size) {
+        igraph_integer_t res;
+        igraph_vector_t ig_cut_prob = ig_view(cut_prob);
+        igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, sample_size, NULL));
+        return res;
+    }
 };
 
 #endif // IG_H
