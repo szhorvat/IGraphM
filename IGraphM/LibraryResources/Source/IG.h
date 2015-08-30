@@ -2,7 +2,7 @@
 #define IG_H
 
 
-extern "C" { // workaround for igraph_version() C++ compatibility bug
+extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph <= 0.7.1
 #include <igraph/igraph.h>
 }
 
@@ -65,7 +65,7 @@ public:
 
     // Create (basic)
 
-    void empty() { igraph_empty(&graph, 0, false); }
+    void empty() { igraph_empty(&graph, 0, false); } // does not free the graph, should not be exposed to Mathematica
 
     void fromEdgeList(mma::RealTensorRef v, mint n, bool directed) {
         igraph_destroy(&graph);
@@ -166,13 +166,13 @@ public:
 
     // Isomorphism
 
-    bool isomorphic(IG &ig) {
+    bool isomorphic(IG &ig) const {
         igraph_bool_t res;
         igCheck(igraph_isomorphic(&graph, &ig.graph, &res));
         return res;
     }
 
-    bool subisomorphic(IG &ig) {
+    bool subisomorphic(IG &ig) const {
         igraph_bool_t res;
         igCheck(igraph_subisomorphic(&graph, &ig.graph, &res));
         return res;
@@ -232,7 +232,7 @@ public:
         return res;
     }
 
-    mint motifsEstimate(mint size, mma::RealTensorRef cut_prob, mint sample_size) {
+    mint motifsEstimate(mint size, mma::RealTensorRef cut_prob, mint sample_size) const {
         igraph_integer_t res;
         igraph_vector_t ig_cut_prob = ig_view(cut_prob);
         igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, sample_size, NULL));

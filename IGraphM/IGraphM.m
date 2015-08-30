@@ -203,13 +203,48 @@ igToGraph[ig_] :=
 
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 
+
 (***** Public functions *****)
 
+(* General (global) *)
+
 IGVersion[] := igraphGlobal@"version"[]
+
+(* Create (games) *)
+
+Options[IGDegreeSequenceGame] = {Method -> "SimpleNoMultiple"}
+
+igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>
+
+IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <> StringTemplate[" Available methods: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
+
+IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[]] := IGDegreeSequenceGame[{}, degrees, opt]
+
+IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : OptionsPattern[]] :=
+    Block[{ig = Make["IG"]},
+      Check[
+        ig@"degreeSequenceGame"[outdegrees, indegrees, Lookup[igDegreeSequenceGameMethods, OptionValue[Method], -1]];
+        igToGraph[ig]
+        ,
+        $Failed
+      ]
+    ]
+
+(* Testing *)
+
+IGDirectedAcyclicGraphQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"dagQ"[]]
+
+IGConnectedQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"connectedQ"[]]
+
+(* Centrality *)
 
 IGBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"betweenness"[]]
 
 IGEdgeBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"edgeBetwenness"[]]
+
+IGCloseness[g_?GraphQ, normalized_ : False] := Module[{ig = igMake[g]}, ig@"closeness"[normalized]]
+
+(* Randomization *)
 
 Options[IGRewire] = { "AllowLoops" -> False };
 IGRewire[g_?GraphQ, n_Integer, opt : OptionsPattern[]] :=
@@ -225,17 +260,16 @@ IGRewireEdges[g_?GraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]]
       igToGraph[ig]
     ]
 
-IGDirectedAcyclicGraphQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"dagQ"[]]
-
-IGConnectedQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"connectedQ"[]]
-
-IGCloseness[g_?GraphQ, normalized_ : False] := Module[{ig = igMake[g]}, ig@"closeness"[normalized]]
+(* Isomorphism *)
 
 IGIsomorphic[g1_?GraphQ, g2_?GraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
 
 IGSubisomorphic[graph_?GraphQ, subgraph_?GraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
 IGIsoclass[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"isoclass"[]]
+
+(* Directed acylic graphs and topological ordering *)
+
 IGTopologicalOrdering[graph_?GraphQ] := Block[{ig = igMake[graph]}, igIndexVec@ig@"topologicalSorting"[]]
 
 Options[IGFeedbackArcSet] = { "Exact" -> True };
@@ -261,25 +295,6 @@ IGMotifTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ] :=
 IGMotifsEstimateTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMake[graph]}, ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize] ]
 
-(* Games *)
-
-Options[IGDegreeSequenceGame] = {Method -> "SimpleNoMultiple"}
-
-igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>
-
-IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <> StringTemplate[" Available methods: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
-
-IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[]] := IGDegreeSequenceGame[{}, degrees, opt]
-
-IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : OptionsPattern[]] :=
-    Block[{ig = Make["IG"]},
-      Check[
-        ig@"degreeSequenceGame"[outdegrees, indegrees, Lookup[igDegreeSequenceGameMethods, OptionValue[Method], -1]];
-        igToGraph[ig]
-        ,
-        $Failed
-      ]
-    ]
 
 End[] (* `Private` *)
 
