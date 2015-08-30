@@ -2,47 +2,9 @@
 #define IG_H
 
 
-extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph <= 0.7.1
-#include <igraph/igraph.h>
-}
+#include "IGCommon.h"
 
-#include "LTemplate.h"
 #include <algorithm>
-
-
-struct igVector {
-    igraph_vector_t vec;
-
-    igVector() { igraph_vector_init(&vec, 0); }
-    ~igVector() { igraph_vector_destroy(&vec); }
-
-    long length() const { return igraph_vector_size(&vec); }
-
-    igraph_real_t *begin() { return &(VECTOR(vec)[0]); }
-    igraph_real_t *end() { return begin() + length(); }
-
-    const igraph_real_t *begin() const { return &(VECTOR(vec)[0]); }
-    const igraph_real_t *end() const { return begin() + length(); }
-
-    mma::RealTensorRef makeMTensor() const {
-        mma::RealTensorRef res = mma::makeVector<double>(length());
-        std::copy(begin(), end(), res.begin());
-        return res;
-    }
-};
-
-
-inline igraph_vector_t ig_view(mma::RealTensorRef &t) {
-    igraph_vector_t vec;
-    igraph_vector_view(&vec, t.data(), t.length());
-    return vec;
-}
-
-
-inline void igCheck(int err) {
-    if (! err) return;
-    throw mma::LibraryError(igraph_strerror(err));
-}
 
 
 class IG {
@@ -69,15 +31,15 @@ public:
 
     void fromEdgeList(mma::RealTensorRef v, mint n, bool directed) {
         igraph_destroy(&graph);
-        igraph_vector_t edgelist = ig_view(v);
+        igraph_vector_t edgelist = igVectorView(v);
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
     }
 
     // Create (games)
 
     void degreeSequenceGame(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, mint method) {
-        igraph_vector_t ig_indeg = ig_view(indeg);
-        igraph_vector_t ig_outdeg = ig_view(outdeg);
+        igraph_vector_t ig_indeg = igVectorView(indeg);
+        igraph_vector_t ig_outdeg = igVectorView(outdeg);
         igraph_degseq_t ig_method;
         switch (method) {
         case 0: ig_method = IGRAPH_DEGSEQ_SIMPLE; break;
@@ -220,21 +182,21 @@ public:
 
     mma::RealTensorRef motifs(mint size, mma::RealTensorRef cut_prob) const {
         igVector vec;
-        igraph_vector_t ig_cut_prob = ig_view(cut_prob);
+        igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
         igCheck(igraph_motifs_randesu(&graph, &vec.vec, size, &ig_cut_prob));
         return vec.makeMTensor();
     }
 
     mint motifsNo(mint size, mma::RealTensorRef cut_prob) const {
         igraph_integer_t res;
-        igraph_vector_t ig_cut_prob = ig_view(cut_prob);
+        igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
         igCheck(igraph_motifs_randesu_no(&graph, &res, size, &ig_cut_prob));
         return res;
     }
 
     mint motifsEstimate(mint size, mma::RealTensorRef cut_prob, mint sample_size) const {
         igraph_integer_t res;
-        igraph_vector_t ig_cut_prob = ig_view(cut_prob);
+        igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
         igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, sample_size, NULL));
         return res;
     }

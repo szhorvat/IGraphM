@@ -1,12 +1,10 @@
 #ifndef IGLOBAL_H
 #define IGLOBAL_H
 
-extern "C" {
-#include <igraph/igraph.h>
-}
+#include "IGCommon.h"
 
-#include "LTemplate.h"
 #include <random>
+
 
 void igWarningHandler(const char *reason, const char *file, int line, int igraph_errno);
 void igErrorHandler(const char *reason, const char *file, int line, int igraph_errno);
