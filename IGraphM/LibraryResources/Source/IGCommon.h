@@ -32,6 +32,30 @@ struct igVector {
 };
 
 
+struct igMatrix {
+    igraph_matrix_t mat;
+
+    igMatrix() { igraph_matrix_init(&mat, 0, 0); }
+    ~igMatrix() { igraph_matrix_destroy(&mat); }
+
+    long length() const { return mat.data.end - mat.data.stor_begin; }
+    long nrow() const { return mat.nrow; }
+    long ncol() const { return mat.ncol; }
+
+    igraph_real_t *begin() { return mat.data.stor_begin; }
+    igraph_real_t *end() { return mat.data.end; }
+
+    const igraph_real_t *begin() const { return mat.data.stor_begin; }
+    const igraph_real_t *end() const { return mat.data.end; }
+
+    mma::RealMatrixRef makeMTensor() const {
+        mma::RealMatrixRef res = mma::makeMatrix<double>(mat.nrow, mat.ncol);
+        std::copy(begin(), end(), res.begin());
+        return res;
+    }
+};
+
+
 inline igraph_vector_t igVectorView(mma::RealTensorRef &t) {
     igraph_vector_t vec;
     igraph_vector_view(&vec, t.data(), t.length());

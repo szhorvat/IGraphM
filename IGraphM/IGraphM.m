@@ -52,6 +52,7 @@ IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
     "IGDegreeSequenceGame[indegrees, outdegrees, options] generates a directed random graph with the given in- and out-degree sequences.";
 
+IGShortestPaths::usage = "IGShortestPaths[graph]";
 
 Begin["`Private`"]
 
@@ -133,7 +134,11 @@ template = LTemplate["IGraphM",
         LFun["triadCensus", {}, {Real, 1}],
         LFun["motifs", {Integer (* size *), {Real, 1} (* cut_prob *)}, {Real, 1}],
         LFun["motifsNo", {Integer (* size *), {Real, 1} (* cut_prob *)}, Integer],
-        LFun["motifsEstimate", {Integer (* size *), {Real, 1} (* cut_prob *), Integer (* sample_size *)}, Integer]
+        LFun["motifsEstimate", {Integer (* size *), {Real, 1} (* cut_prob *), Integer (* sample_size *)}, Integer],
+
+        (* Shortest paths *)
+
+        LFun["shortestPaths", {}, {Real, 2}]
       }
     ]
   }
@@ -322,6 +327,9 @@ IGMotifTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ] :=
 IGMotifsEstimateTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMake[graph]}, ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize] ]
 
+(* Shortest paths *)
+
+IGShortestPaths[graph_?GraphQ] := Block[{ig = igMake[graph]}, Round[ig@"shortestPaths"[]]]
 
 End[] (* `Private` *)
 

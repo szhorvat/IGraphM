@@ -200,6 +200,14 @@ public:
         igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, sample_size, NULL));
         return res;
     }
+
+    // Shortest paths
+
+    mma::RealMatrixRef shortestPaths() const {
+        igMatrix res;
+        igCheck(igraph_shortest_paths(&graph, &res.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
+        return res.makeMTensor();
+    }
 };
 
 #endif // IG_H
