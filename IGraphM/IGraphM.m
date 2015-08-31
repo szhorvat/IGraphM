@@ -52,7 +52,7 @@ IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
     "IGDegreeSequenceGame[indegrees, outdegrees, options] generates a directed random graph with the given in- and out-degree sequences.";
 
-IGShortestPaths::usage = "IGShortestPaths[graph]";
+IGDistanceMatrix::usage = "IGDistanceMatrix[graph]";
 
 Begin["`Private`"]
 
@@ -228,6 +228,9 @@ igToGraph[ig_] :=
 
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 
+(* zero out the diagonal of a square matrix *)
+zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
+
 
 (***** Public functions *****)
 
@@ -329,7 +332,10 @@ IGMotifsEstimateTotalCount[graph_?GraphQ, size_?Internal`PositiveIntegerQ, sampl
 
 (* Shortest paths *)
 
-IGShortestPaths[graph_?GraphQ] := Block[{ig = igMake[graph]}, Round[ig@"shortestPaths"[]]]
+IGDistanceMatrix[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]},
+      zeroDiagonal[Transpose@Round[ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
+    ]
 
 End[] (* `Private` *)
 
