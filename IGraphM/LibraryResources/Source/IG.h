@@ -9,15 +9,10 @@
 
 class IG {
     igraph_t graph;
+    igVector weights;
+    bool weighted;
 
-public:
-    IG() { empty(); }
-
-    ~IG() {
-        igraph_destroy(&graph);
-    }
-
-    // Helpers
+    void empty() { igraph_empty(&graph, 0, false); }
 
     void igConstructorCheck(int err) {
         if (! err) return;
@@ -25,15 +20,46 @@ public:
         throw mma::LibraryError(igraph_strerror(err));
     }
 
+    void destroy() {
+        igraph_destroy(&graph);
+        clearWeights();
+    }
+
+public:
+    IG() : weighted(false) { empty(); }
+
+    ~IG() {
+        igraph_destroy(&graph);
+    }
+
+
     // Create (basic)
 
-    void empty() { igraph_empty(&graph, 0, false); } // does not free the graph, should not be exposed to Mathematica
-
     void fromEdgeList(mma::RealTensorRef v, mint n, bool directed) {
-        igraph_destroy(&graph);
+        destroy();
         igraph_vector_t edgelist = igVectorView(v);
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
     }
+
+    // Weights
+
+    void setWeights(mma::RealTensorRef w) {
+        weighted = true;
+        weights.copyFromMTensor(w);
+    }
+
+    void clearWeights() {
+        weighted = false;
+        weights.clear();
+    }
+
+    mma::RealTensorRef getWeights() const {
+        if (! weighted)
+            mma::message("Graph is not weighted. Returning empty weight vector.", mma::M_WARNING);
+        return weights.makeMTensor();
+    }
+
+    bool weightedQ() const { return weighted; }
 
     // Create (games)
 
@@ -48,7 +74,7 @@ public:
         default: throw mma::LibraryError("degreeSequenceGame: unknown method option.");
         }
 
-        igraph_destroy(&graph);
+        destroy();
         int err;
         if (indeg.length() == 0)
             err = igraph_degree_sequence_game(&graph, &ig_outdeg, NULL, ig_method);
@@ -98,21 +124,25 @@ public:
 
     mma::RealTensorRef betweenness() const {
         igVector vec;
-        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, NULL, true));
-        return vec.makeMTensor();
-    }
-
-    mma::RealTensorRef closeness(bool normalized) const {
-        igVector vec;
-        igCheck(igraph_closeness(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, NULL, normalized));
+        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
+        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, weightList, true));
         return vec.makeMTensor();
     }
 
     mma::RealTensorRef edgeBetweenness() const {
         igVector vec;
-        igCheck(igraph_edge_betweenness(&graph, &vec.vec, true, NULL));
+        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
+        igCheck(igraph_edge_betweenness(&graph, &vec.vec, true, weightList));
         return vec.makeMTensor();
     }
+
+    mma::RealTensorRef closeness(bool normalized) const {
+        igVector vec;
+        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
+        igCheck(igraph_closeness(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, weightList, normalized));
+        return vec.makeMTensor();
+    }
+
 
     // Randomize
 

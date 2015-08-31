@@ -10,6 +10,16 @@ extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph 
 #include <algorithm>
 
 
+
+inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
+    static double dummy = 0.0; // work around igraph not liking zero-length vectors will NULL pointers
+    igraph_vector_t vec;
+    mint len = t.length();
+    igraph_vector_view(&vec, len == 0 ? &dummy : t.data(), len);
+    return vec;
+}
+
+
 struct igVector {
     igraph_vector_t vec;
 
@@ -23,6 +33,13 @@ struct igVector {
 
     const igraph_real_t *begin() const { return &(VECTOR(vec)[0]); }
     const igraph_real_t *end() const { return begin() + length(); }
+
+    void clear() { igraph_vector_clear(&vec); }
+
+    void copyFromMTensor(mma::RealTensorRef t) {
+        igraph_vector_t from = igVectorView(t);
+        igraph_vector_update(&vec, &from);
+    }
 
     mma::RealTensorRef makeMTensor() const {
         mma::RealTensorRef res = mma::makeVector<double>(length());
@@ -54,15 +71,6 @@ struct igMatrix {
         return res;
     }
 };
-
-
-inline igraph_vector_t igVectorView(mma::RealTensorRef &t) {
-    static double dummy = 0.0; // work around igraph not liking zero-length vectors will NULL pointers
-    igraph_vector_t vec;
-    mint len = t.length();
-    igraph_vector_view(&vec, len == 0 ? &dummy : t.data(), len);
-    return vec;
-}
 
 
 inline void igCheck(int err) {

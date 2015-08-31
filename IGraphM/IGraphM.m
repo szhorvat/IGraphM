@@ -88,6 +88,13 @@ template = LTemplate["IGraphM",
 
         LFun["fromEdgeList", {{Real, 2} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
 
+        (* Weights *)
+
+        LFun["setWeights", {{Real, 1}}, "Void"],
+        LFun["getWeights", {}, {Real, 1}],
+        LFun["clearWeights", {}, "Void"],
+        LFun["weightedQ", {}, True|False],
+
         (* Games *)
 
         LFun["degreeSequenceGame", {{Real, 1} (* outdeg *), {Real, 1} (* indeg *), Integer (* method *)}, "Void"],
@@ -204,6 +211,15 @@ If[LoadIGraphM[] === $Failed,
 
 (***** Helper functions *****)
 
+nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
+
+(* zero out the diagonal of a square matrix *)
+zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
+
+(* TODO: do not return true for graphs with only vertex weights *)
+weightedGraphQ = WeightedGraphQ;
+
+
 igEdgeList[g_?GraphQ] :=
     Developer`ToPackedArray@N[List @@@ EdgeList[g] /.
             Dispatch@Thread[VertexList[g] -> Range@VertexCount[g] - 1]]
@@ -216,6 +232,7 @@ igDirectedQ[g_?GraphQ] := DirectedGraphQ[g] && Not@EmptyGraphQ[g]
 igMake[g_?GraphQ] :=
     With[{ig = Make["IG"]},
       ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
+      If[weightedGraphQ[g], ig@"setWeights"[PropertyValue[g, EdgeWeight]]];
       ig
     ]
 
@@ -225,11 +242,6 @@ igToGraph[ig_] :=
       igIndexVec[ig@"edgeList"[]],
       DirectedEdges -> ig@"directedQ"[]
     ]
-
-nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
-
-(* zero out the diagonal of a square matrix *)
-zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
 
 (***** Public functions *****)
