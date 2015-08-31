@@ -57,8 +57,10 @@ struct igMatrix {
 
 
 inline igraph_vector_t igVectorView(mma::RealTensorRef &t) {
+    static double dummy = 0.0; // work around igraph not liking zero-length vectors will NULL pointers
     igraph_vector_t vec;
-    igraph_vector_view(&vec, t.data(), t.length());
+    mint len = t.length();
+    igraph_vector_view(&vec, len == 0 ? &dummy : t.data(), len);
     return vec;
 }
 
