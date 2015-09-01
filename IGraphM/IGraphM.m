@@ -18,6 +18,10 @@ Get["LTemplate`LTemplatePrivate`"]
 
 RecompileIGraphM::usage = "RecompileIGraphM[]";
 
+IGData::usage =
+    "IGData[] returns a list of available items.\n" <>
+    "IGData[item] returns the requested item.";
+
 IGVersion::usage = "IGVersion[] returns the version of the igraph library in use.";
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
@@ -238,6 +242,8 @@ zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 (* TODO: find out how to implement this in a more robust way *)
 weightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeList] =!= Automatic &;
 
+(* Import compressed expressions. *)
+zimport[filename_] := Uncompress@Import[filename, "String"]
 
 igEdgeList[g_?GraphQ] :=
     Developer`ToPackedArray@N[List @@@ EdgeList[g] /.
@@ -264,6 +270,12 @@ igToGraph[ig_] :=
 
 
 (***** Public functions *****)
+
+(*  IGData  *)
+
+$igData = zimport@FileNameJoin[{$packageDirectory, "IGData.mz"}];
+IGData[] := Keys[$igData]
+IGData[item_] := Lookup[$igData, Key[item], Missing["NotAvailable"]]
 
 (* General (global) *)
 
