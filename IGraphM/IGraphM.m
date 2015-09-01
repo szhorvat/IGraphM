@@ -15,6 +15,9 @@
 BeginPackage["IGraphM`"]
 
 Get["LTemplate`LTemplatePrivate`"]
+ConfigureLTemplate["MessageSymbol" -> IGraphM]
+
+IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
 RecompileIGraphM::usage = "RecompileIGraphM[]";
 
@@ -236,10 +239,10 @@ If[LoadIGraphM[] === $Failed,
 
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 
-(* zero out the diagonal of a square matrix *)
+(* Zero out the diagonal of a square matrix. *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
-(* TODO: find out how to implement this in a more robust way *)
+(* TODO: Find out how to implement this in a more robust way. *)
 weightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeList] =!= Automatic &;
 
 (* Import compressed expressions. *)
