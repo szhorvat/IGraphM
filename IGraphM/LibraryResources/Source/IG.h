@@ -237,7 +237,7 @@ public:
 
     mma::RealTensorRef feedbackArcSet(bool exact) const {
         igVector vec;
-        igCheck(igraph_feedback_arc_set(&graph, &vec.vec, NULL, exact ? IGRAPH_FAS_EXACT_IP : IGRAPH_FAS_APPROX_EADES));
+        igCheck(igraph_feedback_arc_set(&graph, &vec.vec, weighted ? &weights.vec : NULL, exact ? IGRAPH_FAS_EXACT_IP : IGRAPH_FAS_APPROX_EADES));
         return vec.makeMTensor();
     }
 
