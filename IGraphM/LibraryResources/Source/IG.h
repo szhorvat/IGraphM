@@ -4,8 +4,6 @@
 
 #include "IGCommon.h"
 
-#include <algorithm>
-
 
 class IG {
     igraph_t graph;
@@ -17,7 +15,9 @@ class IG {
     void igConstructorCheck(int err) {
         if (! err) return;
         empty(); // make sure 'graph' is not left uninitialized
-        throw mma::LibraryError(igraph_strerror(err));
+        std::ostringstream msg;
+        msg << "igraph returned with error: " << igraph_strerror(err);
+        throw mma::LibraryError(msg.str());
     }
 
     void destroy() {
@@ -183,7 +183,7 @@ public:
 
     void rewire(mint n, bool loops) {
         if (n > std::numeric_limits<igraph_integer_t>::max())
-            throw mma::LibraryError("igraph rewire: Requested number of rewiring trials too large.");
+            throw mma::LibraryError("rewire: Requested number of rewiring trials too large.");
         igCheck(igraph_rewire(&graph, n, loops ? IGRAPH_REWIRING_SIMPLE_LOOPS : IGRAPH_REWIRING_SIMPLE));
     }
 

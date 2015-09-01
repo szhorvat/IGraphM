@@ -8,7 +8,8 @@ extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph 
 #include "LTemplate.h"
 
 #include <algorithm>
-
+#include <string>
+#include <sstream>
 
 
 inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
@@ -75,7 +76,9 @@ struct igMatrix {
 
 inline void igCheck(int err) {
     if (! err) return;
-    throw mma::LibraryError(igraph_strerror(err));
+    std::ostringstream msg;
+    msg << "igraph returned with error: " << igraph_strerror(err);
+    throw mma::LibraryError(msg.str());
 }
 
 
