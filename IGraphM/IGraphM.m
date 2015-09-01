@@ -235,8 +235,8 @@ nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 (* zero out the diagonal of a square matrix *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
-(* TODO: do not return true for graphs with only vertex weights *)
-weightedGraphQ = WeightedGraphQ;
+(* TODO: find out how to implement this in a more robust way *)
+weightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeList] =!= Automatic &;
 
 
 igEdgeList[g_?GraphQ] :=
