@@ -38,14 +38,14 @@ IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if a degree sequence for an undirected simple graph is graphical.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if a degree sequence for a directed simple graph is graphical.";
 
-IGIsomorphic::usage = "IGIsomorphic[graph1, graph2]";
-IGSubisomorphic::usage = "IGSubisomorphic[graph, subgraph]";
+IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2]";
+IGSubisomorphicQ::usage = "IGSubisomorphicQ[graph, subgraph]";
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions.";
 
 IGBlissCanonicalPermutation::usage =
     "IGBlissCanonicalPermutation[graph, options] computes a canonical permutation of the graph vertices. " <>
     "Two graphs are isomorphic iff they have the same canonical permutation.";
-IGBlissIsomorphic::usage = "IGBlissIsomorphic[graph1, graph2, options]";
+IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2, options]";
 IGBlissFindIsomorphism::usage = "IGBlissFindIsomorphism[graph1, graph2, options]";
 IGBlissCountAutomorphisms::usage = "IGBlissCountAutomorphisms[graph]";
 
@@ -341,9 +341,9 @@ IGRewireEdges[g_?GraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]]
 
 (* Isomorphism *)
 
-IGIsomorphic[g1_?GraphQ, g2_?GraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
+IGIsomorphicQ[g1_?GraphQ, g2_?GraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
 
-IGSubisomorphic[graph_?GraphQ, subgraph_?GraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
+IGSubisomorphicQ[graph_?GraphQ, subgraph_?GraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
 IGIsoclass[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"isoclass"[]]
 
@@ -365,8 +365,8 @@ IGBlissCanonicalPermutation[graph_?GraphQ, opt : OptionsPattern[]] :=
       igIndexVec@ig@"blissCanonicalPermutation"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
-Options[IGBlissIsomorphic] = { "SplittingHeuristics" -> "First" };
-IGBlissIsomorphic[graph1_?GraphQ, graph2_?GraphQ, opt : OptionsPattern[]] :=
+Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
+IGBlissIsomorphicQ[graph1_?GraphQ, graph2_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMake[graph1], ig2 = igMake[graph2]},
       ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
