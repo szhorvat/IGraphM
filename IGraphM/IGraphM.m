@@ -72,7 +72,7 @@ Begin["`Private`"]
 $packageDirectory  = DirectoryName[$InputFileName];
 $libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
-$buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}]
+$buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}];
 
 (* Add to $LibraryPath in case package is not installed in Applications *)
 If[Not@MemberQ[$LibraryPath, $libraryDirectory],
@@ -204,7 +204,7 @@ RecompileIGraphM[] :=
   ]
 
 
-igraphGlobal (* there should only be a single object of this type, it's set in LoadIGraphM *)
+igraphGlobal (* there should only be a single object of this type, it's set in LoadIGraphM[] below *)
 
 LoadIGraphM[] :=
     If[LoadTemplate[template] === $Failed,
@@ -273,11 +273,12 @@ IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := igraphGlobal@"seedRan
 
 (* Create (games) *)
 
-Options[IGDegreeSequenceGame] = {Method -> "SimpleNoMultiple"}
+Options[IGDegreeSequenceGame] = { Method -> "SimpleNoMultiple" };
 
 igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>
 
-IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <> StringTemplate[" Available methods: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
+IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <>
+    StringTemplate[" Available methods: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
 
 IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[]] := IGDegreeSequenceGame[{}, degrees, opt]
 
@@ -355,7 +356,8 @@ igBlissSplittingHeuristicsNames = {
 igBlissSplittingHeuristics = AssociationThread[igBlissSplittingHeuristicsNames, Range@Length[igBlissSplittingHeuristicsNames] - 1];
 
 IGBlissCanonicalPermutation::usage = IGBlissCanonicalPermutation::usage <>
-    StringTemplate[" Available values for the \"SplittingHeuristics\" option: ``. The permutation depends on the splitting heuristics used."][ToString@InputForm@igBlissSplittingHeuristicsNames];
+    StringTemplate[" Available values for the \"SplittingHeuristics\" option: ``." <>
+        "The permutation depends on the splitting heuristics used."][ToString@InputForm@igBlissSplittingHeuristicsNames];
 
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalPermutation[graph_?GraphQ, opt : OptionsPattern[]] :=
