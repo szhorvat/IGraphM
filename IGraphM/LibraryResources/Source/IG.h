@@ -25,6 +25,18 @@ class IG {
         clearWeights();
     }
 
+    igraph_bliss_sh_t blissIntToSplitting(mint sh) {
+        switch (sh) {
+        case 0: return IGRAPH_BLISS_F;
+        case 1: return IGRAPH_BLISS_FL;
+        case 2: return IGRAPH_BLISS_FLM;
+        case 3: return IGRAPH_BLISS_FM;
+        case 4: return IGRAPH_BLISS_FS;
+        case 5: return IGRAPH_BLISS_FSM;
+        default: throw mma::LibraryError("bliss: Unknown splitting heuristic.");
+        }
+    }
+
 public:
     IG() : weighted(false) { empty(); }
 
@@ -175,6 +187,43 @@ public:
         igCheck(igraph_isoclass(&graph, &res));
         return res;
     }
+
+    mma::RealTensorRef blissCanonicalPermutation(mint splitting) {
+        igVector vec;
+        igCheck(igraph_canonical_permutation(&graph, &vec.vec, blissIntToSplitting(splitting), NULL));
+        return vec.makeMTensor();
+    }
+
+    bool blissIsomorphic(const IG &ig, mint splitting) {
+        igraph_bool_t res;
+        igCheck(igraph_isomorphic_bliss(&graph, &ig.graph, &res, NULL, NULL, blissIntToSplitting(splitting), blissIntToSplitting(splitting), NULL, NULL));
+        return res;
+    }
+
+    mma::RealTensorRef blissFindIsomorphism(const IG &ig, mint splitting) {
+        igraph_bool_t res;
+        igVector map;
+        igCheck(igraph_isomorphic_bliss(&graph, &ig.graph, &res, &map.vec, NULL, blissIntToSplitting(splitting), blissIntToSplitting(splitting), NULL, NULL));
+        if (res)
+            return map.makeMTensor();
+        else
+            return mma::makeVector<double>(0);
+    }
+
+    void blissCountAutomorphisms(MLINK link) {
+        igraph_bliss_info_t info;
+        int argc = 1;
+        if (! MLTestHeadWithArgCount(link, "List", &argc))
+            throw mma::LibraryError("blissCountAutomorphisms: 1 argument expected");
+        int splitting;
+        if (! MLGetInteger(link, &splitting))
+            throw mma::LibraryError("blissCountAutomorphisms: 1 integer argument expected");
+        igCheck(igraph_automorphisms(&graph, blissIntToSplitting(splitting), &info));
+        MLNewPacket(link);
+        MLPutString(link, info.group_size);
+        std::free(info.group_size);
+    }
+
 
     // Topological sorting, directed acylic graphs
 

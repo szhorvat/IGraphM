@@ -38,6 +38,13 @@ IGIsomorphic::usage = "IGIsomorphic[graph1, graph2]";
 IGSubisomorphic::usage = "IGSubisomorphic[graph, subgraph]";
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions.";
 
+IGBlissCanonicalPermutation::usage =
+    "IGBlissCanonicalPermutation[graph, options] computes a canonical permutation of the graph vertices. " <>
+    "Two graphs are isomorphic iff they have the same canonical permutation.";
+IGBlissIsomorphic::usage = "IGBlissIsomorphic[graph1, graph2, options]";
+IGBlissFindIsomorphism::usage = "IGBlissFindIsomorphism[graph1, graph2, options]";
+IGBlissCountAutomorphisms::usage = "IGBlissCountAutomorphisms[graph]";
+
 IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order.";
 
 IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
@@ -129,6 +136,10 @@ template = LTemplate["IGraphM",
         LFun["isomorphic", {LExpressionID["IG"]}, True|False],
         LFun["subisomorphic", {LExpressionID["IG"]}, True|False],
         LFun["isoclass", {}, Integer],
+        LFun["blissCanonicalPermutation", {Integer (* splitting heuristics *)}, {Real, 1}],
+        LFun["blissIsomorphic", {LExpressionID["IG"], Integer (* splitting heuristics *)}, True|False],
+        LFun["blissFindIsomorphism", {LExpressionID["IG"], Integer (* splitting heuristics *)}, {Real, 1}],
+        LFun["blissCountAutomorphisms", LinkObject],
 
         (* Topological sorting and directed acylic graphs *)
 
@@ -289,9 +300,12 @@ IGBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"betweenness"[]]
 
 IGEdgeBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
 
-IGCloseness[g_?GraphQ, normalized_ : False] := Module[{ig = igMake[g]}, ig@"closeness"[normalized]]
+Options[IGCloseness] = { "Normalized" -> False };
+IGCloseness[g_?GraphQ, opt : OptionsPattern[]] := Module[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
 
 (* Randomization *)
+
+(* TODO: functions in this section should warn about weight loss *)
 
 Options[IGRewire] = { "AllowLoops" -> False };
 IGRewire[g_?GraphQ, n_Integer, opt : OptionsPattern[]] :=
@@ -314,6 +328,42 @@ IGIsomorphic[g1_?GraphQ, g2_?GraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2
 IGSubisomorphic[graph_?GraphQ, subgraph_?GraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
 IGIsoclass[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"isoclass"[]]
+
+
+igBlissSplittingHeuristicsNames = {
+  "First", "FirstSmallest", "FirstLargest",
+  "FirstMaximallyConnected", "FirstSmallestMaximallyConnected", "FirstLargestMaximallyConnected"
+};
+
+igBlissSplittingHeuristics = AssociationThread[igBlissSplittingHeuristicsNames, Range@Length[igBlissSplittingHeuristicsNames] - 1];
+
+IGBlissCanonicalPermutation::usage = IGBlissCanonicalPermutation::usage <>
+    StringTemplate[" Available values for the \"SplittingHeuristics\" option: ``. The permutation depends on the splitting heuristics used."][ToString@InputForm@igBlissSplittingHeuristicsNames];
+
+Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
+IGBlissCanonicalPermutation[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]}, 
+      igIndexVec@ig@"blissCanonicalPermutation"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+    ]
+
+Options[IGBlissIsomorphic] = { "SplittingHeuristics" -> "First" };
+IGBlissIsomorphic[graph1_?GraphQ, graph2_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2]},
+      ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+    ]
+
+Options[IGBlissFindIsomorphism] = { "SplittingHeuristics" -> "First" };
+IGBlissFindIsomorphism[graph1_?GraphQ, graph2_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], result},
+      result = igIndexVec@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]];
+      If[result =!= {}, {result}, {}]
+    ]
+
+Options[IGBlissCountAutomorphisms] = { "SplittingHeuristics" -> "First" };
+IGBlissCountAutomorphisms[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      ToExpression@ig@"blissCountAutomorphisms"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+    ]
 
 (* Directed acylic graphs and topological ordering *)
 
