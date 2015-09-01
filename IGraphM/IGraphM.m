@@ -23,7 +23,11 @@ IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used
 
 IGBetweenness::usage = "IGBetweenness[graph]";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph]";
-IGCloseness::usage = "IGCloseness[graph, normalized]";
+IGCloseness::usage = "IGCloseness[graph, options]";
+
+IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff]";
+IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff]";
+IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff, options]";
 
 IGRewire::usage = "IGRewire[graph, n, options]";
 IGRewireEdges::usage = "IGRewireEdges[graph, p, options]";
@@ -125,6 +129,10 @@ template = LTemplate["IGraphM",
         LFun["betweenness", {}, {Real, 1}],
         LFun["edgeBetweenness", {}, {Real, 1}],
         LFun["closeness", {True|False (* normalized *)}, {Real, 1}],
+
+        LFun["betweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
+        LFun["edgeBetweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
+        LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
 
         (* Randomize *)
 
@@ -302,6 +310,15 @@ IGEdgeBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
 
 Options[IGCloseness] = { "Normalized" -> False };
 IGCloseness[g_?GraphQ, opt : OptionsPattern[]] := Module[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
+
+(* Centrality estimates *)
+
+IGBetweennessEstimate[g_?GraphQ, cutoff_] := Module[{ig = igMake[g]}, ig@"betweennessEstimate"[cutoff]]
+
+IGEdgeBetweennessEstimate[g_?GraphQ, cutoff_] := Module[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"[cutoff]]
+
+Options[IGClosenessEstimate] = { "Normalized" -> False };
+IGClosenessEstimate[g_?GraphQ, cutoff_, opt : OptionsPattern[]] := Module[{ig = igMake[g]}, ig@"closenessEstimate"[cutoff, OptionValue["Normalized"]]]
 
 (* Randomization *)
 

@@ -155,6 +155,29 @@ public:
         return vec.makeMTensor();
     }
 
+    // Centrality measures (estimates)
+
+    mma::RealTensorRef betweennessEstimate(double cutoff) const {
+        igVector vec;
+        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
+        igCheck(igraph_betweenness_estimate(&graph, &vec.vec, igraph_vss_all(), true, cutoff, weightList, true));
+        return vec.makeMTensor();
+    }
+
+    mma::RealTensorRef edgeBetweennessEstimate(double cutoff) const {
+        igVector vec;
+        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
+        igCheck(igraph_edge_betweenness_estimate(&graph, &vec.vec, true, cutoff, weightList));
+        return vec.makeMTensor();
+    }
+
+    mma::RealTensorRef closenessEstimate(double cutoff, bool normalized) const {
+        igVector vec;
+        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
+        igCheck(igraph_closeness_estimate(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, cutoff, weightList, normalized));
+        return vec.makeMTensor();
+    }
+
 
     // Randomize
 
