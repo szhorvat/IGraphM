@@ -25,7 +25,7 @@ class IG {
         clearWeights();
     }
 
-    igraph_bliss_sh_t blissIntToSplitting(mint sh) {
+    igraph_bliss_sh_t blissIntToSplitting(mint sh) const {
         switch (sh) {
         case 0: return IGRAPH_BLISS_F;
         case 1: return IGRAPH_BLISS_FL;
@@ -168,15 +168,15 @@ public:
         igCheck(igraph_rewire_edges(&graph, prob, loops, multiple));
     }
 
-    // Isomorphism
+    // Isomorphism (general)
 
-    bool isomorphic(IG &ig) const {
+    bool isomorphic(const IG &ig) const {
         igraph_bool_t res;
         igCheck(igraph_isomorphic(&graph, &ig.graph, &res));
         return res;
     }
 
-    bool subisomorphic(IG &ig) const {
+    bool subisomorphic(const IG &ig) const {
         igraph_bool_t res;
         igCheck(igraph_subisomorphic(&graph, &ig.graph, &res));
         return res;
@@ -187,6 +187,8 @@ public:
         igCheck(igraph_isoclass(&graph, &res));
         return res;
     }
+
+    // Isomorphism (bliss)
 
     mma::RealTensorRef blissCanonicalPermutation(mint splitting) {
         igVector vec;
