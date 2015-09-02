@@ -16,6 +16,11 @@ Switch[$OperatingSystem,
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
     "LibraryDirectories" -> {"$HOME/local/lib"}
-  };
+  },
+
+  "Unix", (* Compilations settings for Linux *)
+  $buildSettings = {
+    "CompileOptions" -> {"-std=c++11"}
+  }
 
 ]
