@@ -16,9 +16,21 @@ Switch[$OperatingSystem,
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
     "LibraryDirectories" -> {"$HOME/local/lib"}
+
+    (*
+       If you use MacPorts, the easy way is to install igraph,
+
+       sudo port install igraph
+
+       then use
+
+       "IncludeDirectories" -> {"/opt/local/include"},
+       "LibraryDirectories" -> {"/opt/local/lib"}
+
+     *)
   },
 
-  "Unix", (* Compilations settings for Linux *)
+  "Unix", (* Compilation settings for Linux *)
   $buildSettings = {
     "CompileOptions" -> {"-std=c++11"}
   }
