@@ -14,8 +14,11 @@
 
 BeginPackage["IGraphM`"]
 
+(* Privately load and configure LTemplate *)
 Get["LTemplate`LTemplatePrivate`"]
 ConfigureLTemplate["MessageSymbol" -> IGraphM]
+
+(***** Usage mesages *****)
 
 IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
@@ -57,7 +60,6 @@ IGBlissFindIsomorphism::usage = "IGBlissFindIsomorphism[graph1, graph2, options]
 IGBlissCountAutomorphisms::usage = "IGBlissCountAutomorphisms[graph]";
 
 IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order.";
-
 IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 
 IGDyadCensus::usage = "IGDyadCensus[graph]";
@@ -74,17 +76,23 @@ IGDistanceMatrix::usage = "IGDistanceMatrix[graph]";
 
 Begin["`Private`"]
 
+(***** Mathematica version check *****)
+
+(* Abort loading and leave a clean $ContextPath behind *)
+packageAbort[] := (End[]; EndPackage[]; Abort[])
+
+If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
+  Print["IGraphM requires Mathematica 10.0.2 or later.  Aborting."];
+  packageAbort[]
+]
+
+
 (***** Package variables *****)
 
 $packageDirectory  = DirectoryName[$InputFileName];
 $libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
 $buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}];
-
-(* Add to $LibraryPath in case package is not installed in Applications *)
-If[Not@MemberQ[$LibraryPath, $libraryDirectory],
-  AppendTo[$LibraryPath, $libraryDirectory]
-]
 
 
 template = LTemplate["IGraphM",
@@ -180,38 +188,41 @@ template = LTemplate["IGraphM",
 
 (***** Compilation, loading and initialization *****)
 
-packageAbort[] := (End[]; EndPackage[]; Abort[]) (* abort loading and leave a clean $ContextPath behind *)
-
-
 $buildSettings = None;
 If[FileExistsQ[$buildSettingsFile], Get[$buildSettingsFile] ]
+
+
+(* Add $libraryDirectory to $LibraryPath in case package is not installed in Applications *)
+If[Not@MemberQ[$LibraryPath, $libraryDirectory],
+  AppendTo[$LibraryPath, $libraryDirectory]
+]
 
 
 RecompileIGraphM::build = "No build settings found. Please check BuildSettings.m."
 
 RecompileIGraphM[] :=
-  Module[{},
-    If[$buildSettings === None,
-      Message[RecompileIGraphM::build];
-      Return[$Failed]
-    ];
-    If[Not@DirectoryQ[$libraryDirectory],
-      CreateDirectory[$libraryDirectory]
-    ];
-    SetDirectory[$sourceDirectory];
-    Quiet@UnloadTemplate[template];
-    CompileTemplate[template, {"IGlobal.cpp"},
-      "CompileOptions" -> {"-ligraph"},
-      "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
-      "TargetDirectory" -> $libraryDirectory,
-      Sequence @@ $buildSettings
-    ];
-    ResetDirectory[];
-    LoadIGraphM[]
-  ]
+    Module[{},
+      If[$buildSettings === None,
+        Message[RecompileIGraphM::build];
+        Return[$Failed]
+      ];
+      If[Not@DirectoryQ[$libraryDirectory],
+        CreateDirectory[$libraryDirectory]
+      ];
+      SetDirectory[$sourceDirectory];
+      Quiet@UnloadTemplate[template];
+      CompileTemplate[template, {"IGlobal.cpp"},
+        "CompileOptions" -> {"-ligraph"},
+        "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
+        "TargetDirectory" -> $libraryDirectory,
+        Sequence @@ $buildSettings
+      ];
+      ResetDirectory[];
+      LoadIGraphM[]
+    ]
 
 
-igraphGlobal (* there should only be a single object of this type, it's set in LoadIGraphM[] below *)
+igraphGlobal (* there should only be a single object of this type; it's set in LoadIGraphM[] below *)
 
 LoadIGraphM[] :=
     If[LoadTemplate[template] === $Failed,
@@ -242,28 +253,32 @@ nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 (* Zero out the diagonal of a square matrix. *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
-(* TODO: Find out how to implement this in a more robust way. *)
-weightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeList] =!= Automatic &;
-
 (* Import compressed expressions. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
 
+(* Get an IG compatible edge list. *)
 igEdgeList[g_?GraphQ] :=
     Developer`ToPackedArray@N[List @@@ EdgeList[g] /.
             Dispatch@Thread[VertexList[g] -> Range@VertexCount[g] - 1]]
 
+(* Convert IG format vertex or edge index vector to Mathematica format *)
 igIndexVec[vec_?ArrayQ] := 1 + Round[vec]
-igIndexVec[expr_] := expr
+igIndexVec[expr_] := expr (* hack: allows LibraryFunctionError to fall through *)
 
 igDirectedQ[g_?GraphQ] := DirectedGraphQ[g] && Not@EmptyGraphQ[g]
 
+(* TODO: Find out how to implement this in a more robust way. *)
+igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeList] =!= Automatic &;
+
+(* Create IG object from Mathematica Graph *)
 igMake[g_?GraphQ] :=
     With[{ig = Make["IG"]},
       ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
-      If[weightedGraphQ[g], ig@"setWeights"[PropertyValue[g, EdgeWeight]]];
+      If[igWeightedGraphQ[g], ig@"setWeights"[PropertyValue[g, EdgeWeight]]];
       ig
     ]
 
+(* Create Mathematica Graph from IG object *)
 igToGraph[ig_] :=
     Graph[
       Range[ig@"vertexCount"[]],
@@ -338,7 +353,7 @@ IGClosenessEstimate[g_?GraphQ, cutoff_, opt : OptionsPattern[]] := Block[{ig = i
 
 (* Randomization *)
 
-(* TODO: functions in this section should warn about weight loss *)
+(* TODO: functions in this section should warn that edge weights will be lost *)
 
 Options[IGRewire] = { "AllowLoops" -> False };
 IGRewire[g_?GraphQ, n_Integer, opt : OptionsPattern[]] :=
@@ -405,9 +420,9 @@ IGTopologicalOrdering[graph_?GraphQ] := Block[{ig = igMake[graph]}, igIndexVec@i
 
 Options[IGFeedbackArcSet] = { "Exact" -> True };
 IGFeedbackArcSet[graph_?GraphQ, opt : OptionsPattern[]] :=
-  Block[{ig = igMake[graph]},
-    Part[EdgeList[graph], igIndexVec@ig@"feedbackArcSet"[OptionValue["Exact"]]]
-  ]
+    Block[{ig = igMake[graph]},
+      Part[EdgeList[graph], igIndexVec@ig@"feedbackArcSet"[OptionValue["Exact"]]]
+    ]
 
 (* Motifs and subgraph counts *)
 
