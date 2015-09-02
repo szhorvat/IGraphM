@@ -97,25 +97,25 @@ template = LTemplate["IGraphM",
 
         (* Graph related functions that do not use the graph data structure *)
 
-        LFun["graphicalQ", {{Real, 1} (* outdeg *), {Real, 1} (* indeg *)}, True|False]
+        LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *)}, True|False]
       }
     ],
     LClass["IG",
       {
         (* Create *)
 
-        LFun["fromEdgeList", {{Real, 2} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
+        LFun["fromEdgeList", {{Real, 2, "Constant"} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
 
         (* Weights *)
 
-        LFun["setWeights", {{Real, 1}}, "Void"],
+        LFun["setWeights", {{Real, 1, "Constant"}}, "Void"],
         LFun["getWeights", {}, {Real, 1}],
         LFun["clearWeights", {}, "Void"],
         LFun["weightedQ", {}, True|False],
 
         (* Games *)
 
-        LFun["degreeSequenceGame", {{Real, 1} (* outdeg *), {Real, 1} (* indeg *), Integer (* method *)}, "Void"],
+        LFun["degreeSequenceGame", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), Integer (* method *)}, "Void"],
 
         (* Structure *)
 
@@ -165,9 +165,9 @@ template = LTemplate["IGraphM",
 
         LFun["dyadCensus", {}, {Integer, 1}],
         LFun["triadCensus", {}, {Real, 1}],
-        LFun["motifs", {Integer (* size *), {Real, 1} (* cut_prob *)}, {Real, 1}],
-        LFun["motifsNo", {Integer (* size *), {Real, 1} (* cut_prob *)}, Integer],
-        LFun["motifsEstimate", {Integer (* size *), {Real, 1} (* cut_prob *), Integer (* sample_size *)}, Integer],
+        LFun["motifs", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, {Real, 1}],
+        LFun["motifsNo", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, Integer],
+        LFun["motifsEstimate", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *), Integer (* sample_size *)}, Integer],
 
         (* Shortest paths *)
 
@@ -311,30 +311,30 @@ IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : 
 
 (* Testing *)
 
-IGDirectedAcyclicGraphQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"dagQ"[]]
+IGDirectedAcyclicGraphQ[g_?GraphQ] := Block[{ig = igMake[g]}, ig@"dagQ"[]]
 
-IGConnectedQ[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"connectedQ"[]]
+IGConnectedQ[g_?GraphQ] := Block[{ig = igMake[g]}, ig@"connectedQ"[]]
 
 IGGraphicalQ[degrees_?nonNegIntVecQ] := IGGraphicalQ[{}, degrees]
 IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := igraphGlobal@"graphicalQ"[outdeg, indeg]
 
 (* Centrality *)
 
-IGBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"betweenness"[]]
+IGBetweenness[g_?GraphQ] := Block[{ig = igMake[g]}, ig@"betweenness"[]]
 
-IGEdgeBetweenness[g_?GraphQ] := Module[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
+IGEdgeBetweenness[g_?GraphQ] := Block[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
 
 Options[IGCloseness] = { "Normalized" -> False };
-IGCloseness[g_?GraphQ, opt : OptionsPattern[]] := Module[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
+IGCloseness[g_?GraphQ, opt : OptionsPattern[]] := Block[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
 
 (* Centrality estimates *)
 
-IGBetweennessEstimate[g_?GraphQ, cutoff_] := Module[{ig = igMake[g]}, ig@"betweennessEstimate"[cutoff]]
+IGBetweennessEstimate[g_?GraphQ, cutoff_] := Block[{ig = igMake[g]}, ig@"betweennessEstimate"[cutoff]]
 
-IGEdgeBetweennessEstimate[g_?GraphQ, cutoff_] := Module[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"[cutoff]]
+IGEdgeBetweennessEstimate[g_?GraphQ, cutoff_] := Block[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"[cutoff]]
 
 Options[IGClosenessEstimate] = { "Normalized" -> False };
-IGClosenessEstimate[g_?GraphQ, cutoff_, opt : OptionsPattern[]] := Module[{ig = igMake[g]}, ig@"closenessEstimate"[cutoff, OptionValue["Normalized"]]]
+IGClosenessEstimate[g_?GraphQ, cutoff_, opt : OptionsPattern[]] := Block[{ig = igMake[g]}, ig@"closenessEstimate"[cutoff, OptionValue["Normalized"]]]
 
 (* Randomization *)
 
@@ -342,14 +342,14 @@ IGClosenessEstimate[g_?GraphQ, cutoff_, opt : OptionsPattern[]] := Module[{ig = 
 
 Options[IGRewire] = { "AllowLoops" -> False };
 IGRewire[g_?GraphQ, n_Integer, opt : OptionsPattern[]] :=
-    Module[{ig = igMake[g]},
+    Block[{ig = igMake[g]},
       ig@"rewire"[n, OptionValue["AllowLoops"]];
       igToGraph[ig]
     ]
 
 Options[IGRewireEdges] = { "AllowLoops" -> False, "AllowMultipleEdges" -> False };
 IGRewireEdges[g_?GraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]] :=
-    Module[{ig = igMake[g]},
+    Block[{ig = igMake[g]},
       ig@"rewireEdges"[p, OptionValue["AllowLoops"], OptionValue["AllowMultipleEdges"]];
       igToGraph[ig]
     ]
