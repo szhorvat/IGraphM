@@ -9,11 +9,9 @@ Switch[$OperatingSystem,
 
   "MacOSX", (* Compilation settings for OS X *)
   $buildSettings = {
-    (* Use MacPorts's gcc 5 *)
-    "Compiler" -> CCompilerDriver`GenericCCompiler`GenericCCompiler,
-    "CompilerName" -> "g++-mp-5",
-    "CompilerInstallation" -> "/opt/local/bin",
-    "SystemCompileOptions" -> {"-std=c++11", "-m64", "-fPIC", "-O2", "-framework Foundation", "-framework \"mathlink\""},
+    (* IGraphM requires C++11. With OS X's default compiler this is supported 10.9 and up only,
+       thus we need to override the default -mmacosx-version-min=10.6 option. *)
+    "CompileOptions" -> {"-std=c++11", "-mmacosx-version-min=10.9"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
