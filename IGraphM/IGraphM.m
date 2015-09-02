@@ -1,12 +1,12 @@
 (* Mathematica Package  *)
 (* Created by IntelliJ IDEA and wlplugin.halirutan.de *)
 
-(* :Title: IGraph/M    *)
-(* :Context: IGraphM`  *)
-(* :Author: szhorvat   *)
-(* :Date: 2015-08-28   *)
+(* :Title: IGraph/M   *)
+(* :Context: IGraphM` *)
+(* :Author: szhorvat  *)
+(* :Date: 2015-08-28  *)
 
-(* :Package Version: 0.1 *)
+(* :Package Version: 0.1pre *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2015 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
@@ -89,6 +89,7 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 
 (***** Package variables *****)
 
+$packageVersion    = "0.1pre";
 $packageDirectory  = DirectoryName[$InputFileName];
 $libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
@@ -297,7 +298,7 @@ IGData[item_] := Lookup[$igData, Key[item], Missing["NotAvailable"]]
 
 (* General (global) *)
 
-IGVersion[] := igraphGlobal@"version"[]
+IGVersion[] := "IGraph/M " <> $packageVersion <> ", based on igraph " <> igraphGlobal@"version"[] <> ".";
 
 IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := igraphGlobal@"seedRandom"[seed]
 
