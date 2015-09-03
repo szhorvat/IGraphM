@@ -213,7 +213,6 @@ RecompileIGraphM[] :=
       SetDirectory[$sourceDirectory];
       Quiet@UnloadTemplate[template];
       CompileTemplate[template, {"IGlobal.cpp"},
-        "Libraries" -> {"igraph"},
         "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
         "TargetDirectory" -> $libraryDirectory,
         Sequence @@ $buildSettings
