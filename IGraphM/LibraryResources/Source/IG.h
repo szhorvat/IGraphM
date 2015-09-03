@@ -312,6 +312,58 @@ public:
         igCheck(igraph_shortest_paths(&graph, &res.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
         return res.makeMTensor();
     }
+
+    // Cliques
+
+    void cliques(MLINK link) const {
+        igList list;
+        mlStream ml{link, "cliques"};
+
+        int min, max;
+        ml >> mlCheckArgs(2) >> min >> max;
+
+        igCheck(igraph_cliques(&graph, &list.list, min, max));
+
+        ml.newPacket();
+        ml << list;
+    }
+
+    void maximalCliques(MLINK link) const {
+        igList list;
+        mlStream ml{link, "maximalCliques"};
+
+        int min, max;
+        ml >> mlCheckArgs(2) >> min >> max;
+
+        igCheck(igraph_maximal_cliques(&graph, &list.list, min, max));
+
+        ml.newPacket();
+        ml << list;
+    }
+
+    mint maximalCliquesCount(int min, int max) const {
+        igraph_integer_t res;
+        igCheck(igraph_maximal_cliques_count(&graph, &res, min, max));
+        return res;
+    }
+
+    void largestCliques(MLINK link) const {
+        igList list;
+        mlStream ml{link, "largestCliques"};
+
+        ml >> mlCheckArgs(0);
+
+        igCheck(igraph_largest_cliques(&graph, &list.list));
+
+        ml.newPacket();
+        ml << list;
+    }
+
+    mint cliqueNumber() const {
+        igraph_integer_t res;
+        igCheck(igraph_clique_number(&graph, &res));
+        return res;
+    }
 };
 
 #endif // IG_H

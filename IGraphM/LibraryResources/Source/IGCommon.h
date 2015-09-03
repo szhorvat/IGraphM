@@ -5,6 +5,7 @@ extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph 
 #include <igraph/igraph.h>
 }
 
+#include "mlstream.h"
 #include "LTemplate.h"
 
 #include <algorithm>
@@ -72,6 +73,33 @@ struct igMatrix {
         return res;
     }
 };
+
+
+struct igList {
+    igraph_vector_ptr_t list;
+
+    igList() { igraph_vector_ptr_init(&list, 0); }
+    ~igList() { igraph_vector_ptr_destroy_all(&list); }
+
+    long length() const { return igraph_vector_ptr_size(&list); }
+};
+
+
+inline mlStream & operator << (mlStream &ml, const igraph_vector_t &vec) {
+    if (! MLPutReal64List(ml.link(), vec.stor_begin, vec.end - vec.stor_begin))
+        ml.error("cannot return vector");
+    return ml;
+}
+
+
+inline mlStream & operator << (mlStream &ml, const igList &list) {
+    long len = list.length();
+    if (! MLPutFunction(ml.link(), "List", len))
+        ml.error("cannot return vector list");
+    for (int i=0; i < len; ++i)
+        ml << *static_cast<igraph_vector_t *>(VECTOR(list.list)[i]);
+    return ml;
+}
 
 
 inline void igCheck(int err) {

@@ -74,6 +74,28 @@ IGDegreeSequenceGame::usage =
 
 IGDistanceMatrix::usage = "IGDistanceMatrix[graph]";
 
+IGCliques::usage =
+    "IGCliques[graph] returns all complete subgraphs (cliques) in graph. Note that this is different from the builtin FindCliques[], which finds maximal cliques.\n" <>
+    "IGCliques[graph, {min, max}] returns all complete subgraphs between sizes min and max.\n" <>
+    "IGCliques[graph, max] returns all complete subgraphs of size at most max.\n" <>
+    "IGCliques[graph, {n}] returns all complete subgraphs of size n.\n";
+
+IGMaximalCliques::usage =
+    "IGMaximalCliques[graph] returns all maximal cliques in graph.\n" <>
+    "IGMaximalCliques[graph, {min, max}] returns all maximal cliques between sizes min and max.\n" <>
+    "IGMaximalCliques[graph, max] returns all maximal cliques of size at most max.\n" <>
+    "IGMaximalCliques[graph, {n}] returns all maximal cliques of size n.\n";
+
+IGMaximalCliquesCount::usage =
+    "IGMaximalCliquesCount[graph] counts all maximal cliques in graph.\n" <>
+    "IGMaximalCliquesCount[graph, {min, max}] counts all maximal cliques between sizes min and max.\n" <>
+    "IGMaximalCliquesCount[graph, max] counts all maximal cliques of size at most max.\n" <>
+    "IGMaximalCliquesCount[graph, {n}] counts all maximal cliques of size n.\n";
+
+IGLargestCliques::usage = "IGLargestCliques[graph] returns the largest cliques in graph.";
+
+IGCliqueNumber::usage = "IGCliqueNumber[graph] returns the clique number of graph. The clique number is the size of the largest clique.";
+
 Begin["`Private`"]
 
 (***** Mathematica version check *****)
@@ -180,7 +202,15 @@ template = LTemplate["IGraphM",
 
         (* Shortest paths *)
 
-        LFun["shortestPaths", {}, {Real, 2}]
+        LFun["shortestPaths", {}, {Real, 2}],
+
+        (* Cliques *)
+
+        LFun["cliques", LinkObject],
+        LFun["maximalCliques", LinkObject],
+        LFun["largestCliques", LinkObject],
+        LFun["maximalCliquesCount", {Integer, Integer}, Integer],
+        LFun["cliqueNumber", {}, Integer]
       }
     ]
   }
@@ -261,9 +291,9 @@ igEdgeList[g_?GraphQ] :=
     Developer`ToPackedArray@N[List @@@ EdgeList[g] /.
             Dispatch@Thread[VertexList[g] -> Range@VertexCount[g] - 1]]
 
-(* Convert IG format vertex or edge index vector to Mathematica format *)
-igIndexVec[vec_?ArrayQ] := 1 + Round[vec]
-igIndexVec[expr_] := expr (* hack: allows LibraryFunctionError to fall through *)
+(* Convert IG format vertex or edge index vector to Mathematica format. *)
+igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
+igIndexVec[arr_] := 1 + Round[arr]
 
 igDirectedQ[g_?GraphQ] := DirectedGraphQ[g] && Not@EmptyGraphQ[g]
 
@@ -450,6 +480,45 @@ IGDistanceMatrix[graph_?GraphQ] :=
     Block[{ig = igMake[graph]},
       zeroDiagonal[Transpose@Round[ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
     ]
+
+(* Cliques *)
+
+IGCliques[graph_] := IGCliques[graph, Infinity]
+IGCliques[graph_, max : (_Integer | Infinity)] := IGCliques[graph, {1, max}]
+IGCliques[graph_, {size_}] := IGCliques[graph, {size, size}]
+IGCliques[graph_?GraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
+    iIGCliques[graph, {min, max /. Infinity -> 0}]
+iIGCliques[graph_, {min_, max_}] :=
+    Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@ig@"cliques"[min, max]
+    ]
+
+IGMaximalCliques[graph_] := IGMaximalCliques[graph, Infinity]
+IGMaximalCliques[graph_, max : (_Integer | Infinity)] := IGMaximalCliques[graph, {1, max}]
+IGMaximalCliques[graph_, {size_}] := IGMaximalCliques[graph, {size, size}]
+IGMaximalCliques[graph_?GraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
+    iIGMaximalCliques[graph, {min, max /. Infinity -> 0}]
+iIGMaximalCliques[graph_, {min_, max_}] :=
+    Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@ig@"maximalCliques"[min, max]
+    ]
+
+IGMaximalCliquesCount[graph_] := IGMaximalCliquesCount[graph, Infinity]
+IGMaximalCliquesCount[graph_, max : (_Integer | Infinity)] := IGMaximalCliquesCount[graph, {1, max}]
+IGMaximalCliquesCount[graph_, {size_}] := IGMaximalCliquesCount[graph, {size, size}]
+IGMaximalCliquesCount[graph_?GraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
+    iIGMaximalCliquesCount[graph, {min, max /. Infinity -> 0}]
+iIGMaximalCliquesCount[graph_, {min_, max_}] :=
+    Block[{ig = igMake[graph]},
+      Round@ig@"maximalCliquesCount"[min, max]
+    ]
+
+IGLargestCliques[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@ig@"largestCliques"[]
+    ]
+
+IGCliqueNumber[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"cliqueNumber"[]]
 
 End[] (* `Private` *)
 
