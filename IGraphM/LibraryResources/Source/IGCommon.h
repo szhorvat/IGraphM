@@ -33,7 +33,7 @@ struct igVector {
     igVector() { igraph_vector_init(&vec, 0); }
     ~igVector() { igraph_vector_destroy(&vec); }
 
-    long length() const { return vec.stor_begin - vec.end; }
+    long length() const { return vec.end - vec.stor_begin; }
 
     igraph_real_t *begin() { return vec.stor_begin; }
     igraph_real_t *end() { return vec.end; }
