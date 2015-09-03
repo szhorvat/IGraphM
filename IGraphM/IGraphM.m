@@ -79,22 +79,27 @@ IGCliques::usage =
     "IGCliques[graph, {min, max}] returns all complete subgraphs between sizes min and max.\n" <>
     "IGCliques[graph, max] returns all complete subgraphs of size at most max.\n" <>
     "IGCliques[graph, {n}] returns all complete subgraphs of size n.\n";
-
 IGMaximalCliques::usage =
     "IGMaximalCliques[graph] returns all maximal cliques in graph.\n" <>
     "IGMaximalCliques[graph, {min, max}] returns all maximal cliques between sizes min and max.\n" <>
     "IGMaximalCliques[graph, max] returns all maximal cliques of size at most max.\n" <>
     "IGMaximalCliques[graph, {n}] returns all maximal cliques of size n.\n";
-
 IGMaximalCliquesCount::usage =
     "IGMaximalCliquesCount[graph] counts all maximal cliques in graph.\n" <>
     "IGMaximalCliquesCount[graph, {min, max}] counts all maximal cliques between sizes min and max.\n" <>
     "IGMaximalCliquesCount[graph, max] counts all maximal cliques of size at most max.\n" <>
     "IGMaximalCliquesCount[graph, {n}] counts all maximal cliques of size n.\n";
-
 IGLargestCliques::usage = "IGLargestCliques[graph] returns the largest cliques in graph.";
-
 IGCliqueNumber::usage = "IGCliqueNumber[graph] returns the clique number of graph. The clique number is the size of the largest clique.";
+
+IGIndependentVertexSets::usage =
+    "IGIndependentVertexSets[graphs] finds all independent vertex sets of graph.\n" <>
+    "IGIndependentVertexSets[graphs, {min, max}]\n" <>
+    "IGIndependentVertexSets[graphs, max]\n" <>
+    "IGIndependentVertexSets[graphs, {n}]";
+IGLargestIndependentVertexSets::usage = "IGLargestIndependentVertexSets[graph] finds the largest independent vertex sets of graph.";
+IGMaximalIndependentVertexSets::usage = "IGMaximalIndependentVertexSets[graph] finds the maximal independent vertex sets of graph.";
+IGIndependenceNumber::usage = "IGIndependenceNumber[graph] returns the independence number of graph. The independence number is the size of the largest independent vertex set.";
 
 Begin["`Private`"]
 
@@ -210,7 +215,14 @@ template = LTemplate["IGraphM",
         LFun["maximalCliques", LinkObject],
         LFun["largestCliques", LinkObject],
         LFun["maximalCliquesCount", {Integer, Integer}, Integer],
-        LFun["cliqueNumber", {}, Integer]
+        LFun["cliqueNumber", {}, Integer],
+
+        (* Independent vertex sets *)
+
+        LFun["independentVertexSets", LinkObject],
+        LFun["largestIndependentVertexSets", LinkObject],
+        LFun["maximalIndependentVertexSets", LinkObject],
+        LFun["independenceNumber", {}, Integer]
       }
     ]
   }
@@ -528,6 +540,30 @@ IGLargestCliques[graph_?GraphQ] :=
     ]
 
 IGCliqueNumber[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"cliqueNumber"[]]
+
+(* Independent vertex sets *)
+
+IGIndependentVertexSets[graph_] := IGIndependentVertexSets[graph, Infinity]
+IGIndependentVertexSets[graph_, max : (_Integer | Infinity)] := IGIndependentVertexSets[graph, {1, max}]
+IGIndependentVertexSets[graph_, {size_}] := IGIndependentVertexSets[graph, {size, size}]
+IGIndependentVertexSets[graph_?GraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
+    iIGIndependentVertexSets[graph, {min, max /. Infinity -> 0}]
+iIGIndependentVertexSets[graph_, {min_, max_}] :=
+    Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@ig@"independentVertexSets"[min, max]
+    ]
+
+IGLargestIndependentVertexSets[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@ig@"largestIndependentVertexSets"[]
+    ]
+
+IGMaximalIndependentVertexSets[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@ig@"maximalIndependentVertexSets"[]
+    ]
+
+IGIndependenceNumber[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"independenceNumber"[]]
 
 End[] (* `Private` *)
 

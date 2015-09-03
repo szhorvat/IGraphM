@@ -360,6 +360,48 @@ public:
         igCheck(igraph_clique_number(&graph, &res));
         return res;
     }
+
+    // Independent vertex sets
+
+    void independentVertexSets(MLINK link) const {
+        mlStream ml{link, "independentVertexSets"};
+        int min, max;
+        ml >> mlCheckArgs(2) >> min >> max;
+
+        igList list;
+        igCheck(igraph_independent_vertex_sets(&graph, &list.list, min, max));
+
+        ml.newPacket();
+        ml << list;
+    }
+
+    void largestIndependentVertexSets(MLINK link) const {
+        mlStream ml{link, "largestIndependentVertexSets"};
+        ml >> mlCheckArgs(0);
+
+        igList list;
+        igCheck(igraph_largest_independent_vertex_sets(&graph, &list.list));
+
+        ml.newPacket();
+        ml << list;
+    }
+
+    void maximalIndependentVertexSets(MLINK link) const {
+        mlStream ml{link, "maximalIndependentVertexSets"};
+        ml >> mlCheckArgs(0);
+
+        igList list;
+        igCheck(igraph_maximal_independent_vertex_sets(&graph, &list.list));
+
+        ml.newPacket();
+        ml << list;
+    }
+
+    mint independenceNumber() const {
+        igraph_integer_t res;
+        igCheck(igraph_independence_number(&graph, &res));
+        return res;
+    }
 };
 
 #endif // IG_H
