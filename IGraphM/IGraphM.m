@@ -319,6 +319,9 @@ igToGraph[ig_] :=
 (* Convert vertex indices to vertex names. *)
 igVertexNames[graph_][indices_] := Part[VertexList[graph], indices]
 
+igLabelValues[_, err_LibraryFunctionError] := err
+igLabelValues[labels_, values_] := AssociationThread[labels, values]
+
 
 (***** Public functions *****)
 
@@ -424,7 +427,7 @@ IGBlissCanonicalPermutation::usage = IGBlissCanonicalPermutation::usage <>
 
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalPermutation[graph_?GraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]}, 
+    Block[{ig = igMake[graph]},
       igVertexNames[graph]@igIndexVec@ig@"blissCanonicalPermutation"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
@@ -459,9 +462,15 @@ IGFeedbackArcSet[graph_?GraphQ, opt : OptionsPattern[]] :=
 
 (* Motifs and subgraph counts *)
 
-IGDyadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"dyadCensus"[]]
+IGDyadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, AssociationThread[{"Mutual", "Asymmetric", "Missing"}, Round@ig@"dyadCensus"[]]]
 
-IGTriadCensus[graph_?GraphQ] := Block[{ig = igMake[graph]}, Round[ig@"triadCensus"[]]]
+IGTriadCensus[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]},
+      igLabelValues[
+        {"003", "012", "102", "021D", "021U", "021C", "111D", "111U", "030T", "030C", "201", "120D", "120U", "120C", "210", "300"},
+        Round@ig@"triadCensus"[]
+      ]
+    ]
 
 IGMotifs[graph_?GraphQ, size_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMake[graph]},
