@@ -27,13 +27,13 @@ struct igVector {
     igVector() { igraph_vector_init(&vec, 0); }
     ~igVector() { igraph_vector_destroy(&vec); }
 
-    long length() const { return igraph_vector_size(&vec); }
+    long length() const { return vec.stor_begin - vec.end; }
 
-    igraph_real_t *begin() { return &(VECTOR(vec)[0]); }
-    igraph_real_t *end() { return begin() + length(); }
+    igraph_real_t *begin() { return vec.stor_begin; }
+    igraph_real_t *end() { return vec.end; }
 
-    const igraph_real_t *begin() const { return &(VECTOR(vec)[0]); }
-    const igraph_real_t *end() const { return begin() + length(); }
+    const igraph_real_t *begin() const { return vec.stor_begin; }
+    const igraph_real_t *end() const { return vec.end; }
 
     void clear() { igraph_vector_clear(&vec); }
 
