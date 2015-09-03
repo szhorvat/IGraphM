@@ -13,7 +13,8 @@ Switch[$OperatingSystem,
   $buildSettings = {
     (* IGraphM requires C++11. With OS X's default compiler this is supported 10.9 and up only,
        thus we need to override the default -mmacosx-version-min=10.6 option. *)
-    "CompileOptions" -> {"-std=c++11", "-O3", "-flto", "-mmacosx-version-min=10.9", "$HOME/local/lib/libigraph.a  $HOME/local/lib/libgmp.a"},
+    "CompileOptions" -> {"-std=c++11", "-mmacosx-version-min=10.9"},
+    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
@@ -36,7 +37,8 @@ Switch[$OperatingSystem,
 
   "Unix", (* Compilation settings for Linux *)
   $buildSettings = {
-    "CompileOptions" -> {"-std=c++11", "-O3", "$HOME/local/lib/libigraph.a  $HOME/local/lib/libgmp.a"},
+    "CompileOptions" -> {"-std=c++11"},
+    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
