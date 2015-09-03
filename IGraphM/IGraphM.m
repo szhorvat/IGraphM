@@ -286,6 +286,9 @@ igToGraph[ig_] :=
       DirectedEdges -> ig@"directedQ"[]
     ]
 
+(* Convert vertex indices to vertex names. *)
+igVertexNames[graph_][indices_] := Part[VertexList[graph], indices]
+
 
 (***** Public functions *****)
 
@@ -392,7 +395,7 @@ IGBlissCanonicalPermutation::usage = IGBlissCanonicalPermutation::usage <>
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalPermutation[graph_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]}, 
-      igIndexVec@ig@"blissCanonicalPermutation"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      igVertexNames[graph]@igIndexVec@ig@"blissCanonicalPermutation"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
