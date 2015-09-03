@@ -59,7 +59,7 @@ IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2, options]";
 IGBlissFindIsomorphism::usage = "IGBlissFindIsomorphism[graph1, graph2, options]";
 IGBlissAutomorphismsCount::usage = "IGBlissAutomorphismsCount[graph]";
 
-IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order.";
+IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order. Note that the values returned are vertex indices, not vertex names.";
 IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 
 IGDyadCensus::usage = "IGDyadCensus[graph]";
@@ -193,7 +193,7 @@ $buildSettings = None;
 If[FileExistsQ[$buildSettingsFile], Get[$buildSettingsFile] ]
 
 
-(* Add $libraryDirectory to $LibraryPath in case package is not installed in Applications *)
+(* Add $libraryDirectory to $LibraryPath in case package is not installed in Applications. *)
 If[Not@MemberQ[$LibraryPath, $libraryDirectory],
   AppendTo[$LibraryPath, $libraryDirectory]
 ]
@@ -233,7 +233,7 @@ LoadIGraphM[] :=
     ]
 
 
-(* Load library, compile if necessary *)
+(* Load library, compile if necessary. *)
 If[LoadIGraphM[] === $Failed,
   Print[Style["Loading failed, trying to recompile ...", Red]];
   If[RecompileIGraphM[] === $Failed
@@ -270,7 +270,7 @@ igDirectedQ[g_?GraphQ] := DirectedGraphQ[g] && Not@EmptyGraphQ[g]
 (* TODO: Find out how to implement this in a more robust way. *)
 igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeList] =!= Automatic &;
 
-(* Create IG object from Mathematica Graph *)
+(* Create IG object from Mathematica Graph. *)
 igMake[g_?GraphQ] :=
     With[{ig = Make["IG"]},
       ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
@@ -278,7 +278,7 @@ igMake[g_?GraphQ] :=
       ig
     ]
 
-(* Create Mathematica Graph from IG object *)
+(* Create Mathematica Graph from IG object. *)
 igToGraph[ig_] :=
     Graph[
       Range[ig@"vertexCount"[]],
