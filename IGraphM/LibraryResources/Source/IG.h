@@ -235,17 +235,17 @@ public:
             return mma::makeVector<double>(0);
     }
 
-    void blissCountAutomorphisms(MLINK link) {
+    void blissAutomorphismsCount(MLINK link) {
         igraph_bliss_info_t info;
-        int argc = 1;
-        if (! MLTestHeadWithArgCount(link, "List", &argc))
-            throw mma::LibraryError("blissCountAutomorphisms: 1 argument expected");
+        mlStream ml{link, "blissAutomorphismsCount"};
         int splitting;
-        if (! MLGetInteger(link, &splitting))
-            throw mma::LibraryError("blissCountAutomorphisms: 1 integer argument expected");
+
+        ml >> mlCheckArgs(1) >> splitting;
+
         igCheck(igraph_automorphisms(&graph, blissIntToSplitting(splitting), &info));
-        MLNewPacket(link);
-        MLPutString(link, info.group_size);
+
+        ml.newPacket();
+        ml << info.group_size;
         std::free(info.group_size);
     }
 

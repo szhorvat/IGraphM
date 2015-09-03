@@ -57,7 +57,7 @@ IGBlissCanonicalPermutation::usage =
     "Two graphs are isomorphic iff they have the same canonical permutation.";
 IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2, options]";
 IGBlissFindIsomorphism::usage = "IGBlissFindIsomorphism[graph1, graph2, options]";
-IGBlissCountAutomorphisms::usage = "IGBlissCountAutomorphisms[graph]";
+IGBlissAutomorphismsCount::usage = "IGBlissAutomorphismsCount[graph]";
 
 IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order.";
 IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
@@ -163,7 +163,7 @@ template = LTemplate["IGraphM",
         LFun["blissCanonicalPermutation", {Integer (* splitting heuristics *)}, {Real, 1}],
         LFun["blissIsomorphic", {LExpressionID["IG"], Integer (* splitting heuristics *)}, True|False],
         LFun["blissFindIsomorphism", {LExpressionID["IG"], Integer (* splitting heuristics *)}, {Real, 1}],
-        LFun["blissCountAutomorphisms", LinkObject],
+        LFun["blissAutomorphismsCount", LinkObject],
 
         (* Topological sorting and directed acylic graphs *)
 
@@ -408,10 +408,10 @@ IGBlissFindIsomorphism[graph1_?GraphQ, graph2_?GraphQ, opt : OptionsPattern[]] :
       If[result =!= {}, {result}, {}]
     ]
 
-Options[IGBlissCountAutomorphisms] = { "SplittingHeuristics" -> "First" };
-IGBlissCountAutomorphisms[graph_?GraphQ, opt : OptionsPattern[]] :=
+Options[IGBlissAutomorphismsCount] = { "SplittingHeuristics" -> "First" };
+IGBlissAutomorphismsCount[graph_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
-      ToExpression@ig@"blissCountAutomorphisms"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      ToExpression@ig@"blissAutomorphismsCount"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 (* Directed acylic graphs and topological ordering *)
