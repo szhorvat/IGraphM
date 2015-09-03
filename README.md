@@ -8,9 +8,22 @@ IGraph/M is a *Mathematica* interface to the [igraph](http://igraph.org/) graph 
 
 IGraph/M is *not a replacement* for Mathematica's graph manipulation functionality.  Instead it is meant to complement it.  Thus it works directly with standard `Graph` objects instead of introducing its own.  Functions for trivial tasks such as adding or removing vertices or edges, returning the vertex or edge count, etc. are not provided.
 
-## Why make IGraph/M?
+## Why create IGraph/M?
 
-igraph is one of the broadest graph manipulation packages available.  Many of its functions are of use to Mathematica users, either because equivalents don't already exist in Mathematica, or because they can be used to verify Mathematica's own results.  My previous package, [IGraphR][2], already provides relatively convenient access to all igraph's R interface from Mathematica, but unfortunately its underlying technology, [RLink](http://reference.wolfram.com/language/RLink/guide/RLink.html), suffers from reliability and performance problems.  IGraph/M uses igraph's C interface through [LibraryLink](http://reference.wolfram.com/language/LibraryLink/tutorial/Overview.html), which makes it much faster, more robust and easier to use with Mathematica's parallel tools.  My main motivation for starting IGraph/M was to get better performance and reliable parallelization.
+igraph is one of the broadest open source graph manipulation packages available.  Many of its functions are of use to Mathematica users, either because equivalents don't already exist in Mathematica, or because they can be used to verify Mathematica's own results.  My previous package, [IGraphR][2], already provides relatively convenient access to igraph's R interface from Mathematica, but unfortunately its underlying technology, [RLink](http://reference.wolfram.com/language/RLink/guide/RLink.html), suffers from reliability and performance problems.  IGraph/M uses igraph's C interface through [LibraryLink](http://reference.wolfram.com/language/LibraryLink/tutorial/Overview.html), which makes it much faster, more robust and easier to use with Mathematica's parallel tools.  My main motivation for starting IGraph/M was to get better performance and reliable parallelization.
+
+### Functionality provided that is not present in Mathematica
+
+ - Vertex betweenness centrality for weighted graphs
+ - Estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs
+ - Minimum feedback arc set for weighted and unweighted graphs
+ - Find all cliques (not just maximal ones)
+ - Count 3- and 4-motifs
+ - Rewire edges, keeping either the density or the degree sequence
+ - Alternative algorithms for isomorphism testing: Bliss, VF2
+ - Subgraph isomorphism
+ - Test if a degree sequence is graphical
+ - Alternative algorithms for generating random graphs with given degree sequence
 
 ## Installation
 
@@ -32,7 +45,7 @@ Desired but not yet completed functionality:
 
  - hierarchical random graphs
  - spectral coarse graining
- - layout algorithms
+ - layout algorithms that take edge weights into account
  - community detection
  - graphlets
 
