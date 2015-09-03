@@ -5,7 +5,7 @@
 #include "IGCommon.h"
 
 
-class IG {
+class IG {    
     igraph_t graph;
     igVector weights;
     bool weighted;
@@ -38,12 +38,11 @@ class IG {
     }
 
 public:
-    IG() : weighted(false) { empty(); }
+    IG() : weighted{false} { empty(); }
 
     ~IG() {
         igraph_destroy(&graph);
     }
-
 
     // Create (basic)
 
@@ -316,12 +315,11 @@ public:
     // Cliques
 
     void cliques(MLINK link) const {
-        igList list;
         mlStream ml{link, "cliques"};
-
         int min, max;
         ml >> mlCheckArgs(2) >> min >> max;
 
+        igList list;
         igCheck(igraph_cliques(&graph, &list.list, min, max));
 
         ml.newPacket();
@@ -329,12 +327,11 @@ public:
     }
 
     void maximalCliques(MLINK link) const {
-        igList list;
         mlStream ml{link, "maximalCliques"};
-
         int min, max;
         ml >> mlCheckArgs(2) >> min >> max;
 
+        igList list;
         igCheck(igraph_maximal_cliques(&graph, &list.list, min, max));
 
         ml.newPacket();
@@ -348,11 +345,10 @@ public:
     }
 
     void largestCliques(MLINK link) const {
-        igList list;
         mlStream ml{link, "largestCliques"};
-
         ml >> mlCheckArgs(0);
 
+        igList list;
         igCheck(igraph_largest_cliques(&graph, &list.list));
 
         ml.newPacket();

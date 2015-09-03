@@ -11,6 +11,10 @@ extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph 
 #include <algorithm>
 #include <string>
 #include <sstream>
+#include <type_traits>
+
+
+static_assert(std::is_same<double, igraph_real_t>::value, "IGraphM assumes igraph_real_t to be double.");
 
 
 inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
@@ -22,6 +26,7 @@ inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
 }
 
 
+// RAII for igraph_vector_t
 struct igVector {
     igraph_vector_t vec;
 
@@ -51,6 +56,7 @@ struct igVector {
 };
 
 
+// RAII for igraph_maxtrix_t
 struct igMatrix {
     igraph_matrix_t mat;
 
@@ -75,6 +81,7 @@ struct igMatrix {
 };
 
 
+// RAII for igraph_vector_ptr_t
 struct igList {
     igraph_vector_ptr_t list;
 
@@ -84,6 +91,8 @@ struct igList {
     long length() const { return igraph_vector_ptr_size(&list); }
 };
 
+
+// extend mlstream with igraph-specific types
 
 inline mlStream & operator << (mlStream &ml, const igraph_vector_t &vec) {
     if (! MLPutReal64List(ml.link(), vec.stor_begin, vec.end - vec.stor_begin))
@@ -102,6 +111,7 @@ inline mlStream & operator << (mlStream &ml, const igList &list) {
 }
 
 
+// check igraph's error codes and abort if necessary
 inline void igCheck(int err) {
     if (! err) return;
     std::ostringstream msg;
