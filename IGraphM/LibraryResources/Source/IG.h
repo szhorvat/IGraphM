@@ -37,6 +37,9 @@ class IG {
         }
     }
 
+    // return the weights if weighted, return NULL otherwise
+    const igraph_vector_t *passWeights() const { return weighted ? &weights.vec : NULL; }
+
 public:
     IG() : weighted{false} { empty(); }
 
@@ -135,22 +138,19 @@ public:
 
     mma::RealTensorRef betweenness() const {
         igVector vec;
-        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
-        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, weightList, true));
+        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, passWeights(), true));
         return vec.makeMTensor();
     }
 
     mma::RealTensorRef edgeBetweenness() const {
         igVector vec;
-        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
-        igCheck(igraph_edge_betweenness(&graph, &vec.vec, true, weightList));
+        igCheck(igraph_edge_betweenness(&graph, &vec.vec, true, passWeights()));
         return vec.makeMTensor();
     }
 
     mma::RealTensorRef closeness(bool normalized) const {
         igVector vec;
-        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
-        igCheck(igraph_closeness(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, weightList, normalized));
+        igCheck(igraph_closeness(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, passWeights(), normalized));
         return vec.makeMTensor();
     }
 
@@ -158,22 +158,19 @@ public:
 
     mma::RealTensorRef betweennessEstimate(double cutoff) const {
         igVector vec;
-        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
-        igCheck(igraph_betweenness_estimate(&graph, &vec.vec, igraph_vss_all(), true, cutoff, weightList, true));
+        igCheck(igraph_betweenness_estimate(&graph, &vec.vec, igraph_vss_all(), true, cutoff, passWeights(), true));
         return vec.makeMTensor();
     }
 
     mma::RealTensorRef edgeBetweennessEstimate(double cutoff) const {
         igVector vec;
-        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
-        igCheck(igraph_edge_betweenness_estimate(&graph, &vec.vec, true, cutoff, weightList));
+        igCheck(igraph_edge_betweenness_estimate(&graph, &vec.vec, true, cutoff, passWeights()));
         return vec.makeMTensor();
     }
 
     mma::RealTensorRef closenessEstimate(double cutoff, bool normalized) const {
         igVector vec;
-        const igraph_vector_t *weightList = weighted ? &weights.vec : NULL;
-        igCheck(igraph_closeness_estimate(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, cutoff, weightList, normalized));
+        igCheck(igraph_closeness_estimate(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, cutoff, passWeights(), normalized));
         return vec.makeMTensor();
     }
 
@@ -261,7 +258,7 @@ public:
 
     mma::RealTensorRef feedbackArcSet(bool exact) const {
         igVector vec;
-        igCheck(igraph_feedback_arc_set(&graph, &vec.vec, weighted ? &weights.vec : NULL, exact ? IGRAPH_FAS_EXACT_IP : IGRAPH_FAS_APPROX_EADES));
+        igCheck(igraph_feedback_arc_set(&graph, &vec.vec, passWeights(), exact ? IGRAPH_FAS_EXACT_IP : IGRAPH_FAS_APPROX_EADES));
         return vec.makeMTensor();
     }
 
