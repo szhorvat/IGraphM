@@ -348,6 +348,9 @@ nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 (* Zero out the diagonal of a square matrix. *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
+(* Replace Infinity by 0 *)
+infToZero[arg_] := Replace[arg, Infinity -> 0]
+
 (* Import compressed expressions. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
 
@@ -448,12 +451,15 @@ IGCloseness[g_?GraphQ, opt : OptionsPattern[]] := Block[{ig = igMake[g]}, ig@"cl
 
 (* Centrality estimates *)
 
-IGBetweennessEstimate[g_?GraphQ, cutoff_] := Block[{ig = igMake[g]}, ig@"betweennessEstimate"[cutoff]]
+IGBetweennessEstimate[g_?GraphQ, cutoff_?Positive] := Block[{ig = igMake[g]}, ig@"betweennessEstimate"@infToZero[cutoff]]
 
-IGEdgeBetweennessEstimate[g_?GraphQ, cutoff_] := Block[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"[cutoff]]
+IGEdgeBetweennessEstimate[g_?GraphQ, cutoff_?Positive] := Block[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
 
 Options[IGClosenessEstimate] = { "Normalized" -> False };
-IGClosenessEstimate[g_?GraphQ, cutoff_, opt : OptionsPattern[]] := Block[{ig = igMake[g]}, ig@"closenessEstimate"[cutoff, OptionValue["Normalized"]]]
+IGClosenessEstimate[g_?GraphQ, cutoff_?Positive, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[g]},
+      ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"]]
+    ]
 
 (* Randomization *)
 
@@ -564,7 +570,7 @@ IGCliques[graph_] := IGCliques[graph, Infinity]
 IGCliques[graph_, max : (_Integer | Infinity)] := IGCliques[graph, {1, max}]
 IGCliques[graph_, {size_}] := IGCliques[graph, {size, size}]
 IGCliques[graph_?GraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    iIGCliques[graph, {min, max /. Infinity -> 0}]
+    iIGCliques[graph, {min, infToZero[max]}]
 iIGCliques[graph_, {min_, max_}] :=
     Block[{ig = igMake[graph]},
       igVertexNames[graph] /@ igIndexVec@ig@"cliques"[min, max]
@@ -574,7 +580,7 @@ IGMaximalCliques[graph_] := IGMaximalCliques[graph, Infinity]
 IGMaximalCliques[graph_, max : (_Integer | Infinity)] := IGMaximalCliques[graph, {1, max}]
 IGMaximalCliques[graph_, {size_}] := IGMaximalCliques[graph, {size, size}]
 IGMaximalCliques[graph_?GraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    iIGMaximalCliques[graph, {min, max /. Infinity -> 0}]
+    iIGMaximalCliques[graph, {min, infToZero[max]}]
 iIGMaximalCliques[graph_, {min_, max_}] :=
     Block[{ig = igMake[graph]},
       igVertexNames[graph] /@ igIndexVec@ig@"maximalCliques"[min, max]
@@ -584,7 +590,7 @@ IGMaximalCliquesCount[graph_] := IGMaximalCliquesCount[graph, Infinity]
 IGMaximalCliquesCount[graph_, max : (_Integer | Infinity)] := IGMaximalCliquesCount[graph, {1, max}]
 IGMaximalCliquesCount[graph_, {size_}] := IGMaximalCliquesCount[graph, {size, size}]
 IGMaximalCliquesCount[graph_?GraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    iIGMaximalCliquesCount[graph, {min, max /. Infinity -> 0}]
+    iIGMaximalCliquesCount[graph, {min, infToZero[max]}]
 iIGMaximalCliquesCount[graph_, {min_, max_}] :=
     Block[{ig = igMake[graph]},
       Round@ig@"maximalCliquesCount"[min, max]
@@ -603,7 +609,7 @@ IGIndependentVertexSets[graph_] := IGIndependentVertexSets[graph, Infinity]
 IGIndependentVertexSets[graph_, max : (_Integer | Infinity)] := IGIndependentVertexSets[graph, {1, max}]
 IGIndependentVertexSets[graph_, {size_}] := IGIndependentVertexSets[graph, {size, size}]
 IGIndependentVertexSets[graph_?GraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    iIGIndependentVertexSets[graph, {min, max /. Infinity -> 0}]
+    iIGIndependentVertexSets[graph, {min, infToZero[max]}]
 iIGIndependentVertexSets[graph_, {min_, max_}] :=
     Block[{ig = igMake[graph]},
       igVertexNames[graph] /@ igIndexVec@ig@"independentVertexSets"[min, max]
