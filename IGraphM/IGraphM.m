@@ -140,6 +140,7 @@ template = LTemplate["IGraphM",
         LFun["init", {}, "Void"],
         LFun["seedRandom", {Integer}, "Void"],
         LFun["version", {}, "UTF8String"],
+        LFun["compilationDate", {}, "UTF8String"],
 
         (* Graph related functions that do not use the graph data structure *)
 
@@ -396,7 +397,10 @@ IGData[item_] := Lookup[$igData, Key[item], Missing["NotAvailable"]]
 
 (* General (global) *)
 
-IGVersion[] := "IGraph/M " <> $packageVersion <> ", based on igraph " <> igraphGlobal@"version"[] <> ".";
+IGVersion[] :=
+    "IGraph/M " <> $packageVersion <>
+    "\nigraph " <> igraphGlobal@"version"[] <> " (" <> igraphGlobal@"compilationDate"[] <> ")\n" <>
+    $System;
 
 IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := igraphGlobal@"seedRandom"[seed]
 

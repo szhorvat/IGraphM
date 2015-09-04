@@ -28,6 +28,8 @@ public:
         return ver;
     }
 
+    const char *compilationDate() { return __DATE__; }
+
     void seedRandom(mint s) {
         igCheck(igraph_rng_seed(igraph_rng_default(), s));
     }
