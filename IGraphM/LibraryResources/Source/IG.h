@@ -399,6 +399,100 @@ public:
         igCheck(igraph_independence_number(&graph, &res));
         return res;
     }
+
+    // Graph drawing (layouts)
+
+    mma::RealTensorRef layoutRandom() const {
+        igMatrix mat;
+        igCheck(igraph_layout_random(&graph, &mat.mat));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutCircle() const {
+        igMatrix mat;
+        igCheck(igraph_layout_circle(&graph, &mat.mat, igraph_vss_all()));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutSphere() const  {
+        igMatrix mat;
+        igCheck(igraph_layout_sphere(&graph, &mat.mat));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutGraphOpt(
+            mma::RealMatrixRef initial, bool use_seed,
+            mint niter,
+            double node_charge, double node_mass, double spring_length,
+            double spring_constant, double max_sa_movement) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igCheck(igraph_layout_graphopt(&graph, &mat.mat, niter, node_charge, node_mass, spring_length, spring_constant, max_sa_movement, use_seed));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutKamadaKawai(
+            mma::RealMatrixRef initial, bool use_seed,
+            mint maxiter, double epsilon, double kkconst) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igCheck(igraph_layout_kamada_kawai(
+                    &graph, &mat.mat, use_seed, maxiter, epsilon, kkconst, passWeights(),
+                    NULL, NULL, NULL, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutKamadaKawai3D(
+            mma::RealMatrixRef initial, bool use_seed,
+            mint maxiter, double epsilon, double kkconst) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igCheck(igraph_layout_kamada_kawai_3d(
+                    &graph, &mat.mat, use_seed, maxiter, epsilon, kkconst, passWeights(),
+                    NULL, NULL, NULL, NULL, NULL, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutSugiyama(mint maxiter, double hgap, double vgap) const  {
+        igMatrix mat;
+        igCheck(igraph_layout_sugiyama(&graph, &mat.mat, NULL, NULL, NULL, hgap, vgap, maxiter, passWeights()));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutFruchtermanReingold(
+            mma::RealMatrixRef initial, bool use_seed,
+            mint niter, double start_temp, mint grid_method) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igraph_layout_grid_t grid;
+        switch (grid_method) {
+        case 0: grid = IGRAPH_LAYOUT_GRID; break;
+        case 1: grid = IGRAPH_LAYOUT_NOGRID; break;
+        case 2: grid = IGRAPH_LAYOUT_AUTOGRID; break;
+        default: throw mma::LibraryError("layoutFruchtermanReingold: unknown method.");
+        }
+
+        igCheck(igraph_layout_fruchterman_reingold(
+                    &graph, &mat.mat, use_seed, niter, start_temp, grid, passWeights(),
+                    NULL, NULL, NULL, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutFruchtermanReingold3D(
+            mma::RealMatrixRef initial, bool use_seed,
+            mint niter, double start_temp) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igCheck(igraph_layout_fruchterman_reingold_3d(
+                    &graph, &mat.mat, use_seed, niter, start_temp, passWeights(),
+                    NULL, NULL, NULL, NULL, NULL, NULL));
+        return mat.makeMTensor();
+    }
 };
 
 #endif // IG_H

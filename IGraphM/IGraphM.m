@@ -101,6 +101,16 @@ IGLargestIndependentVertexSets::usage = "IGLargestIndependentVertexSets[graph] f
 IGMaximalIndependentVertexSets::usage = "IGMaximalIndependentVertexSets[graph] finds the maximal independent vertex sets of graph.";
 IGIndependenceNumber::usage = "IGIndependenceNumber[graph] returns the independence number of graph. The independence number is the size of the largest independent vertex set.";
 
+IGLayoutRandom::usage = "IGLayoutRandom[graph]";
+IGLayoutCircle::usage = "IGLayoutCircle[graph]";
+IGLayoutSphere::usage = "IGLayoutSphere[graph]";
+IGLayoutGraphOpt::usage = "IGLayoutGraphOpt[graph, options]";
+IGLayoutKamadaKawai::usage = "IGLayoutKamadaKawai[graph, options]";
+IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options]";
+(* IGLayoutSugiyama::usage = "IGLayoutSugiyama[graph, options]"; *)
+IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options]";
+IGLayoutFruchtermanReingold3D::usage = "IGLayoutFruchtermanReingold3D[graph, options]";
+
 Begin["`Private`"]
 
 (***** Mathematica version check *****)
@@ -222,7 +232,48 @@ template = LTemplate["IGraphM",
         LFun["independentVertexSets", LinkObject],
         LFun["largestIndependentVertexSets", LinkObject],
         LFun["maximalIndependentVertexSets", LinkObject],
-        LFun["independenceNumber", {}, Integer]
+        LFun["independenceNumber", {}, Integer],
+
+        (* Graph drawing (layouts) *)
+
+        LFun["layoutRandom", {}, {Real, 2}],
+        LFun["layoutCircle", {}, {Real, 2}],
+        LFun["layoutSphere", {}, {Real, 2}],
+
+        LFun["layoutGraphOpt",
+          {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
+            Integer (* niter *),
+            Real (* charge *), Real (* mass *), Real (* spring length *),
+            Real (* spring constant *), Real (* max sa movement *)},
+          {Real, 2}
+        ],
+
+        LFun["layoutKamadaKawai",
+          {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
+            Integer (* maxiter *), Real (* epsilon *), Real (* kkconst *)},
+          {Real, 2}
+        ],
+
+        LFun["layoutKamadaKawai3D",
+          {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
+            Integer (* maxiter *), Real (* epsilon *), Real (* kkconst *)},
+          {Real, 2}
+        ],
+
+        LFun["layoutSugiyama", {Real (* maxiter *), Real (* hgap *), Real (* vgap *)}, {Real, 2}],
+
+        LFun["layoutFruchtermanReingold",
+          {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
+            Integer (* niter *), Real (* start_temp *), Integer (* grid method *)},
+          {Real, 2}
+        ],
+
+        LFun["layoutFruchtermanReingold3D",
+          {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
+            Integer (* niter *), Real (* start_temp *)},
+          {Real, 2}
+        ]
+
       }
     ]
   }
@@ -564,6 +615,107 @@ IGMaximalIndependentVertexSets[graph_?GraphQ] :=
     ]
 
 IGIndependenceNumber[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"independenceNumber"[]]
+
+(* Graph drawing (layouts *)
+
+IGLayoutRandom[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]},
+      Graph[graph, VertexCoordinates -> Transpose@ig@"layoutRandom"[]]
+    ]
+
+IGLayoutCircle[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]},
+      Graph[graph, VertexCoordinates -> Transpose@ig@"layoutCircle"[]]
+    ]
+
+IGLayoutSphere[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]},
+      Graph3D[graph, VertexCoordinates -> Transpose@ig@"layoutSphere"[]]
+    ]
+
+
+Options[IGLayoutGraphOpt] = {
+  "Iterations" -> 500, "NodeCharge" -> 0.001, "NodeMass" -> 30, "SpringLength" -> 0,
+  "SpringConstant" -> 1, "MaxtepMovement" -> 5
+};
+
+IGLayoutGraphOpt[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      Graph[graph, VertexCoordinates ->
+          Rescale@Transpose@ig@"layoutGraphOpt"[{{}}, False,
+            OptionValue["Iterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
+            OptionValue["SpringLength"], OptionValue["SpringConstant"], OptionValue["MaxStepMovement"]
+          ]
+      ]
+    ]
+
+Options[IGLayoutKamadaKawai] = {
+  "MaxIterations" -> Automatic, "Epsilon" -> 0, "KamadaKawaiConstant" -> Automatic
+};
+
+IGLayoutKamadaKawai[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph], maxiter, kkconst},
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
+      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
+      Graph[graph,
+        VertexCoordinates -> Transpose@ig@"layoutKamadaKawai"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
+      ]
+    ]
+
+Options[IGLayoutKamadaKawai3D] = {
+  "MaxIterations" -> Automatic, "Epsilon" -> 0, "KamadaKawaiConstant" -> Automatic
+};
+
+IGLayoutKamadaKawai3D[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph], maxiter, kkconst},
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
+      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
+      Graph3D[graph,
+        VertexCoordinates -> Transpose@ig@"layoutKamadaKawai3D"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
+      ]
+    ]
+
+Options[IGLayoutSugiyama] = {
+  "MaxIterations" -> 100, (* increase if there are too many edge crossings *)
+  "HorizontalGap" -> 1, "VerticalGap" -> 1
+};
+
+(*
+IGLayoutSugiyama[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      Graph[graph,
+        VertexCoordinates -> Transpose@ig@"layoutSugiyama"[OptionValue["MaxIterations"], OptionValue["HorizontalGap"], OptionValue["VerticalGap"]]
+      ]
+    ]
+*)
+
+igFruchtermanReingoldMethods = <| Automatic -> 2, False -> 1, True -> 0 |>;
+
+Options[IGLayoutFruchtermanReingold] = {
+  "MaxIterations" -> 500, "MaxMovement" -> 5, "UseGrid" -> Automatic
+};
+
+IGLayoutFruchtermanReingold[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      Graph[graph,
+        VertexCoordinates -> 0.25 Transpose@ig@"layoutFruchtermanReingold"[{{}}, False,
+          OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1]
+        ]
+      ]
+    ]
+
+Options[IGLayoutFruchtermanReingold3D] = {
+  "MaxIterations" -> 500, "MaxMovement" -> 5
+};
+
+IGLayoutFruchtermanReingold3D[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      Graph3D[graph,
+        VertexCoordinates -> 0.25 Transpose@ig@"layoutFruchtermanReingold3D"[{{}}, False,
+          OptionValue["MaxIterations"], OptionValue["MaxMovement"]
+        ]
+      ]
+    ]
 
 End[] (* `Private` *)
 
