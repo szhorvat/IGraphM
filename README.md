@@ -39,7 +39,7 @@ Currently IGraph/M is still incomplete and under development.  The documentation
 
 ## Contributions
 
-Contributions to IGraph/M are most welcome.  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all igraph functions.  If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M is uses the [LTemplate package][1], and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
+Contributions to IGraph/M are most welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all igraph functions.  If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M is uses the [LTemplate package][1], and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
 
 Desired but not yet completed functionality:
 
@@ -48,8 +48,15 @@ Desired but not yet completed functionality:
  - layout algorithms that take edge weights into account
  - community detection
  - graphlets
-
-Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2].
+ - isomorphism for coloured graphs
+ 
+Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2]. 
+ 
+Other things you can help with:
+ 
+ - write usage messages
+ - write documentation
+ - write unit tests 
 
 ## License
 
