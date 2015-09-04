@@ -22,7 +22,8 @@ ConfigureLTemplate["MessageSymbol" -> IGraphM]
 
 IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
-RecompileIGraphM::usage = "RecompileIGraphM[]";
+`Developer`Recompile::usage = "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
+PrependTo[$ContextPath, $Context <> "Developer`"];
 
 IGData::usage =
     "IGData[] returns a list of available items.\n" <>
@@ -293,12 +294,12 @@ If[Not@MemberQ[$LibraryPath, $libraryDirectory],
 ]
 
 
-RecompileIGraphM::build = "No build settings found. Please check BuildSettings.m."
+Recompile::build = "No build settings found. Please check BuildSettings.m."
 
-RecompileIGraphM[] :=
+Recompile[] :=
     Module[{},
       If[$buildSettings === None,
-        Message[RecompileIGraphM::build];
+        Message[Recompile::build];
         Return[$Failed]
       ];
       If[Not@DirectoryQ[$libraryDirectory],
@@ -330,7 +331,7 @@ LoadIGraphM[] :=
 (* Load library, compile if necessary. *)
 If[LoadIGraphM[] === $Failed,
   Print[Style["Loading failed, trying to recompile ...", Red]];
-  If[RecompileIGraphM[] === $Failed
+  If[Recompile[] === $Failed
     ,
     Print[Style["Cannot load or compile library. \[FreakedSmiley] Aborting.", Red]];
     packageAbort[]
