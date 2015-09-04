@@ -457,12 +457,6 @@ public:
         return mat.makeMTensor();
     }
 
-    mma::RealTensorRef layoutSugiyama(mint maxiter, double hgap, double vgap) const  {
-        igMatrix mat;
-        igCheck(igraph_layout_sugiyama(&graph, &mat.mat, NULL, NULL, NULL, hgap, vgap, maxiter, passWeights()));
-        return mat.makeMTensor();
-    }
-
     mma::RealTensorRef layoutFruchtermanReingold(
             mma::RealMatrixRef initial, bool use_seed,
             mint niter, double start_temp, mint grid_method) const

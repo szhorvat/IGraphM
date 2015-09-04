@@ -108,7 +108,6 @@ IGLayoutSphere::usage = "IGLayoutSphere[graph]";
 IGLayoutGraphOpt::usage = "IGLayoutGraphOpt[graph, options]";
 IGLayoutKamadaKawai::usage = "IGLayoutKamadaKawai[graph, options]";
 IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options]";
-(* IGLayoutSugiyama::usage = "IGLayoutSugiyama[graph, options]"; *)
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options]";
 IGLayoutFruchtermanReingold3D::usage = "IGLayoutFruchtermanReingold3D[graph, options]";
 
@@ -261,8 +260,6 @@ template = LTemplate["IGraphM",
             Integer (* maxiter *), Real (* epsilon *), Real (* kkconst *)},
           {Real, 2}
         ],
-
-        LFun["layoutSugiyama", {Real (* maxiter *), Real (* hgap *), Real (* vgap *)}, {Real, 2}],
 
         LFun["layoutFruchtermanReingold",
           {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
@@ -685,20 +682,6 @@ IGLayoutKamadaKawai3D[graph_?GraphQ, opt : OptionsPattern[]] :=
         VertexCoordinates -> Transpose@ig@"layoutKamadaKawai3D"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
-
-Options[IGLayoutSugiyama] = {
-  "MaxIterations" -> 100, (* increase if there are too many edge crossings *)
-  "HorizontalGap" -> 1, "VerticalGap" -> 1
-};
-
-(*
-IGLayoutSugiyama[graph_?GraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
-      Graph[graph,
-        VertexCoordinates -> Transpose@ig@"layoutSugiyama"[OptionValue["MaxIterations"], OptionValue["HorizontalGap"], OptionValue["VerticalGap"]]
-      ]
-    ]
-*)
 
 igFruchtermanReingoldMethods = <| Automatic -> 2, False -> 1, True -> 0 |>;
 
