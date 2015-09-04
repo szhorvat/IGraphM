@@ -73,8 +73,16 @@ struct igMatrix {
     const igraph_real_t *begin() const { return mat.data.stor_begin; }
     const igraph_real_t *end() const { return mat.data.end; }
 
+    void copyFromMTensor(mma::RealMatrixRef t) {
+        igraph_vector_t from = igVectorView(t);
+        igraph_vector_update(&mat.data, &from);
+        mat.nrow = t.cols();
+        mat.ncol = t.rows();
+        igraph_matrix_transpose(&mat);
+    }
+
     mma::RealMatrixRef makeMTensor() const {
-        mma::RealMatrixRef res = mma::makeMatrix<double>(mat.nrow, mat.ncol);
+        mma::RealMatrixRef res = mma::makeMatrix<double>(mat.ncol, mat.nrow);
         std::copy(begin(), end(), res.begin());
         return res;
     }
