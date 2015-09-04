@@ -38,6 +38,7 @@ class IG {
     }
 
     // return the weights if weighted, return NULL otherwise
+    // use this to pass weights to igraph functions
     const igraph_vector_t *passWeights() const { return weighted ? &weights.vec : NULL; }
 
 public:

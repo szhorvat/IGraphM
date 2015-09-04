@@ -32,26 +32,26 @@ IGData::usage =
 IGVersion::usage = "IGVersion[] returns the version of the igraph library in use.";
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
-IGBetweenness::usage = "IGBetweenness[graph]";
-IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph]";
-IGCloseness::usage = "IGCloseness[graph, options]";
+IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported.";
+IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph. Weighted graphs are supported.";
+IGCloseness::usage = "IGCloseness[graph, options] gives a list of closeness centralities for the vertices of graph. Weighted graphs are supported.";
 
-IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff]";
-IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff]";
-IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff, options]";
+IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff] estimates vertex betweenness by consdering only paths of at most length cutoff.";
+IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff] estimates edge betweenness by consdering only paths of at most length cutoff.";
+IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff, options] estimates closeness centrality by consdering only paths of at most length cutoff.";
 
-IGRewire::usage = "IGRewire[graph, n, options]";
-IGRewireEdges::usage = "IGRewireEdges[graph, p, options]";
+IGRewire::usage = "IGRewire[graph, n, options] attempts to rewire the edges of graph n times while presernving its degree sequence.";
+IGRewireEdges::usage = "IGRewireEdges[graph, p, options] rewires each edge of the graph with probability p.";
 
-IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph]";
-IGConnectedQ::usage = "IGConnectedQ[graph]";
+IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] checks if graph is directed and acyclic.";
+IGConnectedQ::usage = "IGConnectedQ[graph] checks if graph is connected.";
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if a degree sequence for an undirected simple graph is graphical.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if a degree sequence for a directed simple graph is graphical.";
 
-IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2]";
-IGSubisomorphicQ::usage = "IGSubisomorphicQ[graph, subgraph]";
-IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions.";
+IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] checks if graph1 and graph2 are isomorphic.";
+IGSubisomorphicQ::usage = "IGSubisomorphicQ[graph, subgraph] checks if subgraph is contained within graph.";
+IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData[] to get list of graphs ordered by isoclass.";
 
 IGBlissCanonicalPermutation::usage =
     "IGBlissCanonicalPermutation[graph, options] computes a canonical permutation of the graph vertices. " <>
@@ -65,7 +65,7 @@ IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 
 IGDyadCensus::usage = "IGDyadCensus[graph]";
 IGTriadCensus::usage = "IGTriadCensus[graph]";
-IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass for motif ordering.";
+IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.";
 IGMotifsTotalCount::usage = "IGMotifsTotalCount[graph, motifSize]";
 IGMotifsEstimateTotalCount::usage = "IGMotifsEstimate[graph, motifSize, sampleSize]";
 
@@ -120,7 +120,7 @@ Begin["`Private`"]
 packageAbort[] := (End[]; EndPackage[]; Abort[])
 
 If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
-  Print["IGraphM requires Mathematica 10.0.2 or later.  Aborting."];
+  Print["IGraph/M requires Mathematica 10.0.2 or later.  Aborting."];
   packageAbort[]
 ]
 
