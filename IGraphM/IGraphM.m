@@ -348,7 +348,7 @@ zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
 
-check = If[MatchQ[#, _LibraryFunctionError], Return[#, Block]]&
+check = If[MatchQ[#, _LibraryFunctionError], Return[#, Block], #]&
 
 (* Import compressed expressions. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
