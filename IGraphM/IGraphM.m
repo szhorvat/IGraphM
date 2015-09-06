@@ -6,7 +6,7 @@
 (* :Author: szhorvat  *)
 (* :Date: 2015-08-28  *)
 
-(* :Package Version: 0.1pre *)
+(* :Package Version: 0.1 *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2015 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
@@ -126,7 +126,7 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 
 (***** Package variables *****)
 
-$packageVersion    = "0.1pre";
+$packageVersion    = "0.1";
 $packageDirectory  = DirectoryName[$InputFileName];
 $libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
