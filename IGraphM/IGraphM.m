@@ -646,7 +646,7 @@ IGLayoutSphere[graph_?GraphQ] :=
 
 Options[IGLayoutGraphOpt] = {
   "Iterations" -> 500, "NodeCharge" -> 0.001, "NodeMass" -> 30, "SpringLength" -> 0,
-  "SpringConstant" -> 1, "MaxtepMovement" -> 5
+  "SpringConstant" -> 1, "MaxStepMovement" -> 5
 };
 
 IGLayoutGraphOpt[graph_?GraphQ, opt : OptionsPattern[]] :=
