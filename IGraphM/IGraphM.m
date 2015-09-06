@@ -6,7 +6,7 @@
 (* :Author: szhorvat  *)
 (* :Date: 2015-08-28  *)
 
-(* :Package Version: 0.1pre *)
+(* :Package Version: 0.1 *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2015 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
@@ -108,7 +108,6 @@ IGLayoutSphere::usage = "IGLayoutSphere[graph]";
 IGLayoutGraphOpt::usage = "IGLayoutGraphOpt[graph, options]";
 IGLayoutKamadaKawai::usage = "IGLayoutKamadaKawai[graph, options]";
 IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options]";
-(* IGLayoutSugiyama::usage = "IGLayoutSugiyama[graph, options]"; *)
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options]";
 IGLayoutFruchtermanReingold3D::usage = "IGLayoutFruchtermanReingold3D[graph, options]";
 
@@ -127,7 +126,7 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 
 (***** Package variables *****)
 
-$packageVersion    = "0.1pre";
+$packageVersion    = "0.1";
 $packageDirectory  = DirectoryName[$InputFileName];
 $libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
@@ -262,8 +261,6 @@ template = LTemplate["IGraphM",
           {Real, 2}
         ],
 
-        LFun["layoutSugiyama", {Real (* maxiter *), Real (* hgap *), Real (* vgap *)}, {Real, 2}],
-
         LFun["layoutFruchtermanReingold",
           {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
             Integer (* niter *), Real (* start_temp *), Integer (* grid method *)},
@@ -350,6 +347,8 @@ zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
+
+check = If[MatchQ[#, _LibraryFunctionError], Return[#, Block]]&
 
 (* Import compressed expressions. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
@@ -631,17 +630,17 @@ IGIndependenceNumber[graph_?GraphQ] := Block[{ig = igMake[graph]}, ig@"independe
 
 IGLayoutRandom[graph_?GraphQ] :=
     Block[{ig = igMake[graph]},
-      Graph[graph, VertexCoordinates -> Transpose@ig@"layoutRandom"[]]
+      Graph[graph, VertexCoordinates -> Transpose@check@ig@"layoutRandom"[]]
     ]
 
 IGLayoutCircle[graph_?GraphQ] :=
     Block[{ig = igMake[graph]},
-      Graph[graph, VertexCoordinates -> Transpose@ig@"layoutCircle"[]]
+      Graph[graph, VertexCoordinates -> Transpose@check@ig@"layoutCircle"[]]
     ]
 
 IGLayoutSphere[graph_?GraphQ] :=
     Block[{ig = igMake[graph]},
-      Graph3D[graph, VertexCoordinates -> Transpose@ig@"layoutSphere"[]]
+      Graph3D[graph, VertexCoordinates -> Transpose@check@ig@"layoutSphere"[]]
     ]
 
 
@@ -653,7 +652,7 @@ Options[IGLayoutGraphOpt] = {
 IGLayoutGraphOpt[graph_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
       Graph[graph, VertexCoordinates ->
-          Rescale@Transpose@ig@"layoutGraphOpt"[{{}}, False,
+          Rescale@Transpose@check@ig@"layoutGraphOpt"[{{}}, False,
             OptionValue["Iterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
             OptionValue["SpringLength"], OptionValue["SpringConstant"], OptionValue["MaxStepMovement"]
           ]
@@ -669,7 +668,7 @@ IGLayoutKamadaKawai[graph_?GraphQ, opt : OptionsPattern[]] :=
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
       Graph[graph,
-        VertexCoordinates -> Transpose@ig@"layoutKamadaKawai"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
+        VertexCoordinates -> Transpose@check@ig@"layoutKamadaKawai"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
 
@@ -682,23 +681,9 @@ IGLayoutKamadaKawai3D[graph_?GraphQ, opt : OptionsPattern[]] :=
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
       Graph3D[graph,
-        VertexCoordinates -> Transpose@ig@"layoutKamadaKawai3D"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
+        VertexCoordinates -> Transpose@check@ig@"layoutKamadaKawai3D"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
-
-Options[IGLayoutSugiyama] = {
-  "MaxIterations" -> 100, (* increase if there are too many edge crossings *)
-  "HorizontalGap" -> 1, "VerticalGap" -> 1
-};
-
-(*
-IGLayoutSugiyama[graph_?GraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
-      Graph[graph,
-        VertexCoordinates -> Transpose@ig@"layoutSugiyama"[OptionValue["MaxIterations"], OptionValue["HorizontalGap"], OptionValue["VerticalGap"]]
-      ]
-    ]
-*)
 
 igFruchtermanReingoldMethods = <| Automatic -> 2, False -> 1, True -> 0 |>;
 
@@ -709,7 +694,7 @@ Options[IGLayoutFruchtermanReingold] = {
 IGLayoutFruchtermanReingold[graph_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
       Graph[graph,
-        VertexCoordinates -> 0.25 Transpose@ig@"layoutFruchtermanReingold"[{{}}, False,
+        VertexCoordinates -> 0.25 Transpose@check@ig@"layoutFruchtermanReingold"[{{}}, False,
           OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1]
         ]
       ]
@@ -722,7 +707,7 @@ Options[IGLayoutFruchtermanReingold3D] = {
 IGLayoutFruchtermanReingold3D[graph_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
       Graph3D[graph,
-        VertexCoordinates -> 0.25 Transpose@ig@"layoutFruchtermanReingold3D"[{{}}, False,
+        VertexCoordinates -> 0.25 Transpose@check@ig@"layoutFruchtermanReingold3D"[{{}}, False,
           OptionValue["MaxIterations"], OptionValue["MaxMovement"]
         ]
       ]

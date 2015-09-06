@@ -6,7 +6,7 @@ IGraph/M is a *Mathematica* interface to the [igraph](http://igraph.org/) graph 
 
 ## What IGraph/M is not
 
-IGraph/M is *not a replacement* for Mathematica's graph manipulation functionality.  Instead it is meant to complement it.  Thus it works directly with standard `Graph` objects instead of introducing its own.  Functions for trivial tasks such as adding or removing vertices or edges, returning the vertex or edge count, etc. are not provided.
+IGraph/M is *not a replacement* for Mathematica's graph manipulation functionality.  Instead it is meant to complement it.  Thus it works directly with standard `Graph` objects instead of introducing its own graph type.  Functions for trivial tasks such as adding or removing vertices or edges, returning the vertex or edge count, creating standard graphs like cycle graphs, complete graphs, etc. are not provided.
 
 ## Why create IGraph/M?
 
@@ -24,24 +24,58 @@ igraph is one of the broadest open source graph manipulation packages available.
  - Subgraph isomorphism
  - Test if a degree sequence is graphical
  - Alternative algorithms for generating random graphs with given degree sequence
+ - Layout algorithms that take weights into account
 
 ## Installation
 
-Presently IGraph/M does not come with precompiled binary components, so you need to compile it yourself.  It also depends on the [LTemplate package][1], which needs to be installed (in the future it will embed LTemplate).  The installation steps are as follows:
+IGraph/M can be installed like any other Mathematica application.
 
- 1. Place the `IGraphM` directory in `$UserBaseDirectory/Applications`
- 2. Install `LTemplate` by placing it in the same location, `$UserBaseDirectory/Applications`
- 3. Make sure the igraph headers and library are installed on your system.
- 4. Edit `BuildSettings.m` within the `IGraphM` directory and set the location of the igraph library on your system.  Set up the compiler and any special compiler options to use.  Note that IGraph/M requires a C++ compiler with C++11 support.  See the [CCompilerDriver User Guide](http://reference.wolfram.com/language/CCompilerDriver/tutorial/Overview.html) for details.
- 5. Start Mathematica, load the package using ``<<IGraphM` ``, and evaluate `RecompileIGraphM[]`.  If there were no errors, IGraph/M is ready to use.  Check ``?IGraphM`*`` to see what functions are available.
+ - [Download the zip archive from GitHub](https://github.com/szhorvat/IGraphM/releases)
+ - Open the Mathematica's "Applications" directory by evaluating `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`
+ - Unzip the archive, find the `IGraphM` directory, and move it to Mathematica's "Applications" directory.
+
+**Currently IGraph/M comes only with binaries for OS X 10.9 or later and Linux.**  A Windows version is not available at the moment because I did not manage to compile igraph on Windows.  If you can help with creating a Windows binary, please see the Contributions section below.
+
+The package can be loaded with
+
+    << IGraphM`
+
+Check the available functions with
+
+    ?IGraphM`*
+
+and test that it works by evaluating `IGVersion[]`.
+
+## Documentation
 
 Currently IGraph/M is still incomplete and under development.  The documentation is not yet ready, but the usage messages should be descriptive.  For details on how the different functions work, refer to [the C/igraph documentation](http://igraph.org/c/doc/).
 
+Contributions are most welcome.  If you would like to help out with the documentation, please see below.
+
 ## Contributions
 
-Contributions to IGraph/M are most welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all igraph functions.  If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M is uses the [LTemplate package][1], and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
+Contributions to IGraph/M are most welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all igraph functions.  However, the main framework is there, and adding new functions is relatively quick and easy.
 
-Desired but not yet completed functionality:
+If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][1] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
+
+####Compiling from source
+
+To compile IGraph/M, you need will:
+
+ - A C++ compiler with C++11 support.  I used GCC 4.9 and clang 3.6.
+ - A recent development version of [igraph](https://github.com/igraph/igraph). You will need to compile it yourself. igraph 0.7.1 is not compatible.
+ - The [LTemplate Mathematica package][1].  Please download and install it.
+ - git for cloning the repository.
+
+Then follow these steps:
+
+ 1. Clone the IGraphM repository and check out the master branch (do not use the release branch).  
+ 2. Edit `BuildSettings.m` and set the necessary paths to your igraph installation.  The available options are the same as for [CreateLibrary](http://reference.wolfram.com/language/CCompilerDriver/ref/CreateLibrary.html).
+ 3. Append the repository's root directory (i.e. the same directory where this readme file is found) to Mathematica's `$Path`.
+ 4. Load the package with ``<<IGraphM` ``.  It should automatically be compiled. It can also be recompiled using ``IGraphM`Developer`Recompile[]``.
+
+
+#### Desired but not yet completed functionality
 
  - hierarchical random graphs
  - spectral coarse graining
@@ -49,18 +83,25 @@ Desired but not yet completed functionality:
  - community detection
  - graphlets
  - isomorphism for coloured graphs
- 
-Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2]. 
- 
-Other things you can help with:
- 
+
+Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2].
+
+#### Other things you can help with
+
+ - **compile Windows binaries, compile igraph for Windows**
  - write usage messages
  - write documentation
- - write unit tests 
+ - write unit tests
+
+You can contact me in email.  Evaluate the following in Mathematica to get my email address:
+
+    Uncompress["1:eJxTTMoPChZiYGAorsrILypLLHFIz03MzNFLzs8FAG/xCOI="]
 
 ## License
 
 The IGraph/M source code is released under the MIT license, see LICENSE.txt.
+
+igraph (and consequently the IGraph/M binary packages) can be distributed under the terms of the GPLv2.
 
  [1]: https://bitbucket.org/szhorvat/ltemplate
  [2]: http://szhorvat.net/pelican/using-igraph-from-mathematica.html
