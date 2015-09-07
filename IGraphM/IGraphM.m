@@ -45,6 +45,7 @@ IGRewireEdges::usage = "IGRewireEdges[graph, p, options] rewires each edge of th
 
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] checks if graph is directed and acyclic.";
 IGConnectedQ::usage = "IGConnectedQ[graph] checks if graph is connected.";
+IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly connected.";
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if a degree sequence for an undirected simple graph is graphical.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if a degree sequence for a directed simple graph is graphical.";
@@ -181,7 +182,7 @@ template = LTemplate["IGraphM",
         LFun["directedQ", {}, True|False],
         LFun["dagQ", {}, True|False],
         LFun["simpleQ", {}, True|False],
-        LFun["connectedQ", {}, True|False],
+        LFun["connectedQ", {True|False (* strongly connected *)}, True|False],
 
         (* Centrality *)
 
@@ -452,7 +453,8 @@ IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : 
 
 IGDirectedAcyclicGraphQ[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"dagQ"[]]
 
-IGConnectedQ[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"connectedQ"[]]
+IGConnectedQ[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"connectedQ"[True]]
+IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"connectedQ"[False]]
 
 IGGraphicalQ[degrees_?nonNegIntVecQ] := IGGraphicalQ[{}, degrees]
 IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := igraphGlobal@"graphicalQ"[outdeg, indeg]

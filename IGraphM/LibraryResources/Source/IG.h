@@ -128,10 +128,9 @@ public:
         return res;
     }
 
-    // TODO handle strong/weak for directed
-    bool connectedQ() const {
+    bool connectedQ(bool strong) const {
         igraph_bool_t res;
-        igCheck(igraph_is_connected(&graph, &res, IGRAPH_STRONG));
+        igCheck(igraph_is_connected(&graph, &res, strong ? IGRAPH_STRONG : IGRAPH_WEAK));
         return res;
     }
 
