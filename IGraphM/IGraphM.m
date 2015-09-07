@@ -483,7 +483,7 @@ IGClosenessEstimate[g_?igGraphQ, cutoff_?Positive, opt : OptionsPattern[]] :=
 (* TODO: functions in this section should warn that edge weights will be lost *)
 
 Options[IGRewire] = { "AllowLoops" -> False };
-IGRewire[g_?igGraphQ, n_Integer, opt : OptionsPattern[]] :=
+IGRewire[g_?igGraphQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[g]},
       ig@"rewire"[n, OptionValue["AllowLoops"]];
       igToGraph[ig]
