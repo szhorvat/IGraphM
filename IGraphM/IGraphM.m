@@ -111,6 +111,11 @@ IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options]";
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options]";
 IGLayoutFruchtermanReingold3D::usage = "IGLayoutFruchtermanReingold3D[graph, options]";
 
+IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph]";
+IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph]";
+IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficient[graph]";
+IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph] computes the weighted local clustering coefficient, as defined by A. Barrat et al. (2004) http://arxiv.org/abs/cond-mat/0311416";
+
 Begin["`Private`"]
 
 (***** Mathematica version check *****)
@@ -271,8 +276,14 @@ template = LTemplate["IGraphM",
           {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
             Integer (* niter *), Real (* start_temp *)},
           {Real, 2}
-        ]
+        ],
 
+        (* Clustering coefficient *)
+
+        LFun["transitivityUndirected", {}, Real],
+        LFun["transitivityLocalUndirected", {}, {Real, 1}],
+        LFun["transitivityAverageLocalUndirected", {}, Real],
+        LFun["transitivityBarrat", {}, {Real, 1}]
       }
     ]
   }
@@ -712,6 +723,21 @@ IGLayoutFruchtermanReingold3D[graph_?GraphQ, opt : OptionsPattern[]] :=
         ]
       ]
     ]
+
+(* Clustering coefficient *)
+
+IGGlobalClusteringCoefficient[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]}, ig@"transitivityUndirected"[]]
+
+IGLocalClusteringCoefficient[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]}, ig@"transitivityLocalUndirected"[]]
+
+IGAverageLocalClusteringCoefficient[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]}, ig@"transitivityAverageLocalUndirected"[]]
+
+IGWeightedClusteringCoefficient[graph_?GraphQ] :=
+    Block[{ig = igMake[graph]}, ig@"transitivityBarrat"[]]
+
 
 End[] (* `Private` *)
 

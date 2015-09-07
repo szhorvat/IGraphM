@@ -488,6 +488,32 @@ public:
                     NULL, NULL, NULL, NULL, NULL, NULL));
         return mat.makeMTensor();
     }
+
+    // Clusterig coefficient
+
+    double transitivityUndirected() const {
+        double res;
+        igCheck(igraph_transitivity_undirected(&graph, &res, IGRAPH_TRANSITIVITY_ZERO));
+        return res;
+    }
+
+    mma::RealTensorRef transitivityLocalUndirected() const {
+        igVector vec;
+        igCheck(igraph_transitivity_local_undirected(&graph, &vec.vec, igraph_vss_all(), IGRAPH_TRANSITIVITY_ZERO));
+        return vec.makeMTensor();
+    }
+
+    double transitivityAverageLocalUndirected() const {
+        double res;
+        igCheck(igraph_transitivity_avglocal_undirected(&graph, &res, IGRAPH_TRANSITIVITY_ZERO));
+        return res;
+    }
+
+    mma::RealTensorRef transitivityBarrat() const {
+        igVector vec;
+        igCheck(igraph_transitivity_barrat(&graph, &vec.vec, igraph_vss_all(), passWeights(), IGRAPH_TRANSITIVITY_ZERO));
+        return vec.makeMTensor();
+    }
 };
 
 #endif // IG_H
