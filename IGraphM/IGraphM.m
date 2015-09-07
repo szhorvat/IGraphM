@@ -534,7 +534,11 @@ Options[IGBlissFindIsomorphism] = { "SplittingHeuristics" -> "First" };
 IGBlissFindIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], result},
       result = igIndexVec@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]];
-      If[result =!= {}, {result}, {}]
+      If[result === {}, Return[{}]];
+      List@AssociationThread[
+        VertexList[graph1],
+        igVertexNames[graph2]@result
+      ]
     ]
 
 Options[IGBlissAutomorphismsCount] = { "SplittingHeuristics" -> "First" };
