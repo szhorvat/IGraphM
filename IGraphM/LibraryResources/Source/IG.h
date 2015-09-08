@@ -677,6 +677,14 @@ public:
         igCheck(igraph_transitivity_barrat(&graph, &vec.vec, igraph_vss_all(), passWeights(), IGRAPH_TRANSITIVITY_ZERO));
         return vec.makeMTensor();
     }
+
+    // Similarity measures
+
+    mma::RealTensorRef similarityCocitation() const {
+        igMatrix mat;
+        igCheck(igraph_cocitation(&graph, &mat.mat, igraph_vss_all()));
+        return mat.makeMTensor();
+    }
 };
 
 #endif // IG_H

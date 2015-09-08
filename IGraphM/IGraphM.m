@@ -136,6 +136,7 @@ IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph]";
 IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficient[graph]";
 IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph] computes the weighted local clustering coefficient, as defined by A. Barrat et al. (2004) http://arxiv.org/abs/cond-mat/0311416";
 
+IGCocitationSimilarity::usage = "IGCocitationSimilarity[graph]";
 Begin["`Private`"]
 
 (***** Mathematica version check *****)
@@ -313,6 +314,11 @@ template = LTemplate["IGraphM",
         LFun["transitivityLocalUndirected", {}, {Real, 1}],
         LFun["transitivityAverageLocalUndirected", {}, Real],
         LFun["transitivityBarrat", {}, {Real, 1}]
+        LFun["transitivityBarrat", {}, {Real, 1}],
+
+        (* Similarity *)
+
+        LFun["similarityCocitation", {}, {Real, 2}]
       }
     ]
   }
@@ -876,6 +882,10 @@ IGAverageLocalClusteringCoefficient[graph_?igGraphQ] :=
 IGWeightedClusteringCoefficient[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]}, ig@"transitivityBarrat"[]]
 
+(* Similarity *)
+
+IGCocitationSimilarity[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]}, ig@"similarityCocitation"[]]
 
 End[] (* `Private` *)
 
