@@ -32,6 +32,8 @@ IGData::usage =
 IGVersion::usage = "IGVersion[] returns the version of the igraph library in use.";
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
+IGLCF::usage = "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation.";
+
 IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph. Weighted graphs are supported.";
 IGCloseness::usage = "IGCloseness[graph, options] gives a list of closeness centralities for the vertices of graph. Weighted graphs are supported.";
@@ -178,6 +180,7 @@ template = LTemplate["IGraphM",
         (* Create *)
 
         LFun["fromEdgeList", {{Real, 2, "Constant"} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
+        LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
 
         (* Weights *)
 
@@ -461,6 +464,14 @@ IGVersion[] :=
     $System;
 
 IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := igraphGlobal@"seedRandom"[seed]
+
+(* Create *)
+
+IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic] :=
+    Block[{ig = Make["IG"]},
+      ig@"fromLCF"[Replace[n, Automatic :> Length[shifts] repeats], shifts, repeats];
+      Graph[igToGraph[ig], GraphLayout -> "CircularEmbedding"]
+    ]
 
 (* Create (games) *)
 

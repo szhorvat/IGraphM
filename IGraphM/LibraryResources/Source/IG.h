@@ -61,6 +61,12 @@ public:
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
     }
 
+    void fromLCF(mint n, mma::RealTensorRef v, mint repeats) {
+        destroy();
+        igraph_vector_t shifts = igVectorView(v);
+        igConstructorCheck(igraph_lcf_vector(&graph, n, &shifts, repeats));
+    }
+
     // Weights
 
     void setWeights(mma::RealTensorRef w) {
