@@ -467,10 +467,12 @@ IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := igraphGlobal@"seedRan
 
 (* Create *)
 
-IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic] :=
+Options[IGLCF] = { GraphLayout -> "CircularEmbedding" };
+
+IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[{IGLCF, Graph}]] :=
     Block[{ig = Make["IG"]},
       ig@"fromLCF"[Replace[n, Automatic :> Length[shifts] repeats], shifts, repeats];
-      Graph[igToGraph[ig], GraphLayout -> "CircularEmbedding"]
+      Graph[igToGraph[ig], GraphLayout -> OptionValue[GraphLayout], opt]
     ]
 
 (* Create (games) *)
@@ -484,11 +486,11 @@ IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <>
 
 IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[]] := IGDegreeSequenceGame[{}, degrees, opt]
 
-IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : OptionsPattern[]] :=
+IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
     Block[{ig = Make["IG"]},
       Check[
         ig@"degreeSequenceGame"[outdegrees, indegrees, Lookup[igDegreeSequenceGameMethods, OptionValue[Method], -1]];
-        igToGraph[ig]
+        Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
         ,
         $Failed
         ,
