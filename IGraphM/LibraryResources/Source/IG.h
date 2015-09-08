@@ -109,6 +109,11 @@ public:
         igConstructorCheck(err);
     }
 
+    void kRegularGame(mint n, mint k, bool directed, bool multiple) {
+        destroy();
+        igConstructorCheck(igraph_k_regular_game(&graph, n, k, directed, multiple));
+    }
+
     // Structure
 
     mma::RealTensorRef edgeList() const {

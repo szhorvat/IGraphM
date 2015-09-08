@@ -95,6 +95,8 @@ IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
     "IGDegreeSequenceGame[indegrees, outdegrees, options] generates a directed random graph with the given in- and out-degree sequences.";
 
+IGKRegularGame::usage = "IGKRegularGame[n, k]";
+
 IGDistanceMatrix::usage = "IGDistanceMatrix[graph]";
 
 IGCliques::usage =
@@ -192,6 +194,7 @@ template = LTemplate["IGraphM",
         (* Games *)
 
         LFun["degreeSequenceGame", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), Integer (* method *)}, "Void"],
+        LFun["kRegularGame", {Integer, Integer, True|False (* directed *), True|False (* multiple *)}, "Void"],
 
         (* Structure *)
 
@@ -496,6 +499,14 @@ IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : 
         ,
         {LTemplate::error}
       ]
+    ]
+
+
+Options[IGKRegularGame] = { "AllowMultipleEdges" -> False, DirectedEdges -> False };
+IGKRegularGame[n_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[{IGKRegularGame, Graph}]] :=
+    Block[{ig = Make["IG"]},
+      ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["AllowMultipleEdges"]];
+      Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
     ]
 
 (* Testing *)
