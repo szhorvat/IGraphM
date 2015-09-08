@@ -17,11 +17,12 @@ igraph is one of the broadest open source graph manipulation packages available.
  - Vertex betweenness centrality for weighted graphs
  - Estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs
  - Minimum feedback arc set for weighted and unweighted graphs
- - Find all cliques (not just maximal ones)
+ - Find all cliques (not just maximal ones), count cliques without listing them
  - Count 3- and 4-motifs
  - Rewire edges, keeping either the density or the degree sequence
- - Alternative algorithms for isomorphism testing: Bliss, VF2
- - Subgraph isomorphism
+ - Alternative algorithms for isomorphism testing: BLISS, VF2, LAD
+ - Subgraph isomorphism (including induced subgraphs with LAD)
+ - Isomorphism for coloured graphs
  - Test if a degree sequence is graphical
  - Alternative algorithms for generating random graphs with given degree sequence
  - Layout algorithms that take weights into account
@@ -82,7 +83,6 @@ Then follow these steps:
  - layout algorithms that take edge weights into account
  - community detection
  - graphlets
- - isomorphism for coloured graphs
 
 Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2].
 
