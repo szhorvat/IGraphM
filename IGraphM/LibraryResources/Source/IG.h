@@ -4,6 +4,11 @@
 
 #include "IGCommon.h"
 
+#include <list>
+
+class IG;
+
+extern std::map<mint, IG *> IG_collection; // TODO this is a hack pending proper implementation in LTemplate
 
 class IG {    
     igraph_t graph;
@@ -231,7 +236,7 @@ public:
             return mma::makeVector<double>(0);
     }
 
-    void blissAutomorphismsCount(MLINK link) {
+    void blissAutomorphismCount(MLINK link) {
         igraph_bliss_info_t info;
         mlStream ml{link, "blissAutomorphismsCount"};
         int splitting;
@@ -245,6 +250,165 @@ public:
         std::free(info.group_size);
     }
 
+    // Isomorphism (VF2)
+
+    bool vf2Isomorphic(
+            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+    {
+        igIntVector vc1; vc1.copyFromMTensor(vcol1);
+        igIntVector vc2; vc2.copyFromMTensor(vcol2);
+        igIntVector ec1; ec1.copyFromMTensor(ecol1);
+        igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        igraph_bool_t res;
+        igCheck(igraph_isomorphic_vf2(
+                    &graph, &ig.graph,
+                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
+                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
+                    &res, NULL, NULL, NULL, NULL, NULL));
+        return res;
+    }
+
+    void vf2FindIsomorphisms(MLINK link) const {
+        mlStream ml(link, "vf2Isomorphism");
+
+        mint id; // expression ID
+        igIntVector vc1, vc2, ec1, ec2;
+
+        struct VF2data {
+            std::list<igVector> list;
+            long remaining; // remaining number of isomorphisms to find, negative value will run until all are found
+        } vf2data;
+
+        ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
+
+        struct {
+            static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t *map21, void *arg) {
+                VF2data &data = *static_cast<VF2data *>(arg);
+                data.list.push_back(map12);
+                data.remaining--;
+                return data.remaining != 0; // negative will run until all are found
+            }
+        } isohandler;
+
+        igCheck(igraph_isomorphic_function_vf2(
+                    &graph, &IG_collection[id]->graph,
+                    vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
+                    ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
+                    NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
+
+        ml.newPacket();
+        ml << vf2data.list;
+    }
+
+    bool vf2Subisomorphic(
+            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+    {
+        igIntVector vc1; vc1.copyFromMTensor(vcol1);
+        igIntVector vc2; vc2.copyFromMTensor(vcol2);
+        igIntVector ec1; ec1.copyFromMTensor(ecol1);
+        igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        igraph_bool_t res;
+        igCheck(igraph_subisomorphic_vf2(
+                    &graph, &ig.graph,
+                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
+                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
+                    &res, NULL, NULL, NULL, NULL, NULL));
+        return res;
+    }
+
+    void vf2FindSubisomorphisms(MLINK link) const {
+        mlStream ml(link, "vf2Isomorphism");
+
+        mint id; // expression ID
+        igIntVector vc1, vc2, ec1, ec2;
+
+        struct VF2data {
+            std::list<igVector> list;
+            long remaining; // remaining number of isomorphisms to find, negative value will run until all are found
+        } vf2data;
+
+        ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
+
+        struct {
+            static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t *map21, void *arg) {
+                VF2data &data = *static_cast<VF2data *>(arg);
+                data.list.push_back(map21);
+                data.remaining--;
+                return data.remaining != 0; // negative will run until all are found
+            }
+        } isohandler;
+
+        igCheck(igraph_subisomorphic_function_vf2(
+                    &graph, &IG_collection[id]->graph,
+                    vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
+                    ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
+                    NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
+
+        ml.newPacket();
+        ml << vf2data.list;
+    }
+
+    mint vf2AutomorphismCount() const {
+        igraph_integer_t res;
+        igCheck(igraph_count_isomorphisms_vf2(&graph, &graph, NULL, NULL, NULL, NULL, &res, NULL, NULL, NULL));
+        return res;
+    }
+
+    mint vf2IsomorphismCount(
+            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+    {
+        igIntVector vc1; vc1.copyFromMTensor(vcol1);
+        igIntVector vc2; vc2.copyFromMTensor(vcol2);
+        igIntVector ec1; ec1.copyFromMTensor(ecol1);
+        igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        igraph_integer_t res;
+
+        igCheck(igraph_count_isomorphisms_vf2(
+                    &graph, &ig.graph,
+                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
+                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
+                    &res, NULL, NULL, NULL));
+        return res;
+    }
+
+    mint vf2SubisomorphismCount(
+            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+    {
+        igIntVector vc1; vc1.copyFromMTensor(vcol1);
+        igIntVector vc2; vc2.copyFromMTensor(vcol2);
+        igIntVector ec1; ec1.copyFromMTensor(ecol1);
+        igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        igraph_integer_t res;
+        igCheck(igraph_count_subisomorphisms_vf2(
+                    &graph, &ig.graph,
+                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
+                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
+                    &res, NULL, NULL, NULL));
+        return res;
+    }
+
+    // Isomorphism (LAD)
+
+    bool ladSubisomorphic(const IG &ig, bool induced) const {
+        igraph_bool_t res;
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &res, NULL, NULL, induced, 0));
+        return res;
+    }
+
+    mma::RealTensorRef ladGetSubisomorphism(const IG &ig, bool induced) const {
+        igraph_bool_t iso;
+        igVector map;
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, &map.vec, NULL, induced, 0));
+        return map.makeMTensor();
+    }
 
     // Topological sorting, directed acylic graphs
 

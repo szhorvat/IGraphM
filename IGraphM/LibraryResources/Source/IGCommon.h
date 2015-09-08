@@ -27,11 +27,18 @@ inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
 
 
 // RAII for igraph_vector_t
-struct igVector {
+class igVector {
+    bool moved;
+
+    igVector(const igVector &source); // avoid accidental expensive implicit copy
+
+public:
     igraph_vector_t vec;
 
-    igVector() { igraph_vector_init(&vec, 0); }
-    ~igVector() { igraph_vector_destroy(&vec); }
+    igVector() : moved(false) { igraph_vector_init(&vec, 0); }
+    igVector(igVector &&source) : moved(false) { vec = source.vec; source.moved = true; }
+    igVector(const igraph_vector_t *source) : moved(false) { igraph_vector_copy(&vec, source); }
+    ~igVector() { if (!moved) igraph_vector_destroy(&vec); }
 
     long length() const { return vec.end - vec.stor_begin; }
 
@@ -42,6 +49,7 @@ struct igVector {
     const igraph_real_t *end() const { return vec.end; }
 
     void clear() { igraph_vector_clear(&vec); }
+    void resize(long newsize) { igraph_vector_resize(&vec, newsize); }
 
     void copyFromMTensor(mma::RealTensorRef t) {
         igraph_vector_t from = igVectorView(t);
@@ -50,6 +58,38 @@ struct igVector {
 
     mma::RealTensorRef makeMTensor() const {
         mma::RealTensorRef res = mma::makeVector<double>(length());
+        std::copy(begin(), end(), res.begin());
+        return res;
+    }
+};
+
+
+// RAII for igraph_vector_t
+// note that igraph_integer_t and mint may not be the same type
+struct igIntVector {
+    igraph_vector_int_t vec;
+
+    igIntVector() { igraph_vector_int_init(&vec, 0); }
+    ~igIntVector() { igraph_vector_int_destroy(&vec); }
+
+    long length() const { return vec.end - vec.stor_begin; }
+
+    igraph_integer_t *begin() { return vec.stor_begin; }
+    igraph_integer_t *end() { return vec.end; }
+
+    const igraph_integer_t *begin() const { return vec.stor_begin; }
+    const igraph_integer_t *end() const { return vec.end; }
+
+    void clear() { igraph_vector_int_clear(&vec); }
+    void resize(long newsize) { igraph_vector_int_resize(&vec, newsize); }
+
+    void copyFromMTensor(mma::IntTensorRef t) {
+        resize(t.length());
+        std::copy(t.begin(), t.end(), begin());
+    }
+
+    mma::IntTensorRef makeMTensor() const {
+        mma::IntTensorRef res = mma::makeVector<mint>(length());
         std::copy(begin(), end(), res.begin());
         return res;
     }
@@ -97,6 +137,8 @@ struct igList {
     ~igList() { igraph_vector_ptr_destroy_all(&list); }
 
     long length() const { return igraph_vector_ptr_size(&list); }
+
+    void push(igraph_vector_t *vec) { igraph_vector_ptr_push_back(&list, vec); }
 };
 
 
@@ -109,12 +151,28 @@ inline mlStream & operator << (mlStream &ml, const igraph_vector_t &vec) {
 }
 
 
+inline mlStream & operator << (mlStream &ml, const igVector &vec) { return ml << vec.vec; }
+
+
 inline mlStream & operator << (mlStream &ml, const igList &list) {
     long len = list.length();
     if (! MLPutFunction(ml.link(), "List", len))
         ml.error("cannot return vector list");
     for (int i=0; i < len; ++i)
         ml << *static_cast<igraph_vector_t *>(VECTOR(list.list)[i]);
+    return ml;
+}
+
+
+inline mlStream & operator >> (mlStream &ml, igIntVector &vec) {
+    int *data;
+    int length;
+    // igraph_integer_t is an int, so we try to use the corresponding MathLink type: Integer32
+    if (! MLGetInteger32List(ml.link(), &data, &length))
+        ml.error("Integer32List expected");
+    vec.resize(length);
+    std::copy(data, data+length, vec.begin());
+    MLReleaseInteger32List(ml.link(), data, length);
     return ml;
 }
 

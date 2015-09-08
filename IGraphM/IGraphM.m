@@ -50,18 +50,37 @@ IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if a degree sequence for an undirected simple graph is graphical.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if a degree sequence for a directed simple graph is graphical.";
 
-IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] checks if graph1 and graph2 are isomorphic.";
-IGSubisomorphicQ::usage = "IGSubisomorphicQ[graph, subgraph] checks if subgraph is contained within graph.";
+IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic.";
+IGSubisomorphicQ::usage = "IGSubisomorphicQ[graph, subgraph] tests if subgraph is contained within graph.";
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData[] to get list of graphs ordered by isoclass.";
 
 IGBlissCanonicalPermutation::usage =
     "IGBlissCanonicalPermutation[graph, options] computes a canonical permutation of the graph vertices. " <>
     "Two graphs are isomorphic iff they have the same canonical permutation.";
-IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2, options]";
-IGBlissFindIsomorphism::usage = "IGBlissFindIsomorphism[graph1, graph2, options]";
-IGBlissAutomorphismsCount::usage = "IGBlissAutomorphismsCount[graph]";
+IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the BLISS algorithm.";
+IGBlissGetIsomorphism::usage = "IGBlissGetIsomorphism[graph1, graph2, options] returns one isomorphism between graph1 and graph2, if it exists.";
+IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.";
 
-IGTopologicalOrdering::usage = "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order. Note that the values returned are vertex indices, not vertex names.";
+IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.";
+IGVF2FindIsomorphisms::usage =
+    "IGVF2FindIsomorphism[graph1, graph2, options] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
+    "IGVF2FindIsomorphism[graph1, graph2, n, options] finds at most n isomorphisms between graph1 and graph2.";
+IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[graph, subgraph, options] tests if subgraph is contained in graph using the VF2 algorithm.";
+IGVF2FindSubisomorphisms::usage =
+    "IGVF2FindSubisomorphism[graph, subgraph, options] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
+    "IGVF2FindSubisomorphism[graph, subgraph, n, options] finds at most n subisomorphisms from subgraph to graph.";
+IGVF2AutomorphismCount::usage = "IGVF2AutomorphismCount[graph] returns the number of automorphisms of graph.";
+IGVF2IsomorphismCount::usage =
+    "IGVF2IsomorphismCount[graph1, graph2, options] returns the number of isomorphisms between graph1 and graph2." <>
+    "Note that this is not the same as simply counting the automorphisms of one graph if their vertex or edge colorings differ.";
+IGVF2SubisomorphismCount::usage = "IGVF2SubisomorphismCount[subgraph, graph, options]";
+
+IGLADSubisomorphicQ::usage = "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs.";
+IGLADGetSubisomorphism::usage = "IGLADGetSubisomorphism[subgraph, graph] returns one isomorphism between graph1 and graph2, if it exists.";
+
+IGTopologicalOrdering::usage =
+    "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order." <>
+    "Note that the values returned are vertex indices, not vertex names.";
 IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
 
 IGDyadCensus::usage = "IGDyadCensus[graph]";
@@ -207,7 +226,16 @@ template = LTemplate["IGraphM",
         LFun["blissCanonicalPermutation", {Integer (* splitting heuristics *)}, {Real, 1}],
         LFun["blissIsomorphic", {LExpressionID["IG"], Integer (* splitting heuristics *)}, True|False],
         LFun["blissFindIsomorphism", {LExpressionID["IG"], Integer (* splitting heuristics *)}, {Real, 1}],
-        LFun["blissAutomorphismsCount", LinkObject],
+        LFun["blissAutomorphismCount", LinkObject],
+        LFun["vf2Isomorphic", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, True|False],
+        LFun["vf2FindIsomorphisms", LinkObject],
+        LFun["vf2Subisomorphic", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, True|False],
+        LFun["vf2FindSubisomorphisms", LinkObject],
+        LFun["vf2AutomorphismCount", {}, Integer],
+        LFun["vf2IsomorphismCount", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, Integer],
+        LFun["vf2SubisomorphismCount", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, Integer],
+        LFun["ladSubisomorphic", {LExpressionID["IG"], True|False (* induced *)}, True|False],
+        LFun["ladGetSubisomorphism", {LExpressionID["IG"], True|False (* induced *)}, {Real, 1}],
 
         (* Topological sorting and directed acylic graphs *)
 
@@ -353,11 +381,13 @@ If[LoadIGraphM[] === $Failed,
 (***** General messages *****)
 
 IGraphM::mixed = "Mixed graphs are not supported by IGraph/M.";
+IGraphM::vf2col = "Vertex or edge color specifications for VF2 functions must be a pair of integer lists or None.";
 
 
 (***** Helper functions *****)
 
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
+intVecQ = VectorQ[#, Developer`MachineIntegerQ]&
 
 (* Zero out the diagonal of a square matrix. *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
@@ -500,40 +530,42 @@ IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[
 
 (* Isomorphism *)
 
-IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] := Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
+IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
+    Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
 
-IGSubisomorphicQ[graph_?igGraphQ, subgraph_?igGraphQ] := Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
+IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
 IGIsoclass[graph_?igGraphQ] := Block[{ig = igMake[graph]}, ig@"isoclass"[]]
 
 
-igBlissSplittingHeuristicsNames = {
+blissSplittingHeuristicsNames = {
   "First", "FirstSmallest", "FirstLargest",
   "FirstMaximallyConnected", "FirstSmallestMaximallyConnected", "FirstLargestMaximallyConnected"
 };
 
-igBlissSplittingHeuristics = AssociationThread[igBlissSplittingHeuristicsNames, Range@Length[igBlissSplittingHeuristicsNames] - 1];
+blissSplittingHeuristics = AssociationThread[blissSplittingHeuristicsNames, Range@Length[blissSplittingHeuristicsNames] - 1];
 
 IGBlissCanonicalPermutation::usage = IGBlissCanonicalPermutation::usage <>
     StringTemplate[" Available values for the \"SplittingHeuristics\" option: ``." <>
-        "The permutation depends on the splitting heuristics used."][ToString@InputForm@igBlissSplittingHeuristicsNames];
+        "The permutation depends on the splitting heuristics used."][ToString@InputForm@blissSplittingHeuristicsNames];
 
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
-      igVertexNames[graph]@igIndexVec@ig@"blissCanonicalPermutation"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      igVertexNames[graph]@igIndexVec@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
 IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMake[graph1], ig2 = igMake[graph2]},
-      ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
-Options[IGBlissFindIsomorphism] = { "SplittingHeuristics" -> "First" };
-IGBlissFindIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
+Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "First" };
+IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], result},
-      result = igIndexVec@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]];
+      result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]];
       If[result === {}, Return[{}]];
       List@AssociationThread[
         VertexList[graph1],
@@ -541,10 +573,103 @@ IGBlissFindIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[
       ]
     ]
 
-Options[IGBlissAutomorphismsCount] = { "SplittingHeuristics" -> "First" };
-IGBlissAutomorphismsCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
+Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "First" };
+IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
-      ToExpression@ig@"blissAutomorphismsCount"[Lookup[igBlissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+    ]
+
+
+vf2ParseColors[None] := {{},{}}
+vf2ParseColors[col : {_?intVecQ, _?intVecQ}] := col
+vf2ParseColors[expr_] := (Message[IGraphM::vf2col]; {{},{}})
+
+Options[IGVF2IsomorphicQ] = { "VertexColors" -> None, "EdgeColors" -> None };
+
+IGVF2IsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
+      {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
+      {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
+      ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+    ]
+
+Options[IGVF2FindIsomorphisms] = { "VertexColors" -> None, "EdgeColors" -> None };
+
+IGVF2FindIsomorphisms[graph1_?igGraphQ, graph2_?igGraphQ, max : (_?Internal`PositiveMachineIntegerQ | All | Infinity) : All, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2, n, result},
+      n = Replace[max, All|Infinity -> -1];
+      {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
+      {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
+      result = igIndexVec@check@ig1@"vf2FindIsomorphisms"[ManagedLibraryExpressionID[ig2], n, vcol1, vcol2, ecol1, ecol2];
+      AssociationThread[
+        VertexList[graph1],
+        igVertexNames[graph2][#]
+      ]& /@ result
+    ]
+
+Options[IGVF2SubisomorphicQ] = { "VertexColors" -> None, "EdgeColors" -> None };
+
+IGVF2SubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2},
+      {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
+      {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
+      ig1@"vf2Subisomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+    ]
+
+Options[IGVF2FindSubisomorphisms] = { "VertexColors" -> None, "EdgeColors" -> None };
+
+IGVF2FindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, max : (_?Internal`PositiveMachineIntegerQ | All | Infinity) : All, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2, n, result},
+      n = Replace[max, All|Infinity -> -1];
+      {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
+      {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
+      result = igIndexVec@check@ig1@"vf2FindSubisomorphisms"[ManagedLibraryExpressionID[ig2], n, vcol1, vcol2, ecol1, ecol2];
+      AssociationThread[
+        VertexList[subgraph],
+        igVertexNames[graph][#]
+      ]& /@ result
+    ]
+
+IGVF2AutomorphismCount[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]}, ig@"vf2AutomorphismCount"[]]
+
+
+Options[IGVF2IsomorphismCount] = { "VertexColors" -> None, "EdgeColors" -> None };
+
+IGVF2IsomorphismCount[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
+      {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
+      {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
+      ig1@"vf2IsomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+    ]
+
+Options[IGVF2SubisomorphismCount] = { "VertexColors" -> None, "EdgeColors" -> None };
+
+IGVF2SubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2},
+      {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
+      {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
+      ig1@"vf2SubisomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+    ]
+
+
+Options[IGLADSubisomorphicQ] = { "Induced" -> False };
+
+IGLADSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
+      ig1@"ladSubisomorphic"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]]
+    ]
+
+Options[IGLADGetSubisomorphism] = { "Induced" -> False };
+
+IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result},
+      result = igIndexVec@check@ig1@"ladGetSubisomorphism"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]];
+      If[result === {}, Return[{}]];
+      List@AssociationThread[
+        VertexList[subgraph],
+        igVertexNames[graph][result]
+      ]
     ]
 
 (* Directed acylic graphs and topological ordering *)
