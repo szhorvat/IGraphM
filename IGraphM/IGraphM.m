@@ -1,5 +1,5 @@
 (* Mathematica Package  *)
-(* Created by IntelliJ IDEA and wlplugin.halirutan.de *)
+(* Created by Mathematica Plugin for IntelliJ IDEA, see http://wlplugin.halirutan.de/ *)
 
 (* :Title: IGraph/M   *)
 (* :Context: IGraphM` *)
@@ -10,7 +10,7 @@
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2015 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
-(* :Discussion: igraph interface for Mathematica, see http://igraph.org *)
+(* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
 
 BeginPackage["IGraphM`"]
 
@@ -43,8 +43,8 @@ IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff, options] estima
 IGRewire::usage = "IGRewire[graph, n, options] attempts to rewire the edges of graph n times while presernving its degree sequence.";
 IGRewireEdges::usage = "IGRewireEdges[graph, p, options] rewires each edge of the graph with probability p.";
 
-IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] checks if graph is directed and acyclic.";
-IGConnectedQ::usage = "IGConnectedQ[graph] checks if graph is connected.";
+IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] tests if graph is directed and acyclic.";
+IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
 IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly connected.";
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if a degree sequence for an undirected simple graph is graphical.\n" <>
