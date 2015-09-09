@@ -49,9 +49,14 @@ and test that it works by evaluating `IGVersion[]`.
 
 ## Documentation
 
-Currently IGraph/M is still incomplete and under development.  The documentation is not yet ready, but the usage messages should be descriptive.  For details on how the different functions work, refer to [the C/igraph documentation](http://igraph.org/c/doc/).
+Currently IGraph/M is still incomplete and under development.  Use
 
-Contributions are most welcome.  If you would like to help out with the documentation, please see below.
+    <<IGraphM`
+    IGDocumentation[]
+    
+to open the documentation notebook.
+
+The documentation is not yet ready and contributions are most welcome.  If you would like to help out with the documentation, please see below.
 
 ## Contributions
 

@@ -25,6 +25,8 @@ IGraphM::usage = "IGraphM is a symbol to which igraph related messages are assoc
 `Developer`Recompile::usage = "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
 PrependTo[$ContextPath, $Context <> "Developer`"];
 
+IGDocumentation::usage = "IGDocumentation[] opens IGraph/M documentation.";
+
 IGData::usage =
     "IGData[] returns a list of available items.\n" <>
     "IGData[item] returns the requested item.";
@@ -452,6 +454,8 @@ igLabelValues[labels_, values_] := AssociationThread[labels, values]
 igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &
 
 (***** Public functions *****)
+
+IGDocumentation[] := (NotebookOpen@FileNameJoin[{$packageDirectory, "Documentation", "IGDocumentation.nb"}, Saveable -> False]; Null)
 
 (*  IGData  *)
 
