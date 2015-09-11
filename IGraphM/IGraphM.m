@@ -142,8 +142,6 @@ IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph]";
 IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficient[graph]";
 IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph] computes the weighted local clustering coefficient, as defined by A. Barrat et al. (2004) http://arxiv.org/abs/cond-mat/0311416";
 
-IGCocitationSimilarity::usage = "IGCocitationSimilarity[graph]";
-Begin["`Private`"]
 IGCocitationSimilarity::usage =
     "IGCocitationSimilarity[graph]\n" <>
     "IGCocitationSimilarity[graph, vertex]\n" <>
@@ -166,6 +164,18 @@ IGInverseLogWeightedSimilarity::usage =
     "IGInverseLogWeightedSimilarity[graph]\n" <>
     "IGInverseLogWeightedSimilarity[graph, vertex]\n" <>
     "IGInverseLogWeightedSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+
+IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph]";
+IGChordalQ::usage = "IGChordalQ[graph]";
+IGChordalCompletion::usage = "IGChordalCompletion[graph]";
+
+IGMinSeparators::usage = "IGMinSeparators[graph]";
+
+IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulation points of graph. A vertex is an articulation point if its removal increases the number of connected components in the graph.";
+
+IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph]";
+
+Begin["`Private`"];
 
 (***** Mathematica version check *****)
 
@@ -352,6 +362,21 @@ template = LTemplate["IGraphM",
         LFun["similarityJaccard", {{Real, 1, "Constant"}, True|False (* self loops *)}, {Real, 2}],
         LFun["similarityDice", {{Real, 1, "Constant"}, True|False (* self loops *)}, {Real, 2}],
         LFun["similarityInverseLogWeighted", {{Real, 1, "Constant"}}, {Real, 2}],
+
+        (* Chordal graphs *)
+
+        LFun["maximumCardinalitySearch", {}, {Real, 1}],
+        LFun["chordalQ", {}, True|False],
+        LFun["chordalCompletion", {LExpressionID["IG"]}, {Real, 1}],
+
+        (* Vertex separators *)
+
+        LFun["minimumSizeSeparators", LinkObject],
+
+        (* Articulation points *)
+
+        LFun["articulationPoints", {}, {Real, 1}],
+        LFun["biconnectedComponents", LinkObject]
       }
     ]
   }
@@ -969,6 +994,30 @@ IGJaccardSimilarity[graph_?igGraphQ, vs : (_?ListQ | All) : All, opt : OptionsPa
 Options[IGDiceSimilarity] = { SelfLoops -> False };
 IGDiceSimilarity[graph_?igGraphQ, vs : (_?ListQ | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityDice"][graph, vs, OptionValue[SelfLoops]]
 
+
+(* Chordal graphs *)
+
+IGChordalQ[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]}, ig@"chordalQ"[]]
+
+IGMaximumCardinalitySearch[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]}, igVertexNames[graph]@igIndexVec@ig@"maximumCardinalitySearch"[]]
+
+IGChordalCompletion[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph], new = Make["IG"], result},
+      result = new@"chordalCompletion"[ManagedLibraryExpressionID[ig]];
+      {Partition[igVertexNames[graph]@igIndexVec[result], 2], igToGraph[new]}
+    ]
+
+(* Vertex cuts *)
+
+IGMinSeparators[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[graph] /@ igIndexVec@check@ig@"minimumSizeSeparators"[]]
+
+(* Connected components *)
+
+IGArticulationPoints[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[graph]@igIndexVec@check@ig@"articulationPoints"[]]
+
+IGBiconnectedComponents[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[graph] /@ igIndexVec@check@ig@"biconnectedComponents"[]]
 
 End[]; (* `Private` *)
 

@@ -724,6 +724,62 @@ public:
         igCheck(igraph_similarity_inverse_log_weighted(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT));
         return mat.makeMTensor();
     }
+
+    // Chordal graphs
+
+    mma::RealTensorRef maximumCardinalitySearch() const {
+        igVector vec;
+        igCheck(igraph_maximum_cardinality_search(&graph, &vec.vec, NULL));
+        return vec.makeMTensor();
+    }
+
+    bool chordalQ() const {
+        igraph_bool_t res;
+        igCheck(igraph_is_chordal(&graph, NULL, NULL, &res, NULL, NULL));
+        return res;
+    }
+
+    // Note that this is a constructor!
+    mma::RealTensorRef chordalCompletion(const IG &source) {
+        igraph_bool_t chordal;
+        igVector fillin;
+        destroy();
+        igConstructorCheck(igraph_is_chordal(&source.graph, NULL, NULL, &chordal, &fillin.vec, &graph));
+        return fillin.makeMTensor();
+    }
+
+    // Vertex separators
+
+    void minimumSizeSeparators(MLINK link) const {
+        igList list;
+        mlStream ml(link, "minimumSizeSeparators");
+        ml >> mlCheckArgs(0);
+
+        igCheck(igraph_minimum_size_separators(&graph, &list.list));
+
+        ml.newPacket();
+        ml << list;
+    }
+
+    // Connected components
+
+    mma::RealTensorRef articulationPoints() const {
+        igVector vec;
+        igCheck(igraph_articulation_points(&graph, &vec.vec));
+        return vec.makeMTensor();
+    }
+
+    void biconnectedComponents(MLINK link) const {
+        mlStream ml(link, "biconnectedComponents");
+        ml >> mlCheckArgs(0);
+
+        igList list;
+        igraph_integer_t count;
+        igCheck(igraph_biconnected_components(&graph, &count, NULL, NULL, &list.list, NULL));
+
+        ml.newPacket();
+        ml << list;
+    }
 };
 
 #endif // IG_H
