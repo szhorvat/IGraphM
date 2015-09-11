@@ -12,11 +12,11 @@
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
 
-BeginPackage["IGraphM`"]
+BeginPackage["IGraphM`"];
 
 (* Privately load and configure LTemplate *)
-Get["LTemplate`LTemplatePrivate`"]
-ConfigureLTemplate["MessageSymbol" -> IGraphM]
+Get["LTemplate`LTemplatePrivate`"];
+ConfigureLTemplate["MessageSymbol" -> IGraphM];
 
 (***** Usage mesages *****)
 
@@ -409,23 +409,27 @@ zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
 
+(* Return immediately from parent function if we have a LibraryFunctionError.
+   Used on the immediately on return values of library functions.
+   Requires a parent funtcion that uses Block. *)
 check = If[MatchQ[#, _LibraryFunctionError], Return[#, Block], #]&
 
-(* Import compressed expressions. *)
+(* Import compressed expressions. Used in IGData. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
 
 (* Get an IG compatible edge list. *)
-igEdgeList[g_] :=
-    Developer`ToPackedArray@N[List @@@ EdgeList[g] /.
-            Dispatch@Thread[VertexList[g] -> Range@VertexCount[g] - 1]]
+igEdgeList[graph_] :=
+    Developer`ToPackedArray@N[List @@@ EdgeList[graph] /.
+            Dispatch@Thread[VertexList[graph] -> Range@VertexCount[graph] - 1]]
 
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
 igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
 igIndexVec[arr_] := 1 + Round[arr]
 
-igDirectedQ[g_] := DirectedGraphQ[g] && Not@EmptyGraphQ[g]
+igDirectedQ[graph_] := DirectedGraphQ[graph] && Not@EmptyGraphQ[graph]
 
-(* TODO: Find out how to implement this in a more robust way. *)
+(* TODO: Find out how to implement this in a more robust way.
+   We only want edge-weighted graphs, not vertex weighted ones. *)
 igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeList] =!= Automatic &;
 
 (* Create IG object from Mathematica Graph. *)
@@ -447,8 +451,6 @@ igToGraph[ig_] :=
 (* Convert vertex indices to vertex names. *)
 igVertexNames[graph_][indices_] := Part[VertexList[graph], indices]
 
-igLabelValues[_, err_LibraryFunctionError] := err
-igLabelValues[labels_, values_] := AssociationThread[labels, values]
 
 (* check if the argument is an igraph compatible graph *)
 igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &
@@ -722,9 +724,9 @@ IGDyadCensus[graph_?igGraphQ] := Block[{ig = igMake[graph]}, AssociationThread[{
 
 IGTriadCensus[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
-      igLabelValues[
+      AssociationThread[
         {"003", "012", "102", "021D", "021U", "021C", "111D", "111U", "030T", "030C", "201", "120D", "120U", "120C", "210", "300"},
-        Round@ig@"triadCensus"[]
+        Round@check@ig@"triadCensus"[]
       ]
     ]
 
@@ -910,11 +912,12 @@ IGAverageLocalClusteringCoefficient[graph_?igGraphQ] :=
 IGWeightedClusteringCoefficient[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]}, ig@"transitivityBarrat"[]]
 
+
 (* Similarity *)
 
 IGCocitationSimilarity[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]}, ig@"similarityCocitation"[]]
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
-EndPackage[]
+EndPackage[];

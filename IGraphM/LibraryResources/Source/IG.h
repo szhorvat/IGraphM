@@ -1,7 +1,6 @@
 #ifndef IG_H
 #define IG_H
 
-
 #include "IGCommon.h"
 
 #include <list>
