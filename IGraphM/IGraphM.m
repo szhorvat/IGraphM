@@ -144,6 +144,28 @@ IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph]
 
 IGCocitationSimilarity::usage = "IGCocitationSimilarity[graph]";
 Begin["`Private`"]
+IGCocitationSimilarity::usage =
+    "IGCocitationSimilarity[graph]\n" <>
+    "IGCocitationSimilarity[graph, vertex]\n" <>
+    "IGCocitationSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+
+IGBibliographicCoupling::usage =
+    "IGBibliographicCoupling[graph]\n" <>
+    "IGBibliographicCoupling[graph, vertex]\n" <>
+    "IGBibliographicCoupling[graph, {vertex1, vertex2, \[Ellipsis]}]";
+
+IGJaccardSimilarity::usage =
+    "IGJaccardSimilarity[graph]\n" <>
+    "IGJaccardSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+
+IGDiceSimilarity::usage =
+    "IGDiceSimilarity[graph]\n" <>
+    "IGDiceSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+
+IGInverseLogWeightedSimilarity::usage =
+    "IGInverseLogWeightedSimilarity[graph]\n" <>
+    "IGInverseLogWeightedSimilarity[graph, vertex]\n" <>
+    "IGInverseLogWeightedSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
 
 (***** Mathematica version check *****)
 
@@ -321,12 +343,15 @@ template = LTemplate["IGraphM",
         LFun["transitivityUndirected", {}, Real],
         LFun["transitivityLocalUndirected", {}, {Real, 1}],
         LFun["transitivityAverageLocalUndirected", {}, Real],
-        LFun["transitivityBarrat", {}, {Real, 1}]
         LFun["transitivityBarrat", {}, {Real, 1}],
 
         (* Similarity *)
 
-        LFun["similarityCocitation", {}, {Real, 2}]
+        LFun["similarityCocitation", {{Real, 1, "Constant"}}, {Real, 2}],
+        LFun["similarityBibcoupling", {{Real, 1, "Constant"}}, {Real, 2}],
+        LFun["similarityJaccard", {{Real, 1, "Constant"}, True|False (* self loops *)}, {Real, 2}],
+        LFun["similarityDice", {{Real, 1, "Constant"}, True|False (* self loops *)}, {Real, 2}],
+        LFun["similarityInverseLogWeighted", {{Real, 1, "Constant"}}, {Real, 2}],
       }
     ]
   }
@@ -915,8 +940,35 @@ IGWeightedClusteringCoefficient[graph_?igGraphQ] :=
 
 (* Similarity *)
 
-IGCocitationSimilarity[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]}, ig@"similarityCocitation"[]]
+(* for those that return a list of vectors *)
+similarityFunction1[name_, post_ : Identity][graph_, All] := Block[{ig = igMake[graph]}, post@Transpose@check@ig@name[{}] ]
+similarityFunction1[name_, post_ : Identity][graph_, {}] := {}
+similarityFunction1[name_, post_ : Identity][graph_, vs_?ListQ] :=
+    Block[{ig = igMake[graph]},
+      post@Transpose@check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]] ]
+    ]
+similarityFunction1[name_, post_ : Identity][graph_, v_] := similarityFunction1[name, First @* post][graph, {v}]
+
+IGCocitationSimilarity[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityCocitation", Round][graph, vs]
+
+IGBibliographicCoupling[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityBibcoupling", Round][graph, vs]
+
+IGInverseLogWeightedSimilarity[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityInverseLogWeighted"][graph, vs]
+
+(* for those that return a matrix *)
+similarityFunction2[name_][graph_, All, loops_] := Block[{ig = igMake[graph]}, Transpose@check@ig@name[{}, loops] ]
+similarityFunction2[name_][graph_, {}, loops_] := {}
+similarityFunction2[name_][graph_, vs_?ListQ, loops_] :=
+    Block[{ig = igMake[graph]},
+      Transpose@check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]], loops ]
+    ]
+
+Options[IGJaccardSimilarity] = { SelfLoops -> False };
+IGJaccardSimilarity[graph_?igGraphQ, vs : (_?ListQ | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityJaccard"][graph, vs, OptionValue[SelfLoops]]
+
+Options[IGDiceSimilarity] = { SelfLoops -> False };
+IGDiceSimilarity[graph_?igGraphQ, vs : (_?ListQ | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityDice"][graph, vs, OptionValue[SelfLoops]]
+
 
 End[]; (* `Private` *)
 

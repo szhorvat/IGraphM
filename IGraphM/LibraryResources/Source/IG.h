@@ -690,9 +690,38 @@ public:
 
     // Similarity measures
 
-    mma::RealTensorRef similarityCocitation() const {
+    mma::RealTensorRef similarityCocitation(mma::RealTensorRef vs) const {
         igMatrix mat;
-        igCheck(igraph_cocitation(&graph, &mat.mat, igraph_vss_all()));
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_cocitation(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef similarityBibcoupling(mma::RealTensorRef vs) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_bibcoupling(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef similarityJaccard(mma::RealTensorRef vs, bool loops) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_similarity_jaccard(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, loops));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef similarityDice(mma::RealTensorRef vs, bool loops) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_similarity_dice(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, loops));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef similarityInverseLogWeighted(mma::RealTensorRef vs) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_similarity_inverse_log_weighted(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT));
         return mat.makeMTensor();
     }
 };
