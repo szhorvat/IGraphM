@@ -446,7 +446,9 @@ If[LoadIGraphM[] === $Failed,
 
 IGraphM::mixed = "Mixed graphs are not supported by IGraph/M.";
 IGraphM::vf2col = "Vertex or edge color specifications for VF2 functions must be a pair of integer lists or None.";
-
+IGraphM::lytcrd = "The graph doesn't already have existing vertex coordinates. The \"Continue\" -> True layout option will be ignored.";
+IGraphM::lytdim = "The existing vertex coordinates do not have the appropriate dimension for this layout algorithm. The \"Continue\" -> True layout option will be ignored.";
+IGraphM::lytcnt = "`` is not a valid value for the \"Continue\" layout option.";
 
 (***** Helper functions *****)
 
@@ -863,6 +865,30 @@ IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMake[graph]}, ig@"indepen
 
 (* Graph drawing (layouts *)
 
+getVertexCoords[graph_] :=
+    With[{coords = GraphEmbedding[graph]},
+      If[MatrixQ[coords],
+        coords,
+        Message[IGraphM::cntlayout]; {{}}
+      ]
+    ]
+
+continueLayout[graph_, False, ___] := Sequence[{{}}, False]
+continueLayout[graph_, True, dim_ : 2] :=
+    Sequence@@Module[{coords},
+      coords = getVertexCoords[graph];
+      If[Not@MatchQ[Dimensions[coords], {_, dim}],
+        Message[IGraphM::lytdim];
+        coords = {{}}
+      ];
+      {coords, coords =!= {{}}}
+    ]
+continueLayout[graph_, cont_, ___] := ( Message[IGraphM::lytcnt, cont]; continueLayout[graph, False] )
+continueLayout3D[graph_, cont_] := continueLayout[graph, cont, 3]
+
+setVertexCoords[g_, coords_] := Graph[g, VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
+setVertexCoords3D[g_, coords_] := Graph3D[g, VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
+
 IGLayoutRandom[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
       Graph[graph, VertexCoordinates -> Transpose@check@ig@"layoutRandom"[]]
@@ -870,79 +896,86 @@ IGLayoutRandom[graph_?igGraphQ] :=
 
 IGLayoutCircle[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
-      Graph[graph, VertexCoordinates -> Transpose@check@ig@"layoutCircle"[]]
+      setVertexCoords[graph, Transpose@check@ig@"layoutCircle"[]]
     ]
 
 IGLayoutSphere[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
-      Graph3D[graph, VertexCoordinates -> Transpose@check@ig@"layoutSphere"[]]
+      setVertexCoords3D[graph, Transpose@check@ig@"layoutSphere"[]]
     ]
 
 
 Options[IGLayoutGraphOpt] = {
-  "Iterations" -> 500, "NodeCharge" -> 0.001, "NodeMass" -> 30, "SpringLength" -> 0,
-  "SpringConstant" -> 1, "MaxStepMovement" -> 5
+  "MaxIterations" -> 500, "NodeCharge" -> 0.001, "NodeMass" -> 30, "SpringLength" -> 0,
+  "SpringConstant" -> 1, "MaxStepMovement" -> 5,
+  "Continue" -> False
 };
 
 IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
-      Graph[graph, VertexCoordinates ->
-          Rescale@Transpose@check@ig@"layoutGraphOpt"[{{}}, False,
-            OptionValue["Iterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
+      setVertexCoords[graph,
+          0.01 Transpose@check@ig@"layoutGraphOpt"[continueLayout[graph, OptionValue["Continue"]],
+            OptionValue["MaxIterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
             OptionValue["SpringLength"], OptionValue["SpringConstant"], OptionValue["MaxStepMovement"]
           ]
       ]
     ]
 
 Options[IGLayoutKamadaKawai] = {
-  "MaxIterations" -> Automatic, "Epsilon" -> 0, "KamadaKawaiConstant" -> Automatic
+  "MaxIterations" -> Automatic, "Epsilon" -> 0, "KamadaKawaiConstant" -> Automatic,
+  "Continue" -> False
 };
 
 IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph], maxiter, kkconst},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
-      Graph[graph,
-        VertexCoordinates -> Transpose@check@ig@"layoutKamadaKawai"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
+      setVertexCoords[graph,
+        0.5 Transpose@check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"]],
+          maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
 
 Options[IGLayoutKamadaKawai3D] = {
-  "MaxIterations" -> Automatic, "Epsilon" -> 0, "KamadaKawaiConstant" -> Automatic
+  "MaxIterations" -> Automatic, "Epsilon" -> 0, "KamadaKawaiConstant" -> Automatic,
+  "Continue" -> False
 };
 
 IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph], maxiter, kkconst},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
-      Graph3D[graph,
-        VertexCoordinates -> Transpose@check@ig@"layoutKamadaKawai3D"[{{}}, False, maxiter, OptionValue["Epsilon"], kkconst]
+      setVertexCoords3D[graph,
+        0.5 Transpose@check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"]],
+          maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
 
 igFruchtermanReingoldMethods = <| Automatic -> 2, False -> 1, True -> 0 |>;
 
 Options[IGLayoutFruchtermanReingold] = {
-  "MaxIterations" -> 500, "MaxMovement" -> 5, "UseGrid" -> Automatic
+  "MaxIterations" -> 500, "MaxMovement" -> 5, "UseGrid" -> Automatic,
+  "Continue" -> False
 };
 
 IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
-      Graph[graph,
-        VertexCoordinates -> 0.25 Transpose@check@ig@"layoutFruchtermanReingold"[{{}}, False,
+      setVertexCoords[graph,
+        0.25 Transpose@check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1]
         ]
       ]
     ]
 
 Options[IGLayoutFruchtermanReingold3D] = {
-  "MaxIterations" -> 500, "MaxMovement" -> 5
+  "MaxIterations" -> 500, "MaxMovement" -> 5,
+  "Continue" -> False
 };
 
 IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
-      Graph3D[graph,
-        VertexCoordinates -> 0.25 Transpose@check@ig@"layoutFruchtermanReingold3D"[{{}}, False,
+      setVertexCoords[graph,
+        0.25 Transpose@check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"]
         ]
       ]
