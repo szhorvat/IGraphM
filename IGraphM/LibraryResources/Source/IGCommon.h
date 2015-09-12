@@ -133,7 +133,10 @@ struct igMatrix {
 struct igList {
     igraph_vector_ptr_t list;
 
-    igList() { igraph_vector_ptr_init(&list, 0); }
+    igList() {
+        igraph_vector_ptr_init(&list, 0);
+        IGRAPH_VECTOR_PTR_SET_ITEM_DESTRUCTOR(&list, igraph_vector_destroy);
+    }
     ~igList() { igraph_vector_ptr_destroy_all(&list); }
 
     long length() const { return igraph_vector_ptr_size(&list); }
