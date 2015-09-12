@@ -56,11 +56,7 @@ public:
         igraph_vector_update(&vec, &from);
     }
 
-    mma::RealTensorRef makeMTensor() const {
-        mma::RealTensorRef res = mma::makeVector<double>(length());
-        std::copy(begin(), end(), res.begin());
-        return res;
-    }
+    mma::RealTensorRef makeMTensor() const { return mma::makeVector<double>(length(), begin()); }
 };
 
 
@@ -88,11 +84,7 @@ struct igIntVector {
         std::copy(t.begin(), t.end(), begin());
     }
 
-    mma::IntTensorRef makeMTensor() const {
-        mma::IntTensorRef res = mma::makeVector<mint>(length());
-        std::copy(begin(), end(), res.begin());
-        return res;
-    }
+    mma::IntTensorRef makeMTensor() const { return mma::makeVector<mint>(length(), begin()); }
 };
 
 
@@ -116,16 +108,14 @@ struct igMatrix {
     void copyFromMTensor(mma::RealMatrixRef t) {
         igraph_vector_t from = igVectorView(t);
         igraph_vector_update(&mat.data, &from);
+        // Mathematica uses row-major storage, igraph uses column-major storage
+        // thus we need to reverse the row/column counts, then transpose
         mat.nrow = t.cols();
         mat.ncol = t.rows();
         igraph_matrix_transpose(&mat);
     }
 
-    mma::RealMatrixRef makeMTensor() const {
-        mma::RealMatrixRef res = mma::makeMatrix<double>(mat.ncol, mat.nrow);
-        std::copy(begin(), end(), res.begin());
-        return res;
-    }
+    mma::RealMatrixRef makeMTensor() const { return mma::makeMatrixTransposed<double>(mat.nrow, mat.ncol, begin()); }
 };
 
 

@@ -797,7 +797,7 @@ IGMotifsEstimateTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sam
 
 IGDistanceMatrix[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
-      zeroDiagonal[Transpose@Round[ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
+      zeroDiagonal[Round[ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
     ]
 
 (* Cliques *)
@@ -891,17 +891,17 @@ setVertexCoords3D[g_, coords_] := Graph3D[g, VertexCoordinates -> Thread[ Vertex
 
 IGLayoutRandom[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
-      Graph[graph, VertexCoordinates -> Transpose@check@ig@"layoutRandom"[]]
+      Graph[graph, VertexCoordinates -> check@ig@"layoutRandom"[]]
     ]
 
 IGLayoutCircle[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
-      setVertexCoords[graph, Transpose@check@ig@"layoutCircle"[]]
+      setVertexCoords[graph, check@ig@"layoutCircle"[]]
     ]
 
 IGLayoutSphere[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
-      setVertexCoords3D[graph, Transpose@check@ig@"layoutSphere"[]]
+      setVertexCoords3D[graph, check@ig@"layoutSphere"[]]
     ]
 
 
@@ -914,7 +914,7 @@ Options[IGLayoutGraphOpt] = {
 IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
       setVertexCoords[graph,
-          0.01 Transpose@check@ig@"layoutGraphOpt"[continueLayout[graph, OptionValue["Continue"]],
+          0.01 check@ig@"layoutGraphOpt"[continueLayout[graph, OptionValue["Continue"]],
             OptionValue["MaxIterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
             OptionValue["SpringLength"], OptionValue["SpringConstant"], OptionValue["MaxStepMovement"]
           ]
@@ -931,7 +931,7 @@ IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[]] :=
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
       setVertexCoords[graph,
-        0.5 Transpose@check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"]],
+        0.5 check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"]],
           maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
@@ -946,7 +946,7 @@ IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
       setVertexCoords3D[graph,
-        0.5 Transpose@check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"]],
+        0.5 check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"]],
           maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
@@ -961,7 +961,7 @@ Options[IGLayoutFruchtermanReingold] = {
 IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
       setVertexCoords[graph,
-        0.25 Transpose@check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"]],
+        0.25 check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1]
         ]
       ]
@@ -975,7 +975,7 @@ Options[IGLayoutFruchtermanReingold3D] = {
 IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
       setVertexCoords[graph,
-        0.25 Transpose@check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"]],
+        0.25 check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"]
         ]
       ]
@@ -999,11 +999,11 @@ IGWeightedClusteringCoefficient[graph_?igGraphQ] :=
 (* Similarity *)
 
 (* for those that return a list of vectors *)
-similarityFunction1[name_, post_ : Identity][graph_, All] := Block[{ig = igMake[graph]}, post@Transpose@check@ig@name[{}] ]
+similarityFunction1[name_, post_ : Identity][graph_, All] := Block[{ig = igMake[graph]}, post@check@ig@name[{}] ]
 similarityFunction1[name_, post_ : Identity][graph_, {}] := {}
 similarityFunction1[name_, post_ : Identity][graph_, vs_?ListQ] :=
     Block[{ig = igMake[graph]},
-      post@Transpose@check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]] ]
+      post@check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]] ]
     ]
 similarityFunction1[name_, post_ : Identity][graph_, v_] := similarityFunction1[name, First @* post][graph, {v}]
 
@@ -1014,11 +1014,11 @@ IGBibliographicCoupling[graph_?igGraphQ, vs_ : All] := similarityFunction1["simi
 IGInverseLogWeightedSimilarity[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityInverseLogWeighted"][graph, vs]
 
 (* for those that return a matrix *)
-similarityFunction2[name_][graph_, All, loops_] := Block[{ig = igMake[graph]}, Transpose@check@ig@name[{}, loops] ]
+similarityFunction2[name_][graph_, All, loops_] := Block[{ig = igMake[graph]}, check@ig@name[{}, loops] ]
 similarityFunction2[name_][graph_, {}, loops_] := {}
 similarityFunction2[name_][graph_, vs_?ListQ, loops_] :=
     Block[{ig = igMake[graph]},
-      Transpose@check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]], loops ]
+      check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]], loops ]
     ]
 
 Options[IGJaccardSimilarity] = { SelfLoops -> False };
