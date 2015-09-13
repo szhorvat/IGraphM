@@ -1,9 +1,13 @@
 #ifndef IG_H
 #define IG_H
 
-
 #include "IGCommon.h"
 
+#include <list>
+
+class IG;
+
+extern std::map<mint, IG *> IG_collection; // TODO this is a hack pending proper implementation in LTemplate
 
 class IG {    
     igraph_t graph;
@@ -56,6 +60,12 @@ public:
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
     }
 
+    void fromLCF(mint n, mma::RealTensorRef v, mint repeats) {
+        destroy();
+        igraph_vector_t shifts = igVectorView(v);
+        igConstructorCheck(igraph_lcf_vector(&graph, n, &shifts, repeats));
+    }
+
     // Weights
 
     void setWeights(mma::RealTensorRef w) {
@@ -98,6 +108,11 @@ public:
         igConstructorCheck(err);
     }
 
+    void kRegularGame(mint n, mint k, bool directed, bool multiple) {
+        destroy();
+        igConstructorCheck(igraph_k_regular_game(&graph, n, k, directed, multiple));
+    }
+
     // Structure
 
     mma::RealTensorRef edgeList() const {
@@ -128,10 +143,9 @@ public:
         return res;
     }
 
-    // TODO handle strong/weak for directed
-    bool connectedQ() const {
+    bool connectedQ(bool strong) const {
         igraph_bool_t res;
-        igCheck(igraph_is_connected(&graph, &res, IGRAPH_STRONG));
+        igCheck(igraph_is_connected(&graph, &res, strong ? IGRAPH_STRONG : IGRAPH_WEAK));
         return res;
     }
 
@@ -232,7 +246,7 @@ public:
             return mma::makeVector<double>(0);
     }
 
-    void blissAutomorphismsCount(MLINK link) {
+    void blissAutomorphismCount(MLINK link) {
         igraph_bliss_info_t info;
         mlStream ml{link, "blissAutomorphismsCount"};
         int splitting;
@@ -246,6 +260,165 @@ public:
         std::free(info.group_size);
     }
 
+    // Isomorphism (VF2)
+
+    bool vf2Isomorphic(
+            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+    {
+        igIntVector vc1; vc1.copyFromMTensor(vcol1);
+        igIntVector vc2; vc2.copyFromMTensor(vcol2);
+        igIntVector ec1; ec1.copyFromMTensor(ecol1);
+        igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        igraph_bool_t res;
+        igCheck(igraph_isomorphic_vf2(
+                    &graph, &ig.graph,
+                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
+                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
+                    &res, NULL, NULL, NULL, NULL, NULL));
+        return res;
+    }
+
+    void vf2FindIsomorphisms(MLINK link) const {
+        mlStream ml(link, "vf2Isomorphism");
+
+        mint id; // expression ID
+        igIntVector vc1, vc2, ec1, ec2;
+
+        struct VF2data {
+            std::list<igVector> list;
+            long remaining; // remaining number of isomorphisms to find, negative value will run until all are found
+        } vf2data;
+
+        ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
+
+        struct {
+            static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t *map21, void *arg) {
+                VF2data &data = *static_cast<VF2data *>(arg);
+                data.list.push_back(map12);
+                data.remaining--;
+                return data.remaining != 0; // negative will run until all are found
+            }
+        } isohandler;
+
+        igCheck(igraph_isomorphic_function_vf2(
+                    &graph, &IG_collection[id]->graph,
+                    vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
+                    ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
+                    NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
+
+        ml.newPacket();
+        ml << vf2data.list;
+    }
+
+    bool vf2Subisomorphic(
+            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+    {
+        igIntVector vc1; vc1.copyFromMTensor(vcol1);
+        igIntVector vc2; vc2.copyFromMTensor(vcol2);
+        igIntVector ec1; ec1.copyFromMTensor(ecol1);
+        igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        igraph_bool_t res;
+        igCheck(igraph_subisomorphic_vf2(
+                    &graph, &ig.graph,
+                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
+                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
+                    &res, NULL, NULL, NULL, NULL, NULL));
+        return res;
+    }
+
+    void vf2FindSubisomorphisms(MLINK link) const {
+        mlStream ml(link, "vf2Isomorphism");
+
+        mint id; // expression ID
+        igIntVector vc1, vc2, ec1, ec2;
+
+        struct VF2data {
+            std::list<igVector> list;
+            long remaining; // remaining number of isomorphisms to find, negative value will run until all are found
+        } vf2data;
+
+        ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
+
+        struct {
+            static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t *map21, void *arg) {
+                VF2data &data = *static_cast<VF2data *>(arg);
+                data.list.push_back(map21);
+                data.remaining--;
+                return data.remaining != 0; // negative will run until all are found
+            }
+        } isohandler;
+
+        igCheck(igraph_subisomorphic_function_vf2(
+                    &graph, &IG_collection[id]->graph,
+                    vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
+                    ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
+                    NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
+
+        ml.newPacket();
+        ml << vf2data.list;
+    }
+
+    mint vf2AutomorphismCount() const {
+        igraph_integer_t res;
+        igCheck(igraph_count_isomorphisms_vf2(&graph, &graph, NULL, NULL, NULL, NULL, &res, NULL, NULL, NULL));
+        return res;
+    }
+
+    mint vf2IsomorphismCount(
+            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+    {
+        igIntVector vc1; vc1.copyFromMTensor(vcol1);
+        igIntVector vc2; vc2.copyFromMTensor(vcol2);
+        igIntVector ec1; ec1.copyFromMTensor(ecol1);
+        igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        igraph_integer_t res;
+
+        igCheck(igraph_count_isomorphisms_vf2(
+                    &graph, &ig.graph,
+                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
+                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
+                    &res, NULL, NULL, NULL));
+        return res;
+    }
+
+    mint vf2SubisomorphismCount(
+            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+    {
+        igIntVector vc1; vc1.copyFromMTensor(vcol1);
+        igIntVector vc2; vc2.copyFromMTensor(vcol2);
+        igIntVector ec1; ec1.copyFromMTensor(ecol1);
+        igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        igraph_integer_t res;
+        igCheck(igraph_count_subisomorphisms_vf2(
+                    &graph, &ig.graph,
+                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
+                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
+                    &res, NULL, NULL, NULL));
+        return res;
+    }
+
+    // Isomorphism (LAD)
+
+    bool ladSubisomorphic(const IG &ig, bool induced) const {
+        igraph_bool_t res;
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &res, NULL, NULL, induced, 0));
+        return res;
+    }
+
+    mma::RealTensorRef ladGetSubisomorphism(const IG &ig, bool induced) const {
+        igraph_bool_t iso;
+        igVector map;
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, &map.vec, NULL, induced, 0));
+        return map.makeMTensor();
+    }
 
     // Topological sorting, directed acylic graphs
 
@@ -487,6 +660,125 @@ public:
                     &graph, &mat.mat, use_seed, niter, start_temp, passWeights(),
                     NULL, NULL, NULL, NULL, NULL, NULL));
         return mat.makeMTensor();
+    }
+
+    // Clusterig coefficient
+
+    double transitivityUndirected() const {
+        double res;
+        igCheck(igraph_transitivity_undirected(&graph, &res, IGRAPH_TRANSITIVITY_ZERO));
+        return res;
+    }
+
+    mma::RealTensorRef transitivityLocalUndirected() const {
+        igVector vec;
+        igCheck(igraph_transitivity_local_undirected(&graph, &vec.vec, igraph_vss_all(), IGRAPH_TRANSITIVITY_ZERO));
+        return vec.makeMTensor();
+    }
+
+    double transitivityAverageLocalUndirected() const {
+        double res;
+        igCheck(igraph_transitivity_avglocal_undirected(&graph, &res, IGRAPH_TRANSITIVITY_ZERO));
+        return res;
+    }
+
+    mma::RealTensorRef transitivityBarrat() const {
+        igVector vec;
+        igCheck(igraph_transitivity_barrat(&graph, &vec.vec, igraph_vss_all(), passWeights(), IGRAPH_TRANSITIVITY_ZERO));
+        return vec.makeMTensor();
+    }
+
+    // Similarity measures
+
+    mma::RealTensorRef similarityCocitation(mma::RealTensorRef vs) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_cocitation(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef similarityBibcoupling(mma::RealTensorRef vs) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_bibcoupling(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef similarityJaccard(mma::RealTensorRef vs, bool loops) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_similarity_jaccard(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, loops));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef similarityDice(mma::RealTensorRef vs, bool loops) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_similarity_dice(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, loops));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef similarityInverseLogWeighted(mma::RealTensorRef vs) const {
+        igMatrix mat;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_similarity_inverse_log_weighted(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT));
+        return mat.makeMTensor();
+    }
+
+    // Chordal graphs
+
+    mma::RealTensorRef maximumCardinalitySearch() const {
+        igVector vec;
+        igCheck(igraph_maximum_cardinality_search(&graph, &vec.vec, NULL));
+        return vec.makeMTensor();
+    }
+
+    bool chordalQ() const {
+        igraph_bool_t res;
+        igCheck(igraph_is_chordal(&graph, NULL, NULL, &res, NULL, NULL));
+        return res;
+    }
+
+    // Note that this is a constructor!
+    mma::RealTensorRef chordalCompletion(const IG &source) {
+        igraph_bool_t chordal;
+        igVector fillin;
+        destroy();
+        igConstructorCheck(igraph_is_chordal(&source.graph, NULL, NULL, &chordal, &fillin.vec, &graph));
+        return fillin.makeMTensor();
+    }
+
+    // Vertex separators
+
+    void minimumSizeSeparators(MLINK link) const {
+        igList list;
+        mlStream ml(link, "minimumSizeSeparators");
+        ml >> mlCheckArgs(0);
+
+        igCheck(igraph_minimum_size_separators(&graph, &list.list));
+
+        ml.newPacket();
+        ml << list;
+    }
+
+    // Connected components
+
+    mma::RealTensorRef articulationPoints() const {
+        igVector vec;
+        igCheck(igraph_articulation_points(&graph, &vec.vec));
+        return vec.makeMTensor();
+    }
+
+    void biconnectedComponents(MLINK link) const {
+        mlStream ml(link, "biconnectedComponents");
+        ml >> mlCheckArgs(0);
+
+        igList list;
+        igraph_integer_t count;
+        igCheck(igraph_biconnected_components(&graph, &count, NULL, NULL, &list.list, NULL));
+
+        ml.newPacket();
+        ml << list;
     }
 };
 
