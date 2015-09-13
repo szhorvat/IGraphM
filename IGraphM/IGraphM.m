@@ -15,7 +15,7 @@
 BeginPackage["IGraphM`"];
 
 (* Privately load and configure LTemplate *)
-Get["LTemplate`LTemplatePrivate`"];
+Get["`LTemplate`LTemplatePrivate`"];
 ConfigureLTemplate["MessageSymbol" -> IGraphM];
 
 (***** Usage mesages *****)
