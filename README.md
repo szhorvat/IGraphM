@@ -26,6 +26,7 @@ igraph is one of the broadest open source graph manipulation packages available.
  - Test if a degree sequence is graphical
  - Alternative algorithms for generating random graphs with given degree sequence
  - Layout algorithms that take weights into account
+ - Layout algorithms can continue from existing vertex coordinates
 
 ## Installation
 
@@ -33,9 +34,9 @@ IGraph/M can be installed like any other Mathematica application.
 
  - [Download the zip archive from GitHub](https://github.com/szhorvat/IGraphM/releases)
  - Open the Mathematica's "Applications" directory by evaluating `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`
- - Unzip the archive, find the `IGraphM` directory, and move it to Mathematica's "Applications" directory.
+ - Unzip the archive, find the `IGraphM` directory, and move it to Mathematica's "Applications" directory.  If earlier versions of the package were installed, they must be fully removed.
 
-**Currently IGraph/M comes only with binaries for OS X 10.9 or later and Linux.**  A Windows version is not available at the moment because I did not manage to compile igraph on Windows.  If you can help with creating a Windows binary, please see the Contributions section below.
+ IGraph/M requires Mathematica 10 or later.  Binaries are included for Windows 64 bit, OS X 10.9 or later, and Linux.  The package must be compiled from source for any other systems.
 
 The package can be loaded with
 
@@ -53,7 +54,7 @@ Currently IGraph/M is still incomplete and under development.  Use
 
     <<IGraphM`
     IGDocumentation[]
-    
+
 to open the documentation notebook.
 
 The documentation is not yet ready and contributions are most welcome.  If you would like to help out with the documentation, please see below.
@@ -66,7 +67,7 @@ If you are interested in extending IGraph/M, send me an email to get technical g
 
 ####Compiling from source
 
-To compile IGraph/M, you need will:
+To compile IGraph/M, you will need:
 
  - A C++ compiler with C++11 support.  I used GCC 4.9 and clang 3.6.
  - A recent development version of [igraph](https://github.com/igraph/igraph). You will need to compile it yourself. igraph 0.7.1 is not compatible.
@@ -85,7 +86,6 @@ Then follow these steps:
 
  - hierarchical random graphs
  - spectral coarse graining
- - layout algorithms that take edge weights into account
  - community detection
  - graphlets
 
@@ -106,7 +106,7 @@ You can contact me in email.  Evaluate the following in Mathematica to get my em
 
 The IGraph/M source code is released under the MIT license, see LICENSE.txt.
 
-igraph (and consequently the IGraph/M binary packages) can be distributed under the terms of the GPLv2.
+igraph (and consequently the IGraph/M binary packages) can be distributed under the terms of the [GPLv2](http://opensource.org/licenses/GPL-2.0).
 
  [1]: https://bitbucket.org/szhorvat/ltemplate
  [2]: http://szhorvat.net/pelican/using-igraph-from-mathematica.html
