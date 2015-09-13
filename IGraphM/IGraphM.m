@@ -58,9 +58,11 @@ IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2
 IGSubisomorphicQ::usage = "IGSubisomorphicQ[graph, subgraph] tests if subgraph is contained within graph.";
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData[] to get list of graphs ordered by isoclass.";
 
-IGBlissCanonicalPermutation::usage =
-    "IGBlissCanonicalPermutation[graph, options] computes a canonical permutation of the graph vertices. " <>
-    "Two graphs are isomorphic iff they have the same canonical permutation.";
+IGBlissCanonicalLabeling::usage =
+    "IGBlissCanonicalLabeling[graph, options] computes a canonical integer labeling of the graph vertices. " <>
+    "Using this labeling brings representations of isomorphic graphs to the same form.";
+IGBlissCanonicalPermutation::usage = "IGBlissCanonicalPermutation[graph] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.";
+IGBlissCanonicalGraph::usage = "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labeling.";
 IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the BLISS algorithm.";
 IGBlissGetIsomorphism::usage = "IGBlissGetIsomorphism[graph1, graph2, options] returns one isomorphism between graph1 and graph2, if it exists.";
 IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.";
@@ -466,6 +468,9 @@ infToZero[arg_] := Replace[arg, Infinity -> 0]
    Requires a parent funtcion that uses Block. *)
 check = If[MatchQ[#, _LibraryFunctionError], Return[#, Block], #]&
 
+libraryErrorQ[_LibraryFunctionError] := True
+libraryErrorQ[_] := False
+
 (* Import compressed expressions. Used in IGData. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
 
@@ -634,14 +639,30 @@ blissSplittingHeuristicsNames = {
 
 blissSplittingHeuristics = AssociationThread[blissSplittingHeuristicsNames, Range@Length[blissSplittingHeuristicsNames] - 1];
 
-IGBlissCanonicalPermutation::usage = IGBlissCanonicalPermutation::usage <>
+IGBlissCanonicalLabeling::usage = IGBlissCanonicalLabeling::usage <>
     StringTemplate[" Available values for the \"SplittingHeuristics\" option: ``." <>
-        "The permutation depends on the splitting heuristics used."][ToString@InputForm@blissSplittingHeuristicsNames];
+        "The labeling depends on the splitting heuristics used."][ToString@InputForm@blissSplittingHeuristicsNames];
+
+Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "First" };
+IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      AssociationThread[
+        VertexList[graph],
+        igIndexVec@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      ]
+    ]
 
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[graph]},
-      igVertexNames[graph]@igIndexVec@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+        InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+    ]
+
+Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
+IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    With[{labeling = IGBlissCanonicalLabeling[graph]},
+      If[libraryErrorQ[labeling], Return[labeling]];
+      Graph[Range@VertexCount[graph], Replace[EdgeList[graph], labeling, {2}]]
     ]
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
