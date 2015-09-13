@@ -8,6 +8,9 @@
 BeginPackage["`LTemplate`", {"SymbolicC`", "CCodeGenerator`", "CCompilerDriver`"}]
 
 `Private`$private = True;
-Get@FileNameJoin[{DirectoryName[$InputFileName], "LTemplateInner.m"}]
+Quiet[
+  Get@FileNameJoin[{DirectoryName[$InputFileName], "LTemplateInner.m"}],
+  General::shdw (* suppress false shadowing warnings if public LTemplate was loaded first *)
+]
 
 EndPackage[]

@@ -6,7 +6,7 @@
 (* :Author:  szhorvat     *)
 (* :Date:    2015-08-03   *)
 
-(* :Package Version: 0.2dev *)
+(* :Package Version: 0.3dev *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2015 Szabolcs Horvát *)
 (* :Keywords: LibraryLink, C++, Template, Code generation *)

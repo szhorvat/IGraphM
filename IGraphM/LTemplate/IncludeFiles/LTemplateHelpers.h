@@ -5,6 +5,7 @@
 #include <algorithm>
 
 namespace mma {
+namespace detail {
 
 // Functions for getting and setting arguments and return values
 
@@ -57,6 +58,7 @@ public:
 };
 
 
+} // namespace detail
 } // namespace mma
 
 #endif // LTEMPLATE_HELPERS_H

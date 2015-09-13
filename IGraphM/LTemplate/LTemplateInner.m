@@ -273,7 +273,7 @@ if (mode == 0) { // create
     (* Attention: make sure stuff called here won't throw LibraryError *)
       transRet[
         {Integer, 1},
-        CCall["mma::get_collection", collectionName[classname]]
+        CCall["mma::detail::get_collection", collectionName[classname]]
       ],
       CReturn["LIBRARY_NO_ERROR"]
     }
@@ -451,16 +451,16 @@ transRet["Void", value_] := value
 types = Dispatch@{
   Integer -> {"mint", "MArgument_getInteger", "MArgument_setInteger"},
   Real -> {"double", "MArgument_getReal", "MArgument_setReal"},
-  Complex -> {"std::complex<double>", "mma::getComplex", "mma::setComplex"},
+  Complex -> {"std::complex<double>", "mma::detail::getComplex", "mma::detail::setComplex"},
   "Boolean" -> {"bool", "MArgument_getBoolean", "MArgument_setBoolean"},
-  "UTF8String" -> {"const char *", "mma::getString", "mma::setString"},
-  {Integer, __} -> {"mma::IntTensorRef", "mma::getTensor<mint>", "mma::setTensor<mint>"},
-  {Real, __} -> {"mma::RealTensorRef", "mma::getTensor<double>", "mma::setTensor<double>"},
-  {Complex, __} -> {"mma::ComplexTensorRef", "mma::getTensor< mma::complex_t >", "mma::setTensor< mma::complex_t >"},
+  "UTF8String" -> {"const char *", "mma::detail::getString", "mma::detail::setString"},
+  {Integer, __} -> {"mma::IntTensorRef", "mma::detail::getTensor<mint>", "mma::detail::setTensor<mint>"},
+  {Real, __} -> {"mma::RealTensorRef", "mma::detail::getTensor<double>", "mma::detail::setTensor<double>"},
+  {Complex, __} -> {"mma::ComplexTensorRef", "mma::detail::getTensor< mma::complex_t >", "mma::detail::setTensor< mma::complex_t >"},
 
   (* This is a special type that translates integer managed expression IDs on the Mathematica side
      into a class reference on the C++ side. It cannot be returned. *)
-  LExpressionID[classname_String] :> {classname <> " &", "mma::getObject<" <> classname <> ">(" <> collectionName[classname]  <> ")", ""}
+  LExpressionID[classname_String] :> {classname <> " &", "mma::detail::getObject<" <> classname <> ">(" <> collectionName[classname]  <> ")", ""}
 };
 
 

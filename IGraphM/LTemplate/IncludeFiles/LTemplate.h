@@ -14,10 +14,6 @@
 #include <sstream>
 #include <complex>
 
-#ifndef LTEMPLATE_CONTEXT
-#define LTEMPLATE_CONTEXT /* empty */
-#endif
-
 namespace mma {
 
 /// Global WolframLibraryData object for accessing the LibraryLink API.
@@ -85,14 +81,16 @@ public:
 #ifdef NDEBUG
 #define massert(condition) ((void)0)
 #else
-#define massert(condition) (void)(((condition) || mma::_massert_impl(#condition, __FILE__, __LINE__)), 0)
+#define massert(condition) (void)(((condition) || mma::detail::massert_impl(#condition, __FILE__, __LINE__)), 0)
 #endif
 
-inline bool _massert_impl(const char *cond, const char *file, int line) {
-    std::ostringstream msg;
-    msg << cond << ", file " << file << ", line " << line;
-    message(msg.str(), M_ASSERT);
-    throw LibraryError();
+namespace detail {
+    inline bool massert_impl(const char *cond, const char *file, int line) {
+        std::ostringstream msg;
+        msg << cond << ", file " << file << ", line " << line;
+        message(msg.str(), M_ASSERT);
+        throw LibraryError();
+    }
 }
 
 
@@ -103,11 +101,21 @@ inline void check_abort() {
 }
 
 
-template<typename T> T * getData(MTensor t);
+namespace detail { // private
+    template<typename T> T * getData(MTensor t);
 
-template<> inline mint * getData(MTensor t) { return libData->MTensor_getIntegerData(t); }
-template<> inline double * getData(MTensor t) { return libData->MTensor_getRealData(t); }
-template<> inline complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
+    template<> inline mint * getData(MTensor t) { return libData->MTensor_getIntegerData(t); }
+    template<> inline double * getData(MTensor t) { return libData->MTensor_getRealData(t); }
+    template<> inline complex_t * getData(MTensor t) { return reinterpret_cast< complex_t * >( libData->MTensor_getComplexData(t) ); }
+
+    // copy data from column major format to row major format
+    template<typename T, typename U>
+    inline void transposedCopy(const T *from, U *to, mint nrow, mint ncol) {
+        for (mint i=0; i < ncol; ++i)
+            for (mint j=0; j < nrow; ++j)
+                to[i + j*ncol] = from[j + i*nrow];
+    }
+}
 
 
 /// Wrapper class for MTensor pointers
@@ -115,15 +123,13 @@ template<typename T>
 class TensorRef {
     MTensor t; // reminder: MTensor is a pointer type    
     const mint len;
-    const std::vector<mint> dims;
     T *tensor_data;
 
 public:
     TensorRef(const MTensor &mt) :
         t(mt),
-        tensor_data(getData<T>(t)),
-        len(libData->MTensor_getFlattenedLength(t)),
-        dims(libData->MTensor_getDimensions(t), libData->MTensor_getDimensions(t) + libData->MTensor_getRank(t))
+        tensor_data(detail::getData<T>(t)),
+        len(libData->MTensor_getFlattenedLength(t))
     {
         // empty
     }
@@ -146,7 +152,7 @@ public:
         return c;
     }
 
-    const std::vector<mint> & dimensions() const { return dims; }
+    const mint *dimensions() const { return libData->MTensor_getDimensions(t); }
 
     T *data() { return tensor_data; }
     T & operator [] (mint i) { return tensor_data[i]; }
@@ -171,8 +177,9 @@ public:
     {
         if (TensorRef<T>::rank() != 2)
             throw LibraryError("MatrixRef: Matrix expected.");
-        nrows = TensorRef<T>::dimensions()[0];
-        ncols = TensorRef<T>::dimensions()[1];
+        const mint *dims = TensorRef<T>::dimensions();
+        nrows = dims[0];
+        ncols = dims[1];
     }
 
     mint rows() const { return nrows; }
@@ -187,7 +194,7 @@ typedef MatrixRef<double>     RealMatrixRef;
 typedef MatrixRef<complex_t>  ComplexMatrixRef;
 
 
-/// Wrapper class for MTensor pointers to rank 2 tensors
+/// Wrapper class for MTensor pointers to rank 3 tensors
 template<typename T>
 class CubeRef : public TensorRef<T> {
     mint nrows, ncols, nslices;
@@ -197,9 +204,10 @@ public:
     {
         if (TensorRef<T>::rank() != 3)
             throw LibraryError("CubeRef: Rank-3 tensor expected.");
-        nrows = TensorRef<T>::dimensions()[0];
-        ncols = TensorRef<T>::dimensions()[1];
-        nslices = TensorRef<T>::dimensions()()[2];
+        const mint *dims = TensorRef<T>::dimensions();
+        nrows = dims[0];
+        ncols = dims[1];
+        nslices = dims[2];
     }
 
     mint rows() const { return nrows; }
@@ -215,11 +223,13 @@ typedef CubeRef<double>     RealCubeRef;
 typedef CubeRef<complex_t>  ComplexCubeRef;
 
 
-template<typename T> int libraryType();
+namespace detail { // private
+    template<typename T> int libraryType();
 
-template<> inline int libraryType<mint>()      { return MType_Integer; }
-template<> inline int libraryType<double>()    { return MType_Real; }
-template<> inline int libraryType<complex_t>() { return MType_Complex; }
+    template<> inline int libraryType<mint>()      { return MType_Integer; }
+    template<> inline int libraryType<double>()    { return MType_Real; }
+    template<> inline int libraryType<complex_t>() { return MType_Complex; }
+}
 
 /// Creates a rank 3 tensor of the given dimensions
 template<typename T>
@@ -229,24 +239,42 @@ inline CubeRef<T> makeCube(mint nrow, mint ncol, mint nslice) {
     dims[0] = nrow;
     dims[1] = ncol;
     dims[2] = nslice;
-    int err = libData->MTensor_new(libraryType<T>(), 3, dims, &t);
+    int err = libData->MTensor_new(detail::libraryType<T>(), 3, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
 }
 
 
-/// Creates a rank 2 tensor of the given dimensions
+/// Creates a matrix (rank 2 tensor) of the given dimensions
 template<typename T>
 inline MatrixRef<T> makeMatrix(mint nrow, mint ncol) {
     MTensor t = NULL;
     mint dims[2];
     dims[0] = nrow;
     dims[1] = ncol;
-    int err = libData->MTensor_new(libraryType<T>(), 2, dims, &t);
+    int err = libData->MTensor_new(detail::libraryType<T>(), 2, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
+}
+
+
+/// Creates a matrix (rank 2 tensor) of the given dimensions from a row-major storage C array
+template<typename T, typename U>
+inline MatrixRef<T> makeMatrix(mint nrow, mint ncol, const U *data) {
+    TensorRef<T> t = makeMatrix<T>(nrow, ncol);
+    std::copy(data, data + nrow*ncol, t.begin());
+    return t;
+}
+
+
+/// Creates a matrix of the given dimensions from a column-major storage C array
+template<typename T, typename U>
+inline MatrixRef<T> makeMatrixTransposed(mint nrow, mint ncol, const U *data) {
+    TensorRef<T> t = makeMatrix<T>(nrow, ncol);
+    detail::transposedCopy(data, t.data(), nrow, ncol);
+    return t;
 }
 
 
@@ -256,10 +284,19 @@ inline TensorRef<T> makeVector(mint len) {
     MTensor t = NULL;
     mint dims[1];
     dims[0] = len;
-    int err = libData->MTensor_new(libraryType<T>(), 1, dims, &t);
+    int err = libData->MTensor_new(detail::libraryType<T>(), 1, dims, &t);
     if (err)
         throw LibraryError("MTensor_new() failed.", err);
     return TensorRef<T>(t);
+}
+
+
+/// Creates a vector of the given length from a C array
+template<typename T, typename U>
+inline TensorRef<T> makeVector(mint len, const U *data) {
+    TensorRef<T> t = makeVector<T>(len);
+    std::copy(data, data+len, t.begin());
+    return t;
 }
 
 
