@@ -423,9 +423,15 @@ Recompile[] :=
 igraphGlobal (* there should only be a single object of this type; it's set in LoadIGraphM[] below *)
 
 LoadIGraphM[] :=
-    If[LoadTemplate[template] === $Failed,
-      $Failed
-      ,
+    Module[{deps},
+      deps = FileNameJoin[{$libraryDirectory, "dependencies.m"}];
+      Check[
+        If[FileExistsQ[deps], Get[deps]],
+        Return[$Failed]
+      ];
+      If[LoadTemplate[template] === $Failed,
+        Return[$Failed]
+      ];
       igraphGlobal = Make["IGlobal"];
       igraphGlobal@"init"[];
     ]
