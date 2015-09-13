@@ -33,6 +33,12 @@ Switch[$OperatingSystem,
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
     "LibraryDirectories" -> {"$HOME/local/lib"}
-  }
+  },
 
+  "Windows",
+  $buildSettings = { 
+    "CompileOptions" -> {"/EHsc", "/wd4244", "/DNOMINMAX"},
+    "IncludeDirectories"->"C:\\msys64\\home\\%USERNAME%\\local\\include",
+    "ExtraObjectFiles" -> "C:\\msys64\\home\\%USERNAME%\\local\\lib\\libigraph.dll.a"
+  }
 ]
