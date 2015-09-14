@@ -45,7 +45,7 @@ class mlStream {
     std::string context;
 
 public:
-    mlStream(MLINK lp_) : lp(lp_) { }
+    explicit mlStream(MLINK lp_) : lp(lp_) { }
     mlStream(MLINK lp_, std::string context_) : lp(lp_), context(context_) { }
 
     MLINK link() { return lp; }
@@ -70,7 +70,7 @@ public:
 struct mlCheckArgs {
     int argc;
 
-    mlCheckArgs(int argc_) : argc(argc_) { }
+    explicit mlCheckArgs(int argc_) : argc(argc_) { }
 };
 
 inline mlStream & operator >> (mlStream &ml, const mlCheckArgs &ca) {

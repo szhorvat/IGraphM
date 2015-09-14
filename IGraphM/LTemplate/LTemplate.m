@@ -9,6 +9,7 @@
 (* :Package Version: 0.3dev *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2015 Szabolcs Horvát *)
+(* :License: MIT license, see LICENSE.txt *)
 (* :Keywords: LibraryLink, C++, Template, Code generation *)
 (* :Discussion: This package simplifies writing LibraryLink code by auto-generating the boilerplate code. *)
 

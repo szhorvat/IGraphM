@@ -1,5 +1,8 @@
 (* Mathematica Package *)
 
+(* :Copyright: (c) 2015 Szabolcs Horvát *)
+(* :License: MIT license, see LICENSE.txt *)
+
 (*
  * To include LTemplate privately in another package, load LTemplatePrivate.m using Get[],
  * then immediately call ConfigureLTemplate[].
