@@ -6,7 +6,7 @@
 (* :Author: szhorvat  *)
 (* :Date: 2015-08-28  *)
 
-(* :Package Version: 0.1.1 *)
+(* :Package Version: 0.1.2dev *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2015 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
@@ -69,12 +69,12 @@ IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the n
 
 IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.";
 IGVF2FindIsomorphisms::usage =
-    "IGVF2FindIsomorphism[graph1, graph2, options] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
-    "IGVF2FindIsomorphism[graph1, graph2, n, options] finds at most n isomorphisms between graph1 and graph2.";
+    "IGVF2FindIsomorphisms[graph1, graph2, options] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
+    "IGVF2FindIsomorphisms[graph1, graph2, n, options] finds at most n isomorphisms between graph1 and graph2.";
 IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[graph, subgraph, options] tests if subgraph is contained in graph using the VF2 algorithm.";
 IGVF2FindSubisomorphisms::usage =
-    "IGVF2FindSubisomorphism[graph, subgraph, options] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
-    "IGVF2FindSubisomorphism[graph, subgraph, n, options] finds at most n subisomorphisms from subgraph to graph.";
+    "IGVF2FindSubisomorphisms[graph, subgraph, options] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
+    "IGVF2FindSubisomorphisms[graph, subgraph, n, options] finds at most n subisomorphisms from subgraph to graph.";
 IGVF2AutomorphismCount::usage = "IGVF2AutomorphismCount[graph] returns the number of automorphisms of graph.";
 IGVF2IsomorphismCount::usage =
     "IGVF2IsomorphismCount[graph1, graph2, options] returns the number of isomorphisms between graph1 and graph2." <>
@@ -93,7 +93,7 @@ IGDyadCensus::usage = "IGDyadCensus[graph]";
 IGTriadCensus::usage = "IGTriadCensus[graph]";
 IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.";
 IGMotifsTotalCount::usage = "IGMotifsTotalCount[graph, motifSize]";
-IGMotifsEstimateTotalCount::usage = "IGMotifsEstimate[graph, motifSize, sampleSize]";
+IGMotifsEstimateTotalCount::usage = "IGMotifsEstimateTotalCount[graph, motifSize, sampleSize]";
 
 IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
@@ -192,7 +192,7 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 
 (***** Package variables *****)
 
-$packageVersion    = "0.1.1";
+$packageVersion    = "0.1.2dev";
 $packageDirectory  = DirectoryName[$InputFileName];
 $libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
@@ -248,11 +248,11 @@ template = LTemplate["IGraphM",
 
         (* Centrality *)
 
-        LFun["betweenness", {}, {Real, 1}],
+        LFun["betweenness", {True|False (* nobigint *)}, {Real, 1}],
         LFun["edgeBetweenness", {}, {Real, 1}],
         LFun["closeness", {True|False (* normalized *)}, {Real, 1}],
 
-        LFun["betweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
+        LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *)}, {Real, 1}],
         LFun["edgeBetweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
         LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
 
@@ -462,6 +462,7 @@ IGraphM::lytcnt = "`` is not a valid value for the \"Continue\" layout option.";
 
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 intVecQ = VectorQ[#, Developer`MachineIntegerQ]&
+positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&
 
 (* Zero out the diagonal of a square matrix. *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
@@ -520,7 +521,7 @@ igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True]
 
 (***** Public functions *****)
 
-IGDocumentation[] := (NotebookOpen@FileNameJoin[{$packageDirectory, "Documentation", "IGDocumentation.nb"}, Saveable -> False]; Null)
+IGDocumentation[] := (NotebookOpen[FileNameJoin[{$packageDirectory, "Documentation", "IGDocumentation.nb"}], Saveable -> False]; Null)
 
 (*  IGData  *)
 
@@ -590,21 +591,28 @@ IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := igraphGlobal@"graph
 
 (* Centrality *)
 
-IGBetweenness[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"betweenness"[]]
+Options[IGBetweenness] = { "UseBigInt" -> True };
+IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, ig@"betweenness"[Not@TrueQ@OptionValue["UseBigInt"]]]
 
-IGEdgeBetweenness[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
+IGEdgeBetweenness[g_?igGraphQ] :=
+    Block[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
 
 Options[IGCloseness] = { "Normalized" -> False };
-IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] := Block[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
+IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
 
 (* Centrality estimates *)
 
-IGBetweennessEstimate[g_?igGraphQ, cutoff_?Positive] := Block[{ig = igMake[g]}, ig@"betweennessEstimate"@infToZero[cutoff]]
+Options[IGBetweennessEstimate] = { "UseBigInt" -> True };
+IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, ig@"betweennessEstimate"[infToZero[cutoff], Not@TrueQ@OptionValue["UseBigInt"]]]
 
-IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?Positive] := Block[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
+IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ] :=
+    Block[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
 
 Options[IGClosenessEstimate] = { "Normalized" -> False };
-IGClosenessEstimate[g_?igGraphQ, cutoff_?Positive, opt : OptionsPattern[]] :=
+IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[g]},
       ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"]]
     ]

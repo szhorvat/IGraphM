@@ -151,9 +151,9 @@ public:
 
     // Centrality measures
 
-    mma::RealTensorRef betweenness() const {
+    mma::RealTensorRef betweenness(bool nobigint) const {
         igVector vec;
-        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, passWeights(), true));
+        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, passWeights(), nobigint));
         return vec.makeMTensor();
     }
 
@@ -171,9 +171,9 @@ public:
 
     // Centrality measures (estimates)
 
-    mma::RealTensorRef betweennessEstimate(double cutoff) const {
+    mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint) const {
         igVector vec;
-        igCheck(igraph_betweenness_estimate(&graph, &vec.vec, igraph_vss_all(), true, cutoff, passWeights(), true));
+        igCheck(igraph_betweenness_estimate(&graph, &vec.vec, igraph_vss_all(), true, cutoff, passWeights(), nobigint));
         return vec.makeMTensor();
     }
 
@@ -288,7 +288,7 @@ public:
 
         struct VF2data {
             std::list<igVector> list;
-            long remaining; // remaining number of isomorphisms to find, negative value will run until all are found
+            mlint64 remaining; // remaining number of isomorphisms to find, negative value will run until all are found
         } vf2data;
 
         ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
@@ -338,7 +338,7 @@ public:
 
         struct VF2data {
             std::list<igVector> list;
-            long remaining; // remaining number of isomorphisms to find, negative value will run until all are found
+            mlint64 remaining; // remaining number of isomorphisms to find, negative value will run until all are found
         } vf2data;
 
         ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
