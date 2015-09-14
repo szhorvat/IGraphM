@@ -69,12 +69,12 @@ IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the n
 
 IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.";
 IGVF2FindIsomorphisms::usage =
-    "IGVF2FindIsomorphism[graph1, graph2, options] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
-    "IGVF2FindIsomorphism[graph1, graph2, n, options] finds at most n isomorphisms between graph1 and graph2.";
+    "IGVF2FindIsomorphisms[graph1, graph2, options] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
+    "IGVF2FindIsomorphisms[graph1, graph2, n, options] finds at most n isomorphisms between graph1 and graph2.";
 IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[graph, subgraph, options] tests if subgraph is contained in graph using the VF2 algorithm.";
 IGVF2FindSubisomorphisms::usage =
-    "IGVF2FindSubisomorphism[graph, subgraph, options] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
-    "IGVF2FindSubisomorphism[graph, subgraph, n, options] finds at most n subisomorphisms from subgraph to graph.";
+    "IGVF2FindSubisomorphisms[graph, subgraph, options] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
+    "IGVF2FindSubisomorphisms[graph, subgraph, n, options] finds at most n subisomorphisms from subgraph to graph.";
 IGVF2AutomorphismCount::usage = "IGVF2AutomorphismCount[graph] returns the number of automorphisms of graph.";
 IGVF2IsomorphismCount::usage =
     "IGVF2IsomorphismCount[graph1, graph2, options] returns the number of isomorphisms between graph1 and graph2." <>
@@ -93,7 +93,7 @@ IGDyadCensus::usage = "IGDyadCensus[graph]";
 IGTriadCensus::usage = "IGTriadCensus[graph]";
 IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.";
 IGMotifsTotalCount::usage = "IGMotifsTotalCount[graph, motifSize]";
-IGMotifsEstimateTotalCount::usage = "IGMotifsEstimate[graph, motifSize, sampleSize]";
+IGMotifsEstimateTotalCount::usage = "IGMotifsEstimateTotalCount[graph, motifSize, sampleSize]";
 
 IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
