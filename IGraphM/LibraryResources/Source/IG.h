@@ -288,7 +288,7 @@ public:
 
         struct VF2data {
             std::list<igVector> list;
-            long remaining; // remaining number of isomorphisms to find, negative value will run until all are found
+            mlint64 remaining; // remaining number of isomorphisms to find, negative value will run until all are found
         } vf2data;
 
         ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
@@ -338,7 +338,7 @@ public:
 
         struct VF2data {
             std::list<igVector> list;
-            long remaining; // remaining number of isomorphisms to find, negative value will run until all are found
+            mlint64 remaining; // remaining number of isomorphisms to find, negative value will run until all are found
         } vf2data;
 
         ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
