@@ -248,11 +248,11 @@ template = LTemplate["IGraphM",
 
         (* Centrality *)
 
-        LFun["betweenness", {}, {Real, 1}],
+        LFun["betweenness", {True|False (* nobigint *)}, {Real, 1}],
         LFun["edgeBetweenness", {}, {Real, 1}],
         LFun["closeness", {True|False (* normalized *)}, {Real, 1}],
 
-        LFun["betweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
+        LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *)}, {Real, 1}],
         LFun["edgeBetweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
         LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
 
@@ -462,6 +462,7 @@ IGraphM::lytcnt = "`` is not a valid value for the \"Continue\" layout option.";
 
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 intVecQ = VectorQ[#, Developer`MachineIntegerQ]&
+positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&
 
 (* Zero out the diagonal of a square matrix. *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
@@ -590,21 +591,28 @@ IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := igraphGlobal@"graph
 
 (* Centrality *)
 
-IGBetweenness[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"betweenness"[]]
+Options[IGBetweenness] = { "UseBigInt" -> True };
+IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, ig@"betweenness"[Not@TrueQ@OptionValue["UseBigInt"]]]
 
-IGEdgeBetweenness[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
+IGEdgeBetweenness[g_?igGraphQ] :=
+    Block[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
 
 Options[IGCloseness] = { "Normalized" -> False };
-IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] := Block[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
+IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
 
 (* Centrality estimates *)
 
-IGBetweennessEstimate[g_?igGraphQ, cutoff_?Positive] := Block[{ig = igMake[g]}, ig@"betweennessEstimate"@infToZero[cutoff]]
+Options[IGBetweennessEstimate] = { "UseBigInt" -> True };
+IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, ig@"betweennessEstimate"[infToZero[cutoff], Not@TrueQ@OptionValue["UseBigInt"]]]
 
-IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?Positive] := Block[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
+IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ] :=
+    Block[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
 
 Options[IGClosenessEstimate] = { "Normalized" -> False };
-IGClosenessEstimate[g_?igGraphQ, cutoff_?Positive, opt : OptionsPattern[]] :=
+IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[g]},
       ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"]]
     ]

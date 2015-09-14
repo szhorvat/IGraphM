@@ -3586,6 +3586,38 @@ Cell[BoxData["True"], "Output"]
 
 Cell[CellGroupData[{
 
+Cell["Structural properties", "Section"],
+
+Cell[CellGroupData[{
+
+Cell["Betwenness centrality", "Subsection"],
+
+Cell["\<\
+IGBetwenness[] and IGBetwennessEstimate[] have a \
+\[OpenCurlyDoubleQuote]UseBigInt\[CloseCurlyDoubleQuote] option, set to True \
+by default.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Options", "[", "IGBetweenness", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"\<\"UseBigInt\"\>", "\[Rule]", "True"}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell["\<\
+Setting this to False will speed up betweenness calculation significantly but \
+it may give incorrect results for large graphs with lots of symmetries such \
+as GridGraph[{40,40}], due to integer overflow.\
+\>", "Text"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["Layout algorithms", "Section"],
 
 Cell[CellGroupData[{

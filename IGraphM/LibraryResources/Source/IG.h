@@ -151,9 +151,9 @@ public:
 
     // Centrality measures
 
-    mma::RealTensorRef betweenness() const {
+    mma::RealTensorRef betweenness(bool nobigint) const {
         igVector vec;
-        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, passWeights(), true));
+        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, passWeights(), nobigint));
         return vec.makeMTensor();
     }
 
@@ -171,9 +171,9 @@ public:
 
     // Centrality measures (estimates)
 
-    mma::RealTensorRef betweennessEstimate(double cutoff) const {
+    mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint) const {
         igVector vec;
-        igCheck(igraph_betweenness_estimate(&graph, &vec.vec, igraph_vss_all(), true, cutoff, passWeights(), true));
+        igCheck(igraph_betweenness_estimate(&graph, &vec.vec, igraph_vss_all(), true, cutoff, passWeights(), nobigint));
         return vec.makeMTensor();
     }
 
