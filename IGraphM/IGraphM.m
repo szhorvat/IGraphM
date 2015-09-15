@@ -449,6 +449,8 @@ If[LoadIGraphM[] === $Failed,
     ,
     Print[Style["Successfully compiled and loaded the library. \[HappySmiley]", Red]];
   ]
+  ,
+  Print["Evaluate IGDocumentation[] to get started."]
 ]
 
 
