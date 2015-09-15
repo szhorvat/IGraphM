@@ -25,22 +25,24 @@ IGraphM::usage = "IGraphM is a symbol to which igraph related messages are assoc
 `Developer`Recompile::usage = "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
 PrependTo[$ContextPath, $Context <> "Developer`"];
 
-IGDocumentation::usage = "IGDocumentation[] opens IGraph/M documentation.";
+IGDocumentation::usage = "IGDocumentation[] opens the IGraph/M documentation.";
 
 IGData::usage =
     "IGData[] returns a list of available items.\n" <>
     "IGData[item] returns the requested item.";
 
-IGVersion::usage = "IGVersion[] returns the version of the igraph library in use.";
+IGVersion::usage = "IGVersion[] returns the IGraph/M version along with the version of the igraph library in use.";
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
-IGLCF::usage = "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation.";
+IGLCF::usage =
+    "IGLCF[shifts, repeats] creates a graph from LCF notation." <>
+    "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
 
-IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported.";
+IGBetweenness::usage = "IGBetweenness[graph, options] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph. Weighted graphs are supported.";
 IGCloseness::usage = "IGCloseness[graph, options] gives a list of closeness centralities for the vertices of graph. Weighted graphs are supported.";
 
-IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff] estimates vertex betweenness by consdering only paths of at most length cutoff.";
+IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff, options] estimates vertex betweenness by consdering only paths of at most length cutoff.";
 IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff] estimates edge betweenness by consdering only paths of at most length cutoff.";
 IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff, options] estimates closeness centrality by consdering only paths of at most length cutoff.";
 
@@ -51,8 +53,8 @@ IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] tests if graph 
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
 IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly connected.";
 IGGraphicalQ::usage =
-    "IGGraphicalQ[degrees] tests if a degree sequence for an undirected simple graph is graphical.\n" <>
-    "IGGraphicalQ[indegrees, outdegrees] tests if a degree sequence for a directed simple graph is graphical.";
+    "IGGraphicalQ[degrees] tests if degrees is the degree sequence of any simple undirected graph.\n" <>
+    "IGGraphicalQ[indegrees, outdegrees] tests if indegres with outdegrees is the degree sequence of any simple directed graph.";
 
 IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic.";
 IGSubisomorphicQ::usage = "IGSubisomorphicQ[graph, subgraph] tests if subgraph is contained within graph.";
@@ -61,11 +63,11 @@ IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the grap
 IGBlissCanonicalLabeling::usage =
     "IGBlissCanonicalLabeling[graph, options] computes a canonical integer labeling of the graph vertices. " <>
     "Using this labeling brings representations of isomorphic graphs to the same form.";
-IGBlissCanonicalPermutation::usage = "IGBlissCanonicalPermutation[graph] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.";
-IGBlissCanonicalGraph::usage = "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labeling.";
+IGBlissCanonicalPermutation::usage = "IGBlissCanonicalPermutation[graph, options] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.";
+IGBlissCanonicalGraph::usage = "IGBlissCanonicalGraph[graph, options] returns a canonical graph of graph, based on the canonical integer labeling.";
 IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the BLISS algorithm.";
 IGBlissGetIsomorphism::usage = "IGBlissGetIsomorphism[graph1, graph2, options] returns one isomorphism between graph1 and graph2, if it exists.";
-IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.";
+IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph, options] returns the number of automorphisms of graph.";
 
 IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.";
 IGVF2FindIsomorphisms::usage =
@@ -87,7 +89,7 @@ IGLADGetSubisomorphism::usage = "IGLADGetSubisomorphism[subgraph, graph] returns
 IGTopologicalOrdering::usage =
     "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order." <>
     "Note that the values returned are vertex indices, not vertex names.";
-IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph]";
+IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph, options]";
 
 IGDyadCensus::usage = "IGDyadCensus[graph]";
 IGTriadCensus::usage = "IGTriadCensus[graph]";
