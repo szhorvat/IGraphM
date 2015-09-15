@@ -36,16 +36,40 @@ Cell[BoxData[
 Cell[BoxData[{
  RowBox[{
   RowBox[{"m3", "=", 
-   RowBox[{"SortBy", "[", 
+   RowBox[{
     RowBox[{
-     RowBox[{"motifs", "[", "3", "]"}], ",", "IGIsoclass"}], "]"}]}], 
+     RowBox[{"Graph", "[", 
+      RowBox[{"#", ",", 
+       RowBox[{"VertexCoordinates", "\[Rule]", 
+        RowBox[{"CirclePoints", "[", "3", "]"}]}]}], "]"}], "&"}], "/@", 
+    RowBox[{"SortBy", "[", 
+     RowBox[{
+      RowBox[{"motifs", "[", "3", "]"}], ",", "IGIsoclass"}], "]"}]}]}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"m4", "=", 
-   RowBox[{"SortBy", "[", 
+   RowBox[{
     RowBox[{
-     RowBox[{"motifs", "[", "4", "]"}], ",", "IGIsoclass"}], "]"}]}], 
+     RowBox[{"Graph", "[", 
+      RowBox[{"#", ",", 
+       RowBox[{"VertexCoordinates", "\[Rule]", 
+        RowBox[{"CirclePoints", "[", "4", "]"}]}]}], "]"}], "&"}], "/@", 
+    RowBox[{"SortBy", "[", 
+     RowBox[{
+      RowBox[{"motifs", "[", "4", "]"}], ",", "IGIsoclass"}], "]"}]}]}], 
   ";"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MANlabels", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<003\>\"", ",", "\"\<012\>\"", ",", "\"\<021U\>\"", ",", 
+     "\"\<102\>\"", ",", "\"\<021C\>\"", ",", "\"\<111D\>\"", ",", 
+     "\"\<021D\>\"", ",", "\"\<030T\>\"", ",", "\"\<120D\>\"", ",", 
+     "\"\<111U\>\"", ",", "\"\<201\>\"", ",", "\"\<030C\>\"", ",", 
+     "\"\<120C\>\"", ",", "\"\<120U\>\"", ",", "\"\<210\>\"", ",", 
+     "\"\<300\>\""}], "}"}]}], ";"}]], "Input"],
 
 Cell[BoxData[{
  RowBox[{
@@ -73,18 +97,22 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"zexport", "[", 
-  RowBox[{"\"\<IGData.mz\>\"", ",", 
-   RowBox[{"<|", 
+ RowBox[{"zexport", "[", "\[IndentingNewLine]", 
+  RowBox[{"\"\<IGData.mz\>\"", ",", "\[IndentingNewLine]", 
+   RowBox[{"<|", "\[IndentingNewLine]", 
     RowBox[{
      RowBox[{
       RowBox[{"{", 
        RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "3"}], "}"}], "\[Rule]", 
-      "m3"}], ",", 
+      "m3"}], ",", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"{", 
        RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "4"}], "}"}], "\[Rule]", 
-      "m4"}]}], "|>"}]}], "]"}]], "Input"],
+      "m4"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\"\<MANTriadLabels\>\"", "\[Rule]", 
+      RowBox[{"AssociationThread", "[", 
+       RowBox[{"MANlabels", ",", "m3"}], "]"}]}]}], "\[IndentingNewLine]", 
+    "|>"}]}], "\[IndentingNewLine]", "]"}]], "Input"],
 
 Cell[BoxData["\<\"IGData.mz\"\>"], "Output"]
 }, Open  ]],
