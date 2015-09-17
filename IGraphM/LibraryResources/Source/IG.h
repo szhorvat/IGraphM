@@ -66,6 +66,12 @@ public:
         igConstructorCheck(igraph_lcf_vector(&graph, n, &shifts, repeats));
     }
 
+    void makeLattice(mma::RealTensorRef dims, mint nei, bool directed, bool mutual, bool periodic) {
+        destroy();
+        igraph_vector_t igdims = igVectorView(dims);
+        igConstructorCheck(igraph_lattice(&graph, &igdims, nei, directed, mutual, periodic));
+    }
+
     // Weights
 
     void setWeights(mma::RealTensorRef w) {

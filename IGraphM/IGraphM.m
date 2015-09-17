@@ -37,6 +37,7 @@ IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used
 IGLCF::usage =
     "IGLCF[shifts, repeats] creates a graph from LCF notation." <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
+IGMakeLattice::usage = "IGMakeLattice[dimensions]";
 
 IGBetweenness::usage = "IGBetweenness[graph, options] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph. Weighted graphs are supported.";
@@ -222,6 +223,7 @@ template = LTemplate["IGraphM",
 
         LFun["fromEdgeList", {{Real, 2, "Constant"} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
         LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
+        LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
 
         (* Weights *)
 
@@ -550,8 +552,18 @@ Options[IGLCF] = { GraphLayout -> "CircularEmbedding" };
 
 IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[{IGLCF, Graph}]] :=
     Block[{ig = Make["IG"]},
-      ig@"fromLCF"[Replace[n, Automatic :> Length[shifts] repeats], shifts, repeats];
+      check@ig@"fromLCF"[Replace[n, Automatic :> Length[shifts] repeats], shifts, repeats];
       Graph[igToGraph[ig], GraphLayout -> OptionValue[GraphLayout], opt]
+    ]
+
+Options[IGMakeLattice] = {
+  "Radius" -> 1, DirectedEdges -> False, "Mutual" -> False, "Periodic" -> False
+};
+
+IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
+    Block[{ig = Make["IG"]},
+      check@ig@"makeLattice"[dims, OptionValue["Radius"], OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Periodic"]];
+      Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
     ]
 
 (* Create (games) *)
