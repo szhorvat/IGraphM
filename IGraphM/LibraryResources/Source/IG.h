@@ -420,6 +420,20 @@ public:
         return map.makeMTensor();
     }
 
+    void ladFindSubisomorphisms(MLINK link) const  {
+        mlStream ml(link);
+        int induced;
+        mint id;
+        ml >> mlCheckArgs(2) >> id >> induced;
+
+        igList list;
+        igraph_bool_t iso;
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, NULL, &iso, NULL, &list.list, induced, 0));
+
+        ml.newPacket();
+        ml << list;
+    }
+
     // Topological sorting, directed acylic graphs
 
     // see also dagQ() under Testing

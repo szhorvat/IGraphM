@@ -84,7 +84,8 @@ IGVF2IsomorphismCount::usage =
 IGVF2SubisomorphismCount::usage = "IGVF2SubisomorphismCount[subgraph, graph, options]";
 
 IGLADSubisomorphicQ::usage = "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs.";
-IGLADGetSubisomorphism::usage = "IGLADGetSubisomorphism[subgraph, graph] returns one isomorphism between graph1 and graph2, if it exists.";
+IGLADGetSubisomorphism::usage = "IGLADGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.";
+IGLADFindSubisomorphisms::usage = "IGLADFindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph.";
 
 IGTopologicalOrdering::usage =
     "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order." <>
@@ -281,6 +282,7 @@ template = LTemplate["IGraphM",
         LFun["vf2SubisomorphismCount", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, Integer],
         LFun["ladSubisomorphic", {LExpressionID["IG"], True|False (* induced *)}, True|False],
         LFun["ladGetSubisomorphism", {LExpressionID["IG"], True|False (* induced *)}, {Real, 1}],
+        LFun["ladFindSubisomorphisms", LinkObject],
 
         (* Topological sorting and directed acylic graphs *)
 
@@ -797,6 +799,17 @@ IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern
         VertexList[subgraph],
         igVertexNames[graph][result]
       ]
+    ]
+
+Options[IGLADFindSubisomorphisms] = { "Induced" -> False };
+
+IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result},
+      result = igIndexVec@check@ig1@"ladFindSubisomorphisms"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"]];
+      AssociationThread[
+        VertexList[subgraph],
+        igVertexNames[graph][#]
+      ]& /@ result
     ]
 
 (* Directed acylic graphs and topological ordering *)
