@@ -38,6 +38,7 @@ public:
     igVector() : moved(false) { igraph_vector_init(&vec, 0); }
     igVector(igVector &&source) : moved(false) { vec = source.vec; source.moved = true; }
     igVector(const igraph_vector_t *source) : moved(false) { igraph_vector_copy(&vec, source); }
+    explicit igVector(long len) : moved(false) { igraph_vector_init(&vec, len); }
     ~igVector() { if (!moved) igraph_vector_destroy(&vec); }
 
     long length() const { return vec.end - vec.stor_begin; }
