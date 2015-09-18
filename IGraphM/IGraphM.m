@@ -98,6 +98,11 @@ IGTriadCensus::usage = "IGTriadCensus[graph]";
 IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.";
 IGMotifsTotalCount::usage = "IGMotifsTotalCount[graph, motifSize]";
 IGMotifsEstimateTotalCount::usage = "IGMotifsEstimateTotalCount[graph, motifSize, sampleSize]";
+IGTriangles::usage = "IGTriangles[graph] lists all triangles in the graph. Edge directions are ignored.";
+IGAdjacentTriangleCount::usage =
+    "IGAdjacentTriangleCount[graph] counts the triangles each vertex participates in. Edge directions are ignored.\n" <>
+    "IGAdjacentTriangleCount[graph, vertex] counts the triangles vertex participates in.\n" <>
+    "IGAdjacentTriangleCount[graph, {vertex1, vertex2, \[Ellipsis]}] counts the triangles the specified vertices participate in.";
 
 IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
@@ -307,6 +312,9 @@ template = LTemplate["IGraphM",
         LFun["motifs", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, {Real, 1}],
         LFun["motifsNo", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, Integer],
         LFun["motifsEstimate", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *), Integer (* sample_size *)}, Integer],
+
+        LFun["triangles", {}, {Integer, 1}],
+        LFun["countAdjacentTriangles", {{Real, 1, "Constant"}}, {Real, 1}],
 
         (* Shortest paths *)
 
@@ -871,6 +879,21 @@ IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
 
 IGMotifsEstimateTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMake[graph]}, ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize] ]
+
+IGTriangles[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]},
+      Partition[igVertexNames[graph]@igIndexVec@ig@"triangles"[], 3]
+    ]
+
+vss[graph_][All] := {}
+vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, Return@Return[$Failed, Block]]
+
+IGAdjacentTriangleCount[graph_?igGraphQ, vs_List : All] :=
+    Block[{ig = igMake[graph]},
+      Round@check@ig@"countAdjacentTriangles"[vss[graph][vs]]
+    ]
+
+IGAdjacentTriangleCount[graph_?igGraphQ, v_] := First@IGAdjacentTriangleCount[graph, {v}]
 
 (* Shortest paths *)
 

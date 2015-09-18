@@ -495,6 +495,19 @@ public:
         return res;
     }
 
+    mma::IntTensorRef triangles() const {
+        igIntVector vec;
+        igCheck(igraph_list_triangles(&graph, &vec.vec));
+        return vec.makeMTensor();
+    }
+
+    mma::RealTensorRef countAdjacentTriangles(mma::RealTensorRef t) const {
+        igraph_vector_t vsvec = igVectorView(t);
+        igVector res;
+        igCheck(igraph_adjacent_triangles(&graph, &res.vec, t.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
+        return res.makeMTensor();
+    }
+
     // Shortest paths
 
     mma::RealMatrixRef shortestPaths() const {
