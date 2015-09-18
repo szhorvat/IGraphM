@@ -189,7 +189,7 @@ IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph]";
 IGGraphlets::usage =
     "IGGraphlets[graph]\n" <>
     "IGGraphlets[graph, nIterations]";
-IGGraphletBasis::usage = "IGGraphletsBasis[graph]";
+IGGraphletBasis::usage = "IGGraphletBasis[graph]";
 IGGraphletProject::usage =
     "IGGraphletProject[graph, cliques]" <>
     "IGGraphletProject[graph, cliques, nIterations]";
@@ -491,6 +491,25 @@ IGraphM::lytcnt = "`` is not a valid value for the \"Continue\" layout option.";
 
 (***** Helper functions *****)
 
+(* For error handling: *)
+
+igTag (* private tag for throw/catch *)
+throw[val_] := Throw[val, igTag]
+
+SetAttributes[catch, HoldFirst]
+catch[expr_] := Catch[expr, igTag]
+
+check[val_LibraryFunctionError] := throw[val] (* TODO change to $Failed *)
+check[$Failed] := throw[$Failed]
+check[HoldPattern[LibraryFunction[___][___]]] := throw[$Failed]
+check[val_] := val
+
+sck[HoldPattern[LibraryFunction[___][___]]] := $Failed
+sck[val_] := val
+
+
+(* For argument checking: *)
+
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 intVecQ = VectorQ[#, Developer`MachineIntegerQ]&
 positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&
@@ -500,11 +519,6 @@ zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
-
-(* Return immediately from parent function if we have a LibraryFunctionError.
-   Used on the immediately on return values of library functions.
-   Requires a parent funtcion that uses Block. *)
-check = If[MatchQ[#, _LibraryFunctionError], Return[#, Block], #]&
 
 libraryErrorQ[_LibraryFunctionError] := True
 libraryErrorQ[_] := False
@@ -550,6 +564,12 @@ igVertexNames[graph_][indices_] := Part[VertexList[graph], indices]
 (* check if the argument is an igraph compatible graph *)
 igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &
 
+
+(* convert vertex list to IG format *)
+vss[graph_][All] := {}
+vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, throw[$Failed]]
+
+
 (***** Public functions *****)
 
 IGDocumentation[] := (NotebookOpen[FileNameJoin[{$packageDirectory, "Documentation", "IGDocumentation.nb"}], Saveable -> False, WindowTitle -> "IGraph/M Documentation"]; Null)
@@ -567,14 +587,14 @@ IGVersion[] :=
     "\nigraph " <> igraphGlobal@"version"[] <> " (" <> igraphGlobal@"compilationDate"[] <> ")\n" <>
     $System;
 
-IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := igraphGlobal@"seedRandom"[seed]
+IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := sck@igraphGlobal@"seedRandom"[seed]
 
 (* Create *)
 
 Options[IGLCF] = { GraphLayout -> "CircularEmbedding" };
 
 IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[{IGLCF, Graph}]] :=
-    Block[{ig = Make["IG"]},
+    catch@Block[{ig = Make["IG"]},
       check@ig@"fromLCF"[Replace[n, Automatic :> Length[shifts] repeats], shifts, repeats];
       Graph[igToGraph[ig], GraphLayout -> OptionValue[GraphLayout], opt]
     ]
@@ -584,7 +604,7 @@ Options[IGMakeLattice] = {
 };
 
 IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
-    Block[{ig = Make["IG"]},
+    catch@Block[{ig = Make["IG"]},
       check@ig@"makeLattice"[dims, OptionValue["Radius"], OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Periodic"]];
       Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
     ]
@@ -593,69 +613,73 @@ IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]]
 
 Options[IGDegreeSequenceGame] = { Method -> "SimpleNoMultiple" };
 
-igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>
+igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>;
 
 IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <>
     StringTemplate[" Available methods: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
 
-IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[]] := IGDegreeSequenceGame[{}, degrees, opt]
+IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
+    catch@Graph[
+      igDegreeSequenceGame[{}, degrees, OptionValue[Method]],
+      Sequence@@FilterRules[{opt}, Options[Graph]]
+    ]
 
 IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
+    catch@Graph[
+      igDegreeSequenceGame[indegrees, outdegrees, OptionValue[Method]],
+      Sequence@@FilterRules[{opt}, Options[Graph]]
+    ]
+
+igDegreeSequenceGame[indegrees_, outdegrees_, method_] :=
     Block[{ig = Make["IG"]},
-      Check[
-        ig@"degreeSequenceGame"[outdegrees, indegrees, Lookup[igDegreeSequenceGameMethods, OptionValue[Method], -1]];
-        Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
-        ,
-        $Failed
-        ,
-        {LTemplate::error}
-      ]
+      check@ig@"degreeSequenceGame"[outdegrees, indegrees, Lookup[igDegreeSequenceGameMethods, method, -1]];
+      igToGraph[ig]
     ]
 
 
 Options[IGKRegularGame] = { "AllowMultipleEdges" -> False, DirectedEdges -> False };
 IGKRegularGame[n_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[{IGKRegularGame, Graph}]] :=
-    Block[{ig = Make["IG"]},
-      ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["AllowMultipleEdges"]];
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["AllowMultipleEdges"]];
       Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
     ]
 
 (* Testing *)
 
-IGDirectedAcyclicGraphQ[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"dagQ"[]]
+IGDirectedAcyclicGraphQ[g_?igGraphQ] := Block[{ig = igMake[g]}, sck@ig@"dagQ"[]]
 
-IGConnectedQ[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"connectedQ"[True]]
-IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMake[g]}, ig@"connectedQ"[False]]
+IGConnectedQ[g_?igGraphQ] := Block[{ig = igMake[g]}, sck@ig@"connectedQ"[True]]
+IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMake[g]}, sck@ig@"connectedQ"[False]]
 
 IGGraphicalQ[degrees_?nonNegIntVecQ] := IGGraphicalQ[{}, degrees]
-IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := igraphGlobal@"graphicalQ"[outdeg, indeg]
+IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"graphicalQ"[outdeg, indeg]
 
 (* Centrality *)
 
 Options[IGBetweenness] = { "UseBigInt" -> True };
 IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[g]}, ig@"betweenness"[Not@TrueQ@OptionValue["UseBigInt"]]]
+    Block[{ig = igMake[g]}, sck@ig@"betweenness"[Not@TrueQ@OptionValue["UseBigInt"]]]
 
 IGEdgeBetweenness[g_?igGraphQ] :=
-    Block[{ig = igMake[g]}, ig@"edgeBetweenness"[]]
+    Block[{ig = igMake[g]}, sck@ig@"edgeBetweenness"[]]
 
 Options[IGCloseness] = { "Normalized" -> False };
 IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[g]}, ig@"closeness"[OptionValue["Normalized"]]]
+    Block[{ig = igMake[g]}, sck@ig@"closeness"[OptionValue["Normalized"]]]
 
 (* Centrality estimates *)
 
 Options[IGBetweennessEstimate] = { "UseBigInt" -> True };
 IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[g]}, ig@"betweennessEstimate"[infToZero[cutoff], Not@TrueQ@OptionValue["UseBigInt"]]]
+    Block[{ig = igMake[g]}, sck@ig@"betweennessEstimate"[infToZero[cutoff], Not@TrueQ@OptionValue["UseBigInt"]]]
 
 IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ] :=
-    Block[{ig = igMake[g]}, ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
+    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
 
 Options[IGClosenessEstimate] = { "Normalized" -> False };
 IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[g]},
-      ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"]]
+      sck@ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"]]
     ]
 
 (* Randomization *)
@@ -664,8 +688,8 @@ IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[
 
 Options[IGRewire] = { "AllowLoops" -> False };
 IGRewire[g_?igGraphQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[g]},
-      ig@"rewire"[n, OptionValue["AllowLoops"]];
+    catch@Block[{ig = igMake[g]},
+      check@ig@"rewire"[n, OptionValue["AllowLoops"]];
       igToGraph[ig]
     ]
 
@@ -679,12 +703,12 @@ IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[
 (* Isomorphism *)
 
 IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
-    Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
+    Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, sck@ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
 
 IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
-    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, sck@ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
 
-IGIsoclass[graph_?igGraphQ] := Block[{ig = igMake[graph]}, ig@"isoclass"[]]
+IGIsoclass[graph_?igGraphQ] := Block[{ig = igMake[graph]}, sck@ig@"isoclass"[]]
 
 
 blissSplittingHeuristicsNames = {
@@ -700,22 +724,22 @@ IGBlissCanonicalLabeling::usage = IGBlissCanonicalLabeling::usage <>
 
 Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       AssociationThread[
         VertexList[graph],
-        igIndexVec@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+        igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
       ]
     ]
 
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
         InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    With[{labeling = IGBlissCanonicalLabeling[graph]},
+    catch@With[{labeling = check@IGBlissCanonicalLabeling[graph, opt]},
       If[libraryErrorQ[labeling], Return[labeling]];
       Graph[Range@VertexCount[graph], Replace[EdgeList[graph], labeling, {2}]]
     ]
@@ -723,12 +747,12 @@ IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
 IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMake[graph1], ig2 = igMake[graph2]},
-      ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      sck@ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "First" };
 IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], result},
+    catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], result},
       result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]];
       If[result === {}, Return[{}]];
       List@AssociationThread[
@@ -739,7 +763,7 @@ IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]
 
 Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "First" };
 IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
@@ -754,13 +778,13 @@ IGVF2IsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
       {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
-      ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+      sck@ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
 Options[IGVF2FindIsomorphisms] = { "VertexColors" -> None, "EdgeColors" -> None };
 
 IGVF2FindIsomorphisms[graph1_?igGraphQ, graph2_?igGraphQ, max : (_?Internal`PositiveMachineIntegerQ | All | Infinity) : All, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2, n, result},
+    catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2, n, result},
       n = Replace[max, All|Infinity -> -1];
       {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
@@ -777,13 +801,13 @@ IGVF2SubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]]
     Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2},
       {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
-      ig1@"vf2Subisomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+      sck@ig1@"vf2Subisomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
 Options[IGVF2FindSubisomorphisms] = { "VertexColors" -> None, "EdgeColors" -> None };
 
 IGVF2FindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, max : (_?Internal`PositiveMachineIntegerQ | All | Infinity) : All, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2, n, result},
+    check@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2, n, result},
       n = Replace[max, All|Infinity -> -1];
       {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
@@ -804,7 +828,7 @@ IGVF2IsomorphismCount[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]
     Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
       {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
-      ig1@"vf2IsomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+      sck@ig1@"vf2IsomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
 Options[IGVF2SubisomorphismCount] = { "VertexColors" -> None, "EdgeColors" -> None };
@@ -813,7 +837,7 @@ IGVF2SubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPatte
     Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2},
       {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
-      ig1@"vf2SubisomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+      sck@ig1@"vf2SubisomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
 
@@ -821,13 +845,13 @@ Options[IGLADSubisomorphicQ] = { "Induced" -> False };
 
 IGLADSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
-      ig1@"ladSubisomorphic"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]]
+      sck@ig1@"ladSubisomorphic"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]]
     ]
 
 Options[IGLADGetSubisomorphism] = { "Induced" -> False };
 
 IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result},
+    catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result},
       result = igIndexVec@check@ig1@"ladGetSubisomorphism"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]];
       If[result === {}, Return[{}]];
       List@AssociationThread[
@@ -839,7 +863,7 @@ IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern
 Options[IGLADFindSubisomorphisms] = { "Induced" -> False };
 
 IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result},
+    catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result},
       result = igIndexVec@check@ig1@"ladFindSubisomorphisms"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"]];
       AssociationThread[
         VertexList[subgraph],
@@ -849,12 +873,15 @@ IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPatte
 
 (* Directed acylic graphs and topological ordering *)
 
-IGTopologicalOrdering[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igIndexVec@ig@"topologicalSorting"[]]
+IGTopologicalOrdering[graph_?igGraphQ] :=
+    catch@Block[{ig = igMake[graph]},
+      igIndexVec@check@ig@"topologicalSorting"[]
+    ]
 
 Options[IGFeedbackArcSet] = { "Exact" -> True };
 IGFeedbackArcSet[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
-      Part[EdgeList[graph], igIndexVec@ig@"feedbackArcSet"[OptionValue["Exact"]]]
+    catch@Block[{ig = igMake[graph]},
+      Part[EdgeList[graph], igIndexVec@check@ig@"feedbackArcSet"[OptionValue["Exact"]]]
     ]
 
 (* Motifs and subgraph counts *)
@@ -862,44 +889,43 @@ IGFeedbackArcSet[graph_?igGraphQ, opt : OptionsPattern[]] :=
 IGDyadCensus[graph_?igGraphQ] := Block[{ig = igMake[graph]}, AssociationThread[{"Mutual", "Asymmetric", "Missing"}, Round@ig@"dyadCensus"[]]]
 
 IGTriadCensus[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       AssociationThread[
         {"003", "012", "102", "021D", "021U", "021C", "111D", "111U", "030T", "030C", "201", "120D", "120U", "120C", "210", "300"},
         Round@check@ig@"triadCensus"[]
       ]
     ]
 
+(* TODO verify NaN handling *)
 IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
-    Block[{ig = igMake[graph]},
-      Round@Developer`FromPackedArray@ig@"motifs"[size, ConstantArray[0, size]]
+    catch@Block[{ig = igMake[graph]},
+      Round@Developer`FromPackedArray@check@ig@"motifs"[size, ConstantArray[0, size]]
     ]
 
 IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
-    Block[{ig = igMake[graph]}, ig@"motifsNo"[size, ConstantArray[0, size]] ]
+    Block[{ig = igMake[graph]}, sck@ig@"motifsNo"[size, ConstantArray[0, size]] ]
 
 IGMotifsEstimateTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
-    Block[{ig = igMake[graph]}, ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize] ]
+    Block[{ig = igMake[graph]}, sck@ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize] ]
 
 IGTriangles[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
-      Partition[igVertexNames[graph]@igIndexVec@ig@"triangles"[], 3]
+    catch@Block[{ig = igMake[graph]},
+      Partition[igVertexNames[graph]@igIndexVec@check@ig@"triangles"[], 3]
     ]
 
-vss[graph_][All] := {}
-vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, Return@Return[$Failed, Block]]
-
-IGAdjacentTriangleCount[graph_?igGraphQ, vs_List : All] :=
+igAdjacentTriangleCount[graph_, vs_] :=
     Block[{ig = igMake[graph]},
       Round@check@ig@"countAdjacentTriangles"[vss[graph][vs]]
     ]
 
-IGAdjacentTriangleCount[graph_?igGraphQ, v_] := First@IGAdjacentTriangleCount[graph, {v}]
+IGAdjacentTriangleCount[graph_?igGraphQ, vs_List : All] := catch@igAdjacentTriangleCount[graph, vs]
+IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCount[graph, {v}]
 
 (* Shortest paths *)
 
 IGDistanceMatrix[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
-      zeroDiagonal[Round[ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
+    catch@Block[{ig = igMake[graph]},
+      zeroDiagonal[Round[check@ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
     ]
 
 (* Cliques *)
@@ -908,38 +934,38 @@ IGCliques[graph_] := IGCliques[graph, Infinity]
 IGCliques[graph_, max : (_Integer | Infinity)] := IGCliques[graph, {1, max}]
 IGCliques[graph_, {size_}] := IGCliques[graph, {size, size}]
 IGCliques[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    iIGCliques[graph, {min, infToZero[max]}]
-iIGCliques[graph_, {min_, max_}] :=
-    Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@ig@"cliques"[min, max]
+    igCliques[graph, {min, infToZero[max]}]
+igCliques[graph_, {min_, max_}] :=
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@check@ig@"cliques"[min, max]
     ]
 
 IGMaximalCliques[graph_] := IGMaximalCliques[graph, Infinity]
 IGMaximalCliques[graph_, max : (_Integer | Infinity)] := IGMaximalCliques[graph, {1, max}]
 IGMaximalCliques[graph_, {size_}] := IGMaximalCliques[graph, {size, size}]
 IGMaximalCliques[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    iIGMaximalCliques[graph, {min, infToZero[max]}]
-iIGMaximalCliques[graph_, {min_, max_}] :=
-    Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@ig@"maximalCliques"[min, max]
+    igMaximalCliques[graph, {min, infToZero[max]}]
+igMaximalCliques[graph_, {min_, max_}] :=
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@check@ig@"maximalCliques"[min, max]
     ]
 
 IGMaximalCliquesCount[graph_] := IGMaximalCliquesCount[graph, Infinity]
 IGMaximalCliquesCount[graph_, max : (_Integer | Infinity)] := IGMaximalCliquesCount[graph, {1, max}]
 IGMaximalCliquesCount[graph_, {size_}] := IGMaximalCliquesCount[graph, {size, size}]
 IGMaximalCliquesCount[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    iIGMaximalCliquesCount[graph, {min, infToZero[max]}]
-iIGMaximalCliquesCount[graph_, {min_, max_}] :=
-    Block[{ig = igMake[graph]},
-      Round@ig@"maximalCliquesCount"[min, max]
+    igMaximalCliquesCount[graph, {min, infToZero[max]}]
+igMaximalCliquesCount[graph_, {min_, max_}] :=
+    catch@Block[{ig = igMake[graph]},
+      Round@check@ig@"maximalCliquesCount"[min, max]
     ]
 
 IGLargestCliques[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@ig@"largestCliques"[]
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@check@ig@"largestCliques"[]
     ]
 
-IGCliqueNumber[graph_?igGraphQ] := Block[{ig = igMake[graph]}, ig@"cliqueNumber"[]]
+IGCliqueNumber[graph_?igGraphQ] := Block[{ig = igMake[graph]}, sck@ig@"cliqueNumber"[]]
 
 (* Independent vertex sets *)
 
@@ -947,23 +973,23 @@ IGIndependentVertexSets[graph_] := IGIndependentVertexSets[graph, Infinity]
 IGIndependentVertexSets[graph_, max : (_Integer | Infinity)] := IGIndependentVertexSets[graph, {1, max}]
 IGIndependentVertexSets[graph_, {size_}] := IGIndependentVertexSets[graph, {size, size}]
 IGIndependentVertexSets[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    iIGIndependentVertexSets[graph, {min, infToZero[max]}]
-iIGIndependentVertexSets[graph_, {min_, max_}] :=
-    Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@ig@"independentVertexSets"[min, max]
+    igIndependentVertexSets[graph, {min, infToZero[max]}]
+igIndependentVertexSets[graph_, {min_, max_}] :=
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@check@ig@"independentVertexSets"[min, max]
     ]
 
 IGLargestIndependentVertexSets[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@ig@"largestIndependentVertexSets"[]
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@check@ig@"largestIndependentVertexSets"[]
     ]
 
 IGMaximalIndependentVertexSets[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@ig@"maximalIndependentVertexSets"[]
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@check@ig@"maximalIndependentVertexSets"[]
     ]
 
-IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMake[graph]}, ig@"independenceNumber"[]]
+IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMake[graph]}, sck@ig@"independenceNumber"[]]
 
 (* Graph drawing (layouts *)
 
@@ -992,17 +1018,17 @@ setVertexCoords[g_, coords_] := Graph[g, VertexCoordinates -> Thread[ VertexList
 setVertexCoords3D[g_, coords_] := Graph3D[g, VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
 
 IGLayoutRandom[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       Graph[graph, VertexCoordinates -> check@ig@"layoutRandom"[]]
     ]
 
 IGLayoutCircle[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       setVertexCoords[graph, check@ig@"layoutCircle"[]]
     ]
 
 IGLayoutSphere[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       setVertexCoords3D[graph, check@ig@"layoutSphere"[]]
     ]
 
@@ -1014,7 +1040,7 @@ Options[IGLayoutGraphOpt] = {
 };
 
 IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       setVertexCoords[graph,
           0.01 check@ig@"layoutGraphOpt"[continueLayout[graph, OptionValue["Continue"]],
             OptionValue["MaxIterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
@@ -1029,7 +1055,7 @@ Options[IGLayoutKamadaKawai] = {
 };
 
 IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph], maxiter, kkconst},
+    catch@Block[{ig = igMake[graph], maxiter, kkconst},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
       setVertexCoords[graph,
@@ -1044,7 +1070,7 @@ Options[IGLayoutKamadaKawai3D] = {
 };
 
 IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph], maxiter, kkconst},
+    catch@Block[{ig = igMake[graph], maxiter, kkconst},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
       setVertexCoords3D[graph,
@@ -1061,7 +1087,7 @@ Options[IGLayoutFruchtermanReingold] = {
 };
 
 IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       setVertexCoords[graph,
         0.25 check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1]
@@ -1075,7 +1101,7 @@ Options[IGLayoutFruchtermanReingold3D] = {
 };
 
 IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       setVertexCoords[graph,
         0.25 check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"]
@@ -1101,10 +1127,11 @@ IGWeightedClusteringCoefficient[graph_?igGraphQ] :=
 (* Similarity *)
 
 (* for those that return a list of vectors *)
-similarityFunction1[name_, post_ : Identity][graph_, All] := Block[{ig = igMake[graph]}, post@check@ig@name[{}] ]
+similarityFunction1[name_, post_ : Identity][graph_, All] :=
+    catch@Block[{ig = igMake[graph]}, post@check@ig@name[{}] ]
 similarityFunction1[name_, post_ : Identity][graph_, {}] := {}
 similarityFunction1[name_, post_ : Identity][graph_, vs_?ListQ] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       post@check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]] ]
     ]
 similarityFunction1[name_, post_ : Identity][graph_, v_] := similarityFunction1[name, First @* post][graph, {v}]
@@ -1116,10 +1143,11 @@ IGBibliographicCoupling[graph_?igGraphQ, vs_ : All] := similarityFunction1["simi
 IGInverseLogWeightedSimilarity[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityInverseLogWeighted"][graph, vs]
 
 (* for those that return a matrix *)
-similarityFunction2[name_][graph_, All, loops_] := Block[{ig = igMake[graph]}, check@ig@name[{}, loops] ]
+similarityFunction2[name_][graph_, All, loops_] :=
+    catch@Block[{ig = igMake[graph]}, check@ig@name[{}, loops] ]
 similarityFunction2[name_][graph_, {}, loops_] := {}
 similarityFunction2[name_][graph_, vs_?ListQ, loops_] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]], loops ]
     ]
 
@@ -1136,42 +1164,52 @@ IGChordalQ[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]}, ig@"chordalQ"[]]
 
 IGMaximumCardinalitySearch[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]}, igVertexNames[graph]@igIndexVec@ig@"maximumCardinalitySearch"[]]
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph]@igIndexVec@check@ig@"maximumCardinalitySearch"[]
+    ]
 
 IGChordalCompletion[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph], new = Make["IG"], result},
-      result = new@"chordalCompletion"[ManagedLibraryExpressionID[ig]];
+    catch@Block[{ig = igMake[graph], new = Make["IG"], result},
+      result = check@new@"chordalCompletion"[ManagedLibraryExpressionID[ig]];
       {Partition[igVertexNames[graph]@igIndexVec[result], 2], igToGraph[new]}
     ]
 
 (* Vertex cuts *)
 
-IGMinSeparators[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[graph] /@ igIndexVec@check@ig@"minimumSizeSeparators"[]]
+IGMinSeparators[graph_?igGraphQ] :=
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@check@ig@"minimumSizeSeparators"[]
+    ]
 
 (* Connected components *)
 
-IGArticulationPoints[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[graph]@igIndexVec@check@ig@"articulationPoints"[]]
+IGArticulationPoints[graph_?igGraphQ] :=
+    catch@Block[{ig = igMake[graph]},
+      igVertexNames[graph]@igIndexVec@check@ig@"articulationPoints"[]
+    ]
 
-IGBiconnectedComponents[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[graph] /@ igIndexVec@check@ig@"biconnectedComponents"[]]
+IGBiconnectedComponents[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]},
+      igVertexNames[graph] /@ igIndexVec@check@ig@"biconnectedComponents"[]
+    ]
 
 (* Graphlets *)
 
 IGGraphlets[graph_?igGraphQ, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
-    Block[{ig = igMake[graph], basis, mu},
+    catch@Block[{ig = igMake[graph], basis, mu},
       {basis, mu} = check@ig@"graphlets"[niter];
       {igVertexNames[graph] /@ igIndexVec[basis], mu}
     ]
 
 IGGraphletBasis[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph], basis, thresholds},
+    catch@Block[{ig = igMake[graph], basis, thresholds},
       {basis, thresholds} = check@ig@"graphletBasis"[];
       {igVertexNames[graph] /@ igIndexVec[basis], thresholds}
     ]
 
 IGGraphletProject[graph_?igGraphQ, cliques : {__List}, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
-    Block[{ig = igMake[graph], clq},
-      clq = Check[Map[VertexIndex[graph, #] - 1&, cliques, {2}], Return[$Failed]];
-      ig@"graphletProject"[clq, niter]
+    catch@Block[{ig = igMake[graph], clq},
+      check@ig@"graphletProject"[Map[vss[graph], cliques, {2}], niter]
     ]
 
 End[]; (* `Private` *)
