@@ -87,7 +87,6 @@ Then follow these steps:
  - hierarchical random graphs
  - spectral coarse graining
  - community detection
- - graphlets
 
 Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2].
 

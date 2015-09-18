@@ -181,6 +181,15 @@ IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulatio
 
 IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph]";
 
+IGGraphlets::usage =
+    "IGGraphlets[graph]\n" <>
+    "IGGraphlets[graph, nIterations]";
+IGGraphletBasis::usage = "IGGraphletsBasis[graph]";
+IGGraphletProject::usage =
+    "IGGraphletProject[graph, cliques]" <>
+    "IGGraphletProject[graph, cliques, nIterations]";
+
+
 Begin["`Private`"];
 
 (***** Mathematica version check *****)
@@ -384,7 +393,13 @@ template = LTemplate["IGraphM",
         (* Articulation points *)
 
         LFun["articulationPoints", {}, {Real, 1}],
-        LFun["biconnectedComponents", LinkObject]
+        LFun["biconnectedComponents", LinkObject],
+
+        (* Graphlets *)
+
+        LFun["graphlets", LinkObject],
+        LFun["graphletBasis", LinkObject],
+        LFun["graphletProject", LinkObject]
       }
     ]
   }
@@ -1115,6 +1130,26 @@ IGMinSeparators[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[gr
 IGArticulationPoints[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[graph]@igIndexVec@check@ig@"articulationPoints"[]]
 
 IGBiconnectedComponents[graph_?igGraphQ] := Block[{ig = igMake[graph]}, igVertexNames[graph] /@ igIndexVec@check@ig@"biconnectedComponents"[]]
+
+(* Graphlets *)
+
+IGGraphlets[graph_?igGraphQ, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
+    Block[{ig = igMake[graph], basis, mu},
+      {basis, mu} = check@ig@"graphlets"[niter];
+      {igVertexNames[graph] /@ igIndexVec[basis], mu}
+    ]
+
+IGGraphletBasis[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph], basis, thresholds},
+      {basis, thresholds} = check@ig@"graphletBasis"[];
+      {igVertexNames[graph] /@ igIndexVec[basis], thresholds}
+    ]
+
+IGGraphletProject[graph_?igGraphQ, cliques : {__List}, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
+    Block[{ig = igMake[graph], clq},
+      clq = Check[Map[VertexIndex[graph, #] - 1&, cliques, {2}], Return[$Failed]];
+      ig@"graphletProject"[clq, niter]
+    ]
 
 End[]; (* `Private` *)
 

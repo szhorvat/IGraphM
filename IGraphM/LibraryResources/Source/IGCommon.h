@@ -130,6 +130,8 @@ struct igList {
     }
     ~igList() { igraph_vector_ptr_destroy_all(&list); }
 
+    void clear() { igraph_vector_ptr_clear(&list); }
+
     long length() const { return igraph_vector_ptr_size(&list); }
 
     void push(igraph_vector_t *vec) { igraph_vector_ptr_push_back(&list, vec); }
@@ -154,6 +156,26 @@ inline mlStream & operator << (mlStream &ml, const igList &list) {
         ml.error("cannot return vector list");
     for (int i=0; i < len; ++i)
         ml << *static_cast<igraph_vector_t *>(VECTOR(list.list)[i]);
+    return ml;
+}
+
+
+inline mlStream & operator >> (mlStream &ml, igList &list) {
+    list.clear();
+    int len;
+    if (! MLTestHead(ml.link(), "List", &len))
+        ml.error("List of lists expected");
+    igraph_vector_ptr_resize(&list.list, len);
+    for (int i=0; i < len; ++i) {
+        igraph_vector_t *vec = static_cast<igraph_vector_t *>(malloc(sizeof(igraph_vector_t)));
+        double *data;
+        int listlen;
+        if (! MLGetReal64List(ml.link(), &data, &listlen))
+            ml.error("Real64List expected in list of lists");
+        std::copy(data, data+listlen, vec->stor_begin);
+        MLReleaseReal64List(ml.link(), data, listlen);
+        VECTOR(list.list)[i] = vec;
+    }
     return ml;
 }
 

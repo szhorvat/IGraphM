@@ -800,6 +800,48 @@ public:
         ml.newPacket();
         ml << list;
     }
+
+    // Graphlets
+
+    void graphletBasis(MLINK link) const {
+        mlStream ml(link);
+        ml >> mlCheckArgs(0);
+
+        igList cliques;
+        igVector thresholds;
+        igCheck(igraph_graphlets_candidate_basis(&graph, passWeights(), &cliques.list, &thresholds.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << cliques << thresholds;
+    }
+
+    void graphletProject(MLINK link) const  {
+        mlStream ml(link);
+
+        igList cliques;
+        int niter;
+
+        ml >> mlCheckArgs(2) >> cliques >> niter;
+
+        igVector mu;
+        igCheck(igraph_graphlets_project(&graph, passWeights(), &cliques.list, &mu.vec, false, niter));
+
+        ml.newPacket();
+        ml << mu;
+    }
+
+    void graphlets(MLINK link) const {
+        mlStream ml(link);
+        int niter;
+        ml >> mlCheckArgs(1) >> niter;
+
+        igVector mu;
+        igList cliques;
+        igCheck(igraph_graphlets(&graph, passWeights(), &cliques.list, &mu.vec, niter));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << cliques << mu;
+    }
 };
 
 #endif // IG_H
