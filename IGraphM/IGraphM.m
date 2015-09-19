@@ -147,6 +147,11 @@ IGLayoutKamadaKawai::usage = "IGLayoutKamadaKawai[graph, options]";
 IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options]";
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options]";
 IGLayoutFruchtermanReingold3D::usage = "IGLayoutFruchtermanReingold3D[graph, options]";
+IGLayoutGEM::usage = "IGLayoutGEM[graph, options]";
+IGLayoutDavidsonHarel::usage = "IGLayoutDavidsonHarel[graph, options]";
+(* IGLayoutMDS::usage = "IGLayoutMDS[graph]"; *)
+IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options]";
+IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options]";
 
 IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph]";
 IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph]";
@@ -372,6 +377,26 @@ template = LTemplate["IGraphM",
             Integer (* niter *), Real (* start_temp *)},
           {Real, 2}
         ],
+
+        LFun["layoutGEM",
+          {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
+            Integer (* maxiter *), Real (* temp_min *), Real (* temp_max *), Real (* temp_init *)},
+          {Real, 2}
+        ],
+
+        LFun["layoutDavidsonHarel",
+          {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
+            Integer (* maxiter *), Integer (* fineiter *), Real (* cool_fact *),
+            Real (* weight_node_dist *), Real (* weight_border *),
+            Real (* weight_edge_lengths *), Real (* weight_edge_crossings *),
+            Real (* weight_node_edge_dist *)},
+          {Real, 2}
+        ],
+
+        LFun["layoutMDS", {{Real, 2, "Constant"}, Integer}, {Real, 2}],
+
+        LFun["layoutReingoldTilford", {{Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
+        LFun["layoutReingoldTilfordCircular", {{Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
 
         (* Clustering coefficient *)
 
@@ -1102,10 +1127,85 @@ Options[IGLayoutFruchtermanReingold3D] = {
 
 IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
-      setVertexCoords[graph,
+      setVertexCoords3D[graph,
         0.25 check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"]
         ]
+      ]
+    ]
+
+Options[IGLayoutGEM] = {
+  "MaxIterations" -> Automatic, "Continue" -> False,
+  "MaxTemperature" -> Automatic, "MinTemperature" -> 1/10, "InitTemperature" -> Automatic
+};
+
+IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], maxiter, maxtemp, inittemp},
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 40 VertexCount[graph]^2];
+      maxtemp = Replace[OptionValue["MaxTemperature"], Automatic -> VertexCount[graph]];
+      inittemp = Replace[OptionValue["InitTemperature"], Automatic -> Sqrt@VertexCount[graph]];
+      setVertexCoords[graph,
+        3*^-3 check@ig@"layoutGEM"[continueLayout[graph, OptionValue["Continue"]],
+          maxiter, maxtemp, OptionValue["MinTemperature"], inittemp
+        ]
+      ]
+    ]
+
+Options[IGLayoutDavidsonHarel] = {
+  "MaxIterations" -> 10, "Continue" -> False,
+  "FineTuningIterations" -> Automatic, "CoolingFactor" -> 0.75,
+  "NodeDistanceWeight" -> 1.0, "BorderDistanceWeight" -> 0.0, "EdgeLengthWeight" -> Automatic,
+  "EdgeCrossingWeight" -> Automatic, "EdgeDistanceWeight" -> Automatic
+};
+
+IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], tuneiter, edgelenw, edgecrossw, edgedistw},
+      tuneiter = Replace[OptionValue["FineTuningIterations"], Automatic -> Max[10, Log[2, VertexCount[graph]]]];
+      edgelenw = Replace[OptionValue["EdgeLengthWeight"], Automatic -> GraphDensity[graph]/10];
+      edgecrossw = Replace[OptionValue["EdgeCrossingWeight"], Automatic -> 1 - GraphDensity[graph]];
+      edgedistw = Replace[OptionValue["EdgeDistanceWeight"], Automatic -> 1 - GraphDensity[graph] / 5];
+      setVertexCoords[graph,
+        0.1 check@ig@"layoutDavidsonHarel"[continueLayout[graph, OptionValue["Continue"]],
+          OptionValue["MaxIterations"],
+          tuneiter, OptionValue["CoolingFactor"], OptionValue["NodeDistanceWeight"],
+          OptionValue["BorderDistanceWeight"], edgelenw, edgecrossw, edgedistw
+        ]
+      ]
+    ]
+
+(*
+IGLayoutMDS[graph_?igGraphQ, dim : (2|3) : 2, Optional[distMatrix_?SquareMatrixQ, Automatic]] :=
+    catch@Block[{ig = igMake[graph]},
+      setVertexCoords[graph,
+        check@ig@"layoutMDS"[
+          Replace[distMatrix, Automatic -> {{}}],
+          dim
+        ]
+      ]
+    ]
+*)
+
+Options[IGLayoutReingoldTilford] = { "Roots" -> Automatic, DirectedEdges -> False };
+
+IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], roots},
+      roots = Replace[OptionValue["Roots"], Automatic -> {}];
+      If[Not@ListQ[roots], roots = {roots}];
+      roots = VertexIndex[graph, #] - 1& /@ roots;
+      setVertexCoords[graph,
+        {1,-1}#& /@ check@ig@"layoutReingoldTilford"[roots, OptionValue[DirectedEdges]]
+      ]
+    ]
+
+Options[IGLayoutReingoldTilfordCircular] = { "Roots" -> Automatic, DirectedEdges -> False };
+
+IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], roots},
+      roots = Replace[OptionValue["Roots"], Automatic -> {}];
+      If[Not@ListQ[roots], roots = {roots}];
+      roots = VertexIndex[graph, #] - 1& /@ roots;
+      setVertexCoords[graph,
+        {1,-1}#& /@ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 

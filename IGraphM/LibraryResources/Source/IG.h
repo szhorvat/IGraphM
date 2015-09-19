@@ -695,6 +695,53 @@ public:
         return mat.makeMTensor();
     }
 
+    mma::RealTensorRef layoutGEM(
+            mma::RealTensorRef initial, bool use_seed,
+            mint maxiter, double temp_max, double temp_min, double temp_init) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igCheck(igraph_layout_gem(&graph, &mat.mat, use_seed, maxiter, temp_max, temp_min, temp_init));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutDavidsonHarel(
+            mma::RealTensorRef initial, bool use_seed,
+            mint maxiter, mint fineiter, double cool_fact,
+            double weight_node_dist, double weight_border,
+            double weight_edge_lengths, double weight_edge_crossings,
+            double weight_node_edge_dist) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igCheck(igraph_layout_davidson_harel(
+                    &graph, &mat.mat, use_seed,
+                    maxiter, fineiter, cool_fact,
+                    weight_node_dist, weight_border, weight_edge_lengths, weight_edge_crossings,weight_node_edge_dist));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutMDS(mma::RealMatrixRef dist, mint dim) const {
+        igMatrix dmat, mat;
+        dmat.copyFromMTensor(dist);
+        igCheck(igraph_layout_mds(&graph, &mat.mat, dist.cols() == 0 ? NULL : &dmat.mat, dim, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutReingoldTilford(mma::RealTensorRef roots, bool directed) {
+        igMatrix mat;
+        igraph_vector_t rootvec = igVectorView(roots);
+        igCheck(igraph_layout_reingold_tilford(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? NULL : &rootvec, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutReingoldTilfordCircular(mma::RealTensorRef roots, bool directed) {
+        igMatrix mat;
+        igraph_vector_t rootvec = igVectorView(roots);
+        igCheck(igraph_layout_reingold_tilford_circular(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? NULL : &rootvec, NULL));
+        return mat.makeMTensor();
+    }
+
     // Clusterig coefficient
 
     double transitivityUndirected() const {
