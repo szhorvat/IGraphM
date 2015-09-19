@@ -37,7 +37,7 @@ IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used
 IGLCF::usage =
     "IGLCF[shifts, repeats] creates a graph from LCF notation." <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
-IGMakeLattice::usage = "IGMakeLattice[dimensions]";
+IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}, options] generates a lattice graph of the given dimensions.";
 
 IGBetweenness::usage = "IGBetweenness[graph, options] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph. Weighted graphs are supported.";
@@ -58,7 +58,7 @@ IGGraphicalQ::usage =
     "IGGraphicalQ[indegrees, outdegrees] tests if indegres with outdegrees is the degree sequence of any simple directed graph.";
 
 IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic.";
-IGSubisomorphicQ::usage = "IGSubisomorphicQ[graph, subgraph] tests if subgraph is contained within graph.";
+IGSubisomorphicQ::usage = "IGSubisomorphicQ[subgraph, graph] tests if subgraph is contained within graph.";
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData[] to get list of graphs ordered by isoclass.";
 
 IGBlissCanonicalLabeling::usage =
@@ -74,10 +74,10 @@ IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2, options] tests if gr
 IGVF2FindIsomorphisms::usage =
     "IGVF2FindIsomorphisms[graph1, graph2, options] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
     "IGVF2FindIsomorphisms[graph1, graph2, n, options] finds at most n isomorphisms between graph1 and graph2.";
-IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[graph, subgraph, options] tests if subgraph is contained in graph using the VF2 algorithm.";
+IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[subgraph, graph, options] tests if subgraph is contained in graph using the VF2 algorithm.";
 IGVF2FindSubisomorphisms::usage =
-    "IGVF2FindSubisomorphisms[graph, subgraph, options] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
-    "IGVF2FindSubisomorphisms[graph, subgraph, n, options] finds at most n subisomorphisms from subgraph to graph.";
+    "IGVF2FindSubisomorphisms[subgraph, graph, options] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
+    "IGVF2FindSubisomorphisms[subgraph, graph, n, options] finds at most n subisomorphisms from subgraph to graph.";
 IGVF2AutomorphismCount::usage = "IGVF2AutomorphismCount[graph] returns the number of automorphisms of graph.";
 IGVF2IsomorphismCount::usage =
     "IGVF2IsomorphismCount[graph1, graph2, options] returns the number of isomorphisms between graph1 and graph2." <>
@@ -91,10 +91,10 @@ IGLADFindSubisomorphisms::usage = "IGLADFindSubisomorphisms[subgraph, graph] fin
 IGTopologicalOrdering::usage =
     "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order." <>
     "Note that the values returned are vertex indices, not vertex names.";
-IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph, options]";
+IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph, options] computes a feedback edge set of graph. Removing these edges makes the graph acyclic.";
 
-IGDyadCensus::usage = "IGDyadCensus[graph]";
-IGTriadCensus::usage = "IGTriadCensus[graph]";
+IGDyadCensus::usage = "IGDyadCensus[graph] classifies dyad in the graph into mutual, asymmetric or null states.";
+IGTriadCensus::usage = "IGTriadCensus[graph] classifies triads in the graph into 16 possible states, labelled using MAN (mutual, asymmetric, null) notation.";
 IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.";
 IGMotifsTotalCount::usage = "IGMotifsTotalCount[graph, motifSize]";
 IGMotifsEstimateTotalCount::usage = "IGMotifsEstimateTotalCount[graph, motifSize, sampleSize]";
@@ -108,9 +108,9 @@ IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
     "IGDegreeSequenceGame[indegrees, outdegrees, options] generates a directed random graph with the given in- and out-degree sequences.";
 
-IGKRegularGame::usage = "IGKRegularGame[n, k]";
+IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n vertices, i.e. a graph in which all vertices have degree k.";
 
-IGDistanceMatrix::usage = "IGDistanceMatrix[graph]";
+IGDistanceMatrix::usage = "IGDistanceMatrix[graph] computes the shortest path between each vertex pair in graph.";
 
 IGCliques::usage =
     "IGCliques[graph] returns all complete subgraphs (cliques) in graph. Note that this is different from the builtin FindCliques[], which finds maximal cliques.\n" <>
@@ -139,9 +139,9 @@ IGLargestIndependentVertexSets::usage = "IGLargestIndependentVertexSets[graph] f
 IGMaximalIndependentVertexSets::usage = "IGMaximalIndependentVertexSets[graph] finds the maximal independent vertex sets of graph.";
 IGIndependenceNumber::usage = "IGIndependenceNumber[graph] returns the independence number of graph. The independence number is the size of the largest independent vertex set.";
 
-IGLayoutRandom::usage = "IGLayoutRandom[graph]";
-IGLayoutCircle::usage = "IGLayoutCircle[graph]";
-IGLayoutSphere::usage = "IGLayoutSphere[graph]";
+IGLayoutRandom::usage = "IGLayoutRandom[graph] lays out vertices randomly in the unit square.";
+IGLayoutCircle::usage = "IGLayoutCircle[graph] lays out vertices on a circle.";
+IGLayoutSphere::usage = "IGLayoutSphere[graph] lays out vertices approximately uniformly distributed on a sphere.";
 IGLayoutGraphOpt::usage = "IGLayoutGraphOpt[graph, options]";
 IGLayoutKamadaKawai::usage = "IGLayoutKamadaKawai[graph, options]";
 IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options]";
@@ -153,20 +153,20 @@ IGLayoutDavidsonHarel::usage = "IGLayoutDavidsonHarel[graph, options]";
 IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options]";
 IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options]";
 
-IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph]";
-IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph]";
-IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficient[graph]";
+IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph] returns the global clustering coefficient of graph.";
+IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph] returns the local clustering coefficient of each vertex.";
+IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficient[graph] returns the average local clustering coefficient of graph.";
 IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph] computes the weighted local clustering coefficient, as defined by A. Barrat et al. (2004) http://arxiv.org/abs/cond-mat/0311416";
 
-IGCocitationSimilarity::usage =
-    "IGCocitationSimilarity[graph]\n" <>
-    "IGCocitationSimilarity[graph, vertex]\n" <>
-    "IGCocitationSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+IGCocitationCoupling::usage =
+    "IGCocitationCoupling[graph] returns the cocitation coupling between all vertex pairs in graph. The cocitation coupling of two vertices is the number of vertices connecting to both of them (with directed edges).\n" <>
+    "IGCocitationCoupling[graph, vertex] returns the cocitation coupling of vertex with all other vertices in graph.\n" <>
+    "IGCocitationCoupling[graph, {vertex1, vertex2, \[Ellipsis]}] returns the cocitation coupling of vertex1, vertex2, \[Ellipsis] with all other vertices in graph.";
 
 IGBibliographicCoupling::usage =
-    "IGBibliographicCoupling[graph]\n" <>
-    "IGBibliographicCoupling[graph, vertex]\n" <>
-    "IGBibliographicCoupling[graph, {vertex1, vertex2, \[Ellipsis]}]";
+    "IGBibliographicCoupling[graph] returns the bibliographic coupling between all vertex pairs in graph. The bibliographic coupling of two vertices is the number of vertices they both connect to (with directed edges)\n" <>
+    "IGBibliographicCoupling[graph, vertex] returns the bibliographic coupling of vertex with all other vertices in graph.\n" <>
+    "IGBibliographicCoupling[graph, {vertex1, vertex2, \[Ellipsis]}] returns the bibliographic coupling of vertex1, vertex2, \[Ellipsis] with all other vertices in graph.";
 
 IGJaccardSimilarity::usage =
     "IGJaccardSimilarity[graph]\n" <>
@@ -185,11 +185,11 @@ IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph]";
 IGChordalQ::usage = "IGChordalQ[graph]";
 IGChordalCompletion::usage = "IGChordalCompletion[graph]";
 
-IGMinSeparators::usage = "IGMinSeparators[graph]";
+IGMinSeparators::usage = "IGMinSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph.";
 
 IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulation points of graph. A vertex is an articulation point if its removal increases the number of connected components in the graph.";
 
-IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph]";
+IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it.";
 
 IGGraphlets::usage =
     "IGGraphlets[graph]\n" <>
@@ -911,7 +911,7 @@ IGFeedbackArcSet[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 (* Motifs and subgraph counts *)
 
-IGDyadCensus[graph_?igGraphQ] := Block[{ig = igMake[graph]}, AssociationThread[{"Mutual", "Asymmetric", "Missing"}, Round@ig@"dyadCensus"[]]]
+IGDyadCensus[graph_?igGraphQ] := Block[{ig = igMake[graph]}, AssociationThread[{"Mutual", "Asymmetric", "Null"}, Round@ig@"dyadCensus"[]]]
 
 IGTriadCensus[graph_?igGraphQ] :=
     catch@Block[{ig = igMake[graph]},
@@ -1236,7 +1236,7 @@ similarityFunction1[name_, post_ : Identity][graph_, vs_?ListQ] :=
     ]
 similarityFunction1[name_, post_ : Identity][graph_, v_] := similarityFunction1[name, First @* post][graph, {v}]
 
-IGCocitationSimilarity[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityCocitation", Round][graph, vs]
+IGCocitationCoupling[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityCocitation", Round][graph, vs]
 
 IGBibliographicCoupling[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityBibcoupling", Round][graph, vs]
 
