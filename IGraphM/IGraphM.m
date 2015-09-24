@@ -184,9 +184,9 @@ IGInverseLogWeightedSimilarity::usage =
     "IGInverseLogWeightedSimilarity[graph, vertex]\n" <>
     "IGInverseLogWeightedSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
 
-IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph]";
-IGChordalQ::usage = "IGChordalQ[graph]";
-IGChordalCompletion::usage = "IGChordalCompletion[graph]";
+IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a rank to each vertex, from 1 to n, according to the maximum cardinality search algorithm. Visiting the vertices of the graph by decreasing rank is equivalent to always visiting the next vertex with the most already visited neighbours. Ties are broken randomly.";
+IGChordalQ::usage = "IGChordalQ[graph] tests if graph is chordal.";
+IGChordalCompletion::usage = "IGChordalCompletion[graph] returns a set of edges that, when added to graph, make it chordal. The edge-set this function returns is usually not minimal.";
 
 IGMinSeparators::usage = "IGMinSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph.";
 
@@ -430,7 +430,7 @@ template = LTemplate["IGraphM",
 
         LFun["maximumCardinalitySearch", {}, {Real, 1}],
         LFun["chordalQ", {}, True|False],
-        LFun["chordalCompletion", {LExpressionID["IG"]}, {Real, 1}],
+        LFun["chordalCompletion", {}, {Real, 1}],
 
         (* Vertex separators *)
 
@@ -1294,9 +1294,9 @@ IGMaximumCardinalitySearch[graph_?igGraphQ] :=
     ]
 
 IGChordalCompletion[graph_?igGraphQ] :=
-    catch@Block[{ig = igMake[graph], new = Make["IG"], result},
-      result = check@new@"chordalCompletion"[ManagedLibraryExpressionID[ig]];
-      {Partition[igVertexNames[graph]@igIndexVec[result], 2], igToGraph[new]}
+    catch@Block[{ig = igMake[graph], result},
+      result = check@ig@"chordalCompletion"[];
+      If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge] @@@ Partition[igVertexNames[graph]@igIndexVec[result], 2]
     ]
 
 (* Vertex cuts *)

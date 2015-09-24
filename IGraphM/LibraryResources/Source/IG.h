@@ -824,12 +824,10 @@ public:
         return res;
     }
 
-    // Note that this is a constructor!
-    mma::RealTensorRef chordalCompletion(const IG &source) {
+    mma::RealTensorRef chordalCompletion() const {
         igraph_bool_t chordal;
         igVector fillin;
-        destroy();
-        igConstructorCheck(igraph_is_chordal(&source.graph, NULL, NULL, &chordal, &fillin.vec, &graph));
+        igCheck(igraph_is_chordal(&graph, NULL, NULL, &chordal, &fillin.vec, NULL));
         return fillin.makeMTensor();
     }
 
