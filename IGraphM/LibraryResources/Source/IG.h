@@ -72,6 +72,11 @@ public:
         igConstructorCheck(igraph_lattice(&graph, &igdims, nei, directed, mutual, periodic));
     }
 
+    void graphAtlas(mint n) {
+        destroy();
+        igConstructorCheck(igraph_atlas(&graph, n));
+    }
+
     // Weights
 
     void setWeights(mma::RealTensorRef w) {

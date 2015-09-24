@@ -38,6 +38,9 @@ IGLCF::usage =
     "IGLCF[shifts, repeats] creates a graph from LCF notation." <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
 IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}, options] generates a lattice graph of the given dimensions.";
+IGGraphAtlas::usage =
+    "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
+    "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
 
 IGBetweenness::usage = "IGBetweenness[graph, options] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph. Weighted graphs are supported.";
@@ -243,6 +246,7 @@ template = LTemplate["IGraphM",
         LFun["fromEdgeList", {{Real, 2, "Constant"} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
         LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
         LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
+        LFun["graphAtlas", {Integer}, "Void"],
 
         (* Weights *)
 
@@ -631,6 +635,12 @@ Options[IGMakeLattice] = {
 IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"makeLattice"[dims, OptionValue["Radius"], OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Periodic"]];
+      Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
+    ]
+
+IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"graphAtlas"[n];
       Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
     ]
 
