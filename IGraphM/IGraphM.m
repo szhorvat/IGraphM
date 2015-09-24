@@ -155,6 +155,8 @@ IGLayoutDavidsonHarel::usage = "IGLayoutDavidsonHarel[graph, options]";
 (* IGLayoutMDS::usage = "IGLayoutMDS[graph]"; *)
 IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options]";
 IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options]";
+IGLayoutDrL::usage = "IGLayoutDrL[graph, options]";
+IGLayoutDrL3D::usage = "IGLayoutDrL3D[graph, options]";
 
 IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph] returns the global clustering coefficient of graph.";
 IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph] returns the local clustering coefficient of each vertex.";
@@ -410,6 +412,9 @@ template = LTemplate["IGraphM",
 
         LFun["layoutReingoldTilford", {{Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
         LFun["layoutReingoldTilfordCircular", {{Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
+
+        LFun["layoutDrL", {{Real, 2, "Constant"} (* initial positions *), True|False (* use initial *), Integer (* settings template *)}, {Real, 2}],
+        LFun["layoutDrL3D", {{Real, 2, "Constant"} (* initial positions *), True|False (* use initial *), Integer (* settings template *)}, {Real, 2}],
 
         (* Clustering coefficient *)
 
@@ -1232,6 +1237,33 @@ IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[]] :=
       roots = VertexIndex[graph, #] - 1& /@ roots;
       setVertexCoords[graph,
         {1,-1}#& /@ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
+      ]
+    ]
+
+Options[IGLayoutDrL] = { "Settings" -> "Default", "Continue" -> False };
+Options[IGLayoutDrL3D] = { "Settings" -> "Default", "Continue" -> False };
+
+igLayoutDrLSettings = {"Default", "Coarsen", "Coarsest", "Refine", "Final"};
+igLayoutDrLSettingsAsc = AssociationThread[igLayoutDrLSettings, Range@Length[igLayoutDrLSettings]];
+
+IGLayoutDrL::usage = IGLayoutDrL::usage <> ". Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
+IGLayoutDrL3D::usage = IGLayoutDrL3D::usage <> ". Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
+
+IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      setVertexCoords[graph,
+        0.05 PrincipalComponents@check@ig@"layoutDrL"[continueLayout[graph, OptionValue["Continue"]],
+          Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
+        ]
+      ]
+    ]
+
+IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      setVertexCoords3D[graph,
+        0.05 PrincipalComponents@check@ig@"layoutDrL3D"[continueLayout3D[graph, OptionValue["Continue"]],
+          Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
+        ]
       ]
     ]
 

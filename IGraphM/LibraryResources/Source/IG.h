@@ -733,17 +733,61 @@ public:
         return mat.makeMTensor();
     }
 
-    mma::RealTensorRef layoutReingoldTilford(mma::RealTensorRef roots, bool directed) {
+    mma::RealTensorRef layoutReingoldTilford(mma::RealTensorRef roots, bool directed) const {
         igMatrix mat;
         igraph_vector_t rootvec = igVectorView(roots);
         igCheck(igraph_layout_reingold_tilford(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? NULL : &rootvec, NULL));
         return mat.makeMTensor();
     }
 
-    mma::RealTensorRef layoutReingoldTilfordCircular(mma::RealTensorRef roots, bool directed) {
+    mma::RealTensorRef layoutReingoldTilfordCircular(mma::RealTensorRef roots, bool directed) const {
         igMatrix mat;
         igraph_vector_t rootvec = igVectorView(roots);
         igCheck(igraph_layout_reingold_tilford_circular(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? NULL : &rootvec, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutDrL(mma::RealTensorRef initial, bool use_seed, mint opt) const {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+
+        igraph_layout_drl_default_t templ;
+        switch (opt) {
+        case 1: templ = IGRAPH_LAYOUT_DRL_DEFAULT; break;
+        case 2: templ = IGRAPH_LAYOUT_DRL_COARSEN; break;
+        case 3: templ = IGRAPH_LAYOUT_DRL_COARSEST; break;
+        case 4: templ = IGRAPH_LAYOUT_DRL_REFINE; break;
+        case 5: templ = IGRAPH_LAYOUT_DRL_FINAL; break;
+        default: throw mma::LibraryError("Invalid settings template for DrL layout.");
+        }
+
+        igraph_layout_drl_options_t options;
+        igCheck(igraph_layout_drl_options_init(&options, templ));
+
+        igCheck(igraph_layout_drl(&graph, &mat.mat, use_seed, &options, passWeights(), NULL));
+
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutDrL3D(mma::RealTensorRef initial, bool use_seed, mint opt) const {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+
+        igraph_layout_drl_default_t templ;
+        switch (opt) {
+        case 1: templ = IGRAPH_LAYOUT_DRL_DEFAULT; break;
+        case 2: templ = IGRAPH_LAYOUT_DRL_COARSEN; break;
+        case 3: templ = IGRAPH_LAYOUT_DRL_COARSEST; break;
+        case 4: templ = IGRAPH_LAYOUT_DRL_REFINE; break;
+        case 5: templ = IGRAPH_LAYOUT_DRL_FINAL; break;
+        default: throw mma::LibraryError("Invalid settings template for DrL layout.");
+        }
+
+        igraph_layout_drl_options_t options;
+        igCheck(igraph_layout_drl_options_init(&options, templ));
+
+        igCheck(igraph_layout_drl_3d(&graph, &mat.mat, use_seed, &options, passWeights(), NULL));
+
         return mat.makeMTensor();
     }
 
