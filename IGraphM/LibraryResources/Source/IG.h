@@ -268,7 +268,7 @@ public:
 
         ml.newPacket();
         ml << info.group_size;
-        std::free(info.group_size);
+        igraph_free(info.group_size);
     }
 
     // Isomorphism (VF2)

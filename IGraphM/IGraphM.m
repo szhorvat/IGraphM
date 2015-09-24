@@ -465,7 +465,7 @@ If[FileExistsQ[$buildSettingsFile], Get[$buildSettingsFile] ]
 
 (* Add $libraryDirectory to $LibraryPath in case package is not installed in Applications. *)
 If[Not@MemberQ[$LibraryPath, $libraryDirectory],
-  AppendTo[$LibraryPath, $libraryDirectory]
+  PrependTo[$LibraryPath, $libraryDirectory]
 ]
 
 
@@ -968,6 +968,7 @@ igAdjacentTriangleCount[graph_, vs_] :=
       Round@check@ig@"countAdjacentTriangles"[vss[graph][vs]]
     ]
 
+IGAdjacentTriangleCount[graph_?igGraphQ, {}] := {}
 IGAdjacentTriangleCount[graph_?igGraphQ, vs_List : All] := catch@igAdjacentTriangleCount[graph, vs]
 IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCount[graph, {v}]
 
@@ -1314,7 +1315,7 @@ IGArticulationPoints[graph_?igGraphQ] :=
     ]
 
 IGBiconnectedComponents[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]},
+    catch@Block[{ig = igMake[graph]},
       igVertexNames[graph] /@ igIndexVec@check@ig@"biconnectedComponents"[]
     ]
 
