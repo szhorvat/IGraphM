@@ -202,6 +202,15 @@ IGGraphletProject::usage =
     "IGGraphletProject[graph, cliques]" <>
     "IGGraphletProject[graph, cliques, nIterations]";
 
+IGVertexConnectivity::usage =
+    "IGVertexConnectivity[graph]" <>
+    "IGVertexConnectivity[graph, s t]";
+
+IGEdgeConnectivity::usage =
+    "IGEdgeConnectivity[graph]" <>
+    "IGEdgeConnectivity[graph, s t]";
+
+IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph]";
 
 Begin["`Private`"];
 
@@ -426,6 +435,11 @@ template = LTemplate["IGraphM",
         (* Vertex separators *)
 
         LFun["minimumSizeSeparators", LinkObject],
+        LFun["vertexConnectivity", {}, Integer],
+        LFun["edgeConnectivity", {}, Integer],
+        LFun["vertexConnectivityST", {Integer, Integer}, Integer],
+        LFun["edgeConnectivityST", {Integer, Integer}, Integer],
+        LFun["cohesiveBlocks", LinkObject],
 
         (* Articulation points *)
 
@@ -598,6 +612,7 @@ igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True]
 vss[graph_][All] := {}
 vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, throw[$Failed]]
 
+vs[graph_][v_] := Check[VertexIndex[graph, v] - 1, throw[$Failed]]
 
 (***** Public functions *****)
 
@@ -1301,6 +1316,34 @@ IGArticulationPoints[graph_?igGraphQ] :=
 IGBiconnectedComponents[graph_?igGraphQ] :=
     Block[{ig = igMake[graph]},
       igVertexNames[graph] /@ igIndexVec@check@ig@"biconnectedComponents"[]
+    ]
+
+(* Connectivity *)
+
+IGVertexConnectivity[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]},
+      sck@ig@"vertexConnectivity"[]
+    ]
+
+IGVertexConnectivity[graph_?igGraphQ, s_, t_] :=
+    catch@Block[{ig = igMake[graph]},
+      check@ig@"vertexConnectivityST"[vs[graph][s], vs[graph][t]]
+    ]
+
+IGEdgeConnectivity[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]},
+      sck@ig@"edgeConnectivity"[]
+    ]
+
+IGEdgeConnectivity[graph_?igGraphQ, s_, t_] :=
+    catch@Block[{ig = igMake[graph]},
+      check@ig@"edgeConnectivityST"[vs[graph][s], vs[graph][t]]
+    ]
+
+IGCohesiveBlocks[graph_?igGraphQ] :=
+    catch@Block[{ig = igMake[graph], blocks, cohesion, parents},
+      {blocks, cohesion, parents} = check@ig@"cohesiveBlocks"[];
+      {igVertexNames[graph] /@ igIndexVec[blocks], Round[cohesion](*, igIndexVec[parents]*)}
     ]
 
 (* Graphlets *)

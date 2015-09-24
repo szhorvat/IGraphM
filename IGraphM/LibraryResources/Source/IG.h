@@ -866,6 +866,46 @@ public:
         ml << list;
     }
 
+    // Connectivity
+
+    mint vertexConnectivity() const {
+        igraph_integer_t res;
+        igCheck(igraph_vertex_connectivity(&graph, &res, true));
+        return res;
+    }
+
+    mint edgeConnectivity() const {
+        igraph_integer_t res;
+        igCheck(igraph_edge_connectivity(&graph, &res, true));
+        return res;
+    }
+
+    mint vertexConnectivityST(mint s, mint t) const {
+        igraph_integer_t res;
+        igCheck(igraph_st_vertex_connectivity(&graph, &res, s, t, IGRAPH_VCONN_NEI_ERROR));
+        return res;
+    }
+
+    mint edgeConnectivityST(mint s, mint t) const {
+        igraph_integer_t res;
+        igCheck(igraph_st_edge_connectivity(&graph, &res, s, t));
+        return res;
+    }
+
+    void cohesiveBlocks(MLINK link) const {
+        mlStream ml(link);
+        ml >> mlCheckArgs(0);
+
+        igList blocks;
+        igVector cohesion;
+        igVector parents;
+
+        igCheck(igraph_cohesive_blocks(&graph, &blocks.list, &cohesion.vec, &parents.vec, NULL));
+
+        ml.newPacket();
+        ml << mlHead("List", 3) << blocks << cohesion << parents;
+    }
+
     // Graphlets
 
     void graphletBasis(MLINK link) const {
