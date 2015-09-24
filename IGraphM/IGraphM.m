@@ -1092,7 +1092,7 @@ Options[IGLayoutGraphOpt] = {
 IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
       setVertexCoords[graph,
-          0.01 check@ig@"layoutGraphOpt"[continueLayout[graph, OptionValue["Continue"]],
+          0.01 PrincipalComponents@check@ig@"layoutGraphOpt"[continueLayout[graph, OptionValue["Continue"]],
             OptionValue["MaxIterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
             OptionValue["SpringLength"], OptionValue["SpringConstant"], OptionValue["MaxStepMovement"]
           ]
@@ -1109,7 +1109,7 @@ IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[]] :=
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
       setVertexCoords[graph,
-        0.5 check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"]],
+        0.5 PrincipalComponents@check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"]],
           maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
@@ -1124,7 +1124,7 @@ IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
       maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
       setVertexCoords3D[graph,
-        0.5 check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"]],
+        0.5 PrincipalComponents@check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"]],
           maxiter, OptionValue["Epsilon"], kkconst]
       ]
     ]
@@ -1139,7 +1139,7 @@ Options[IGLayoutFruchtermanReingold] = {
 IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
       setVertexCoords[graph,
-        0.25 check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"]],
+        0.25 PrincipalComponents@check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1]
         ]
       ]
@@ -1153,7 +1153,7 @@ Options[IGLayoutFruchtermanReingold3D] = {
 IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
       setVertexCoords3D[graph,
-        0.25 check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"]],
+        0.25 PrincipalComponents@check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"]],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"]
         ]
       ]
@@ -1170,7 +1170,7 @@ IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[]] :=
       maxtemp = Replace[OptionValue["MaxTemperature"], Automatic -> VertexCount[graph]];
       inittemp = Replace[OptionValue["InitTemperature"], Automatic -> Sqrt@VertexCount[graph]];
       setVertexCoords[graph,
-        3*^-3 check@ig@"layoutGEM"[continueLayout[graph, OptionValue["Continue"]],
+        3*^-3 PrincipalComponents@check@ig@"layoutGEM"[continueLayout[graph, OptionValue["Continue"]],
           maxiter, maxtemp, OptionValue["MinTemperature"], inittemp
         ]
       ]
