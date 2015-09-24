@@ -1053,7 +1053,7 @@ getVertexCoords[graph_] :=
     With[{coords = GraphEmbedding[graph]},
       If[MatrixQ[coords],
         coords,
-        Message[IGraphM::cntlayout]; {{}}
+        Message[IGraphM::lytcrd]; {{}}
       ]
     ]
 
@@ -1061,7 +1061,7 @@ continueLayout[graph_, False, ___] := Sequence[{{}}, False]
 continueLayout[graph_, True, dim_ : 2] :=
     Sequence@@Module[{coords},
       coords = getVertexCoords[graph];
-      If[Not@MatchQ[Dimensions[coords], {_, dim}],
+      If[coords =!= {{}} && Not@MatchQ[Dimensions[coords], {_, dim}],
         Message[IGraphM::lytdim];
         coords = {{}}
       ];
