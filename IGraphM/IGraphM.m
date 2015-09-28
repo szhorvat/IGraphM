@@ -85,7 +85,7 @@ IGVF2AutomorphismCount::usage = "IGVF2AutomorphismCount[graph] returns the numbe
 IGVF2IsomorphismCount::usage =
     "IGVF2IsomorphismCount[graph1, graph2, options] returns the number of isomorphisms between graph1 and graph2." <>
     "Note that this is not the same as simply counting the automorphisms of one graph if their vertex or edge colorings differ.";
-IGVF2SubisomorphismCount::usage = "IGVF2SubisomorphismCount[subgraph, graph, options]";
+IGVF2SubisomorphismCount::usage = "IGVF2SubisomorphismCount[subgraph, graph, options] returns the number of mappings from subgraph to graph.";
 
 IGLADSubisomorphicQ::usage = "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs.";
 IGLADGetSubisomorphism::usage = "IGLADGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.";
@@ -119,17 +119,17 @@ IGCliques::usage =
     "IGCliques[graph] returns all complete subgraphs (cliques) in graph. Note that this is different from the builtin FindCliques[], which finds maximal cliques.\n" <>
     "IGCliques[graph, {min, max}] returns all complete subgraphs between sizes min and max.\n" <>
     "IGCliques[graph, max] returns all complete subgraphs of size at most max.\n" <>
-    "IGCliques[graph, {n}] returns all complete subgraphs of size n.\n";
+    "IGCliques[graph, {n}] returns all complete subgraphs of size n.";
 IGMaximalCliques::usage =
     "IGMaximalCliques[graph] returns all maximal cliques in graph.\n" <>
     "IGMaximalCliques[graph, {min, max}] returns all maximal cliques between sizes min and max.\n" <>
     "IGMaximalCliques[graph, max] returns all maximal cliques of size at most max.\n" <>
-    "IGMaximalCliques[graph, {n}] returns all maximal cliques of size n.\n";
+    "IGMaximalCliques[graph, {n}] returns all maximal cliques of size n.";
 IGMaximalCliquesCount::usage =
     "IGMaximalCliquesCount[graph] counts all maximal cliques in graph.\n" <>
     "IGMaximalCliquesCount[graph, {min, max}] counts all maximal cliques between sizes min and max.\n" <>
     "IGMaximalCliquesCount[graph, max] counts all maximal cliques of size at most max.\n" <>
-    "IGMaximalCliquesCount[graph, {n}] counts all maximal cliques of size n.\n";
+    "IGMaximalCliquesCount[graph, {n}] counts all maximal cliques of size n.";
 IGLargestCliques::usage = "IGLargestCliques[graph] returns the largest cliques in graph.";
 IGCliqueNumber::usage = "IGCliqueNumber[graph] returns the clique number of graph. The clique number is the size of the largest clique.";
 
@@ -201,11 +201,11 @@ IGGraphlets::usage =
     "IGGraphlets[graph, nIterations]";
 IGGraphletBasis::usage = "IGGraphletBasis[graph]";
 IGGraphletProject::usage =
-    "IGGraphletProject[graph, cliques]" <>
+    "IGGraphletProject[graph, cliques]\n" <>
     "IGGraphletProject[graph, cliques, nIterations]";
 
 IGVertexConnectivity::usage =
-    "IGVertexConnectivity[graph]" <>
+    "IGVertexConnectivity[graph]\n" <>
     "IGVertexConnectivity[graph, s t]";
 
 IGEdgeConnectivity::usage =
@@ -775,7 +775,7 @@ blissSplittingHeuristicsNames = {
 blissSplittingHeuristics = AssociationThread[blissSplittingHeuristicsNames, Range@Length[blissSplittingHeuristicsNames] - 1];
 
 IGBlissCanonicalLabeling::usage = IGBlissCanonicalLabeling::usage <>
-    StringTemplate[" Available values for the \"SplittingHeuristics\" option: ``." <>
+    StringTemplate[" Available values for the \"SplittingHeuristics\" option: ``. " <>
         "The labeling depends on the splitting heuristics used."][ToString@InputForm@blissSplittingHeuristicsNames];
 
 Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "First" };
@@ -1251,8 +1251,8 @@ Options[IGLayoutDrL3D] = { "Settings" -> "Default", "Continue" -> False, "Align"
 igLayoutDrLSettings = {"Default", "Coarsen", "Coarsest", "Refine", "Final"};
 igLayoutDrLSettingsAsc = AssociationThread[igLayoutDrLSettings, Range@Length[igLayoutDrLSettings]];
 
-IGLayoutDrL::usage = IGLayoutDrL::usage <> ". Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
-IGLayoutDrL3D::usage = IGLayoutDrL3D::usage <> ". Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
+IGLayoutDrL::usage = IGLayoutDrL::usage <> " Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
+IGLayoutDrL3D::usage = IGLayoutDrL3D::usage <> " Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
 
 IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], scale = 0.05},
