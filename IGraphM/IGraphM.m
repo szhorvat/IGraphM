@@ -1201,7 +1201,7 @@ IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[]] :=
       edgecrossw = Replace[OptionValue["EdgeCrossingWeight"], Automatic -> 1 - GraphDensity[graph]];
       edgedistw = Replace[OptionValue["EdgeDistanceWeight"], Automatic -> 1 - GraphDensity[graph] / 5];
       setVertexCoords[graph,
-        scale check@ig@"layoutDavidsonHarel"[continueLayout[graph, OptionValue["Continue"], scale],
+        scale align[OptionValue["Align"]]@check@ig@"layoutDavidsonHarel"[continueLayout[graph, OptionValue["Continue"], scale],
           OptionValue["MaxIterations"],
           tuneiter, OptionValue["CoolingFactor"], OptionValue["NodeDistanceWeight"],
           OptionValue["BorderDistanceWeight"], edgelenw, edgecrossw, edgedistw
