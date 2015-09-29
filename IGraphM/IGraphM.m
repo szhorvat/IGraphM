@@ -37,21 +37,21 @@ IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used
 IGLCF::usage =
     "IGLCF[shifts, repeats] creates a graph from LCF notation." <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
-IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}, options] generates a lattice graph of the given dimensions.";
+IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice graph of the given dimensions.";
 IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
 
-IGBetweenness::usage = "IGBetweenness[graph, options] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported.";
+IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported. Use the \"UseBigInt\" -> True option for accuracy with large graphs.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph. Weighted graphs are supported.";
-IGCloseness::usage = "IGCloseness[graph, options] gives a list of closeness centralities for the vertices of graph. Weighted graphs are supported.";
+IGCloseness::usage = "IGCloseness[graph] gives a list of closeness centralities for the vertices of graph. Weighted graphs are supported.";
 
-IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff, options] estimates vertex betweenness by consdering only paths of at most length cutoff.";
+IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff] estimates vertex betweenness by consdering only paths of at most length cutoff.";
 IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff] estimates edge betweenness by consdering only paths of at most length cutoff.";
-IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff, options] estimates closeness centrality by consdering only paths of at most length cutoff.";
+IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff] estimates closeness centrality by consdering only paths of at most length cutoff.";
 
-IGRewire::usage = "IGRewire[graph, n, options] attempts to rewire the edges of graph n times while presernving its degree sequence.";
-IGRewireEdges::usage = "IGRewireEdges[graph, p, options] rewires each edge of the graph with probability p.";
+IGRewire::usage = "IGRewire[graph, n] attempts to rewire the edges of graph n times while presernving its degree sequence.";
+IGRewireEdges::usage = "IGRewireEdges[graph, p] rewires each edge of the graph with probability p.";
 
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] tests if graph is directed and acyclic.";
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
@@ -65,27 +65,27 @@ IGSubisomorphicQ::usage = "IGSubisomorphicQ[subgraph, graph] tests if subgraph i
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData[] to get list of graphs ordered by isoclass.";
 
 IGBlissCanonicalLabeling::usage =
-    "IGBlissCanonicalLabeling[graph, options] computes a canonical integer labeling of the graph vertices. " <>
+    "IGBlissCanonicalLabeling[graph] computes a canonical integer labeling of the graph vertices. " <>
     "Using this labeling brings representations of isomorphic graphs to the same form.";
-IGBlissCanonicalPermutation::usage = "IGBlissCanonicalPermutation[graph, options] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.";
-IGBlissCanonicalGraph::usage = "IGBlissCanonicalGraph[graph, options] returns a canonical graph of graph, based on the canonical integer labeling.";
-IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the BLISS algorithm.";
-IGBlissGetIsomorphism::usage = "IGBlissGetIsomorphism[graph1, graph2, options] returns one isomorphism between graph1 and graph2, if it exists.";
-IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph, options] returns the number of automorphisms of graph.";
+IGBlissCanonicalPermutation::usage = "IGBlissCanonicalPermutation[graph] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.";
+IGBlissCanonicalGraph::usage = "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labeling.";
+IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are ismorphic using the BLISS algorithm.";
+IGBlissGetIsomorphism::usage = "IGBlissGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.";
+IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.";
 
-IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2, options] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.";
+IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.";
 IGVF2FindIsomorphisms::usage =
-    "IGVF2FindIsomorphisms[graph1, graph2, options] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
-    "IGVF2FindIsomorphisms[graph1, graph2, n, options] finds at most n isomorphisms between graph1 and graph2.";
-IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[subgraph, graph, options] tests if subgraph is contained in graph using the VF2 algorithm.";
+    "IGVF2FindIsomorphisms[graph1, graph2] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
+    "IGVF2FindIsomorphisms[graph1, graph2, n] finds at most n isomorphisms between graph1 and graph2.";
+IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph using the VF2 algorithm.";
 IGVF2FindSubisomorphisms::usage =
-    "IGVF2FindSubisomorphisms[subgraph, graph, options] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
-    "IGVF2FindSubisomorphisms[subgraph, graph, n, options] finds at most n subisomorphisms from subgraph to graph.";
+    "IGVF2FindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
+    "IGVF2FindSubisomorphisms[subgraph, graph, n] finds at most n subisomorphisms from subgraph to graph.";
 IGVF2AutomorphismCount::usage = "IGVF2AutomorphismCount[graph] returns the number of automorphisms of graph.";
 IGVF2IsomorphismCount::usage =
-    "IGVF2IsomorphismCount[graph1, graph2, options] returns the number of isomorphisms between graph1 and graph2." <>
+    "IGVF2IsomorphismCount[graph1, graph2] returns the number of isomorphisms between graph1 and graph2." <>
     "Note that this is not the same as simply counting the automorphisms of one graph if their vertex or edge colorings differ.";
-IGVF2SubisomorphismCount::usage = "IGVF2SubisomorphismCount[subgraph, graph, options] returns the number of mappings from subgraph to graph.";
+IGVF2SubisomorphismCount::usage = "IGVF2SubisomorphismCount[subgraph, graph] returns the number of mappings from subgraph to graph.";
 
 IGLADSubisomorphicQ::usage = "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs.";
 IGLADGetSubisomorphism::usage = "IGLADGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.";
@@ -94,7 +94,7 @@ IGLADFindSubisomorphisms::usage = "IGLADFindSubisomorphisms[subgraph, graph] fin
 IGTopologicalOrdering::usage =
     "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order." <>
     "Note that the values returned are vertex indices, not vertex names.";
-IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph, options] computes a feedback edge set of graph. Removing these edges makes the graph acyclic.";
+IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph] computes a feedback edge set of graph. Removing these edges makes the graph acyclic.";
 
 IGDyadCensus::usage = "IGDyadCensus[graph] classifies dyad in the graph into mutual, asymmetric or null states.";
 IGTriadCensus::usage = "IGTriadCensus[graph] classifies triads in the graph into 16 possible states, labelled using MAN (mutual, asymmetric, null) notation.";
@@ -108,8 +108,8 @@ IGAdjacentTriangleCount::usage =
     "IGAdjacentTriangleCount[graph, {vertex1, vertex2, \[Ellipsis]}] counts the triangles the specified vertices participate in.";
 
 IGDegreeSequenceGame::usage =
-    "IGDegreeSequenceGame[degrees, options] generates an undirected random graph with the given degree sequence.\n" <>
-    "IGDegreeSequenceGame[indegrees, outdegrees, options] generates a directed random graph with the given in- and out-degree sequences.";
+    "IGDegreeSequenceGame[degrees] generates an undirected random graph with the given degree sequence.\n" <>
+    "IGDegreeSequenceGame[indegrees, outdegrees] generates a directed random graph with the given in- and out-degree sequences.";
 
 IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n vertices, i.e. a graph in which all vertices have degree k.";
 
