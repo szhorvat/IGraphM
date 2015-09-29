@@ -12,7 +12,7 @@
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
 
-BeginPackage["IGraphM`"];
+BeginPackage["IGraphM`", {"HierarchicalClustering`"}];
 
 (* Privately load and configure LTemplate *)
 Get["LTemplate`LTemplatePrivate`"];
@@ -212,7 +212,32 @@ IGEdgeConnectivity::usage =
     "IGEdgeConnectivity[graph]" <>
     "IGEdgeConnectivity[graph, s t]";
 
+IGClusters::usage = "IGClusters[association] represents the output of community detection functions.";
+
 IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph]";
+
+IGCompareCommunities::usage =
+    "IGCompareCommunities[igclusters1, igclusters1]\n" <>
+    "IGCompareCommunities[igclusters1, igclusters1, method]\n" <>
+    "IGCompareCommunities[graph, communities1, communities2]\n" <>
+    "IGCompareCommunities[graph, communities1, communities2, method]";
+
+IGModularity::usage =
+    "IGModularity[graph, communities]\n" <>
+    "IGModularity[graph, igclusters]";
+IGCommunitiesEdgeBetweenness::usage = "IGCommunitiesEdgeBetweenness[graph] implements the Girvan-Newman community finding algorithm.";
+IGCommunitiesGreedy::usage = "IGCommunitiesGreedy[graph]";
+IGCommunitiesWalktrap::usage =
+    "IGCommunitiesWalktrap[graph]\n" <>
+    "IGCommunitiesWalktrap[graph, steps]";
+IGCommunitiesOptimalModularity::usage = "IGCommunitiesOptimalModularity[graph]";
+IGCommunitiesMultilevel::usage = "IGCommunitiesMultilevel[graph]";
+IGCommunitiesLabelPropagation::usage = "IGCommunitiesLabelPropagation[graph]";
+IGCommunitiesInfoMAP::usage =
+    "IGCommunitiesInfoMAP[graph]\n" <>
+    "IGCommunitiesInfoMAP[graph, trials]";
+IGCommunitiesSpinGlass::usage = "IGCommunitiesSpinGlass[graph]";
+IGCommunitiesLeadingEigenvector::usage = "IGCommunitiesLeadingEigenvector[graph]";
 
 Begin["`Private`"];
 
@@ -455,7 +480,21 @@ template = LTemplate["IGraphM",
 
         LFun["graphlets", LinkObject],
         LFun["graphletBasis", LinkObject],
-        LFun["graphletProject", LinkObject]
+        LFun["graphletProject", LinkObject],
+
+        (* Community detection *)
+
+        LFun["modularity", {{Real, 1, "Constant"}}, Real],
+        LFun["compareCommunities", {{Real, 1, "Constant"}, {Real, 1, "Constant"}, Integer (* method *)}, Real],
+        LFun["communityEdgeBetweenness", LinkObject],
+        LFun["communityWalktrap", LinkObject],
+        LFun["communityFastGreedy", LinkObject],
+        LFun["communityOptimalModularity", LinkObject],
+        LFun["communityMultilevel", LinkObject],
+        LFun["communityLabelPropagation", LinkObject],
+        LFun["communityInfoMAP", LinkObject],
+        LFun["communitySpinGlass", LinkObject],
+        LFun["communityLeadingEigenvector", LinkObject]
       }
     ]
   }
@@ -618,6 +657,9 @@ vss[graph_][All] := {}
 vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, throw[$Failed]]
 
 vs[graph_][v_] := Check[VertexIndex[graph, v] - 1, throw[$Failed]]
+
+
+vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexWeight] =!= Automatic
 
 (***** Public functions *****)
 
@@ -1400,6 +1442,297 @@ IGGraphletBasis[graph_?igGraphQ] :=
 IGGraphletProject[graph_?igGraphQ, cliques : {__List}, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
     catch@Block[{ig = igMake[graph], clq},
       check@ig@"graphletProject"[Map[vss[graph], cliques, {2}], niter]
+    ]
+
+
+(* Community detection *)
+
+clusterAscQ[asc_?AssociationQ] := AllTrue[{"Elements", "Communities", "Algorithm"}, KeyExistsQ[asc, #]&]
+clusterAscQ[_] := False
+
+igClustersQ[IGClusters[asc_]] := clusterAscQ[asc]
+igClustersQ[_] := False
+
+hierarchicalQ[asc_] := KeyExistsQ[asc, "Merges"]
+
+IGClusters::hier = "The provided clustering is not hierarchical."
+
+IGClusters[asc_?AssociationQ]["Properties"] :=
+    Sort@Join[
+      Keys[asc],
+      {
+        "Properties",
+        If[hierarchicalQ[asc], "HierarchicalClusters", Unevaluated@Sequence[]]
+      }
+    ]
+
+IGClusters[asc_?AssociationQ]["HierarchicalClusters"] :=
+    If[hierarchicalQ[asc],
+      toHierarchicalClusters[asc],
+      Message[IGClusters::hier]; $Failed
+    ]
+IGClusters[asc_?AssociationQ][key_String] := asc[key]
+
+toHierarchicalClusters[asc_] :=
+    Module[{cl, merge, cnt, n, s},
+      n = Length@asc@"Elements";
+      Switch[asc@"Algorithm",
+        "EdgeBetweenness", s = 1 + Length@asc@"RemovedEdges" - asc@"Bridges",
+        _, s = Range[n]
+      ];
+      MapThread[Set[cl[#2], #1]&, {asc@"Elements", Range[n]}];
+      cnt[Cluster[_, _, _, n1_, n2_]] := n1 + n2;
+      cnt[_] := 1;
+      merge[{j_, k_}, {i_}] := cl[i + n] = Cluster[cl[j], cl[k], s[[i]], cnt@cl[j], cnt@cl[k]];
+      Last@MapIndexed[merge, asc["Merges"]]
+    ]
+
+grid[g_] := Column[Row /@ g]
+
+MakeBoxes[c : IGClusters[asc_?clusterAscQ], form : (StandardForm|TraditionalForm)] :=
+    With[{boxes = RowBox[{"IGClusters", "[",
+      ToBoxes[
+        Panel@OpenerView[{
+          grid[
+            {
+              {"Elements: ", Length@asc@"Elements"},
+              {"Communities: ", Length@asc@"Communities"}
+            }
+          ],
+          grid[{
+            {"Modularity: ", If[KeyExistsQ[asc, "Modularity"], Max@asc@"Modularity", "unknown"]},
+            {"Hierarchical: ", hierarchicalQ[asc]},
+            {"Algorithm: ", asc@"Algorithm"}
+          }
+          ]
+        }],
+        form],
+      "]"}]},
+      InterpretationBox[
+        boxes,
+        c
+      ]
+    ]
+
+igClusters[graph_][asc_] := IGClusters@Join[<|"Elements" -> VertexList[graph]|>, asc]
+
+communitiesFromMembership[graph_, membership_] := Values@GroupBy[Transpose[{VertexList[graph], Round[membership]}], Last -> First]
+
+communitiesToMembership[elems_, communities_] :=
+    Module[{copy = communities},
+      copy[[All, All]] = Range@Length[communities] - 1;
+      Lookup[AssociationThread[Flatten[communities, 1], Flatten[copy, 1]], elems]
+    ]
+
+
+IGModularity[graph_?igGraphQ, clusters_?igClustersQ] := IGModularity[graph, clusters["Communities"]]
+IGModularity[graph_?igGraphQ, communities : {__List}] :=
+    catch@Block[{ig = igMake[graph]},
+      check@ig@"modularity"[communitiesToMembership[VertexList[graph], communities]]
+    ]
+
+igCompareCommunitiesMethods = {
+  "VariationOfInformation",
+  "NormalizedMutualInformation",
+  "SplitJoinDistance",
+  "UnadjustedRandIndex",
+  "AdjustedRandIndex"
+};
+
+igCompareCommunitiesMethodsAsc = AssociationThread[igCompareCommunitiesMethods, Range@Length[igCompareCommunitiesMethods] - 1]
+
+igCompareCommunities[elems_, c1_, c2_, method_] :=
+    Block[{ig = Make["IG"]},
+      res = check@ig@"compareCommunities"[communitiesToMembership[elems, c1], communitiesToMembership[elems, c2],
+        Lookup[igCompareCommunitiesMethodsAsc, method, -1]
+      ];
+      If[method === "SplitJoinDistance", res = Round[res]];
+      <| method -> res |>
+    ]
+
+IGCompareCommunities[graph_?igGraphQ, comm1 : {__List}, comm2 : {__List}, methods : {__String} : igCompareCommunitiesMethods] :=
+    catch[
+      Join @@ (igCompareCommunities[VertexList[graph], comm1, comm2, #]& /@ methods)
+    ]
+
+IGCompareCommunities[graph_?igGraphQ, comm1 : {__List}, comm2 : {__List}, method_String] :=
+    catch@igCompareCommunities[VertexList[graph], comm1, comm2, method]
+
+IGCompareCommunities::diff = "The compared cluster objects must contain exactly the same elements"
+
+IGCompareCommunities[c1_?igClustersQ, c2_?igClustersQ, methods : {__String} : igCompareCommunitiesMethods] :=
+    catch[
+      If[c1@"Elements" =!= c2@"Elements", Message[IGCompareCommunities::diff]; throw[$Failed]];
+      Join @@ (igCompareCommunities[c1@"Elements", c1@"Communities", c2@"Communities", #]& /@ methods)
+    ]
+
+IGCompareCommunities[c1_?igClustersQ, c2_?igClustersQ, method_String] := IGCompareCommunities[c1, c2, {method}]
+
+
+IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
+    catch@Module[{ig = igMake[graph], result, merges, betweenness, bridges, modularity, membership, removed},
+      {result, merges, betweenness, bridges, modularity, membership} = check@ig@"communityEdgeBetweenness"[];
+      removed = Part[EdgeList[graph], igIndexVec[result]];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> modularity,
+        "Merges" -> igIndexVec[merges],
+        "RemovedEdges" -> removed,
+        "EdgeBetweenness" -> betweenness,
+        "Bridges" -> Round[bridges] (*Part[removed, Round[bridges]]*),
+        "Algorithm" -> "EdgeBetweenness"
+      |>
+    ]
+
+
+IGCommunitiesWalktrap[graph_?igGraphQ, steps : _?Internal`PositiveMachineIntegerQ : 4] :=
+    catch@Module[{ig = igMake[graph], merges, modularity, membership},
+      {merges, modularity, membership} = check@ig@"communityWalktrap"[steps];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> modularity,
+        "Merges" -> igIndexVec[merges],
+        "Algorithm" -> "Walktrap"
+      |>
+    ]
+
+
+IGCommunitiesGreedy[graph_?igGraphQ] :=
+    catch@Module[{ig = igMake[graph], merges, modularity, membership},
+      {merges, modularity, membership} = check@ig@"communityFastGreedy"[];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> modularity,
+        "Merges" -> igIndexVec[merges],
+        "Algorithm" -> "Greedy"
+      |>
+    ]
+
+
+IGCommunitiesOptimalModularity[graph_?igGraphQ] :=
+    catch@Module[{ig = igMake[graph], modularity, membership},
+      {modularity, membership} = check@ig@"communityOptimalModularity"[];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> {modularity},
+        "Algorithm" -> "OptimalModularity"
+      |>
+    ]
+
+
+IGCommunitiesMultilevel[graph_?igGraphQ] :=
+    catch@Module[{ig = igMake[graph], modularity, membership, memberships},
+      {modularity, membership, memberships} = check@ig@"communityMultilevel"[];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> modularity,
+        "MultilevelCommunities" -> (communitiesFromMembership[graph, #]&) /@ memberships,
+        "Algorithm" -> "Multilevel"
+      |>
+    ]
+
+
+Options[IGCommunitiesLabelPropagation] = { "Initial" -> None, "Fixed" -> None };
+
+IGCommunitiesLabelPropagation::invopt = "Invalid value for the `` option.";
+
+IGCommunitiesLabelPropagation[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Module[{ig = igMake[graph], membership, modularity, initial, fixed, vl},
+      initial = OptionValue["Initial"];
+      fixed = OptionValue["Fixed"];
+      vl = VertexList[graph];
+      If[initial =!= None,
+        If[ Not@MatchQ[initial, {__List}] || Not@SubsetQ[vl, Flatten[initial, 1]],
+          Message[IGCommunitiesLabelPropagation::invopt, "\"Initial\""];
+          throw[$Failed];
+        ];
+        initial = Prepend[initial, Complement[vl, Flatten[initial, 1]]];
+        initial = communitiesToMembership[vl, initial] - 1;
+        ,
+        initial = {};
+      ];
+      If[fixed =!= None,
+        If[Not@SubsetQ[vl, fixed],
+          Message[IGCommunitiesLabelPropagation::invopt, "\"Fixed\""];
+          throw[$Failed];
+        ];
+        fixed = {Complement[VertexList[graph], fixed], fixed};
+        fixed = communitiesToMembership[vl, fixed];
+        ,
+        fixed = {};
+      ];
+      {membership, modularity} = check@ig@"communityLabelPropagation"[initial, fixed];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> {modularity},
+        "Algorithm" -> "LabelPropagation"
+      |>
+    ]
+
+
+IGCommunitiesInfoMAP[graph_?igGraphQ, trials_ : 10] :=
+    catch@Module[{ig = igMake[graph], membership, codelen, vertexWeights},
+      vertexWeights = If[vertexWeightedQ[graph], PropertyValue[graph, VertexWeight], {}];
+      {membership, codelen} = check@ig@"communityInfoMAP"[trials, vertexWeights];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "CodeLength" -> codelen,
+        "Algorithm" -> "InfoMAP"
+      |>
+    ]
+
+
+Options[IGCommunitiesSpinGlass] = {
+  "UpdateRule" -> "Configuration",
+  "ParallelUpdating" -> False,
+  "SpinCount" -> 25,
+  "StartingTemperature" -> 1.,
+  "StoppingTemperature" -> 0.01,
+  "CoolingFactor" -> 0.99,
+  "Gamma" -> 1,
+  "GammaMinus" -> 1,
+  "Method" -> "Original"
+};
+
+igSpinGlassUpdateRules = {"Simple", "Configuration"};
+igSpinGlassUpdateRulesAsc = AssociationThread[igSpinGlassUpdateRules, Range@Length[igSpinGlassUpdateRules] - 1];
+igSpinGlassMethods = {"Original", "Negative"};
+igSpinGlassMethodsAsc = AssociationThread[igSpinGlassMethods, Range@Length[igSpinGlassMethods] - 1];
+
+IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Module[{ig = igMake[graph], modularity, membership, temp},
+      {membership, modularity, temp} = check@ig@"communitySpinGlass"[
+        OptionValue["SpinCount"], Boole@OptionValue["ParallelUpdating"],
+        OptionValue["StartingTemperature"], OptionValue["StoppingTemperature"], OptionValue["CoolingFactor"],
+        Lookup[igSpinGlassUpdateRulesAsc, OptionValue["UpdateRule"], -1],
+        OptionValue["Gamma"],
+        Lookup[igSpinGlassMethodsAsc, OptionValue["Method"], -1],
+        OptionValue["GammaMinus"]
+      ];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> {modularity},
+        "Temperature" -> temp,
+        "Algorithm" -> "SpinGlass"
+      |>
+    ]
+
+
+Options[IGCommunitiesLeadingEigenvector] = { "Steps" -> Automatic };
+
+IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Module[{ig = igMake[graph], modularity, membership, merges, eval, evec},
+      {membership, merges, modularity, eval, evec} = check@ig@"communityLeadingEigenvector"[
+        Replace[OptionValue["Steps"], Automatic :> VertexCount[graph]]
+      ];
+      igClusters[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> {modularity},
+        "Merges" -> igIndexVec[merges], (* TODO *)
+        "Eigenvalues" -> eval,
+        "Eigenvectors" -> evec,
+        "Algorithm" -> "LeadingEigenvector"
+      |>
     ]
 
 End[]; (* `Private` *)

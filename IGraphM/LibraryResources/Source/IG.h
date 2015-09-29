@@ -989,6 +989,228 @@ public:
         ml.newPacket();
         ml << mlHead("List", 2) << cliques << mu;
     }
+
+    // Community detection
+
+    double modularity(mma::RealTensorRef t) const {
+        igraph_vector_t membership = igVectorView(t);
+        double res;
+        igCheck(igraph_modularity(&graph, &membership, &res, passWeights()));
+        return res;
+    }
+
+    double compareCommunities(mma::RealTensorRef c1, mma::RealTensorRef c2, mint m) const {
+        igraph_community_comparison_t method;
+        switch (m) {
+        case 0: method = IGRAPH_COMMCMP_VI; break;
+        case 1: method = IGRAPH_COMMCMP_NMI; break;
+        case 2: method = IGRAPH_COMMCMP_SPLIT_JOIN; break;
+        case 3: method = IGRAPH_COMMCMP_RAND; break;
+        case 4: method = IGRAPH_COMMCMP_ADJUSTED_RAND; break;
+        default: throw mma::LibraryError("Invalid community comparison method.");
+        }
+
+        igraph_vector_t comm1 = igVectorView(c1);
+        igraph_vector_t comm2 = igVectorView(c2);
+        double res;
+        igCheck(igraph_compare_communities(&comm1, &comm2, &res, method));
+        return res;
+    }
+
+    mma::IntTensorRef splitJoinDistance(mma::RealTensorRef c1, mma::RealTensorRef c2) const {
+        igraph_integer_t d1, d2;
+
+        igraph_vector_t comm1 = igVectorView(c1);
+        igraph_vector_t comm2 = igVectorView(c2);
+
+        igCheck(igraph_split_join_distance(&comm1, &comm2, &d1, &d2));
+
+        mma::IntTensorRef res = mma::makeVector<mint>(2);
+        res[0] = d1;
+        res[1] = d2;
+        return res;
+    }
+
+    void communityEdgeBetweenness(MLINK link) const {
+        mlStream ml(link);
+        ml >> mlCheckArgs(0);
+
+        igVector result, betweenness, bridges, modularity, membership;
+        igMatrix merges;
+
+        igCheck(igraph_community_edge_betweenness(
+                    &graph, &result.vec, &betweenness.vec, &merges.mat, &bridges.vec, &modularity.vec, &membership.vec, true, passWeights()
+                    ));
+
+        ml.newPacket();
+        ml << mlHead("List", 6)
+           << result << merges << betweenness << bridges << modularity << membership;
+    }
+
+    void communityWalktrap(MLINK link) const {
+        mlStream ml(link);
+        igraph_integer_t steps;
+        ml >> mlCheckArgs(1) >> steps;
+
+        igVector modularity, membership;
+        igMatrix merges;
+
+        igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, &modularity.vec, &membership.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 3)
+           << merges << modularity << membership;
+    }
+
+    void communityFastGreedy(MLINK link) const {
+        mlStream ml(link);
+        ml >> mlCheckArgs(0);
+
+        igVector modularity, membership;
+        igMatrix merges;
+
+        igCheck(igraph_community_fastgreedy(&graph, passWeights(), &merges.mat, &modularity.vec, &membership.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 3)
+           << merges << modularity << membership;
+    }
+
+    void communityMultilevel(MLINK link) const {
+        mlStream ml(link);
+        ml >> mlCheckArgs(0);
+
+        igVector modularity, membership;
+        igMatrix memberships;
+
+        igCheck(igraph_community_multilevel(&graph, passWeights(), &membership.vec, &memberships.mat, &modularity.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 3) << modularity << membership << memberships;
+    }
+
+    void communityLabelPropagation(MLINK link) const {
+        mlStream ml(link);
+
+        igVector initial;
+        igBoolVector fixed;
+        ml >> mlCheckArgs(2) >> initial >> fixed;
+
+        igVector membership;
+        double modularity;
+
+        igCheck(igraph_community_label_propagation(
+                    &graph, &membership.vec, passWeights(),
+                    initial.length() == 0 ? NULL : &initial.vec,
+                    fixed.length() == 0 ? NULL : &fixed.vec,
+                    &modularity));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << membership << modularity;
+    }
+
+    void communityInfoMAP(MLINK link) const {
+        mlStream ml(link);
+
+        int trials;
+        igVector v_weights;
+        ml >> mlCheckArgs(2) >> trials >> v_weights;
+
+        igVector membership;
+        double codelen;
+
+        igCheck(igraph_community_infomap(
+                    &graph, passWeights(), v_weights.length() == 0 ? NULL : &v_weights.vec,
+                    trials, &membership.vec, &codelen));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << membership << codelen;
+    }
+
+    void communityOptimalModularity(MLINK link) const {
+        mlStream ml(link);
+        ml >> mlCheckArgs(0);
+
+        igVector membership;
+        double modularity;
+
+        igCheck(igraph_community_optimal_modularity(&graph, &modularity, &membership.vec, passWeights()));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << modularity << membership;
+    }
+
+    void communitySpinGlass(MLINK link) const {
+        mlStream ml(link);
+
+        igraph_integer_t spins, update_rule, method;
+        igraph_bool_t parupdate;
+        double starttemp, stoptemp, coolfact, gamma, gamma_minus;
+        ml >> mlCheckArgs(9)
+            >> spins // number of spins, i.e. max number of clusters
+            >> parupdate // parallel update for IGRAPH_SPINCOMM_INP_NEG
+            >> starttemp >> stoptemp >> coolfact // start, stop temperature, cooling factor
+            >> update_rule
+            >> gamma
+            >> method
+            >> gamma_minus;
+
+        igraph_spinglass_implementation_t method_e;
+        switch (method) {
+        case 0: method_e = IGRAPH_SPINCOMM_IMP_ORIG; break;
+        case 1: method_e = IGRAPH_SPINCOMM_IMP_NEG; break;
+        default:
+            throw mma::LibraryError("communitySpinGlass: invalid method option.");
+        }
+
+        igraph_spincomm_update_t update_rule_e;
+        switch (update_rule) {
+        case 0: update_rule_e = IGRAPH_SPINCOMM_UPDATE_SIMPLE; break;
+        case 1: update_rule_e = IGRAPH_SPINCOMM_UPDATE_CONFIG; break;
+        default:
+            throw mma::LibraryError("communitySpinGlass: invalid update rule option.");
+        }
+
+        double modularity, temperature;
+        igVector membership;
+
+        igCheck(igraph_community_spinglass(
+                    &graph, passWeights(),
+                    &modularity, &temperature, &membership.vec, NULL,
+                    spins, parupdate, starttemp, stoptemp, coolfact,
+                    update_rule_e, gamma, method_e, gamma_minus
+                    ));
+
+        ml.newPacket();
+        ml << mlHead("List", 3) << membership << modularity << temperature;
+    }
+
+    void communityLeadingEigenvector(MLINK link) const {
+        mlStream ml(link);
+
+        igraph_integer_t steps;
+        ml >> mlCheckArgs(1) >> steps;
+
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+
+        igVector membership, eigenvalues;
+        igMatrix merges;
+        igList eigenvectors;
+        double modularity;
+
+        igCheck(igraph_community_leading_eigenvector(
+                    &graph, passWeights(),
+                    &merges.mat, &membership.vec,
+                    steps, &options, &modularity, false,
+                    &eigenvalues.vec, &eigenvectors.list, // eigenvalues, eigenvectors
+                    NULL, // history
+                    NULL, NULL // callback
+                    ));
+
+        ml.newPacket();
+        ml << mlHead("List", 5) << membership << merges << modularity << eigenvalues << eigenvectors;
+    }
 };
 
 #endif // IG_H
