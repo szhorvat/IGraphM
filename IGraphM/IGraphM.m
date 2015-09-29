@@ -577,8 +577,7 @@ zimport[filename_] := Uncompress@Import[filename, "String"]
 
 (* Get an IG compatible edge list. *)
 igEdgeList[graph_] :=
-    Developer`ToPackedArray@N[List @@@ EdgeList[graph] /.
-            Dispatch@Thread[VertexList[graph] -> Range@VertexCount[graph] - 1]]
+    Developer`ToPackedArray@N[List @@@ EdgeList@IndexGraph[graph]] - 1
 
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
 igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
