@@ -587,7 +587,7 @@ igDirectedQ[graph_] := DirectedGraphQ[graph] && Not@EmptyGraphQ[graph]
 
 (* TODO: Find out how to implement this in a more robust way.
    We only want edge-weighted graphs, not vertex weighted ones. *)
-igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeList] =!= Automatic &;
+igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &;
 
 (* Create IG object from Mathematica Graph. *)
 igMake[g_] :=
