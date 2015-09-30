@@ -679,7 +679,7 @@ public:
         case 0: grid = IGRAPH_LAYOUT_GRID; break;
         case 1: grid = IGRAPH_LAYOUT_NOGRID; break;
         case 2: grid = IGRAPH_LAYOUT_AUTOGRID; break;
-        default: throw mma::LibraryError("layoutFruchtermanReingold: unknown method.");
+        default: throw mma::LibraryError("layoutFruchtermanReingold: unknown method option.");
         }
 
         igCheck(igraph_layout_fruchterman_reingold(

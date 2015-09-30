@@ -206,11 +206,11 @@ IGGraphletProject::usage =
 
 IGVertexConnectivity::usage =
     "IGVertexConnectivity[graph]\n" <>
-    "IGVertexConnectivity[graph, s t]";
+    "IGVertexConnectivity[graph, s, t]";
 
 IGEdgeConnectivity::usage =
     "IGEdgeConnectivity[graph]" <>
-    "IGEdgeConnectivity[graph, s t]";
+    "IGEdgeConnectivity[graph, s, t]";
 
 IGClusters::usage = "IGClusters[association] represents the output of community detection functions.";
 
@@ -587,7 +587,7 @@ throw[val_] := Throw[val, igTag]
 SetAttributes[catch, HoldFirst]
 catch[expr_] := Catch[expr, igTag]
 
-check[val_LibraryFunctionError] := throw[val] (* TODO change to $Failed *)
+check[val_LibraryFunctionError] := throw[val] (* TODO change to throw[$Failed] *)
 check[$Failed] := throw[$Failed]
 check[HoldPattern[LibraryFunction[___][___]]] := throw[$Failed]
 check[val_] := val
@@ -607,9 +607,6 @@ zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
-
-libraryErrorQ[_LibraryFunctionError] := True
-libraryErrorQ[_] := False
 
 (* Import compressed expressions. Used in IGData. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
@@ -836,10 +833,7 @@ IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@With[{labeling = check@IGBlissCanonicalLabeling[graph, opt]},
-      If[libraryErrorQ[labeling], Return[labeling]];
-      Graph[Range@VertexCount[graph], Replace[EdgeList[graph], labeling, {2}]]
-    ]
+      catch@VertexReplace[graph, Normal@check@IGBlissCanonicalLabeling[graph, opt]]
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
 IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
@@ -1158,8 +1152,8 @@ Options[IGLayoutKamadaKawai] = {
 
 IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], maxiter, kkconst, scale = 0.5},
-      maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
-      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
+      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> VertexCount[graph]];
       setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"], scale],
           maxiter, OptionValue["Epsilon"], kkconst]
@@ -1173,8 +1167,8 @@ Options[IGLayoutKamadaKawai3D] = {
 
 IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], maxiter, kkconst, scale = 0.5},
-      maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 10 VertexCount[graph]];
-      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic -> VertexCount[graph]];
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
+      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> VertexCount[graph]];
       setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
           maxiter, OptionValue["Epsilon"], kkconst]
@@ -1218,9 +1212,9 @@ Options[IGLayoutGEM] = {
 
 IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], maxiter, maxtemp, inittemp, scale = 3*^-3},
-      maxiter = Replace[OptionValue["MaxIterations"], Automatic -> 40 VertexCount[graph]^2];
-      maxtemp = Replace[OptionValue["MaxTemperature"], Automatic -> VertexCount[graph]];
-      inittemp = Replace[OptionValue["InitTemperature"], Automatic -> Sqrt@VertexCount[graph]];
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 40 VertexCount[graph]^2];
+      maxtemp = Replace[OptionValue["MaxTemperature"], Automatic :> VertexCount[graph]];
+      inittemp = Replace[OptionValue["InitTemperature"], Automatic :> Sqrt@VertexCount[graph]];
       setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutGEM"[continueLayout[graph, OptionValue["Continue"], scale],
           maxiter, maxtemp, OptionValue["MinTemperature"], inittemp
@@ -1237,10 +1231,10 @@ Options[IGLayoutDavidsonHarel] = {
 
 IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], tuneiter, edgelenw, edgecrossw, edgedistw, scale = 0.1},
-      tuneiter = Replace[OptionValue["FineTuningIterations"], Automatic -> Max[10, Log[2, VertexCount[graph]]]];
-      edgelenw = Replace[OptionValue["EdgeLengthWeight"], Automatic -> GraphDensity[graph]/10];
-      edgecrossw = Replace[OptionValue["EdgeCrossingWeight"], Automatic -> 1 - GraphDensity[graph]];
-      edgedistw = Replace[OptionValue["EdgeDistanceWeight"], Automatic -> 1 - GraphDensity[graph] / 5];
+      tuneiter = Replace[OptionValue["FineTuningIterations"], Automatic :> Max[10, Log[2, VertexCount[graph]]]];
+      edgelenw = Replace[OptionValue["EdgeLengthWeight"], Automatic :> GraphDensity[graph]/10];
+      edgecrossw = Replace[OptionValue["EdgeCrossingWeight"], Automatic :> 1 - GraphDensity[graph]];
+      edgedistw = Replace[OptionValue["EdgeDistanceWeight"], Automatic :> 1 - GraphDensity[graph] / 5];
       setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDavidsonHarel"[continueLayout[graph, OptionValue["Continue"], scale],
           OptionValue["MaxIterations"],
@@ -1461,7 +1455,7 @@ IGClusters[asc_?AssociationQ]["Properties"] :=
     Sort@Join[
       Keys[asc],
       {
-        "Properties",
+        "Properties", "ElementCount",
         If[hierarchicalQ[asc], "HierarchicalClusters", Unevaluated@Sequence[]]
       }
     ]
@@ -1471,6 +1465,9 @@ IGClusters[asc_?AssociationQ]["HierarchicalClusters"] :=
       toHierarchicalClusters[asc],
       Message[IGClusters::hier]; $Failed
     ]
+
+IGClusters[asc_?AssociationQ]["ElementCount"] := Length[asc["Elements"]]
+
 IGClusters[asc_?AssociationQ][key_String] := asc[key]
 
 toHierarchicalClusters[asc_] :=
@@ -1487,12 +1484,12 @@ toHierarchicalClusters[asc_] :=
       Last@MapIndexed[merge, asc["Merges"]]
     ]
 
-grid[g_] := Column[Row /@ g]
+grid[g_] := Column[Row /@ MapAt[Style[#, Gray]&, g, Table[{i, 1}, {i, Length[g]}]]]
 
 MakeBoxes[c : IGClusters[asc_?clusterAscQ], form : (StandardForm|TraditionalForm)] :=
     With[{boxes = RowBox[{"IGClusters", "[",
       ToBoxes[
-        Panel@OpenerView[{
+        Panel[OpenerView[{
           grid[
             {
               {"Elements: ", Length@asc@"Elements"},
@@ -1505,7 +1502,7 @@ MakeBoxes[c : IGClusters[asc_?clusterAscQ], form : (StandardForm|TraditionalForm
             {"Algorithm: ", asc@"Algorithm"}
           }
           ]
-        }],
+        }], BaselinePosition -> Baseline],
         form],
       "]"}]},
       InterpretationBox[
