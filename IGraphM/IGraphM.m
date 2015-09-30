@@ -217,27 +217,27 @@ IGClusters::usage = "IGClusters[association] represents the output of community 
 IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph]";
 
 IGCompareCommunities::usage =
-    "IGCompareCommunities[igclusters1, igclusters1]\n" <>
-    "IGCompareCommunities[igclusters1, igclusters1, method]\n" <>
-    "IGCompareCommunities[graph, communities1, communities2]\n" <>
-    "IGCompareCommunities[graph, communities1, communities2, method]";
+    "IGCompareCommunities[igclusters1, igclusters1] compares two community structures given as IGClusters objects using all available methods.\n" <>
+    "IGCompareCommunities[igclusters1, igclusters1, method] compares two community structures given as IGCluster objects using method.\n" <>
+    "IGCompareCommunities[graph, communities1, communities2] compares two partitionings of the graph vertices into communities using all available methods.\n" <>
+    "IGCompareCommunities[graph, communities1, communities2, method] compares two partitionings of the graph vertices into communities using methods.";
 
 IGModularity::usage =
-    "IGModularity[graph, communities]\n" <>
-    "IGModularity[graph, igclusters]";
-IGCommunitiesEdgeBetweenness::usage = "IGCommunitiesEdgeBetweenness[graph] implements the Girvan-Newman community finding algorithm.";
-IGCommunitiesGreedy::usage = "IGCommunitiesGreedy[graph]";
+    "IGModularity[graph, {{v11, v12, \[Ellipsis]}, {v21, v22, \[Ellipsis]}, \[Ellipsis]}] computes the modularity of graph based on the given partitioning of the vertex list into communities.\n" <>
+    "IGModularity[graph, igclusters] computes the modularity of graph based on the community structure represented as an IGClusters object.";
+IGCommunitiesEdgeBetweenness::usage = "IGCommunitiesEdgeBetweenness[graph] finds communities using the Girvan-Newman algorithm.";
+IGCommunitiesGreedy::usage = "IGCommunitiesGreedy[graph] finds communities using greedy optimization of modularity.";
 IGCommunitiesWalktrap::usage =
-    "IGCommunitiesWalktrap[graph]\n" <>
-    "IGCommunitiesWalktrap[graph, steps]";
-IGCommunitiesOptimalModularity::usage = "IGCommunitiesOptimalModularity[graph]";
-IGCommunitiesMultilevel::usage = "IGCommunitiesMultilevel[graph]";
-IGCommunitiesLabelPropagation::usage = "IGCommunitiesLabelPropagation[graph]";
+    "IGCommunitiesWalktrap[graph] finds communities vie short random walks (of length 4 by default).\n" <>
+    "IGCommunitiesWalktrap[graph, steps] finds communities via random walks of length steps.";
+IGCommunitiesOptimalModularity::usage = "IGCommunitiesOptimalModularity[graph] finds communities by maximizing the modularity through integer programming.";
+IGCommunitiesMultilevel::usage = "IGCommunitiesMultilevel[graph] finds communities using the Louvain method.";
+IGCommunitiesLabelPropagation::usage = "IGCommunitiesLabelPropagation[graph] finds communities by assigning labels to each vertex and and then updating them by majority voting in the neighborhood of the vertex.";
 IGCommunitiesInfoMAP::usage =
-    "IGCommunitiesInfoMAP[graph]\n" <>
+    "IGCommunitiesInfoMAP[graph] finds communities using the InfoMAP algorithm. The default number of trials is 10.\n" <>
     "IGCommunitiesInfoMAP[graph, trials]";
-IGCommunitiesSpinGlass::usage = "IGCommunitiesSpinGlass[graph]";
-IGCommunitiesLeadingEigenvector::usage = "IGCommunitiesLeadingEigenvector[graph]";
+IGCommunitiesSpinGlass::usage = "IGCommunitiesSpinGlass[graph] finds communities using a spin glass model and simulated annealing.";
+IGCommunitiesLeadingEigenvector::usage = "IGCommunitiesLeadingEigenvector[graph] finds communities based on the leading eigenvector of the modularity matrix.";
 
 Begin["`Private`"];
 
@@ -1550,6 +1550,9 @@ igCompareCommunities[elems_, c1_, c2_, method_] :=
       <| method -> res |>
     ]
 
+IGCompareCommunities::usage =
+    IGCompareCommunities::usage <> " Available methods: " <> ToString[igCompareCommunitiesMethods, InputForm] <> ".";
+
 IGCompareCommunities[graph_?igGraphQ, comm1 : {__List}, comm2 : {__List}, methods : {__String} : igCompareCommunitiesMethods] :=
     catch[
       Join @@ (igCompareCommunities[VertexList[graph], comm1, comm2, #]& /@ methods)
@@ -1698,6 +1701,11 @@ igSpinGlassUpdateRules = {"Simple", "Configuration"};
 igSpinGlassUpdateRulesAsc = AssociationThread[igSpinGlassUpdateRules, Range@Length[igSpinGlassUpdateRules] - 1];
 igSpinGlassMethods = {"Original", "Negative"};
 igSpinGlassMethodsAsc = AssociationThread[igSpinGlassMethods, Range@Length[igSpinGlassMethods] - 1];
+
+IGCommunitiesSpinGlass::usage =
+    IGCommunitiesSpinGlass::usage <>
+        " Available \"UpdateRule\" option values: " <> ToString[igSpinGlassUpdateRules, InputForm] <>
+        ". Available \"Method\" option values: " <> ToString[igSpinGlassMethods, InputForm] <> ".";
 
 IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Module[{ig = igMake[graph], modularity, membership, temp},
