@@ -1256,27 +1256,29 @@ IGLayoutMDS[graph_?igGraphQ, dim : (2|3) : 2, Optional[distMatrix_?SquareMatrixQ
     ]
 *)
 
-Options[IGLayoutReingoldTilford] = { "Roots" -> Automatic, DirectedEdges -> False };
+Options[IGLayoutReingoldTilford] = {
+  "RootVertices" -> Automatic, DirectedEdges -> False, "Rotation" -> 0,
+  "LayerHeight" -> 1, "LeafDistance" -> 1
+};
 
 IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], roots},
-      roots = Replace[OptionValue["Roots"], Automatic -> {}];
-      If[Not@ListQ[roots], roots = {roots}];
-      roots = VertexIndex[graph, #] - 1& /@ roots;
+      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic -> {}];
       setVertexCoords[graph,
-        {1,-1}#& /@ check@ig@"layoutReingoldTilford"[roots, OptionValue[DirectedEdges]]
+        Composition[
+          RotationTransform[Pi + OptionValue["Rotation"]],
+          ScalingTransform[{OptionValue["LeafDistance"], OptionValue["LayerHeight"]}]
+        ] /@ check@ig@"layoutReingoldTilford"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 
-Options[IGLayoutReingoldTilfordCircular] = { "Roots" -> Automatic, DirectedEdges -> False };
+Options[IGLayoutReingoldTilfordCircular] = { "RootVertices" -> Automatic, DirectedEdges -> False, "Rotation" -> 0 };
 
 IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], roots},
-      roots = Replace[OptionValue["Roots"], Automatic -> {}];
-      If[Not@ListQ[roots], roots = {roots}];
-      roots = VertexIndex[graph, #] - 1& /@ roots;
+      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic -> {}];
       setVertexCoords[graph,
-        {1,-1}#& /@ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
+        RotationTransform@OptionValue["Rotation"] /@ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 
