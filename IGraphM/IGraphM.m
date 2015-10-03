@@ -658,6 +658,9 @@ vs[graph_][v_] := Check[VertexIndex[graph, v] - 1, throw[$Failed]]
 
 vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexWeight] =!= Automatic
 
+applyGraphOpt[opt___][graph_] := Graph[graph, Sequence@@FilterRules[{opt}, Options[Graph]]]
+applyGraphOpt3D[opt___][graph_] := Graph3D[graph, Sequence@@FilterRules[{opt}, Options[Graph3D]]]
+
 (***** Public functions *****)
 
 IGDocumentation[] := (NotebookOpen[FileNameJoin[{$packageDirectory, "Documentation", "IGDocumentation.nb"}], Saveable -> False, WindowTitle -> "IGraph/M Documentation"]; Null)
@@ -684,7 +687,7 @@ Options[IGLCF] = { GraphLayout -> "CircularEmbedding" };
 IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[{IGLCF, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"fromLCF"[Replace[n, Automatic :> Length[shifts] repeats], shifts, repeats];
-      Graph[igToGraph[ig], GraphLayout -> OptionValue[GraphLayout], opt]
+      applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
 
 Options[IGMakeLattice] = {
@@ -694,13 +697,13 @@ Options[IGMakeLattice] = {
 IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"makeLattice"[dims, OptionValue["Radius"], OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Periodic"]];
-      Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
+      applyGraphOpt[opt]@igToGraph[ig]
     ]
 
 IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"graphAtlas"[n];
-      Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
+      applyGraphOpt[opt]@igToGraph[ig]
     ]
 
 (* Create (games) *)
@@ -713,16 +716,11 @@ IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <>
     StringTemplate[" Available methods: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
 
 IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
-    catch@Graph[
-      igDegreeSequenceGame[{}, degrees, OptionValue[Method]],
-      Sequence@@FilterRules[{opt}, Options[Graph]]
-    ]
+    catch@applyGraphOpt[opt]@igDegreeSequenceGame[{}, degrees, OptionValue[Method]]
+
 
 IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
-    catch@Graph[
-      igDegreeSequenceGame[indegrees, outdegrees, OptionValue[Method]],
-      Sequence@@FilterRules[{opt}, Options[Graph]]
-    ]
+    catch@applyGraphOpt[opt]@igDegreeSequenceGame[indegrees, outdegrees, OptionValue[Method]]
 
 igDegreeSequenceGame[indegrees_, outdegrees_, method_] :=
     Block[{ig = Make["IG"]},
@@ -735,7 +733,7 @@ Options[IGKRegularGame] = { "AllowMultipleEdges" -> False, DirectedEdges -> Fals
 IGKRegularGame[n_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[{IGKRegularGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["AllowMultipleEdges"]];
-      Graph[igToGraph[ig], Sequence@@FilterRules[{opt}, Options[Graph]]]
+      applyGraphOpt[opt]@igToGraph[ig]
     ]
 
 (* Testing *)
@@ -1106,26 +1104,30 @@ continueLayout[graph_, True, scale_ : 1, dim_ : 2] :=
 continueLayout[graph_, cont_, ___] := ( Message[IGraphM::lytcnt, cont]; continueLayout[graph, False] )
 continueLayout3D[graph_, cont_, scale_ : 1] := continueLayout[graph, cont, scale, 3]
 
-setVertexCoords[g_, coords_] := Graph[g, VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
-setVertexCoords3D[g_, coords_] := Graph3D[g, VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
+(* These should simply use Graph and Graph3D but due to a Mathematica bug
+   that won't work on some graphs, such as those returns by KaryTree.
+   Thus we use SetProperty with GraphLayout instead.
+*)
+setVertexCoords[g_, coords_] := SetProperty[g, VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
+setVertexCoords3D[g_, coords_] := SetProperty[SetProperty[g, GraphLayout -> {"Dimension" -> 3}], VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
 
 align[True] = PrincipalComponents
 align[False] = Identity
 align[val_] := (Message[IGraphM::lytaln, val]; Identity)
 
-IGLayoutRandom[graph_?igGraphQ] :=
+IGLayoutRandom[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMake[graph]},
-      Graph[graph, VertexCoordinates -> check@ig@"layoutRandom"[]]
+      applyGraphOpt[opt]@setVertexCoords[graph, check@ig@"layoutRandom"[]]
     ]
 
-IGLayoutCircle[graph_?igGraphQ] :=
+IGLayoutCircle[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMake[graph]},
-      setVertexCoords[graph, check@ig@"layoutCircle"[]]
+      applyGraphOpt[opt]@setVertexCoords[graph, check@ig@"layoutCircle"[]]
     ]
 
-IGLayoutSphere[graph_?igGraphQ] :=
+IGLayoutSphere[graph_?igGraphQ, opt : OptionsPattern[Graph3D]] :=
     catch@Block[{ig = igMake[graph]},
-      setVertexCoords3D[graph, check@ig@"layoutSphere"[]]
+      applyGraphOpt3D[opt]@setVertexCoords3D[graph, check@ig@"layoutSphere"[]]
     ]
 
 
@@ -1135,9 +1137,9 @@ Options[IGLayoutGraphOpt] = {
   "Continue" -> False, "Align" -> True
 };
 
-IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGraphOpt,Graph}]] :=
     catch@Block[{ig = igMake[graph], scale = 0.01},
-      setVertexCoords[graph,
+      applyGraphOpt[opt]@setVertexCoords[graph,
           scale align[OptionValue["Align"]]@check@ig@"layoutGraphOpt"[continueLayout[graph, OptionValue["Continue"], scale],
             OptionValue["MaxIterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
             OptionValue["SpringLength"], OptionValue["SpringConstant"], OptionValue["MaxStepMovement"]
@@ -1150,11 +1152,11 @@ Options[IGLayoutKamadaKawai] = {
   "Continue" -> False, "Align" -> True
 };
 
-IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai,Graph}]] :=
     catch@Block[{ig = igMake[graph], maxiter, kkconst, scale = 0.5},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> VertexCount[graph]];
-      setVertexCoords[graph,
+      applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"], scale],
           maxiter, OptionValue["Epsilon"], kkconst]
       ]
@@ -1165,11 +1167,11 @@ Options[IGLayoutKamadaKawai3D] = {
   "Continue" -> False, "Align" -> True
 };
 
-IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai3D,Graph3D}]] :=
     catch@Block[{ig = igMake[graph], maxiter, kkconst, scale = 0.5},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> VertexCount[graph]];
-      setVertexCoords3D[graph,
+      applyGraphOpt3D[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
           maxiter, OptionValue["Epsilon"], kkconst]
       ]
@@ -1182,9 +1184,9 @@ Options[IGLayoutFruchtermanReingold] = {
   "Continue" -> False, "Align" -> True
 };
 
-IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruchtermanReingold,Graph}]] :=
     catch@Block[{ig = igMake[graph], scale = 0.25},
-      setVertexCoords[graph,
+      applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"], scale],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1]
         ]
@@ -1196,9 +1198,9 @@ Options[IGLayoutFruchtermanReingold3D] = {
   "Continue" -> False, "Align" -> True
 };
 
-IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruchtermanReingold3D,Graph3D}]] :=
     catch@Block[{ig = igMake[graph], scale = 0.25},
-      setVertexCoords3D[graph,
+      applyGraphOpt3D[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"]
         ]
@@ -1210,12 +1212,12 @@ Options[IGLayoutGEM] = {
   "MaxTemperature" -> Automatic, "MinTemperature" -> 1/10, "InitTemperature" -> Automatic
 };
 
-IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGEM,Graph}]] :=
     catch@Block[{ig = igMake[graph], maxiter, maxtemp, inittemp, scale = 3*^-3},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 40 VertexCount[graph]^2];
       maxtemp = Replace[OptionValue["MaxTemperature"], Automatic :> VertexCount[graph]];
       inittemp = Replace[OptionValue["InitTemperature"], Automatic :> Sqrt@VertexCount[graph]];
-      setVertexCoords[graph,
+      applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutGEM"[continueLayout[graph, OptionValue["Continue"], scale],
           maxiter, maxtemp, OptionValue["MinTemperature"], inittemp
         ]
@@ -1229,13 +1231,13 @@ Options[IGLayoutDavidsonHarel] = {
   "EdgeCrossingWeight" -> Automatic, "EdgeDistanceWeight" -> Automatic
 };
 
-IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDavidsonHarel,Graph}]] :=
     catch@Block[{ig = igMake[graph], tuneiter, edgelenw, edgecrossw, edgedistw, scale = 0.1},
-      tuneiter = Replace[OptionValue["FineTuningIterations"], Automatic :> Max[10, Log[2, VertexCount[graph]]]];
+      tuneiter = Replace[OptionValue["FineTuningIterations"], Automatic :> Max[10, Round@Log[2, VertexCount[graph]]]];
       edgelenw = Replace[OptionValue["EdgeLengthWeight"], Automatic :> GraphDensity[graph]/10];
       edgecrossw = Replace[OptionValue["EdgeCrossingWeight"], Automatic :> 1 - GraphDensity[graph]];
       edgedistw = Replace[OptionValue["EdgeDistanceWeight"], Automatic :> 1 - GraphDensity[graph] / 5];
-      setVertexCoords[graph,
+      applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDavidsonHarel"[continueLayout[graph, OptionValue["Continue"], scale],
           OptionValue["MaxIterations"],
           tuneiter, OptionValue["CoolingFactor"], OptionValue["NodeDistanceWeight"],
@@ -1261,10 +1263,10 @@ Options[IGLayoutReingoldTilford] = {
   "LayerHeight" -> 1, "LeafDistance" -> 1
 };
 
-IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilford,Graph}]] :=
     catch@Block[{ig = igMake[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic -> {}];
-      setVertexCoords[graph,
+      applyGraphOpt[opt]@setVertexCoords[graph,
         Composition[
           RotationTransform[Pi + OptionValue["Rotation"]],
           ScalingTransform[{OptionValue["LeafDistance"], OptionValue["LayerHeight"]}]
@@ -1274,10 +1276,10 @@ IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 Options[IGLayoutReingoldTilfordCircular] = { "RootVertices" -> Automatic, DirectedEdges -> False, "Rotation" -> 0 };
 
-IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[]] :=
+IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilfordCircular,Graph}]] :=
     catch@Block[{ig = igMake[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic -> {}];
-      setVertexCoords[graph,
+      applyGraphOpt[opt]@setVertexCoords[graph,
         RotationTransform@OptionValue["Rotation"] /@ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
       ]
     ]
@@ -1291,18 +1293,18 @@ igLayoutDrLSettingsAsc = AssociationThread[igLayoutDrLSettings, Range@Length[igL
 IGLayoutDrL::usage = IGLayoutDrL::usage <> " Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
 IGLayoutDrL3D::usage = IGLayoutDrL3D::usage <> " Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
 
-IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMake[graph], scale = 0.05},
-      setVertexCoords[graph,
+IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL,Graph}]] :=
+    catch@Block[{ig = igMake[graph], scale = 0.25},
+      applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL"[continueLayout[graph, OptionValue["Continue"], scale],
           Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
         ]
       ]
     ]
 
-IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMake[graph], scale = 0.05},
-      setVertexCoords3D[graph,
+IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL3D,Graph3D}]] :=
+    catch@Block[{ig = igMake[graph], scale = 0.25},
+      applyGraphOpt[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
           Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
         ]
