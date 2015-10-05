@@ -395,7 +395,7 @@ public:
     }
 
     void vf2FindIsomorphisms(MLINK link) const {
-        mlStream ml(link, "vf2Isomorphism");
+        mlStream ml{link, "vf2Isomorphism"};
 
         mint id; // expression ID
         igIntVector vc1, vc2, ec1, ec2;
@@ -445,7 +445,7 @@ public:
     }
 
     void vf2FindSubisomorphisms(MLINK link) const {
-        mlStream ml(link, "vf2Isomorphism");
+        mlStream ml{link, "vf2Isomorphism"};
 
         mint id; // expression ID
         igIntVector vc1, vc2, ec1, ec2;
@@ -535,7 +535,7 @@ public:
     }
 
     void ladFindSubisomorphisms(MLINK link) const  {
-        mlStream ml(link);
+        mlStream ml{link, "ladFindSubisomorphism"};
         int induced;
         mint id;
         ml >> mlCheckArgs(2) >> id >> induced;
@@ -982,7 +982,7 @@ public:
 
     void minimumSizeSeparators(MLINK link) const {
         igList list;
-        mlStream ml(link, "minimumSizeSeparators");
+        mlStream ml{link, "minimumSizeSeparators"};
         ml >> mlCheckArgs(0);
 
         igCheck(igraph_minimum_size_separators(&graph, &list.list));
@@ -1000,7 +1000,7 @@ public:
     }
 
     void biconnectedComponents(MLINK link) const {
-        mlStream ml(link, "biconnectedComponents");
+        mlStream ml{link, "biconnectedComponents"};
         ml >> mlCheckArgs(0);
 
         igList list;
@@ -1038,7 +1038,7 @@ public:
     }
 
     void cohesiveBlocks(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "cohesiveBlocks"};
         ml >> mlCheckArgs(0);
 
         igList blocks;
@@ -1054,7 +1054,7 @@ public:
     // Graphlets
 
     void graphletBasis(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "graphletBasis"};
         ml >> mlCheckArgs(0);
 
         igList cliques;
@@ -1066,7 +1066,7 @@ public:
     }
 
     void graphletProject(MLINK link) const  {
-        mlStream ml(link);
+        mlStream ml{link, "graphletProject"};
 
         igList cliques;
         int niter;
@@ -1081,7 +1081,7 @@ public:
     }
 
     void graphlets(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "graphlets"};
         int niter;
         ml >> mlCheckArgs(1) >> niter;
 
@@ -1135,7 +1135,7 @@ public:
     }
 
     void communityEdgeBetweenness(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communityEdgeBetweenness"};
         ml >> mlCheckArgs(0);
 
         igVector result, betweenness, bridges, modularity, membership;
@@ -1151,7 +1151,7 @@ public:
     }
 
     void communityWalktrap(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communityWalktrap"};
         igraph_integer_t steps;
         ml >> mlCheckArgs(1) >> steps;
 
@@ -1166,7 +1166,7 @@ public:
     }
 
     void communityFastGreedy(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communityFastGreedy"};
         ml >> mlCheckArgs(0);
 
         igVector modularity, membership;
@@ -1180,7 +1180,7 @@ public:
     }
 
     void communityMultilevel(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communityMultilevel"};
         ml >> mlCheckArgs(0);
 
         igVector modularity, membership;
@@ -1193,7 +1193,7 @@ public:
     }
 
     void communityLabelPropagation(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communityLabelPropagation"};
 
         igVector initial;
         igBoolVector fixed;
@@ -1213,7 +1213,7 @@ public:
     }
 
     void communityInfoMAP(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communityInfoMAP"};
 
         int trials;
         igVector v_weights;
@@ -1231,7 +1231,7 @@ public:
     }
 
     void communityOptimalModularity(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communityOptimalModularity"};
         ml >> mlCheckArgs(0);
 
         igVector membership;
@@ -1244,7 +1244,7 @@ public:
     }
 
     void communitySpinGlass(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communitySpinGlass"};
 
         igraph_integer_t spins, update_rule, method;
         igraph_bool_t parupdate;
@@ -1289,7 +1289,7 @@ public:
     }
 
     void communityLeadingEigenvector(MLINK link) const {
-        mlStream ml(link);
+        mlStream ml{link, "communityLeadingEigenvector"};
 
         igraph_integer_t steps;
         ml >> mlCheckArgs(1) >> steps;

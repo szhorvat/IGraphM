@@ -35,7 +35,7 @@ IGVersion::usage = "IGVersion[] returns the IGraph/M version along with the vers
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
 IGLCF::usage =
-    "IGLCF[shifts, repeats] creates a graph from LCF notation." <>
+    "IGLCF[shifts, repeats] creates a graph from LCF notation.\n" <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
 IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice graph of the given dimensions.";
 IGGraphAtlas::usage =
@@ -88,11 +88,11 @@ IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the n
 
 IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.";
 IGVF2FindIsomorphisms::usage =
-    "IGVF2FindIsomorphisms[graph1, graph2] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm." <>
+    "IGVF2FindIsomorphisms[graph1, graph2] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm.\n" <>
     "IGVF2FindIsomorphisms[graph1, graph2, n] finds at most n isomorphisms between graph1 and graph2.";
 IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph using the VF2 algorithm.";
 IGVF2FindSubisomorphisms::usage =
-    "IGVF2FindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph using the VF2 algorithm." <>
+    "IGVF2FindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph using the VF2 algorithm.\n" <>
     "IGVF2FindSubisomorphisms[subgraph, graph, n] finds at most n subisomorphisms from subgraph to graph.";
 IGVF2AutomorphismCount::usage = "IGVF2AutomorphismCount[graph] returns the number of automorphisms of graph.";
 IGVF2IsomorphismCount::usage =
@@ -158,7 +158,7 @@ IGIndependenceNumber::usage = "IGIndependenceNumber[graph] returns the independe
 IGLayoutRandom::usage = "IGLayoutRandom[graph] lays out vertices randomly in the unit square.";
 IGLayoutCircle::usage = "IGLayoutCircle[graph] lays out vertices on a circle.";
 IGLayoutSphere::usage = "IGLayoutSphere[graph] lays out vertices approximately uniformly distributed on a sphere.";
-IGLayoutGraphOpt::usage = "IGLayoutGraphOpt[graph, options]";
+IGLayoutGraphOpt::usage = "IGLayoutGraphOpt[graph, options] lays out the graph using the GraphOpt algorithm.";
 IGLayoutKamadaKawai::usage = "IGLayoutKamadaKawai[graph, options] lays out the graph using the Kamada-Kawai algorithm (similar to \"SpringEmbedding\").";
 IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options] lays out the graph in 3D using the Kamada-Kawai algorithm (similar to \"SpringEmbedding\").";
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options] lays out the graph using the Fruchterman-Reingold algorithm (similar to \"SpringElectricalEmbedding\").";
@@ -733,7 +733,7 @@ Options[IGDegreeSequenceGame] = { Method -> "SimpleNoMultiple" };
 igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>;
 
 IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <>
-    StringTemplate[" Available methods: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
+    StringTemplate[" Available Method options: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
 
 IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
     catch@applyGraphOpt[opt]@igDegreeSequenceGame[{}, degrees, OptionValue[Method]]
@@ -749,10 +749,12 @@ igDegreeSequenceGame[indegrees_, outdegrees_, method_] :=
     ]
 
 
-Options[IGKRegularGame] = { "AllowMultipleEdges" -> False, DirectedEdges -> False };
+Options[IGKRegularGame] = { "MultipleEdges" -> False, DirectedEdges -> False };
 IGKRegularGame[n_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[{IGKRegularGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
-      check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["AllowMultipleEdges"]];
+      check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["MultipleEdges"]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
@@ -883,17 +885,17 @@ IGConstraintScore[graph_?igGraphQ] :=
 
 (* TODO: functions in this section should warn that edge weights will be lost *)
 
-Options[IGRewire] = { "AllowLoops" -> False };
+Options[IGRewire] = { SelfLoops -> False };
 IGRewire[g_?igGraphQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[g]},
-      check@ig@"rewire"[n, OptionValue["AllowLoops"]];
+      check@ig@"rewire"[n, OptionValue[SelfLoops]];
       igToGraph[ig]
     ]
 
-Options[IGRewireEdges] = { "AllowLoops" -> False, "AllowMultipleEdges" -> False };
+Options[IGRewireEdges] = { SelfLoops -> False, "MultipleEdges" -> False };
 IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[g]},
-      ig@"rewireEdges"[p, OptionValue["AllowLoops"], OptionValue["AllowMultipleEdges"]];
+      ig@"rewireEdges"[p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
       igToGraph[ig]
     ]
 
@@ -1072,10 +1074,23 @@ IGTopologicalOrdering[graph_?igGraphQ] :=
       igIndexVec@check@ig@"topologicalSorting"[]
     ]
 
-Options[IGFeedbackArcSet] = { "Exact" -> True };
+
+igFeedbackArcSetMethods = <| "IntegerProgramming" -> True, "EadesLinSmyth" -> False |>;
+
+Options[IGFeedbackArcSet] = { Method -> "IntegerProgramming" };
+
+IGFeedbackArcSet::bdmtd =
+    "Value of option Method -> `` is not one of " <>
+    ToString[Keys[igFeedbackArcSetMethods], InputForm] <> "."
+
+IGFeedbackArcSet::usage = IGFeedbackArcSet::usage <> " Available Method options: " <> ToString[Keys[igFeedbackArcSetMethods], InputForm] <> ".";
+
 IGFeedbackArcSet[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
-      Part[EdgeList[graph], igIndexVec@check@ig@"feedbackArcSet"[OptionValue["Exact"]]]
+      Part[
+        EdgeList[graph],
+        igIndexVec@check@ig@"feedbackArcSet"[Lookup[igFeedbackArcSetMethods, OptionValue[Method], Message[IGFeedbackArcSet::bdmtd, OptionValue[Method]]; throw[$Failed]]]
+      ]
     ]
 
 (* Motifs and subgraph counts *)
@@ -1822,7 +1837,7 @@ Options[IGCommunitiesSpinGlass] = {
   "CoolingFactor" -> 0.99,
   "Gamma" -> 1,
   "GammaMinus" -> 1,
-  "Method" -> "Original"
+  Method -> "Original"
 };
 
 igSpinGlassUpdateRules = {"Simple", "Configuration"};
@@ -1833,7 +1848,7 @@ igSpinGlassMethodsAsc = AssociationThread[igSpinGlassMethods, Range@Length[igSpi
 IGCommunitiesSpinGlass::usage =
     IGCommunitiesSpinGlass::usage <>
         " Available \"UpdateRule\" option values: " <> ToString[igSpinGlassUpdateRules, InputForm] <>
-        ". Available \"Method\" option values: " <> ToString[igSpinGlassMethods, InputForm] <> ".";
+        ". Available Method option values: " <> ToString[igSpinGlassMethods, InputForm] <> ".";
 
 IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Module[{ig = igMake[graph], modularity, membership, temp},
@@ -1842,7 +1857,7 @@ IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
         OptionValue["StartingTemperature"], OptionValue["StoppingTemperature"], OptionValue["CoolingFactor"],
         Lookup[igSpinGlassUpdateRulesAsc, OptionValue["UpdateRule"], -1],
         OptionValue["Gamma"],
-        Lookup[igSpinGlassMethodsAsc, OptionValue["Method"], -1],
+        Lookup[igSpinGlassMethodsAsc, OptionValue[Method], -1],
         OptionValue["GammaMinus"]
       ];
       igClusterData[graph]@<|
