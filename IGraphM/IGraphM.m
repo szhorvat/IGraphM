@@ -42,13 +42,26 @@ IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
 
-IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph. Weighted graphs are supported. Use the \"UseBigInt\" -> True option for accuracy with large graphs.";
-IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph. Weighted graphs are supported.";
-IGCloseness::usage = "IGCloseness[graph] gives a list of closeness centralities for the vertices of graph. Weighted graphs are supported.";
+IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.";
+IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph.";
+IGCloseness::usage = "IGCloseness[graph] gives a list of closeness centralities for the vertices of graph.";
 
 IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff] estimates vertex betweenness by consdering only paths of at most length cutoff.";
 IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff] estimates edge betweenness by consdering only paths of at most length cutoff.";
 IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff] estimates closeness centrality by consdering only paths of at most length cutoff.";
+
+IGPageRank::usage =
+    "IGPageRank[graph] gives a list of PageRank centralities for the vertices of the graph.\n" <>
+    "IGPageRank[graph, damping] gives a list of PageRank centralities for the vertices of the graph using damping factor damping.";
+
+IGPersonalizedPageRank::usage =
+    "IGPersonalizedPageRank[graph, reset] gives a list of personalized PageRank centralities for the vertices of the graph.\n" <>
+    "IGPersonalizedPageRank[graph, reset, damping] gives a list of personalized PageRank centralities for the vertices of the graph using damping factor damping.";
+
+IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph]";
+IGHubScore::usage = "IGHubScore[graph] returns Kleinberg's hub score for each vertex.";
+IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority score for each vertex.";
+IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint score for each vertex.";
 
 IGRewire::usage = "IGRewire[graph, n] attempts to rewire the edges of graph n times while presernving its degree sequence.";
 IGRewireEdges::usage = "IGRewireEdges[graph, p] rewires each edge of the graph with probability p.";
@@ -319,6 +332,13 @@ template = LTemplate["IGraphM",
         LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *)}, {Real, 1}],
         LFun["edgeBetweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
         LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
+
+        LFun["pageRank", {Integer (* method *), Real (* damping *), True|False (* directed *), Integer (* powerNiter *), Real (* powerEpsilon *)}, {Real, 1}],
+        LFun["personalizedPageRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *), Integer (* powerNiter *), Real (* powerEpsilon *)}, {Real, 1}],
+        LFun["eigenvectorCentrality", {True|False (* directed *), True|False (* nornalized *)}, {Real, 1}],
+        LFun["hubScore", {True|False (* nornalized *)}, {Real, 1}],
+        LFun["authorityScore", {True|False (* nornalized *)}, {Real, 1}],
+        LFun["constraintScore", {}, {Real, 1}],
 
         (* Randomize *)
 
@@ -748,9 +768,24 @@ IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"g
 
 (* Centrality *)
 
-Options[IGBetweenness] = { "UseBigInt" -> True };
+igBetwennessMethods = <| "Precise" -> False, "Fast" -> True |>;
+
+Options[IGBetweenness] = { Method -> "Precise" };
+
+IGBetweenness::bdmtd =
+    "Value of option Method -> `` is not one of " <>
+        ToString[Keys[igBetwennessMethods], InputForm] <>
+        ". Defaulting to " <> ToString[OptionValue[IGBetweenness, Method], InputForm] <> ".";
+
+IGBetweenness::usage = IGBetweenness::usage <> " Available Method options: " <> ToString[Keys[igBetwennessMethods], InputForm] <>".";
+
 IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[g]}, sck@ig@"betweenness"[Not@TrueQ@OptionValue["UseBigInt"]]]
+    Block[{ig = igMake[g]},
+      sck@ig@"betweenness"[
+        Lookup[igBetwennessMethods, OptionValue[Method], Message[IGBetweenness::bdmtd, OptionValue[Method]]; False]
+      ]
+    ]
+
 
 IGEdgeBetweenness[g_?igGraphQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweenness"[]]
@@ -761,9 +796,16 @@ IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
 
 (* Centrality estimates *)
 
-Options[IGBetweennessEstimate] = { "UseBigInt" -> True };
+Options[IGBetweennessEstimate] = { Method -> "Precise" };
+IGBetweennessEstimate::bdmtd = IGBetweenness::bdmtd;
+IGBetweennessEstimate::usage = IGBetweennessEstimate::usage <> " Available Method options: " <> ToString[Keys[igBetwennessMethods], InputForm] <>".";
 IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[g]}, sck@ig@"betweennessEstimate"[infToZero[cutoff], Not@TrueQ@OptionValue["UseBigInt"]]]
+    Block[{ig = igMake[g]},
+      sck@ig@"betweennessEstimate"[
+        infToZero[cutoff],
+        Lookup[igBetwennessMethods, OptionValue[Method], Message[IGBetweennessEstimate::bdmtd, OptionValue[Method]]; False]
+      ]
+    ]
 
 IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
@@ -772,6 +814,69 @@ Options[IGClosenessEstimate] = { "Normalized" -> False };
 IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[g]},
       sck@ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"]]
+    ]
+
+Options[IGPageRank] = { Method -> "PRPACK" };
+
+igPageRankMethods = { "PowerIteration", "Arnoldi", "PRPACK" };
+igPageRankMethodsAsc = AssociationThread[igPageRankMethods, Range@Length[igPageRankMethods] - 1];
+igPageRankPowerOptions = <| "Epsilon" -> 0.001, "MaxIterations" -> 1000 |>;
+
+Options[IGPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
+
+IGPageRank[graph_?GraphQ, damping : _?Positive : 0.85, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], method, methodOptions = {}, powerOpt},
+      method = OptionValue[Method];
+      If[ListQ[method],
+        {method, methodOptions} = {First[method], Rest[method]};
+      ];
+      powerOpt = Join[igPageRankPowerOptions, Association[methodOptions]];
+      check@ig@"pageRank"[
+        Lookup[igPageRankMethodsAsc, method, -1], damping, OptionValue[DirectedEdges], powerOpt["MaxIterations"], powerOpt["Epsilon"]
+      ]
+    ]
+
+Options[IGPersonalizedPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
+
+IGPersonalizedPageRank::invarg = "Second argument must be a vector of the same length as the vertex count of the graph.";
+
+IGPersonalizedPageRank[graph_?GraphQ, reset_?VectorQ, damping : _?Positive : 0.85, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], method, methodOptions = {}, powerOpt},
+      method = OptionValue[Method];
+      If[ListQ[method],
+        {method, methodOptions} = {First[method], Rest[method]};
+      ];
+      powerOpt = Join[igPageRankPowerOptions, Association[methodOptions]];
+      If[Length[reset] != VertexCount[graph],
+        Message[IGPersonalizedPageRank::invarg];
+        throw[$Failed]
+      ];
+      check@ig@"personalizedPageRank"[
+        Lookup[igPageRankMethodsAsc, method, -1], reset, damping, OptionValue[DirectedEdges], powerOpt["MaxIterations"], powerOpt["Epsilon"]
+      ]
+    ]
+
+Options[IGEigenvectorCentrality] = { DirectedEdges -> True, "Normalized" -> True };
+IGEigenvectorCentrality[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      sck@ig@"eigenvectorCentrality"[OptionValue[DirectedEdges], OptionValue["Normalized"]]
+    ]
+
+Options[IGHubScore] = { "Normalized" -> True };
+IGHubScore[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      sck@ig@"hubScore"[OptionValue["Normalized"]]
+    ]
+
+Options[IGAuthorityScore] = { "Normalized" -> True };
+IGAuthorityScore[graph_?GraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMake[graph]},
+      sck@ig@"authorityScore"[OptionValue["Normalized"]]
+    ]
+
+IGConstraintScore[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]},
+      sck@ig@"constraintScore"[]
     ]
 
 (* Randomization *)

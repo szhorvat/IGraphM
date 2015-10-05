@@ -180,6 +180,109 @@ public:
         return vec.makeMTensor();
     }
 
+    mma::RealTensorRef pageRank(mint method, double damping, bool directed, mint powerNiter, double powerEpsilon) const {
+        igraph_pagerank_algo_t algo;
+        void *options;
+        igraph_pagerank_power_options_t power_options;
+        igraph_arpack_options_t arpack_options;
+        switch (method) {
+        case 0:
+            algo = IGRAPH_PAGERANK_ALGO_POWER;
+            power_options.niter = powerNiter;
+            power_options.eps = powerEpsilon;
+            options = &power_options;
+            break;
+        case 1:
+            algo = IGRAPH_PAGERANK_ALGO_ARPACK;
+            igraph_arpack_options_init(&arpack_options);
+            options = &arpack_options;
+            break;
+        case 2:
+            algo = IGRAPH_PAGERANK_ALGO_PRPACK;
+            options = NULL;
+            break;
+        default: throw mma::LibraryError("Uknown PageRank method.");
+        }
+
+        igVector vector;
+        double value;
+
+        igCheck(igraph_pagerank(
+                    &graph, algo, &vector.vec, &value, igraph_vss_all(),
+                    directed, damping, passWeights(), options));
+        // TODO warn if value != 1.
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef personalizedPageRank(mint method, mma::RealTensorRef treset, double damping, bool directed, mint powerNiter, double powerEpsilon) const {
+        igraph_pagerank_algo_t algo;
+        void *options;
+        igraph_pagerank_power_options_t power_options;
+        igraph_arpack_options_t arpack_options;
+        switch (method) {
+        case 0:
+            algo = IGRAPH_PAGERANK_ALGO_POWER;
+            power_options.niter = powerNiter;
+            power_options.eps = powerEpsilon;
+            options = &power_options;
+            break;
+        case 1:
+            algo = IGRAPH_PAGERANK_ALGO_ARPACK;
+            igraph_arpack_options_init(&arpack_options);
+            options = &arpack_options;
+            break;
+        case 2:
+            algo = IGRAPH_PAGERANK_ALGO_PRPACK;
+            options = NULL;
+            break;
+        default: throw mma::LibraryError("Uknown PageRank method.");
+        }
+
+        igraph_vector_t reset = igVectorView(treset);
+
+        igVector vector;
+        double value;
+
+        igCheck(igraph_personalized_pagerank(
+                    &graph, algo, &vector.vec, &value, igraph_vss_all(),
+                    directed, damping, &reset, passWeights(), options));
+        // TODO warn if value != 1.
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef eigenvectorCentrality(bool directed, bool normalized) const {
+        igVector vector;
+        double value;
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+        igCheck(igraph_eigenvector_centrality(&graph, &vector.vec, &value, directed, normalized, passWeights(), &options));
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef hubScore(bool normalized) const {
+        igVector vector;
+        double value;
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+        igCheck(igraph_hub_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef authorityScore(bool normalized) const {
+        igVector vector;
+        double value;
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+        igCheck(igraph_authority_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef constraintScore() const {
+        igVector vec;
+        igCheck(igraph_constraint(&graph, &vec.vec, igraph_vss_all(), passWeights()));
+        return vec.makeMTensor();
+    }
+
     // Centrality measures (estimates)
 
     mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint) const {
