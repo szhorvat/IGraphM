@@ -231,9 +231,11 @@ IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph]";
 
 IGCompareCommunities::usage =
     "IGCompareCommunities[clusterdata1, clusterdata2] compares two community structures given as IGClusterData objects using all available methods.\n" <>
-    "IGCompareCommunities[clusterdata1, clusterdata2, method] compares two community structures given as IGClusterData objects using method.\n" <>
+    "IGCompareCommunities[clusterdata1, clusterdata2, method] compares two community structures using method.\n" <>
+    "IGCompareCommunities[clusterdata1, clusterdata2, {method1, \[Ellipsis]}] compares two community structures using each given method.\n" <>
     "IGCompareCommunities[graph, communities1, communities2] compares two partitionings of the graph vertices into communities using all available methods.\n" <>
-    "IGCompareCommunities[graph, communities1, communities2, method] compares two partitionings of the graph vertices into communities using methods.";
+    "IGCompareCommunities[graph, communities1, communities2, method] compares two community structures using method.\n" <>
+    "IGCompareCommunities[graph, communities1, communities2, {method1, \[Ellipsis]}] compares two community structures using each given method.";
 
 IGModularity::usage =
     "IGModularity[graph, {{v11, v12, \[Ellipsis]}, {v21, v22, \[Ellipsis]}, \[Ellipsis]}] computes the modularity of graph based on the given partitioning of the vertex list into communities.\n" <>
@@ -681,6 +683,13 @@ vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexW
 applyGraphOpt[opt___][graph_] := Graph[graph, Sequence@@FilterRules[{opt}, Options[Graph]]]
 applyGraphOpt3D[opt___][graph_] := Graph3D[graph, Sequence@@FilterRules[{opt}, Options[Graph3D]]]
 
+amendUsage[sym_Symbol, amend_, args___] :=
+    Module[{lines},
+      lines = StringSplit[sym::usage, "\n"];
+      lines[[1]] = lines[[1]] <> " " <> StringTemplate[amend, InsertionFunction -> (ToString[#, InputForm]&)][args];
+      sym::usage = StringJoin@Riffle[lines, "\n"]
+    ]
+
 (***** Public functions *****)
 
 IGDocumentation[] := (NotebookOpen[FileNameJoin[{$packageDirectory, "Documentation", "IGDocumentation.nb"}], Saveable -> False, WindowTitle -> "IGraph/M Documentation"]; Null)
@@ -729,12 +738,8 @@ IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]
 (* Create (games) *)
 
 Options[IGDegreeSequenceGame] = { Method -> "SimpleNoMultiple" };
-
 igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>;
-
-IGDegreeSequenceGame::usage = IGDegreeSequenceGame::usage <>
-    StringTemplate[" Available Method options: ``"][ToString@InputForm@Keys[igDegreeSequenceGameMethods]];
-
+amendUsage[IGDegreeSequenceGame, "Available Method options: <*Keys[igDegreeSequenceGameMethods]*>."];
 IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
     catch@applyGraphOpt[opt]@igDegreeSequenceGame[{}, degrees, OptionValue[Method]]
 
@@ -779,7 +784,7 @@ IGBetweenness::bdmtd =
         ToString[Keys[igBetwennessMethods], InputForm] <>
         ". Defaulting to " <> ToString[OptionValue[IGBetweenness, Method], InputForm] <> ".";
 
-IGBetweenness::usage = IGBetweenness::usage <> " Available Method options: " <> ToString[Keys[igBetwennessMethods], InputForm] <>".";
+amendUsage[IGBetweenness, "Available Method options: <*Keys[igBetwennessMethods]*>."];
 
 IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[g]},
@@ -800,7 +805,7 @@ IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
 
 Options[IGBetweennessEstimate] = { Method -> "Precise" };
 IGBetweennessEstimate::bdmtd = IGBetweenness::bdmtd;
-IGBetweennessEstimate::usage = IGBetweennessEstimate::usage <> " Available Method options: " <> ToString[Keys[igBetwennessMethods], InputForm] <>".";
+amendUsage[IGBetweennessEstimate, "Available Method options: <*Keys[igBetwennessMethods]*>."];
 IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMake[g]},
       sck@ig@"betweennessEstimate"[
@@ -826,7 +831,7 @@ igPageRankPowerOptions = <| "Epsilon" -> 0.001, "MaxIterations" -> 1000 |>;
 
 Options[IGPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
 
-IGPageRank[graph_?GraphQ, damping : _?Positive : 0.85, opt : OptionsPattern[]] :=
+IGPageRank[graph_?GraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], method, methodOptions = {}, powerOpt},
       method = OptionValue[Method];
       If[ListQ[method],
@@ -842,7 +847,7 @@ Options[IGPersonalizedPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
 
 IGPersonalizedPageRank::invarg = "Second argument must be a vector of the same length as the vertex count of the graph.";
 
-IGPersonalizedPageRank[graph_?GraphQ, reset_?VectorQ, damping : _?Positive : 0.85, opt : OptionsPattern[]] :=
+IGPersonalizedPageRank[graph_?GraphQ, reset_?VectorQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], method, methodOptions = {}, powerOpt},
       method = OptionValue[Method];
       If[ListQ[method],
@@ -917,9 +922,10 @@ blissSplittingHeuristicsNames = {
 
 blissSplittingHeuristics = AssociationThread[blissSplittingHeuristicsNames, Range@Length[blissSplittingHeuristicsNames] - 1];
 
-IGBlissCanonicalLabeling::usage = IGBlissCanonicalLabeling::usage <>
-    StringTemplate[" Available values for the \"SplittingHeuristics\" option: ``. " <>
-        "The labeling depends on the splitting heuristics used."][ToString@InputForm@blissSplittingHeuristicsNames];
+amendUsage[IGBlissCanonicalLabeling,
+  " Available values for the \"SplittingHeuristics\" option: ``. The labeling depends on the splitting heuristics used.",
+  blissSplittingHeuristicsNames
+];
 
 Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
@@ -1081,9 +1087,9 @@ Options[IGFeedbackArcSet] = { Method -> "IntegerProgramming" };
 
 IGFeedbackArcSet::bdmtd =
     "Value of option Method -> `` is not one of " <>
-    ToString[Keys[igFeedbackArcSetMethods], InputForm] <> "."
+    ToString[Keys[igFeedbackArcSetMethods], InputForm] <> ".";
 
-IGFeedbackArcSet::usage = IGFeedbackArcSet::usage <> " Available Method options: " <> ToString[Keys[igFeedbackArcSetMethods], InputForm] <> ".";
+amendUsage[IGFeedbackArcSet, "Available Method options: <*Keys[igFeedbackArcSetMethods]*>. \"IntegerProgramming\" is guaranteed to find a minimum feedback arc set."];
 
 IGFeedbackArcSet[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
@@ -1410,11 +1416,14 @@ Options[IGLayoutDrL3D] = { "Settings" -> "Default", "Continue" -> False, "Align"
 igLayoutDrLSettings = {"Default", "Coarsen", "Coarsest", "Refine", "Final"};
 igLayoutDrLSettingsAsc = AssociationThread[igLayoutDrLSettings, Range@Length[igLayoutDrLSettings]];
 
-IGLayoutDrL::usage = IGLayoutDrL::usage <> " Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
-IGLayoutDrL3D::usage = IGLayoutDrL3D::usage <> " Possible values for the \"Settings\" option are: " <> ToString[igLayoutDrLSettings, InputForm] <> ".";
+
+amendUsage[#, "Possible values for the \"Settings\" option are <*igLayoutDrLSettings*>."]& /@ {IGLayoutDrL, IGLayoutDrL3D};
+
+IGLayoutDrL::conn = "IGLayoutDrL may fail on disconnected graphs. Use on connected graphs only.";
 
 IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL,Graph}]] :=
     catch@Block[{ig = igMake[graph], scale = 0.25},
+      If[Not@ConnectedGraphQ[graph], Message[IGLayoutDrL::conn]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL"[continueLayout[graph, OptionValue["Continue"], scale],
           Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
@@ -1422,8 +1431,11 @@ IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL,Graph}]] :=
       ]
     ]
 
+IGLayoutDrL3D::conn = IGLayoutDrL::conn;
+
 IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL3D,Graph3D}]] :=
     catch@Block[{ig = igMake[graph], scale = 0.25},
+      If[Not@ConnectedGraphQ[graph], Message[IGLayoutDrL3D::conn]];
       applyGraphOpt[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
           Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
@@ -1693,8 +1705,7 @@ igCompareCommunities[elems_, c1_, c2_, method_] :=
       <| method -> res |>
     ]
 
-IGCompareCommunities::usage =
-    IGCompareCommunities::usage <> " Available methods: " <> ToString[igCompareCommunitiesMethods, InputForm] <> ".";
+amendUsage[IGCompareCommunities, "Available methods: <*igCompareCommunitiesMethods*>."];
 
 IGCompareCommunities[graph_?igGraphQ, comm1 : {__List}, comm2 : {__List}, methods : {__String} : igCompareCommunitiesMethods] :=
     catch[
@@ -1845,10 +1856,9 @@ igSpinGlassUpdateRulesAsc = AssociationThread[igSpinGlassUpdateRules, Range@Leng
 igSpinGlassMethods = {"Original", "Negative"};
 igSpinGlassMethodsAsc = AssociationThread[igSpinGlassMethods, Range@Length[igSpinGlassMethods] - 1];
 
-IGCommunitiesSpinGlass::usage =
-    IGCommunitiesSpinGlass::usage <>
-        " Available \"UpdateRule\" option values: " <> ToString[igSpinGlassUpdateRules, InputForm] <>
-        ". Available Method option values: " <> ToString[igSpinGlassMethods, InputForm] <> ".";
+amendUsage[IGCommunitiesSpinGlass,
+  "Available \"UpdateRule\" option values: <*igSpinGlassUpdateRules*>. Available Method options: <*igSpinGlassMethods*>."
+];
 
 IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Module[{ig = igMake[graph], modularity, membership, temp},
