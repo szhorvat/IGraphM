@@ -784,7 +784,7 @@ IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : 
     catch@applyGraphOpt[opt]@igDegreeSequenceGame[indegrees, outdegrees, OptionValue[Method]]
 
 igDegreeSequenceGame[indegrees_, outdegrees_, method_] :=
-    Block[{ig = Make["IG"]},
+    (* no catch *) Block[{ig = Make["IG"]},
       check@ig@"degreeSequenceGame"[outdegrees, indegrees, Lookup[igDegreeSequenceGameMethods, method, -1]];
       igToGraph[ig]
     ]
@@ -947,8 +947,8 @@ IGRewire[g_?igGraphQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[
 
 Options[IGRewireEdges] = { SelfLoops -> False, "MultipleEdges" -> False };
 IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[g]},
-      ig@"rewireEdges"[p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
+    catch@Block[{ig = igMake[g]},
+      check@ig@"rewireEdges"[p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
       igToGraph[ig]
     ]
 
@@ -964,7 +964,7 @@ IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
     ]
 
 IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
-    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
+    catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
       checkMulti /@ {subgraph, graph};
       check@ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]
     ]
@@ -1233,7 +1233,7 @@ IGTriangles[graph_?igGraphQ] :=
     ]
 
 igAdjacentTriangleCount[graph_, vs_] :=
-    Block[{ig = igMake[graph]},
+    (* no catch *) Block[{ig = igMake[graph]},
       Round@check@ig@"countAdjacentTriangles"[vss[graph][vs]]
     ]
 
