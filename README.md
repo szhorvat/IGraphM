@@ -12,23 +12,23 @@ IGraph/M is *not a replacement* for Mathematica's graph manipulation functionali
 
 igraph is one of the broadest open source graph manipulation packages available.  Many of its functions are of use to Mathematica users, either because equivalents don't already exist in Mathematica, or because they can be used to verify Mathematica's own results.  My previous package, [IGraphR][2], already provides relatively convenient access to igraph's R interface from Mathematica, but unfortunately its underlying technology, [RLink](http://reference.wolfram.com/language/RLink/guide/RLink.html), suffers from reliability and performance problems.  IGraph/M uses igraph's C interface through [LibraryLink](http://reference.wolfram.com/language/LibraryLink/tutorial/Overview.html), which makes it much faster, more robust and easier to use with Mathematica's parallel tools.  My main motivation for starting IGraph/M was to get better performance and reliable parallelization.
 
-### Functionality provided that is not present in Mathematica 10
+### Functionality highlights
 
- - Vertex betweenness centrality for weighted graphs
+ - Centrality measures for weighted graphs
  - Estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs
+ - Community detection algorithms
  - Minimum feedback arc set for weighted and unweighted graphs
  - Find all cliques (not just maximal ones), count cliques without listing them
  - Count 3- and 4-motifs, list triangles
  - Rewire edges, keeping either the density or the degree sequence
  - Alternative algorithms for isomorphism testing: BLISS, VF2, LAD
  - Subgraph isomorphism (including induced subgraphs with LAD)
- - Isomorphism and automorphism group for coloured graphs
+ - Isomorphism for coloured graphs
  - Test if a degree sequence is graphical
  - Alternative algorithms for generating random graphs with given degree sequence
- - Layout algorithms that take weights into account
+ - Additional layout algorithms, layouts for weighted graphs
  - Layout algorithms can continue from existing vertex coordinates
  - Biconnected components, articulation points, find all minimum vertex cuts
- - Graphlet decomposition
  - Several other specialized functions not mentioned here ...
 
 ## Installation
@@ -74,7 +74,7 @@ Please see [Development.md](Development.md) for additional information.
 
  - hierarchical random graphs
  - spectral coarse graining
- - community detection
+ - maximum flows, minimum cuts
  - additional structural properties
 
 Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2].
@@ -92,9 +92,21 @@ You can contact me in email.  Evaluate the following in Mathematica to get my em
 
 ## Bugs and troubleshooting
 
-IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until all problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues).
+IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until most problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues).
 
 During the version 0.1.x series IGraph/M should be considered unstable.  Function names, options, and the structure of return values may change without notice.  Thus I do encourage you to use it interactively, but at this point I do not recommend basing other packages on IGraph/M.  Starting from version 0.2.0 I will try to avoid making any breaking changes.
+
+### Known issues and workarounds
+
+ * `Graph[Graph[...], ...]` returned
+
+   Sometimes layout functions may return an expression which looks like
+
+        Graph[ Graph[...], VertexCoordinates -> {...} ]
+
+   or similar. A property does not get correctly applied to the graph.  This is due to a bug in Mathematica. I believe I have worked around most of these issues, but if you encounter them, one possible workaround is to cycle the graph `g` through some other representation, e.g. `g = Uncompress@Compress[g]`.
+
+ * Graphlet decomposition functions may crash the kernel. This is due to an igraph bug.
 
 ## License
 
