@@ -374,6 +374,20 @@ public:
         igraph_free(info.group_size);
     }
 
+    // returns the generators of the group
+    void blissAutomorphismGroup(MLINK link) {
+        mlStream ml{link, "blissAutomorphismGroup"};
+        int splitting;
+
+        ml >> mlCheckArgs(1) >> splitting;
+
+        igList list;
+        igCheck(igraph_automorphism_group(&graph, &list.list, blissIntToSplitting(splitting), NULL));
+
+        ml.newPacket();
+        ml << list;
+    }
+
     // Isomorphism (VF2)
 
     bool vf2Isomorphic(

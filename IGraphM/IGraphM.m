@@ -85,6 +85,7 @@ IGBlissCanonicalGraph::usage = "IGBlissCanonicalGraph[graph] returns a canonical
 IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are ismorphic using the BLISS algorithm.";
 IGBlissGetIsomorphism::usage = "IGBlissGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.";
 IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.";
+IGBlissAutomorphismGroup::usage = "IGBlissAutomorphismGroup[graph]";
 
 IGVF2IsomorphicQ::usage = "IGVF2IsomorphicQ[graph1, graph2] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.";
 IGVF2FindIsomorphisms::usage =
@@ -356,6 +357,7 @@ template = LTemplate["IGraphM",
         LFun["blissIsomorphic", {LExpressionID["IG"], Integer (* splitting heuristics *)}, True|False],
         LFun["blissFindIsomorphism", {LExpressionID["IG"], Integer (* splitting heuristics *)}, {Real, 1}],
         LFun["blissAutomorphismCount", LinkObject],
+        LFun["blissAutomorphismGroup", LinkObject],
         LFun["vf2Isomorphic", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, True|False],
         LFun["vf2FindIsomorphisms", LinkObject],
         LFun["vf2Subisomorphic", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, True|False],
@@ -967,6 +969,12 @@ Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "First" };
 IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
       ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+    ]
+
+Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "First" };
+IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 
