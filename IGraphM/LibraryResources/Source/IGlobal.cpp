@@ -19,8 +19,11 @@ void igWarningHandler(const char *reason, const char *file, int line, int igraph
 
 
 void igErrorHandler(const char *reason, const char *file, int line, int igraph_errno) {
-    std::ostringstream msg;
-    msg << file << ":" << line << ", " << reason;
-    mma::message(msg.str(), mma::M_ERROR);
+    // avoid printing empty messages
+    if (strlen(reason) != 0) {
+        std::ostringstream msg;
+        msg << file << ":" << line << ", " << reason;
+        mma::message(msg.str(), mma::M_ERROR);
+    }
     IGRAPH_FINALLY_FREE();
 }
