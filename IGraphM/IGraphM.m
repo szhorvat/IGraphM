@@ -126,6 +126,8 @@ IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[indegrees, outdegrees] generates a directed random graph with the given in- and out-degree sequences.";
 
 IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n vertices, i.e. a graph in which all vertices have degree k.";
+IGStochasticBlockModelGame::usage = "IGStochasticBlockModelGame[ratesMatrix, blockSizes] samples from a stochastic block model.";
+IGForestFireGame::usage = "IGForestFireGame[n, fwprob]";
 
 IGDistanceMatrix::usage = "IGDistanceMatrix[graph] computes the shortest path between each vertex pair in graph.";
 
@@ -311,6 +313,8 @@ template = LTemplate["IGraphM",
 
         LFun["degreeSequenceGame", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), Integer (* method *)}, "Void"],
         LFun["kRegularGame", {Integer, Integer, True|False (* directed *), True|False (* multiple *)}, "Void"],
+        LFun["stochasticBlockModel", {{Real, 2, "Constant"}, {Integer, 1, "Constant"}, True|False (* directed *), True|False (* loops *)}, "Void"],
+        LFun["forestFireGame", {Integer (* vertex count *), Real (* fwprob *), Real (* bwratio *), Integer (* nambs *), True|False (* directed *)}, "Void"],
 
         (* Structure *)
 
@@ -778,6 +782,18 @@ IGKRegularGame[n_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineI
       check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["MultipleEdges"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
+
+Options[IGStochasticBlockModelGame] = { SelfLoops -> False, DirectedEdges -> False };
+IGStochasticBlockModelGame[ratesMatrix_?SquareMatrixQ, blockSizes_?nonNegIntVecQ, opt : OptionsPattern[{IGStochasticBlockModelGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"stochasticBlockModel"[ratesMatrix, blockSizes, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+Options[IGForestFireGame] = { DirectedEdges -> False };
+IGForestFireGame[n_?Internal`PositiveMachineIntegerQ, fwprob_?NonNegative, bwratio : _?NonNegative : 1, nambs : _?Internal`NonNegativeIntegerQ : 1, opt : OptionsPattern[{IGForestFireGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"forestFireGame"[n, fwprob, bwratio, nambs, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 

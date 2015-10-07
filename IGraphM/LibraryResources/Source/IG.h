@@ -124,6 +124,23 @@ public:
         igConstructorCheck(igraph_k_regular_game(&graph, n, k, directed, multiple));
     }
 
+    void stochasticBlockModel(mma::RealMatrixRef tmat, mma::IntTensorRef tsizes, bool directed, bool loops) {
+        igIntVector sizes;
+        sizes.copyFromMTensor(tsizes);
+        igMatrix mat;
+        mat.copyFromMTensor(tmat);
+        igraph_integer_t n = 0;
+        for (igraph_integer_t *i = sizes.begin(); i != sizes.end(); ++i)
+            n += *i;
+        destroy();
+        igConstructorCheck(igraph_sbm_game(&graph, n, &mat.mat, &sizes.vec, directed, loops));
+    }
+
+    void forestFireGame(mint n, double fwprob, double bwratio, mint nambs, bool directed) {
+        destroy();
+        igConstructorCheck(igraph_forest_fire_game(&graph, n, fwprob, bwratio, nambs, directed));
+    }
+
     // Structure
 
     mma::RealTensorRef edgeList() const {
