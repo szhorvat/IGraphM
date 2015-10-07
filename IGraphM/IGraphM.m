@@ -257,6 +257,12 @@ IGCommunitiesInfoMAP::usage =
 IGCommunitiesSpinGlass::usage = "IGCommunitiesSpinGlass[graph] finds communities using a spin glass model and simulated annealing.";
 IGCommunitiesLeadingEigenvector::usage = "IGCommunitiesLeadingEigenvector[graph] finds communities based on the leading eigenvector of the modularity matrix.";
 
+
+IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
+
+IGUnfoldTree::usage = "IGUnfoldTree[graph]";
+
+
 Begin["`Private`"];
 
 (***** Mathematica version check *****)
@@ -522,7 +528,14 @@ template = LTemplate["IGraphM",
         LFun["communityLabelPropagation", LinkObject],
         LFun["communityInfoMAP", LinkObject],
         LFun["communitySpinGlass", LinkObject],
-        LFun["communityLeadingEigenvector", LinkObject]
+        LFun["communityLeadingEigenvector", LinkObject],
+
+        (* Maximum flow *)
+
+        LFun["gomoryHuTree", {LExpressionID["IG"], {Real, 1, "Constant"}}, {Real, 1}],
+
+        (* Unfold tree *)
+        LFun["unfoldTree", {LExpressionID["IG"], {Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 1}]
       }
     ]
   }
@@ -1933,6 +1946,32 @@ IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
         "Eigenvalues" -> eval,
         "Eigenvectors" -> evec,
         "Algorithm" -> "LeadingEigenvector"
+      |>
+    ]
+
+(* Maximum flow *)
+
+IGGomoryHuTree[graph_?GraphQ] :=
+    catch@Block[{new = Make["IG"], ig = igMake[graph], flow, capacity},
+      capacity = PropertyValue[graph, EdgeCapacity];
+      If[Not@VectorQ[capacity], capacity = {}];
+      flow = check@new@"gomoryHuTree"[ManagedLibraryExpressionID[ig], capacity];
+      <|
+        "Tree" -> VertexReplace[igToGraph[new], Thread[Range@VertexCount[graph] -> VertexList[graph]]],
+        "Flow" -> flow
+      |>
+    ]
+
+(* Unfold tree *)
+
+Options[IGUnfoldTree] = { DirectedEdges -> True };
+IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
+    catch@Block[{new = Make["IG"], ig = igMake[graph], mapping, t},
+      mapping = check@new@"unfoldTree"[ManagedLibraryExpressionID[ig], vss[graph][roots], OptionValue[DirectedEdges]];
+      t = igToGraph[new];
+      <|
+        "Tree" -> t,
+        "Mapping" -> AssociationThread[VertexList[t], igVertexNames[graph]@igIndexVec[mapping]]
       |>
     ]
 

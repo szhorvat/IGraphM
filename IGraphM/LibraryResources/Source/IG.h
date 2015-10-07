@@ -1022,6 +1022,17 @@ public:
         ml << list;
     }
 
+    // Maximum flow
+
+    // note that this is a constructor!
+    mma::RealTensorRef gomoryHuTree(const IG &ig, mma::RealTensorRef tcapacity) {
+        igraph_vector_t capacity = igVectorView(tcapacity);
+        igVector flows;
+        destroy();
+        igConstructorCheck(igraph_gomory_hu_tree(&ig.graph, &graph, &flows.vec, tcapacity.length() == 0 ? NULL : &capacity));
+        return flows.makeMTensor();
+    }
+
     // Connected components
 
     mma::RealTensorRef articulationPoints() const {
@@ -1344,6 +1355,17 @@ public:
 
         ml.newPacket();
         ml << mlHead("List", 5) << membership << merges << modularity << eigenvalues << eigenvectors;
+    }
+
+    // Unfold tree
+
+    // note this is a constructor!
+    mma::RealTensorRef unfoldTree(const IG &source, mma::RealTensorRef troots, bool directed) {
+        igraph_vector_t roots = igVectorView(troots);
+        igVector mapping;
+        destroy();
+        igConstructorCheck(igraph_unfold_tree(&source.graph, &graph, directed ? IGRAPH_OUT : IGRAPH_ALL, &roots, &mapping.vec));
+        return mapping.makeMTensor();
     }
 };
 
