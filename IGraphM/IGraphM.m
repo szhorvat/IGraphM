@@ -14,6 +14,8 @@
 
 BeginPackage["IGraphM`", {"HierarchicalClustering`"}];
 
+Unprotect /@ Names["IGraphM`*"];
+
 (* Privately load and configure LTemplate *)
 Get["LTemplate`LTemplatePrivate`"];
 ConfigureLTemplate["MessageSymbol" -> IGraphM];
@@ -2023,6 +2025,8 @@ IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
         "Mapping" -> AssociationThread[VertexList[t], igVertexNames[graph]@igIndexVec[mapping]]
       |>
     ]
+
+With[{syms = Names["IGraphM`*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
 
 End[]; (* `Private` *)
 
