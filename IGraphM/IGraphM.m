@@ -953,14 +953,26 @@ IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[
 
 (* Isomorphism *)
 
+IGraphM::isonmg = "igraph does not currently support checking isomorphism of multigraphs.";
+checkMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::isonmg]; throw[$Failed]]
+
 IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
-    Block[{ig1 = igMake[g1], ig2 = igMake[g2]}, sck@ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]]
+    catch@Block[{ig1 = igMake[g1], ig2 = igMake[g2]},
+      checkMulti /@ {g1,g2};
+      check@ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]
+    ]
 
 IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
-    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]}, sck@ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]]
+    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
+      checkMulti /@ {subgraph, graph};
+      check@ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]
+    ]
 
 IGIsoclass[graph_?igGraphQ] := Block[{ig = igMake[graph]}, sck@ig@"isoclass"[]]
 
+
+IGraphM::blissnmg = "Bliss does not support multigraphs.";
+blissCheckMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::blissnmg]; throw[$Failed]]
 
 blissSplittingHeuristicsNames = {
   "First", "FirstSmallest", "FirstLargest",
@@ -977,6 +989,7 @@ amendUsage[IGBlissCanonicalLabeling,
 Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
+      blissCheckMulti[graph];
       AssociationThread[
         VertexList[graph],
         igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
@@ -986,7 +999,8 @@ IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
-        InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      blissCheckMulti[graph];
+      InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
@@ -995,13 +1009,15 @@ IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
 IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2]},
-      sck@ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+    catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2]},
+      blissCheckMulti /@ {graph1, graph2};
+      check@ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "First" };
 IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], result},
+      blissCheckMulti /@ {graph1, graph2};
       result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]];
       If[result === {}, Return[{}]];
       List@AssociationThread[
@@ -1013,15 +1029,20 @@ IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]
 Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "First" };
 IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
+      blissCheckMulti[graph];
       ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
 Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "First" };
 IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
+      blissCheckMulti[graph];
       igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
     ]
 
+
+IGraphM::vf2nmg = "VF2 does not support multigraphs.";
+vf2CheckMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::vf2nmg]; throw[$Failed]]
 
 vf2ParseColors[None] := {{},{}}
 vf2ParseColors[col : {_?intVecQ, _?intVecQ}] := col
@@ -1030,16 +1051,18 @@ vf2ParseColors[expr_] := (Message[IGraphM::vf2col]; {{},{}})
 Options[IGVF2IsomorphicQ] = { "VertexColors" -> None, "EdgeColors" -> None };
 
 IGVF2IsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
+    catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
+      vf2CheckMulti /@ {graph1, graph2};
       {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
-      sck@ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+      check@ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
 Options[IGVF2FindIsomorphisms] = { "VertexColors" -> None, "EdgeColors" -> None };
 
 IGVF2FindIsomorphisms[graph1_?igGraphQ, graph2_?igGraphQ, max : (_?Internal`PositiveMachineIntegerQ | All | Infinity) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2, n, result},
+      vf2CheckMulti /@ {graph1, graph2};
       n = Replace[max, All|Infinity -> -1];
       {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
@@ -1053,16 +1076,18 @@ IGVF2FindIsomorphisms[graph1_?igGraphQ, graph2_?igGraphQ, max : (_?Internal`Posi
 Options[IGVF2SubisomorphicQ] = { "VertexColors" -> None, "EdgeColors" -> None };
 
 IGVF2SubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2},
+    catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2},
+      vf2CheckMulti /@ {subgraph, graph};
       {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
-      sck@ig1@"vf2Subisomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+      check@ig1@"vf2Subisomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
 Options[IGVF2FindSubisomorphisms] = { "VertexColors" -> None, "EdgeColors" -> None };
 
 IGVF2FindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, max : (_?Internal`PositiveMachineIntegerQ | All | Infinity) : All, opt : OptionsPattern[]] :=
-    check@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2, n, result},
+    catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2, n, result},
+      vf2CheckMulti /@ {subgraph, graph};
       n = Replace[max, All|Infinity -> -1];
       {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
@@ -1074,25 +1099,30 @@ IGVF2FindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, max : (_?Internal`
     ]
 
 IGVF2AutomorphismCount[graph_?igGraphQ] :=
-    Block[{ig = igMake[graph]}, ig@"vf2AutomorphismCount"[]]
+    catch@Block[{ig = igMake[graph]},
+      vf2CheckMulti[graph];
+      check@ig@"vf2AutomorphismCount"[]
+    ]
 
 
 Options[IGVF2IsomorphismCount] = { "VertexColors" -> None, "EdgeColors" -> None };
 
 IGVF2IsomorphismCount[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
+    catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
+      vf2CheckMulti /@ {graph1, graph2};
       {vcol1, vcol2} = vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = vf2ParseColors@OptionValue["EdgeColors"];
-      sck@ig1@"vf2IsomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+      check@ig1@"vf2IsomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
 Options[IGVF2SubisomorphismCount] = { "VertexColors" -> None, "EdgeColors" -> None };
 
 IGVF2SubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2},
+    catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol1, vcol2, ecol1, ecol2},
+      vf2CheckMulti /@ {subgraph, graph};
       {vcol1, vcol2} = Reverse@vf2ParseColors@OptionValue["VertexColors"];
       {ecol1, ecol2} = Reverse@vf2ParseColors@OptionValue["EdgeColors"];
-      sck@ig1@"vf2SubisomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
+      check@ig1@"vf2SubisomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
 
