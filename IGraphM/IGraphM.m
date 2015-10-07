@@ -95,7 +95,6 @@ IGVF2SubisomorphicQ::usage = "IGVF2SubisomorphicQ[subgraph, graph] tests if subg
 IGVF2FindSubisomorphisms::usage =
     "IGVF2FindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph using the VF2 algorithm.\n" <>
     "IGVF2FindSubisomorphisms[subgraph, graph, n] finds at most n subisomorphisms from subgraph to graph.";
-IGVF2AutomorphismCount::usage = "IGVF2AutomorphismCount[graph] returns the number of automorphisms of graph.";
 IGVF2IsomorphismCount::usage =
     "IGVF2IsomorphismCount[graph1, graph2] returns the number of isomorphisms between graph1 and graph2." <>
     "Note that this is not the same as simply counting the automorphisms of one graph if their vertex or edge colorings differ.";
@@ -1097,13 +1096,6 @@ IGVF2FindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, max : (_?Internal`
         igVertexNames[graph][#]
       ]& /@ result
     ]
-
-IGVF2AutomorphismCount[graph_?igGraphQ] :=
-    catch@Block[{ig = igMake[graph]},
-      vf2CheckMulti[graph];
-      check@ig@"vf2AutomorphismCount"[]
-    ]
-
 
 Options[IGVF2IsomorphismCount] = { "VertexColors" -> None, "EdgeColors" -> None };
 

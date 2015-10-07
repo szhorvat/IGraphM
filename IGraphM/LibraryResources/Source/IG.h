@@ -507,12 +507,6 @@ public:
         ml << vf2data.list;
     }
 
-    mint vf2AutomorphismCount() const {
-        igraph_integer_t res;
-        igCheck(igraph_count_isomorphisms_vf2(&graph, &graph, NULL, NULL, NULL, NULL, &res, NULL, NULL, NULL));
-        return res;
-    }
-
     mint vf2IsomorphismCount(
             const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
                           mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
