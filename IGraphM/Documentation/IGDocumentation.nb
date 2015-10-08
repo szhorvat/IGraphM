@@ -4296,35 +4296,30 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"IGraphM", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"games.c:931, No simple undirected \
-graph can realize the given degree sequence\\\"\\)\[NoBreak]\"\>"}]], \
+   RowBox[{"IGraphM", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"games.c:931, No simple undirected graph can \
+realize the given degree sequence\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"IGraphM", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"games.c:3874, \\\"\\)\[NoBreak]\"\>"}]], \
 "Message", "MSG"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"IGraphM", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"games.c:3874, \
-\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
+   RowBox[{"IGraphM", "::", "error"}], "MessageName"], ":", 
+  " ", "\<\"\[NoBreak]\\!\\(\\\"igraph returned with error: Invalid value\\\"\
+\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
 
 Cell[BoxData[
  RowBox[{
   StyleBox[
-   RowBox[{"IGraphM", "::", "error"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"\[NoBreak]\\!\\(\\\"igraph returned with error: Invalid \
-value\\\"\\)\[NoBreak]\"\>"}]], "Message", "MSG"],
-
-Cell[BoxData[
- RowBox[{
-  StyleBox[
-   RowBox[{"General", "::", "stop"}], "MessageName"], 
-  RowBox[{
-  ":", " "}], "\<\"Further output of \[NoBreak]\\!\\(\\*StyleBox[\\(IGraphM \
-:: error\\), \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during this \
+   RowBox[{"General", "::", "stop"}], "MessageName"], ":", 
+  " ", "\<\"Further output of \[NoBreak]\\!\\(\\*StyleBox[\\(IGraphM :: error\
+\\), \\\"MessageName\\\"]\\)\[NoBreak] will be suppressed during this \
 calculation. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
 ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
 ButtonData:>\\\"paclet:ref/message/General/stop\\\", ButtonNote -> \
@@ -5780,7 +5775,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are \
 isomorphic.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-5299f493-683e-4e4d-9ad1-69b57c99506d"]
+ CellTags->"Info-f38cd764-52e2-4ade-8cee-9c684f671600"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5791,7 +5786,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGSubisomorphicQ[subgraph, graph] tests if subgraph is \
 contained within graph.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-939cf720-f080-445d-88e4-c1a1214c5dd5"]
+ CellTags->"Info-c3f44bfe-9fae-49ff-a38f-5f4cd700bfff"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5840,55 +5835,56 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b51125b3-98c0-4197-9a69-709a22ff6b0d", {
+           "Info-b509108b-028a-45fb-96ee-32e82ec1246e", {
             "IGBlissAutomorphismCount", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGBlissCanonicalGraph",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-b51125b3-98c0-4197-9a69-709a22ff6b0d", {
-            "IGBlissCanonicalGraph", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGBlissCanonicalPermutation",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-b51125b3-98c0-4197-9a69-709a22ff6b0d", {
-            "IGBlissCanonicalPermutation", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGBlissIsomorphicQ",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-b51125b3-98c0-4197-9a69-709a22ff6b0d", {
-            "IGBlissIsomorphicQ", "IGraphM`"}},
-          ButtonNote->"IGraphM`"]},
-        {
-         ButtonBox["IGBlissAutomorphismGroup",
-          BaseStyle->"InformationLink",
-          ButtonData:>{
-           "Info-b51125b3-98c0-4197-9a69-709a22ff6b0d", {
-            "IGBlissAutomorphismGroup", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGBlissCanonicalLabeling",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b51125b3-98c0-4197-9a69-709a22ff6b0d", {
+           "Info-b509108b-028a-45fb-96ee-32e82ec1246e", {
             "IGBlissCanonicalLabeling", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGBlissIsomorphicQ",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-b509108b-028a-45fb-96ee-32e82ec1246e", {
+            "IGBlissIsomorphicQ", "IGraphM`"}},
+          ButtonNote->"IGraphM`"]},
+        {
+         ButtonBox["IGBlissAutomorphismGroup",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-b509108b-028a-45fb-96ee-32e82ec1246e", {
+            "IGBlissAutomorphismGroup", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGBlissCanonicalPermutation",
+          BaseStyle->"InformationLink",
+          ButtonData:>{
+           "Info-b509108b-028a-45fb-96ee-32e82ec1246e", {
+            "IGBlissCanonicalPermutation", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], ""},
+        {
+         ButtonBox["IGBlissCanonicalGraph",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-b509108b-028a-45fb-96ee-32e82ec1246e", {
+            "IGBlissCanonicalGraph", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGBlissGetIsomorphism",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b51125b3-98c0-4197-9a69-709a22ff6b0d", {
+           "Info-b509108b-028a-45fb-96ee-32e82ec1246e", {
             "IGBlissGetIsomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], ""}
        },
        DefaultBaseStyle->"InfoGrid",
        GridBoxItemSize->{"Columns" -> {{
-            Scaled[0.2375]}}}]}
+            Scaled[0.31666666666666665`]}}}]}
     },
     GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
    Dynamic[Typeset`open$$],
@@ -6032,60 +6028,53 @@ Cell[BoxData[
        StyleBox["IGraphM`", "InfoHeading"]}]},
      {GridBox[{
         {
-         ButtonBox["IGVF2AutomorphismCount",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-835b466b-b2ab-4a24-8f0a-8789e00cd1ca", {
-            "IGVF2AutomorphismCount", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGVF2FindSubisomorphisms",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-835b466b-b2ab-4a24-8f0a-8789e00cd1ca", {
-            "IGVF2FindSubisomorphisms", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGVF2IsomorphismCount",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-835b466b-b2ab-4a24-8f0a-8789e00cd1ca", {
-            "IGVF2IsomorphismCount", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGVF2SubisomorphismCount",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-835b466b-b2ab-4a24-8f0a-8789e00cd1ca", {
-            "IGVF2SubisomorphismCount", "IGraphM`"}},
-          ButtonNote->"IGraphM`"]},
-        {
          ButtonBox["IGVF2FindIsomorphisms",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-835b466b-b2ab-4a24-8f0a-8789e00cd1ca", {
+           "Info-699e702a-c5c7-45b2-84fa-557461ccadd8", {
             "IGVF2FindIsomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-835b466b-b2ab-4a24-8f0a-8789e00cd1ca", {
+           "Info-699e702a-c5c7-45b2-84fa-557461ccadd8", {
             "IGVF2IsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-835b466b-b2ab-4a24-8f0a-8789e00cd1ca", {
+           "Info-699e702a-c5c7-45b2-84fa-557461ccadd8", {
             "IGVF2SubisomorphicQ", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], ""}
+          ButtonNote->"IGraphM`"]},
+        {
+         ButtonBox["IGVF2FindSubisomorphisms",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-699e702a-c5c7-45b2-84fa-557461ccadd8", {
+            "IGVF2FindSubisomorphisms", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGVF2IsomorphismCount",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-699e702a-c5c7-45b2-84fa-557461ccadd8", {
+            "IGVF2IsomorphismCount", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGVF2SubisomorphismCount",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-699e702a-c5c7-45b2-84fa-557461ccadd8", {
+            "IGVF2SubisomorphismCount", "IGraphM`"}},
+          ButtonNote->"IGraphM`"]}
        },
        DefaultBaseStyle->"InfoGrid",
        GridBoxItemSize->{"Columns" -> {{
-            Scaled[0.2375]}}}]}
+            Scaled[0.31666666666666665`]}}}]}
     },
     GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
    Dynamic[Typeset`open$$],
@@ -6093,15 +6082,348 @@ Cell[BoxData[
 }, Open  ]],
 
 Cell[TextData[{
- "VF2 supports vertex coloured and edge coloured graphs. Colours can be \
-provided as a pair of integer lists using the ",
+ "VF2 supports vertex coloured and edge coloured graphs. A colour \
+specification consists of one of more of the ",
  Cell[BoxData[
   FormBox["\"\<VertexColors\>\"", TraditionalForm]]],
- " or ",
+ " and ",
  Cell[BoxData[
   FormBox["\"\<EdgeColors\>\"", TraditionalForm]]],
- " options."
-}], "Text"]
+ " options. Allowed formats for these options are a list of integers, an \
+association assigning integers to the vertices/edges, or ",
+ Cell[BoxData[
+  FormBox["None", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ ". When using associations, it is not necessarily to specify a colour for \
+each vertex/edge. The omitted ones are assumed to have colour ",
+ Cell[BoxData[
+  FormBox["0", TraditionalForm]]],
+ "."
+}], "Text"],
+
+Cell[TextData[{
+ "The following graph has two automorphisms: ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}], TraditionalForm]]],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", 
+    RowBox[{"2", ",", "1"}], "}"}], TraditionalForm]]],
+ "."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"Graph", "[", 
+    RowBox[{"{", 
+     RowBox[{"1", "\[UndirectedEdge]", "2"}], "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"IGVF2IsomorphismCount", "[", 
+  RowBox[{"g", ",", "g"}], "]"}]}], "Input"],
+
+Cell[BoxData["2"], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+ "If we colour one of the vertices, the permutation ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", 
+    RowBox[{"2", ",", "1"}], "}"}], TraditionalForm]]],
+ " becomes forbidden, so only one automorphism remains."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"IGVF2IsomorphismCount", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"g", ",", 
+     RowBox[{"\"\<VertexColors\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}]}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"g", ",", 
+     RowBox[{"\"\<VertexColors\>\"", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "2"}], "}"}]}]}], "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData["1"], "Output"]
+}, Open  ]],
+
+Cell["\<\
+Multigraphs are not directly supported for isomorphism checking, but we can \
+map the multigraph isomorphism problem into an edge-coloured graph \
+isomorphism one by designating the multiplicity of each edge as its colour.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"g1", "=", 
+  RowBox[{"EdgeAdd", "[", 
+   RowBox[{
+    RowBox[{"PathGraph", "[", 
+     RowBox[{
+      RowBox[{"Range", "[", "5", "]"}], ",", 
+      RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], "]"}], ",", 
+    RowBox[{"2", "\[UndirectedEdge]", "3"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ GraphicsBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{1, 2, 3, 4, 5}, {
+      Null, {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {2, 3}}}, {
+      VertexLabels -> {"Name"}}]]}, 
+    TagBox[GraphicsGroupBox[{
+       {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+        {Arrowheads[0.], 
+         ArrowBox[{{3.9909283401861844`, 1.4866362306694295`*^-8}, {
+          3.0618134296263735`, 1.3087886426806303`*^-9}}, 
+          0.03694770780022549]}, 
+        {Arrowheads[0.], 
+         ArrowBox[BezierCurveBox[{{3.0618134296263735`, 
+          1.3087886426806303`*^-9}, {
+          2.5293327923020925`, -0.1751230271406846}, {1.9968521545473805`, 
+          0.}}], 0.03694770780022549]}, 
+        {Arrowheads[0.], 
+         ArrowBox[BezierCurveBox[{{3.0618134296263735`, 
+          1.3087886426806303`*^-9}, {2.529332791871661, 
+          0.17512302844947927`}, {1.9968521545473805`, 0.}}], 
+          0.03694770780022549]}, 
+        {Arrowheads[0.], 
+         ArrowBox[{{1.9968521545473805`, 0.}, {0.9317413638931069, 
+          4.088409490031423*^-9}}, 0.03694770780022549]}, 
+        {Arrowheads[0.], 
+         ArrowBox[{{0.9317413638931069, 4.088409490031423*^-9}, {0., 
+          1.337281788934584*^-8}}, 0.03694770780022549]}}, 
+       {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+        0.7]}], {
+         DiskBox[{3.9909283401861844`, 1.4866362306694295`*^-8}, 
+          0.03694770780022549], 
+         InsetBox["1", 
+          Offset[{2, 2}, {4.0278760479864095`, 0.0369477226665878}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {
+         DiskBox[{3.0618134296263735`, 1.3087886426806303`*^-9}, 
+          0.03694770780022549], 
+         InsetBox["2", 
+          Offset[{2, 2}, {3.098761137426599, 0.03694770910901413}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {
+         DiskBox[{1.9968521545473805`, 0.}, 0.03694770780022549], 
+         InsetBox["3", 
+          Offset[{2, 2}, {2.033799862347606, 0.03694770780022549}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {
+         DiskBox[{0.9317413638931069, 4.088409490031423*^-9}, 
+          0.03694770780022549], 
+         InsetBox["4", 
+          Offset[{2, 2}, {0.9686890716933324, 0.036947711888634986`}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {
+         DiskBox[{0., 1.337281788934584*^-8}, 0.03694770780022549], 
+         InsetBox["5", 
+          Offset[{2, 2}, {0.03694770780022549, 0.03694772117304338}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}}}],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FrameTicks->None,
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]]]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"g2", "=", 
+  RowBox[{"EdgeAdd", "[", 
+   RowBox[{
+    RowBox[{"PathGraph", "[", 
+     RowBox[{
+      RowBox[{"Range", "[", "5", "]"}], ",", 
+      RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], "]"}], ",", 
+    RowBox[{"4", "\[UndirectedEdge]", "3"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ GraphicsBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{1, 2, 3, 4, 5}, {
+      Null, {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {4, 3}}}, {
+      VertexLabels -> {"Name"}}]]}, 
+    TagBox[GraphicsGroupBox[{
+       {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+        {Arrowheads[0.], 
+         ArrowBox[{{3.9909283401861844`, 1.4866362306694295`*^-8}, {
+          3.0618134296263735`, 1.3087886426806303`*^-9}}, 
+          0.03694770780022549]}, 
+        {Arrowheads[0.], 
+         ArrowBox[{{3.0618134296263735`, 1.3087886426806303`*^-9}, {
+          1.9968521545473805`, 0.}}, 0.03694770780022549]}, 
+        {Arrowheads[0.], 
+         ArrowBox[BezierCurveBox[{{1.9968521545473805`, 0.}, {
+          1.4642967585479418`, -0.17514761220378527`}, {0.9317413638931069, 
+          4.088409490031423*^-9}}], 0.03694770780022549]}, 
+        {Arrowheads[0.], 
+         ArrowBox[BezierCurveBox[{{1.9968521545473805`, 0.}, {
+          1.4642967598925491`, 0.17514761629218828`}, {0.9317413638931069, 
+          4.088409490031423*^-9}}], 0.03694770780022549]}, 
+        {Arrowheads[0.], 
+         ArrowBox[{{0.9317413638931069, 4.088409490031423*^-9}, {0., 
+          1.337281788934584*^-8}}, 0.03694770780022549]}}, 
+       {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+        0.7]}], {
+         DiskBox[{3.9909283401861844`, 1.4866362306694295`*^-8}, 
+          0.03694770780022549], 
+         InsetBox["1", 
+          Offset[{2, 2}, {4.0278760479864095`, 0.0369477226665878}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {
+         DiskBox[{3.0618134296263735`, 1.3087886426806303`*^-9}, 
+          0.03694770780022549], 
+         InsetBox["2", 
+          Offset[{2, 2}, {3.098761137426599, 0.03694770910901413}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {
+         DiskBox[{1.9968521545473805`, 0.}, 0.03694770780022549], 
+         InsetBox["3", 
+          Offset[{2, 2}, {2.033799862347606, 0.03694770780022549}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {
+         DiskBox[{0.9317413638931069, 4.088409490031423*^-9}, 
+          0.03694770780022549], 
+         InsetBox["4", 
+          Offset[{2, 2}, {0.9686890716933324, 0.036947711888634986`}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {
+         DiskBox[{0., 1.337281788934584*^-8}, 0.03694770780022549], 
+         InsetBox["5", 
+          Offset[{2, 2}, {0.03694770780022549, 0.03694772117304338}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}}}],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FrameTicks->None,
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]]]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"IGVF2IsomorphicQ", "[", 
+  RowBox[{"g1", ",", "g2"}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"IGraphM", "::", "vf2nmg"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"VF2 does not support multigraphs.\"\>"}]], "Message", \
+"MSG"],
+
+Cell[BoxData["$Failed"], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Since ",
+ Cell[BoxData[
+  FormBox["g1", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " and ",
+ Cell[BoxData[
+  FormBox["g2", TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " are undirected, we need to bring their edges into a sorted canonical form \
+before counting them. This ensures that ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"4", "\[UndirectedEdge]", "3"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"3", "\[UndirectedEdge]", "4"}], TraditionalForm]],
+  FormatType->"TraditionalForm"],
+ " are treated as the same edge."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"colors1", "=", 
+  RowBox[{"Counts", "[", 
+   RowBox[{"Sort", "/@", 
+    RowBox[{"EdgeList", "[", "g1", "]"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"1", "\[UndirectedEdge]", "2"}], "\[Rule]", "1"}], ",", 
+   RowBox[{
+    RowBox[{"2", "\[UndirectedEdge]", "3"}], "\[Rule]", "2"}], ",", 
+   RowBox[{
+    RowBox[{"3", "\[UndirectedEdge]", "4"}], "\[Rule]", "1"}], ",", 
+   RowBox[{
+    RowBox[{"4", "\[UndirectedEdge]", "5"}], "\[Rule]", "1"}]}], 
+  "\[RightAssociation]"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"colors2", "=", 
+  RowBox[{"Counts", "[", 
+   RowBox[{"Sort", "/@", 
+    RowBox[{"EdgeList", "[", "g2", "]"}]}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"1", "\[UndirectedEdge]", "2"}], "\[Rule]", "1"}], ",", 
+   RowBox[{
+    RowBox[{"2", "\[UndirectedEdge]", "3"}], "\[Rule]", "1"}], ",", 
+   RowBox[{
+    RowBox[{"3", "\[UndirectedEdge]", "4"}], "\[Rule]", "2"}], ",", 
+   RowBox[{
+    RowBox[{"4", "\[UndirectedEdge]", "5"}], "\[Rule]", "1"}]}], 
+  "\[RightAssociation]"}]], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"IGVF2IsomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"Graph", "@", 
+      RowBox[{"Keys", "[", "colors1", "]"}]}], ",", 
+     RowBox[{"\"\<EdgeColors\>\"", "\[Rule]", "colors1"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"Graph", "@", 
+      RowBox[{"Keys", "[", "colors2", "]"}]}], ",", 
+     RowBox[{"\"\<EdgeColors\>\"", "\[Rule]", "colors2"}]}], "}"}]}], 
+  "]"}]], "Input"],
+
+Cell[BoxData["True"], "Output"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -6148,21 +6470,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-ba06b42e-8dca-4ccc-a451-9e4bdb4a2fba", {
+           "Info-612b4458-cf3f-419c-be2a-c33834a4ead8", {
             "IGLADFindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADGetSubisomorphism",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-ba06b42e-8dca-4ccc-a451-9e4bdb4a2fba", {
+           "Info-612b4458-cf3f-419c-be2a-c33834a4ead8", {
             "IGLADGetSubisomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADSubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-ba06b42e-8dca-4ccc-a451-9e4bdb4a2fba", {
+           "Info-612b4458-cf3f-419c-be2a-c33834a4ead8", {
             "IGLADSubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -7197,7 +7519,6 @@ Cell[BoxData[
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutGEM",
           BaseStyle->"InformationLink",
-          
           ButtonData:>{
            "Info-258321d8-c056-47fc-85b7-ef22f7a8af06", {
             "IGLayoutGEM", "IGraphM`"}},
@@ -7571,8 +7892,8 @@ Cell["Drawing large graphs", "Subsection"],
 Cell[TextData[{
  Cell[BoxData[
   FormBox["IGLayoutDrL", TraditionalForm]]],
- " is designed specifically for large graphs with high clustering. The \
-following image is created using DrL."
+ " is designed specifically for visualizing large graphs with high \
+clustering. The following image is created using DrL."
 }], "Text"],
 
 Cell[TextData[Cell[BoxData[
@@ -29480,7 +29801,6 @@ I0eeA5h35I4y71GsB9RTD5dYLxhCvQSznrCDespmvaEj9aZkPWIp9biL9YqF
             BezierCurveBox[{2, {0.679673822666892, 0.3924098644779406}, 1}], 
             0.020399597244776385`], 
            ArrowBox[
-            
             BezierCurveBox[{
              2, {-0.18635158111754604`, 0.10759013552211057`}, 3}], 
             0.020399597244776385`], 
