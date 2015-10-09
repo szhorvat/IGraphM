@@ -1,5 +1,6 @@
 
 #include "IGlobal.h"
+#include <cstring>
 
 
 int igInterruptionHandler(void *) {
