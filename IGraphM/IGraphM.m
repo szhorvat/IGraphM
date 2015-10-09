@@ -383,7 +383,6 @@ template = LTemplate["IGraphM",
         LFun["vf2FindIsomorphisms", LinkObject],
         LFun["vf2Subisomorphic", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, True|False],
         LFun["vf2FindSubisomorphisms", LinkObject],
-        LFun["vf2AutomorphismCount", {}, Integer],
         LFun["vf2IsomorphismCount", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, Integer],
         LFun["vf2SubisomorphismCount", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, Integer],
         LFun["ladSubisomorphic", {LExpressionID["IG"], True|False (* induced *)}, True|False],
@@ -623,7 +622,6 @@ If[LoadIGraphM[] === $Failed,
 (***** General messages *****)
 
 IGraphM::mixed = "Mixed graphs are not supported by IGraph/M.";
-IGraphM::vf2col = "Vertex or edge color specifications for VF2 functions must be a pair of integer lists or None.";
 IGraphM::lytcrd = "The graph doesn't already have existing vertex coordinates. The \"Continue\" -> True layout option will be ignored.";
 IGraphM::lytdim = "The existing vertex coordinates do not have the appropriate dimension for this layout algorithm. The \"Continue\" -> True layout option will be ignored.";
 IGraphM::lytcnt = "`` is not a valid value for the \"Continue\" layout option.";
