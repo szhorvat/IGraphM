@@ -962,20 +962,47 @@ IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[
 
 (* Isomorphism *)
 
-IGraphM::isonmg = "igraph does not currently support checking isomorphism of multigraphs.";
-checkMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::isonmg]; throw[$Failed]]
-
 IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
-    catch@Block[{ig1 = igMake[g1], ig2 = igMake[g2]},
-      checkMulti /@ {g1,g2};
-      check@ig1@"isomorphic"[ManagedLibraryExpressionID@ig2]
+    catch@If[MultigraphQ[g1] || MultigraphQ[g2],
+      igMultigraphIsomorphicQ[g1, g2]
+      ,
+      Block[{ig1 = igMake[g1], ig2 = igMake[g2]},
+        check@ig1@"isomorphic"[ManagedLibraryExpressionID[ig2]]
+      ]
+    ]
+
+(* Transform multigraph isomorphism to edge-coloured graph isomorphism. *)
+igMultigraphIsomorphicQ[g1_, g2_] :=
+    (* no catch *) Block[{ig1, ig2, ec1, ec2},
+      VertexCount[g1] == VertexCount[g2] && EdgeCount[g1] == EdgeCount[g2] &&
+      Internal`InheritedBlock[{UndirectedEdge},
+        SetAttributes[UndirectedEdge, Orderless];
+        ec1 = Counts@EdgeList[g1]; ec2 = Counts@EdgeList[g2];
+        ig1 = igMake@Graph@Keys[ec1]; ig2 = igMake@Graph@Keys[ec2];
+        check@ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], {}, {}, Values[ec1], Values[ec2]]
+      ]
     ]
 
 IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
-    catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
-      checkMulti /@ {subgraph, graph};
-      check@ig1@"subisomorphic"[ManagedLibraryExpressionID@ig2]
+    catch@If[MultigraphQ[subgraph] || MultigraphQ[graph],
+      igMultigraphSubisomorphicQ[subgraph, graph]
+      ,
+      Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
+        check@ig1@"subisomorphic"[ManagedLibraryExpressionID[ig2]]
+      ]
     ]
+
+(* Transform multigraph subisomorphism to edge-coloured graph subisomorphism. *)
+igMultigraphSubisomorphicQ[subgraph_, graph_] :=
+(* no catch *) Block[{ig, igs, ec, ecs},
+      Internal`InheritedBlock[{UndirectedEdge},
+        SetAttributes[UndirectedEdge, Orderless];
+        ec = Counts@EdgeList[graph]; ecs = Counts@EdgeList[subgraph];
+        ig = igMake@Graph@Keys[ec]; igs = igMake@Graph@Keys[ecs];
+        check@ig@"vf2Subisomorphic"[ManagedLibraryExpressionID[igs], {}, {}, Values[ec], Values[ecs]]
+      ]
+]
+
 
 IGIsoclass[graph_?igGraphQ] := Block[{ig = igMake[graph]}, sck@ig@"isoclass"[]]
 
