@@ -207,13 +207,14 @@ inline mlStream & operator >> (mlStream &ml, igList &list) {
     int len;
     if (! MLTestHead(ml.link(), "List", &len))
         ml.error("List of lists expected");
-    igraph_vector_ptr_resize(&list.list, len);
+    igraph_vector_ptr_resize(&list.list, len);    
     for (int i=0; i < len; ++i) {
-        igraph_vector_t *vec = static_cast<igraph_vector_t *>(malloc(sizeof(igraph_vector_t)));
+        igraph_vector_t *vec = static_cast<igraph_vector_t *>(malloc(sizeof(igraph_vector_t)));        
         double *data;
         int listlen;
         if (! MLGetReal64List(ml.link(), &data, &listlen))
             ml.error("Real64List expected in list of lists");
+        igraph_vector_init(vec, listlen);
         std::copy(data, data+listlen, vec->stor_begin);
         MLReleaseReal64List(ml.link(), data, listlen);
         VECTOR(list.list)[i] = vec;
