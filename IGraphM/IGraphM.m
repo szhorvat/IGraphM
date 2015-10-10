@@ -112,9 +112,15 @@ IGVF2SubisomorphismCount::usage =
     "IGVF2SubisomorphismCount[subgraph, graph] returns the number of mappings from subgraph to graph.\n" <>
     "IGVF2SubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] returns the number of mappings from vertex or edge coloured subgraph to graph.";
 
-IGLADSubisomorphicQ::usage = "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs.";
-IGLADGetSubisomorphism::usage = "IGLADGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.";
-IGLADFindSubisomorphisms::usage = "IGLADFindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph.";
+IGLADSubisomorphicQ::usage =
+    "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs." <>
+    "IGLADSubisomorphicQ[{subgraph, colorSpec}, {graph, colorSpec}] tests if a vertex coloured subgraph is contained in graph.";
+IGLADGetSubisomorphism::usage =
+    "IGLADGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.\n" <>
+    "IGLADGetSubisomorphism[{subgraph, colorSpec}, {graph, colorSpec}] returns one subisomorphism from s vertex coloured subgraph to graph.";
+IGLADFindSubisomorphisms::usage =
+    "IGLADFindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph.\n" <>
+    "IGLADFindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] finds all subisomorphisms from a vertex coloured subgraph to graph.";
 
 IGTopologicalOrdering::usage =
     "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order." <>
@@ -386,7 +392,9 @@ template = LTemplate["IGraphM",
         LFun["vf2IsomorphismCount", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, Integer],
         LFun["vf2SubisomorphismCount", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, Integer],
         LFun["ladSubisomorphic", {LExpressionID["IG"], True|False (* induced *)}, True|False],
+        LFun["ladSubisomorphicColored", LinkObject],
         LFun["ladGetSubisomorphism", {LExpressionID["IG"], True|False (* induced *)}, {Real, 1}],
+        LFun["ladGetSubisomorphismColored", LinkObject],
         LFun["ladFindSubisomorphisms", LinkObject],
 
         (* Topological sorting and directed acylic graphs *)
@@ -1007,6 +1015,39 @@ igMultigraphSubisomorphicQ[subgraph_, graph_] :=
 IGIsoclass[graph_?igGraphQ] := Block[{ig = igMake[graph]}, sck@ig@"isoclass"[]]
 
 
+(* Vertex and edge colouring helper functions *)
+
+IGraphM::vcol = "The \"VertexColors\" option must be a list of integers, an association assigning integers to vertices, or None.";
+IGraphM::ecol = "The \"EdgeColors\" option must be a list of integers, an association assigning integers to edges, or None.";
+IGraphM::bdecol = "Edge colors: the following edges are not in the graph: ``.";
+IGraphM::bdvcol = "Vertex colors: the following vertices are not in the graph: ``.";
+IGraphM::vcolcnt = "When vertex colours are specified as a list, the list length must be the same as the vertex count of the graph.";
+IGraphM::ecolcnt = "When edge colours are specified as a list, the list length must be the same as the edge count of the graph.";
+IGraphM::vcmm = "Only one graph is vertex coloured. Colours will be ignored.";
+
+defaultVF2Colors = {"EdgeColors" -> None, "VertexColors" -> None};
+
+colorCheckVertices[g_, c_] := With[{cm = Complement[Keys[c], VertexList[g]]}, If[cm =!= {}, Message[IGraphM::bdvcol, cm]]];
+
+parseVertexColors[_][None] := {}
+parseVertexColors[g_][col_?intVecQ] := (If[VertexCount[g] != Length[col], Message[IGraphM::vcolcnt]; throw[$Failed]]; col)
+parseVertexColors[g_][col_?AssociationQ] := (colorCheckVertices[g, col]; Lookup[col, VertexList[g], 0])
+parseVertexColors[_][_] := (Message[IGraphM::vcol]; {})
+
+colorCheckEdges[g_, c_] := With[{cm = Complement[Keys[c], EdgeList[g]]}, If[cm =!= {}, Message[IGraphM::bdecol, cm]]];
+
+parseEdgeColors[_][None] := {}
+parseEdgeColors[g_][col_?intVecQ] := (If[EdgeCount[g] != Length[col], Message[IGraphM::ecolcnt]; throw[$Failed]]; col)
+parseEdgeColors[g_][col_?AssociationQ] :=
+    Internal`InheritedBlock[{UndirectedEdge},
+      SetAttributes[UndirectedEdge, Orderless];
+      colorCheckEdges[g,col];
+      Lookup[KeyMap[Identity, col] (* allow Orderless to do its job *), EdgeList[g], 0]
+    ]
+parseEdgeColors[_][_] := (Message[IGraphM::ecol]; {})
+
+(** Bliss **)
+
 IGraphM::blissnmg = "Bliss does not support multigraphs.";
 blissCheckMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::blissnmg]; throw[$Failed]]
 
@@ -1077,36 +1118,10 @@ IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
     ]
 
 
+(** VF2 **)
+
 IGraphM::vf2nmg = "VF2 does not support multigraphs.";
 vf2CheckMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::vf2nmg]; throw[$Failed]]
-
-
-IGraphM::vcol = "The \"VertexColors\" option must be a list of integers, an association assigning integers to vertices, or None.";
-IGraphM::ecol = "The \"EdgeColors\" option must be a list of integers, an association assigning integers to edges, or None.";
-IGraphM::bdecol = "Edge colors: the following edges are not in the graph: ``.";
-IGraphM::bdvcol = "Vertex colors: the following vertices are not in the graph: ``.";
-
-defaultVF2Colors = {"EdgeColors" -> None, "VertexColors" -> None};
-
-colorCheckVertices[g_, c_] := With[{cm = Complement[Keys[c], VertexList[g]]}, If[cm =!= {}, Message[IGraphM::bdvcol, cm]]];
-
-parseVertexColors[_][None] := {}
-parseVertexColors[_][col_?intVecQ] := col
-parseVertexColors[g_][col_?AssociationQ] := (colorCheckVertices[g, col]; Lookup[col, VertexList[g], 0])
-parseVertexColors[_][_] := (Message[IGraphM::vcol]; {})
-
-colorCheckEdges[g_, c_] := With[{cm = Complement[Keys[c], EdgeList[g]]}, If[cm =!= {}, Message[IGraphM::bdecol, cm]]];
-
-parseEdgeColors[_][None] := {}
-parseEdgeColors[_][col_?intVecQ] := col
-parseEdgeColors[g_][col_?AssociationQ] :=
-    Internal`InheritedBlock[{UndirectedEdge},
-      SetAttributes[UndirectedEdge, Orderless];
-      colorCheckEdges[g,col];
-      Lookup[KeyMap[Identity, col] (* allow Orderless to do its job *), EdgeList[g], 0]
-    ]
-parseEdgeColors[_][_] := (Message[IGraphM::ecol]; {})
-
 
 IGVF2IsomorphicQ[{graph1_?igGraphQ, opt1 : OptionsPattern[]}, {graph2_?igGraphQ, opt2 : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
@@ -1230,12 +1245,34 @@ IGVF2SubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ] :=
     ]
 
 
+(** LAD **)
+
+defaultLADColors = {"VertexColors" -> None};
+
 Options[IGLADSubisomorphicQ] = { "Induced" -> False };
 
 IGLADSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
       sck@ig1@"ladSubisomorphic"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]]
     ]
+
+IGLADSubisomorphicQ[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{vcol, vcolsub},
+      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, col, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, colsub, "VertexColors"];
+      If[vcol === {} || vcolsub === {},
+        If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
+        IGLADSubisomorphicQ[subgraph, graph, opt]
+        ,
+        Block[{ig1 = igMake[graph], ig2 = igMake[subgraph]},
+          check@ig1@"ladSubisomorphicColored"[
+            ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"],
+            Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub
+          ]
+        ]
+      ]
+    ]
+
 
 Options[IGLADGetSubisomorphism] = { "Induced" -> False };
 
@@ -1249,11 +1286,51 @@ IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern
       ]
     ]
 
+IGLADGetSubisomorphism[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{vcol, vcolsub},
+      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, col, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, colsub, "VertexColors"];
+      If[vcol === {} || vcolsub === {},
+        If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
+        IGLADGetSubisomorphism[subgraph, graph, opt]
+        ,
+        Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result},
+          result = igIndexVec@check@ig1@"ladGetSubisomorphism"[
+            ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"],
+            Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub
+          ];
+          If[result === {}, Return[{}]];
+          List@AssociationThread[
+            VertexList[subgraph],
+            igVertexNames[graph][result]
+          ]
+        ]
+      ]
+    ]
+
+
 Options[IGLADFindSubisomorphisms] = { "Induced" -> False };
 
 IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result},
-      result = igIndexVec@check@ig1@"ladFindSubisomorphisms"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"]];
+      result = igIndexVec@check@ig1@"ladFindSubisomorphisms"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"], {}];
+      AssociationThread[
+        VertexList[subgraph],
+        igVertexNames[graph][#]
+      ]& /@ result
+    ]
+
+IGLADFindSubisomorphisms[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], result, vcol, vcolsub, domain},
+      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, col, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, colsub, "VertexColors"];
+      If[vcol === {} || vcolsub === {},
+        If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
+        domain = {}
+        ,
+        domain = Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub;
+      ];
+      result = igIndexVec@check@ig1@"ladFindSubisomorphisms"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"], domain];
       AssociationThread[
         VertexList[subgraph],
         igVertexNames[graph][#]

@@ -552,6 +552,24 @@ public:
         return res;
     }
 
+    void ladSubisomorphicColored(MLINK link) const {
+        mlStream ml{link, "ladSubisomorphicColored"};
+        mint id;
+        igraph_bool_t induced;
+        igList domain;
+        ml >> mlCheckArgs(3)
+           >> id >> induced >> domain;
+
+        igraph_bool_t res;
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, &domain.list, &res, NULL, NULL, induced, 0));
+
+        ml.newPacket();
+        if (res)
+            ml << mlSymbol("True");
+        else
+            ml << mlSymbol("False");
+    }
+
     mma::RealTensorRef ladGetSubisomorphism(const IG &ig, bool induced) const {
         igraph_bool_t iso;
         igVector map;
@@ -559,15 +577,32 @@ public:
         return map.makeMTensor();
     }
 
+    void ladGetSubisomorphismColored(MLINK link) const {
+        mlStream ml{link, "ladGetSubisomorphismColored"};
+        mint id;
+        igraph_bool_t induced;
+        igList domain;
+        ml >> mlCheckArgs(3)
+           >> id >> induced >> domain;
+
+        igraph_bool_t iso;
+        igVector map;
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, &domain.list, &iso, &map.vec, NULL, induced, 0));
+
+        ml.newPacket();
+        ml << map;
+    }
+
     void ladFindSubisomorphisms(MLINK link) const  {
         mlStream ml{link, "ladFindSubisomorphism"};
-        int induced;
         mint id;
-        ml >> mlCheckArgs(2) >> id >> induced;
+        igraph_bool_t induced;
+        igList domain;
+        ml >> mlCheckArgs(3) >> id >> induced >> domain;
 
         igList list;
         igraph_bool_t iso;
-        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, NULL, &iso, NULL, &list.list, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
 
         ml.newPacket();
         ml << list;
