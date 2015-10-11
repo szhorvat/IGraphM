@@ -26,7 +26,7 @@ If the tests have passed, install it with `make install`
 
 ##### igraph
 
-Clone the master branch of [the igraph repository](https://github.com/igraph/igraph). igraph 0.8 is required (0.7.1 is not compatible). Compile as follows:
+Clone [this fork of the igraph](https://github.com/szhorvat/igraph) and check out the `IGraphM` branch. This fork is identical to the main igraph repository, except for a few small occasional patches that IGraph/M may depend on.  Compile as follows:
 
     export CPPFLAGS=-I$HOME/local LDFLAGS=-L$HOME/local
     ./bootstrap.sh
@@ -45,14 +45,13 @@ If the tests have passed, install it with `make install`.
 To compile IGraph/M, you will need:
 
  - A C++ compiler with C++11 support.  I used GCC 4.9 and clang 3.6.
- - A recent development version of [igraph](https://github.com/igraph/igraph). You will need to compile it yourself. igraph 0.7.1 is not compatible.
  - The [LTemplate Mathematica package][1].  Please download and install it.
  - git for cloning the repository.
 
 Then follow these steps:
 
  1. Clone the IGraphM repository and check out the master branch (do not use the release branch).  
- 2. Edit `BuildSettings.m` and set the necessary paths to your igraph installation.  The available options are the same as for [CreateLibrary](http://reference.wolfram.com/language/CCompilerDriver/ref/CreateLibrary.html).
+ 2. Edit `BuildSettings.m` and set the path to your igraph installation, where necessary.  The available options are the same as for [CreateLibrary](http://reference.wolfram.com/language/CCompilerDriver/ref/CreateLibrary.html).
  3. Append the repository's root directory (i.e. the same directory where this readme file is found) to Mathematica's `$Path`.
  4. Load the package with ``<<IGraphM` ``.  It should automatically be compiled. It can also be recompiled using ``IGraphM`Developer`Recompile[]``.
 

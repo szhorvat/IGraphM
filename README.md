@@ -14,6 +14,7 @@ igraph is one of the broadest open source graph manipulation packages available.
 
 ### Functionality highlights
 
+ - Interruption support: using Evaluate → Abort Evaluation in Mathematica works with most IGraph/M functions.
  - Centrality measures for weighted graphs
  - Estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs
  - Community detection algorithms
@@ -23,11 +24,9 @@ igraph is one of the broadest open source graph manipulation packages available.
  - Rewire edges, keeping either the density or the degree sequence
  - Alternative algorithms for isomorphism testing: BLISS, VF2, LAD
  - Subgraph isomorphism (including induced subgraphs with LAD)
- - Isomorphism for coloured graphs
- - Test if a degree sequence is graphical
- - Alternative algorithms for generating random graphs with given degree sequence
- - Additional layout algorithms, layouts for weighted graphs
- - Layout algorithms can continue from existing vertex coordinates
+ - Isomorphism for edge or vertex coloured graphs; multigraph isomorphism implementation based on edge colouring
+ - Alternative algorithms for generating random graphs with given degree sequence. Test for degree sequence graphicality.
+ - Additional layout algorithms: most work with weighted graphs and can continue the layout optimization starting from a given set of vertex positions.
  - Biconnected components, articulation points, find all minimum vertex cuts
  - Several other specialized functions not mentioned here ...
 
