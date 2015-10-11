@@ -1053,10 +1053,10 @@ public:
     // Vertex separators
 
     void minimumSizeSeparators(MLINK link) const {
-        igList list;
         mlStream ml{link, "minimumSizeSeparators"};
         ml >> mlCheckArgs(0);
 
+        igList list;
         igCheck(igraph_minimum_size_separators(&graph, &list.list));
 
         ml.newPacket();
