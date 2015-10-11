@@ -80,14 +80,27 @@ IGSubisomorphicQ::usage = "IGSubisomorphicQ[subgraph, graph] tests if subgraph i
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData[] to get list of graphs ordered by isoclass.";
 
 IGBlissCanonicalLabeling::usage =
-    "IGBlissCanonicalLabeling[graph] computes a canonical integer labeling of the graph vertices. " <>
-    "Using this labeling brings representations of isomorphic graphs to the same form.";
-IGBlissCanonicalPermutation::usage = "IGBlissCanonicalPermutation[graph] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.";
-IGBlissCanonicalGraph::usage = "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labeling.";
-IGBlissIsomorphicQ::usage = "IGBlissIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are ismorphic using the BLISS algorithm.";
-IGBlissGetIsomorphism::usage = "IGBlissGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.";
-IGBlissAutomorphismCount::usage = "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.";
-IGBlissAutomorphismGroup::usage = "IGBlissAutomorphismGroup[graph] returns a set of generators for the automorphism group of graph. It is not guaranteed to be minimal.";
+    "IGBlissCanonicalLabeling[graph] computes a canonical integer labeling of the graph vertices. Using this labeling brings representations of isomorphic graphs to the same form.\n" <>
+    "IGBlissCanonicalLabeling[{graph, colorSpec}] computes a canonical integer labeling for the vertices of a vertex coloured graph.";
+
+IGBlissCanonicalPermutation::usage =
+    "IGBlissCanonicalPermutation[graph] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.\n" <>
+    "IGBlissCanonicalPermutation[{graph, colorSpec}] returns the caonical vertex permutation of a vertex coloured graph.";
+IGBlissCanonicalGraph::usage =
+    "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labeling.\n" <>
+    "IGBlissCanonicalGraph[{graph, colorSpec}] returns a canonical graph of a vertex coloured graph, based on the canonical integer labeling.";
+IGBlissIsomorphicQ::usage =
+    "IGBlissIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are ismorphic using the BLISS algorithm.\n" <>
+    "IGBlissIsomorphicQ[{graph1, colorSpec}, {graph2, colorSpec}] tests if two vertex coloured graphs are ismorphic using the BLISS algorithm.";
+IGBlissGetIsomorphism::usage =
+    "IGBlissGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.\n" <>
+    "IGBlissGetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] returns one isomorphism between two vertex colored graphs, if it exists.";
+IGBlissAutomorphismCount::usage =
+    "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.\n" <>
+    "IGBlissAutomorphismCount[{graph, colorSpec}] returns the number of automorphisms of a vertex coloured graph.";
+IGBlissAutomorphismGroup::usage =
+    "IGBlissAutomorphismGroup[graph] returns a set of generators for the automorphism group of graph. It is not guaranteed to be minimal.\n" <>
+    "IGBlissAutomorphismGroup[{graph, colorSpec}] returns a set of generators for the automorphism group of a vertex coloured graph.";
 
 IGVF2IsomorphicQ::usage =
     "IGVF2IsomorphicQ[graph1, graph2] tests if graph1 and graph2 are ismorphic using the VF2 algorithm.\n" <>
@@ -380,9 +393,9 @@ template = LTemplate["IGraphM",
         LFun["isomorphic", {LExpressionID["IG"]}, True|False],
         LFun["subisomorphic", {LExpressionID["IG"]}, True|False],
         LFun["isoclass", {}, Integer],
-        LFun["blissCanonicalPermutation", {Integer (* splitting heuristics *)}, {Real, 1}],
-        LFun["blissIsomorphic", {LExpressionID["IG"], Integer (* splitting heuristics *)}, True|False],
-        LFun["blissFindIsomorphism", {LExpressionID["IG"], Integer (* splitting heuristics *)}, {Real, 1}],
+        LFun["blissCanonicalPermutation", {Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* colour *)}, {Real, 1}],
+        LFun["blissIsomorphic", {LExpressionID["IG"], Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* color1 *), {Integer, 1, "Constant"} (* color 2 *)}, True|False],
+        LFun["blissFindIsomorphism", {LExpressionID["IG"], Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* color1 *), {Integer, 1, "Constant"} (* color 2 *)}, {Real, 1}],
         LFun["blissAutomorphismCount", LinkObject],
         LFun["blissAutomorphismGroup", LinkObject],
         LFun["vf2Isomorphic", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, True|False],
@@ -1051,6 +1064,8 @@ parseEdgeColors[_][_] := (Message[IGraphM::ecol]; {})
 IGraphM::blissnmg = "Bliss does not support multigraphs.";
 blissCheckMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::blissnmg]; throw[$Failed]]
 
+defaultBlissColors = {"VertexColors" -> None};
+
 blissSplittingHeuristicsNames = {
   "First", "FirstSmallest", "FirstLargest",
   "FirstMaximallyConnected", "FirstSmallestMaximallyConnected", "FirstLargestMaximallyConnected"
@@ -1063,39 +1078,81 @@ amendUsage[IGBlissCanonicalLabeling,
   blissSplittingHeuristicsNames
 ];
 
+
 Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
       blissCheckMulti[graph];
       AssociationThread[
         VertexList[graph],
-        igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+        igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
       ]
     ]
+IGBlissCanonicalLabeling[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], vcol},
+      blissCheckMulti[graph];
+      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, col, "VertexColors"];
+      AssociationThread[
+        VertexList[graph],
+        igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
+      ]
+    ]
+
 
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
       blissCheckMulti[graph];
-      InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
     ]
+IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], vcol},
+      blissCheckMulti[graph];
+      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, col, "VertexColors"];
+      InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
+    ]
+
 
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
 IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
       catch@VertexReplace[graph, Normal@check@IGBlissCanonicalLabeling[graph, opt]]
+IGBlissCanonicalGraph[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@VertexReplace[graph, Normal@check@IGBlissCanonicalLabeling[{graph, col}, opt]]
+
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
 IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2]},
       blissCheckMulti /@ {graph1, graph2};
-      check@ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      check@ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}, {}]
+    ]
+IGBlissIsomorphicQ[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGraphQ, col2 : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2},
+      blissCheckMulti /@ {graph1, graph2};
+      vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, col1, "VertexColors"];
+      vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, col2, "VertexColors"];
+      check@ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol1, vcol2]
     ]
 
+
 Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "First" };
+
 IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], result},
       blissCheckMulti /@ {graph1, graph2};
-      result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]];
+      result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}, {}];
+      If[result === {}, Return[{}]];
+      List@AssociationThread[
+        VertexList[graph1],
+        igVertexNames[graph2]@result
+      ]
+    ]
+IGBlissGetIsomorphism[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGraphQ, col2 : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], result, vcol1, vcol2},
+      blissCheckMulti /@ {graph1, graph2};
+      vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, col1, "VertexColors"];
+      vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, col2, "VertexColors"];
+      result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol1, vcol2];
       If[result === {}, Return[{}]];
       List@AssociationThread[
         VertexList[graph1],
@@ -1103,20 +1160,37 @@ IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]
       ]
     ]
 
+
 Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "First" };
+
 IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
       blissCheckMulti[graph];
-      ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
     ]
 
+IGBlissAutomorphismCount[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], vcol},
+      blissCheckMulti[graph];
+      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, col, "VertexColors"];
+      ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
+    ]
+
+
 Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "First" };
+
 IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
       blissCheckMulti[graph];
-      igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1]]
+      igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
     ]
 
+IGBlissAutomorphismGroup[{graph_?GraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph], vcol},
+      blissCheckMulti[graph];
+      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, col, "VertexColors"];
+      igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
+    ]
 
 (** VF2 **)
 

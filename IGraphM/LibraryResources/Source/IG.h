@@ -355,22 +355,34 @@ public:
 
     // Isomorphism (bliss)
 
-    mma::RealTensorRef blissCanonicalPermutation(mint splitting) {
+    mma::RealTensorRef blissCanonicalPermutation(mint splitting, mma::IntTensorRef col) {
         igVector vec;
-        igCheck(igraph_canonical_permutation(&graph, &vec.vec, blissIntToSplitting(splitting), NULL));
+        igIntVector colvec;
+        colvec.copyFromMTensor(col);
+        igCheck(igraph_canonical_permutation(&graph, col.length() == 0 ? NULL : &colvec.vec, &vec.vec, blissIntToSplitting(splitting), NULL));
         return vec.makeMTensor();
     }
 
-    bool blissIsomorphic(const IG &ig, mint splitting) {
+    bool blissIsomorphic(const IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
         igraph_bool_t res;
-        igCheck(igraph_isomorphic_bliss(&graph, &ig.graph, &res, NULL, NULL, blissIntToSplitting(splitting), blissIntToSplitting(splitting), NULL, NULL));
+        igIntVector colvec1, colvec2;
+        colvec1.copyFromMTensor(col1);
+        colvec2.copyFromMTensor(col2);
+        igCheck(igraph_isomorphic_bliss(
+                    &graph, &ig.graph, col1.length() == 0 ? NULL : &colvec1.vec, col2.length() == 0 ? NULL : &colvec2.vec,
+                    &res, NULL, NULL, blissIntToSplitting(splitting), NULL, NULL));
         return res;
     }
 
-    mma::RealTensorRef blissFindIsomorphism(const IG &ig, mint splitting) {
+    mma::RealTensorRef blissFindIsomorphism(const IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
         igraph_bool_t res;
+        igIntVector colvec1, colvec2;
+        colvec1.copyFromMTensor(col1);
+        colvec2.copyFromMTensor(col2);
         igVector map;
-        igCheck(igraph_isomorphic_bliss(&graph, &ig.graph, &res, &map.vec, NULL, blissIntToSplitting(splitting), blissIntToSplitting(splitting), NULL, NULL));
+        igCheck(igraph_isomorphic_bliss(
+                    &graph, &ig.graph, col1.length() == 0 ? NULL : &colvec1.vec, col2.length() == 0 ? NULL : &colvec2.vec,
+                    &res, &map.vec, NULL, blissIntToSplitting(splitting), NULL, NULL));
         if (res)
             return map.makeMTensor();
         else
@@ -381,10 +393,10 @@ public:
         igraph_bliss_info_t info;
         mlStream ml{link, "blissAutomorphismsCount"};
         int splitting;
+        igIntVector colors;
+        ml >> mlCheckArgs(2) >> splitting >> colors;
 
-        ml >> mlCheckArgs(1) >> splitting;
-
-        igCheck(igraph_automorphisms(&graph, blissIntToSplitting(splitting), &info));
+        igCheck(igraph_automorphisms(&graph, colors.length() == 0 ? NULL : &colors.vec, blissIntToSplitting(splitting), &info));
 
         ml.newPacket();
         ml << info.group_size;
@@ -395,11 +407,11 @@ public:
     void blissAutomorphismGroup(MLINK link) {
         mlStream ml{link, "blissAutomorphismGroup"};
         int splitting;
-
-        ml >> mlCheckArgs(1) >> splitting;
+        igIntVector colors;
+        ml >> mlCheckArgs(2) >> splitting >> colors;
 
         igList list;
-        igCheck(igraph_automorphism_group(&graph, &list.list, blissIntToSplitting(splitting), NULL));
+        igCheck(igraph_automorphism_group(&graph, colors.length() == 0 ? NULL : &colors.vec, &list.list, blissIntToSplitting(splitting), NULL));
 
         ml.newPacket();
         ml << list;
