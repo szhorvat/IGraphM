@@ -1,0 +1,281 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"<<", "IGraphM`"}]], "Input"],
+
+Cell[BoxData["\<\"Evaluate IGDocumentation[] to get started.\"\>"], "Print"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"layouts", "=", 
+  RowBox[{"Symbol", "/@", 
+   RowBox[{"Names", "[", "\"\<IGLayout*\>\"", "]"}]}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "IGLayoutCircle", ",", "IGLayoutDavidsonHarel", ",", "IGLayoutDrL", ",", 
+   "IGLayoutDrL3D", ",", "IGLayoutFruchtermanReingold", ",", 
+   "IGLayoutFruchtermanReingold3D", ",", "IGLayoutGEM", ",", 
+   "IGLayoutGraphOpt", ",", "IGLayoutKamadaKawai", ",", 
+   "IGLayoutKamadaKawai3D", ",", "IGLayoutRandom", ",", 
+   "IGLayoutReingoldTilford", ",", "IGLayoutReingoldTilfordCircular", ",", 
+   "IGLayoutSphere"}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SeedRandom", "[", "42", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "1", "]"}], "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<LesMiserables\>\""}], "}"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "2", "]"}], "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<DolphinSocialNetwork\>\""}], 
+     "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "3", "]"}], "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<ZacharyKarateClub\>\""}], 
+     "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"g", "[", "4", "]"}], "=", 
+    RowBox[{"Graph", "[", 
+     RowBox[{
+      RowBox[{"Range", "[", "128", "]"}], ",", 
+      RowBox[{"{", "}"}]}], "]"}]}], ";"}], 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"ExampleData", "[", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<NetworkGraph\>\"", ",", "\"\<BipartiteDiseasomeNetwork\>\""}], 
+      "}"}], "]"}], ";"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "5", "]"}], "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<PerlModuleAuthors\>\""}], 
+     "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "6", "]"}], "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<NetworkGraph\>\"", ",", "\"\<MetabolicNetworkYersiniaPestis\>\""}], 
+     "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "7", "]"}], "=", 
+   RowBox[{
+   "GraphData", "[", "\"\<CremonaRichmondConfigurationGraph\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "8", "]"}], "=", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{"PriceGraphDistribution", "[", 
+     RowBox[{"48", ",", "2", ",", "1"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "9", "]"}], "=", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{"BarabasiAlbertGraphDistribution", "[", 
+     RowBox[{"100", ",", "1"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "10", "]"}], "=", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{"WattsStrogatzGraphDistribution", "[", 
+     RowBox[{"100", ",", "0.05"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "11", "]"}], "=", 
+   RowBox[{"GraphData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<GeneralizedPrism\>\"", ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"3", ",", " ", "5"}], "}"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "12", "]"}], "=", 
+   RowBox[{"GridGraph", "[", 
+    RowBox[{"{", 
+     RowBox[{"10", ",", "15"}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "13", "]"}], "=", 
+   RowBox[{"GridGraph", "[", 
+    RowBox[{"{", 
+     RowBox[{"4", ",", "4", ",", "4", ",", "4"}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "14", "]"}], "=", 
+   RowBox[{"KaryTree", "[", "56", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "15", "]"}], "=", 
+   RowBox[{"PetersenGraph", "[", 
+    RowBox[{"17", ",", "15"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "16", "]"}], "=", 
+   RowBox[{"GraphData", "[", "\"\<DodecahedralGraph\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "17", "]"}], "=", 
+   RowBox[{"GraphData", "[", "\"\<IcosidodecahedralGraph\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "18", "]"}], "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<PowerGrid\>\""}], "}"}], 
+    "]"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"n", "=", "18"}], ";"}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"VertexCount", "[", 
+    RowBox[{"g", "[", "i", "]"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"i", ",", "n"}], "}"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+  "77", ",", "62", ",", "34", ",", "128", ",", "840", ",", "1453", ",", "15", 
+   ",", "48", ",", "100", ",", "100", ",", "15", ",", "150", ",", "256", ",", 
+   "56", ",", "34", ",", "20", ",", "30", ",", "4941"}], "}"}]], "Output"]
+}, Open  ]],
+
+Cell[BoxData[{
+ RowBox[{"IGSeedRandom", "[", "42", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"CellPrint", "@", 
+   RowBox[{"Cell", "[", 
+    RowBox[{"\"\<Results\>\"", ",", "\"\<Section\>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Do", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"CellPrint", "[", 
+     RowBox[{"Cell", "[", 
+      RowBox[{
+       RowBox[{"\"\<Graph \>\"", "<>", 
+        RowBox[{"ToString", "[", "i", "]"}]}], ",", "\"\<Subsection\>\""}], 
+      "]"}], "]"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"Do", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ly", "===", "IGLayoutDrL3D"}], "&&", 
+          RowBox[{"MemberQ", "[", 
+           RowBox[{
+            RowBox[{"Length", "/@", 
+             RowBox[{"WeaklyConnectedComponents", "[", 
+              RowBox[{"g", "[", "i", "]"}], "]"}]}], ",", "1"}], "]"}]}], ",",
+          "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+          "Print", "[", "\"\<DrL 3D doesn't like isolated vertices\>\"", 
+           "]"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"Continue", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ly", "===", "IGLayoutDavidsonHarel"}], "&&", 
+          RowBox[{
+           RowBox[{"VertexCount", "[", 
+            RowBox[{"g", "[", "i", "]"}], "]"}], ">", "500"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Print", "[", "\"\<DavidsonHarel is slow\>\"", "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Continue", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ly", "===", "IGLayoutGEM"}], "&&", 
+          RowBox[{
+           RowBox[{"VertexCount", "[", 
+            RowBox[{"g", "[", "i", "]"}], "]"}], ">", "500"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Print", "[", "\"\<GEM is slow\>\"", "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Continue", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"MemberQ", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+             "IGLayoutSphere", ",", "IGLayoutFruchtermanReingold3D", ",", 
+              "IGLayoutKamadaKawai3D", ",", "IGLayoutDrL3D"}], "}"}], ",", 
+            "ly"}], "]"}], "&&", 
+          RowBox[{"VertexCount", "[", 
+           RowBox[{
+            RowBox[{"g", "[", "i", "]"}], ">", "1200"}], "]"}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Print", "[", "\"\<avoid large 3D layouts\>\"", "]"}], 
+          ";"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", "]"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Print", "[", 
+        RowBox[{"Labeled", "[", 
+         RowBox[{
+          RowBox[{"ly", "[", 
+           RowBox[{"g", "[", "i", "]"}], "]"}], ",", "ly"}], "]"}], "]"}]}], 
+      "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"ly", ",", "layouts"}], "}"}]}], "]"}], ";"}], 
+   "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"i", ",", "n"}], "}"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input"]
+},
+WindowSize->{808, 751},
+WindowMargins->{{20, Automatic}, {Automatic, 44}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
+2015)",
+StyleDefinitions->"Default.nb"
+]

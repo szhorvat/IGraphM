@@ -1,0 +1,53 @@
+Notebook[{
+Cell["\<\
+These tests use MicroTest from https://github.com/szhorvat/MicroTest\
+\>", "Text"],
+
+Cell[BoxData[{
+ RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"<<", "MicroTest`"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"AbsoluteTiming", "@", 
+  RowBox[{"MTRun", "[", "\[IndentingNewLine]", 
+   RowBox[{"Get", "[", "\"\<Tests.m\>\"", "]"}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"IGVersion", "[", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", 
+  RowBox[{
+   RowBox[{"Complement", "[", 
+    RowBox[{
+     RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
+     RowBox[{"{", "\"\<IGraphM\>\"", "}"}]}], "]"}], ",", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
+    "&"}]}], "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Scan", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Information", "[", 
+     RowBox[{"#", ",", 
+      RowBox[{"LongForm", "\[Rule]", "False"}]}], "]"}], "&"}], ",", 
+   RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], "]"}]], "Input"]
+},
+WindowSize->{838, 822},
+WindowMargins->{{82, Automatic}, {10, Automatic}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
+2015)",
+StyleDefinitions->"Default.nb"
+]
+
