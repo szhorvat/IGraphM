@@ -66,7 +66,7 @@ public:
 
 // Special
 
-/// The first item to be extracted from mlStream, checks number of arguments
+/// Must be the first item extracted from mlStream, checks number of arguments.
 struct mlCheckArgs {
     int argc;
 
@@ -89,6 +89,8 @@ inline mlStream & operator >> (mlStream &ml, const mlCheckArgs &ca) {
 }
 
 
+/// Used for inserting a head with the given argument count into mlStream.
+/** Tyically used with the head List when returning multiple results. */
 struct mlHead {
     const char *head;
     int argc;
@@ -100,6 +102,23 @@ inline mlStream & operator << (mlStream &ml, const mlHead &head) {
     if (! MLPutFunction(ml.link(), head.head, head.argc)) {
         std::ostringstream msg;
         msg << "Cannot put head " << head.head << " with " << head.argc << " arguments";
+        ml.error(msg.str());
+    }
+    return ml;
+}
+
+
+/// Used for inserting a symbol into mlStream
+struct mlSymbol {
+    const char *symbol;
+
+    mlSymbol(const char *symbol_) : symbol(symbol_) { }
+};
+
+inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
+    if (! MLPutSymbol(ml.link(), symbol.symbol)) {
+        std::ostringstream msg;
+        msg << "Cannot put symbol " << symbol.symbol;
         ml.error(msg.str());
     }
     return ml;
@@ -169,7 +188,7 @@ inline mlStream & operator << (mlStream &ml, const char *s) {
         const int rank = t.rank(); \
         const mint *mdims = t.dimensions(); \
         int dims[maxrank]; \
-        massert(rank < maxrank); \
+        massert(rank <= maxrank); \
         std::copy(mdims, mdims + rank, dims); \
         if (! MLPut ## MTYPE ## Array(ml.link(), t.data(), dims, NULL, rank)) \
             ml.error("Cannot return " #CTYPE " tensor"); \

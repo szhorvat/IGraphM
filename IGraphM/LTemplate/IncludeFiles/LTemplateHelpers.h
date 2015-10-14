@@ -15,6 +15,11 @@ inline TensorRef<T> getTensor(MArgument marg) { return TensorRef<T>(MArgument_ge
 template<typename T>
 inline void setTensor(MArgument marg, TensorRef<T> &val) { MArgument_setMTensor(marg, val.tensor()); }
 
+template<typename T>
+inline SparseArrayRef<T> getSparseArray(MArgument marg) { return MArgument_getMSparseArray(marg); }
+
+template<typename T>
+inline void setSparseArray(MArgument marg, SparseArrayRef<T> &val) { MArgument_setMSparseArray(marg, val.sparseArray()); }
 
 inline complex_t getComplex(MArgument marg) {
     mcomplex c = MArgument_getComplex(marg);

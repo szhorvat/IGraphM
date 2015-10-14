@@ -1,5 +1,5 @@
 /** \file
- *  Include this header before classes to be used with the LTemplate Mathematica package
+ *  Include this header before classes to be used with the LTemplate _Mathematica_ package
  */
 
 #ifndef LTEMPLATE_H
@@ -7,6 +7,7 @@
 
 #include "mathlink.h"
 #include "WolframLibrary.h"
+#include "WolframSparseLibrary.h"
 
 #include <map>
 #include <vector>
@@ -16,26 +17,27 @@
 
 namespace mma {
 
-/// Global WolframLibraryData object for accessing the LibraryLink API.
+/// Global `WolframLibraryData` object for accessing the LibraryLink API.
 extern WolframLibraryData libData;
 
+/// Complex number type compatible with LibraryLink
 typedef std::complex<double> complex_t;
 
 
-/// For use in the message() function.
+/// For use in the mma::message() function.
 enum MessageType { M_INFO, M_WARNING, M_ERROR, M_ASSERT };
 
 
-/** Issue a Mathematica message
- * \param msg the text of the message
- * \param type determines the message tag which will be used
+/** \brief Issue a _Mathematica_ message.
+ *  \param msg the text of the message
+ *  \param type determines the message tag which will be used
  */
 void message(const char *msg, MessageType type = M_INFO);
 
 inline void message(std::string msg, MessageType type = M_INFO) { message(msg.c_str(), type); }
 
 
-/// Call Mathematica's Print[].
+/// Call _Mathematica_'s `Print[]`.
 inline void print(const char *msg) {
     if (libData->AbortQ())
         return; // trying to use the MathLink connection during an abort appears to break it
@@ -50,13 +52,13 @@ inline void print(const char *msg) {
         MLNewPacket(link);
 }
 
-
+/// Call _Mathematica_'s `Print[]`, `std::string` argument version.
 inline void print(std::string msg) { print(msg.c_str()); }
 
 
-/** Throwing this returns to Mathematica immediately.
- *  \param reported in Mathematica as LTemplate::error
- *  \param used as the LibraryFunction exit code.
+/** \brief Throwing this type returns to _Mathematica_ immediately.
+ *  \param s reported in _Mathematica_ as `LTemplate::error`.
+ *  \param err used as the LibraryFunction exit code.
  */
 class LibraryError {
     const std::string msg;
@@ -81,6 +83,7 @@ public:
 #ifdef NDEBUG
 #define massert(condition) ((void)0)
 #else
+/// Replacement for the standard `assert` macro. Instead of aborting the process, it throws a mma::LibraryError
 #define massert(condition) (void)(((condition) || mma::detail::massert_impl(#condition, __FILE__, __LINE__)), 0)
 #endif
 
@@ -118,12 +121,14 @@ namespace detail { // private
 }
 
 
-/// Wrapper class for MTensor pointers
+/** \brief Wrapper class for `MTensor` pointers
+ *  \param T must be `mint`, `double` or `mma::complex_t`.
+ */
 template<typename T>
 class TensorRef {
-    MTensor t; // reminder: MTensor is a pointer type    
+    const MTensor t; // reminder: MTensor is a pointer type
+    T * const tensor_data;
     const mint len;
-    T *tensor_data;
 
 public:
     TensorRef(const MTensor &mt) :
@@ -145,7 +150,7 @@ public:
 
     mint shareCount() const { return libData->MTensor_shareCount(t); }
 
-    TensorRef clone() {
+    TensorRef clone() const {
         MTensor c = NULL;
         int err = libData->MTensor_clone(t, &c);
         if (err) throw LibraryError("MTensor_clone() failed", err);
@@ -167,7 +172,7 @@ typedef TensorRef<double>    RealTensorRef;
 typedef TensorRef<complex_t> ComplexTensorRef;
 
 
-/// Wrapper class for MTensor pointers to rank 2 tensors
+/// Wrapper class for `MTensor` pointers to rank 2 tensors
 template<typename T>
 class MatrixRef : public TensorRef<T> {
     mint nrows, ncols;
@@ -185,8 +190,8 @@ public:
     mint rows() const { return nrows; }
     mint cols() const { return ncols; }
 
-    T & operator () (mint i, mint j) { return (*this)[nrows*i + j]; }
-    const T & operator () (mint i, mint j) const { return (*this)[nrows*i + j]; }
+    T & operator () (mint i, mint j) { return (*this)[ncols*i + j]; }
+    const T & operator () (mint i, mint j) const { return (*this)[ncols*i + j]; }
 };
 
 typedef MatrixRef<mint>       IntMatrixRef;
@@ -194,7 +199,7 @@ typedef MatrixRef<double>     RealMatrixRef;
 typedef MatrixRef<complex_t>  ComplexMatrixRef;
 
 
-/// Wrapper class for MTensor pointers to rank 3 tensors
+/// Wrapper class for `MTensor` pointers to rank 3 tensors
 template<typename T>
 class CubeRef : public TensorRef<T> {
     mint nrows, ncols, nslices;
@@ -214,8 +219,8 @@ public:
     mint cols() const { return ncols; }
     mint slices() const { return nslices; }
 
-    T & operator () (mint i, mint j, mint k) { return (*this)[nrows*ncols*i + ncols*j + k]; }
-    const T & operator () (mint i, mint j, mint k) const { return (*this)[nrows*ncols*i + ncols*j + k]; }
+    T & operator () (mint i, mint j, mint k) { return (*this)[nslices*ncols*i + nslices*j + k]; }
+    const T & operator () (mint i, mint j, mint k) const { return (*this)[nslices*ncols*i + nslices*j + k]; }
 };
 
 typedef CubeRef<mint>       IntCubeRef;
@@ -300,7 +305,59 @@ inline TensorRef<T> makeVector(mint len, const U *data) {
 }
 
 
-/// Convenience function for disowning const char * strings.
+/// Wrapper class for `MSparseArray` pointers
+template<typename T>
+class SparseArrayRef {
+    const MSparseArray sa; // reminder: MSparseArray is a pointer type
+
+public:
+    SparseArrayRef(const MSparseArray &msa) : sa(msa) { /* empty */ }
+
+    MSparseArray sparseArray() { return sa; }
+
+    mint rank() const { return libData->sparseLibraryFunctions->MSparseArray_getRank(sa); }
+
+    void free() { libData->sparseLibraryFunctions->MSparseArray_free(sa); }
+    void disown() { libData->sparseLibraryFunctions->MSparseArray_disown(sa); }
+    void disownAll() { libData->sparseLibraryFunctions->MSparseArray_disownAll(sa); }
+
+    mint shareCount() const { return libData->sparseLibraryFunctions->MSparseArray_shareCount(sa); }
+
+    SparseArrayRef clone() const {
+        MSparseArray c = NULL;
+        int err = libData->sparseLibraryFunctions->MSparseArray_clone(sa, &c);
+        if (err) throw LibraryError("MSparseArray_clone() failed", err);
+        return c;
+    }
+
+    IntTensorRef explicitPositions() const {
+        MTensor mt = NULL;
+        libData->sparseLibraryFunctions->MSparseArray_getExplicitPositions(sa, &mt);
+        return IntTensorRef(mt);
+    }
+
+    bool explicitValuesQ() const {
+        return libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa) != NULL;
+    }
+
+    /// Returns the explicit values in the sparse array as an `MTensor`.
+    /// The result `MTensor` is part of the `MSparseArray` data structure and will be destroyed at the same time with it.
+    /// Clone it before returning it to the kernel.
+    TensorRef<T> explicitValues() const {
+        MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getExplicitValues(sa);
+        if (*mt == NULL)
+            throw LibraryError("SparseArrayRef::explicitValues() called on pattern array");
+        return TensorRef<T>(*mt);
+    }
+
+    T implicitValue() const {
+        MTensor *mt = libData->sparseLibraryFunctions->MSparseArray_getImplicitValue(sa);
+        return (TensorRef<T>(*mt).data())[0];
+    }
+};
+
+
+/// Convenience function for disowning `const char *` strings.
 inline void disownString(const char *str) {
     libData->UTF8String_disown(const_cast<char *>(str));
 }

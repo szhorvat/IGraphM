@@ -202,9 +202,14 @@ validateFun[LOFun[name_]] := validateName[name]
 
 (* TODO: Handle other types such as images, sparse arrays, LibraryDataType, etc. *)
 
+numericPattern = Integer|Real|Complex;
+sparseArrayPattern = LibraryDataType[SparseArray, numericPattern, PatternSequence[] | _Integer?Positive]; (* disallow SparseArray without explicit element type specification *)
+passingMethodPattern = PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic;
+
 (* must be called within validateTemplate, uses location *)
-validateType[Integer|Real|Complex|"Boolean"|"UTF8String"|LExpressionID[_String]] := True
-validateType[{Integer|Real|Complex, (_Integer?Positive) | Verbatim[_], PatternSequence[]|"Shared"|"Manual"|"Constant"|Automatic}] := True
+validateType[numericPattern|"Boolean"|"UTF8String"|sparseArrayPattern|LExpressionID[_String]] := True
+validateType[{numericPattern, (_Integer?Positive) | Verbatim[_], passingMethodPattern}] := True
+validateType[{sparseArrayPattern, passingMethodPattern}] := True
 validateType[type_] := (Message[ValidTemplateQ::type, location, type]; False)
 
 validateReturnType["Void"] := True
@@ -248,7 +253,7 @@ collectionName[classname_String] := classname <> "_collection"
 
 collectionType[classname_String] := "std::map<mint, " <> classname <> " *>"
 
-managerName[classname_String] := classname <> "_manager"
+managerName[classname_String] := classname <> "_manager_fun"
 
 fullyQualifiedSymbolName[sym_Symbol] := Context[sym] <> SymbolName[sym]
 
@@ -461,6 +466,9 @@ types = Dispatch@{
   {Integer, __} -> {"mma::IntTensorRef", "mma::detail::getTensor<mint>", "mma::detail::setTensor<mint>"},
   {Real, __} -> {"mma::RealTensorRef", "mma::detail::getTensor<double>", "mma::detail::setTensor<double>"},
   {Complex, __} -> {"mma::ComplexTensorRef", "mma::detail::getTensor< mma::complex_t >", "mma::detail::setTensor< mma::complex_t >"},
+  LibraryDataType[SparseArray, Integer, ___] | {LibraryDataType[SparseArray, Integer, ___], ___} -> {"mma::SparseArrayRef<mint>", "mma::detail::getSparseArray<mint>", "mma::detail::setSparseArray<mint>"},
+  LibraryDataType[SparseArray, Real, ___] | {LibraryDataType[SparseArray, Real, ___], _} -> {"mma::SparseArrayRef<double>", "mma::detail::getSparseArray<double>", "mma::detail::setSparseArray<double>"},
+  LibraryDataType[SparseArray, Complex, ___] | {LibraryDataType[SparseArray, Complex, ___], ___} -> {"mma::SparseArrayRef< mma::complex_t >", "mma::detail::getSparseArray< mma::complex_t >", "mma::detail::setSparseArray< mma::complex_t >"},
 
   (* This is a special type that translates integer managed expression IDs on the Mathematica side
      into a class reference on the C++ side. It cannot be returned. *)
@@ -540,7 +548,7 @@ unloadTemplate[LTemplate[libname_String, classes_]] :=
     ]
 
 
-(* TODO: verify class exists for Make and LClassInstances *)
+(* TODO: verify class exists for Make and LExpressionList *)
 
 Make[class_Symbol] := Make@SymbolName[class]
 Make[classname_String] := CreateManagedLibraryExpression[classname, Symbol@symName[classname]]

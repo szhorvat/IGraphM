@@ -17,7 +17,7 @@ BeginPackage["IGraphM`", {"HierarchicalClustering`"}];
 Unprotect /@ Names["IGraphM`*"];
 
 (* Privately load and configure LTemplate *)
-Get["`LTemplate`LTemplatePrivate`"];
+Get["IGraphM`LTemplate`LTemplatePrivate`"];
 ConfigureLTemplate["MessageSymbol" -> IGraphM];
 
 (***** Usage mesages *****)
