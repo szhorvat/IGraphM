@@ -251,6 +251,11 @@ MT[
   {1, 2}
 ]
 
+MT[
+  IGIsomorphicQ[PetersenGraph[6, 2], IGLCF[{-5, 2, 4, -2, -5, 4, -4, 5, 2, -4, -2, 5}]],
+  True
+]
+
 
 (*******************************************************************************)
 MTSection["Acylic graphs"]
@@ -380,6 +385,57 @@ directedIsomorphismTest[if_] := {
 
 directedIsomorphismTest /@ { IGIsomorphicQ, IGSubisomorphicQ, IGVF2IsomorphicQ, IGVF2SubisomorphicQ  };
 
+
+MT[
+  Length@DeleteDuplicates[Rest@IGData[{"AllDirectedGraphs", 3}], IGIsomorphicQ],
+  15
+]
+
+MT[
+  Length@DeleteDuplicates[Rest@IGData[{"AllDirectedGraphs", 3}], IGVF2IsomorphicQ],
+  15
+]
+
+MT[
+  Length@DeleteDuplicates[Rest@IGData[{"AllDirectedGraphs", 3}], IGBlissIsomorphicQ],
+  15
+]
+
+MT[
+  Length@DeleteDuplicates[Rest@IGData[{"AllDirectedGraphs", 4}], IGIsomorphicQ],
+  217
+]
+
+MT[
+  Length@DeleteDuplicates[Rest@IGData[{"AllDirectedGraphs", 4}], IGVF2IsomorphicQ],
+  217
+]
+
+MT[
+  Length@DeleteDuplicates[Rest@IGData[{"AllDirectedGraphs", 4}], IGBlissIsomorphicQ],
+  217
+]
+
+MT[
+  IGBlissAutomorphismCount /@ IGData[{"AllDirectedGraphs", 4}],
+  GroupOrder@*GraphAutomorphismGroup /@ IGData[{"AllDirectedGraphs", 4}]
+]
+
+MT[
+  IGBlissAutomorphismCount /@ IGData[{"AllDirectedGraphs", 3}],
+  GroupOrder@*GraphAutomorphismGroup /@ IGData[{"AllDirectedGraphs", 3}]
+]
+
+MT[
+  IGBlissAutomorphismCount[ GraphData["PerkelGraph"] ],
+  GraphData["PerkelGraph", "AutomorphismCount"]
+]
+
+MT[
+  GroupOrder@PermutationGroup@IGBlissAutomorphismGroup[ GraphData["PerkelGraph"] ],
+  GraphData["PerkelGraph", "AutomorphismCount"]
+]
+
 (*******************************************************************************)
 MTSection["Isomorphism: multigraphs"]
 
@@ -419,10 +475,6 @@ MT[
   LibraryFunctionError["LIBRARY_FUNCTION_ERROR", 6],
   {IGraphM::error}
 ]& /@ {IGLADFindSubisomorphisms, IGLADGetSubisomorphism, IGLADSubisomorphicQ}
-
-
-(*******************************************************************************)
-MTSection["LAD Isomorphism"]
 
 
 (*******************************************************************************)
@@ -535,6 +587,55 @@ MT[
   4052036
 ]
 
+MT[
+  IGMotifs[dolphin, 3],
+  {Indeterminate, Indeterminate, 638, 95}
+]
+
+MT[
+  Length@IGTriangles[dolphin],
+  95
+]
+
+MT[
+  IGMotifs[dolphin, 4],
+  {Indeterminate, Indeterminate, Indeterminate, Indeterminate, 709,
+    Indeterminate, 2099, 768, 59, 138, 27}
+]
+
+MT[
+  IGMotifsTotalCount[dolphin, 3],
+  733
+]
+
+MT[
+  IGMotifsTotalCount[dolphin, 4],
+  3800
+]
+
+MT[
+  IGTriadCensus[web],
+  <|"003" -> 301658398, "012" -> 4601577, "102" -> 15179,
+      "021D" -> 44442, "021U" -> 42371, "021C" -> 13453, "111D" -> 347,
+      "111U" -> 316, "030T" -> 1250, "030C" -> 3, "201" -> 5, "120D" -> 41,
+      "120U" -> 13, "120C" -> 4, "210" -> 1, "300" -> 0|>
+]
+
+MT[
+  IGTriadCensus[dolphin],
+  <|"003" -> 29108, "012" -> 0, "102" -> 7979, "021D" -> 0, "021U" -> 0,
+      "021C" -> 0, "111D" -> 0, "111U" -> 0, "030T" -> 0, "030C" -> 0,
+      "201" -> 638, "120D" -> 0, "120U" -> 0, "120C" -> 0, "210" -> 0,
+      "300" -> 95|>,
+  {IGraphM::warning}
+]
+
+MT[
+  MapThread[SameQ, {IGTriadCensus[web] /@ Keys@IGData["MANTriadLabels"], IGMotifs[web, 3]}],
+  {False, False, True, False, True, True, True, True, True, True, True, True, True, True, True, True}
+]
+
+
 (*******************************************************************************)
 MTSection["Connectivity"]
 
@@ -592,6 +693,16 @@ MT[
 MT[
   IGEdgeConnectivity[Graph[{1->2}], 2, 1],
   0
+]
+
+MT[
+  Sort[Sort /@ IGBiconnectedComponents[dolphin]],
+  Sort[Sort /@ KVertexConnectedComponents[dolphin, 2]]
+]
+
+MT[
+  IGArticulationPoints[dolphin],
+  {"Ripplefluke", "Scabs", "Patchback", "SN63", "Trigger", "Web", "Jet"}
 ]
 
 
@@ -656,11 +767,6 @@ MT[
 ]
 
 MT[
-  IGIsomorphicQ[PetersenGraph[6, 2], IGLCF[{-5, 2, 4, -2, -5, 4, -4, 5, 2, -4, -2, 5}]],
-  True
-]
-
-MT[
   IGIsomorphicQ[IGMakeLattice[{3,4}], GridGraph[{3,4}]],
   True
 ]
@@ -706,4 +812,9 @@ MT[
 MT[
   IGMinSeparators[#] =!= {} & /@ ulist,
   ConnectedGraphQ /@ ulist
+]
+
+MT[
+  And @@ MapThread[IGIsomorphicQ, {IGData[{"AllDirectedGraphs", 3}], Values@IGData["MANTriadLabels"]}],
+  True
 ]
