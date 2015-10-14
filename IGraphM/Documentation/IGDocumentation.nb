@@ -67,21 +67,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGAdjacentTriangleCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDirectedAcyclicGraphQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGDirectedAcyclicGraphQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutKamadaKawai3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutKamadaKawai3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -89,21 +89,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGArticulationPoints", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDistanceMatrix",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGDistanceMatrix", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutRandom",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutRandom", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -111,21 +111,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGAuthorityScore", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDocumentation",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGDocumentation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutReingoldTilford",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutReingoldTilford", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -133,21 +133,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGAverageLocalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDyadCensus",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGDyadCensus", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutReingoldTilfordCircular",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutReingoldTilfordCircular", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -155,21 +155,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBetweenness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGEdgeBetweenness",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGEdgeBetweenness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutSphere",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutSphere", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -177,42 +177,42 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBetweennessEstimate", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGEdgeBetweennessEstimate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGEdgeBetweennessEstimate", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLCF",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {"IGLCF", "IGraphM`"}},
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {"IGLCF", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGBibliographicCoupling",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBibliographicCoupling", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGEdgeConnectivity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGEdgeConnectivity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLocalClusteringCoefficient",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLocalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -220,21 +220,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBiconnectedComponents", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGEigenvectorCentrality",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGEigenvectorCentrality", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMakeLattice",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMakeLattice", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -242,20 +242,20 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBlissAutomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGFeedbackArcSet",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGFeedbackArcSet", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalCliques",
           BaseStyle->"InformationLink",
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMaximalCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -263,21 +263,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBlissAutomorphismGroup", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGForestFireGame",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGForestFireGame", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalCliquesCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMaximalCliquesCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -285,21 +285,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBlissCanonicalGraph", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGGlobalClusteringCoefficient",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGGlobalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalIndependentVertexSets",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMaximalIndependentVertexSets", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -307,20 +307,20 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBlissCanonicalLabeling", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGGomoryHuTree",
           BaseStyle->"InformationLink",
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGGomoryHuTree", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximumCardinalitySearch",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMaximumCardinalitySearch", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -328,21 +328,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBlissCanonicalPermutation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGGraphAtlas",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGGraphAtlas", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMinSeparators",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMinSeparators", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -350,21 +350,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBlissGetIsomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGGraphicalQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGGraphicalQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGModularity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGModularity", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -372,21 +372,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGBlissIsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGGraphletBasis",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGGraphletBasis", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMotifs",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMotifs", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -394,21 +394,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGChordalCompletion", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGGraphletProject",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGGraphletProject", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMotifsEstimateTotalCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMotifsEstimateTotalCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -416,21 +416,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGChordalQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGGraphlets",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGGraphlets", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMotifsTotalCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGMotifsTotalCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -438,21 +438,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCliqueNumber", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGHubScore",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGHubScore", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGPageRank",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGPageRank", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -460,21 +460,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGIndependenceNumber",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGIndependenceNumber", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGPersonalizedPageRank",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGPersonalizedPageRank", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -482,21 +482,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCloseness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGIndependentVertexSets",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGIndependentVertexSets", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGraphM",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGraphM", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -504,21 +504,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGClosenessEstimate", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGInverseLogWeightedSimilarity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGInverseLogWeightedSimilarity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGRewire",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGRewire", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -526,21 +526,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGClusterData", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGIsoclass",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGIsoclass", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGRewireEdges",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGRewireEdges", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -548,21 +548,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCocitationCoupling", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGIsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGIsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGSeedRandom",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGSeedRandom", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -570,21 +570,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCohesiveBlocks", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGJaccardSimilarity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGJaccardSimilarity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGStochasticBlockModelGame",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGStochasticBlockModelGame", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -592,21 +592,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesEdgeBetweenness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGKRegularGame",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGKRegularGame", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGSubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGSubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -614,20 +614,20 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesGreedy", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADFindSubisomorphisms",
           BaseStyle->"InformationLink",
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLADFindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGTopologicalOrdering",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGTopologicalOrdering", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -635,21 +635,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesInfoMAP", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADGetSubisomorphism",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLADGetSubisomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGTriadCensus",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGTriadCensus", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -657,21 +657,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesLabelPropagation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADSubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLADSubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGTriangles",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGTriangles", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -679,21 +679,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesLeadingEigenvector", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLargestCliques",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLargestCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGUnfoldTree",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGUnfoldTree", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -701,21 +701,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesMultilevel", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLargestIndependentVertexSets",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLargestIndependentVertexSets", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVersion",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGVersion", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -723,21 +723,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesOptimalModularity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutCircle",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutCircle", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVertexConnectivity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGVertexConnectivity", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -745,21 +745,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesSpinGlass", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutDavidsonHarel",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutDavidsonHarel", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2FindIsomorphisms",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGVF2FindIsomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -767,21 +767,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCommunitiesWalktrap", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutDrL",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutDrL", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2FindSubisomorphisms",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGVF2FindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -789,21 +789,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGCompareCommunities", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutDrL3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutDrL3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGVF2IsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -811,21 +811,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGConnectedQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutFruchtermanReingold",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutFruchtermanReingold", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGVF2IsomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -833,21 +833,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGConstraintScore", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutFruchtermanReingold3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutFruchtermanReingold3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGVF2SubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -855,21 +855,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGData", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutGEM",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutGEM", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGVF2SubisomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -877,21 +877,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGDegreeSequenceGame", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutGraphOpt",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutGraphOpt", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGWeaklyConnectedQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGWeaklyConnectedQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -899,21 +899,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGDiceSimilarity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutKamadaKawai",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGLayoutKamadaKawai", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGWeightedClusteringCoefficient",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-621e6879-f79d-4e20-a824-bf7b8b87283f", {
+           "Info-447cb1d5-202c-4117-a930-8859a209856b", {
             "IGWeightedClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -937,7 +937,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGVersion[] returns the IGraph/M version along with the \
 version of the igraph library in use.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-3416f98a-b4d4-476b-8412-e78ee250160a"]
+ CellTags->"Info-b6a67ccb-1bfd-4d45-a662-8046bb9e21fa"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -945,7 +945,7 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"IGVersion", "[", "]"}]], "Input"],
 
-Cell[BoxData["\<\"IGraph/M 0.1.3dev\\nigraph 0.8.0-pre+2f9a072 (Oct 11 \
+Cell[BoxData["\<\"IGraph/M 0.1.3\\nigraph 0.8.0-pre+403ce00 (Oct 14 \
 2015)\\nMac OS X x86 (64-bit)\"\>"], "Output"]
 }, Open  ]],
 
@@ -3404,7 +3404,7 @@ Cell[BoxData[
 notation.\\nIGLCF[shifts, repeats, vertexCount] creates a graph from LCF \
 notation with the number of vertices specified.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-de93903e-63e0-45a9-b3df-93437c4cb5e1"]
+ CellTags->"Info-6ffdcfca-8476-4a25-8f1c-07010f85a4c5"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -3726,7 +3726,7 @@ Cell[BoxData[
      RowBox[{"-", "7"}], ",", "7", ",", 
      RowBox[{"-", "7"}], ",", 
      RowBox[{"-", "5"}]}], "}"}], ",", "3", ",", 
-   RowBox[{"GraphStyle", "->", "\"\<DiagramBlue\>\""}]}], "]"}]], "Input"],
+   RowBox[{"GraphStyle", "->", "\"\<ThickEdge\>\""}]}], "]"}]], "Input"],
 
 Cell[BoxData[
  GraphicsBox[
@@ -3739,282 +3739,158 @@ Cell[BoxData[
        18}, {14, 15}, {15, 16}, {16, 17}, {17, 18}}}, {
       GraphLayout -> {
         "Dimension" -> 2, "VertexLayout" -> "CircularEmbedding"}, GraphStyle -> 
-       "DiagramBlue"}]], Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+       "ThickEdge"}]], Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
        Directive[
-        GrayLevel[0.5], 
-        Opacity[1]], 
-       LineBox[{
-         DynamicLocation["VertexID$1", Automatic, Center], 
-         DynamicLocation["VertexID$2", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$1", Automatic, Center], 
-         DynamicLocation["VertexID$6", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$1", Automatic, Center], 
-         DynamicLocation["VertexID$18", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$2", Automatic, Center], 
-         DynamicLocation["VertexID$3", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$2", Automatic, Center], 
-         DynamicLocation["VertexID$9", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$3", Automatic, Center], 
-         DynamicLocation["VertexID$4", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$3", Automatic, Center], 
-         DynamicLocation["VertexID$14", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$4", Automatic, Center], 
-         DynamicLocation["VertexID$5", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$4", Automatic, Center], 
-         DynamicLocation["VertexID$11", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$5", Automatic, Center], 
-         DynamicLocation["VertexID$6", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$5", Automatic, Center], 
-         DynamicLocation["VertexID$16", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$6", Automatic, Center], 
-         DynamicLocation["VertexID$7", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$7", Automatic, Center], 
-         DynamicLocation["VertexID$8", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$7", Automatic, Center], 
-         DynamicLocation["VertexID$12", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$8", Automatic, Center], 
-         DynamicLocation["VertexID$9", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$8", Automatic, Center], 
-         DynamicLocation["VertexID$15", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$9", Automatic, Center], 
-         DynamicLocation["VertexID$10", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$10", Automatic, Center], 
-         DynamicLocation["VertexID$11", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$10", Automatic, Center], 
-         DynamicLocation["VertexID$17", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$11", Automatic, Center], 
-         DynamicLocation["VertexID$12", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$12", Automatic, Center], 
-         DynamicLocation["VertexID$13", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$13", Automatic, Center], 
-         DynamicLocation["VertexID$14", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$13", Automatic, Center], 
-         DynamicLocation["VertexID$18", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$14", Automatic, Center], 
-         DynamicLocation["VertexID$15", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$15", Automatic, Center], 
-         DynamicLocation["VertexID$16", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$16", Automatic, Center], 
-         DynamicLocation["VertexID$17", Automatic, Center]}], 
-       LineBox[{
-         DynamicLocation["VertexID$17", Automatic, Center], 
-         DynamicLocation["VertexID$18", Automatic, Center]}]}, {
+        Opacity[0.3], 
+        Thickness[0.03], 
+        Hue[0.12, 1, 0.7]], {
+        CapForm["Round"], 
+        LineBox[{{-0.34202014332566943`, 
+         0.9396926207859086}, {-0.6427876096865399, 0.7660444431189786}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.34202014332566943`, 
+         0.9396926207859086}, {-0.8660254037844383, -0.4999999999999994}}]}, {
+       
+        CapForm["Round"], 
+        LineBox[{{-0.34202014332566943`, 0.9396926207859086}, {
+         1.8369701987210297`*^-16, 1.}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.6427876096865399, 
+         0.7660444431189786}, {-0.866025403784439, 0.5000000000000008}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.6427876096865399, 0.7660444431189786}, {
+         6.049014748177263*^-16, -1.}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.866025403784439, 
+         0.5000000000000008}, {-0.9848077530122081, 0.17364817766693114`}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.866025403784439, 0.5000000000000008}, {
+         0.9848077530122079, 0.17364817766692991`}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.9848077530122081, 
+         0.17364817766693114`}, {-0.9848077530122079, \
+-0.17364817766692958`}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.9848077530122081, 0.17364817766693114`}, {
+         0.64278760968654, -0.7660444431189787}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.9848077530122079, -0.17364817766692958`}, \
+{-0.8660254037844383, -0.4999999999999994}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.9848077530122079, -0.17364817766692958`}, {
+         0.6427876096865388, 0.7660444431189778}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.8660254037844383, -0.4999999999999994}, \
+{-0.6427876096865389, -0.7660444431189773}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.6427876096865389, -0.7660444431189773}, \
+{-0.3420201433256682, -0.9396926207859082}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.6427876096865389, -0.7660444431189773}, {
+         0.8660254037844389, -0.5000000000000004}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.3420201433256682, -0.9396926207859082}, {
+         6.049014748177263*^-16, -1.}}]}, {
+        CapForm["Round"], 
+        LineBox[{{-0.3420201433256682, -0.9396926207859082}, {
+         0.8660254037844386, 0.4999999999999993}}]}, {
+        CapForm["Round"], 
+        LineBox[{{6.049014748177263*^-16, -1.}, {
+         0.3420201433256693, -0.9396926207859085}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.3420201433256693, -0.9396926207859085}, {
+         0.64278760968654, -0.7660444431189787}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.3420201433256693, -0.9396926207859085}, {
+         0.34202014332566855`, 0.9396926207859081}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.64278760968654, -0.7660444431189787}, {
+         0.8660254037844389, -0.5000000000000004}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.8660254037844389, -0.5000000000000004}, {
+         0.984807753012208, -0.17364817766693127`}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.984807753012208, -0.17364817766693127`}, {
+         0.9848077530122079, 0.17364817766692991`}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.984807753012208, -0.17364817766693127`}, {
+         1.8369701987210297`*^-16, 1.}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.9848077530122079, 0.17364817766692991`}, {
+         0.8660254037844386, 0.4999999999999993}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.8660254037844386, 0.4999999999999993}, {
+         0.6427876096865388, 0.7660444431189778}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.6427876096865388, 0.7660444431189778}, {
+         0.34202014332566855`, 0.9396926207859081}}]}, {
+        CapForm["Round"], 
+        LineBox[{{0.34202014332566855`, 0.9396926207859081}, {
+         1.8369701987210297`*^-16, 1.}}]}}, {
        Directive[
-        Hue[0.6, 0.3, 0.8], 
-        EdgeForm[]], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-0.49062681510192074`, 
-           0.840621225565981}, {-0.19341347154941815`, 1.0387640160058362`}], 
-          "DynamicName", BoxID -> "VertexID$1"], 
-         InsetBox[
-          FormBox["1", TraditionalForm], 
-          DynamicLocation["VertexID$1", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$1"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-0.7913942814627912, 
-           0.6669730478990509}, {-0.4941809379102886, 0.8651158383389063}], 
-          "DynamicName", BoxID -> "VertexID$2"], 
-         InsetBox[
-          FormBox["2", TraditionalForm], 
-          DynamicLocation["VertexID$2", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$2"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-1.0146320755606903`, 
-           0.40092860478007314`}, {-0.7174187320081877, 0.5990713952199285}], 
-          "DynamicName", BoxID -> "VertexID$3"], 
-         InsetBox[
-          FormBox["3", TraditionalForm], 
-          DynamicLocation["VertexID$3", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$3"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-1.1334144247884594`, 
-           0.07457678244700348}, {-0.8362010812359568, 0.2727195728868588}], 
-          "DynamicName", BoxID -> "VertexID$4"], 
-         InsetBox[
-          FormBox["4", TraditionalForm], 
-          DynamicLocation["VertexID$4", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$4"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-1.1334144247884592`, -0.2727195728868572}, \
-{-0.8362010812359566, -0.07457678244700193}], "DynamicName", BoxID -> 
-          "VertexID$5"], 
-         InsetBox[
-          FormBox["5", TraditionalForm], 
-          DynamicLocation["VertexID$5", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$5"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-1.0146320755606895`, -0.599071395219927}, \
-{-0.717418732008187, -0.40092860478007175`}], "DynamicName", BoxID -> 
-          "VertexID$6"], 
-         InsetBox[
-          FormBox["6", TraditionalForm], 
-          DynamicLocation["VertexID$6", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$6"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-0.7913942814627902, -0.865115838338905}, \
-{-0.4941809379102876, -0.6669730478990497}], "DynamicName", BoxID -> 
-          "VertexID$7"], 
-         InsetBox[
-          FormBox["7", TraditionalForm], 
-          DynamicLocation["VertexID$7", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$7"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-0.4906268151019195, -1.0387640160058358`}, \
-{-0.19341347154941693`, -0.8406212255659805}], "DynamicName", BoxID -> 
-          "VertexID$8"], 
-         InsetBox[
-          FormBox["8", TraditionalForm], 
-          DynamicLocation["VertexID$8", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$8"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-0.14860667177625067`, -1.0990713952199276`}, {
-           0.1486066717762519, -0.9009286047800723}], "DynamicName", BoxID -> 
-          "VertexID$9"], 
-         InsetBox[
-          FormBox["9", TraditionalForm], 
-          DynamicLocation["VertexID$9", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$9"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{0.19341347154941804`, -1.0387640160058362`}, {
-           0.49062681510192063`, -0.8406212255659808}], "DynamicName", BoxID -> 
-          "VertexID$10"], 
-         InsetBox[
-          FormBox["10", TraditionalForm], 
-          DynamicLocation["VertexID$10", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$10"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{0.4941809379102887, -0.8651158383389064}, {
-           0.7913942814627913, -0.666973047899051}], "DynamicName", BoxID -> 
-          "VertexID$11"], 
-         InsetBox[
-          FormBox["11", TraditionalForm], 
-          DynamicLocation["VertexID$11", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$11"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{0.7174187320081876, -0.5990713952199281}, {
-           1.0146320755606901`, -0.4009286047800728}], "DynamicName", BoxID -> 
-          "VertexID$12"], 
-         InsetBox[
-          FormBox["12", TraditionalForm], 
-          DynamicLocation["VertexID$12", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$12"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{0.8362010812359567, -0.27271957288685894`}, {
-           1.1334144247884592`, -0.07457678244700362}], "DynamicName", BoxID -> 
-          "VertexID$13"], 
-         InsetBox[
-          FormBox["13", TraditionalForm], 
-          DynamicLocation["VertexID$13", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$13"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{0.8362010812359566, 0.07457678244700226}, {
-           1.1334144247884592`, 0.27271957288685755`}], "DynamicName", BoxID -> 
-          "VertexID$14"], 
-         InsetBox[
-          FormBox["14", TraditionalForm], 
-          DynamicLocation["VertexID$14", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$14"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{0.7174187320081873, 0.40092860478007164`}, {
-           1.01463207556069, 0.5990713952199269}], "DynamicName", BoxID -> 
-          "VertexID$15"], 
-         InsetBox[
-          FormBox["15", TraditionalForm], 
-          DynamicLocation["VertexID$15", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$15"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{0.4941809379102875, 0.6669730478990501}, {
-           0.7913942814627901, 0.8651158383389055}], "DynamicName", BoxID -> 
-          "VertexID$16"], 
-         InsetBox[
-          FormBox["16", TraditionalForm], 
-          DynamicLocation["VertexID$16", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$16"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{0.19341347154941727`, 0.8406212255659804}, {
-           0.49062681510191986`, 1.0387640160058358`}], "DynamicName", BoxID -> 
-          "VertexID$17"], 
-         InsetBox[
-          FormBox["17", TraditionalForm], 
-          DynamicLocation["VertexID$17", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$17"], 
-       TagBox[{
-         TagBox[
-          
-          RectangleBox[{-0.1486066717762511, 0.9009286047800723}, {
-           0.14860667177625148`, 1.0990713952199276`}], "DynamicName", BoxID -> 
-          "VertexID$18"], 
-         InsetBox[
-          FormBox["18", TraditionalForm], 
-          DynamicLocation["VertexID$18", None, Center], BaseStyle -> 
-          "Graphics"]}, "DynamicName", BoxID -> 
-        "VertexLabelID$18"]}}], $CellContext`flag}, 
+        Hue[0.6, 0.7, 0.6], 
+        EdgeForm[{}]], 
+       TagBox[
+        DiskBox[{-0.34202014332566943`, 0.9396926207859086}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$1"], 
+       TagBox[
+        DiskBox[{-0.6427876096865399, 0.7660444431189786}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$2"], 
+       TagBox[
+        DiskBox[{-0.866025403784439, 0.5000000000000008}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$3"], 
+       TagBox[
+        DiskBox[{-0.9848077530122081, 0.17364817766693114`}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$4"], 
+       TagBox[
+        DiskBox[{-0.9848077530122079, -0.17364817766692958`}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$5"], 
+       TagBox[
+        DiskBox[{-0.8660254037844383, -0.4999999999999994}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$6"], 
+       TagBox[
+        DiskBox[{-0.6427876096865389, -0.7660444431189773}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$7"], 
+       TagBox[
+        DiskBox[{-0.3420201433256682, -0.9396926207859082}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$8"], 
+       TagBox[
+        DiskBox[{6.049014748177263*^-16, -1.}, 0.014035121340383754`], 
+        "DynamicName", BoxID -> "VertexID$9"], 
+       TagBox[
+        DiskBox[{0.3420201433256693, -0.9396926207859085}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$10"], 
+       TagBox[
+        DiskBox[{0.64278760968654, -0.7660444431189787}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$11"], 
+       TagBox[
+        DiskBox[{0.8660254037844389, -0.5000000000000004}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$12"], 
+       TagBox[
+        DiskBox[{0.984807753012208, -0.17364817766693127`}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$13"], 
+       TagBox[
+        DiskBox[{0.9848077530122079, 0.17364817766692991`}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$14"], 
+       TagBox[
+        DiskBox[{0.8660254037844386, 0.4999999999999993}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$15"], 
+       TagBox[
+        DiskBox[{0.6427876096865388, 0.7660444431189778}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$16"], 
+       TagBox[
+        DiskBox[{0.34202014332566855`, 0.9396926207859081}, 
+         0.014035121340383754`], "DynamicName", BoxID -> "VertexID$17"], 
+       TagBox[
+        DiskBox[{1.8369701987210297`*^-16, 1.}, 0.014035121340383754`], 
+        "DynamicName", BoxID -> "VertexID$18"]}}], $CellContext`flag}, 
     TagBox[
      DynamicBox[GraphComputation`NetworkGraphicsBox[
       3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
       CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
        SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-      ImageSizeCache->{{7.180000000000007, 
-       351.82000000000005`}, {-170.10719999999998`, 164.0900339193514}}],
+      ImageSizeCache->{{0.46944018951718824`, 
+       358.53055981048277`}, {-184.8177598104828, 178.48528137423858`}}],
      MouseAppearanceTag["NetworkGraphics"]],
     AllowKernelInitialization->False,
     UnsavedVariables:>{$CellContext`flag}]],
@@ -4023,6 +3899,204 @@ Cell[BoxData[
   FrameTicks->None,
   GridLinesStyle->Directive[
     GrayLevel[0.5, 0.4]]]], "Output"]
+}, Open  ]],
+
+Cell[TextData[{
+ "The cuboctahedral graph is ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox[
+    RowBox[{"[", 
+     RowBox[{"4", ",", "2"}], "]"}], "6"], TraditionalForm]]],
+ "."
+}], "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"IGLayoutKamadaKawai3D", "@", 
+  RowBox[{"IGLCF", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"4", ",", "2"}], "}"}], ",", "6"}], "]"}]}]], "Input"],
+
+Cell[BoxData[
+ Graphics3DBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, {
+      Null, {{1, 2}, {1, 5}, {1, 9}, {1, 12}, {2, 3}, {2, 4}, {2, 12}, {3, 
+       4}, {3, 7}, {3, 11}, {4, 5}, {4, 6}, {5, 6}, {5, 9}, {6, 7}, {6, 8}, {
+       7, 8}, {7, 11}, {8, 9}, {8, 10}, {9, 10}, {10, 11}, {10, 12}, {11, 
+       12}}}, {GraphLayout -> {"Dimension" -> 3}, 
+       VertexCoordinates -> {{0.2892832414223136, 0.24599297675329096`, 
+        0.5307532646012435}, {0.6286564638614168, -0.12933261568103915`, 
+        0.1186105872175481}, {
+        0.3394666997843116, -0.37525062133145876`, -0.41214285766089814`}, {
+        0.18125863725814093`, -0.6006068520880363, 
+        0.1795786766839012}, {-0.158031744181323, -0.22523208685002732`, 
+        0.5917243908008244}, {-0.4473365614196116, -0.4713577140500312, 
+        0.061064605488053134`}, {-0.28924411907028125`, \
+-0.24609248144202495`, -0.53068961894275}, {-0.6285576503713074, 
+        0.12931514807488106`, -0.1186301237467479}, {-0.3393621458417069, 
+        0.375395842634699, 0.4120606024642352}, {-0.1812908124484185, 
+        0.600689544457058, -0.17966600672350064`}, {0.157919262676005, 
+        0.22518848585973666`, -0.5916662875236885}, {0.4472387283304606, 
+        0.47129037366295223`, -0.06099723265822049}}}]]}, 
+    TagBox[
+     GraphicsGroup3DBox[
+      GraphicsComplex3DBox[{{0.2892832414223136, 0.24599297675329096`, 
+       0.5307532646012435}, {0.6286564638614168, -0.12933261568103915`, 
+       0.1186105872175481}, {
+       0.3394666997843116, -0.37525062133145876`, -0.41214285766089814`}, {
+       0.18125863725814093`, -0.6006068520880363, 
+       0.1795786766839012}, {-0.158031744181323, -0.22523208685002732`, 
+       0.5917243908008244}, {-0.4473365614196116, -0.4713577140500312, 
+       0.061064605488053134`}, {-0.28924411907028125`, -0.24609248144202495`, \
+-0.53068961894275}, {-0.6285576503713074, 
+       0.12931514807488106`, -0.1186301237467479}, {-0.3393621458417069, 
+       0.375395842634699, 0.4120606024642352}, {-0.1812908124484185, 
+       0.600689544457058, -0.17966600672350064`}, {0.157919262676005, 
+       0.22518848585973666`, -0.5916662875236885}, {0.4472387283304606, 
+       0.47129037366295223`, -0.06099723265822049}}, {
+        {Hue[0.6, 0.2, 0.8], 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.2892832414223136, 0.24599297675329096`, 
+           0.5307532646012435}, {0.6286564638614168, -0.12933261568103915`, 
+           0.1186105872175481}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.2892832414223136, 0.24599297675329096`, 
+           0.5307532646012435}, {-0.158031744181323, -0.22523208685002732`, 
+           0.5917243908008244}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.2892832414223136, 0.24599297675329096`, 
+           0.5307532646012435}, {-0.3393621458417069, 0.375395842634699, 
+           0.4120606024642352}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.2892832414223136, 0.24599297675329096`, 
+           0.5307532646012435}, {0.4472387283304606, 
+           0.47129037366295223`, -0.06099723265822049}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.6286564638614168, -0.12933261568103915`, 
+           0.1186105872175481}, {
+           0.3394666997843116, -0.37525062133145876`, \
+-0.41214285766089814`}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.6286564638614168, -0.12933261568103915`, 
+           0.1186105872175481}, {0.18125863725814093`, -0.6006068520880363, 
+           0.1795786766839012}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.6286564638614168, -0.12933261568103915`, 
+           0.1186105872175481}, {0.4472387283304606, 
+           0.47129037366295223`, -0.06099723265822049}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{
+           0.3394666997843116, -0.37525062133145876`, -0.41214285766089814`}, \
+{0.18125863725814093`, -0.6006068520880363, 0.1795786766839012}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{
+           0.3394666997843116, -0.37525062133145876`, -0.41214285766089814`}, \
+{-0.28924411907028125`, -0.24609248144202495`, -0.53068961894275}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{
+           0.3394666997843116, -0.37525062133145876`, -0.41214285766089814`}, \
+{0.157919262676005, 0.22518848585973666`, -0.5916662875236885}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.18125863725814093`, -0.6006068520880363, 
+           0.1795786766839012}, {-0.158031744181323, -0.22523208685002732`, 
+           0.5917243908008244}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.18125863725814093`, -0.6006068520880363, 
+           0.1795786766839012}, {-0.4473365614196116, -0.4713577140500312, 
+           0.061064605488053134`}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.158031744181323, -0.22523208685002732`, 
+           0.5917243908008244}, {-0.4473365614196116, -0.4713577140500312, 
+           0.061064605488053134`}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.158031744181323, -0.22523208685002732`, 
+           0.5917243908008244}, {-0.3393621458417069, 0.375395842634699, 
+           0.4120606024642352}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.4473365614196116, -0.4713577140500312, 
+           0.061064605488053134`}, {-0.28924411907028125`, \
+-0.24609248144202495`, -0.53068961894275}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.4473365614196116, -0.4713577140500312, 
+           0.061064605488053134`}, {-0.6285576503713074, 
+           0.12931514807488106`, -0.1186301237467479}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[
+           TubeBox[{{{-0.28924411907028125`, -0.24609248144202495`, \
+-0.53068961894275}, {-0.6285576503713074, 
+           0.12931514807488106`, -0.1186301237467479}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[
+           TubeBox[{{{-0.28924411907028125`, -0.24609248144202495`, \
+-0.53068961894275}, {0.157919262676005, 
+           0.22518848585973666`, -0.5916662875236885}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.6285576503713074, 
+           0.12931514807488106`, -0.1186301237467479}, {-0.3393621458417069, 
+           0.375395842634699, 0.4120606024642352}}}], 0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.6285576503713074, 
+           0.12931514807488106`, -0.1186301237467479}, {-0.1812908124484185, 
+           0.600689544457058, -0.17966600672350064`}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.3393621458417069, 0.375395842634699, 
+           0.4120606024642352}, {-0.1812908124484185, 
+           0.600689544457058, -0.17966600672350064`}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.1812908124484185, 
+           0.600689544457058, -0.17966600672350064`}, {0.157919262676005, 
+           0.22518848585973666`, -0.5916662875236885}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{-0.1812908124484185, 
+           0.600689544457058, -0.17966600672350064`}, {0.4472387283304606, 
+           0.47129037366295223`, -0.06099723265822049}}}], 
+           0.03257051951982487]}, 
+         {Arrowheads[0.], 
+          Arrow3DBox[TubeBox[{{{0.157919262676005, 
+           0.22518848585973666`, -0.5916662875236885}, {0.4472387283304606, 
+           0.47129037366295223`, -0.06099723265822049}}}], 
+           0.03257051951982487]}}, 
+        {Hue[0.6, 0.6, 1], SphereBox[1, 0.03257051951982487], 
+         SphereBox[2, 0.03257051951982487], SphereBox[3, 0.03257051951982487],
+          SphereBox[4, 0.03257051951982487], 
+         SphereBox[5, 0.03257051951982487], SphereBox[6, 0.03257051951982487],
+          SphereBox[7, 0.03257051951982487], 
+         SphereBox[8, 0.03257051951982487], SphereBox[9, 0.03257051951982487],
+          SphereBox[10, 0.03257051951982487], 
+         SphereBox[11, 0.03257051951982487], 
+         SphereBox[12, 0.03257051951982487]}}]],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  Boxed->False,
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FaceGridsStyle->Automatic,
+  Lighting->FEPrivate`If[
+    FEPrivate`SameQ["MacOSX", "Windows"], {{"Directional", 
+      GrayLevel[0.7], 
+      ImageScaled[{1, 1, 0}]}, {"Point", 
+      GrayLevel[0.9], 
+      ImageScaled[{0, 0, 3.5}], {0, 0, 0.07}}}, {{"Directional", 
+      GrayLevel[0.7], 
+      ImageScaled[{1, 1, 0}]}, {"Point", 
+      GrayLevel[0.9], 
+      ImageScaled[{0, 0, 0}], {0, 0, 0.07}}}]]], "Output"]
 }, Open  ]]
 }, Closed]],
 
@@ -4041,7 +4115,7 @@ by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. This \
 function is provided for convenience; if you are looking for a specific named \
 graph, use the builtin GraphData function.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-7dcf127f-efe5-4b99-85d2-3b219e881348"]
+ CellTags->"Info-d0e0b94f-d194-4271-b5cc-7f182cf02a7c"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -4087,7 +4161,180 @@ Cell[BoxData[
    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
   FrameTicks->None,
   GridLinesStyle->Directive[
-    GrayLevel[0.5, 0.4]]]], "Output"]
+    GrayLevel[
+    0.5, 0.4]]]], "Output",ImageCache->GraphicsData["CompressedBitmap", "\<\
+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
+z7vZXf8/9D8ncKv/PIH8+0/wn0Hwbvs/7XofNQ==\
+\>"]]
 }, Open  ]]
 }, Closed]],
 
@@ -4103,7 +4350,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice graph \
 of the given dimensions.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-fd4c94ae-d1b4-4d44-ad7c-2563dc60a8d8"]
+ CellTags->"Info-cd14500d-b2eb-4ca0-b338-e16e96a53cc7"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -4163,7 +4410,7 @@ graph with the given degree sequence. Available Method options: \
 \\\"Simple\\\"}.\\nIGDegreeSequenceGame[indegrees, outdegrees] generates a \
 directed random graph with the given in- and out-degree sequences.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-71f73328-0f41-4f14-b2c5-18edcbdd51f0"]
+ CellTags->"Info-f0ea7dc4-6ee3-4dd7-81aa-08c4b74ab62d"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -4221,7 +4468,7 @@ Cell[BoxData[
  StyleBox["\<\"IGKRegularGame[n, k] generates a k-regular graph on n \
 vertices, i.e. a graph in which all vertices have degree k.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-79b90374-9c75-42c2-876d-91fe112e02ac"]
+ CellTags->"Info-ed36724c-80bf-4760-bca6-c562eb185260"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -4331,7 +4578,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGStochasticBlockModelGame[ratesMatrix, blockSizes] samples \
 from a stochastic block model.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-081e4aff-fc4d-40fd-b825-facc901313af"]
+ CellTags->"Info-b1ea2629-7c03-47fe-bddf-3679bd686420"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -4496,7 +4743,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGForestFireGame[n, fwprob]\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-a9626288-3c98-4990-acfa-e8609df20106"]
+ CellTags->"Info-3114ef47-e1e9-4cb5-a68c-802f71343f5c"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5063,8 +5310,8 @@ w8IntQ==
          {Arrowheads[0.], 
           ArrowBox[BezierCurveBox[{40, 423, 67}], 0.02261146496815286]}, 
          {Arrowheads[0.], 
-          ArrowBox[BezierCurveBox[{40, 424, 425, 95}], 0.02261146496815286]}, 
-         
+          ArrowBox[BezierCurveBox[{40, 424, 425, 95}], 
+           0.02261146496815286]}, 
          {Arrowheads[0.], 
           ArrowBox[BezierCurveBox[{41, 426, 427, 46}], 
            0.02261146496815286]}, 
@@ -5293,7 +5540,7 @@ Cell[BoxData[
  StyleBox["\<\"IGBetweenness[graph] gives a list of betweenness centralities \
 for the vertices of graph. Available Method options: {\\\"Precise\\\", \
 \\\"Fast\\\"}.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-5306612d-3098-4a68-bd49-1985193254d4"]
+ CellTags->"Info-0dedd8ed-d0c3-4032-9b39-ce87a72eafaf"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5306,7 +5553,7 @@ Cell[BoxData[
 betweenness by consdering only paths of at most length cutoff. Available \
 Method options: {\\\"Precise\\\", \\\"Fast\\\"}.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-df2aa6b8-e639-4803-adf0-c3001e1a4ac9"]
+ CellTags->"Info-74a64289-8175-4fd5-8975-c3505b1cc028"]
 }, Open  ]],
 
 Cell["Weighted graphs are supported.", "Text"],
@@ -5353,7 +5600,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.285815`", ",", "18980.52414303636`"}], "}"}]], "Output"]
+  RowBox[{"0.278922`", ",", "18980.52414303636`"}], "}"}]], "Output"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5368,7 +5615,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.037027`", ",", "18980.524324323203`"}], "}"}]], "Output"]
+  RowBox[{"0.03671`", ",", "18980.524324323203`"}], "}"}]], "Output"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -5397,7 +5644,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.995342`", ",", "45701.7295998485`"}], "}"}]], "Output"]
+  RowBox[{"1.058328`", ",", "45701.7295998485`"}], "}"}]], "Output"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5412,7 +5659,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.117377`", ",", "78169.68917727846`"}], "}"}]], "Output"]
+  RowBox[{"0.116129`", ",", "78169.68917727846`"}], "}"}]], "Output"]
 }, Open  ]]
 }, Closed]],
 
@@ -5428,7 +5675,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGCloseness[graph] gives a list of closeness centralities for \
 the vertices of graph.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-fd88fed5-1f86-4947-b744-0f33977f3f4f"]
+ CellTags->"Info-2deb9fa3-7cbf-450d-a026-7270909a8858"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5440,7 +5687,7 @@ Cell[BoxData[
  StyleBox["\<\"IGClosenessEstimate[graph, cutoff] estimates closeness \
 centrality by consdering only paths of at most length cutoff.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-d7c4b3e3-eb97-44c2-a848-2f2bc494c76b"]
+ CellTags->"Info-90144e4c-03ad-4928-8b20-9bb60564979f"]
 }, Open  ]],
 
 Cell["Weighted graphs are supported.", "Text"]
@@ -5460,7 +5707,7 @@ Cell[BoxData[
 the vertices of the graph.\\nIGPageRank[graph, damping] gives a list of \
 PageRank centralities for the vertices of the graph using damping factor \
 damping.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-3c50135a-26d1-46d6-9f04-56c5210132c0"]
+ CellTags->"Info-a0a12c2d-b17c-41f8-9a3e-6948772cff13"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5474,7 +5721,7 @@ personalized PageRank centralities for the vertices of the \
 graph.\\nIGPersonalizedPageRank[graph, reset, damping] gives a list of \
 personalized PageRank centralities for the vertices of the graph using \
 damping factor damping.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-595cb83a-4164-48c3-8ce5-56816a5640e4"]
+ CellTags->"Info-befa0f13-94b8-4746-b3cc-d614a433cd6b"]
 }, Open  ]],
 
 Cell["Weighted graphs are supported.", "Text"],
@@ -5534,7 +5781,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGEigenvectorCentrality[graph]\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-42181856-5f7a-49aa-bb0f-723f320b7381"]
+ CellTags->"Info-02cd3916-d195-4906-971c-69f7ad42e001"]
 }, Open  ]]
 }, Closed]],
 
@@ -5550,7 +5797,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGHubScore[graph] returns Kleinberg's hub score for each \
 vertex.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-4637f02b-f285-47e1-92bb-2e7aebca705b"]
+ CellTags->"Info-6bd05b3f-7afd-4fe2-95f0-62fad600b5b8"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5561,7 +5808,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGAuthorityScore[graph] returns Kleinberg's authority score \
 for each vertex.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-a8e7f758-6cf9-4a98-96a8-7ff6e98a1166"]
+ CellTags->"Info-106dd6bd-0547-49d1-a617-71a61afe228c"]
 }, Open  ]]
 }, Closed]],
 
@@ -5577,7 +5824,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGConstraintScore[graph] returns Burt's constraint score for \
 each vertex.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-cf785e0b-5ae3-417f-a3d9-545efe584dd0"]
+ CellTags->"Info-01e01c5c-a77e-46e9-ab83-eaa791ae051b"]
 }, Open  ]]
 }, Closed]]
 }, Closed]],
@@ -5759,7 +6006,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are \
 isomorphic.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-6b580e09-c5ea-4d46-8afc-70522a1dab4e"]
+ CellTags->"Info-692cefd6-0d5a-40c8-916b-84bc05e1cbc8"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5770,7 +6017,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGSubisomorphicQ[subgraph, graph] tests if subgraph is \
 contained within graph.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-1ad4a152-878c-466e-9a6d-fadceff92564"]
+ CellTags->"Info-ee8562d4-60a3-458f-b696-6e1250e6bb56"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5819,21 +6066,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b3869935-7593-49d3-bad4-486c784070ec", {
+           "Info-0d5cf33f-fd29-40d6-9f2f-3b3deaa21dd8", {
             "IGBlissAutomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGBlissCanonicalLabeling",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b3869935-7593-49d3-bad4-486c784070ec", {
+           "Info-0d5cf33f-fd29-40d6-9f2f-3b3deaa21dd8", {
             "IGBlissCanonicalLabeling", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGBlissIsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b3869935-7593-49d3-bad4-486c784070ec", {
+           "Info-0d5cf33f-fd29-40d6-9f2f-3b3deaa21dd8", {
             "IGBlissIsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -5841,14 +6088,14 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b3869935-7593-49d3-bad4-486c784070ec", {
+           "Info-0d5cf33f-fd29-40d6-9f2f-3b3deaa21dd8", {
             "IGBlissAutomorphismGroup", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGBlissCanonicalPermutation",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b3869935-7593-49d3-bad4-486c784070ec", {
+           "Info-0d5cf33f-fd29-40d6-9f2f-3b3deaa21dd8", {
             "IGBlissCanonicalPermutation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], ""},
         {
@@ -5856,14 +6103,13 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-b3869935-7593-49d3-bad4-486c784070ec", {
+           "Info-0d5cf33f-fd29-40d6-9f2f-3b3deaa21dd8", {
             "IGBlissCanonicalGraph", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGBlissGetIsomorphism",
           BaseStyle->"InformationLink",
-          
           ButtonData:>{
-           "Info-b3869935-7593-49d3-bad4-486c784070ec", {
+           "Info-0d5cf33f-fd29-40d6-9f2f-3b3deaa21dd8", {
             "IGBlissGetIsomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], ""}
        },
@@ -6017,21 +6263,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f672ee4b-9f08-4a21-b50d-155ec3dd74e7", {
+           "Info-a486c31b-ce26-4ba5-b75f-e563bcf56072", {
             "IGVF2FindIsomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f672ee4b-9f08-4a21-b50d-155ec3dd74e7", {
+           "Info-a486c31b-ce26-4ba5-b75f-e563bcf56072", {
             "IGVF2IsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f672ee4b-9f08-4a21-b50d-155ec3dd74e7", {
+           "Info-a486c31b-ce26-4ba5-b75f-e563bcf56072", {
             "IGVF2SubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -6039,21 +6285,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f672ee4b-9f08-4a21-b50d-155ec3dd74e7", {
+           "Info-a486c31b-ce26-4ba5-b75f-e563bcf56072", {
             "IGVF2FindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f672ee4b-9f08-4a21-b50d-155ec3dd74e7", {
+           "Info-a486c31b-ce26-4ba5-b75f-e563bcf56072", {
             "IGVF2IsomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-f672ee4b-9f08-4a21-b50d-155ec3dd74e7", {
+           "Info-a486c31b-ce26-4ba5-b75f-e563bcf56072", {
             "IGVF2SubisomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -6287,9 +6533,8 @@ Cell[BoxData[
           BaseStyle->"Graphics"]}, {
          DiskBox[{0.9317413638931069, 4.088409490031423*^-9}, 
           0.03694770780022549], 
-         InsetBox["4", 
-          Offset[{2, 2}, {0.9686890716933324, 0.036947711888634986`}], 
-          ImageScaled[{0, 0}],
+         InsetBox["4", Offset[{2, 2}, 
+          {0.9686890716933324, 0.036947711888634986`}], ImageScaled[{0, 0}],
           BaseStyle->"Graphics"]}, {
          DiskBox[{0., 1.337281788934584*^-8}, 0.03694770780022549], 
          InsetBox["5", 
@@ -6459,21 +6704,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0e097b5b-e260-4334-8d2e-6991ae2248db", {
+           "Info-f9a0fff2-bae4-402d-902a-5d4128f267c2", {
             "IGLADFindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADGetSubisomorphism",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0e097b5b-e260-4334-8d2e-6991ae2248db", {
+           "Info-f9a0fff2-bae4-402d-902a-5d4128f267c2", {
             "IGLADGetSubisomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADSubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0e097b5b-e260-4334-8d2e-6991ae2248db", {
+           "Info-f9a0fff2-bae4-402d-902a-5d4128f267c2", {
             "IGLADSubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -7359,8 +7604,8 @@ Cell[BoxData[
       {Hue[0.8, 0.6, 0.8], 
        DiskBox[{1.1355828268873955`, 0.2918546032560756}, 
         0.04742176927572629]}, 
-      InsetBox["\<\"Michael\"\>", 
-       Offset[{2, 2}, {1.183004596163122, 0.3392763725318019}], ImageScaled[{0, 0}],
+      InsetBox["\<\"Michael\"\>", Offset[{2, 2}, 
+       {1.183004596163122, 0.3392763725318019}], ImageScaled[{0, 0}],
        BaseStyle->"Graphics"]}, {
       {Hue[0.14, 1, 0.9], 
        DiskBox[{1.1168092176465532`, 2.470993011763239}, 
@@ -7481,21 +7726,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutCircle", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutFruchtermanReingold3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutFruchtermanReingold3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutRandom",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutRandom", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -7503,21 +7748,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutDavidsonHarel", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutGEM",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutGEM", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutReingoldTilford",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutReingoldTilford", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -7525,21 +7770,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutDrL", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutGraphOpt",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutGraphOpt", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutReingoldTilfordCircular",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutReingoldTilfordCircular", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -7547,21 +7792,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutDrL3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutKamadaKawai",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutKamadaKawai", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutSphere",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutSphere", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -7569,14 +7814,14 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutFruchtermanReingold", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutKamadaKawai3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-dc702295-c5fe-47e5-b792-dc309b716e9c", {
+           "Info-4ff72769-c21f-4f73-9c37-dc7ea6f1acc0", {
             "IGLayoutKamadaKawai3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], ""}
        },
@@ -7861,8 +8106,7 @@ be used with forests."
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"DirectedEdges", " ", "\[Rule]", " ", "True"}], 
-   TraditionalForm]]],
+   RowBox[{"DirectedEdges", "\[Rule]", "True"}], TraditionalForm]]],
  " lays out the graph so that directed edges are pointing form lower levels \
 (near the root) towards higher ones (away from the root)."
 }], "Item"],
@@ -32893,21 +33137,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesEdgeBetweenness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesLabelPropagation",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesLabelPropagation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesOptimalModularity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesOptimalModularity", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -32915,21 +33159,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesGreedy", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesLeadingEigenvector",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesLeadingEigenvector", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesSpinGlass",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesSpinGlass", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -32937,21 +33181,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesInfoMAP", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesMultilevel",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesMultilevel", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesWalktrap",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-c5384e86-9df3-4fa9-b7ae-5935feb23535", {
+           "Info-568a1a7e-765e-45d2-b159-2bfdb0447615", {
             "IGCommunitiesWalktrap", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -33639,637 +33883,7 @@ n/uFCi0k3JIsLk5cgAG/In6uWgP/AhVqAHE=
    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
   FrameTicks->None,
   GridLinesStyle->Directive[
-    GrayLevel[
-    0.5, 0.4]]]], "Output",ImageCache->GraphicsData["CompressedBitmap", "\<\
-eJycvWV4XUfSrq0ThzPJzDvJ0DucycyEGZ3EzLZsS5YsySQzM7NklmRmW2Zm
-ZmbHzMzMzJg6ddfqXpLznV/fvq5E0vbea/XqrnrqKejqyAqNq1epU6FxjUoV
-/pG/YYX61WtUavSPfPUa6ltZ/k9ExP+pHhERsfUfEfwu+qv7n71q8D/3x//P
-39fYjyxy585tca+I0cE/rbIfL8ixY8ekWfMWklihirRq3UbOnj3rP7LEffv2
-7YxvP2f/f0nu3bsnVarVkBpNOknPEfOlSr0kqVu/gTx8+DBiVPD1Re4Ox90d
-yukdWrZqLadPnw4vc+TwIYmOT5TRczbLhEU7ZcTMjRIdV1bOnjkd8fz/4/bp
-waUX2o/fy30dRdXqNW0UvUbOl6oN2kmtOvVk3+HTsnzDQUkbPEN+zFNM+o9d
-KJOX7pWew2ZLoeIlZfrCDXL6wnW75rFjR6VJ02Y2PCbgzJkzz9zlD3Lw4AGJ
-ikuUUbN1kAt36s9NUrREaSnToJdUaTtOUoYtlnI1W8m3OYtIXPk6ki1PUanV
-tIt0Tl8kjbtOkw4DZkuJuHJSp3mKjnKBVNa5qle/oc3V4GdvdfHCBYmKLSU9
-hs+VSUv2SA8dcJHicdK212SZMH+z9Bm3QhIaD5OStVLlvewVJL52V4lvMkzq
-dZksXYcvlbL1e0ieIvEydt7WYD5nbJDokmXl1MmT/laL3NxNmDBBIqPiJb5C
-HclXOEZK12gjzbrP0FEvlGrtxsni9ftk8sLtUrjmQBk2/Sc5df6atOg5U9/b
-Ksm9J+m8FpV+YxbZvKYNni4l48vK9WvX3F0W24+3ZN++fRJTubVEVUuR/uNX
-SfuB86RSm9HSIHWqdBw0X+p2mig1O0yQVr1mycpNh6ROp0lSqHo/6T5ymUQl
-NpIf9C6x5WpLkag4mT17dnpmyfyt1Ok8VVKHLZE+Y5dLq96zpES9wXL01GVZ
-t+2o5KnUS7KV6y5ZS6dJz9HL9P1LMmnBFilco7806TZdStXtKjlj6svyNZuG
-ZB7zm/Lo0RMp22SwLFy7Vyq3HatjWSpL1++XGu0nSN3Ok3T8Y6S6ztCPZbpJ
-6tBFsnzjQZ38xdJaR8DidB6yRMq1GCXrthyIGPLspB85ckQaNmoi3+UsKpWq
-1ZHY2t2lhT56Lx1gy14zbcAL1u6T2ct3SkydvjJl0VYpVnuQlG85SoZMWWOX
-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
-eGdMalNl9WWbjzANYBVUH39x5wMqO12HLwHS3F2yyKJ1e83g3rn30I3mZRsd
-M4nwVE0aZ+yev9E1tayBorxg/5y/Sh/JXbGXFKzWT5ZtOBDxizteVxuLXdbZ
-czOaxcY/aPJqsNzN/MsmRUgQFAEa0LbvbNNo1lFH5u8IZldNGi+fRnWQb2OT
-Zd+Rc7+8IzPRRX24Y6cvh3cEBNGT2St2uTu+pFK2UInhSl3TufaMzDBe2aZd
-J9xnXpABI2fIXz7ILh9/V0Bq1KorR48ejXBiNM5dGlq1estht2TBexeVxbXu
-M0u27D3pNOslaaOgyC1xLREN1VR96BWoVPgZPP3yFStLsw79FP5XS+3mqVKt
-Ri158OCBx2x/25mKfBPnb3H4ELyHQWqhMgRuZXGXVH02GaqteIwWYkK49bHT
-V8KZOKwOTIn4CuoabFUHZoeMnLVRyW05SO4vb7t++zFTbv56zb23RF1DnGZV
-8FAcsZm1O04wW1hEHU5EctzcjX61lVPK6GkrJHeBKHUBZsrERbuUCk+U+FLl
-5MaNG7+46bEzlz1tdHj8quEAUw8f4PVAqRIy78URX1Vp/PNuXdT8G1Rjq0fP
-3iijx06QQsVKStG4ShJZvKQsXbr0lwuLvrdRKVSW6O76itKCRzYSqDuv+2qU
-Y9TFg8hmT+wOz3Yz/6rFV0YrZ+IaY/SWqtn2nSc64Nbdx0nb1HTpOWyWk96h
-7q5Pnjwxd+7xo0chKoG6sCvFOGcN30D3paUi0S51V+/cvS/ZS3WU9wq3lUZd
-p6ste2p3OqaWEsuK/k3Uh1d0y+IEG3PcYdACOXf5tkLJfKbKP/8Q95HDhw9L
-bXWySpZKlGrVa8muXbvCEY1U8o7V46/XnTDgS9RuM0DKV6omn35fUP76YQ6Z
-MW+lHD19RQYqYQW9sNdXb9xxAv+CbNx1XAaoc4YlwJ6v3HzIDyPdCef9+/el
-qt4eH2/wpFXSuF1fKZtYUe7euROazPlr9qh0bco0nFfUR7yvHlkZadC2l1q0
-tdKkXW/JW6SktO0zw5jczdv3Hdy9qCZqCyzcJg3bSZRJhzQ080heDny+uHKm
-HqgJMaYCxUpJav+Jao62ZAFvdUhYJpCravI448y69qoW+hv/2/gSCKcX0y9I
-zyFTpZi65KPnbJHxC3ZY4KBQVILs2bv/Za++bmI2qmHhBfdEhnUpI34xvJs3
-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
-WyC5B8tWSvqMXmTNgGs26SLNmrVQMXDN2JwJDDoSI84QS9X1KDclW7dutS33
-0QkVzD9p0LqbnXGZYdheUp2+K4kVqkjLLkPM5+6sHlG+IiXoFB4uyRl3cNtK
-NX5+6TBSPMuB4xciMrpg71Ft/8lhQCBBnHrXccAsyVUwRpp3HGAMoGXKEItd
-3bx5068MxI3yd7XeoU9DpgiTwgGI/hYEG7+KS2GuwjNMZrpsk6/zJLOPGcKh
-fOLL/n4bHg0DHoEtlCkh9rxYSRYb3ebwJBS1WrvxBvm8Hjx8ZOV6ujTNHPJb
-GFMt1uBhY6R05foW/yYcRKeI8hWrErBzcudy6UGMBpHctOt4RLSbf3LNFSpV
-leadB9sJEKmDpkm+wiXk5MnToWjjZ3KYZ+YT1Di3dMeO7aEY83R4r0QXfPSe
-wjcciIzWoFmszALEzTi/9CWbEXZ67lJNZ68MjSLKla+MWofXQvYZO4fH+AXi
-rHFidITr/fVp4cD+EBbSwwOYBWrg5KBaICp1IxnB8DeNzRqyumOt8TRI3QCr
-ePjBsVHB7kpWkb0nOKmgP9E2Xu6Qg4gW7r6HDh20+G/qoOk2dxyblZSUDI77
-pfEnohJeBegwdbRzgbe1HzjX8uol3GfOnTsX5GA50dId+RBTqjJqFk7lwwcP
-LEvMpgbodZtuI0z1cFz8tF1yjWoXrNkbTi9EHhXjeFMv63A+Pqf4EKordZy8
-R0NCXoTdTp08SWQnIuP476MmwJkPFQwOH15oTd29yMA9yHzSySBstaNuDmho
-tbH6HUTHW7qQ01gXouDEcgypRS2Dcxcsc0fYiHwUwZ3jZy5b0hk9vqLG1szV
-wHkRLd39Zs2aFfjqJctKw0ZNOLLOmyZfCnX48CFrIMJxNyVKlpGq9ZOC6uFb
-9yJi3GfoRFSd85tbdTOCm6S2n7jt5UuXwk3k1JNUqVbTpJt40Pp168LpYfp5
-ZBqT+jjfeNuvvCETmmUxq4pBf/jwccZBZRcCzTh84mLom6JlBOAwNN4CAE9E
-WXsEhXL+7a06g2xj5m39lr8q5JO+RCrfYekA9pzFh07wYr+Wms/gSr8y9YIx
-wMeAZtaA2njfrZMiGfqbQWwapk5p5e50Q/3o0+qjPXnyxLM7XxOOLeUAwdrk
-9NQ4YIk4U3Pnrl0ha6dbKnvzmVaaNK1duzacQrTh1KmT5ArDqVaqZlNIDav/
-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
-xmiTt7J/icnLf176//8dfem/CqFu4g==\
-\>"]]
+    GrayLevel[0.5, 0.4]]]], "Output"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -37663,7 +37277,6 @@ I0eeA5h35I4y71GsB9RTD5dYLxhCvQSznrCDespmvaEj9aZkPWIp9biL9YqF
             Opacity[0.7], 
             Hue[0.6, 0.7, 0.5]], 
            ArrowBox[
-            
             BezierCurveBox[{
              1, {0.18635158111754768`, 0.10759013552212691`}, 2}], 
             0.020399597244776385`], 
@@ -37676,6 +37289,7 @@ I0eeA5h35I4y71GsB9RTD5dYLxhCvQSznrCDespmvaEj9aZkPWIp9biL9YqF
             BezierCurveBox[{2, {0.679673822666892, 0.3924098644779406}, 1}], 
             0.020399597244776385`], 
            ArrowBox[
+            
             BezierCurveBox[{
              2, {-0.18635158111754604`, 0.10759013552211057`}, 3}], 
             0.020399597244776385`], 
