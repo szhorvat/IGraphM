@@ -66,6 +66,17 @@ public:
         igConstructorCheck(igraph_lcf_vector(&graph, n, &shifts, repeats));
     }
 
+    void makeLattice(mma::RealTensorRef dims, mint nei, bool directed, bool mutual, bool periodic) {
+        destroy();
+        igraph_vector_t igdims = igVectorView(dims);
+        igConstructorCheck(igraph_lattice(&graph, &igdims, nei, directed, mutual, periodic));
+    }
+
+    void graphAtlas(mint n) {
+        destroy();
+        igConstructorCheck(igraph_atlas(&graph, n));
+    }
+
     // Weights
 
     void setWeights(mma::RealTensorRef w) {
@@ -111,6 +122,23 @@ public:
     void kRegularGame(mint n, mint k, bool directed, bool multiple) {
         destroy();
         igConstructorCheck(igraph_k_regular_game(&graph, n, k, directed, multiple));
+    }
+
+    void stochasticBlockModel(mma::RealMatrixRef tmat, mma::IntTensorRef tsizes, bool directed, bool loops) {
+        igIntVector sizes;
+        sizes.copyFromMTensor(tsizes);
+        igMatrix mat;
+        mat.copyFromMTensor(tmat);
+        igraph_integer_t n = 0;
+        for (igraph_integer_t *i = sizes.begin(); i != sizes.end(); ++i)
+            n += *i;
+        destroy();
+        igConstructorCheck(igraph_sbm_game(&graph, n, &mat.mat, &sizes.vec, directed, loops));
+    }
+
+    void forestFireGame(mint n, double fwprob, double bwratio, mint nambs, bool directed) {
+        destroy();
+        igConstructorCheck(igraph_forest_fire_game(&graph, n, fwprob, bwratio, nambs, directed));
     }
 
     // Structure
@@ -169,6 +197,109 @@ public:
         return vec.makeMTensor();
     }
 
+    mma::RealTensorRef pageRank(mint method, double damping, bool directed, mint powerNiter, double powerEpsilon) const {
+        igraph_pagerank_algo_t algo;
+        void *options;
+        igraph_pagerank_power_options_t power_options;
+        igraph_arpack_options_t arpack_options;
+        switch (method) {
+        case 0:
+            algo = IGRAPH_PAGERANK_ALGO_POWER;
+            power_options.niter = powerNiter;
+            power_options.eps = powerEpsilon;
+            options = &power_options;
+            break;
+        case 1:
+            algo = IGRAPH_PAGERANK_ALGO_ARPACK;
+            igraph_arpack_options_init(&arpack_options);
+            options = &arpack_options;
+            break;
+        case 2:
+            algo = IGRAPH_PAGERANK_ALGO_PRPACK;
+            options = NULL;
+            break;
+        default: throw mma::LibraryError("Uknown PageRank method.");
+        }
+
+        igVector vector;
+        double value;
+
+        igCheck(igraph_pagerank(
+                    &graph, algo, &vector.vec, &value, igraph_vss_all(),
+                    directed, damping, passWeights(), options));
+        // TODO warn if value != 1.
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef personalizedPageRank(mint method, mma::RealTensorRef treset, double damping, bool directed, mint powerNiter, double powerEpsilon) const {
+        igraph_pagerank_algo_t algo;
+        void *options;
+        igraph_pagerank_power_options_t power_options;
+        igraph_arpack_options_t arpack_options;
+        switch (method) {
+        case 0:
+            algo = IGRAPH_PAGERANK_ALGO_POWER;
+            power_options.niter = powerNiter;
+            power_options.eps = powerEpsilon;
+            options = &power_options;
+            break;
+        case 1:
+            algo = IGRAPH_PAGERANK_ALGO_ARPACK;
+            igraph_arpack_options_init(&arpack_options);
+            options = &arpack_options;
+            break;
+        case 2:
+            algo = IGRAPH_PAGERANK_ALGO_PRPACK;
+            options = NULL;
+            break;
+        default: throw mma::LibraryError("Uknown PageRank method.");
+        }
+
+        igraph_vector_t reset = igVectorView(treset);
+
+        igVector vector;
+        double value;
+
+        igCheck(igraph_personalized_pagerank(
+                    &graph, algo, &vector.vec, &value, igraph_vss_all(),
+                    directed, damping, &reset, passWeights(), options));
+        // TODO warn if value != 1.
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef eigenvectorCentrality(bool directed, bool normalized) const {
+        igVector vector;
+        double value;
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+        igCheck(igraph_eigenvector_centrality(&graph, &vector.vec, &value, directed, normalized, passWeights(), &options));
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef hubScore(bool normalized) const {
+        igVector vector;
+        double value;
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+        igCheck(igraph_hub_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef authorityScore(bool normalized) const {
+        igVector vector;
+        double value;
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+        igCheck(igraph_authority_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        return vector.makeMTensor();
+    }
+
+    mma::RealTensorRef constraintScore() const {
+        igVector vec;
+        igCheck(igraph_constraint(&graph, &vec.vec, igraph_vss_all(), passWeights()));
+        return vec.makeMTensor();
+    }
+
     // Centrality measures (estimates)
 
     mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint) const {
@@ -224,22 +355,34 @@ public:
 
     // Isomorphism (bliss)
 
-    mma::RealTensorRef blissCanonicalPermutation(mint splitting) {
+    mma::RealTensorRef blissCanonicalPermutation(mint splitting, mma::IntTensorRef col) {
         igVector vec;
-        igCheck(igraph_canonical_permutation(&graph, &vec.vec, blissIntToSplitting(splitting), NULL));
+        igIntVector colvec;
+        colvec.copyFromMTensor(col);
+        igCheck(igraph_canonical_permutation(&graph, col.length() == 0 ? NULL : &colvec.vec, &vec.vec, blissIntToSplitting(splitting), NULL));
         return vec.makeMTensor();
     }
 
-    bool blissIsomorphic(const IG &ig, mint splitting) {
+    bool blissIsomorphic(const IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
         igraph_bool_t res;
-        igCheck(igraph_isomorphic_bliss(&graph, &ig.graph, &res, NULL, NULL, blissIntToSplitting(splitting), blissIntToSplitting(splitting), NULL, NULL));
+        igIntVector colvec1, colvec2;
+        colvec1.copyFromMTensor(col1);
+        colvec2.copyFromMTensor(col2);
+        igCheck(igraph_isomorphic_bliss(
+                    &graph, &ig.graph, col1.length() == 0 ? NULL : &colvec1.vec, col2.length() == 0 ? NULL : &colvec2.vec,
+                    &res, NULL, NULL, blissIntToSplitting(splitting), NULL, NULL));
         return res;
     }
 
-    mma::RealTensorRef blissFindIsomorphism(const IG &ig, mint splitting) {
+    mma::RealTensorRef blissFindIsomorphism(const IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
         igraph_bool_t res;
+        igIntVector colvec1, colvec2;
+        colvec1.copyFromMTensor(col1);
+        colvec2.copyFromMTensor(col2);
         igVector map;
-        igCheck(igraph_isomorphic_bliss(&graph, &ig.graph, &res, &map.vec, NULL, blissIntToSplitting(splitting), blissIntToSplitting(splitting), NULL, NULL));
+        igCheck(igraph_isomorphic_bliss(
+                    &graph, &ig.graph, col1.length() == 0 ? NULL : &colvec1.vec, col2.length() == 0 ? NULL : &colvec2.vec,
+                    &res, &map.vec, NULL, blissIntToSplitting(splitting), NULL, NULL));
         if (res)
             return map.makeMTensor();
         else
@@ -250,14 +393,28 @@ public:
         igraph_bliss_info_t info;
         mlStream ml{link, "blissAutomorphismsCount"};
         int splitting;
+        igIntVector colors;
+        ml >> mlCheckArgs(2) >> splitting >> colors;
 
-        ml >> mlCheckArgs(1) >> splitting;
-
-        igCheck(igraph_automorphisms(&graph, blissIntToSplitting(splitting), &info));
+        igCheck(igraph_automorphisms(&graph, colors.length() == 0 ? NULL : &colors.vec, blissIntToSplitting(splitting), &info));
 
         ml.newPacket();
         ml << info.group_size;
-        std::free(info.group_size);
+        igraph_free(info.group_size);
+    }
+
+    // returns the generators of the group
+    void blissAutomorphismGroup(MLINK link) {
+        mlStream ml{link, "blissAutomorphismGroup"};
+        int splitting;
+        igIntVector colors;
+        ml >> mlCheckArgs(2) >> splitting >> colors;
+
+        igList list;
+        igCheck(igraph_automorphism_group(&graph, colors.length() == 0 ? NULL : &colors.vec, &list.list, blissIntToSplitting(splitting), NULL));
+
+        ml.newPacket();
+        ml << list;
     }
 
     // Isomorphism (VF2)
@@ -281,7 +438,7 @@ public:
     }
 
     void vf2FindIsomorphisms(MLINK link) const {
-        mlStream ml(link, "vf2Isomorphism");
+        mlStream ml{link, "vf2Isomorphism"};
 
         mint id; // expression ID
         igIntVector vc1, vc2, ec1, ec2;
@@ -331,7 +488,7 @@ public:
     }
 
     void vf2FindSubisomorphisms(MLINK link) const {
-        mlStream ml(link, "vf2Isomorphism");
+        mlStream ml{link, "vf2Isomorphism"};
 
         mint id; // expression ID
         igIntVector vc1, vc2, ec1, ec2;
@@ -360,12 +517,6 @@ public:
 
         ml.newPacket();
         ml << vf2data.list;
-    }
-
-    mint vf2AutomorphismCount() const {
-        igraph_integer_t res;
-        igCheck(igraph_count_isomorphisms_vf2(&graph, &graph, NULL, NULL, NULL, NULL, &res, NULL, NULL, NULL));
-        return res;
     }
 
     mint vf2IsomorphismCount(
@@ -413,11 +564,60 @@ public:
         return res;
     }
 
+    void ladSubisomorphicColored(MLINK link) const {
+        mlStream ml{link, "ladSubisomorphicColored"};
+        mint id;
+        igraph_bool_t induced;
+        igList domain;
+        ml >> mlCheckArgs(3)
+           >> id >> induced >> domain;
+
+        igraph_bool_t res;
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, &domain.list, &res, NULL, NULL, induced, 0));
+
+        ml.newPacket();
+        if (res)
+            ml << mlSymbol("True");
+        else
+            ml << mlSymbol("False");
+    }
+
     mma::RealTensorRef ladGetSubisomorphism(const IG &ig, bool induced) const {
         igraph_bool_t iso;
         igVector map;
         igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, &map.vec, NULL, induced, 0));
         return map.makeMTensor();
+    }
+
+    void ladGetSubisomorphismColored(MLINK link) const {
+        mlStream ml{link, "ladGetSubisomorphismColored"};
+        mint id;
+        igraph_bool_t induced;
+        igList domain;
+        ml >> mlCheckArgs(3)
+           >> id >> induced >> domain;
+
+        igraph_bool_t iso;
+        igVector map;
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, &domain.list, &iso, &map.vec, NULL, induced, 0));
+
+        ml.newPacket();
+        ml << map;
+    }
+
+    void ladFindSubisomorphisms(MLINK link) const  {
+        mlStream ml{link, "ladFindSubisomorphism"};
+        mint id;
+        igraph_bool_t induced;
+        igList domain;
+        ml >> mlCheckArgs(3) >> id >> induced >> domain;
+
+        igList list;
+        igraph_bool_t iso;
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+
+        ml.newPacket();
+        ml << list;
     }
 
     // Topological sorting, directed acylic graphs
@@ -473,6 +673,19 @@ public:
         igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
         igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, sample_size, NULL));
         return res;
+    }
+
+    mma::IntTensorRef triangles() const {
+        igIntVector vec;
+        igCheck(igraph_list_triangles(&graph, &vec.vec));
+        return vec.makeMTensor();
+    }
+
+    mma::RealTensorRef countAdjacentTriangles(mma::RealTensorRef t) const {
+        igraph_vector_t vsvec = igVectorView(t);
+        igVector res;
+        igCheck(igraph_adjacent_triangles(&graph, &res.vec, t.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
+        return res.makeMTensor();
     }
 
     // Shortest paths
@@ -641,7 +854,7 @@ public:
         case 0: grid = IGRAPH_LAYOUT_GRID; break;
         case 1: grid = IGRAPH_LAYOUT_NOGRID; break;
         case 2: grid = IGRAPH_LAYOUT_AUTOGRID; break;
-        default: throw mma::LibraryError("layoutFruchtermanReingold: unknown method.");
+        default: throw mma::LibraryError("layoutFruchtermanReingold: unknown method option.");
         }
 
         igCheck(igraph_layout_fruchterman_reingold(
@@ -659,6 +872,97 @@ public:
         igCheck(igraph_layout_fruchterman_reingold_3d(
                     &graph, &mat.mat, use_seed, niter, start_temp, passWeights(),
                     NULL, NULL, NULL, NULL, NULL, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutGEM(
+            mma::RealTensorRef initial, bool use_seed,
+            mint maxiter, double temp_max, double temp_min, double temp_init) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igCheck(igraph_layout_gem(&graph, &mat.mat, use_seed, maxiter, temp_max, temp_min, temp_init));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutDavidsonHarel(
+            mma::RealTensorRef initial, bool use_seed,
+            mint maxiter, mint fineiter, double cool_fact,
+            double weight_node_dist, double weight_border,
+            double weight_edge_lengths, double weight_edge_crossings,
+            double weight_node_edge_dist) const
+    {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+        igCheck(igraph_layout_davidson_harel(
+                    &graph, &mat.mat, use_seed,
+                    maxiter, fineiter, cool_fact,
+                    weight_node_dist, weight_border, weight_edge_lengths, weight_edge_crossings,weight_node_edge_dist));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutMDS(mma::RealMatrixRef dist, mint dim) const {
+        igMatrix dmat, mat;
+        dmat.copyFromMTensor(dist);
+        igCheck(igraph_layout_mds(&graph, &mat.mat, dist.cols() == 0 ? NULL : &dmat.mat, dim, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutReingoldTilford(mma::RealTensorRef roots, bool directed) const {
+        igMatrix mat;
+        igraph_vector_t rootvec = igVectorView(roots);
+        igCheck(igraph_layout_reingold_tilford(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? NULL : &rootvec, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutReingoldTilfordCircular(mma::RealTensorRef roots, bool directed) const {
+        igMatrix mat;
+        igraph_vector_t rootvec = igVectorView(roots);
+        igCheck(igraph_layout_reingold_tilford_circular(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? NULL : &rootvec, NULL));
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutDrL(mma::RealTensorRef initial, bool use_seed, mint opt) const {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+
+        igraph_layout_drl_default_t templ;
+        switch (opt) {
+        case 1: templ = IGRAPH_LAYOUT_DRL_DEFAULT; break;
+        case 2: templ = IGRAPH_LAYOUT_DRL_COARSEN; break;
+        case 3: templ = IGRAPH_LAYOUT_DRL_COARSEST; break;
+        case 4: templ = IGRAPH_LAYOUT_DRL_REFINE; break;
+        case 5: templ = IGRAPH_LAYOUT_DRL_FINAL; break;
+        default: throw mma::LibraryError("Invalid settings template for DrL layout.");
+        }
+
+        igraph_layout_drl_options_t options;
+        igCheck(igraph_layout_drl_options_init(&options, templ));
+
+        igCheck(igraph_layout_drl(&graph, &mat.mat, use_seed, &options, passWeights(), NULL));
+
+        return mat.makeMTensor();
+    }
+
+    mma::RealTensorRef layoutDrL3D(mma::RealTensorRef initial, bool use_seed, mint opt) const {
+        igMatrix mat;
+        mat.copyFromMTensor(initial);
+
+        igraph_layout_drl_default_t templ;
+        switch (opt) {
+        case 1: templ = IGRAPH_LAYOUT_DRL_DEFAULT; break;
+        case 2: templ = IGRAPH_LAYOUT_DRL_COARSEN; break;
+        case 3: templ = IGRAPH_LAYOUT_DRL_COARSEST; break;
+        case 4: templ = IGRAPH_LAYOUT_DRL_REFINE; break;
+        case 5: templ = IGRAPH_LAYOUT_DRL_FINAL; break;
+        default: throw mma::LibraryError("Invalid settings template for DrL layout.");
+        }
+
+        igraph_layout_drl_options_t options;
+        igCheck(igraph_layout_drl_options_init(&options, templ));
+
+        igCheck(igraph_layout_drl_3d(&graph, &mat.mat, use_seed, &options, passWeights(), NULL));
+
         return mat.makeMTensor();
     }
 
@@ -739,26 +1043,35 @@ public:
         return res;
     }
 
-    // Note that this is a constructor!
-    mma::RealTensorRef chordalCompletion(const IG &source) {
+    mma::RealTensorRef chordalCompletion() const {
         igraph_bool_t chordal;
         igVector fillin;
-        destroy();
-        igConstructorCheck(igraph_is_chordal(&source.graph, NULL, NULL, &chordal, &fillin.vec, &graph));
+        igCheck(igraph_is_chordal(&graph, NULL, NULL, &chordal, &fillin.vec, NULL));
         return fillin.makeMTensor();
     }
 
     // Vertex separators
 
     void minimumSizeSeparators(MLINK link) const {
-        igList list;
-        mlStream ml(link, "minimumSizeSeparators");
+        mlStream ml{link, "minimumSizeSeparators"};
         ml >> mlCheckArgs(0);
 
+        igList list;
         igCheck(igraph_minimum_size_separators(&graph, &list.list));
 
         ml.newPacket();
         ml << list;
+    }
+
+    // Maximum flow
+
+    // note that this is a constructor!
+    mma::RealTensorRef gomoryHuTree(const IG &ig, mma::RealTensorRef tcapacity) {
+        igraph_vector_t capacity = igVectorView(tcapacity);
+        igVector flows;
+        destroy();
+        igConstructorCheck(igraph_gomory_hu_tree(&ig.graph, &graph, &flows.vec, tcapacity.length() == 0 ? NULL : &capacity));
+        return flows.makeMTensor();
     }
 
     // Connected components
@@ -770,7 +1083,7 @@ public:
     }
 
     void biconnectedComponents(MLINK link) const {
-        mlStream ml(link, "biconnectedComponents");
+        mlStream ml{link, "biconnectedComponents"};
         ml >> mlCheckArgs(0);
 
         igList list;
@@ -779,6 +1092,321 @@ public:
 
         ml.newPacket();
         ml << list;
+    }
+
+    // Connectivity
+
+    mint vertexConnectivity() const {
+        igraph_integer_t res;
+        igCheck(igraph_vertex_connectivity(&graph, &res, true));
+        return res;
+    }
+
+    mint edgeConnectivity() const {
+        igraph_integer_t res;
+        igCheck(igraph_edge_connectivity(&graph, &res, true));
+        return res;
+    }
+
+    mint vertexConnectivityST(mint s, mint t) const {
+        igraph_integer_t res;
+        igCheck(igraph_st_vertex_connectivity(&graph, &res, s, t, IGRAPH_VCONN_NEI_ERROR));
+        return res;
+    }
+
+    mint edgeConnectivityST(mint s, mint t) const {
+        igraph_integer_t res;
+        igCheck(igraph_st_edge_connectivity(&graph, &res, s, t));
+        return res;
+    }
+
+    void cohesiveBlocks(MLINK link) const {
+        mlStream ml{link, "cohesiveBlocks"};
+        ml >> mlCheckArgs(0);
+
+        igList blocks;
+        igVector cohesion;
+        igVector parents;
+
+        igCheck(igraph_cohesive_blocks(&graph, &blocks.list, &cohesion.vec, &parents.vec, NULL));
+
+        ml.newPacket();
+        ml << mlHead("List", 3) << blocks << cohesion << parents;
+    }
+
+    // Graphlets
+
+    void graphletBasis(MLINK link) const {
+        mlStream ml{link, "graphletBasis"};
+        ml >> mlCheckArgs(0);
+
+        igList cliques;
+        igVector thresholds;
+        igCheck(igraph_graphlets_candidate_basis(&graph, passWeights(), &cliques.list, &thresholds.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << cliques << thresholds;
+    }
+
+    void graphletProject(MLINK link) const  {
+        mlStream ml{link, "graphletProject"};
+
+        igList cliques;
+        int niter;
+
+        ml >> mlCheckArgs(2) >> cliques >> niter;
+
+        igVector mu;
+        igCheck(igraph_graphlets_project(&graph, passWeights(), &cliques.list, &mu.vec, false, niter));
+
+        ml.newPacket();
+        ml << mu;
+    }
+
+    void graphlets(MLINK link) const {
+        mlStream ml{link, "graphlets"};
+        int niter;
+        ml >> mlCheckArgs(1) >> niter;
+
+        igVector mu;
+        igList cliques;
+        igCheck(igraph_graphlets(&graph, passWeights(), &cliques.list, &mu.vec, niter));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << cliques << mu;
+    }
+
+    // Community detection
+
+    double modularity(mma::RealTensorRef t) const {
+        igraph_vector_t membership = igVectorView(t);
+        double res;
+        igCheck(igraph_modularity(&graph, &membership, &res, passWeights()));
+        return res;
+    }
+
+    double compareCommunities(mma::RealTensorRef c1, mma::RealTensorRef c2, mint m) const {
+        igraph_community_comparison_t method;
+        switch (m) {
+        case 0: method = IGRAPH_COMMCMP_VI; break;
+        case 1: method = IGRAPH_COMMCMP_NMI; break;
+        case 2: method = IGRAPH_COMMCMP_SPLIT_JOIN; break;
+        case 3: method = IGRAPH_COMMCMP_RAND; break;
+        case 4: method = IGRAPH_COMMCMP_ADJUSTED_RAND; break;
+        default: throw mma::LibraryError("Invalid community comparison method.");
+        }
+
+        igraph_vector_t comm1 = igVectorView(c1);
+        igraph_vector_t comm2 = igVectorView(c2);
+        double res;
+        igCheck(igraph_compare_communities(&comm1, &comm2, &res, method));
+        return res;
+    }
+
+    mma::IntTensorRef splitJoinDistance(mma::RealTensorRef c1, mma::RealTensorRef c2) const {
+        igraph_integer_t d1, d2;
+
+        igraph_vector_t comm1 = igVectorView(c1);
+        igraph_vector_t comm2 = igVectorView(c2);
+
+        igCheck(igraph_split_join_distance(&comm1, &comm2, &d1, &d2));
+
+        mma::IntTensorRef res = mma::makeVector<mint>(2);
+        res[0] = d1;
+        res[1] = d2;
+        return res;
+    }
+
+    void communityEdgeBetweenness(MLINK link) const {
+        mlStream ml{link, "communityEdgeBetweenness"};
+        ml >> mlCheckArgs(0);
+
+        igVector result, betweenness, bridges, modularity, membership;
+        igMatrix merges;
+
+        igCheck(igraph_community_edge_betweenness(
+                    &graph, &result.vec, &betweenness.vec, &merges.mat, &bridges.vec, &modularity.vec, &membership.vec, true, passWeights()
+                    ));
+
+        ml.newPacket();
+        ml << mlHead("List", 6)
+           << result << merges << betweenness << bridges << modularity << membership;
+    }
+
+    void communityWalktrap(MLINK link) const {
+        mlStream ml{link, "communityWalktrap"};
+        igraph_integer_t steps;
+        ml >> mlCheckArgs(1) >> steps;
+
+        igVector modularity, membership;
+        igMatrix merges;
+
+        igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, &modularity.vec, &membership.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 3)
+           << merges << modularity << membership;
+    }
+
+    void communityFastGreedy(MLINK link) const {
+        mlStream ml{link, "communityFastGreedy"};
+        ml >> mlCheckArgs(0);
+
+        igVector modularity, membership;
+        igMatrix merges;
+
+        igCheck(igraph_community_fastgreedy(&graph, passWeights(), &merges.mat, &modularity.vec, &membership.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 3)
+           << merges << modularity << membership;
+    }
+
+    void communityMultilevel(MLINK link) const {
+        mlStream ml{link, "communityMultilevel"};
+        ml >> mlCheckArgs(0);
+
+        igVector modularity, membership;
+        igMatrix memberships;
+
+        igCheck(igraph_community_multilevel(&graph, passWeights(), &membership.vec, &memberships.mat, &modularity.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 3) << modularity << membership << memberships;
+    }
+
+    void communityLabelPropagation(MLINK link) const {
+        mlStream ml{link, "communityLabelPropagation"};
+
+        igVector initial;
+        igBoolVector fixed;
+        ml >> mlCheckArgs(2) >> initial >> fixed;
+
+        igVector membership;
+        double modularity;
+
+        igCheck(igraph_community_label_propagation(
+                    &graph, &membership.vec, passWeights(),
+                    initial.length() == 0 ? NULL : &initial.vec,
+                    fixed.length() == 0 ? NULL : &fixed.vec,
+                    &modularity));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << membership << modularity;
+    }
+
+    void communityInfoMAP(MLINK link) const {
+        mlStream ml{link, "communityInfoMAP"};
+
+        int trials;
+        igVector v_weights;
+        ml >> mlCheckArgs(2) >> trials >> v_weights;
+
+        igVector membership;
+        double codelen;
+
+        igCheck(igraph_community_infomap(
+                    &graph, passWeights(), v_weights.length() == 0 ? NULL : &v_weights.vec,
+                    trials, &membership.vec, &codelen));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << membership << codelen;
+    }
+
+    void communityOptimalModularity(MLINK link) const {
+        mlStream ml{link, "communityOptimalModularity"};
+        ml >> mlCheckArgs(0);
+
+        igVector membership;
+        double modularity;
+
+        igCheck(igraph_community_optimal_modularity(&graph, &modularity, &membership.vec, passWeights()));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << modularity << membership;
+    }
+
+    void communitySpinGlass(MLINK link) const {
+        mlStream ml{link, "communitySpinGlass"};
+
+        igraph_integer_t spins, update_rule, method;
+        igraph_bool_t parupdate;
+        double starttemp, stoptemp, coolfact, gamma, gamma_minus;
+        ml >> mlCheckArgs(9)
+            >> spins // number of spins, i.e. max number of clusters
+            >> parupdate // parallel update for IGRAPH_SPINCOMM_INP_NEG
+            >> starttemp >> stoptemp >> coolfact // start, stop temperature, cooling factor
+            >> update_rule
+            >> gamma
+            >> method
+            >> gamma_minus;
+
+        igraph_spinglass_implementation_t method_e;
+        switch (method) {
+        case 0: method_e = IGRAPH_SPINCOMM_IMP_ORIG; break;
+        case 1: method_e = IGRAPH_SPINCOMM_IMP_NEG; break;
+        default:
+            throw mma::LibraryError("communitySpinGlass: invalid method option.");
+        }
+
+        igraph_spincomm_update_t update_rule_e;
+        switch (update_rule) {
+        case 0: update_rule_e = IGRAPH_SPINCOMM_UPDATE_SIMPLE; break;
+        case 1: update_rule_e = IGRAPH_SPINCOMM_UPDATE_CONFIG; break;
+        default:
+            throw mma::LibraryError("communitySpinGlass: invalid update rule option.");
+        }
+
+        double modularity, temperature;
+        igVector membership;
+
+        igCheck(igraph_community_spinglass(
+                    &graph, passWeights(),
+                    &modularity, &temperature, &membership.vec, NULL,
+                    spins, parupdate, starttemp, stoptemp, coolfact,
+                    update_rule_e, gamma, method_e, gamma_minus
+                    ));
+
+        ml.newPacket();
+        ml << mlHead("List", 3) << membership << modularity << temperature;
+    }
+
+    void communityLeadingEigenvector(MLINK link) const {
+        mlStream ml{link, "communityLeadingEigenvector"};
+
+        igraph_integer_t steps;
+        ml >> mlCheckArgs(1) >> steps;
+
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+
+        igVector membership, eigenvalues;
+        igMatrix merges;
+        igList eigenvectors;
+        double modularity;
+
+        igCheck(igraph_community_leading_eigenvector(
+                    &graph, passWeights(),
+                    &merges.mat, &membership.vec,
+                    steps, &options, &modularity, false,
+                    &eigenvalues.vec, &eigenvectors.list, // eigenvalues, eigenvectors
+                    NULL, // history
+                    NULL, NULL // callback
+                    ));
+
+        ml.newPacket();
+        ml << mlHead("List", 5) << membership << merges << modularity << eigenvalues << eigenvectors;
+    }
+
+    // Unfold tree
+
+    // note this is a constructor!
+    mma::RealTensorRef unfoldTree(const IG &source, mma::RealTensorRef troots, bool directed) {
+        igraph_vector_t roots = igVectorView(troots);
+        igVector mapping;
+        destroy();
+        igConstructorCheck(igraph_unfold_tree(&source.graph, &graph, directed ? IGRAPH_OUT : IGRAPH_ALL, &roots, &mapping.vec));
+        return mapping.makeMTensor();
     }
 };
 

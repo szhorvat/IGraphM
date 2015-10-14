@@ -12,31 +12,33 @@ IGraph/M is *not a replacement* for Mathematica's graph manipulation functionali
 
 igraph is one of the broadest open source graph manipulation packages available.  Many of its functions are of use to Mathematica users, either because equivalents don't already exist in Mathematica, or because they can be used to verify Mathematica's own results.  My previous package, [IGraphR][2], already provides relatively convenient access to igraph's R interface from Mathematica, but unfortunately its underlying technology, [RLink](http://reference.wolfram.com/language/RLink/guide/RLink.html), suffers from reliability and performance problems.  IGraph/M uses igraph's C interface through [LibraryLink](http://reference.wolfram.com/language/LibraryLink/tutorial/Overview.html), which makes it much faster, more robust and easier to use with Mathematica's parallel tools.  My main motivation for starting IGraph/M was to get better performance and reliable parallelization.
 
-### Functionality provided that is not present in Mathematica
+### Functionality highlights
 
- - Vertex betweenness centrality for weighted graphs
+ - Interruption support: using Evaluate → Abort Evaluation in Mathematica works with most IGraph/M functions.
+ - Centrality measures for weighted graphs
  - Estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs
+ - Community detection algorithms
  - Minimum feedback arc set for weighted and unweighted graphs
  - Find all cliques (not just maximal ones), count cliques without listing them
- - Count 3- and 4-motifs
+ - Count 3- and 4-motifs, list triangles
  - Rewire edges, keeping either the density or the degree sequence
  - Alternative algorithms for isomorphism testing: BLISS, VF2, LAD
  - Subgraph isomorphism (including induced subgraphs with LAD)
- - Isomorphism for coloured graphs
- - Test if a degree sequence is graphical
- - Alternative algorithms for generating random graphs with given degree sequence
- - Layout algorithms that take weights into account
- - Layout algorithms can continue from existing vertex coordinates
+ - Isomorphism for edge or vertex coloured graphs; multigraph isomorphism implementation based on edge colouring
+ - Alternative algorithms for generating random graphs with given degree sequence. Test for degree sequence graphicality.
+ - Additional layout algorithms: most work with weighted graphs and can continue the layout optimization starting from a given set of vertex positions.
+ - Biconnected components, articulation points, find all minimum vertex cuts
+ - Several other specialized functions not mentioned here ...
 
 ## Installation
 
 IGraph/M can be installed like any other Mathematica application.
 
  - [Download the zip archive from GitHub](https://github.com/szhorvat/IGraphM/releases)
- - Open the Mathematica's "Applications" directory by evaluating `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`
- - Unzip the archive, find the `IGraphM` directory, and move it to Mathematica's "Applications" directory.  If earlier versions of the package were installed, they must be fully removed.
+ - Open Mathematica's "Applications" directory by evaluating `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`
+ - Unzip the archive, find the `IGraphM` directory, and move it to Mathematica's "Applications" directory.  If earlier versions of the package were installed, they must be fully removed first.
 
- IGraph/M requires Mathematica 10 or later.  Binaries are included for Windows 64 bit, OS X 10.9 or later, and Linux.  The package must be compiled from source for any other systems.
+ IGraph/M requires Mathematica 10 or later.  Binaries are included for Windows 64 bit, OS X 10.9 or later, and Linux x86_64.  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
 The package can be loaded with
 
@@ -61,33 +63,18 @@ The documentation is not yet ready and contributions are most welcome.  If you w
 
 ## Contributions
 
-Contributions to IGraph/M are most welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all igraph functions.  However, the main framework is there, and adding new functions is relatively quick and easy.
+Contributions to IGraph/M are most welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all of igraph.  However, the main framework is there, and adding new functions is relatively quick and easy.
 
 If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][1] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
 
-####Compiling from source
-
-To compile IGraph/M, you will need:
-
- - A C++ compiler with C++11 support.  I used GCC 4.9 and clang 3.6.
- - A recent development version of [igraph](https://github.com/igraph/igraph). You will need to compile it yourself. igraph 0.7.1 is not compatible.
- - The [LTemplate Mathematica package][1].  Please download and install it.
- - git for cloning the repository.
-
-Then follow these steps:
-
- 1. Clone the IGraphM repository and check out the master branch (do not use the release branch).  
- 2. Edit `BuildSettings.m` and set the necessary paths to your igraph installation.  The available options are the same as for [CreateLibrary](http://reference.wolfram.com/language/CCompilerDriver/ref/CreateLibrary.html).
- 3. Append the repository's root directory (i.e. the same directory where this readme file is found) to Mathematica's `$Path`.
- 4. Load the package with ``<<IGraphM` ``.  It should automatically be compiled. It can also be recompiled using ``IGraphM`Developer`Recompile[]``.
-
+Please see [Development.md](Development.md) for additional information.
 
 #### Desired but not yet completed functionality
 
  - hierarchical random graphs
  - spectral coarse graining
- - community detection
- - graphlets
+ - maximum flows, minimum cuts
+ - additional structural properties
 
 Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2].
 
@@ -101,6 +88,24 @@ Remember, if you need to use any of these from *Mathematica* today, there is alw
 You can contact me in email.  Evaluate the following in Mathematica to get my email address:
 
     Uncompress["1:eJxTTMoPChZiYGAorsrILypLLHFIz03MzNFLzs8FAG/xCOI="]
+
+## Bugs and troubleshooting
+
+IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until most problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues).
+
+During the version 0.1.x series IGraph/M should be considered unstable.  Function names, options, and the structure of return values may change without notice.  Thus I do encourage you to use it interactively, but at this point I do not recommend basing other packages on IGraph/M.  Starting from version 0.2.0 I will try to avoid making any breaking changes.
+
+### Known issues and workarounds
+
+ * `Graph[Graph[...], ...]` returned
+
+   Sometimes layout functions may return an expression which looks like
+
+        Graph[ Graph[...], VertexCoordinates -> {...} ]
+
+   or similar. A property does not get correctly applied to the graph.  This is due to a bug in Mathematica. I believe I have worked around most of these issues, but if you encounter them, one possible workaround is to cycle the graph `g` through some other representation, e.g. `g = Uncompress@Compress[g]`.
+
+ * Graphlet decomposition functions may crash the kernel. This is due to an igraph bug.
 
 ## License
 

@@ -38,6 +38,7 @@ public:
     igVector() : moved(false) { igraph_vector_init(&vec, 0); }
     igVector(igVector &&source) : moved(false) { vec = source.vec; source.moved = true; }
     igVector(const igraph_vector_t *source) : moved(false) { igraph_vector_copy(&vec, source); }
+    explicit igVector(long len) : moved(false) { igraph_vector_init(&vec, len); }
     ~igVector() { if (!moved) igraph_vector_destroy(&vec); }
 
     long length() const { return vec.end - vec.stor_begin; }
@@ -60,9 +61,38 @@ public:
 };
 
 
+// RAII for graph_vector_bool_t
+class igBoolVector {
+
+    igBoolVector(const igBoolVector &source); // avoid accidental implicit copy
+
+public:
+
+    igraph_vector_bool_t vec;
+
+    igBoolVector() { igraph_vector_bool_init(&vec, 0); }
+    ~igBoolVector() { igraph_vector_bool_destroy(&vec); }
+
+    long length() const { return vec.end - vec.stor_begin; }
+
+    igraph_bool_t *begin() { return vec.stor_begin; }
+    igraph_bool_t *end() { return vec.end; }
+
+    const igraph_bool_t *begin() const { return vec.stor_begin; }
+    const igraph_bool_t *end() const { return vec.end; }
+
+    void clear() { igraph_vector_bool_clear(&vec); }
+    void resize(long newsize) { igraph_vector_bool_resize(&vec, newsize); }
+};
+
+
 // RAII for igraph_vector_t
 // note that igraph_integer_t and mint may not be the same type
-struct igIntVector {
+class igIntVector {
+
+    igIntVector(const igIntVector &source); // avoid accidental implicit copy
+
+public:
     igraph_vector_int_t vec;
 
     igIntVector() { igraph_vector_int_init(&vec, 0); }
@@ -129,6 +159,8 @@ struct igList {
     }
     ~igList() { igraph_vector_ptr_destroy_all(&list); }
 
+    void clear() { igraph_vector_ptr_clear(&list); }
+
     long length() const { return igraph_vector_ptr_size(&list); }
 
     void push(igraph_vector_t *vec) { igraph_vector_ptr_push_back(&list, vec); }
@@ -157,10 +189,69 @@ inline mlStream & operator << (mlStream &ml, const igList &list) {
 }
 
 
+inline mlStream & operator << (mlStream &ml, const igMatrix &mat) {
+    int dims[2];
+    dims[0] = mat.ncol();
+    dims[1] = mat.nrow();
+    int ok =
+            MLPutFunction(ml.link(), "Transpose", 1) &&
+            MLPutReal64Array(ml.link(), mat.begin(), dims, NULL, 2);
+    if (! ok)
+        ml.error("cannot return matrix");
+    return ml;
+}
+
+
+inline mlStream & operator >> (mlStream &ml, igList &list) {
+    list.clear();
+    int len;
+    if (! MLTestHead(ml.link(), "List", &len))
+        ml.error("List of lists expected");
+    igraph_vector_ptr_resize(&list.list, len);    
+    for (int i=0; i < len; ++i) {
+        igraph_vector_t *vec = static_cast<igraph_vector_t *>(malloc(sizeof(igraph_vector_t)));        
+        double *data;
+        int listlen;
+        if (! MLGetReal64List(ml.link(), &data, &listlen))
+            ml.error("Real64List expected in list of lists");
+        igraph_vector_init(vec, listlen);
+        std::copy(data, data+listlen, vec->stor_begin);
+        MLReleaseReal64List(ml.link(), data, listlen);
+        VECTOR(list.list)[i] = vec;
+    }
+    return ml;
+}
+
+
+inline mlStream & operator >> (mlStream &ml, igVector &vec) {
+    double *data;
+    int length;
+    if (! MLGetReal64List(ml.link(), &data, &length))
+        ml.error("Real64List expected");
+    vec.resize(length);
+    std::copy(data, data+length, vec.begin());
+    MLReleaseReal64List(ml.link(), data, length);
+    return ml;
+}
+
+
 inline mlStream & operator >> (mlStream &ml, igIntVector &vec) {
     int *data;
     int length;
     // igraph_integer_t is an int, so we try to use the corresponding MathLink type: Integer32
+    if (! MLGetInteger32List(ml.link(), &data, &length))
+        ml.error("Integer32List expected");
+    vec.resize(length);
+    std::copy(data, data+length, vec.begin());
+    MLReleaseInteger32List(ml.link(), data, length);
+    return ml;
+}
+
+
+inline mlStream & operator >> (mlStream &ml, igBoolVector &vec) {
+    int *data;
+    int length;
+    // igraph_bool_t is an int, so we try to use the corresponding MathLink type: Integer32
     if (! MLGetInteger32List(ml.link(), &data, &length))
         ml.error("Integer32List expected");
     vec.resize(length);
