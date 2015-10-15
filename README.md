@@ -34,9 +34,9 @@ igraph is one of the broadest open source graph manipulation packages available.
 
 IGraph/M can be installed like any other Mathematica application.
 
- - [Download the zip archive from GitHub](https://github.com/szhorvat/IGraphM/releases)
- - Open Mathematica's "Applications" directory by evaluating `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`
- - Unzip the archive, find the `IGraphM` directory, and move it to Mathematica's "Applications" directory.  If earlier versions of the package were installed, they must be fully removed first.
+ - [Download the zip archive from GitHub](https://github.com/szhorvat/IGraphM/releases).
+ - Open Mathematica's "Applications" directory by evaluating `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`.
+ - Unzip the downloaded archive.  It will contain this `README.md` file, and a directory called `IGraphM`.  Move the `IGraphM` directory into Mathematica's "Applications" directory.  If earlier versions of the package were installed, they must be fully removed first.
 
  IGraph/M requires Mathematica 10 or later.  Binaries are included for Windows 64 bit, OS X 10.9 or later, and Linux x86_64.  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
