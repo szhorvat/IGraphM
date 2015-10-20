@@ -334,6 +334,7 @@ template = LTemplate["IGraphM",
         (* Create *)
 
         LFun["fromEdgeList", {{Real, _, "Constant"} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
+        (* LFun["fromEdgeListML", LinkObject], *)
         LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
         LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
         LFun["graphAtlas", {Integer}, "Void"],
@@ -684,11 +685,11 @@ zimport[filename_] := Uncompress@Import[filename, "String"]
 
 (* Get an IG compatible edge list. *)
 (* This implementation attempts to select the fastest method based on the internal representation
-   of the graph. With the "Simple" representation, IndexGraph is very fast, otherwise it's slower
-   than the Lookup method.
+   of the graph. With the "Simple" representation, IndexGraph is very fast. With "Incidence" it's
+   slower than the Lookup method. With "NullGraph", performance doesn't matter.
 
    While GraphComputation`GraphRepresentation is an internal undocumented function, hopefully this
-   is robust against changes in that function as both branches of the If are valid ways to retrieve
+   is robust against changes as both branches of the If are valid ways to retrieve
    the edge list for any graph. They only differ in performance.
 *)
 igEdgeList[graph_] :=

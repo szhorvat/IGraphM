@@ -60,6 +60,34 @@ public:
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
     }
 
+    void fromEdgeListML(MLINK link) {
+        mlStream ml{link, "fromEdgeListML"};
+        igMatrix mat;
+        igraph_bool_t directed;
+        igraph_integer_t n;
+        ml >> mlCheckArgs(3) >> n >> directed;
+        int argc;
+        if (! MLTestHead(link, "Graph", &argc))
+            ml.error("Head Graph expected");
+        ml >> mlDiscard(1);
+        if (! MLTestHead(link, "List", &argc))
+            ml.error("Head List expected");
+        if (! directed) {
+            ml >> mlDiscard(1);
+        }
+        ml >> mat;
+
+        for (double *v = mat.begin(); v != mat.end(); ++v) {
+            (*v) -= 1;
+        }
+
+        destroy();
+        igConstructorCheck(igraph_create(&graph, &mat.mat.data, n, directed));
+
+        ml.newPacket();
+        ml << mlSymbol("Null");
+    }
+
     void fromLCF(mint n, mma::RealTensorRef v, mint repeats) {
         destroy();
         igraph_vector_t shifts = igVectorView(v);
