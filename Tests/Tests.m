@@ -3,6 +3,8 @@
 
 tolEq[a_, b_, tol_ : 1*^-8 ] := Max@Abs[a-b] < tol
 
+takeUpper[mat_?SquareMatrixQ] := Extract[mat, Subsets[Range@Length[mat], {2}]]
+
 (*******************************************************************************)
 MTSection["Basic"]
 
@@ -757,6 +759,40 @@ MT[
   IGCompareCommunities[c, c2],
   IGCompareCommunities[c2, c]
 ]
+
+
+(*******************************************************************************)
+MTSection["Shortest paths"]
+
+(* directed, unweighted, unconnected *)
+MT[
+  IGDistanceCounts[web],
+  hist = Values@Rest@Most@KeySort@Counts@Flatten@GraphDistanceMatrix[web]
+]
+
+MT[
+  IGAveragePathLength[web],
+  N@Mean@WeightedData[Range@Length[hist], hist]
+]
+
+
+(* undirected, unweighted, connected *)
+MT[
+  IGDistanceCounts[dolphin],
+  hist = Values@KeySort@Counts@takeUpper@GraphDistanceMatrix[dolphin]
+]
+
+MT[
+  IGAveragePathLength[dolphin],
+  N@Mean@WeightedData[Range@Length[hist], hist]
+]
+
+
+MT[
+  IGGirth[PetersenGraph[5, 3]],
+  5
+]
+
 
 (*******************************************************************************)
 MTSection["Test remaining functions"]

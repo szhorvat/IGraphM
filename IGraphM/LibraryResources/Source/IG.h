@@ -724,6 +724,25 @@ public:
         return res.makeMTensor();
     }
 
+    mma::RealTensorRef shortestPathHistogram() const {
+        igVector res;
+        double unconnected;
+        igCheck(igraph_path_length_hist(&graph, &res.vec, &unconnected, true));
+        return res.makeMTensor();
+    }
+
+    double averagePathLength() const {
+        double res;
+        igCheck(igraph_average_path_length(&graph, &res, true, true));
+        return res;
+    }
+
+    mint girth() const {
+        igraph_integer_t res;
+        igCheck(igraph_girth(&graph, &res, NULL));
+        return res;
+    }
+
     // Cliques
 
     void cliques(MLINK link) const {

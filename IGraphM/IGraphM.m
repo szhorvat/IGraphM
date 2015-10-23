@@ -160,6 +160,9 @@ IGStochasticBlockModelGame::usage = "IGStochasticBlockModelGame[ratesMatrix, blo
 IGForestFireGame::usage = "IGForestFireGame[n, fwprob]";
 
 IGDistanceMatrix::usage = "IGDistanceMatrix[graph] computes the shortest path between each vertex pair in graph.";
+IGDistanceCounts::usage = "IGDistanceCounts[graph] computes a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k.";
+IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of all-pair unweighted shortest path lengths of the graph.";
+IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the graph. The graph is treated as undirected, self-loops and multi-edges are ignored.";
 
 IGCliques::usage =
     "IGCliques[graph] returns all complete subgraphs (cliques) in graph. Note that this is different from the builtin FindCliques[], which finds maximal cliques.\n" <>
@@ -430,6 +433,9 @@ template = LTemplate["IGraphM",
         (* Shortest paths *)
 
         LFun["shortestPaths", {}, {Real, 2}],
+        LFun["shortestPathHistogram", {}, {Real, 1}],
+        LFun["averagePathLength", {}, Real],
+        LFun["girth", {}, Real],
 
         (* Cliques *)
 
@@ -1481,6 +1487,21 @@ IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCo
 IGDistanceMatrix[graph_?igGraphQ] :=
     catch@Block[{ig = igMake[graph]},
       zeroDiagonal[Round[check@ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
+    ]
+
+IGDistanceCounts[graph_?igGraphQ] :=
+    catch@Block[{ig = igMake[graph]},
+      check@Round@ig@"shortestPathHistogram"[]
+    ]
+
+IGAveragePathLength[graph_?igGraphQ] :=
+    Block[{ig = igMake[graph]},
+      sck@ig@"averagePathLength"[]
+    ]
+
+IGGirth[graph_?igGraphQ] :=
+    catch@Block[{ig = igMake[graph]},
+      check@Round@ig@"girth"[]
     ]
 
 (* Cliques *)
