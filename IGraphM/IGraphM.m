@@ -169,6 +169,16 @@ IGCliques::usage =
     "IGCliques[graph, {min, max}] returns all complete subgraphs between sizes min and max.\n" <>
     "IGCliques[graph, max] returns all complete subgraphs of size at most max.\n" <>
     "IGCliques[graph, {n}] returns all complete subgraphs of size n.";
+IGCliqueSizeCounts::usage =
+    "IGCliqueSizeCounts[graph] computes a histogram of clique sizes in graph. The kth element of the result is the number of k-cliques.\n" <>
+    "IGCliqueSizeCounts[graph, {min, max}] computes a histogram of clique sizes between min and max in graph.\n" <>
+    "IGCliqueSizeCounts[graph, max] computed a histogram of clique sizes no larger than max in graph.\n" <>
+    "IGCliqueSizeCounts[graph, {n}] counts cliques of size n in graph.";
+IGMaximalCliqueSizeCounts::usage =
+    "IGMaximalCliqueSizeCounts[graph] computes a histogram of maximal clique sizes in graph. The kth element of the result is the number of maximal k-cliques.\n" <>
+    "IGMaximalCliqueSizeCounts[graph, {min, max}] computes a histogram of maximal clique sizes between min and max in graph.\n" <>
+    "IGMaximalCliqueSizeCounts[graph, max] computed a histogram of maximal clique sizes no larger than max in graph.\n" <>
+    "IGMaximalCliqueSizeCounts[graph, {n}] counts maximal cliques of size n in graph.";
 IGMaximalCliques::usage =
     "IGMaximalCliques[graph] returns all maximal cliques in graph.\n" <>
     "IGMaximalCliques[graph, {min, max}] returns all maximal cliques between sizes min and max.\n" <>
@@ -440,9 +450,11 @@ template = LTemplate["IGraphM",
         (* Cliques *)
 
         LFun["cliques", LinkObject],
+        LFun["cliqueDistribution", {Integer, Integer}, {Real, 1}],
         LFun["maximalCliques", LinkObject],
         LFun["largestCliques", LinkObject],
         LFun["maximalCliquesCount", {Integer, Integer}, Integer],
+        LFun["maximalCliqueDistribution", {Integer, Integer}, {Integer, 1}],
         LFun["cliqueNumber", {}, Integer],
 
         (* Independent vertex sets *)
@@ -1514,6 +1526,26 @@ IGCliques[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Inte
 igCliques[graph_, {min_, max_}] :=
     catch@Block[{ig = igMake[graph]},
       igVertexNames[graph] /@ igIndexVec@check@ig@"cliques"[min, max]
+    ]
+
+IGCliqueSizeCounts[graph_] := IGCliqueSizeCounts[graph, Infinity]
+IGCliqueSizeCounts[graph_, max : (_Integer | Infinity)] := IGCliqueSizeCounts[graph, {1, max}]
+IGCliqueSizeCounts[graph_, {size_}] := IGCliqueSizeCounts[graph, {size, size}]
+IGCliqueSizeCounts[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
+    igCliqueSizeCounts[graph, {min, infToZero[max]}]
+igCliqueSizeCounts[graph_, {min_, max_}] :=
+    catch@Block[{ig = igMake[graph]},
+      Round@check@ig@"cliqueDistribution"[min, max]
+    ]
+
+IGMaximalCliqueSizeCounts[graph_] := IGMaximalCliqueSizeCounts[graph, Infinity]
+IGMaximalCliqueSizeCounts[graph_, max : (_Integer | Infinity)] := IGMaximalCliqueSizeCounts[graph, {1, max}]
+IGMaximalCliqueSizeCounts[graph_, {size_}] := IGMaximalCliqueSizeCounts[graph, {size, size}]
+IGMaximalCliqueSizeCounts[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
+    igMaximalCliqueSizeCounts[graph, {min, infToZero[max]}]
+igMaximalCliqueSizeCounts[graph_, {min_, max_}] :=
+    Block[{ig = igMake[graph]},
+      sck@ig@"maximalCliqueDistribution"[min, max]
     ]
 
 IGMaximalCliques[graph_] := IGMaximalCliques[graph, Infinity]

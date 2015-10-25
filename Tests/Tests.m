@@ -518,6 +518,9 @@ MTSection["Cliques"]
 cl[g_, k_] :=
     Union[Sort /@ Values /@ IGLADFindSubisomorphisms[CompleteGraph[k], g]]
 
+cl2[g_] :=
+    Rest@Union[Sort /@ Catenate[Subsets /@ FindClique[g, Infinity, All]]]
+
 canon[ls_] := Sort[Sort /@ ls]
 
 rg = RandomGraph[{30,200}];
@@ -540,6 +543,55 @@ MT[
 MT[
   Complement[canon@IGMaximalCliques[rg], canon@IGCliques[rg]],
   {}
+]
+
+MT[
+  canon@IGCliques[rg] == canon@cl2[rg],
+  True
+]
+
+MT[
+  IGCliqueSizeCounts[rg],
+  Values@KeySort@Counts[Length /@ IGCliques[rg]]
+]
+
+MT[
+  IGMaximalCliqueSizeCounts[rg],
+  With[{cl = FindClique[rg, Infinity, All]},
+    Lookup[Counts[Length /@ cl], Range@Max[Length /@ cl], 0]
+  ]
+]
+
+MT[
+  IGCliques[Graph[{},{}]],
+  {}
+]
+
+MT[
+  canon@IGCliques[Graph[{1,2,3},{}]],
+  {{1},{2},{3}}
+]
+
+MT[
+  IGMaximalCliques[Graph[{},{}]],
+  {}
+]
+
+MT[
+  canon@IGMaximalCliques[Graph[{1,2,3},{}]],
+  {{1},{2},{3}}
+]
+
+MT[
+  canon@IGCliques[Graph[{1, 2}, {1 -> 2}]],
+  {{1},{2},{1,2}},
+  {IGraphM::warning}
+]
+
+MT[
+  canon@IGMaximalCliques[Graph[{1, 2}, {1 -> 2}]],
+  {{1,2}},
+  {IGraphM::warning}
 ]
 
 (*******************************************************************************)
