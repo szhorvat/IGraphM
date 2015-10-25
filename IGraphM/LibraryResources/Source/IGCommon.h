@@ -235,6 +235,27 @@ inline mlStream & operator >> (mlStream &ml, igVector &vec) {
 }
 
 
+inline mlStream & operator >> (mlStream &ml, igMatrix &mat) {
+    double *data;
+    int *dims;
+    char **heads;
+    int depth;
+    if (! MLGetReal64Array(ml.link(), &data, &dims, &heads, &depth))
+        ml.error("Real64 matrix expected");
+    if (depth != 2)
+        ml.error("Real64 matrix expected, depth doesn't match");
+
+    int length = 1;
+    for (int i=0; i < depth; ++i)
+        length *= dims[i];
+    igraph_vector_resize(&mat.mat.data, length);
+    std::copy(data, data+length, mat.begin());
+    mat.mat.nrow = dims[1];
+    mat.mat.ncol = dims[0];
+    MLReleaseReal64Array(ml.link(), data, dims, heads, depth);
+    return ml;
+}
+
 inline mlStream & operator >> (mlStream &ml, igIntVector &vec) {
     int *data;
     int length;

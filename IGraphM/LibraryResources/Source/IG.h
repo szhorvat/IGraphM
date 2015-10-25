@@ -9,6 +9,10 @@ class IG;
 
 extern std::map<mint, IG *> IG_collection; // TODO this is a hack pending proper implementation in LTemplate
 
+// TODO this is a hack, should patch igraph to expose this interface
+typedef int(*igraph_i_maximal_clique_func_t)(const igraph_vector_t*, void*, igraph_bool_t*);
+extern "C" int igraph_i_maximal_cliques(const igraph_t *graph, igraph_i_maximal_clique_func_t func, void* data);
+
 class IG {    
     igraph_t graph;
     igVector weights;
@@ -58,6 +62,34 @@ public:
         destroy();
         igraph_vector_t edgelist = igVectorView(v);
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
+    }
+
+    void fromEdgeListML(MLINK link) {
+        mlStream ml{link, "fromEdgeListML"};
+        igMatrix mat;
+        igraph_bool_t directed;
+        igraph_integer_t n;
+        ml >> mlCheckArgs(3) >> n >> directed;
+        int argc;
+        if (! MLTestHead(link, "Graph", &argc))
+            ml.error("Head Graph expected");
+        ml >> mlDiscard(1);
+        if (! MLTestHead(link, "List", &argc))
+            ml.error("Head List expected");
+        if (! directed) {
+            ml >> mlDiscard(1);
+        }
+        ml >> mat;
+
+        for (double *v = mat.begin(); v != mat.end(); ++v) {
+            (*v) -= 1;
+        }
+
+        destroy();
+        igConstructorCheck(igraph_create(&graph, &mat.mat.data, n, directed));
+
+        ml.newPacket();
+        ml << mlSymbol("Null");
     }
 
     void fromLCF(mint n, mma::RealTensorRef v, mint repeats) {
@@ -696,6 +728,25 @@ public:
         return res.makeMTensor();
     }
 
+    mma::RealTensorRef shortestPathHistogram() const {
+        igVector res;
+        double unconnected;
+        igCheck(igraph_path_length_hist(&graph, &res.vec, &unconnected, true));
+        return res.makeMTensor();
+    }
+
+    double averagePathLength() const {
+        double res;
+        igCheck(igraph_average_path_length(&graph, &res, true, true));
+        return res;
+    }
+
+    mint girth() const {
+        igraph_integer_t res;
+        igCheck(igraph_girth(&graph, &res, NULL));
+        return res;
+    }
+
     // Cliques
 
     void cliques(MLINK link) const {
@@ -710,6 +761,12 @@ public:
         ml << list;
     }
 
+    mma::RealTensorRef cliqueDistribution(mint min, mint max) const {
+        igVector hist;
+        igCheck(igraph_clique_size_hist(&graph, &hist.vec, min, max));
+        return hist.makeMTensor();
+    }
+
     void maximalCliques(MLINK link) const {
         mlStream ml{link, "maximalCliques"};
         int min, max;
@@ -722,10 +779,40 @@ public:
         ml << list;
     }
 
-    mint maximalCliquesCount(int min, int max) const {
+    mint maximalCliquesCount(mint min, mint max) const {
         igraph_integer_t res;
         igCheck(igraph_maximal_cliques_count(&graph, &res, min, max));
         return res;
+    }
+
+    mma::IntTensorRef maximalCliqueDistribution(mint min, mint max) const {
+        struct clique_data {
+            std::vector<mint> hist;
+            long min, max;
+        } cd;
+
+        cd.hist.reserve(50);
+        cd.min = min;
+        cd.max = max;
+        struct {
+            static int handle(const igraph_vector_t *clique, void *data, igraph_bool_t *cont) {
+                clique_data *cd = static_cast<clique_data *>(data);
+                long clique_size = igraph_vector_size(clique);
+                if (clique_size < cd->min || (clique_size > cd->max && cd->max > 0))
+                    return IGRAPH_SUCCESS;
+                if (cd->hist.size() < clique_size) {
+                    if (cd->hist.capacity() < clique_size)
+                        cd->hist.reserve(2*clique_size);
+                    cd->hist.resize(clique_size, 0);
+                }
+                cd->hist[clique_size-1] += 1;
+                return IGRAPH_SUCCESS;
+            }
+        } clique_counter;
+
+        igCheck(igraph_i_maximal_cliques(&graph, &clique_counter.handle, &cd));
+
+        return mma::makeVector<mint>(cd.hist.size(), &cd.hist[0]);
     }
 
     void largestCliques(MLINK link) const {
