@@ -125,6 +125,19 @@ inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
 }
 
 
+struct mlDiscard {
+    const int count;
+    mlDiscard(int count_ = 1) : count(count_) {}
+};
+
+inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
+    for (int i=0; i < drop.count; ++i)
+        if (! MLTransferExpression(NULL, ml.link()))
+            ml.error("Cannot discard expression");
+    return ml;
+}
+
+
 // Basic types (integer and floating point)
 
 #define MLSTREAM_DEF_BASIC_GET(MTYPE, CTYPE) \
