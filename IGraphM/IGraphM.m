@@ -253,7 +253,7 @@ IGMinSeparators::usage = "IGMinSeparators[graph] returns all separator vertex se
 
 IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulation points of graph. A vertex is an articulation point if its removal increases the number of connected components in the graph.";
 
-IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it.";
+IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Size-one components are not returned.";
 
 IGGraphlets::usage =
     "IGGraphlets[graph]\n" <>
@@ -449,19 +449,19 @@ template = LTemplate["IGraphM",
 
         (* Cliques *)
 
-        LFun["cliques", LinkObject],
+        LFun["cliques", {Integer, Integer}, {Integer, 1}],
         LFun["cliqueDistribution", {Integer, Integer}, {Real, 1}],
-        LFun["maximalCliques", LinkObject],
-        LFun["largestCliques", LinkObject],
+        LFun["maximalCliques", {Integer, Integer}, {Integer, 1}],
+        LFun["largestCliques", {}, {Integer, 1}],
         LFun["maximalCliquesCount", {Integer, Integer}, Integer],
         LFun["maximalCliqueDistribution", {Integer, Integer}, {Integer, 1}],
         LFun["cliqueNumber", {}, Integer],
 
         (* Independent vertex sets *)
 
-        LFun["independentVertexSets", LinkObject],
-        LFun["largestIndependentVertexSets", LinkObject],
-        LFun["maximalIndependentVertexSets", LinkObject],
+        LFun["independentVertexSets", {Integer, Integer}, {Integer, 1}],
+        LFun["largestIndependentVertexSets", {}, {Integer, 1}],
+        LFun["maximalIndependentVertexSets", {}, {Integer, 1}],
         LFun["independenceNumber", {}, Integer],
 
         (* Graph drawing (layouts) *)
@@ -548,7 +548,7 @@ template = LTemplate["IGraphM",
 
         (* Vertex separators *)
 
-        LFun["minimumSizeSeparators", LinkObject],
+        LFun["minimumSizeSeparators", {}, {Integer, 1}],
         LFun["vertexConnectivity", {}, Integer],
         LFun["edgeConnectivity", {}, Integer],
         LFun["vertexConnectivityST", {Integer, Integer}, Integer],
@@ -558,7 +558,7 @@ template = LTemplate["IGraphM",
         (* Articulation points *)
 
         LFun["articulationPoints", {}, {Real, 1}],
-        LFun["biconnectedComponents", LinkObject],
+        LFun["biconnectedComponents", {}, {Integer, 1}],
 
         (* Graphlets *)
 
@@ -1582,8 +1582,8 @@ IGCliques[graph_, {size_}] := IGCliques[graph, {size, size}]
 IGCliques[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igCliques[graph, {min, infToZero[max]}]
 igCliques[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@check@ig@"cliques"[min, max]
+    catch@Block[{ig = igMakeFast[graph]},
+      igUnpackVertexSet[graph]@check@ig@"cliques"[min, max]
     ]
 
 IGCliqueSizeCounts[graph_] := IGCliqueSizeCounts[graph, Infinity]
@@ -1612,8 +1612,8 @@ IGMaximalCliques[graph_, {size_}] := IGMaximalCliques[graph, {size, size}]
 IGMaximalCliques[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igMaximalCliques[graph, {min, infToZero[max]}]
 igMaximalCliques[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@check@ig@"maximalCliques"[min, max]
+    catch@Block[{ig = igMakeFast[graph]},
+      igUnpackVertexSet[graph]@check@ig@"maximalCliques"[min, max]
     ]
 
 IGMaximalCliquesCount[graph_] := IGMaximalCliquesCount[graph, Infinity]
@@ -1627,8 +1627,8 @@ igMaximalCliquesCount[graph_, {min_, max_}] :=
     ]
 
 IGLargestCliques[graph_?igGraphQ] :=
-    catch@Block[{ig = igMake[graph]},
-      igVertexNames[graph] /@ igIndexVec@check@ig@"largestCliques"[]
+    catch@Block[{ig = igMakeFast[graph]},
+      igUnpackVertexSet[graph]@check@ig@"largestCliques"[]
     ]
 
 IGCliqueNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"cliqueNumber"[]]
@@ -1642,17 +1642,17 @@ IGIndependentVertexSets[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ,
     igIndependentVertexSets[graph, {min, infToZero[max]}]
 igIndependentVertexSets[graph_, {min_, max_}] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igVertexNames[graph] /@ igIndexVec@check@ig@"independentVertexSets"[min, max]
+      igUnpackVertexSet[graph]@check@ig@"independentVertexSets"[min, max]
     ]
 
 IGLargestIndependentVertexSets[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igVertexNames[graph] /@ igIndexVec@check@ig@"largestIndependentVertexSets"[]
+      igUnpackVertexSet[graph]@check@ig@"largestIndependentVertexSets"[]
     ]
 
 IGMaximalIndependentVertexSets[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igVertexNames[graph] /@ igIndexVec@check@ig@"maximalIndependentVertexSets"[]
+      igUnpackVertexSet[graph]@check@ig@"maximalIndependentVertexSets"[]
     ]
 
 IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"independenceNumber"[]]
@@ -1962,7 +1962,7 @@ IGChordalCompletion[graph_?igGraphQ] :=
 
 IGMinSeparators[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igVertexNames[graph] /@ igIndexVec@check@ig@"minimumSizeSeparators"[]
+      igUnpackVertexSet[graph]@check@ig@"minimumSizeSeparators"[]
     ]
 
 (* Connected components *)
@@ -1974,7 +1974,7 @@ IGArticulationPoints[graph_?igGraphQ] :=
 
 IGBiconnectedComponents[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igVertexNames[graph] /@ igIndexVec@check@ig@"biconnectedComponents"[]
+      igUnpackVertexSet[graph]@check@ig@"biconnectedComponents"[]
     ]
 
 (* Connectivity *)

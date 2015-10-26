@@ -49,6 +49,31 @@ class IG {
     // use this to pass weights to igraph functions
     const igraph_vector_t *passWeights() const { return weighted ? &weights.vec : NULL; }
 
+    // packs an igList (usually representing vertex sets) into
+    // a single IntTensor for fast transfer
+    mma::IntTensorRef packListIntoIntTensor(const igList &list) const {
+        std::vector<mint> lengths;
+        long list_length = list.length();
+        mint total_length = 0;
+        for (int i=0; i < list_length; ++i) {
+            mint len = igraph_vector_size(static_cast<igraph_vector_t *>(VECTOR(list.list)[i]));
+            total_length += len;
+            total_length += 1;
+            lengths.push_back(len);
+        }
+        total_length += 1;
+        mma::IntTensorRef t = mma::makeVector<mint>(total_length);
+        t[0] = list_length;
+        std::copy(lengths.begin(), lengths.end(), t.begin() + 1);
+        mint *ptr = t.begin() + 1 + list_length;
+        for (int i=0; i < list_length; ++i) {
+            double *b = &VECTOR(*static_cast<igraph_vector_t *>(VECTOR(list.list)[i]))[0];
+            std::copy(b, b+lengths[i], ptr);
+            ptr += lengths[i];
+        }
+        return t;
+    }
+
 public:
     IG() : weighted{false} { empty(); }
 
@@ -749,16 +774,10 @@ public:
 
     // Cliques
 
-    void cliques(MLINK link) const {
-        mlStream ml{link, "cliques"};
-        int min, max;
-        ml >> mlCheckArgs(2) >> min >> max;
-
+    mma::IntTensorRef cliques(mint min, mint max) const {
         igList list;
         igCheck(igraph_cliques(&graph, &list.list, min, max));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     mma::RealTensorRef cliqueDistribution(mint min, mint max) const {
@@ -767,16 +786,10 @@ public:
         return hist.makeMTensor();
     }
 
-    void maximalCliques(MLINK link) const {
-        mlStream ml{link, "maximalCliques"};
-        int min, max;
-        ml >> mlCheckArgs(2) >> min >> max;
-
+    mma::IntTensorRef maximalCliques(mint min, mint max) const {
         igList list;
         igCheck(igraph_maximal_cliques(&graph, &list.list, min, max));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     mint maximalCliquesCount(mint min, mint max) const {
@@ -815,15 +828,10 @@ public:
         return mma::makeVector<mint>(cd.hist.size(), &cd.hist[0]);
     }
 
-    void largestCliques(MLINK link) const {
-        mlStream ml{link, "largestCliques"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef largestCliques() const {
         igList list;
         igCheck(igraph_largest_cliques(&graph, &list.list));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     mint cliqueNumber() const {
@@ -834,38 +842,22 @@ public:
 
     // Independent vertex sets
 
-    void independentVertexSets(MLINK link) const {
-        mlStream ml{link, "independentVertexSets"};
-        int min, max;
-        ml >> mlCheckArgs(2) >> min >> max;
-
+    mma::IntTensorRef independentVertexSets(mint min, mint max) const {
         igList list;
         igCheck(igraph_independent_vertex_sets(&graph, &list.list, min, max));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
-    void largestIndependentVertexSets(MLINK link) const {
-        mlStream ml{link, "largestIndependentVertexSets"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef largestIndependentVertexSets() const {
         igList list;
         igCheck(igraph_largest_independent_vertex_sets(&graph, &list.list));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
-    void maximalIndependentVertexSets(MLINK link) const {
-        mlStream ml{link, "maximalIndependentVertexSets"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef maximalIndependentVertexSets() const {
         igList list;
         igCheck(igraph_maximal_independent_vertex_sets(&graph, &list.list));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     mint independenceNumber() const {
@@ -1139,15 +1131,10 @@ public:
 
     // Vertex separators
 
-    void minimumSizeSeparators(MLINK link) const {
-        mlStream ml{link, "minimumSizeSeparators"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef minimumSizeSeparators() const {
         igList list;
         igCheck(igraph_minimum_size_separators(&graph, &list.list));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     // Maximum flow
@@ -1169,16 +1156,11 @@ public:
         return vec.makeMTensor();
     }
 
-    void biconnectedComponents(MLINK link) const {
-        mlStream ml{link, "biconnectedComponents"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef biconnectedComponents() const {
         igList list;
         igraph_integer_t count;
         igCheck(igraph_biconnected_components(&graph, &count, NULL, NULL, &list.list, NULL));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     // Connectivity
