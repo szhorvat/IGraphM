@@ -71,6 +71,7 @@ dolphin = ExampleData[{"NetworkGraph", "DolphinSocialNetwork"}];
 web = ExampleData[{"NetworkGraph", "ExpandedComputationalGeometry"}];
 collab = ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}];
 football = ExampleData[{"NetworkGraph", "AmericanCollegeFootball"}];
+lesmiserables = ExampleData[{"NetworkGraph", "LesMiserables"}];
 
 (*******************************************************************************)
 MTSection["Undirected"]
@@ -765,7 +766,7 @@ MTSection["Community detection"]
 
 funs = {IGCommunitiesEdgeBetweenness, IGCommunitiesGreedy, IGCommunitiesInfoMAP,
   IGCommunitiesLabelPropagation, IGCommunitiesMultilevel,
-  IGCommunitiesOptimalModularity, IGCommunitiesWalktrap, IGCommunitiesLeadingEigenvector, IGCommunitiesSpinGlass};
+  IGCommunitiesWalktrap, IGCommunitiesLeadingEigenvector, IGCommunitiesSpinGlass};
 
 igClusterQ = Head[#] === IGClusterData&
 
@@ -773,6 +774,11 @@ MT[
   igClusterQ[#[dolphin]],
   True
 ]& /@ funs
+
+MT[
+  igClusterQ@IGCommunitiesOptimalModularity[lesmiserables],
+  True
+]
 
 MT[
   c = IGCommunitiesEdgeBetweenness[dolphin];
