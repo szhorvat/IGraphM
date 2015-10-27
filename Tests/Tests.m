@@ -752,7 +752,7 @@ MT[
 
 MT[
   Sort[Sort /@ IGBiconnectedComponents[dolphin]],
-  Sort[Sort /@ KVertexConnectedComponents[dolphin, 2]]
+  DeleteCases[Sort[Sort /@ KVertexConnectedComponents[dolphin, 2]], {_}]
 ]
 
 MT[
