@@ -830,45 +830,55 @@ amendUsage[sym_Symbol, amend_, args___] :=
       sym::usage = StringJoin@Riffle[lines, "\n"]
     ]
 
+optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
+
 (***** Public functions *****)
 
+SyntaxInformation[IGDocumentation] = {"ArgumentsPattern" -> {}};
 IGDocumentation[] := (NotebookOpen[FileNameJoin[{$packageDirectory, "Documentation", "IGDocumentation.nb"}], Saveable -> False, WindowTitle -> "IGraph/M Documentation"]; Null)
 
 (*  IGData  *)
 
 $igData = zimport@FileNameJoin[{$packageDirectory, "IGData.mz"}];
+SyntaxInformation[IGData] = {"ArgumentsPattern" -> {_.}};
 IGData[] := Keys[$igData]
 IGData[item_] := Lookup[$igData, Key[item], Missing["NotAvailable"]]
 
 (* General (global) *)
 
+SyntaxInformation[IGVersion] = {"ArgumentsPattern" -> {}};
 IGVersion[] :=
     "IGraph/M " <> $packageVersion <>
     "\nigraph " <> igraphGlobal@"version"[] <> " (" <> igraphGlobal@"compilationDate"[] <> ")\n" <>
     $System;
 
+
+SyntaxInformation[IGSeedRandom] = {"ArgumentsPattern" -> {_}};
 IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := sck@igraphGlobal@"seedRandom"[seed]
+
 
 (* Create *)
 
 Options[IGLCF] = { GraphLayout -> "CircularEmbedding" };
-
+SyntaxInformation[IGLCF] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGLCF, Graph]};
 IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[{IGLCF, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"fromLCF"[Replace[n, Automatic :> Length[shifts] repeats], shifts, repeats];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
 
+
 Options[IGMakeLattice] = {
   "Radius" -> 1, DirectedEdges -> False, "Mutual" -> False, "Periodic" -> False
 };
-
+SyntaxInformation[IGMakeLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGMakeLattice, Graph]};
 IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"makeLattice"[dims, OptionValue["Radius"], OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Periodic"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
+SyntaxInformation[IGGraphAtlas] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGGraphAtlas, Graph]};
 IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"graphAtlas"[n];
@@ -880,9 +890,10 @@ IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]
 Options[IGDegreeSequenceGame] = { Method -> "SimpleNoMultiple" };
 igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>;
 amendUsage[IGDegreeSequenceGame, "Available Method options: <*Keys[igDegreeSequenceGameMethods]*>."];
+SyntaxInformation[IGDegreeSequenceGame] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGDegreeSequenceGame, Graph]};
+
 IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
     catch@applyGraphOpt[opt]@igDegreeSequenceGame[{}, degrees, OptionValue[Method]]
-
 
 IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
     catch@applyGraphOpt[opt]@igDegreeSequenceGame[indegrees, outdegrees, OptionValue[Method]]
@@ -895,6 +906,7 @@ igDegreeSequenceGame[indegrees_, outdegrees_, method_] :=
 
 
 Options[IGKRegularGame] = { "MultipleEdges" -> False, DirectedEdges -> False };
+SyntaxInformation[IGKRegularGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGKRegularGame, Graph]};
 IGKRegularGame[n_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[{IGKRegularGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["MultipleEdges"]];
@@ -902,6 +914,7 @@ IGKRegularGame[n_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineI
     ]
 
 Options[IGStochasticBlockModelGame] = { SelfLoops -> False, DirectedEdges -> False };
+SyntaxInformation[IGStochasticBlockModelGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGStochasticBlockModelGame, Graph]};
 IGStochasticBlockModelGame[ratesMatrix_?SquareMatrixQ, blockSizes_?nonNegIntVecQ, opt : OptionsPattern[{IGStochasticBlockModelGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"stochasticBlockModel"[ratesMatrix, blockSizes, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
@@ -909,6 +922,7 @@ IGStochasticBlockModelGame[ratesMatrix_?SquareMatrixQ, blockSizes_?nonNegIntVecQ
     ]
 
 Options[IGForestFireGame] = { DirectedEdges -> False };
+SyntaxInformation[IGForestFireGame] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGForestFireGame, Graph]};
 IGForestFireGame[n_?Internal`PositiveMachineIntegerQ, fwprob_?NonNegative, bwratio : _?NonNegative : 1, nambs : _?Internal`NonNegativeIntegerQ : 1, opt : OptionsPattern[{IGForestFireGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"forestFireGame"[n, fwprob, bwratio, nambs, OptionValue[DirectedEdges]];
@@ -917,11 +931,16 @@ IGForestFireGame[n_?Internal`PositiveMachineIntegerQ, fwprob_?NonNegative, bwrat
 
 (* Testing *)
 
+SyntaxInformation[IGDirectedAcyclicGraphQ] = {"ArgumentsPattern" -> {_}};
 IGDirectedAcyclicGraphQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"dagQ"[]]
 
+SyntaxInformation[IGConnectedQ] = {"ArgumentsPattern" -> {_}};
 IGConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[True]]
+
+SyntaxInformation[IGWeaklyConnectedQ] = {"ArgumentsPattern" -> {_}};
 IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[False]]
 
+SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
 IGGraphicalQ[degrees_?nonNegIntVecQ] := IGGraphicalQ[{}, degrees]
 IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"graphicalQ"[outdeg, indeg]
 
@@ -938,6 +957,8 @@ IGBetweenness::bdmtd =
 
 amendUsage[IGBetweenness, "Available Method options: <*Keys[igBetwennessMethods]*>."];
 
+SyntaxInformation[IGBetweenness] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+
 IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[g]},
       sck@ig@"betweenness"[
@@ -947,10 +968,12 @@ IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 (* note: edge ordering is critical *)
+SyntaxInformation[IGEdgeBetweenness] = {"ArgumentsPattern" -> {_}};
 IGEdgeBetweenness[g_?igGraphQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweenness"[]]
 
 Options[IGCloseness] = { "Normalized" -> False };
+SyntaxInformation[IGCloseness] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[g]}, sck@ig@"closeness"[OptionValue["Normalized"]]]
 
@@ -959,6 +982,7 @@ IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
 Options[IGBetweennessEstimate] = { Method -> "Precise" };
 IGBetweennessEstimate::bdmtd = IGBetweenness::bdmtd;
 amendUsage[IGBetweennessEstimate, "Available Method options: <*Keys[igBetwennessMethods]*>."];
+SyntaxInformation[IGBetweennessEstimate] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[g]},
       sck@ig@"betweennessEstimate"[
@@ -968,22 +992,25 @@ IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPatter
     ]
 
 (* note: edge ordering is critical *)
+SyntaxInformation[IGEdgeBetweennessEstimate] = {"ArgumentsPattern" -> {_, _}};
 IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
 
 Options[IGClosenessEstimate] = { "Normalized" -> False };
+SyntaxInformation[IGClosenessEstimate] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[g]},
       sck@ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"]]
     ]
 
-Options[IGPageRank] = { Method -> "PRPACK" };
+
 
 igPageRankMethods = { "PowerIteration", "Arnoldi", "PRPACK" };
 igPageRankMethodsAsc = AssociationThread[igPageRankMethods, Range@Length[igPageRankMethods] - 1];
 igPageRankPowerOptions = <| "Epsilon" -> 0.001, "MaxIterations" -> 1000 |>;
 
 Options[IGPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
+SyntaxInformation[IGPageRank] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 
 IGPageRank[graph_?GraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}, powerOpt},
@@ -997,7 +1024,9 @@ IGPageRank[graph_?GraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPatt
       ]
     ]
 
+
 Options[IGPersonalizedPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
+SyntaxInformation[IGPersonalizedPageRank] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 
 IGPersonalizedPageRank::invarg = "Second argument must be a vector of the same length as the vertex count of the graph.";
 
@@ -1017,24 +1046,29 @@ IGPersonalizedPageRank[graph_?GraphQ, reset_?VectorQ, damping : _?positiveNumeri
       ]
     ]
 
+
 Options[IGEigenvectorCentrality] = { DirectedEdges -> True, "Normalized" -> True };
+SyntaxInformation[IGEigenvectorCentrality] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGEigenvectorCentrality[graph_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"eigenvectorCentrality"[OptionValue[DirectedEdges], OptionValue["Normalized"]]
     ]
 
 Options[IGHubScore] = { "Normalized" -> True };
+SyntaxInformation[IGHubScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGHubScore[graph_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"hubScore"[OptionValue["Normalized"]]
     ]
 
 Options[IGAuthorityScore] = { "Normalized" -> True };
+SyntaxInformation[IGAuthorityScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGAuthorityScore[graph_?GraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"authorityScore"[OptionValue["Normalized"]]
     ]
 
+SyntaxInformation[IGConstraintScore] = {"ArgumentsPattern" -> {_}};
 IGConstraintScore[graph_?igGraphQ] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"constraintScore"[]
@@ -1045,6 +1079,7 @@ IGConstraintScore[graph_?igGraphQ] :=
 (* TODO: functions in this section should warn that edge weights will be lost *)
 
 Options[IGRewire] = { SelfLoops -> False };
+SyntaxInformation[IGRewire] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGRewire[g_?igGraphQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[g]},
       check@ig@"rewire"[n, OptionValue[SelfLoops]];
@@ -1052,6 +1087,7 @@ IGRewire[g_?igGraphQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[
     ]
 
 Options[IGRewireEdges] = { SelfLoops -> False, "MultipleEdges" -> False };
+SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[g]},
       check@ig@"rewireEdges"[p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
@@ -1060,6 +1096,7 @@ IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[
 
 (* Isomorphism *)
 
+SyntaxInformation[IGIsomorphicQ] = {"ArgumentsPattern" -> {_, _}};
 IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
     catch@If[MultigraphQ[g1] || MultigraphQ[g2],
       igMultigraphIsomorphicQ[g1, g2]
@@ -1081,6 +1118,7 @@ igMultigraphIsomorphicQ[g1_, g2_] :=
       ]
     ]
 
+SyntaxInformation[IGSubisomorphicQ] = {"ArgumentsPattern" -> {_, _}};
 IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
     catch@If[MultigraphQ[subgraph] || MultigraphQ[graph],
       igMultigraphSubisomorphicQ[subgraph, graph]
@@ -1102,6 +1140,7 @@ igMultigraphSubisomorphicQ[subgraph_, graph_] :=
 ]
 
 
+SyntaxInformation[IGIsoclass] = {"ArgumentsPattern" -> {_}};
 IGIsoclass[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"isoclass"[]]
 
 
@@ -1157,6 +1196,7 @@ amendUsage[IGBlissCanonicalLabeling,
 
 
 Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "First" };
+SyntaxInformation[IGBlissCanonicalLabeling] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
       blissCheckMulti[graph];
@@ -1177,6 +1217,7 @@ IGBlissCanonicalLabeling[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Option
 
 
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
+SyntaxInformation[IGBlissCanonicalPermutation] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
       blissCheckMulti[graph];
@@ -1191,6 +1232,7 @@ IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Opt
 
 
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
+SyntaxInformation[IGBlissCanonicalGraph] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
       catch@VertexReplace[graph, Normal@check@IGBlissCanonicalLabeling[graph, opt]]
 IGBlissCanonicalGraph[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
@@ -1198,6 +1240,7 @@ IGBlissCanonicalGraph[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPa
 
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
+SyntaxInformation[IGBlissIsomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2]},
       blissCheckMulti /@ {graph1, graph2};
@@ -1213,7 +1256,7 @@ IGBlissIsomorphicQ[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGraph
 
 
 Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "First" };
-
+SyntaxInformation[IGBlissGetIsomorphism] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], result},
       blissCheckMulti /@ {graph1, graph2};
@@ -1239,7 +1282,7 @@ IGBlissGetIsomorphism[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGr
 
 
 Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "First" };
-
+SyntaxInformation[IGBlissAutomorphismCount] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
       blissCheckMulti[graph];
@@ -1255,7 +1298,7 @@ IGBlissAutomorphismCount[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Option
 
 
 Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "First" };
-
+SyntaxInformation[IGBlissAutomorphismGroup] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
       blissCheckMulti[graph];
@@ -1274,6 +1317,8 @@ IGBlissAutomorphismGroup[{graph_?GraphQ, col : OptionsPattern[]}, opt : OptionsP
 IGraphM::vf2nmg = "VF2 does not support multigraphs.";
 vf2CheckMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::vf2nmg]; throw[$Failed]]
 
+SyntaxInformation[IGVF2IsomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}}};
+
 IGVF2IsomorphicQ[{graph1_?igGraphQ, opt1 : OptionsPattern[]}, {graph2_?igGraphQ, opt2 : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
       vf2CheckMulti /@ {graph1, graph2};
@@ -1290,6 +1335,8 @@ IGVF2IsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ] :=
       check@ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], {}, {}, {}, {}]
     ]
 
+
+SyntaxInformation[IGVF2FindIsomorphisms] = {"ArgumentsPattern" -> {{__}, {__}, _.}};
 
 IGVF2FindIsomorphisms[{graph1_?igGraphQ, opt1 : OptionsPattern[]}, {graph2_?igGraphQ, opt2 : OptionsPattern[]}, max : (_?Internal`PositiveMachineIntegerQ | All | Infinity) : All] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2, n, result},
@@ -1318,6 +1365,8 @@ IGVF2FindIsomorphisms[graph1_?igGraphQ, graph2_?igGraphQ, max : (_?Internal`Posi
     ]
 
 
+SyntaxInformation[IGVF2SubisomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}}};
+
 IGVF2SubisomorphicQ[{subgraph_?igGraphQ, optsub : OptionsPattern[]}, {graph_?igGraphQ, opt : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol, vcolsub, ecol, ecolsub},
       vf2CheckMulti /@ {subgraph, graph};
@@ -1334,6 +1383,8 @@ IGVF2SubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
       check@ig1@"vf2Subisomorphic"[ManagedLibraryExpressionID[ig2], {}, {}, {}, {}]
     ]
 
+
+SyntaxInformation[IGVF2FindSubisomorphisms] = {"ArgumentsPattern" -> {{__}, {__}, _.}};
 
 IGVF2FindSubisomorphisms[{subgraph_?igGraphQ, optsub : OptionsPattern[]}, {graph_?igGraphQ, opt : OptionsPattern[]}, max : (_?Internal`PositiveMachineIntegerQ | All | Infinity) : All] :=
     catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol, vcolsub, ecol, ecolsub, n, result},
@@ -1362,6 +1413,8 @@ IGVF2FindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, max : (_?Internal`
     ]
 
 
+SyntaxInformation[IGVF2IsomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}}};
+
 IGVF2IsomorphismCount[{graph1_?igGraphQ, opt1 : OptionsPattern[]}, {graph2_?igGraphQ, opt2 : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
       vf2CheckMulti /@ {graph1, graph2};
@@ -1378,6 +1431,8 @@ IGVF2IsomorphismCount[graph1_?igGraphQ, graph2_?igGraphQ] :=
       check@ig1@"vf2IsomorphismCount"[ManagedLibraryExpressionID[ig2], {}, {} ,{}, {}]
     ]
 
+
+SyntaxInformation[IGVF2SubisomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}}};
 
 IGVF2SubisomorphismCount[{subgraph_?igGraphQ, optsub : OptionsPattern[]}, {graph_?igGraphQ, opt : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol, vcolsub, ecol, ecolsub},
@@ -1401,6 +1456,7 @@ IGVF2SubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ] :=
 defaultLADColors = {"VertexColors" -> None};
 
 Options[IGLADSubisomorphicQ] = { "Induced" -> False };
+SyntaxInformation[IGLADSubisomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 
 IGLADSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
@@ -1426,6 +1482,7 @@ IGLADSubisomorphicQ[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igG
 
 
 Options[IGLADGetSubisomorphism] = { "Induced" -> False };
+SyntaxInformation[IGLADGetSubisomorphism] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 
 IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
@@ -1461,6 +1518,7 @@ IGLADGetSubisomorphism[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?
 
 
 Options[IGLADFindSubisomorphisms] = { "Induced" -> False };
+SyntaxInformation[IGLADFindSubisomorphisms] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 
 IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
@@ -1490,6 +1548,7 @@ IGLADFindSubisomorphisms[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph
 
 (* Directed acylic graphs and topological ordering *)
 
+SyntaxInformation[IGTopologicalOrdering] = {"ArgumentsPattern" -> {_}};
 IGTopologicalOrdering[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igIndexVec@check@ig@"topologicalSorting"[]
@@ -1499,6 +1558,7 @@ IGTopologicalOrdering[graph_?igGraphQ] :=
 igFeedbackArcSetMethods = <| "IntegerProgramming" -> True, "EadesLinSmyth" -> False |>;
 
 Options[IGFeedbackArcSet] = { Method -> "IntegerProgramming" };
+SyntaxInformation[IGFeedbackArcSet] = {"ArgumentsPattern" -> {_, OptionsPattern[]} };
 
 IGFeedbackArcSet::bdmtd =
     "Value of option Method -> `` is not one of " <>
@@ -1516,8 +1576,10 @@ IGFeedbackArcSet[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 (* Motifs and subgraph counts *)
 
+SyntaxInformation[IGDyadCensus] = {"ArgumentsPattern" -> {_}};
 IGDyadCensus[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, AssociationThread[{"Mutual", "Asymmetric", "Null"}, Round@ig@"dyadCensus"[]]]
 
+SyntaxInformation[IGTriadCensus] = {"ArgumentsPattern" -> {_}};
 IGTriadCensus[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       AssociationThread[
@@ -1527,17 +1589,21 @@ IGTriadCensus[graph_?igGraphQ] :=
     ]
 
 (* TODO verify NaN handling *)
+SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _}};
 IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       Round@Developer`FromPackedArray@check@ig@"motifs"[size, ConstantArray[0, size]]
     ]
 
+SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _}};
 IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMakeFast[graph]}, sck@ig@"motifsNo"[size, ConstantArray[0, size]] ]
 
+SyntaxInformation[IGMotifsEstimateTotalCount] = {"ArgumentsPattern" -> {_, _, _}};
 IGMotifsEstimateTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMakeFast[graph]}, sck@ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize] ]
 
+SyntaxInformation[IGTriangles] = {"ArgumentsPattern" -> {_}};
 IGTriangles[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       Partition[igVertexNames[graph]@igIndexVec@check@ig@"triangles"[], 3]
@@ -1548,27 +1614,32 @@ igAdjacentTriangleCount[graph_, vs_] :=
       Round@check@ig@"countAdjacentTriangles"[vss[graph][vs]]
     ]
 
+SyntaxInformation[IGAdjacentTriangleCount] = {"ArgumentsPattern" -> {_, _}};
 IGAdjacentTriangleCount[graph_?igGraphQ, {}] := {}
 IGAdjacentTriangleCount[graph_?igGraphQ, vs_List : All] := catch@igAdjacentTriangleCount[graph, vs]
 IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCount[graph, {v}]
 
 (* Shortest paths *)
 
+SyntaxInformation[IGDistanceMatrix] = {"ArgumentsPattern" -> {_}};
 IGDistanceMatrix[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       zeroDiagonal[Round[check@ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
     ]
 
+SyntaxInformation[IGDistanceCounts] = {"ArgumentsPattern" -> {_}};
 IGDistanceCounts[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       check@Round@ig@"shortestPathHistogram"[]
     ]
 
+SyntaxInformation[IGAveragePathLength] = {"ArgumentsPattern" -> {_}};
 IGAveragePathLength[graph_?igGraphQ] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"averagePathLength"[]
     ]
 
+SyntaxInformation[IGGirth] = {"ArgumentsPattern" -> {_}};
 IGGirth[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       check@Round@ig@"girth"[]
@@ -1576,6 +1647,7 @@ IGGirth[graph_?igGraphQ] :=
 
 (* Cliques *)
 
+SyntaxInformation[IGCliques] = {"ArgumentsPattern" -> {_, _.}};
 IGCliques[graph_] := IGCliques[graph, Infinity]
 IGCliques[graph_, max : (_Integer | Infinity)] := IGCliques[graph, {1, max}]
 IGCliques[graph_, {size_}] := IGCliques[graph, {size, size}]
@@ -1586,6 +1658,7 @@ igCliques[graph_, {min_, max_}] :=
       igUnpackVertexSet[graph]@check@ig@"cliques"[min, max]
     ]
 
+SyntaxInformation[IGCliqueSizeCounts] = {"ArgumentsPattern" -> {_, _.}};
 IGCliqueSizeCounts[graph_] := IGCliqueSizeCounts[graph, Infinity]
 IGCliqueSizeCounts[graph_, max : (_Integer | Infinity)] := IGCliqueSizeCounts[graph, {1, max}]
 IGCliqueSizeCounts[graph_, {size_}] := IGCliqueSizeCounts[graph, {size, size}]
@@ -1596,6 +1669,7 @@ igCliqueSizeCounts[graph_, {min_, max_}] :=
       Round@check@ig@"cliqueDistribution"[min, max]
     ]
 
+SyntaxInformation[IGMaximalCliqueSizeCounts] = {"ArgumentsPattern" -> {_, _.}};
 IGMaximalCliqueSizeCounts[graph_] := IGMaximalCliqueSizeCounts[graph, Infinity]
 IGMaximalCliqueSizeCounts[graph_, max : (_Integer | Infinity)] := IGMaximalCliqueSizeCounts[graph, {1, max}]
 IGMaximalCliqueSizeCounts[graph_, {size_}] := IGMaximalCliqueSizeCounts[graph, {size, size}]
@@ -1606,6 +1680,7 @@ igMaximalCliqueSizeCounts[graph_, {min_, max_}] :=
       sck@ig@"maximalCliqueDistribution"[min, max]
     ]
 
+SyntaxInformation[IGMaximalCliques] = {"ArgumentsPattern" -> {_, _.}};
 IGMaximalCliques[graph_] := IGMaximalCliques[graph, Infinity]
 IGMaximalCliques[graph_, max : (_Integer | Infinity)] := IGMaximalCliques[graph, {1, max}]
 IGMaximalCliques[graph_, {size_}] := IGMaximalCliques[graph, {size, size}]
@@ -1616,6 +1691,7 @@ igMaximalCliques[graph_, {min_, max_}] :=
       igUnpackVertexSet[graph]@check@ig@"maximalCliques"[min, max]
     ]
 
+SyntaxInformation[IGMaximalCliquesCount] = {"ArgumentsPattern" -> {_, _.}};
 IGMaximalCliquesCount[graph_] := IGMaximalCliquesCount[graph, Infinity]
 IGMaximalCliquesCount[graph_, max : (_Integer | Infinity)] := IGMaximalCliquesCount[graph, {1, max}]
 IGMaximalCliquesCount[graph_, {size_}] := IGMaximalCliquesCount[graph, {size, size}]
@@ -1626,15 +1702,18 @@ igMaximalCliquesCount[graph_, {min_, max_}] :=
       Round@check@ig@"maximalCliquesCount"[min, max]
     ]
 
+SyntaxInformation[IGLargestCliques] = {"ArgumentsPattern" -> {_}};
 IGLargestCliques[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"largestCliques"[]
     ]
 
+SyntaxInformation[IGCliqueNumber] = {"ArgumentsPattern" -> {_}};
 IGCliqueNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"cliqueNumber"[]]
 
 (* Independent vertex sets *)
 
+SyntaxInformation[IGIndependentVertexSets] = {"ArgumentsPattern" -> {_, _.}};
 IGIndependentVertexSets[graph_] := IGIndependentVertexSets[graph, Infinity]
 IGIndependentVertexSets[graph_, max : (_Integer | Infinity)] := IGIndependentVertexSets[graph, {1, max}]
 IGIndependentVertexSets[graph_, {size_}] := IGIndependentVertexSets[graph, {size, size}]
@@ -1645,16 +1724,19 @@ igIndependentVertexSets[graph_, {min_, max_}] :=
       igUnpackVertexSet[graph]@check@ig@"independentVertexSets"[min, max]
     ]
 
+SyntaxInformation[IGLargestIndependentVertexSets] = {"ArgumentsPattern" -> {_}};
 IGLargestIndependentVertexSets[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"largestIndependentVertexSets"[]
     ]
 
+SyntaxInformation[IGMaximalIndependentVertexSets] = {"ArgumentsPattern" -> {_}};
 IGMaximalIndependentVertexSets[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"maximalIndependentVertexSets"[]
     ]
 
+SyntaxInformation[IGIndependenceNumber] = {"ArgumentsPattern" -> {_}};
 IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"independenceNumber"[]]
 
 (* Graph drawing (layouts *)
@@ -1691,16 +1773,19 @@ align[True] = PrincipalComponents
 align[False] = Identity
 align[val_] := (Message[IGraphM::lytaln, val]; Identity)
 
+SyntaxInformation[IGLayoutRandom] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGLayoutRandom[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMakeFast[graph]},
       applyGraphOpt[opt]@setVertexCoords[graph, check@ig@"layoutRandom"[]]
     ]
 
+SyntaxInformation[IGLayoutCircle] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGLayoutCircle[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMakeFast[graph]},
       applyGraphOpt[opt]@setVertexCoords[graph, check@ig@"layoutCircle"[]]
     ]
 
+SyntaxInformation[IGLayoutSphere] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph3D]};
 IGLayoutSphere[graph_?igGraphQ, opt : OptionsPattern[Graph3D]] :=
     catch@Block[{ig = igMakeFast[graph]},
       applyGraphOpt3D[opt]@setVertexCoords3D[graph, check@ig@"layoutSphere"[]]
@@ -1713,6 +1798,8 @@ Options[IGLayoutGraphOpt] = {
   "Continue" -> False, "Align" -> True
 };
 
+SyntaxInformation[IGLayoutGraphOpt] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutGraphOpt, Graph]};
+
 IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGraphOpt,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.01},
       applyGraphOpt[opt]@setVertexCoords[graph,
@@ -1723,10 +1810,13 @@ IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGraphOpt,Graph}]
       ]
     ]
 
+
 Options[IGLayoutKamadaKawai] = {
   "MaxIterations" -> Automatic, "Epsilon" -> 0, "KamadaKawaiConstant" -> Automatic,
   "Continue" -> False, "Align" -> True
 };
+
+SyntaxInformation[IGLayoutKamadaKawai] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutKamadaKawai, Graph]};
 
 IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
@@ -1738,10 +1828,13 @@ IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai,G
       ]
     ]
 
+
 Options[IGLayoutKamadaKawai3D] = {
   "MaxIterations" -> Automatic, "Epsilon" -> 0, "KamadaKawaiConstant" -> Automatic,
   "Continue" -> False, "Align" -> True
 };
+
+SyntaxInformation[IGLayoutKamadaKawai3D] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutKamadaKawai3D, Graph3D]};
 
 IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai3D,Graph3D}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
@@ -1753,12 +1846,15 @@ IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai
       ]
     ]
 
+
 igFruchtermanReingoldMethods = <| Automatic -> 2, False -> 1, True -> 0 |>;
 
 Options[IGLayoutFruchtermanReingold] = {
   "MaxIterations" -> 500, "MaxMovement" -> 5, "UseGrid" -> Automatic,
   "Continue" -> False, "Align" -> True
 };
+
+SyntaxInformation[IGLayoutFruchtermanReingold] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutFruchtermanReingold, Graph]};
 
 IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruchtermanReingold,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.25},
@@ -1769,10 +1865,13 @@ IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruch
       ]
     ]
 
+
 Options[IGLayoutFruchtermanReingold3D] = {
   "MaxIterations" -> 500, "MaxMovement" -> 5,
   "Continue" -> False, "Align" -> True
 };
+
+SyntaxInformation[IGLayoutFruchtermanReingold3D] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutFruchtermanReingold3D, Graph3D]};
 
 IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruchtermanReingold3D,Graph3D}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.25},
@@ -1783,10 +1882,13 @@ IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFru
       ]
     ]
 
+
 Options[IGLayoutGEM] = {
   "MaxIterations" -> Automatic, "Continue" -> False, "Align" -> True,
   "MaxTemperature" -> Automatic, "MinTemperature" -> 1/10, "InitTemperature" -> Automatic
 };
+
+SyntaxInformation[IGLayoutGEM] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutGEM, Graph]};
 
 IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGEM,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, maxtemp, inittemp, scale = 3*^-3},
@@ -1800,12 +1902,15 @@ IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGEM,Graph}]] :=
       ]
     ]
 
+
 Options[IGLayoutDavidsonHarel] = {
   "MaxIterations" -> 10, "Continue" -> False, "Align" -> True,
   "FineTuningIterations" -> Automatic, "CoolingFactor" -> 0.75,
   "NodeDistanceWeight" -> 1.0, "BorderDistanceWeight" -> 0.0, "EdgeLengthWeight" -> Automatic,
   "EdgeCrossingWeight" -> Automatic, "EdgeDistanceWeight" -> Automatic
 };
+
+SyntaxInformation[IGLayoutDavidsonHarel] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutDavidsonHarel, Graph]};
 
 IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDavidsonHarel,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], tuneiter, edgelenw, edgecrossw, edgedistw, scale = 0.1},
@@ -1839,6 +1944,8 @@ Options[IGLayoutReingoldTilford] = {
   "LayerHeight" -> 1, "LeafDistance" -> 1
 };
 
+SyntaxInformation[IGLayoutReingoldTilford] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilford, Graph]};
+
 IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilford,Graph}]] :=
     catch@Block[{ig = igMakeFast[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic -> {}];
@@ -1850,7 +1957,10 @@ IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldT
       ]
     ]
 
+
 Options[IGLayoutReingoldTilfordCircular] = { "RootVertices" -> Automatic, DirectedEdges -> False, "Rotation" -> 0 };
+
+SyntaxInformation[IGLayoutReingoldTilfordCircular] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilfordCircular, Graph]};
 
 IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilfordCircular,Graph}]] :=
     catch@Block[{ig = igMakeFast[graph], roots},
@@ -1860,8 +1970,12 @@ IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutR
       ]
     ]
 
+
 Options[IGLayoutDrL] = { "Settings" -> "Default", "Continue" -> False, "Align" -> True };
 Options[IGLayoutDrL3D] = { "Settings" -> "Default", "Continue" -> False, "Align" -> True };
+
+SyntaxInformation[IGLayoutDrL] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutDrL, Graph]};
+SyntaxInformation[IGLayoutDrL3D] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutDrL3D, Graph3D]};
 
 igLayoutDrLSettings = {"Default", "Coarsen", "Coarsest", "Refine", "Final"};
 igLayoutDrLSettingsAsc = AssociationThread[igLayoutDrLSettings, Range@Length[igLayoutDrLSettings]];
@@ -1895,15 +2009,19 @@ IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL3D,Graph3D}]] :=
 
 (* Clustering coefficient *)
 
+SyntaxInformation[IGGlobalClusteringCoefficient] = {"ArgumentsPattern" -> {_}};
 IGGlobalClusteringCoefficient[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[graph]}, ig@"transitivityUndirected"[]]
 
+SyntaxInformation[IGLocalClusteringCoefficient] = {"ArgumentsPattern" -> {_}};
 IGLocalClusteringCoefficient[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[graph]}, ig@"transitivityLocalUndirected"[]]
 
+SyntaxInformation[IGAverageLocalClusteringCoefficient] = {"ArgumentsPattern" -> {_}};
 IGAverageLocalClusteringCoefficient[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[graph]}, ig@"transitivityAverageLocalUndirected"[]]
 
+SyntaxInformation[IGWeightedClusteringCoefficient] = {"ArgumentsPattern" -> {_}};
 IGWeightedClusteringCoefficient[graph_?igGraphQ] :=
     Block[{ig = igMakeFastWeighted[graph]}, ig@"transitivityBarrat"[]]
 
@@ -1920,10 +2038,13 @@ similarityFunction1[name_, post_ : Identity][graph_, vs_?ListQ] :=
     ]
 similarityFunction1[name_, post_ : Identity][graph_, v_] := similarityFunction1[name, First @* post][graph, {v}]
 
+SyntaxInformation[IGCocitationCoupling] = {"ArgumentsPattern" -> {_, _.}};
 IGCocitationCoupling[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityCocitation", Round][graph, vs]
 
+SyntaxInformation[IGBibliographicCoupling] = {"ArgumentsPattern" -> {_, _.}};
 IGBibliographicCoupling[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityBibcoupling", Round][graph, vs]
 
+SyntaxInformation[IGInverseLogWeightedSimilarity] = {"ArgumentsPattern" -> {_, _.}};
 IGInverseLogWeightedSimilarity[graph_?igGraphQ, vs_ : All] := similarityFunction1["similarityInverseLogWeighted"][graph, vs]
 
 (* for those that return a matrix *)
@@ -1936,22 +2057,27 @@ similarityFunction2[name_][graph_, vs_?ListQ, loops_] :=
     ]
 
 Options[IGJaccardSimilarity] = { SelfLoops -> False };
+SyntaxInformation[IGJaccardSimilarity] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGJaccardSimilarity[graph_?igGraphQ, vs : (_?ListQ | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityJaccard"][graph, vs, OptionValue[SelfLoops]]
 
 Options[IGDiceSimilarity] = { SelfLoops -> False };
+SyntaxInformation[IGDiceSimilarity] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGDiceSimilarity[graph_?igGraphQ, vs : (_?ListQ | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityDice"][graph, vs, OptionValue[SelfLoops]]
 
 
 (* Chordal graphs *)
 
+SyntaxInformation[IGChordalQ] = {"ArgumentsPattern" -> {_}};
 IGChordalQ[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[graph]}, ig@"chordalQ"[]]
 
+SyntaxInformation[IGMaximumCardinalitySearch] = {"ArgumentsPattern" -> {_}};
 IGMaximumCardinalitySearch[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igVertexNames[graph]@igIndexVec@check@ig@"maximumCardinalitySearch"[]
     ]
 
+SyntaxInformation[IGChordalCompletion] = {"ArgumentsPattern" -> {_}};
 IGChordalCompletion[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph], result},
       result = check@ig@"chordalCompletion"[];
@@ -1960,6 +2086,7 @@ IGChordalCompletion[graph_?igGraphQ] :=
 
 (* Vertex cuts *)
 
+SyntaxInformation[IGMinSeparators] = {"ArgumentsPattern" -> {_}};
 IGMinSeparators[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"minimumSizeSeparators"[]
@@ -1967,17 +2094,21 @@ IGMinSeparators[graph_?igGraphQ] :=
 
 (* Connected components *)
 
+SyntaxInformation[IGArticulationPoints] = {"ArgumentsPattern" -> {_}};
 IGArticulationPoints[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igVertexNames[graph]@igIndexVec@check@ig@"articulationPoints"[]
     ]
 
+SyntaxInformation[IGBiconnectedComponents] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedComponents[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"biconnectedComponents"[]
     ]
 
 (* Connectivity *)
+
+SyntaxInformation[IGVertexConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
 
 IGVertexConnectivity[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[graph]},
@@ -1989,6 +2120,9 @@ IGVertexConnectivity[graph_?igGraphQ, s_, t_] :=
       check@ig@"vertexConnectivityST"[vs[graph][s], vs[graph][t]]
     ]
 
+
+SyntaxInformation[IGEdgeConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
+
 IGEdgeConnectivity[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[graph]},
       sck@ig@"edgeConnectivity"[]
@@ -1999,6 +2133,8 @@ IGEdgeConnectivity[graph_?igGraphQ, s_, t_] :=
       check@ig@"edgeConnectivityST"[vs[graph][s], vs[graph][t]]
     ]
 
+
+SyntaxInformation[IGCohesiveBlocks] = {"ArgumentsPattern" -> {_}};
 IGCohesiveBlocks[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph], blocks, cohesion, parents},
       {blocks, cohesion, parents} = check@ig@"cohesiveBlocks"[];
@@ -2130,6 +2266,7 @@ communitiesToMembership[elems_, communities_] :=
     ]
 
 
+SyntaxInformation[IGModularity] = {"ArgumentsPattern" -> {_, _}};
 IGModularity[graph_?igGraphQ, clusters_?igClusterDataQ] := IGModularity[graph, clusters["Communities"]]
 IGModularity[graph_?igGraphQ, communities : {__List}] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
@@ -2157,6 +2294,8 @@ igCompareCommunities[elems_, c1_, c2_, method_] :=
 
 amendUsage[IGCompareCommunities, "Available methods: <*igCompareCommunitiesMethods*>."];
 
+SyntaxInformation[IGCompareCommunities] = {"ArgumentsPattern" -> {_, _, _., _.}};
+
 IGCompareCommunities[graph_?igGraphQ, comm1 : {__List}, comm2 : {__List}, methods : {__String} : igCompareCommunitiesMethods] :=
     catch[
       Join @@ (igCompareCommunities[VertexList[graph], comm1, comm2, #]& /@ methods)
@@ -2176,6 +2315,7 @@ IGCompareCommunities[c1_?igClusterDataQ, c2_?igClusterDataQ, methods : {__String
 IGCompareCommunities[c1_?igClusterDataQ, c2_?igClusterDataQ, method_String] := IGCompareCommunities[c1, c2, {method}]
 
 
+SyntaxInformation[IGCommunitiesEdgeBetweenness] = {"ArgumentsPattern" -> {_}};
 IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
     catch@Module[{ig = igMakeFastWeighted[graph], result, merges, betweenness, bridges, modularity, membership, removed},
       {result, merges, betweenness, bridges, modularity, membership} = check@ig@"communityEdgeBetweenness"[];
@@ -2192,6 +2332,7 @@ IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
     ]
 
 
+SyntaxInformation[IGCommunitiesWalktrap] = {"ArgumentsPattern" -> {_, _.}};
 IGCommunitiesWalktrap[graph_?igGraphQ, steps : _?Internal`PositiveMachineIntegerQ : 4] :=
     catch@Module[{ig = igMakeFastWeighted[graph], merges, modularity, membership},
       {merges, modularity, membership} = check@ig@"communityWalktrap"[steps];
@@ -2204,6 +2345,7 @@ IGCommunitiesWalktrap[graph_?igGraphQ, steps : _?Internal`PositiveMachineInteger
     ]
 
 
+SyntaxInformation[IGCommunitiesGreedy] = {"ArgumentsPattern" -> {_}};
 IGCommunitiesGreedy[graph_?igGraphQ] :=
     catch@Module[{ig = igMakeFastWeighted[graph], merges, modularity, membership},
       {merges, modularity, membership} = check@ig@"communityFastGreedy"[];
@@ -2216,6 +2358,7 @@ IGCommunitiesGreedy[graph_?igGraphQ] :=
     ]
 
 
+SyntaxInformation[IGCommunitiesOptimalModularity] = {"ArgumentsPattern" -> {_}};
 IGCommunitiesOptimalModularity[graph_?igGraphQ] :=
     catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership},
       {modularity, membership} = check@ig@"communityOptimalModularity"[];
@@ -2227,6 +2370,7 @@ IGCommunitiesOptimalModularity[graph_?igGraphQ] :=
     ]
 
 
+SyntaxInformation[IGCommunitiesMultilevel] = {"ArgumentsPattern" -> {_}};
 IGCommunitiesMultilevel[graph_?igGraphQ] :=
     catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, memberships},
       {modularity, membership, memberships} = check@ig@"communityMultilevel"[];
@@ -2240,6 +2384,7 @@ IGCommunitiesMultilevel[graph_?igGraphQ] :=
 
 
 Options[IGCommunitiesLabelPropagation] = { "Initial" -> None, "Fixed" -> None };
+SyntaxInformation[IGCommunitiesLabelPropagation] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 IGCommunitiesLabelPropagation::invopt = "Invalid value for the `` option.";
 
@@ -2277,6 +2422,7 @@ IGCommunitiesLabelPropagation[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 
+SyntaxInformation[IGCommunitiesInfoMAP] = {"ArgumentsPattern" -> {_, _.}};
 IGCommunitiesInfoMAP[graph_?igGraphQ, trials_ : 10] :=
     catch@Module[{ig = igMakeFastWeighted[graph], membership, codelen, vertexWeights},
       vertexWeights = If[vertexWeightedQ[graph], PropertyValue[graph, VertexWeight], {}];
@@ -2300,6 +2446,8 @@ Options[IGCommunitiesSpinGlass] = {
   "GammaMinus" -> 1,
   Method -> "Original"
 };
+
+SyntaxInformation[IGCommunitiesSpinGlass] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 igSpinGlassUpdateRules = {"Simple", "Configuration"};
 igSpinGlassUpdateRulesAsc = AssociationThread[igSpinGlassUpdateRules, Range@Length[igSpinGlassUpdateRules] - 1];
@@ -2330,6 +2478,7 @@ IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 Options[IGCommunitiesLeadingEigenvector] = { "Steps" -> Automatic };
+SyntaxInformation[IGCommunitiesLeadingEigenvector] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, merges, eval, evec},
@@ -2349,6 +2498,7 @@ IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
 (* Maximum flow *)
 
 (* note: edge ordering is critical *)
+SyntaxInformation[IGGomoryHuTree] = {"ArgumentsPattern" -> {_}};
 IGGomoryHuTree[graph_?GraphQ] :=
     catch@Block[{new = Make["IG"], ig = igMake[graph], flow, capacity},
       capacity = PropertyValue[graph, EdgeCapacity];
@@ -2363,6 +2513,7 @@ IGGomoryHuTree[graph_?GraphQ] :=
 (* Unfold tree *)
 
 Options[IGUnfoldTree] = { DirectedEdges -> True };
+SyntaxInformation[IGUnfoldTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
     catch@Block[{new = Make["IG"], ig = igMakeFast[graph], mapping, t},
       mapping = check@new@"unfoldTree"[ManagedLibraryExpressionID[ig], vss[graph][roots], OptionValue[DirectedEdges]];
@@ -2373,6 +2524,8 @@ IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
       |>
     ]
 
+
+(* Protect all package symbols *)
 With[{syms = Names["IGraphM`*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
 
 End[]; (* `Private` *)
