@@ -677,6 +677,28 @@ public:
         ml << list;
     }
 
+    mint ladCountSubisomorphisms(const IG &ig, bool induced) {
+        igraph_bool_t iso;
+        igList list;
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, NULL, &list.list, induced, 0));
+        return list.length();
+    }
+
+    void ladCountSubisomorphismsColored(MLINK link) {
+        mlStream ml{link, "ladCountSubisomorphismsColored"};
+        mint id;
+        igraph_bool_t induced;
+        igList domain;
+        ml >> mlCheckArgs(3) >> id >> induced >> domain;
+
+        igList list;
+        igraph_bool_t iso;
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+
+        ml.newPacket();
+        ml << list.length();
+    }
+
     // Topological sorting, directed acylic graphs
 
     // see also dagQ() under Testing

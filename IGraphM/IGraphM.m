@@ -134,6 +134,9 @@ IGLADGetSubisomorphism::usage =
 IGLADFindSubisomorphisms::usage =
     "IGLADFindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph.\n" <>
     "IGLADFindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] finds all subisomorphisms from a vertex coloured subgraph to graph.";
+IGLADSubisomorphismCount::usage =
+    "IGLADSubisomorphismCount[subgraph, graph] counts subisomorphisms from subgraph to graph.\n" <>
+    "IGLADSubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] counts subisomorphisms from a vertex coloured subgraph to graph.";
 
 IGTopologicalOrdering::usage =
     "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order." <>
@@ -423,6 +426,8 @@ template = LTemplate["IGraphM",
         LFun["ladGetSubisomorphism", {LExpressionID["IG"], True|False (* induced *)}, {Real, 1}],
         LFun["ladGetSubisomorphismColored", LinkObject],
         LFun["ladFindSubisomorphisms", LinkObject],
+        LFun["ladCountSubisomorphisms", {LExpressionID["IG"], True|False (* induced *)}, Integer],
+        LFun["ladCountSubisomorphismsColored", LinkObject],
 
         (* Topological sorting and directed acylic graphs *)
 
@@ -1545,6 +1550,29 @@ IGLADFindSubisomorphisms[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph
         igVertexNames[graph][#]
       ]& /@ result
     ]
+
+
+Options[IGLADSubisomorphismCount] = { "Induced" -> False };
+SyntaxInformation[IGLADSubisomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
+
+IGLADSubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
+      sck@ig1@"ladCountSubisomorphisms"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]]
+    ]
+
+IGLADSubisomorphismCount[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result, vcol, vcolsub, domain},
+      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, col, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, colsub, "VertexColors"];
+      If[vcol === {} || vcolsub === {},
+        If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
+        domain = {}
+        ,
+        domain = Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub;
+      ];
+      check@ig1@"ladCountSubisomorphismsColored"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"], domain]
+    ]
+
 
 (* Directed acylic graphs and topological ordering *)
 
