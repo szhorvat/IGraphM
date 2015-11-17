@@ -2015,7 +2015,7 @@ IGLayoutDrL::conn = "IGLayoutDrL may fail on disconnected graphs. Use on connect
 
 IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.25},
-      If[Not@ConnectedGraphQ[graph], Message[IGLayoutDrL::conn]];
+      If[Not@WeaklyConnectedGraphQ[graph], Message[IGLayoutDrL::conn]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL"[continueLayout[graph, OptionValue["Continue"], scale],
           Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
@@ -2027,7 +2027,7 @@ IGLayoutDrL3D::conn = IGLayoutDrL::conn;
 
 IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL3D,Graph3D}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.25},
-      If[Not@ConnectedGraphQ[graph], Message[IGLayoutDrL3D::conn]];
+      If[Not@WeaklyConnectedGraphQ[graph], Message[IGLayoutDrL3D::conn]];
       applyGraphOpt[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
           Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
