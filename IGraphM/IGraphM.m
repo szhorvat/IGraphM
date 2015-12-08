@@ -2043,7 +2043,7 @@ IGGlobalClusteringCoefficient[graph_?igGraphQ] :=
 
 SyntaxInformation[IGLocalClusteringCoefficient] = {"ArgumentsPattern" -> {_}};
 IGLocalClusteringCoefficient[graph_?igGraphQ] :=
-    Block[{ig = igMakeFast[graph]}, ig@"transitivityLocalUndirected"[]]
+    Block[{ig = igMakeFast[SimpleGraph@UndirectedGraph[graph]]}, ig@"transitivityLocalUndirected"[]]
 
 SyntaxInformation[IGAverageLocalClusteringCoefficient] = {"ArgumentsPattern" -> {_}};
 IGAverageLocalClusteringCoefficient[graph_?igGraphQ] :=
