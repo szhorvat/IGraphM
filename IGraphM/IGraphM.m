@@ -1100,7 +1100,7 @@ IGConstraintScore[graph_?igGraphQ] :=
 
 Options[IGRewire] = { SelfLoops -> False };
 SyntaxInformation[IGRewire] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGRewire[g_?igGraphQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[]] :=
+IGRewire[g_?igGraphQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[g]},
       check@ig@"rewire"[n, OptionValue[SelfLoops]];
       igToGraph[ig]

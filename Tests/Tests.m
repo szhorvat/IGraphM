@@ -935,18 +935,26 @@ MT[
 ]
 
 MT[
+  With[{r = IGRewire[dg, 100]},
+    VertexInDegree[r] == VertexInDegree[dg] &&
+    VertexOutDegree[r] == VertexOutDegree[dg]
+  ],
+  True
+]
+
+MT[
+  IsomorphicGraphQ[IGRewire[ug, 0], ug],
+  True
+]
+
+MT[
   EdgeCount@IGRewireEdges[ug, 0.1] == EdgeCount[ug],
   True
 ]
 
 MT[
-  IGDistanceMatrix[ug],
-  GraphDistanceMatrix[ug]
-]
-
-MT[
-  IGDistanceMatrix[dg],
-  GraphDistanceMatrix[dg]
+  IsomorphicGraphQ[IGRewireEdges[ug, 0], ug],
+  True
 ]
 
 connCompCount[g_] := Length@ConnectedComponents[g]
