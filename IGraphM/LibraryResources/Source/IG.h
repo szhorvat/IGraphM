@@ -198,6 +198,20 @@ public:
         igConstructorCheck(igraph_forest_fire_game(&graph, n, fwprob, bwratio, nambs, directed));
     }
 
+    void bipartiteGameGNM(mint n1, mint n2, mint m, bool directed, bool bidirectional) {
+        destroy();
+        igConstructorCheck(igraph_bipartite_game(
+                               &graph, NULL, IGRAPH_ERDOS_RENYI_GNM,
+                               n1, n2, 0, m, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
+    }
+
+    void bipartiteGameGNP(mint n1, mint n2, double p, bool directed, bool bidirectional) {
+        destroy();
+        igConstructorCheck(igraph_bipartite_game(
+                               &graph, NULL, IGRAPH_ERDOS_RENYI_GNP,
+                               n1, n2, p, 0, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
+    }
+
     // Structure
 
     mma::RealTensorRef edgeList() const {
