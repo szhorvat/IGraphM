@@ -248,6 +248,12 @@ public:
         return res;
     }
 
+    bool bipartiteQ() const {
+        igraph_bool_t res;
+        igCheck(igraph_is_bipartite(&graph, &res, NULL));
+        return res;
+    }
+
     // Centrality measures
 
     mma::RealTensorRef betweenness(bool nobigint) const {
@@ -1554,6 +1560,19 @@ public:
         destroy();
         igConstructorCheck(igraph_unfold_tree(&source.graph, &graph, directed ? IGRAPH_OUT : IGRAPH_ALL, &roots, &mapping.vec));
         return mapping.makeMTensor();
+    }
+
+    // Bipartite partitions
+
+    mma::IntTensorRef bipartitePartitions() const {
+        igraph_bool_t res;
+        igBoolVector map;
+
+        igCheck(igraph_is_bipartite(&graph, &res, &map.vec));
+        if (! res)
+            throw mma::LibraryError("bipartitePartitions: The graph is not bipartite.");
+
+        return map.makeMTensor();
     }
 };
 

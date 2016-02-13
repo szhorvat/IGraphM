@@ -74,6 +74,7 @@ IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly 
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if degrees is the degree sequence of any simple undirected graph.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any simple directed graph.";
+IGBipartiteQ::usage = "IGBipartiteQ[graph] tests if graph is bipartite.";
 
 IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic.";
 IGSubisomorphicQ::usage = "IGSubisomorphicQ[subgraph, graph] tests if subgraph is contained within graph.";
@@ -309,10 +310,11 @@ IGCommunitiesInfoMAP::usage =
 IGCommunitiesSpinGlass::usage = "IGCommunitiesSpinGlass[graph] finds communities using a spin glass model and simulated annealing.";
 IGCommunitiesLeadingEigenvector::usage = "IGCommunitiesLeadingEigenvector[graph] finds communities based on the leading eigenvector of the modularity matrix.";
 
-
 IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 
 IGUnfoldTree::usage = "IGUnfoldTree[graph]";
+
+IGBipartitePartitions::usage = "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.";
 
 
 Begin["`Private`"];
@@ -391,6 +393,7 @@ template = LTemplate["IGraphM",
         LFun["dagQ", {}, True|False],
         LFun["simpleQ", {}, True|False],
         LFun["connectedQ", {True|False (* strongly connected *)}, True|False],
+        LFun["bipartiteQ", {}, True|False],
 
         (* Centrality *)
 
@@ -603,7 +606,12 @@ template = LTemplate["IGraphM",
         LFun["gomoryHuTree", {LExpressionID["IG"], {Real, 1, "Constant"}}, {Real, 1}],
 
         (* Unfold tree *)
-        LFun["unfoldTree", {LExpressionID["IG"], {Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 1}]
+
+        LFun["unfoldTree", {LExpressionID["IG"], {Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 1}],
+
+        (* Bipartite graphs *)
+
+        LFun["bipartitePartitions", {}, {Integer, 1}]
       }
     ]
   }
@@ -983,6 +991,9 @@ IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connected
 SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
 IGGraphicalQ[degrees_?nonNegIntVecQ] := IGGraphicalQ[{}, degrees]
 IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"graphicalQ"[outdeg, indeg]
+
+SyntaxInformation[IGBipartiteQ] = {"ArgumentsPattern" -> {_}};
+IGBipartiteQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"bipartiteQ"[]]
 
 (* Centrality *)
 
@@ -2651,6 +2662,16 @@ IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
         "Tree" -> t,
         "Mapping" -> AssociationThread[VertexList[t], igVertexNames[graph]@igIndexVec[mapping]]
       |>
+    ]
+
+(* Bipartite partitions *)
+
+(* TODO: Return $Failed and issue message if not bipartite. *)
+SyntaxInformation[IGBipartitePartitions] = {"ArgumentsPattern" -> {_}};
+IGBipartitePartitions[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph], parts},
+      parts = check@ig@"bipartitePartitions"[];
+      {Pick[VertexList[graph], parts, 0], Pick[VertexList[graph], parts, 1]}
     ]
 
 
