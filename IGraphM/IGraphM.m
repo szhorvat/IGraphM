@@ -44,6 +44,8 @@ IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
 
+IGConnectNeighborhood::usage = "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighborhood. Warning: weights and other graph properties are discarded.";
+
 IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph.";
 IGCloseness::usage = "IGCloseness[graph] gives a list of closeness centralities for the vertices of graph.";
@@ -385,6 +387,10 @@ template = LTemplate["IGraphM",
 
         LFun["bipartiteGameGNM", {Integer (* n1 *), Integer (* n2 *), Integer (* m *), True|False (* directed *), True|False (* bidirectional *)}, "Void"],
         LFun["bipartiteGameGNP", {Integer (* n1 *), Integer (* n2 *), Real (* p *), True|False (* directed *), True|False (* bidirectional *)}, "Void"],
+
+        (* Modification *)
+
+        LFun["connectNeighborhood", {Integer (* order *)}, "Void"],
 
         (* Structure *)
 
@@ -986,6 +992,18 @@ IGBipartiteGameGNP[n1_?Internal`PositiveMachineIntegerQ, n2_?Internal`PositiveMa
     catch@Block[{ig = Make["IG"]},
       check@ig@"bipartiteGameGNP"[n1, n2, p, OptionValue[DirectedEdges], OptionValue["Bidirectional"]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
+    ]
+
+(* Modification *)
+
+(* Warning: this function doesn't preserve the edge ordering or any graph properties *)
+vertexRename[names_][graph_] := AdjacencyGraph[names, AdjacencyMatrix[graph], DirectedEdges -> DirectedGraphQ[graph]]
+
+SyntaxInformation[IGConnectNeighborhood] = {"ArgumentsPattern" -> {_, _}};
+IGConnectNeighborhood[graph_?igGraphQ, k_?Internal`NonNegativeMachineIntegerQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      check@ig@"connectNeighborhood"[k];
+      vertexRename[VertexList[graph]]@igToGraph[ig]
     ]
 
 (* Testing *)

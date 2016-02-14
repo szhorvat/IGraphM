@@ -212,6 +212,12 @@ public:
                                n1, n2, p, 0, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
     }
 
+    // Modification
+
+    void connectNeighborhood(mint order) {
+        igCheck(igraph_connect_neighborhood(&graph, order, IGRAPH_ALL));
+    }
+
     // Structure
 
     mma::RealTensorRef edgeList() const {
