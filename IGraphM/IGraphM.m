@@ -162,7 +162,13 @@ IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n v
 IGStochasticBlockModelGame::usage = "IGStochasticBlockModelGame[ratesMatrix, blockSizes] samples from a stochastic block model.";
 IGForestFireGame::usage = "IGForestFireGame[n, fwprob]";
 
-IGDistanceMatrix::usage = "IGDistanceMatrix[graph] computes the shortest path between each vertex pair in graph.";
+IGBipartiteGameGNM::usage = "IGBipartiteGameGNM[n1, n2, m] generates a bipartite random graph with n1 and n2 vertices in the two partitions and m edges.";
+IGBipartiteGameGNP::usage = "IGBipartiteGameGNP[n1, n2, p] generates a bipartite Bernoulli random graph with n1 and n2 vertices in the two partitions and connection probability p.";
+
+IGDistanceMatrix::usage =
+    "IGDistanceMatrix[graph] computes the shortest path length between each vertex pair in graph.\n" <>
+    "IGDistanceMatrix[graph, fromVertices] computes the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
+    "IGDistanceMatrix[graph, fromVertices, toVertices] computes the shortest path lengths between the given vertices in graph.";
 IGDistanceCounts::usage = "IGDistanceCounts[graph] computes a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k.";
 IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of all-pair unweighted shortest path lengths of the graph.";
 IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the graph. The graph is treated as undirected, self-loops and multi-edges are ignored.";
@@ -447,10 +453,14 @@ template = LTemplate["IGraphM",
 
         (* Shortest paths *)
 
-        LFun["shortestPaths", {}, {Real, 2}],
+        LFun["shortestPaths", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
         LFun["shortestPathHistogram", {}, {Real, 1}],
         LFun["averagePathLength", {}, Real],
         LFun["girth", {}, Real],
+
+        LFun["shortestPathsDijkstra", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
+        LFun["shortestPathsBellmanFord", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
+        LFun["shortestPathsJohnson", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
 
         (* Cliques *)
 
@@ -702,6 +712,11 @@ zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
+
+(* Unpack array containing infinities *)
+(* TODO: Test on all platforms *)
+fixInf[arr_?Developer`PackedArrayQ] := If[FreeQ[arr,Infinity], arr, Developer`FromPackedArray[arr]]
+fixInf[arr_] := arr
 
 (* Import compressed expressions. Used in IGData. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
@@ -1649,16 +1664,82 @@ IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCo
 
 (* Shortest paths *)
 
-SyntaxInformation[IGDistanceMatrix] = {"ArgumentsPattern" -> {_}};
-IGDistanceMatrix[graph_?igGraphQ] :=
+Options[IGDistanceMatrix] = {Method -> Automatic};
+igDistanceMatrixMethods = <|
+  "Unweighted" -> igDistanceMatrixUnweighted,
+  "Dijkstra" -> igDistanceMatrixDijkstra,
+  "BellmanFord" -> igDistanceMatrixBellmanFord,
+  "Johnson" -> igDistanceMatrixJohnson
+|>;
+
+IGDistanceMatrix::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igDistanceMatrixMethods], InputForm] <> ".";
+
+SyntaxInformation[IGDistanceMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGDistanceMatrix, Graph]};
+
+amendUsage[IGDistanceMatrix, "Available Method options: <*Keys[igDistanceMatrixMethods]*>."];
+
+IGDistanceMatrix[graph_?igGraphQ, from : (_?ListQ | All) : All, to : (_?ListQ | All) : All, opt : OptionsPattern[]] :=
+    Module[{method},
+      method = OptionValue[Method];
+      If[from === {}, Return[{}]];
+      If[to === {}, Return[ConstantArray[{}, Length[from]]]];
+      If[Not@MemberQ[Keys[igDistanceMatrixMethods] ~Join~ {Automatic}, method],
+        Message[IGDistanceMatrix::bdmtd, method];
+        Return[$Failed]
+      ];
+      If[method === Automatic,
+        method = Which[
+          Not@igWeightedGraphQ[graph], "Unweighted",
+          TrueQ[Min@PropertyValue[graph, EdgeWeight] >= 0], "Dijkstra",
+          True, "Johnson"
+        ]
+      ];
+      igDistanceMatrixMethods[method][graph, vss[graph][from], vss[graph][to]]
+    ]
+
+igDistanceMatrixUnweighted[graph_, from_, to_] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Round@fixInf@check@ig@"shortestPaths"[from, to]
+    ]
+
+igDistanceMatrixDijkstra[graph_, from_, to_] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      zeroDiagonal[Round[check@ig@"shortestPaths"[]] /. 0 -> Infinity] (* TODO: avoid unpacking when no infinities present *)
+      fixInf@check@ig@"shortestPathsDijkstra"[from, to]
+    ]
+
+igDistanceMatrixBellmanFord[graph_, from_, to_] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      fixInf@check@ig@"shortestPathsBellmanFord"[from, to]
+    ]
+
+igDistanceMatrixJohnson[graph_, from_, to_] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      fixInf@check@ig@"shortestPathsJohnson"[from, to]
     ]
 
 SyntaxInformation[IGDistanceCounts] = {"ArgumentsPattern" -> {_}};
 IGDistanceCounts[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
-      check@Round@ig@"shortestPathHistogram"[]
+      Round@check@ig@"shortestPathCounts"[]
+    ]
+
+
+Options[IGDistanceHistogram] = { Method -> "Dijkstra" };
+SyntaxInformation[IGDistanceHistogram] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGDistanceHistogram]};
+igDistanceHistogramMethods = <| "Dijkstra" -> 0, "BellmanFord" -> 1 |>;
+amendUsage[IGDistanceHistogram, "Available Method options: <*Keys[igDistanceHistogramMethods]*>."];
+IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_?ListQ | All) : All, to : (_?ListQ | All) : All, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[graph], fromidx, toidx},
+      If[from === {} || to === {},
+        Return[{}]
+      ];
+      If[from === All,
+        fromidx = Range[0, VertexCount[graph]-1], (* Must not use {} for All. See C++ code. *)
+        fromidx = vss[graph][from]
+      ];
+      toidx = vss[graph][to];
+
+      check@ig@"shortestPathWeightedHistogram"[binsize, fromidx, toidx, Lookup[igDistanceHistogramMethods, OptionValue[Method], -1] ]
     ]
 
 SyntaxInformation[IGAveragePathLength] = {"ArgumentsPattern" -> {_}};

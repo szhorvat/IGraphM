@@ -853,6 +853,70 @@ MT[
 
 
 (*******************************************************************************)
+MTSection["Shortest paths"]
+
+MT[
+  IGDistanceMatrix[ug],
+  GraphDistanceMatrix[ug]
+]
+
+MT[
+  IGDistanceMatrix[ug, {1,2,4}],
+  GraphDistanceMatrix[ug][[{1,2,4}]]
+]
+
+MT[
+  IGDistanceMatrix[ug, {1,2,4}, {3,5}],
+  GraphDistanceMatrix[ug][[{1,2,4}, {3,5}]]
+]
+
+MT[
+  IGDistanceMatrix[dg],
+  GraphDistanceMatrix[dg]
+]
+
+MT[
+  IGDistanceMatrix[dg, {1,2,4}],
+  GraphDistanceMatrix[dg][[{1,2,4}]]
+]
+
+MT[
+  IGDistanceMatrix[dg, {1,2,4}, {3,5}],
+  GraphDistanceMatrix[dg][[{1,2,4}, {3,5}]]
+]
+
+MT[
+  IGDistanceMatrix[wug] == GraphDistanceMatrix[wug],
+  True
+]
+
+MT[
+  IGDistanceMatrix[wug, {1,2,4}] == GraphDistanceMatrix[wug][[{1,2,4}]],
+  True
+]
+
+MT[
+  IGDistanceMatrix[wug, {1,2,4}, {3,4}] == GraphDistanceMatrix[wug][[{1,2,4}, {3,4}]],
+  True
+]
+
+MT[
+  IGDistanceMatrix[wdg] == GraphDistanceMatrix[wdg],
+  True
+]
+
+MT[
+  IGDistanceMatrix[wdg, {1,2,4}] == GraphDistanceMatrix[wdg][[{1,2,4}]],
+  True
+]
+
+MT[
+  IGDistanceMatrix[wdg, {1,2,4}, {3,4}] == GraphDistanceMatrix[wdg][[{1,2,4}, {3,4}]],
+  True
+]
+
+
+(*******************************************************************************)
 MTSection["Test remaining functions"]
 
 MT[

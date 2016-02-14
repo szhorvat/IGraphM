@@ -769,9 +769,51 @@ public:
 
     // Shortest paths
 
-    mma::RealMatrixRef shortestPaths() const {
+    mma::RealMatrixRef shortestPaths(mma::RealTensorRef from, mma::RealTensorRef to) const {
         igMatrix res;
-        igCheck(igraph_shortest_paths(&graph, &res.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
+        igraph_vector_t fromv = igVectorView(from);
+        igraph_vector_t tov   = igVectorView(to);
+        igCheck(igraph_shortest_paths(
+                    &graph, &res.mat,
+                    from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+                    to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+                    IGRAPH_OUT));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef shortestPathsDijkstra(mma::RealTensorRef from, mma::RealTensorRef to) const {
+        igMatrix res;
+        igraph_vector_t fromv = igVectorView(from);
+        igraph_vector_t tov   = igVectorView(to);
+        igCheck(igraph_shortest_paths_dijkstra(
+                    &graph, &res.mat,
+                    from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+                    to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+                    passWeights(), IGRAPH_OUT));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef shortestPathsBellmanFord(mma::RealTensorRef from, mma::RealTensorRef to) const {
+        igMatrix res;
+        igraph_vector_t fromv = igVectorView(from);
+        igraph_vector_t tov   = igVectorView(to);
+        igCheck(igraph_shortest_paths_bellman_ford(
+                    &graph, &res.mat,
+                    from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+                    to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+                    passWeights(), IGRAPH_OUT));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef shortestPathsJohnson(mma::RealTensorRef from, mma::RealTensorRef to) const {
+        igMatrix res;
+        igraph_vector_t fromv = igVectorView(from);
+        igraph_vector_t tov   = igVectorView(to);
+        igCheck(igraph_shortest_paths_johnson(
+                    &graph, &res.mat,
+                    from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+                    to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+                    passWeights()));
         return res.makeMTensor();
     }
 
