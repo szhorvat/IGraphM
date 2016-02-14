@@ -471,15 +471,16 @@ template = LTemplate["IGraphM",
 
         (* Shortest paths *)
 
-        LFun["shortestPaths", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
-        LFun["shortestPathHistogram", {}, {Real, 1}],
+        LFun["shortestPaths", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPathCounts", {}, {Real, 1}],
         LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
         LFun["averagePathLength", {}, Real],
         LFun["girth", {}, Real],
 
-        LFun["shortestPathsDijkstra", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
-        LFun["shortestPathsBellmanFord", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
-        LFun["shortestPathsJohnson", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
+        LFun["shortestPathsDijkstra", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPathsBellmanFord", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPathsJohnson", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
+
         LFun["diameter", {True|False (* by components *)}, Integer],
         LFun["findDiameter", {True|False (* by components *)}, {Real, 1}],
         LFun["diameterDijkstra", {True|False (* by components *)}, Real],
@@ -779,7 +780,7 @@ igDirectedQ[graph_] := DirectedGraphQ[graph] && Not@EmptyGraphQ[graph]
    We only want edge-weighted graphs, not vertex weighted ones. *)
 igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &;
 
-(* Create IG object from Mathematica Graph. *)
+(* Create IG object from Mathematica Graph. Must be used when edge ordering matters. *)
 igMake[g_] :=
     With[{ig = Make["IG"]},
       ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
@@ -1886,14 +1887,14 @@ IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_?ListQ 
 
 SyntaxInformation[IGAveragePathLength] = {"ArgumentsPattern" -> {_}};
 IGAveragePathLength[graph_?igGraphQ] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMakeFast[graph]},
       sck@ig@"averagePathLength"[]
     ]
 
 SyntaxInformation[IGGirth] = {"ArgumentsPattern" -> {_}};
 IGGirth[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
-      check@Round@ig@"girth"[]
+      Round@check@ig@"girth"[]
     ]
 
 (* Cliques *)

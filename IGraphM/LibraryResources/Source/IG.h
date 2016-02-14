@@ -13,7 +13,7 @@ extern std::map<mint, IG *> IG_collection; // TODO this is a hack pending proper
 typedef int(*igraph_i_maximal_clique_func_t)(const igraph_vector_t*, void*, igraph_bool_t*);
 extern "C" int igraph_i_maximal_cliques(const igraph_t *graph, igraph_i_maximal_clique_func_t func, void* data);
 
-class IG {    
+class IG {
     igraph_t graph;
     igVector weights;
     bool weighted;
@@ -843,7 +843,7 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef shortestPathHistogram() const {
+    mma::RealTensorRef shortestPathCounts() const {
         igVector res;
         double unconnected;
         igCheck(igraph_path_length_hist(&graph, &res.vec, &unconnected, true));
@@ -1094,7 +1094,7 @@ public:
         case 0: grid = IGRAPH_LAYOUT_GRID; break;
         case 1: grid = IGRAPH_LAYOUT_NOGRID; break;
         case 2: grid = IGRAPH_LAYOUT_AUTOGRID; break;
-        default: throw mma::LibraryError("layoutFruchtermanReingold: unknown method option.");
+        default: throw mma::LibraryError("layoutFruchtermanReingold: Unknown method option.");
         }
 
         igCheck(igraph_layout_fruchterman_reingold(
@@ -1576,7 +1576,7 @@ public:
         case 0: method_e = IGRAPH_SPINCOMM_IMP_ORIG; break;
         case 1: method_e = IGRAPH_SPINCOMM_IMP_NEG; break;
         default:
-            throw mma::LibraryError("communitySpinGlass: invalid method option.");
+            throw mma::LibraryError("communitySpinGlass: Invalid method option.");
         }
 
         igraph_spincomm_update_t update_rule_e;
@@ -1584,7 +1584,7 @@ public:
         case 0: update_rule_e = IGRAPH_SPINCOMM_UPDATE_SIMPLE; break;
         case 1: update_rule_e = IGRAPH_SPINCOMM_UPDATE_CONFIG; break;
         default:
-            throw mma::LibraryError("communitySpinGlass: invalid update rule option.");
+            throw mma::LibraryError("communitySpinGlass: Invalid update rule option.");
         }
 
         double modularity, temperature;
