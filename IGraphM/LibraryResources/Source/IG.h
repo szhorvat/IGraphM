@@ -844,6 +844,30 @@ public:
         return res.makeMTensor();
     }
 
+    mint diameter(bool components) const {
+        igraph_integer_t diam;
+        igCheck(igraph_diameter(&graph, &diam, NULL, NULL, NULL, true, components));
+        return diam;
+    }
+
+    mma::RealTensorRef findDiameter(bool components) const {
+        igVector path;
+        igCheck(igraph_diameter(&graph, NULL, NULL, NULL, &path.vec, true, components));
+        return path.makeMTensor();
+    }
+
+    double diameterDijkstra(bool components) const {
+        double diam;
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), &diam, NULL, NULL, NULL, true, components));
+        return diam;
+    }
+
+    mma::RealTensorRef findDiameterDijkstra(bool components) const {
+        igVector path;
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), NULL, NULL, NULL, &path.vec, true, components));
+        return path.makeMTensor();
+    }
+
     double averagePathLength() const {
         double res;
         igCheck(igraph_average_path_length(&graph, &res, true, true));

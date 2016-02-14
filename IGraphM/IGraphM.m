@@ -173,6 +173,8 @@ IGDistanceMatrix::usage =
 IGDistanceCounts::usage = "IGDistanceCounts[graph] computes a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k.";
 IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of all-pair unweighted shortest path lengths of the graph.";
 IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the graph. The graph is treated as undirected, self-loops and multi-edges are ignored.";
+IGDiameter::usage = "IGDiameter[graph] computes the diameter of graph.";
+IGFindDiameter::usage = "IGFindDiameter[graph] returns a longest shortest path in graph, i.e. a shortest path with length equal to the graph diameter.";
 
 IGCliques::usage =
     "IGCliques[graph] returns all complete subgraphs (cliques) in graph. Note that this is different from the builtin FindCliques[], which finds maximal cliques.\n" <>
@@ -467,6 +469,10 @@ template = LTemplate["IGraphM",
         LFun["shortestPathsDijkstra", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
         LFun["shortestPathsBellmanFord", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
         LFun["shortestPathsJohnson", {{Real, 1, "Constant"}, {Real, 1, "Constant"}}, {Real, 2}],
+        LFun["diameter", {True|False (* by components *)}, Integer],
+        LFun["findDiameter", {True|False (* by components *)}, {Real, 1}],
+        LFun["diameterDijkstra", {True|False (* by components *)}, Real],
+        LFun["findDiameterDijkstra", {True|False (* by components *)}, {Real, 1}],
 
         (* Cliques *)
 
@@ -1747,6 +1753,88 @@ igDistanceMatrixJohnson[graph_, from_, to_] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       fixInf@check@ig@"shortestPathsJohnson"[from, to]
     ]
+
+
+Options[IGDiameter] = { Method -> Automatic, "ByComponents" -> False };
+
+igDiameterMethods = <|
+  "Unweighted" -> igDiameterUnweighted,
+  "Dijkstra" -> igDiameterDijkstra
+|>;
+
+SyntaxInformation[IGDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGDiameter]};
+
+amendUsage[IGDiameter, "Available Method options: <*Keys[igDiameterMethods]*>."];
+
+IGDiameter::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igDiameterMethods], InputForm] <> ".";
+
+IGDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Module[{method},
+      method = OptionValue[Method];
+      If[Not@MemberQ[Keys[igDiameterMethods] ~Join~ {Automatic}, method],
+        Message[IGDiameter::bdmtd, method];
+        Return[$Failed]
+      ];
+      If[method === Automatic,
+        method = Which[
+          igWeightedGraphQ[graph], "Dijkstra",
+          True, "Unweighted"
+        ]
+      ];
+      igDiameterMethods[method][graph, OptionValue["ByComponents"]]
+    ]
+
+igDiameterUnweighted[graph_, bycomp_] :=
+    catch@Block[{ig = igMakeFast[graph], diam},
+      diam = check@ig@"diameter"[bycomp];
+      If[diam == VertexCount[graph], Infinity, diam]
+    ]
+
+igDiameterDijkstra[graph_, bycomp_] :=
+    Block[{ig = igMakeFastWeighted[graph]},
+      sck@ig@"diameterDijkstra"[bycomp]
+    ]
+
+
+Options[IGFindDiameter] = { Method -> Automatic, "ByComponents" -> False };
+
+igFindDiameterMethods = <|
+  "Unweighted" -> igFindDiameterUnweighted,
+  "Dijkstra" -> igFindDiameterDijkstra
+|>;
+
+SyntaxInformation[IGFindDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGFindDiameter]};
+
+amendUsage[IGFindDiameter, "Available Method options: <*Keys[igDiameterMethods]*>."];
+
+IGFindDiameter::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igFindDiameterMethods], InputForm] <> ".";
+
+IGFindDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Module[{method},
+      method = OptionValue[Method];
+      If[Not@MemberQ[Keys[igFindDiameterMethods] ~Join~ {Automatic}, method],
+        Message[IGFindDiameter::bdmtd, method];
+        Return[$Failed]
+      ];
+      If[method === Automatic,
+        method = Which[
+          igWeightedGraphQ[graph], "Dijkstra",
+          True, "Unweighted"
+        ]
+      ];
+      igFindDiameterMethods[method][graph, OptionValue["ByComponents"]]
+    ]
+
+igFindDiameterUnweighted[graph_, bycomp_] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      igVertexNames[graph]@igIndexVec@check@ig@"findDiameter"[bycomp]
+    ]
+
+igFindDiameterDijkstra[graph_, bycomp_] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      igVertexNames[graph]@igIndexVec@check@ig@"findDiameterDijkstra"[bycomp]
+    ]
+
 
 SyntaxInformation[IGDistanceCounts] = {"ArgumentsPattern" -> {_}};
 IGDistanceCounts[graph_?igGraphQ] :=
