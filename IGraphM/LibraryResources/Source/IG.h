@@ -844,6 +844,53 @@ public:
         return res.makeMTensor();
     }
 
+    mma::IntTensorRef shortestPathWeightedHistogram(double binsize, mma::RealTensorRef from, mma::RealTensorRef to, mint method) const {
+        if (weighted && igraph_vector_min(&weights.vec) < 0)
+            throw mma::LibraryError("shortestPathWeightedHistogram: Negative edge weights are not supported.");
+
+        std::vector<mint> hist;
+        igMatrix mat;
+
+        const bool toall = to.length() == 0;
+        igraph_vector_t tov = igVectorView(to);
+        const mint tolen = toall ? igraph_vcount(&graph) : to.length();
+
+        for (mint i=0; i < from.length(); ++i) {
+            mma::check_abort();
+            switch (method) {
+            case 0:
+                igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT);
+                break;
+            case 1:
+                igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT);
+                break;
+            default:
+                throw mma::LibraryError("shortestPathWeightedHistogram: Unknown method.");
+            }
+
+            for (igraph_integer_t j=0; j < tolen; ++j) {
+                if (toall) {
+                    if (from[i] == j)
+                        continue;
+                } else {
+                    if (from[i] == to[j])
+                        continue;
+                }
+                double length = VECTOR(mat.mat.data)[j];
+                if (igraph_is_inf(length))
+                    continue;
+                mint idx = std::floor(length / binsize);
+                if (idx >= hist.size()) {
+                    hist.reserve(std::ceil(1.5*(idx + 1)));
+                    hist.resize(idx+1, 0);
+                }
+                hist[idx] += 1;
+            }
+        }
+        mma::IntTensorRef res = mma::makeVector<mint>(hist.size(), &hist[0]);
+        return res;
+    }
+
     mint diameter(bool components) const {
         igraph_integer_t diam;
         igCheck(igraph_diameter(&graph, &diam, NULL, NULL, NULL, true, components));

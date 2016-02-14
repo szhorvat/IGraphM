@@ -4,6 +4,7 @@
 tolEq[a_, b_, tol_ : 1*^-8 ] := Max@Abs[a-b] < tol
 
 takeUpper[mat_?SquareMatrixQ] := Extract[mat, Subsets[Range@Length[mat], {2}]]
+takeLower[mat_?SquareMatrixQ] := takeUpper@Transpose[mat]
 
 (*******************************************************************************)
 MTSection["Basic"]
@@ -833,6 +834,30 @@ MT[
   N@Mean@WeightedData[Range@Length[hist], hist]
 ]
 
+MT[
+  {0} ~Join~ IGDistanceCounts[dg] == IGDistanceHistogram[dg, 1],
+  True
+]
+
+MT[
+  {0} ~Join~ IGDistanceCounts[ug] == IGDistanceHistogram[ug, 1]/2,
+  True
+]
+
+MT[
+  IGDistanceHistogram[wdg, 0.1],
+  With[{vals=takeUpper@GraphDistanceMatrix[wdg] ~Join~ takeLower@GraphDistanceMatrix[wdg]},
+    BinCounts[vals, {0, Ceiling[Max[vals], 0.1], 0.1}]
+  ]
+]
+
+MT[
+  IGDistanceHistogram[wug, 0.1],
+  With[{vals=takeUpper@GraphDistanceMatrix[wug] ~Join~ takeLower@GraphDistanceMatrix[wug]},
+    BinCounts[vals, {0, Ceiling[Max[vals], 0.1], 0.1}]
+  ]
+]
+
 
 (* undirected, unweighted, connected *)
 MT[
@@ -851,9 +876,6 @@ MT[
   5
 ]
 
-
-(*******************************************************************************)
-MTSection["Shortest paths"]
 
 MT[
   IGDistanceMatrix[ug],
