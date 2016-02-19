@@ -1001,6 +1001,29 @@ public:
         return res;
     }
 
+    // Weighted cliques
+
+    mma::IntTensorRef cliquesWeighted(mint wmin, mint wmax, mma::RealTensorRef vertex_weights, bool maximal) const {
+        igraph_vector_t weights = igVectorView(vertex_weights);
+        igList list;
+        igCheck(igraph_weighted_cliques(&graph, &weights, &list.list, wmin, wmax, maximal));
+        return packListIntoIntTensor(list);
+    }
+
+    mma::IntTensorRef largestCliquesWeighted(mma::RealTensorRef vertex_weights) const {
+        igraph_vector_t weights = igVectorView(vertex_weights);
+        igList list;
+        igCheck(igraph_largest_weighted_cliques(&graph, &weights, &list.list));
+        return packListIntoIntTensor(list);
+    }
+
+    mint cliqueNumberWeighted(mma::RealTensorRef vertex_weights) const {
+        igraph_vector_t weights = igVectorView(vertex_weights);
+        double res;
+        igCheck(igraph_weighted_clique_number(&graph, &weights, &res));
+        return res;
+    }
+
     // Independent vertex sets
 
     mma::IntTensorRef independentVertexSets(mint min, mint max) const {

@@ -210,6 +210,10 @@ IGMaximalCliquesCount::usage =
     "IGMaximalCliquesCount[graph, {n}] counts all maximal cliques of size n.";
 IGLargestCliques::usage = "IGLargestCliques[graph] returns the largest cliques in graph.";
 IGCliqueNumber::usage = "IGCliqueNumber[graph] returns the clique number of graph. The clique number is the size of the largest clique.";
+IGWeightedCliques::usage = "IGWeightedCliques[graph, {min, max}] returns all complete subgraphs having total vertex weight between min and max.";
+IGMaximalWeightedCliques::usage = "IGMaximalWeightedCliques[graph, {min, max}] returns all maximal cliques having total vertex weight between min and max.";
+IGLargestWeightedCliques::usage = "IGLargestWeightedCliques[graph] returns the cliques having the largest total vertex weight in graph.";
+IGWeightedCliqueNumber::usage = "IGWeightedCliqueNumber[graph] return the maximum total vertex weight of any clique in graph.";
 
 IGIndependentVertexSets::usage =
     "IGIndependentVertexSets[graphs] returns all independent vertex sets of graph.\n" <>
@@ -496,6 +500,9 @@ template = LTemplate["IGraphM",
         LFun["maximalCliquesCount", {Integer, Integer}, Integer],
         LFun["maximalCliqueDistribution", {Integer, Integer}, {Integer, 1}],
         LFun["cliqueNumber", {}, Integer],
+        LFun["cliquesWeighted", {Integer (* min_weight *), Integer (* max_weight *), {Real, 1, "Constant"} (* vertex_weights *), True|False (* maximal *)}, {Integer, 1}],
+        LFun["largestCliquesWeighted", {{Real, 1, "Constant"} (* vertex_weights *)}, {Integer, 1}],
+        LFun["cliqueNumberWeighted", {{Real, 1, "Constant"} (* vertex_weights *)}, Integer],
 
         (* Independent vertex sets *)
 
@@ -1984,6 +1991,40 @@ IGLargestCliques[graph_?igGraphQ] :=
 
 SyntaxInformation[IGCliqueNumber] = {"ArgumentsPattern" -> {_}};
 IGCliqueNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"cliqueNumber"[]]
+
+SyntaxInformation[IGWeightedCliques] = {"ArgumentsPattern" -> {_, {_, _}}};
+IGWeightedCliques[graph_?igGraphQ, {min_?Internal`NonNegativeMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
+    If[vertexWeightedQ[graph], igCliquesWeighted, igCliques][graph, {min, infToZero[max]}]
+igCliquesWeighted[graph_, {min_, max_}] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      igUnpackVertexSet[graph]@check@ig@"cliquesWeighted"[min, max, PropertyValue[graph, VertexWeight], False]
+    ]
+
+SyntaxInformation[IGMaximalWeightedCliques] = {"ArgumentsPattern" -> {_, {_, _}}};
+IGMaximalWeightedCliques[graph_?igGraphQ, {min_?Internal`NonNegativeMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
+    If[vertexWeightedQ[graph], igMaximalCliquesWeighted, igMaximalCliques][graph, {min, infToZero[max]}]
+igMaximalCliquesWeighted[graph_, {min_, max_}] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      igUnpackVertexSet[graph]@check@ig@"cliquesWeighted"[min, max, PropertyValue[graph, VertexWeight], True (* maximal *)]
+    ]
+
+SyntaxInformation[IGLargestWeightedCliques] = {"ArgumentsPattern" -> {_}};
+IGLargestWeightedCliques[graph_?igGraphQ] :=
+    If[vertexWeightedQ[graph], igLargestCliquesWeighted, IGLargestCliques][graph]
+igLargestCliquesWeighted[graph_] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      igUnpackVertexSet[graph]@check@ig@"largestCliquesWeighted"[PropertyValue[graph, VertexWeight]]
+    ]
+
+SyntaxInformation[IGWeightedCliqueNumber] = {"ArgumentsPattern" -> {_}};
+IGWeightedCliqueNumber[graph_?igGraphQ] :=
+    If[vertexWeightedQ[graph], igMaximumCliqueWeight, IGCliqueNumber][graph]
+igMaximumCliqueWeight[graph_] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"cliqueNumberWeighted"[PropertyValue[graph, VertexWeight]]
+    ]
+
+
 
 (* Independent vertex sets *)
 
