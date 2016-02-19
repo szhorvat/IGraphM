@@ -25,6 +25,7 @@ ConfigureLTemplate["MessageSymbol" -> IGraphM];
 IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
 `Developer`Recompile::usage = "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
+`Developer`GetInfo::usage = "IGraphM`Developer`GetInfo[] returns useful information about IGraph/M and the system it is running on, for debugging and troubleshooting purposes.";
 PrependTo[$ContextPath, $Context <> "Developer`"];
 
 IGDocumentation::usage = "IGDocumentation[] opens the IGraph/M documentation.";
@@ -701,6 +702,26 @@ If[LoadIGraphM[] === $Failed,
   ,
   Print["Evaluate IGDocumentation[] to get started."]
 ]
+
+
+(***** GetInfo for troubleshooting *****)
+
+GetInfo[] :=
+    Module[{res = "", igver, osver},
+      res = StringJoin[res, "Mathematica version: \n", $Version, "; Release number: ", ToString[$ReleaseNumber], "\n\n"];
+      res = StringJoin[res, "Package version: \n", $packageVersion, "\n\n"];
+      res = StringJoin[res, "Package location: \n", FindFile["IGraphM`"], "\n\n"];
+      igver = Quiet@IGVersion[];
+      res = StringJoin[res, "IGVersion[]: \n", If[StringQ[igver], igver, "Failed."], "\n\n"];
+      res = StringJoin[res, "Build settings: \n", ToString[$buildSettings], "\n\n"];
+      osver = Quiet@Switch[$OperatingSystem,
+        "MacOSX", Import["!sw_vers", "String"],
+        "Unix", Import["!uname -a", "String"] <> Import["!lsb_release -a 2>/dev/null", "String"],
+        "Windows", Import["!systeminfo | findstr /B /C:\"OS Name\" /C:\"OS Version\" /C:\"System Type\"", "String"]
+      ];
+      res = StringJoin[res, "Operating system: \n", If[StringQ[osver], osver, "Failed."]]; (* no newline after last item *)
+      res
+    ]
 
 
 (***** General messages *****)
