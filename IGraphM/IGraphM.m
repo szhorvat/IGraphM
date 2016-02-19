@@ -212,10 +212,10 @@ IGLargestCliques::usage = "IGLargestCliques[graph] returns the largest cliques i
 IGCliqueNumber::usage = "IGCliqueNumber[graph] returns the clique number of graph. The clique number is the size of the largest clique.";
 
 IGIndependentVertexSets::usage =
-    "IGIndependentVertexSets[graphs] finds all independent vertex sets of graph.\n" <>
-    "IGIndependentVertexSets[graphs, {min, max}]\n" <>
-    "IGIndependentVertexSets[graphs, max]\n" <>
-    "IGIndependentVertexSets[graphs, {n}]";
+    "IGIndependentVertexSets[graphs] returns all independent vertex sets of graph.\n" <>
+    "IGIndependentVertexSets[graphs, {min, max}] returns all independent vertex sets of graph between sizes min and max.\n" <>
+    "IGIndependentVertexSets[graphs, max] returns all independent vertex sets up to size max.\n" <>
+    "IGIndependentVertexSets[graphs, {n}] returns all independent vertex sets of size n.";
 IGLargestIndependentVertexSets::usage = "IGLargestIndependentVertexSets[graph] finds the largest independent vertex sets of graph.";
 IGMaximalIndependentVertexSets::usage = "IGMaximalIndependentVertexSets[graph] finds the maximal independent vertex sets of graph.";
 IGIndependenceNumber::usage = "IGIndependenceNumber[graph] returns the independence number of graph. The independence number is the size of the largest independent vertex set.";
@@ -672,7 +672,7 @@ Recompile[] :=
     ]
 
 
-igraphGlobal (* there should only be a single object of this type; it's set in LoadIGraphM[] below *)
+igraphGlobal (* IGlobal object. There should only be a single object of this type; it's set in LoadIGraphM[] below. *)
 
 LoadIGraphM[] :=
     Module[{deps},
@@ -732,6 +732,7 @@ IGraphM::lytdim = "The existing vertex coordinates do not have the appropriate d
 IGraphM::lytcnt = "`` is not a valid value for the \"Continue\" layout option.";
 IGraphM::lytaln = "`` is not a valid value for the \"Align\" layout option."
 
+
 (***** Helper functions *****)
 
 (* For error handling: *)
@@ -742,7 +743,7 @@ throw[val_] := Throw[val, igTag]
 SetAttributes[catch, HoldFirst]
 catch[expr_] := Catch[expr, igTag]
 
-check[val_LibraryFunctionError] := throw[val] (* TODO change to throw[$Failed] *)
+check[val_LibraryFunctionError] := throw[val] (* TODO: change to throw[$Failed] *)
 check[$Failed] := throw[$Failed]
 check[HoldPattern[LibraryFunction[___][___]]] := throw[$Failed]
 check[val_] := val
@@ -1069,7 +1070,7 @@ IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 
-(* note: edge ordering is critical *)
+(* Note: edge ordering is critical *)
 SyntaxInformation[IGEdgeBetweenness] = {"ArgumentsPattern" -> {_}};
 IGEdgeBetweenness[g_?igGraphQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweenness"[]]
@@ -1093,7 +1094,7 @@ IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPatter
       ]
     ]
 
-(* note: edge ordering is critical *)
+(* Note: edge ordering is critical *)
 SyntaxInformation[IGEdgeBetweennessEstimate] = {"ArgumentsPattern" -> {_, _}};
 IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
@@ -1176,7 +1177,7 @@ IGConstraintScore[graph_?igGraphQ] :=
       sck@ig@"constraintScore"[]
     ]
 
-(* Randomization *)
+(* Randomization and rewiring *)
 
 (* TODO: functions in this section should warn that edge weights will be lost *)
 
@@ -1333,6 +1334,7 @@ IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Opt
     ]
 
 
+(* TODO: Investigate speeding up VertexReplace *)
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
 SyntaxInformation[IGBlissCanonicalGraph] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
@@ -1713,7 +1715,6 @@ IGTriadCensus[graph_?igGraphQ] :=
       ]
     ]
 
-(* TODO verify NaN handling *)
 SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _}};
 IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
     catch@Block[{ig = igMakeFast[graph]},
@@ -2770,7 +2771,8 @@ IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 (* Maximum flow *)
 
-(* note: edge ordering is critical *)
+(* TODO: Speed up VertexReplace *)
+(* Note: edge ordering is critical *)
 SyntaxInformation[IGGomoryHuTree] = {"ArgumentsPattern" -> {_}};
 IGGomoryHuTree[graph_?GraphQ] :=
     catch@Block[{new = Make["IG"], ig = igMake[graph], flow, capacity},
@@ -2807,6 +2809,9 @@ IGBipartitePartitions[graph_?igGraphQ] :=
       {Pick[VertexList[graph], parts, 0], Pick[VertexList[graph], parts, 1]}
     ]
 
+
+
+(***** Finalize *****)
 
 (* Protect all package symbols *)
 With[{syms = Names["IGraphM`*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
