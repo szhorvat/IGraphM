@@ -74,6 +74,19 @@ collab = ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}];
 football = ExampleData[{"NetworkGraph", "AmericanCollegeFootball"}];
 lesmiserables = ExampleData[{"NetworkGraph", "LesMiserables"}];
 
+bipartite = Graph[
+  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+  {3 <-> 6, 5 <-> 6, 4 <-> 7, 1 <-> 8, 2 <-> 8, 4 <-> 8, 1 <-> 9,
+    2 <-> 9, 4 <-> 9, 5 <-> 10, 1 <-> 11, 4 <-> 11, 5 <-> 11, 2 <-> 12,
+    5 <-> 12}
+  ];
+
+dbipartite = Graph[
+  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+  {3 -> 6, 4 -> 7, 1 -> 9, 5 -> 10, 2 -> 12, 3 -> 12, 4 -> 12, 9 -> 1,
+    10 -> 1, 11 -> 1, 12 -> 2, 9 -> 3, 10 -> 3, 8 -> 5, 10 -> 5}
+];
+
 (*******************************************************************************)
 MTSection["Undirected"]
 
@@ -241,6 +254,8 @@ Print["Cycle timing: ", First@Timing[IGraphM`Private`igMake /@ cycleTestList;] ]
 (*******************************************************************************)
 MTSection["Creation"]
 
+(* IGLCF *)
+
 MT[
   With[{g = IGLCF[{-2, 2}, 2]},
     {EdgeCount[g], VertexCount[g]}
@@ -258,6 +273,74 @@ MT[
 MT[
   IGIsomorphicQ[PetersenGraph[6, 2], IGLCF[{-5, 2, 4, -2, -5, 4, -4, 5, 2, -4, -2, 5}]],
   True
+]
+
+
+(* IGDegreeSequenceGame *)
+
+MT[
+  IGIsomorphicQ[
+    IGDegreeSequenceGame[{0,0,0,0}, Method -> #],
+    Graph[{1,2,3,4},{}]
+  ],
+  True
+]& /{ "SimpleNoMultiple", "Simple" }
+
+MT[
+  IGIsomorphicQ[
+    IGDegreeSequenceGame[{1,1,0,0}, Method -> #],
+    Graph[{1,2,3,4},{1<->2}]
+  ],
+  True
+]& /{ "SimpleNoMultiple", "Simple" }
+
+MT[
+  IGIsomorphicQ[
+    IGDegreeSequenceGame[{2,2,2,2}, Method -> #],
+    Graph[{1,2,3,4},{1<->2}]
+  ],
+  True
+]& /{ "SimpleNoMultiple", "Simple", "VigerLatapy" }
+
+
+(* IGKRegularGame *)
+
+MT[
+  IGIsomorphicQ[
+    IGKRegularGame[0,0],
+    empty
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGKRegularGame[4,1],
+    Graph[{1<->2, 3<->4}]
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGKRegularGame[4,2],
+    CycleGraph[4]
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGKRegularGame[5,4],
+    CompleteGraph[5]
+  ],
+  True
+]
+
+MT[
+  IGKRegularGame[3, 3];,
+  Null,
+  {IGraphM::error}
 ]
 
 
@@ -565,7 +648,7 @@ MT[
 ]
 
 MT[
-  IGCliques[Graph[{},{}]],
+  IGCliques[empty],
   {}
 ]
 
@@ -575,7 +658,7 @@ MT[
 ]
 
 MT[
-  IGMaximalCliques[Graph[{},{}]],
+  IGMaximalCliques[empty],
   {}
 ]
 
@@ -584,17 +667,111 @@ MT[
   {{1},{2},{3}}
 ]
 
+(* edge directions are ignored for clique finding *)
 MT[
   canon@IGCliques[Graph[{1, 2}, {1 -> 2}]],
   {{1},{2},{1,2}},
   {IGraphM::warning}
 ]
 
+(* edge directions are ignored for clique finding *)
 MT[
   canon@IGMaximalCliques[Graph[{1, 2}, {1 -> 2}]],
   {{1,2}},
   {IGraphM::warning}
 ]
+
+
+(*******************************************************************************)
+MTSection["Weighted cliques"]
+
+(* weights must be integers *)
+MT[
+  canon@IGWeightedCliques[Graph[{1, 2, 3}, {1 <-> 2}, VertexWeight -> {1.5, 2, 3}], {0,Infinity}],
+  canon[{{1}, {2}, {1, 2}, {3}}],
+  {IGraphM::warning}
+]
+
+(* weights must be positive *)
+MT[
+  IGWeightedCliques[Graph[{1,2,3}, { 1<-> 2}], VertexWeight -> {0,1,2}];,
+  Null,
+  {IGraphM::error}
+]
+
+(* edge directions are ignored *)
+MT[
+  canon@IGWeightedCliques[Graph[{1, 2}, {1 -> 2}, VertexWeight -> {1, 2}], {0, Infinity}],
+  canon[{{1}, {2}, {1, 2}}],
+  {IGraphM::warning}
+]
+
+vwg = Graph[{1 <-> 2, 1 <-> 3, 1 <-> 6, 2 <-> 3, 2 <-> 4, 2 <-> 6,
+  2 <-> 9, 2 <-> 10, 3 <-> 5, 3 <-> 9, 4 <-> 6, 4 <-> 7, 4 <-> 10,
+  5 <-> 9, 5 <-> 10, 6 <-> 7, 6 <-> 9, 7 <-> 8, 7 <-> 10, 8 <-> 10},
+  VertexWeight -> {1, 6, 3, 1, 1, 6, 5, 8, 6, 9}];
+
+MT[
+  canon@IGWeightedCliques[vwg, {0, Infinity}],
+  canon@{{6}, {4}, {6, 4}, {1}, {1, 6}, {3}, {1, 3}, {10}, {4,
+    10}, {9}, {3, 9}, {6, 9}, {7}, {10, 7}, {4, 10, 7}, {4, 7}, {6, 4,
+    7}, {6, 7}, {2}, {2, 9}, {2, 3, 9}, {2, 6, 9}, {2, 10}, {2, 4,
+    10}, {2, 3}, {1, 2, 3}, {1, 2}, {1, 2, 6}, {2, 4}, {2, 6, 4}, {2,
+    6}, {5}, {9, 5}, {3, 9, 5}, {10, 5}, {3, 5}, {8}, {7, 8}, {10, 7,
+    8}, {10, 8}}
+]
+
+MT[
+  canon@IGWeightedCliques[vwg, {5, Infinity}],
+  canon@{{10}, {4, 10}, {9}, {3, 9}, {6, 9}, {7}, {10, 7}, {4, 10, 7}, {4,
+    7}, {6, 4, 7}, {6, 7}, {2}, {2, 9}, {2, 3, 9}, {2, 6, 9}, {2,
+    10}, {2, 4, 10}, {2, 3}, {1, 2, 3}, {1, 2}, {1, 2, 6}, {2, 4}, {2,
+    6, 4}, {2, 6}, {5}, {9, 5}, {3, 9, 5}, {10, 5}, {3, 5}, {8}, {7,
+    8}, {10, 7, 8}, {10, 8}}
+]
+
+MT[
+  canon@IGWeightedCliques[vwg, {5, 6}],
+  canon@{{10}, {4, 10}, {9}, {7}, {2}}
+]
+
+MT[
+  IGWeightedCliques[vwg, {5, 5}],
+  {{10}}
+]
+
+MT[
+  canon@IGMaximalWeightedCliques[vwg, {0, Infinity}],
+  canon@{{5, 10}, {1, 2, 3}, {1, 2, 6}, {2, 3, 9}, {2, 4, 6}, {2, 4, 10}, {2,
+    6, 9}, {3, 5, 9}, {4, 6, 7}, {4, 7, 10}, {7, 8, 10}}
+]
+
+MT[
+  canon@IGMaximalWeightedCliques[vwg, {15, Infinity}],
+  canon@{{2, 3, 9}, {3, 5, 9}, {7, 8, 10}}
+]
+
+MT[
+  canon@IGMaximalWeightedCliques[vwg, {15, 17}],
+  canon@{{2, 3, 9}, {3, 5, 9}}
+]
+
+MT[
+  canon@IGMaximalWeightedCliques[vwg, {15, 15}],
+  canon@{{2, 3, 9}}
+]
+
+MT[
+  IGWeightedCliqueNumber[vwg],
+  20
+]
+
+MT[
+  canon@IGLargestWeightedCliques[vwg],
+  canon@{{10, 7, 8}}
+]
+
+
 
 (*******************************************************************************)
 MTSection["Motifs and subgraph counts"]
@@ -605,6 +782,16 @@ triangleCount[g_?GraphQ] := triangleCount@AdjacencyMatrix[g]
 MT[
   Length@IGTriangles[ug],
   triangleCount[ug]
+]
+
+MT[
+  IGTriangles[empty],
+  {}
+]
+
+MT[
+  IGTriangles[edgeless],
+  {}
 ]
 
 MT[
@@ -660,6 +847,26 @@ MT[
 ]
 
 MT[
+  IGMotifs[empty, 3],
+  {Indeterminate, Indeterminate, 0, 0}
+]
+
+MT[
+  IGMotifs[empty, 4],
+  {Indeterminate, Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, 0, 0, 0, 0, 0}
+]
+
+MT[
+  IGMotifs[edgeless, 3],
+  {Indeterminate, Indeterminate, 0, 0}
+]
+
+MT[
+  IGMotifs[edgeless, 4],
+  {Indeterminate, Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, 0, 0, 0, 0, 0}
+]
+
+MT[
   IGMotifsTotalCount[dolphin, 3],
   733
 ]
@@ -667,6 +874,16 @@ MT[
 MT[
   IGMotifsTotalCount[dolphin, 4],
   3800
+]
+
+MT[
+  IGMotifsTotalCount[empty, 3],
+  0
+]
+
+MT[
+  IGMotifsTotalCount[edgeless, 3],
+  0
 ]
 
 MT[
@@ -687,10 +904,44 @@ MT[
 ]
 
 MT[
+  IGTriadCensus[empty],
+  <|"003" -> 0, "012" -> 0, "102" -> 0, "021D" -> 0, "021U" -> 0,
+    "021C" -> 0, "111D" -> 0, "111U" -> 0, "030T" -> 0, "030C" -> 0,
+    "201" -> 0, "120D" -> 0, "120U" -> 0, "120C" -> 0, "210" -> 0,
+    "300" -> 0|>,
+  {IGraphM::warning}
+]
+
+MT[
+  IGTriadCensus[Graph[{1,2,3},{}]],
+  <|"003" -> 1, "012" -> 0, "102" -> 0, "021D" -> 0, "021U" -> 0,
+    "021C" -> 0, "111D" -> 0, "111U" -> 0, "030T" -> 0, "030C" -> 0,
+    "201" -> 0, "120D" -> 0, "120U" -> 0, "120C" -> 0, "210" -> 0,
+    "300" -> 0|>,
+  {IGraphM::warning}
+]
+
+MT[
   MapThread[SameQ, {IGTriadCensus[web] /@ Keys@IGData["MANTriadLabels"], IGMotifs[web, 3]}],
   {False, False, True, False, True, True, True, True, True, True, True, True, True, True, True, True}
 ]
 
+MT[
+  IGDyadCensus[empty],
+  <|"Mutual" -> 0, "Asymmetric" -> 0, "Null" -> 0|>,
+  {IGraphM::warning}
+]
+
+MT[
+  IGDyadCensus[Graph[{1,2,3}, {}]],
+  <|"Mutual" -> 0, "Asymmetric" -> 0, "Null" -> 3|>,
+  {IGraphM::warning}
+]
+
+MT[
+  IGDyadCensus[web],
+  <|"Mutual" -> 13, "Asymmetric" -> 3927, "Null" -> 746985|>
+]
 
 (*******************************************************************************)
 MTSection["Connectivity"]
@@ -823,6 +1074,54 @@ MT[
 (*******************************************************************************)
 MTSection["Shortest paths"]
 
+(* verify handling of infinities *)
+MT[
+  IGDistanceMatrix[edgeless],
+  { {0, Infinity, Infinity},
+    {Infinity, 0, Infinity},
+    {Infinity, Infinity, 0}}
+]
+
+MT[
+  IGDistanceMatrix[Graph[{1, 2, 3}, {2 <-> 3}, EdgeWeight -> {1.2}]],
+  {{0., Infinity, Infinity}, {Infinity, 0., 1.2}, {Infinity, 1.2, 0.}}
+]
+
+MT[
+  IGDistanceMatrix[empty],
+  {}
+]
+
+MT[
+  IGDistanceCounts[empty],
+  {}
+]
+
+MT[
+  IGDistanceCounts[edgeless],
+  {}
+]
+
+MT[
+  IGDistanceHistogram[empty, 1],
+  {}
+]
+
+MT[
+  IGDistanceHistogram[edgeless, 1],
+  {}
+]
+
+MT[
+  IGAveragePathLength[empty],
+  Indeterminate
+]
+
+MT[
+  IGAveragePathLength[edgeless],
+  Indeterminate
+]
+
 (* directed, unweighted, unconnected *)
 MT[
   IGDistanceCounts[web],
@@ -939,7 +1238,43 @@ MT[
 
 
 (*******************************************************************************)
+MTSection["Bipartite graphs"]
+
+MT[
+  IGBipartitePartitions[bipartite],
+  {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10, 11, 12}}
+]
+
+MT[
+  IGBipartitePartitions[empty],
+  {{},{}}
+]
+
+(* not the only valid result, change test if implementation changes *)
+MT[
+  IGBipartitePartitions[Graph[{1,2,3,4}, {}]],
+  {{1,2,3,4}, {}}
+]
+
+MT[
+  IGBipartiteQ[bipartite],
+  True
+]
+
+MT[
+  IGBipartitePartitions[dbipartite],
+  {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10, 11, 12}}
+]
+
+MT[
+  IGBipartiteQ[dbipartite],
+  True
+]
+
+(*******************************************************************************)
 MTSection["Test remaining functions"]
+
+(* IGData *)
 
 MT[
   IGData /@ IGData[];,
@@ -947,9 +1282,20 @@ MT[
 ]
 
 MT[
+  And @@ MapThread[IGIsomorphicQ, {IGData[{"AllDirectedGraphs", 3}], Values@IGData["MANTriadLabels"]}],
+  True
+]
+
+
+(* IGMakeLattice *)
+
+MT[
   IGIsomorphicQ[IGMakeLattice[{3,4}], GridGraph[{3,4}]],
   True
 ]
+
+
+(* IGRewire *)
 
 MT[
   VertexDegree@IGRewire[ug, 100] == VertexDegree[ug],
@@ -969,6 +1315,9 @@ MT[
   True
 ]
 
+
+(* IGRewireEdges *)
+
 MT[
   EdgeCount@IGRewireEdges[ug, 0.1] == EdgeCount[ug],
   True
@@ -978,6 +1327,72 @@ MT[
   IsomorphicGraphQ[IGRewireEdges[ug, 0], ug],
   True
 ]
+
+MT[
+  IGIsomorphicQ[
+    IGRewireEdges[empty, 0],
+    empty
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGRewireEdges[edgeless, 0],
+    edgeless
+  ],
+  True
+]
+
+
+(* IGConnectNeighborhood *)
+
+MT[
+  IsomorphicGraphQ[
+    IGConnectNeighborhood[CycleGraph[10], 2],
+    IGMakeLattice[{10}, "Periodic" -> True, "Radius" -> 2]
+  ],
+  True
+]
+
+MT[
+  EdgeList@IGConnectNeighborhood[empty, 2],
+  {}
+]
+
+MT[
+  IsomorphicGraphQ[
+    IGConnectNeighborhood[ug, 1],
+    ug
+  ],
+  True,
+  {IGraphM::warning}
+]
+
+MT[
+  EdgeList@IGConnectNeighborhood[
+    Graph[{1 -> 2, 2 -> 1, 2 -> 3, 3 -> 2}],
+    2],
+  {1 \[DirectedEdge] 2, 1 \[DirectedEdge] 3, 2 \[DirectedEdge] 1,
+    2 \[DirectedEdge] 3, 3 \[DirectedEdge] 1, 3 \[DirectedEdge] 2}
+]
+
+MT[
+  EdgeList@IGConnectNeighborhood[
+    Graph[{1 -> 2, 2 -> 3}],
+    2],
+  {1 \[DirectedEdge] 2, 1 \[DirectedEdge] 3, 2 \[DirectedEdge] 3}
+]
+
+MT[
+  EdgeList@IGConnectNeighborhood[
+    Graph[{1 -> 2, 3 -> 2}],
+    2],
+  {1 \[DirectedEdge] 2, 3 \[DirectedEdge] 2}
+]
+
+
+(* IGArticulationPoints *)
 
 connCompCount[g_] := Length@ConnectedComponents[g]
 
@@ -997,12 +1412,9 @@ MT[
   True
 ]
 
+(* IGMinSeparators *)
+
 MT[
   IGMinSeparators[#] =!= {} & /@ ulist,
   ConnectedGraphQ /@ ulist
-]
-
-MT[
-  And @@ MapThread[IGIsomorphicQ, {IGData[{"AllDirectedGraphs", 3}], Values@IGData["MANTriadLabels"]}],
-  True
 ]
