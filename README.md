@@ -19,10 +19,11 @@ igraph is one of the broadest open source graph manipulation packages available.
  - Estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs
  - Community detection algorithms
  - Minimum feedback arc set for weighted and unweighted graphs
- - Find all cliques (not just maximal ones), count cliques without listing them
+ - Find all cliques (not just maximal ones), count cliques of different sizes without listing them, weighted cliques
  - Count 3- and 4-motifs, list triangles
+ - Histogram for shortest path lengths
  - Rewire edges, keeping either the density or the degree sequence
- - Alternative algorithms for isomorphism testing: BLISS, VF2, LAD
+ - Alternative fast algorithms for isomorphism testing: Bliss, VF2, LAD
  - Subgraph isomorphism (including induced subgraphs with LAD)
  - Isomorphism for edge or vertex coloured graphs; multigraph isomorphism implementation based on edge colouring
  - Alternative algorithms for generating random graphs with given degree sequence. Test for degree sequence graphicality.
@@ -30,11 +31,13 @@ igraph is one of the broadest open source graph manipulation packages available.
  - Biconnected components, articulation points, find all minimum vertex cuts
  - Several other specialized functions not mentioned here ...
 
+The documentation contains many examples.
+
 ## Installation
 
 IGraph/M can be installed like any other Mathematica application.
 
- - [Download the zip archive from GitHub](https://github.com/szhorvat/IGraphM/releases).
+ - [Download the zip archive from GitHub's releases page](https://github.com/szhorvat/IGraphM/releases).
  - Open Mathematica's "Applications" directory by evaluating `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`.
  - Unzip the downloaded archive.  It will contain this `README.md` file, and a directory called `IGraphM`.  Move the `IGraphM` directory into Mathematica's "Applications" directory.  If earlier versions of the package were installed, they must be fully removed first.
 
@@ -59,7 +62,7 @@ Currently IGraph/M is still incomplete and under development.  Use
 
 to open the documentation notebook.
 
-The documentation is not yet ready and contributions are most welcome.  If you would like to help out with the documentation, please see below.
+The documentation is not yet ready and contributions are most welcome.  If you would like to help out with the documentation, please see the Contributions section below.
 
 ## Contributions
 
@@ -91,7 +94,7 @@ You can contact me in email.  Evaluate the following in Mathematica to get my em
 
 ## Bugs and troubleshooting
 
-IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until most problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues).
+IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until most problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues). **In the bug report include the output of ``IGraphM`Developer`GetInfo[]``.**
 
 During the version 0.1.x series IGraph/M should be considered unstable.  Function names, options, and the structure of return values may change without notice.  Thus I do encourage you to use it interactively, but at this point I do not recommend basing other packages on IGraph/M.  Starting from version 0.2.0 I will try to avoid making any breaking changes.
 
@@ -105,7 +108,9 @@ During the version 0.1.x series IGraph/M should be considered unstable.  Functio
 
    or similar. A property does not get correctly applied to the graph.  This is due to a bug in Mathematica. I believe I have worked around most of these issues, but if you encounter them, one possible workaround is to cycle the graph `g` through some other representation, e.g. `g = Uncompress@Compress[g]`.
 
- * Graphlet decomposition functions may crash the kernel. This is due to an igraph bug.
+ * Graphlet decomposition functions may crash the kernel. This is due to [a bug in the igraph C core](https://github.com/igraph/igraph/issues/869).
+
+ * The graphs returned by `IGBipartiteGameGNM` and `IGBipartiteGameGNP` may not render when using the `DirectedEdges -> True` and `"Bidirectional" -> True` options.  This is due to a bug in Mathematica's  `"BipartiteEmbdding"` graph layout and can be corrected by passing `GraphLayout -> Automatic` to these functions.
 
 ## License
 
