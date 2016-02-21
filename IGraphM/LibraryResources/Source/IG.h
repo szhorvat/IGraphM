@@ -215,7 +215,7 @@ public:
     // Modification
 
     void connectNeighborhood(mint order) {
-        igCheck(igraph_connect_neighborhood(&graph, order, IGRAPH_ALL));
+        igCheck(igraph_connect_neighborhood(&graph, order, IGRAPH_OUT));
     }
 
     // Structure

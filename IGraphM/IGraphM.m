@@ -1027,7 +1027,11 @@ IGBipartiteGameGNP[n1_?Internal`PositiveMachineIntegerQ, n2_?Internal`PositiveMa
 (* Modification *)
 
 (* Warning: this function doesn't preserve the edge ordering or any graph properties *)
-vertexRename[names_][graph_] := AdjacencyGraph[names, AdjacencyMatrix[graph], DirectedEdges -> DirectedGraphQ[graph]]
+vertexRename[names_][graph_] :=
+    If[VertexCount[graph] == 0,
+      graph,
+      AdjacencyGraph[names, AdjacencyMatrix[graph], DirectedEdges -> DirectedGraphQ[graph]]
+    ]
 
 SyntaxInformation[IGConnectNeighborhood] = {"ArgumentsPattern" -> {_, _}};
 IGConnectNeighborhood[graph_?igGraphQ, k_?Internal`NonNegativeMachineIntegerQ] :=
