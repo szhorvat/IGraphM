@@ -67,569 +67,547 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGAdjacentTriangleCount", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGData",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGData", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGLayoutFruchtermanReingold3D",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGLayoutFruchtermanReingold3D", "IGraphM`"}},
-          ButtonNote->"IGraphM`"]},
-        {
-         ButtonBox["IGArticulationPoints",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGArticulationPoints", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGDegreeSequenceGame",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGDegreeSequenceGame", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGLayoutGEM",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGLayoutGEM", "IGraphM`"}},
-          ButtonNote->"IGraphM`"]},
-        {
-         ButtonBox["IGAuthorityScore",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGAuthorityScore", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDiameter",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGDiameter", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutGraphOpt",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutGraphOpt", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGAverageLocalClusteringCoefficient",
+         ButtonBox["IGArticulationPoints",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGAverageLocalClusteringCoefficient", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGArticulationPoints", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDiceSimilarity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGDiceSimilarity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutKamadaKawai",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutKamadaKawai", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGAveragePathLength",
+         ButtonBox["IGAuthorityScore",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGAveragePathLength", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGAuthorityScore", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDirectedAcyclicGraphQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGDirectedAcyclicGraphQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutKamadaKawai3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutKamadaKawai3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBetweenness",
+         ButtonBox["IGAverageLocalClusteringCoefficient",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBetweenness", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGAverageLocalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDistanceCounts",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGDistanceCounts", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutRandom",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutRandom", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBetweennessEstimate",
+         ButtonBox["IGAveragePathLength",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBetweennessEstimate", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGAveragePathLength", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDistanceHistogram",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGDistanceHistogram", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutReingoldTilford",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutReingoldTilford", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBibliographicCoupling",
+         ButtonBox["IGBetweenness",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBibliographicCoupling", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBetweenness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDistanceMatrix",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGDistanceMatrix", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutReingoldTilfordCircular",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutReingoldTilfordCircular", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBiconnectedComponents",
+         ButtonBox["IGBetweennessEstimate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBiconnectedComponents", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBetweennessEstimate", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDocumentation",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGDocumentation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutSphere",
           BaseStyle->"InformationLink",
+          
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutSphere", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBipartiteGameGNM",
+         ButtonBox["IGBibliographicCoupling",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBipartiteGameGNM", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBibliographicCoupling", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGDyadCensus",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGDyadCensus", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLCF",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {"IGLCF", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {"IGLCF", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBipartiteGameGNP",
+         ButtonBox["IGBiconnectedComponents",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBipartiteGameGNP", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBiconnectedComponents", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGEdgeBetweenness",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGEdgeBetweenness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLocalClusteringCoefficient",
           BaseStyle->"InformationLink",
-          
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLocalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBipartiteParitions",
+         ButtonBox["IGBipartiteGameGNM",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBipartiteParitions", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBipartiteGameGNM", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGEdgeBetweennessEstimate",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGEdgeBetweennessEstimate", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMakeLattice",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGMakeLattice", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBipartiteQ",
+         ButtonBox["IGBipartiteGameGNP",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBipartiteQ", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBipartiteGameGNP", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGEdgeConnectivity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGEdgeConnectivity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalCliques",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGMaximalCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBlissAutomorphismCount",
+         ButtonBox["IGBipartitePartitions",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBlissAutomorphismCount", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBipartitePartitions", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGEigenvectorCentrality",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGEigenvectorCentrality", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalCliquesCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGMaximalCliquesCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBlissAutomorphismGroup",
+         ButtonBox["IGBipartiteQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBlissAutomorphismGroup", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBipartiteQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGFeedbackArcSet",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGFeedbackArcSet", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalCliqueSizeCounts",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGMaximalCliqueSizeCounts", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
-         ButtonBox["IGBlissCanonicalGraph",
+         ButtonBox["IGBlissAutomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGBlissCanonicalGraph", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBlissAutomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGFindDiameter",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGFindDiameter", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalIndependentVertexSets",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGMaximalIndependentVertexSets", "IGraphM`"}},
+          ButtonNote->"IGraphM`"]},
+        {
+         ButtonBox["IGBlissAutomorphismGroup",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBlissAutomorphismGroup", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGForestFireGame",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGForestFireGame", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGMaximalWeightedCliques",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGMaximalWeightedCliques", "IGraphM`"}},
+          ButtonNote->"IGraphM`"]},
+        {
+         ButtonBox["IGBlissCanonicalGraph",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGBlissCanonicalGraph", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGGirth",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGGirth", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGMaximumCardinalitySearch",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGMaximumCardinalitySearch", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGBlissCanonicalLabeling",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGBlissCanonicalLabeling", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGForestFireGame",
+         ButtonBox["IGGlobalClusteringCoefficient",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGForestFireGame", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGGlobalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGMaximumCardinalitySearch",
+         ButtonBox["IGMinSeparators",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGMaximumCardinalitySearch", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGMinSeparators", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGBlissCanonicalPermutation",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGBlissCanonicalPermutation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGGirth",
+         ButtonBox["IGGomoryHuTree",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGGirth", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGGomoryHuTree", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGMinSeparators",
+         ButtonBox["IGModularity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGMinSeparators", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGModularity", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGBlissGetIsomorphism",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGBlissGetIsomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGGlobalClusteringCoefficient",
+         ButtonBox["IGGraphAtlas",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGGlobalClusteringCoefficient", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGGraphAtlas", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGModularity",
+         ButtonBox["IGMotifs",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGModularity", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGMotifs", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGBlissIsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGBlissIsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGGomoryHuTree",
+         ButtonBox["IGGraphicalQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGGomoryHuTree", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGGraphicalQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGMotifs",
+         ButtonBox["IGMotifsEstimateTotalCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGMotifs", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGMotifsEstimateTotalCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGChordalCompletion",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGChordalCompletion", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGGraphAtlas",
+         ButtonBox["IGGraphletBasis",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGGraphAtlas", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGGraphletBasis", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGMotifsEstimateTotalCount",
+         ButtonBox["IGMotifsTotalCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGMotifsEstimateTotalCount", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGMotifsTotalCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGChordalQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGChordalQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGGraphicalQ",
+         ButtonBox["IGGraphletProject",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGGraphicalQ", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGGraphletProject", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGMotifsTotalCount",
+         ButtonBox["IGPageRank",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGMotifsTotalCount", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGPageRank", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGCliqueNumber",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCliqueNumber", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGGraphletBasis",
+         ButtonBox["IGGraphlets",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGGraphletBasis", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGGraphlets", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGPageRank",
+         ButtonBox["IGPersonalizedPageRank",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGPageRank", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGPersonalizedPageRank", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGCliques",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGGraphletProject",
+         ButtonBox["IGHubScore",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGGraphletProject", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGHubScore", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGPersonalizedPageRank",
+         ButtonBox["IGraphM",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGPersonalizedPageRank", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGraphM", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGCliqueSizeCounts",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCliqueSizeCounts", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGGraphlets",
+         ButtonBox["IGIndependenceNumber",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGGraphlets", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGraphM",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGraphM", "IGraphM`"}},
-          ButtonNote->"IGraphM`"]},
-        {
-         ButtonBox["IGCliquesWeighted",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGCliquesWeighted", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGHubScore",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGHubScore", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGIndependenceNumber", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGRewire",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGRewire", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -637,21 +615,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCloseness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGIndependenceNumber",
+         ButtonBox["IGIndependentVertexSets",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGIndependenceNumber", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGIndependentVertexSets", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGRewireEdges",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGRewireEdges", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -659,21 +637,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGClosenessEstimate", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGIndependentVertexSets",
+         ButtonBox["IGInverseLogWeightedSimilarity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGIndependentVertexSets", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGInverseLogWeightedSimilarity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGSeedRandom",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGSeedRandom", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -681,21 +659,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGClusterData", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGInverseLogWeightedSimilarity",
+         ButtonBox["IGIsoclass",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGInverseLogWeightedSimilarity", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGIsoclass", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGStochasticBlockModelGame",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGStochasticBlockModelGame", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -703,21 +681,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCocitationCoupling", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGIsoclass",
+         ButtonBox["IGIsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGIsoclass", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGIsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGSubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGSubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -725,21 +703,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCohesiveBlocks", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGIsomorphicQ",
+         ButtonBox["IGJaccardSimilarity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGIsomorphicQ", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGJaccardSimilarity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGTopologicalOrdering",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGTopologicalOrdering", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -747,21 +725,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesEdgeBetweenness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGJaccardSimilarity",
+         ButtonBox["IGKRegularGame",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGJaccardSimilarity", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGKRegularGame", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGTriadCensus",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGTriadCensus", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -769,21 +747,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesGreedy", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGKRegularGame",
+         ButtonBox["IGLADFindSubisomorphisms",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGKRegularGame", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLADFindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGTriangles",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGTriangles", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -791,21 +769,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesInfoMAP", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGLADFindSubisomorphisms",
+         ButtonBox["IGLADGetSubisomorphism",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGLADFindSubisomorphisms", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLADGetSubisomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGUnfoldTree",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGUnfoldTree", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -813,21 +791,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesLabelPropagation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGLADGetSubisomorphism",
+         ButtonBox["IGLADSubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGLADGetSubisomorphism", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLADSubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVersion",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGVersion", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -835,21 +813,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesLeadingEigenvector", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGLADSubisomorphicQ",
+         ButtonBox["IGLADSubisomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGLADSubisomorphicQ", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLADSubisomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVertexConnectivity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGVertexConnectivity", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -857,21 +835,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesMultilevel", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGLADSubisomorphismCount",
+         ButtonBox["IGLargestCliques",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGLADSubisomorphismCount", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLargestCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2FindIsomorphisms",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGVF2FindIsomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -879,21 +857,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesOptimalModularity", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGLargestCliques",
+         ButtonBox["IGLargestIndependentVertexSets",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGLargestCliques", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLargestIndependentVertexSets", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2FindSubisomorphisms",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGVF2FindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -901,21 +879,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesSpinGlass", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGLargestIndependentVertexSets",
+         ButtonBox["IGLargestWeightedCliques",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
-            "IGLargestIndependentVertexSets", "IGraphM`"}},
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLargestWeightedCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGVF2IsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -923,21 +901,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCommunitiesWalktrap", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutCircle",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutCircle", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGVF2IsomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -945,21 +923,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGCompareCommunities", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutDavidsonHarel",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutDavidsonHarel", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGVF2SubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -967,21 +945,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGConnectedQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutDrL",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutDrL", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGVF2SubisomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -989,21 +967,20 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGConnectNeighborhood", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutDrL3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutDrL3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGWeaklyConnectedQ",
           BaseStyle->"InformationLink",
-          
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGWeaklyConnectedQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -1011,21 +988,65 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGConstraintScore", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutFruchtermanReingold",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGLayoutFruchtermanReingold", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGWeightedCliqueNumber",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGWeightedCliqueNumber", "IGraphM`"}},
+          ButtonNote->"IGraphM`"]},
+        {
+         ButtonBox["IGData",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGData", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGLayoutFruchtermanReingold3D",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLayoutFruchtermanReingold3D", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGWeightedCliques",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGWeightedCliques", "IGraphM`"}},
+          ButtonNote->"IGraphM`"]},
+        {
+         ButtonBox["IGDegreeSequenceGame",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGDegreeSequenceGame", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGLayoutGEM",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
+            "IGLayoutGEM", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGWeightedClusteringCoefficient",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-31dc0479-ed92-4f32-adcb-d7b30c781ddb", {
+           "Info-809bdece-4790-44c1-8806-f284b0f87c88", {
             "IGWeightedClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -1049,7 +1070,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGVersion[] returns the IGraph/M version along with the \
 version of the igraph library in use.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-03ee7704-6f16-45fe-87d4-7eefe1371539"]
+ CellTags->"Info-3c4b9e8e-a4c4-46e8-90ea-52481cde8d7e"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -1057,8 +1078,8 @@ Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"IGVersion", "[", "]"}]], "Input"],
 
-Cell[BoxData["\<\"IGraph/M 0.1.5dev\\nigraph 0.8.0-pre+1887c5a (Feb 14 \
-2016)\\nMac OS X x86 (64-bit)\"\>"], "Output"]
+Cell[BoxData["\<\"IGraph/M 0.2.0pre1\\nigraph 0.8.0-pre+e08b14d (Feb 21 2016)\
+\\nMac OS X x86 (64-bit)\"\>"], "Output"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -3278,6 +3299,7 @@ Cell[BoxData[
           "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$4"], 
        TagBox[{
          TagBox[
+          
           FilledCurveBox[{{{0, 2, 1}, {1, 2, 2}, {0, 1, 1}, {1, 2, 2}, {0, 1, 
            1}, {1, 2, 2}, {0, 1, 1}, {1, 2, 
            2}}}, {{{-0.814692582479458, -0.6892120018815899}, \
@@ -3523,7 +3545,7 @@ Cell[BoxData[
 notation.\\nIGLCF[shifts, repeats, vertexCount] creates a graph from LCF \
 notation with the number of vertices specified.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-a8b9a80d-f6e1-4f59-bfc5-555dc762c3ca"]
+ CellTags->"Info-a555076f-551d-4a30-b1f7-b4b6be0228b7"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -4049,7 +4071,8 @@ Cell[BoxData[
       Null, {{1, 2}, {1, 5}, {1, 9}, {1, 12}, {2, 3}, {2, 4}, {2, 12}, {3, 
        4}, {3, 7}, {3, 11}, {4, 5}, {4, 6}, {5, 6}, {5, 9}, {6, 7}, {6, 8}, {
        7, 8}, {7, 11}, {8, 9}, {8, 10}, {9, 10}, {10, 11}, {10, 12}, {11, 
-       12}}}, {GraphLayout -> {"Dimension" -> 3}, 
+       12}}}, {
+      GraphLayout -> {"Dimension" -> 3}, 
        VertexCoordinates -> {{0.2892832414223136, 0.24599297675329096`, 
         0.5307532646012435}, {0.6286564638614168, -0.12933261568103915`, 
         0.1186105872175481}, {
@@ -4158,7 +4181,7 @@ by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. This \
 function is provided for convenience; if you are looking for a specific named \
 graph, use the builtin GraphData function.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-f23fa81d-1d16-4ffa-8e32-ae9f51f26563"]
+ CellTags->"Info-567f3639-b5b3-4bd6-a949-98b66f92f21e"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -4221,7 +4244,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice graph \
 of the given dimensions.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-e08dfb4b-bd47-48e6-9db6-ef32ba6b4da0"]
+ CellTags->"Info-a1741428-d1f9-4aab-bb7a-95cbdccd9df7"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -4281,7 +4304,7 @@ graph with the given degree sequence. Available Method options: \
 \\\"Simple\\\"}.\\nIGDegreeSequenceGame[indegrees, outdegrees] generates a \
 directed random graph with the given in- and out-degree sequences.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-d8936921-53b8-4776-af33-4d02b8dd1967"]
+ CellTags->"Info-aaeb42ee-57a5-41c3-a1d2-6d11c0b1d32e"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -4339,7 +4362,7 @@ Cell[BoxData[
  StyleBox["\<\"IGKRegularGame[n, k] generates a k-regular graph on n \
 vertices, i.e. a graph in which all vertices have degree k.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-3423db96-d6fa-4331-a5a5-d64ebf1af84d"]
+ CellTags->"Info-87ad3547-1208-438e-8192-03521602262f"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -4451,7 +4474,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGStochasticBlockModelGame[ratesMatrix, blockSizes] samples \
 from a stochastic block model.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-1fcb77e2-d818-468f-93da-79c2605fa5f2"]
+ CellTags->"Info-a0cfc7e0-d39b-4e86-b8c9-4f31ab15f7d0"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -4617,7 +4640,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGForestFireGame[n, fwprob]\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-3ccef20c-86a2-4c61-b9d0-f3523357af68"]
+ CellTags->"Info-c4e9d786-db1d-422b-8ef9-4a8de8f4f168"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -4972,8 +4995,8 @@ w8IntQ==
          {Arrowheads[0.], 
           ArrowBox[BezierCurveBox[{15, 304, 22}], 0.02261146496815286]}, 
          {Arrowheads[0.], 
-          ArrowBox[BezierCurveBox[{15, 305, 306, 54}], 0.02261146496815286]}, 
-         
+          ArrowBox[BezierCurveBox[{15, 305, 306, 54}], 
+           0.02261146496815286]}, 
          {Arrowheads[0.], 
           ArrowBox[BezierCurveBox[{15, 307, 308, 56}], 
            0.02261146496815286]}, 
@@ -5142,8 +5165,8 @@ w8IntQ==
          {Arrowheads[0.], 
           ArrowBox[BezierCurveBox[{32, 400, 46}], 0.02261146496815286]}, 
          {Arrowheads[0.], 
-          ArrowBox[BezierCurveBox[{32, 401, 402, 47}], 
-           0.02261146496815286]}, 
+          ArrowBox[BezierCurveBox[{32, 401, 402, 47}], 0.02261146496815286]}, 
+         
          {Arrowheads[0.], 
           ArrowBox[BezierCurveBox[{32, 403, 53}], 0.02261146496815286]}, 
          {Arrowheads[0.], 
@@ -5406,7 +5429,7 @@ Cell[BoxData[
  StyleBox["\<\"IGBipartiteGameGNM[n1, n2, m] generates a bipartite random \
 graph with n1 and n2 vertices in the two partitions and m edges.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-70060266-74a9-44c4-9210-ed3abe21b138"]
+ CellTags->"Info-e0bb07df-56b3-4727-8412-af5969a0f18f"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5418,7 +5441,7 @@ Cell[BoxData[
  StyleBox["\<\"IGBipartiteGameGNP[n1, n2, p] generates a bipartite Bernoulli \
 random graph with n1 and n2 vertices in the two partitions and connection \
 probability p.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-2ed042b2-2b4f-42bd-bbf5-4317b41ed076"]
+ CellTags->"Info-2eef147f-8863-4167-b67a-977dfd6652e9"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5569,7 +5592,7 @@ Cell[BoxData[
  StyleBox["\<\"IGBetweenness[graph] gives a list of betweenness centralities \
 for the vertices of graph. Available Method options: {\\\"Precise\\\", \
 \\\"Fast\\\"}.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-d0116a0d-f26b-4130-ba01-203a816c3e6c"]
+ CellTags->"Info-2420f284-a7d8-4352-bd1c-71af67bbcee6"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5582,7 +5605,7 @@ Cell[BoxData[
 betweenness by considering only paths of at most length cutoff. Available \
 Method options: {\\\"Precise\\\", \\\"Fast\\\"}.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-bdf6fd81-3515-4e2b-9402-b2863274e2bb"]
+ CellTags->"Info-9aec107f-c3b4-4667-9c0d-ea5f6b73b83d"]
 }, Open  ]],
 
 Cell["Weighted graphs are supported.", "Text"],
@@ -5629,7 +5652,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.254955`", ",", "18980.52414303636`"}], "}"}]], "Output"]
+  RowBox[{"0.253231`", ",", "18980.52414303636`"}], "}"}]], "Output"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5644,7 +5667,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.035196`", ",", "18980.524324323203`"}], "}"}]], "Output"]
+  RowBox[{"0.035784`", ",", "18980.524324323203`"}], "}"}]], "Output"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -5673,7 +5696,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.953646`", ",", "45701.7295998485`"}], "}"}]], "Output"]
+  RowBox[{"0.921386`", ",", "45701.7295998485`"}], "}"}]], "Output"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5688,7 +5711,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.123024`", ",", "78169.68917727846`"}], "}"}]], "Output"]
+  RowBox[{"0.108473`", ",", "78169.68917727846`"}], "}"}]], "Output"]
 }, Open  ]]
 }, Closed]],
 
@@ -5704,7 +5727,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGCloseness[graph] gives a list of closeness centralities for \
 the vertices of graph.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-f4fc9287-435f-49bf-946b-ce348b3d0c4c"]
+ CellTags->"Info-1244d343-c007-42d5-a104-aa463b00114b"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5716,7 +5739,7 @@ Cell[BoxData[
  StyleBox["\<\"IGClosenessEstimate[graph, cutoff] estimates closeness \
 centrality by considering only paths of at most length cutoff.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-1e49f673-11ec-49f4-bcb2-dd8b24f143ef"]
+ CellTags->"Info-32ef1a2f-455a-46f1-945e-ee3aaabfac41"]
 }, Open  ]],
 
 Cell["Weighted graphs are supported.", "Text"]
@@ -5736,7 +5759,7 @@ Cell[BoxData[
 the vertices of the graph.\\nIGPageRank[graph, damping] gives a list of \
 PageRank centralities for the vertices of the graph using damping factor \
 damping.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-74a8abc6-b206-477a-9f4c-0b91d2e24472"]
+ CellTags->"Info-45fbeee2-a8fe-49f4-942c-140e5a21068c"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5750,7 +5773,7 @@ personalized PageRank centralities for the vertices of the \
 graph.\\nIGPersonalizedPageRank[graph, reset, damping] gives a list of \
 personalized PageRank centralities for the vertices of the graph using \
 damping factor damping.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-46a6d016-3f2f-43dd-b92e-e8ea3703b0f9"]
+ CellTags->"Info-bf3c9100-27c0-47f7-94b6-4720905d5288"]
 }, Open  ]],
 
 Cell["Weighted graphs are supported.", "Text"],
@@ -5810,7 +5833,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGEigenvectorCentrality[graph]\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-2b3eb635-b00a-4054-a66c-d2db493e99a2"]
+ CellTags->"Info-d324ca77-d68e-4fc0-bde0-9680ec2ba7ab"]
 }, Open  ]]
 }, Closed]],
 
@@ -5826,7 +5849,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGHubScore[graph] returns Kleinberg's hub score for each \
 vertex.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-24524d11-d547-400c-be0e-65978bf7a776"]
+ CellTags->"Info-159489c6-5149-40fb-950e-ecbfa3e1e9e6"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -5837,7 +5860,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGAuthorityScore[graph] returns Kleinberg's authority score \
 for each vertex.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-2397b632-2ee1-46da-97b4-b18bdc0c9c1b"]
+ CellTags->"Info-0ee9e74d-d7a9-41a7-91b9-a62c4d79fefe"]
 }, Open  ]]
 }, Closed]],
 
@@ -5853,7 +5876,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGConstraintScore[graph] returns Burt's constraint score for \
 each vertex.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-6616ebf2-4a17-4ecf-bffb-5dfa1cde461c"]
+ CellTags->"Info-6597d8b7-d5fa-4534-87c8-a27f2bda6557"]
 }, Open  ]]
 }, Closed]]
 }, Closed]],
@@ -6009,14 +6032,14 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-97e6efcd-b9da-4f59-b85e-16b284d91a82", {
+           "Info-093f9bd8-4dff-401c-9c20-61aec6aca731", {
             "IGAverageLocalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLocalClusteringCoefficient",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-97e6efcd-b9da-4f59-b85e-16b284d91a82", {
+           "Info-093f9bd8-4dff-401c-9c20-61aec6aca731", {
             "IGLocalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -6024,14 +6047,14 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-97e6efcd-b9da-4f59-b85e-16b284d91a82", {
+           "Info-093f9bd8-4dff-401c-9c20-61aec6aca731", {
             "IGGlobalClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGWeightedClusteringCoefficient",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-97e6efcd-b9da-4f59-b85e-16b284d91a82", {
+           "Info-093f9bd8-4dff-401c-9c20-61aec6aca731", {
             "IGWeightedClusteringCoefficient", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -6081,7 +6104,7 @@ between from the given vertices to each vertex in \
 graph.\\nIGDistanceMatrix[graph, fromVertices, toVertices] computes the \
 shortest path lengths between the given vertices in graph.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-d13e81e3-952b-47fd-872e-7ad6c714c5e2"]
+ CellTags->"Info-383b9250-8efb-42a9-88b9-1d1d23ddb0ca"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -6161,14 +6184,13 @@ Cell[BoxData[
 shortest path lengths between all vertex pairs. The kth element of the result \
 is the count of shortest paths of length k.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-1db72617-8787-442e-b281-43dfadb9c80b"]
+ CellTags->"Info-8bafd4ad-b1a0-4cd4-8a78-60c8a3b5c7d3"]
 }, Open  ]],
 
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"IGDistanceCounts", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"IGDistanceCounts", "[", "]"}], TraditionalForm]]],
  " counts all-pair ",
  StyleBox["unweighted",
   FontSlant->"Italic"],
@@ -6176,8 +6198,7 @@ Cell[TextData[{
 restrict the computation to certain start and end vertex sets, use ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"IGDistanceHistogram", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"IGDistanceHistogram", "[", "]"}], TraditionalForm]]],
  "."
 }], "Text"],
 
@@ -6538,59 +6559,49 @@ vertices and bin size.\\nIGDistanceHistogram[graph, binsize, from, to] \
 computes a histogram of weighted shortest path lengths in graph for the given \
 starting and ending vertices and bin size.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-b64d944e-d2c5-4789-bb55-e211afece056"]
+ CellTags->"Info-8db02717-12d2-4749-b41d-4872552e2901"]
 }, Open  ]],
 
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"IGDistanceHistogram", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"IGDistanceHistogram", "[", "]"}], TraditionalForm]]],
  " computes the weighted shortest path length histogram between the specified \
 start and end vertex sets. The start and end vertex sets do not need to be \
 the same. Note that if the graph is undirected, path lengths between ",
  Cell[BoxData[
-  FormBox["s", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["s", TraditionalForm]]],
  " and ",
  Cell[BoxData[
-  FormBox["t", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["t", TraditionalForm]]],
  " will be double counted (from ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"s", "\[Rule]", "t"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"s", "\[Rule]", "t"}], TraditionalForm]]],
  " and ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"t", "\[Rule]", "s"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"t", "\[Rule]", "s"}], TraditionalForm]]],
  ") if ",
  Cell[BoxData[
-  FormBox["s", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["s", TraditionalForm]]],
  " and ",
  Cell[BoxData[
-  FormBox["t", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["t", TraditionalForm]]],
  " appear both in the starting and ending vertex sets."
 }], "Text"],
 
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"IGDistanceHistogram", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"IGDistanceHistogram", "[", "]"}], TraditionalForm]]],
  " is useful when the result of ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"IGDistanceMatrix", "[", "]"}], TraditionalForm]],
-  FormatType->"TraditionalForm"],
+   RowBox[{"IGDistanceMatrix", "[", "]"}], TraditionalForm]]],
  " (or ",
  Cell[BoxData[
-  FormBox["GraphDistanceMatrix", TraditionalForm]],
-  FormatType->"TraditionalForm"],
+  FormBox["GraphDistanceMatrix", TraditionalForm]]],
  ") does not fit in memory."
 }], "Text"]
 }, Closed]],
@@ -6608,7 +6619,7 @@ Cell[BoxData[
  StyleBox["\<\"IGAveragePathLength[graph] returns the average of all-pair \
 unweighted shortest path lengths of the graph.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-b447156d-6ec7-48c6-a121-caf2abeea308"]
+ CellTags->"Info-1ed41262-8b83-4b37-bd1b-7b2b0c227a79"]
 }, Open  ]],
 
 Cell["\<\
@@ -6630,7 +6641,7 @@ Cell[BoxData[
  StyleBox["\<\"IGGirth[graph] returns the length of the shortest cycle of the \
 graph. The graph is treated as undirected, self-loops and multi-edges are \
 ignored.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-fc643fd5-52e8-4b55-ac8e-3b28972f74c7"]
+ CellTags->"Info-e1df0034-2c42-4de5-b54e-4925f9211b70"]
 }, Open  ]]
 }, Closed]],
 
@@ -6647,7 +6658,7 @@ Cell[BoxData[
  StyleBox["\<\"IGDiameter[graph] computes the diameter of graph. Available \
 Method options: {\\\"Unweighted\\\", \\\"Dijkstra\\\"}.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-1d0580ae-d269-4954-b315-55377a30be1f"]
+ CellTags->"Info-6a186326-5303-4d8d-8aea-8189d48278b0"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -6660,7 +6671,7 @@ Cell[BoxData[
 graph, i.e. a shortest path with length equal to the graph diameter. \
 Available Method options: {\\\"Unweighted\\\", \\\"Dijkstra\\\"}.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-7aae70fc-b2b8-4a30-b8c7-cad946930a94"]
+ CellTags->"Info-10091230-5979-43e5-b2b7-ec35a542f722"]
 }, Open  ]],
 
 Cell["The available options are:", "Text"],
@@ -6718,7 +6729,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGBipartiteQ[graph] tests if graph is bipartite.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-15750bfc-54a2-45f7-a285-663fab16392c"]
+ CellTags->"Info-2c5d5cc4-a722-4d6e-b44f-627201d8bf21"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -6727,9 +6738,16 @@ Cell[BoxData[
  RowBox[{"?", "IGBipartiteParitions"}]], "Input"],
 
 Cell[BoxData[
- StyleBox["\<\"IGBipartiteParitions[graph] partitions the vertices of a \
-bipartite graph.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-f571df9c-2d43-4111-ba1c-382441478c9c"]
+ RowBox[{
+  StyleBox[
+   RowBox[{"Information", "::", "notfound"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Symbol \
+\[NoBreak]\\!\\(\\*RowBox[{\\\"\\\\\\\"IGBipartiteParitions\\\\\\\"\\\"}]\\)\
+\[NoBreak] not found. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/General/notfound\\\", ButtonNote -> \
+\\\"Information::notfound\\\"]\\)\"\>"}]], "Message", "MSG"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -6863,14 +6881,228 @@ Cell[BoxData[
  RowBox[{"IGBipartiteParitions", "[", "g", "]"}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{"1", ",", "2", ",", "3", ",", "4", ",", "5"}], "}"}], ",", 
-   RowBox[{"{", 
-    RowBox[{"6", ",", "7", ",", "8", ",", "9", ",", "10"}], "}"}]}], 
-  "}"}]], "Output"]
+ RowBox[{"IGBipartiteParitions", "[", 
+  GraphicsBox[
+   NamespaceBox["NetworkGraphics",
+    DynamicModuleBox[{Typeset`graph = HoldComplete[
+      Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {
+       Null, {{2, 6}, {3, 6}, {5, 6}, {2, 7}, {3, 7}, {5, 7}, {2, 8}, {5, 
+        8}, {2, 9}, {4, 10}}}, {
+       GraphLayout -> {
+         "Dimension" -> 2, "VertexLayout" -> "BipartiteEmbedding"}, 
+        VertexLabels -> {"Name"}}]]}, 
+     TagBox[GraphicsGroupBox[{
+        {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.7563749617533747}, {
+           1.1403919561283224`, -0.8843806265450239}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.7563749617533747}, {
+           1.1403919561283224`, -0.6283692969617255}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.7563749617533747}, {
+           1.1403919561283224`, -0.3723579673784271}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.7563749617533747}, {
+           1.1403919561283224`, -0.11634663779512866`}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.5003636321700763}, {
+           1.1403919561283224`, -0.8843806265450239}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.5003636321700763}, {
+           1.1403919561283224`, -0.6283692969617255}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -1.1170739021352813`}, {
+           1.1163466377951288`, -1.1170739021352813`}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.24435230258677787`}, {
+           1.1403919561283224`, -0.8843806265450239}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.24435230258677787`}, {
+           1.1403919561283224`, -0.6283692969617255}}, 
+           0.016072210673220594`]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{0.11634663779512877`, -0.24435230258677787`}, {
+           1.1403919561283224`, -0.3723579673784271}}, 
+           0.016072210673220594`]}}, 
+        {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+         0.7]}], {
+          DiskBox[{0.11634663779512877`, -1.3497671777255387`}, 
+           0.016072210673220594`], 
+          InsetBox["1", 
+           Offset[{2, 2}, {0.13241884846834936`, -1.3336949670523182`}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{0.11634663779512877`, -0.7563749617533747}, 
+           0.016072210673220594`], 
+          InsetBox["2", 
+           Offset[{2, 2}, {0.13241884846834936`, -0.7403027510801541}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{0.11634663779512877`, -0.5003636321700763}, 
+           0.016072210673220594`], 
+          InsetBox["3", 
+           Offset[{2, 2}, {0.13241884846834936`, -0.48429142149685567`}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{0.11634663779512877`, -1.1170739021352813`}, 
+           0.016072210673220594`], 
+          InsetBox["4", 
+           Offset[{2, 2}, {0.13241884846834936`, -1.1010016914620608`}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{0.11634663779512877`, -0.24435230258677787`}, 
+           0.016072210673220594`], 
+          InsetBox["5", 
+           Offset[{2, 2}, {0.13241884846834936`, -0.22828009191355728`}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{1.1403919561283224`, -0.8843806265450239}, 
+           0.016072210673220594`], 
+          InsetBox["6", 
+           Offset[{2, 2}, {1.156464166801543, -0.8683084158718033}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{1.1403919561283224`, -0.6283692969617255}, 
+           0.016072210673220594`], 
+          InsetBox["7", 
+           Offset[{2, 2}, {1.156464166801543, -0.6122970862885049}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{1.1403919561283224`, -0.3723579673784271}, 
+           0.016072210673220594`], 
+          InsetBox["8", 
+           Offset[{2, 2}, {1.156464166801543, -0.35628575670520646`}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{1.1403919561283224`, -0.11634663779512866`}, 
+           0.016072210673220594`], 
+          InsetBox["9", 
+           Offset[{2, 2}, {1.156464166801543, -0.10027442712190807`}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{1.1163466377951288`, -1.1170739021352813`}, 
+           0.016072210673220594`], 
+          InsetBox["10", 
+           Offset[{2, 2}, {1.1324188484683493`, -1.1010016914620608`}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}}}],
+      MouseAppearanceTag["NetworkGraphics"]],
+     AllowKernelInitialization->False]],
+   DefaultBaseStyle->{
+    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+   FormatType->TraditionalForm,
+   FrameTicks->None,
+   GridLinesStyle->Directive[
+     GrayLevel[0.5, 0.4]]], "]"}]], "Output"]
 }, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Similarity measures", "Subsection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "IGBibliographicCoupling"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"IGBibliographicCoupling[graph] returns the bibliographic \
+coupling between all vertex pairs in graph. The bibliographic coupling of two \
+vertices is the number of vertices they both connect to (with directed edges)\
+\\nIGBibliographicCoupling[graph, vertex] returns the bibliographic coupling \
+of vertex with all other vertices in graph.\\nIGBibliographicCoupling[graph, \
+{vertex1, vertex2, \[Ellipsis]}] returns the bibliographic coupling of \
+vertex1, vertex2, \[Ellipsis] with all other vertices in graph.\"\>", 
+  "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-2e08b659-4e73-485f-8d44-929512ae714a"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "IGCocitationCoupling"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"IGCocitationCoupling[graph] returns the cocitation coupling \
+between all vertex pairs in graph. The cocitation coupling of two vertices is \
+the number of vertices connecting to both of them (with directed \
+edges).\\nIGCocitationCoupling[graph, vertex] returns the cocitation coupling \
+of vertex with all other vertices in graph.\\nIGCocitationCoupling[graph, \
+{vertex1, vertex2, \[Ellipsis]}] returns the cocitation coupling of vertex1, \
+vertex2, \[Ellipsis] with all other vertices in graph.\"\>", 
+  "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-59598f33-46af-45dd-a221-fce2545a65c7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "IGDiceSimilarity"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"IGDiceSimilarity[graph]\\nIGDiceSimilarity[graph, {vertex1, \
+vertex2, \[Ellipsis]}]\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-2e03557c-3089-428b-92bd-17ae4e92892e"]
+}, Open  ]],
+
+Cell["\<\
+The Dice similarity coefficient of two vertices is twice the number of common \
+neighbors divided by the sum of the degrees of the vertices.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "IGJaccardSimilarity"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"IGJaccardSimilarity[graph]\\nIGJaccardSimilarity[graph, \
+{vertex1, vertex2, \[Ellipsis]}]\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-7e5ae74f-afff-465e-ae5d-4d3bc992973e"]
+}, Open  ]],
+
+Cell["\<\
+The Jaccard similarity coefficient of two vertices is the number of common \
+neighbors divided by the number of vertices that are neighbors of at least \
+one of the two vertices being considered.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", "IGInverseLogWeightedSimilarity"}]], "Input"],
+
+Cell[BoxData[
+ StyleBox["\<\"IGInverseLogWeightedSimilarity[graph]\\\
+nIGInverseLogWeightedSimilarity[graph, \
+vertex]\\nIGInverseLogWeightedSimilarity[graph, {vertex1, vertex2, \
+\[Ellipsis]}]\"\>", "MSG"]], "Print", "PrintUsage",
+ CellTags->"Info-454fac64-ed68-4c64-b777-b317f5362edb"]
+}, Open  ]],
+
+Cell["\<\
+The inverse log-weighted similarity of two vertices is the number of their \
+common neighbors, weighted by the inverse logarithm of their degrees. It is \
+based on the assumption that two vertices should be considered more similar \
+if they share a low-degree common neighbor, since high-degree common \
+neighbors are more likely to appear even by pure chance.
+
+Isolated vertices will have zero similarity to any other vertex. \
+Self-similarities are not calculated.
+
+Reference: Lada A. Adamic and Eytan Adar: Friends and neighbors on the Web. \
+Social Networks, 25(3):211-230, 2003.\
+\>", "Text"]
 }, Closed]]
 }, Closed]],
 
@@ -6891,7 +7123,7 @@ Cell[BoxData[
  StyleBox["\<\"IGMotifs[graph, motifSize] returns the motif distribution of \
 graph. See IGIsoclass and IGData for motif ordering.\"\>", 
   "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-e099a6e2-056d-413e-8f1e-6053dbf58710"]
+ CellTags->"Info-b0d89c82-59df-4bfd-973f-d02eb6e4fc6b"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -7215,7 +7447,7 @@ Cell[BoxData[
  StyleBox["\<\"IGTriadCensus[graph] classifies triads in the graph into 16 \
 possible states, labelled using MAN (mutual, asymmetric, null) notation.\"\>",
    "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-83d2529c-4d90-46ce-ac76-0fc77cdc88df"]
+ CellTags->"Info-b483e6fd-e532-4035-b77c-1514597451f1"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -7226,7 +7458,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGDyadCensus[graph] classifies dyad in the graph into mutual, \
 asymmetric or null states.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-3d5353d9-d1df-4ea9-9353-a667e19cf35b"]
+ CellTags->"Info-5c9ea5a4-1c12-48d3-8001-638a2fdf2062"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -7251,7 +7483,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGTriangles[graph] lists all triangles in the graph. Edge \
 directions are ignored.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-c70d759a-fe85-4fd9-9eb2-e7e6d878547d"]
+ CellTags->"Info-a221634d-f0f7-4a0d-b923-1c90430c4b36"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -7266,7 +7498,7 @@ ignored.\\nIGAdjacentTriangleCount[graph, vertex] counts the triangles vertex \
 participates in.\\nIGAdjacentTriangleCount[graph, {vertex1, vertex2, \
 \[Ellipsis]}] counts the triangles the specified vertices participate \
 in.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-24e94a83-f725-4be2-9d5c-cd6bbbe46ae8"]
+ CellTags->"Info-ceedc345-f0a0-4180-b75d-bafceaaf1fa2"]
 }, Open  ]]
 }, Closed]]
 }, Closed]],
@@ -7323,7 +7555,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are \
 isomorphic.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-48f25d6f-ecba-4ce0-8de9-f880a47b3631"]
+ CellTags->"Info-45cf9566-6b07-4651-b68b-0406eb02df62"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -7334,7 +7566,7 @@ Cell[BoxData[
 Cell[BoxData[
  StyleBox["\<\"IGSubisomorphicQ[subgraph, graph] tests if subgraph is \
 contained within graph.\"\>", "MSG"]], "Print", "PrintUsage",
- CellTags->"Info-944a5f88-a34a-4c68-9ae8-772b21e8e07a"]
+ CellTags->"Info-48f52e20-c7f2-444f-ba35-49c1ccf14214"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -7394,28 +7626,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-760d29f2-0f38-4e55-aa58-11fbf0faca83", {
+           "Info-a3c9a85e-a23c-4301-a69f-9146413205c8", {
             "IGBlissAutomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGBlissCanonicalGraph",
+         ButtonBox["IGBlissCanonicalLabeling",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-760d29f2-0f38-4e55-aa58-11fbf0faca83", {
-            "IGBlissCanonicalGraph", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGBlissCanonicalPermutation",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-760d29f2-0f38-4e55-aa58-11fbf0faca83", {
-            "IGBlissCanonicalPermutation", "IGraphM`"}},
+           "Info-a3c9a85e-a23c-4301-a69f-9146413205c8", {
+            "IGBlissCanonicalLabeling", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGBlissIsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-760d29f2-0f38-4e55-aa58-11fbf0faca83", {
+           "Info-a3c9a85e-a23c-4301-a69f-9146413205c8", {
             "IGBlissIsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -7423,27 +7648,35 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-760d29f2-0f38-4e55-aa58-11fbf0faca83", {
+           "Info-a3c9a85e-a23c-4301-a69f-9146413205c8", {
             "IGBlissAutomorphismGroup", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGBlissCanonicalLabeling",
+         ButtonBox["IGBlissCanonicalPermutation",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-760d29f2-0f38-4e55-aa58-11fbf0faca83", {
-            "IGBlissCanonicalLabeling", "IGraphM`"}},
+           "Info-a3c9a85e-a23c-4301-a69f-9146413205c8", {
+            "IGBlissCanonicalPermutation", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], ""},
+        {
+         ButtonBox["IGBlissCanonicalGraph",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-a3c9a85e-a23c-4301-a69f-9146413205c8", {
+            "IGBlissCanonicalGraph", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGBlissGetIsomorphism",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-760d29f2-0f38-4e55-aa58-11fbf0faca83", {
+           "Info-a3c9a85e-a23c-4301-a69f-9146413205c8", {
             "IGBlissGetIsomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], ""}
        },
        DefaultBaseStyle->"InfoGrid",
        GridBoxItemSize->{"Columns" -> {{
-            Scaled[0.2375]}}}]}
+            Scaled[0.31666666666666665`]}}}]}
     },
     GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
    Dynamic[Typeset`open$$],
@@ -7591,21 +7824,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8e09b393-31e7-46c9-893d-2cf480732f60", {
+           "Info-92b9b552-21df-43fa-95f7-d86e598f5c67", {
             "IGVF2FindIsomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8e09b393-31e7-46c9-893d-2cf480732f60", {
+           "Info-92b9b552-21df-43fa-95f7-d86e598f5c67", {
             "IGVF2IsomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8e09b393-31e7-46c9-893d-2cf480732f60", {
+           "Info-92b9b552-21df-43fa-95f7-d86e598f5c67", {
             "IGVF2SubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -7613,21 +7846,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8e09b393-31e7-46c9-893d-2cf480732f60", {
+           "Info-92b9b552-21df-43fa-95f7-d86e598f5c67", {
             "IGVF2FindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2IsomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8e09b393-31e7-46c9-893d-2cf480732f60", {
+           "Info-92b9b552-21df-43fa-95f7-d86e598f5c67", {
             "IGVF2IsomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGVF2SubisomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-8e09b393-31e7-46c9-893d-2cf480732f60", {
+           "Info-92b9b552-21df-43fa-95f7-d86e598f5c67", {
             "IGVF2SubisomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -8021,28 +8254,28 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-6bf389e9-c2e4-4890-b810-290ca5c94162", {
+           "Info-25d04a18-8d0d-468a-bf64-5193850861b6", {
             "IGLADFindSubisomorphisms", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADGetSubisomorphism",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-6bf389e9-c2e4-4890-b810-290ca5c94162", {
+           "Info-25d04a18-8d0d-468a-bf64-5193850861b6", {
             "IGLADGetSubisomorphism", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADSubisomorphicQ",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-6bf389e9-c2e4-4890-b810-290ca5c94162", {
+           "Info-25d04a18-8d0d-468a-bf64-5193850861b6", {
             "IGLADSubisomorphicQ", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLADSubisomorphismCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-6bf389e9-c2e4-4890-b810-290ca5c94162", {
+           "Info-25d04a18-8d0d-468a-bf64-5193850861b6", {
             "IGLADSubisomorphismCount", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
@@ -9056,59 +9289,81 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-2a2f0ff6-0394-493d-8dfb-fdd87b9772c7", {
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
             "IGCliqueNumber", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGCliqueSizeCounts",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-2a2f0ff6-0394-493d-8dfb-fdd87b9772c7", {
-            "IGCliqueSizeCounts", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLargestCliques",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-2a2f0ff6-0394-493d-8dfb-fdd87b9772c7", {
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
             "IGLargestCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalCliquesCount",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-2a2f0ff6-0394-493d-8dfb-fdd87b9772c7", {
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
             "IGMaximalCliquesCount", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGWeightedCliqueNumber",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
+            "IGWeightedCliqueNumber", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
          ButtonBox["IGCliques",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-2a2f0ff6-0394-493d-8dfb-fdd87b9772c7", {
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
             "IGCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
-         ButtonBox["IGCliquesWeighted",
+         ButtonBox["IGLargestWeightedCliques",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-2a2f0ff6-0394-493d-8dfb-fdd87b9772c7", {
-            "IGCliquesWeighted", "IGraphM`"}},
-          ButtonNote->"IGraphM`"], 
-         ButtonBox["IGMaximalCliques",
-          BaseStyle->"InformationLink",
-          
-          ButtonData:>{
-           "Info-2a2f0ff6-0394-493d-8dfb-fdd87b9772c7", {
-            "IGMaximalCliques", "IGraphM`"}},
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
+            "IGLargestWeightedCliques", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGMaximalCliqueSizeCounts",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-2a2f0ff6-0394-493d-8dfb-fdd87b9772c7", {
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
             "IGMaximalCliqueSizeCounts", "IGraphM`"}},
-          ButtonNote->"IGraphM`"]}
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGWeightedCliques",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
+            "IGWeightedCliques", "IGraphM`"}},
+          ButtonNote->"IGraphM`"]},
+        {
+         ButtonBox["IGCliqueSizeCounts",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
+            "IGCliqueSizeCounts", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGMaximalCliques",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
+            "IGMaximalCliques", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], 
+         ButtonBox["IGMaximalWeightedCliques",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info-c65a79df-ca0d-47e2-bf1c-3302588f1cf4", {
+            "IGMaximalWeightedCliques", "IGraphM`"}},
+          ButtonNote->"IGraphM`"], ""}
        },
        DefaultBaseStyle->"InfoGrid",
        GridBoxItemSize->{"Columns" -> {{
@@ -11017,21 +11272,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutCircle", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutFruchtermanReingold3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutFruchtermanReingold3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutRandom",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutRandom", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -11039,21 +11294,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutDavidsonHarel", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutGEM",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutGEM", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutReingoldTilford",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutReingoldTilford", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -11061,21 +11316,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutDrL", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutGraphOpt",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutGraphOpt", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutReingoldTilfordCircular",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutReingoldTilfordCircular", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -11083,21 +11338,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutDrL3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutKamadaKawai",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutKamadaKawai", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutSphere",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutSphere", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -11105,14 +11360,14 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutFruchtermanReingold", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGLayoutKamadaKawai3D",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-447e9515-d805-4c94-a1b9-04d430a409a3", {
+           "Info-39873b0a-c2d1-46c7-a120-184cb756601b", {
             "IGLayoutKamadaKawai3D", "IGraphM`"}},
           ButtonNote->"IGraphM`"], ""}
        },
@@ -29187,21 +29442,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesEdgeBetweenness", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesLabelPropagation",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesLabelPropagation", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesOptimalModularity",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesOptimalModularity", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -29209,21 +29464,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesGreedy", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesLeadingEigenvector",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesLeadingEigenvector", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesSpinGlass",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesSpinGlass", "IGraphM`"}},
           ButtonNote->"IGraphM`"]},
         {
@@ -29231,21 +29486,21 @@ Cell[BoxData[
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesInfoMAP", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesMultilevel",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesMultilevel", "IGraphM`"}},
           ButtonNote->"IGraphM`"], 
          ButtonBox["IGCommunitiesWalktrap",
           BaseStyle->"InformationLink",
           
           ButtonData:>{
-           "Info-0c832bda-a194-459e-87f9-2e2772a808ac", {
+           "Info-91114667-e036-4c0c-91b3-a27acc0baae1", {
             "IGCommunitiesWalktrap", "IGraphM`"}},
           ButtonNote->"IGraphM`"]}
        },
