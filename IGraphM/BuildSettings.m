@@ -32,7 +32,12 @@ Switch[$OperatingSystem,
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
-    "LibraryDirectories" -> {"$HOME/local/lib"}
+    "LibraryDirectories" -> {"$HOME/local/lib"},
+
+    If[$SystemWordLength == 32,
+      "Defines" -> {"MLSTREAM_32BIT_INT_AND_LONG"},
+      Unevaluated@Sequence[]
+    ]
   },
 
   "Windows",
