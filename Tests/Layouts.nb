@@ -250,9 +250,9 @@ Cell[BoxData[{
              "IGLayoutSphere", ",", "IGLayoutFruchtermanReingold3D", ",", 
               "IGLayoutKamadaKawai3D", ",", "IGLayoutDrL3D"}], "}"}], ",", 
             "ly"}], "]"}], "&&", 
-          RowBox[{"VertexCount", "[", 
-           RowBox[{
-            RowBox[{"g", "[", "i", "]"}], ">", "1200"}], "]"}]}], ",", 
+          RowBox[{
+           RowBox[{"VertexCount", "[", 
+            RowBox[{"g", "[", "i", "]"}], "]"}], ">", "1200"}]}], ",", 
          "\[IndentingNewLine]", 
          RowBox[{
           RowBox[{"Print", "[", "\"\<avoid large 3D layouts\>\"", "]"}], 
@@ -275,7 +275,8 @@ WindowSize->{808, 751},
 WindowMargins->{{20, Automatic}, {Automatic, 44}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
+FrontEndVersion->"10.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 10, \
 2015)",
 StyleDefinitions->"Default.nb"
 ]
+

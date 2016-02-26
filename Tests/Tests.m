@@ -345,7 +345,7 @@ MT[
 
 
 (*******************************************************************************)
-MTSection["Acylic graphs"]
+MTSection["Acyclic graphs"]
 
 MT[
   AllTrue[EdgeDelete[#, IGFeedbackArcSet[#]]& /@ ulist, AcyclicGraphQ],
@@ -597,6 +597,12 @@ MT[
   True
 ]
 
+MT[
+  ClosenessCentrality[#] == IGCloseness[#, Normalized -> True],
+  True
+]& /@ {ug, dg, wug, wdg, umulti, dmulti}
+
+
 (*******************************************************************************)
 MTSection["Cliques"]
 
@@ -679,6 +685,36 @@ MT[
   canon@IGMaximalCliques[Graph[{1, 2}, {1 -> 2}]],
   {{1,2}},
   {IGraphM::warning}
+]
+
+MT[
+  IGCliqueNumber[#] == IGIndependenceNumber@GraphComplement[#],
+  True
+]& /@ {ug, umulti}
+
+MT[
+  IGCliqueNumber@GraphComplement[#] == IGIndependenceNumber[#],
+  True
+]& /@ {ug, umulti}
+
+MT[
+  IGCliqueNumber[#] == Length@First@FindClique[#],
+  True
+]& /@ {ug, umulti}
+
+MT[
+  IGIndependenceNumber[#] == Length@First@FindIndependentVertexSet[#],
+  True
+]& /@ {ug, umulti}
+
+MT[
+  IGCliqueNumber[empty],
+  0
+]
+
+MT[
+  IGIndependenceNumber[empty],
+  0
 ]
 
 
@@ -1236,6 +1272,56 @@ MT[
   True
 ]
 
+MT[
+  IGDiameter[empty],
+  Infinity
+]
+
+MT[
+  IGDiameter[edgeless],
+  Infinity
+]
+
+MT[
+  IGDiameter[#],
+  GraphDiameter[#]
+]& /{ug, dg, wug, wdg, umulti, dmulti}
+
+MT[
+  IGFindDiameter[empty],
+  {}
+]
+
+MT[
+  IGFindDiameter[empty, "ByComponents" -> True],
+  {}
+]
+
+MT[
+  IGFindDiameter[edgeless],
+  {}
+]
+
+MT[
+  IGFindDiameter[Graph[{1, 2, 3}, {}], "ByComponents" -> True],
+  {1}
+]
+
+MT[
+  IGFindDiameter[PathGraph@Range[10]],
+  Range[10]
+]
+
+MT[
+  IGFindDiameter[Graph[{1 -> 2, 2 -> 3, 4 -> 3}]], (* "ByComponents" -> False is the default *)
+  {}
+]
+
+MT[
+  IGFindDiameter[Graph[{4,3,2,1}, {1 -> 2, 2 -> 3, 4 -> 3}], "ByComponents" -> True],
+  {1,2,3}
+]
+
 
 (*******************************************************************************)
 MTSection["Bipartite graphs"]
@@ -1417,4 +1503,81 @@ MT[
 MT[
   IGMinSeparators[#] =!= {} & /@ ulist,
   ConnectedGraphQ /@ ulist
+]
+
+(* IGAdjacentTriangleCount *)
+
+MT[
+  IGAdjacentTriangleCount[#],
+  With[{am = AdjacencyMatrix[#]}, Normal@Diagonal[am.am.am]/2]
+]& /@ ulist
+
+MT[
+  IGAdjacentTriangleCount[empty],
+  {}
+]
+
+MT[
+  IGAdjacentTriangleCount[Graph[{1,2,3},{}]],
+  {0,0,0}
+]
+
+(* IGGraphicalQ *)
+
+MT[
+  IGGraphicalQ@VertexDegree[#],
+  True
+]& /@ ulist
+
+MT[
+  IGGraphicalQ[VertexInDegree[#], VertexOutDegree[#]],
+  True
+]& /@ dlist
+
+MT[
+  IGGraphicalQ[VertexOutDegree[#], VertexInDegree[#]],
+  True
+]& /@ dlist
+
+MT[
+  IGGraphicalQ[{1,2,1}],
+  True
+]
+
+MT[
+  IGGraphicalQ[{1,2,2}],
+  False
+]
+
+MT[
+  IGGraphicalQ[{1,0},{1,0}],
+  False
+]
+
+MT[
+  IGGraphicalQ[{1,0},{0,1}],
+  True
+]
+
+
+(* Chordal graphs *)
+
+MT[
+  IGChordalQ[empty],
+  True
+]
+
+MT[
+  IGChordalQ[edgeless],
+  True
+]
+
+MT[
+  IGChordalQ[CycleGraph[3]],
+  True
+]
+
+MT[
+  IGChordalQ[CycleGraph[4]],
+  False
 ]
