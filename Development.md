@@ -22,7 +22,9 @@ On OS X, set the following environment variable before compiling the libraries:
     make
     make check
 
-If the tests have passed, install it with `make install`
+If the tests have passed, install it with `make install`.
+
+To maximize compatibility with different types of CPUs, consider using the `--host=...` option to the `configure` script. Use the output of `configfsf.guess` as the target host.
 
 ##### igraph
 
@@ -40,13 +42,19 @@ If the tests have passed, install it with `make install`.
 
 One option for compiling igraph on Windows is to use an MSYS shell to run the configure script.  Instructions for installing MSYS2 and the MinGW-w64 compiler are found at https://wiki.qt.io/MSYS2.  Install them in a directory with no spaces in its path.  The following instructions assume that libraries will be installed in `$HOME/local`.
 
-Once it is set up, we need to compile GMP.  [Download]((https://gmplib.org/)) and extract it.  Compile using
+##### GMP
+
+Once the toolchain is set up, we can compile GMP.  [Download](https://gmplib.org/) and extract it.  Compile using
 
     ./configure --prefix=$HOME/local --with-pic
     make
     make check
+    
+To maximize compatibility with different types of CPUs, consider using the `--host=...` option to the `configure` script. Use the output of `configfsf.guess` as the target host.
 
 If the tests have passed, install it with `make install`
+
+##### igraph
 
 Clone [this fork of the igraph](https://github.com/szhorvat/igraph) and check out the `IGraphM` branch. This fork is identical to the main igraph repository, except for a few small temporary patches that the latest version of IGraph/M may depend on.  Compile and install as follows:
 
@@ -56,7 +64,9 @@ Clone [this fork of the igraph](https://github.com/szhorvat/igraph) and check ou
     make
     make install
 
-This will produce a DLL named `libigraph-0.dll` in `$HOME/bin`.  It must be copied into `IGraphM/LibraryResources/Windows-x86-64`.  When using the above version of MinGW-w64, it is also necessary to copy the dependencies `libgcc_s_seh-1.dll`, `libstdc++-6.dll` and `libwinpthread-1.dll` to the same directory.
+This will produce a DLL named `libigraph-0.dll` in `$HOME/local/bin`.  It must be copied into `IGraphM/LibraryResources/Windows-x86-64`.  When using the above version of MinGW-w64, it is also necessary to copy the dependencies `libgcc_s_seh-1.dll`, `libstdc++-6.dll` and `libwinpthread-1.dll` to the same directory.
+
+IGraph/M needs to be told about what dependencies it has to load.  This is done by creating a file named `dependencies.m` in the same directory and adding `LibraryLoad` calls to it in the appropriate order.  For an example see `dependencies.m` on the `release` branch of the IGraph/M GitHub repo.
 
 ## Compiling IGraph/M
 
