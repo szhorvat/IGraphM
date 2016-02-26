@@ -724,7 +724,7 @@ GetInfo[] :=
       osver = Quiet@Switch[$OperatingSystem,
         "MacOSX", Import["!sw_vers", "String"],
         "Unix", Import["!uname -a", "String"] <> Import["!lsb_release -a 2>/dev/null", "String"],
-        "Windows", Import["!systeminfo | findstr /B /C:\"OS Name\" /C:\"OS Version\" /C:\"System Type\"", "String"]
+        "Windows", StringReplace[Import["!systeminfo | findstr /B /C:\"OS Name\" /C:\"OS Version\" /C:\"System Type\"", "String"], "\r" -> ""]
       ];
       res = StringJoin[res, "Operating system: \n", If[StringQ[osver], osver, "Failed."]]; (* no newline after last item *)
       res
@@ -1751,7 +1751,7 @@ igAdjacentTriangleCount[graph_, vs_] :=
       Round@check@ig@"countAdjacentTriangles"[vss[graph][vs]]
     ]
 
-SyntaxInformation[IGAdjacentTriangleCount] = {"ArgumentsPattern" -> {_, _}};
+SyntaxInformation[IGAdjacentTriangleCount] = {"ArgumentsPattern" -> {_, _.}};
 IGAdjacentTriangleCount[graph_?igGraphQ, {}] := {}
 IGAdjacentTriangleCount[graph_?igGraphQ, vs_List : All] := catch@igAdjacentTriangleCount[graph, vs]
 IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCount[graph, {v}]
@@ -2088,8 +2088,12 @@ continueLayout3D[graph_, cont_, scale_ : 1] := continueLayout[graph, cont, scale
 setVertexCoords[g_, coords_] := SetProperty[g, VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
 setVertexCoords3D[g_, coords_] := SetProperty[SetProperty[g, GraphLayout -> {"Dimension" -> 3}], VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
 
-align[True] = PrincipalComponents
-align[False] = Identity
+
+igAlign[{}] := {}
+igAlign[pts_] := PrincipalComponents[pts]
+
+align[True] = igAlign;
+align[False] = Identity;
 align[val_] := (Message[IGraphM::lytaln, val]; Identity)
 
 SyntaxInformation[IGLayoutRandom] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
@@ -2140,7 +2144,7 @@ SyntaxInformation[IGLayoutKamadaKawai] = {"ArgumentsPattern" -> {_, OptionsPatte
 IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
-      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> VertexCount[graph]];
+      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> Max[1, VertexCount[graph]]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"], scale],
           maxiter, OptionValue["Epsilon"], kkconst]
@@ -2158,7 +2162,7 @@ SyntaxInformation[IGLayoutKamadaKawai3D] = {"ArgumentsPattern" -> {_, OptionsPat
 IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai3D,Graph3D}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
-      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> VertexCount[graph]];
+      kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> Max[1, VertexCount[graph]]];
       applyGraphOpt3D[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
           maxiter, OptionValue["Epsilon"], kkconst]
@@ -2212,8 +2216,8 @@ SyntaxInformation[IGLayoutGEM] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "
 IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGEM,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, maxtemp, inittemp, scale = 3*^-3},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 40 VertexCount[graph]^2];
-      maxtemp = Replace[OptionValue["MaxTemperature"], Automatic :> VertexCount[graph]];
-      inittemp = Replace[OptionValue["InitTemperature"], Automatic :> Sqrt@VertexCount[graph]];
+      maxtemp = Replace[OptionValue["MaxTemperature"], Automatic :> Max[1, VertexCount[graph]]];
+      inittemp = Replace[OptionValue["InitTemperature"], Automatic :> Max[1, Sqrt@VertexCount[graph]]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutGEM"[continueLayout[graph, OptionValue["Continue"], scale],
           maxiter, maxtemp, OptionValue["MinTemperature"], inittemp
@@ -2232,11 +2236,12 @@ Options[IGLayoutDavidsonHarel] = {
 SyntaxInformation[IGLayoutDavidsonHarel] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutDavidsonHarel, Graph]};
 
 IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDavidsonHarel,Graph}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], tuneiter, edgelenw, edgecrossw, edgedistw, scale = 0.1},
+    catch@Block[{ig = igMakeFastWeighted[graph], tuneiter, edgelenw, edgecrossw, edgedistw, dens, scale = 0.1},
+      dens = If[VertexCount[graph] == 0, 0, GraphDensity[graph]];
       tuneiter = Replace[OptionValue["FineTuningIterations"], Automatic :> Max[10, Round@Log[2, VertexCount[graph]]]];
-      edgelenw = Replace[OptionValue["EdgeLengthWeight"], Automatic :> GraphDensity[graph]/10];
-      edgecrossw = Replace[OptionValue["EdgeCrossingWeight"], Automatic :> 1 - GraphDensity[graph]];
-      edgedistw = Replace[OptionValue["EdgeDistanceWeight"], Automatic :> 1 - GraphDensity[graph] / 5];
+      edgelenw = Replace[OptionValue["EdgeLengthWeight"], Automatic :> dens/10];
+      edgecrossw = Replace[OptionValue["EdgeCrossingWeight"], Automatic :> 1 - dens];
+      edgedistw = Replace[OptionValue["EdgeDistanceWeight"], Automatic :> 1 - dens / 5];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDavidsonHarel"[continueLayout[graph, OptionValue["Continue"], scale],
           OptionValue["MaxIterations"],
