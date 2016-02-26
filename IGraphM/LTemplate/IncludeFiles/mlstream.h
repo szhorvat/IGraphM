@@ -112,7 +112,7 @@ inline mlStream & operator << (mlStream &ml, const mlHead &head) {
 struct mlSymbol {
     const char *symbol;
 
-    mlSymbol(const char *symbol_) : symbol(symbol_) { }
+    explicit mlSymbol(const char *symbol_) : symbol(symbol_) { }
 };
 
 inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
@@ -127,7 +127,7 @@ inline mlStream & operator << (mlStream &ml, const mlSymbol &symbol) {
 
 struct mlDiscard {
     const int count;
-    mlDiscard(int count_ = 1) : count(count_) {}
+    explicit mlDiscard(int count_ = 1) : count(count_) {}
 };
 
 inline mlStream & operator >> (mlStream &ml, const mlDiscard &drop) {
@@ -154,6 +154,11 @@ MLSTREAM_DEF_BASIC_GET(Real32, float)
 MLSTREAM_DEF_BASIC_GET(Real64, double)
 MLSTREAM_DEF_BASIC_GET(Real128, mlextended_double)
 
+#ifdef MLSTREAM_32BIT_INT_AND_LONG
+inline mlStream & operator >> (mlStream &ml, long &x) { ml >> reinterpret_cast<int &>(x); }
+#endif
+
+
 #define MLSTREAM_DEF_BASIC_PUT(MTYPE, CTYPE) \
     inline mlStream & operator << (mlStream &ml, CTYPE x) { \
         if (! MLPut ## MTYPE(ml.link(), x)) \
@@ -167,6 +172,10 @@ MLSTREAM_DEF_BASIC_PUT(Integer64, mlint64)
 MLSTREAM_DEF_BASIC_PUT(Real32, float)
 MLSTREAM_DEF_BASIC_PUT(Real64, double)
 MLSTREAM_DEF_BASIC_PUT(Real128, mlextended_double)
+
+#ifdef MLSTREAM_32BIT_INT_AND_LONG
+inline mlStream & operator << (mlStream &ml, long x) { ml << static_cast<int>(x); }
+#endif
 
 
 // Strings
@@ -250,6 +259,12 @@ MLSTREAM_DEF_VEC_PUT(Real32, float)
 MLSTREAM_DEF_VEC_PUT(Real64, double)
 MLSTREAM_DEF_VEC_PUT(Real128, mlextended_double)
 
+#ifdef MLSTREAM_32BIT_INT_AND_LONG
+inline mlStream & operator << (mlStream &ml, const std::vector<long> &vec) {
+    ml << reinterpret_cast<const std::vector<int> &>(vec);
+}
+#endif
+
 #define MLSTREAM_DEF_VEC_GET(MTYPE, CTYPE) \
     inline mlStream & operator >> (mlStream &ml, std::vector<CTYPE> &vec) { \
         CTYPE *data; \
@@ -268,6 +283,12 @@ MLSTREAM_DEF_VEC_GET(Integer64, mlint64)
 MLSTREAM_DEF_VEC_GET(Real32, float)
 MLSTREAM_DEF_VEC_GET(Real64, double)
 MLSTREAM_DEF_VEC_GET(Real128, mlextended_double)
+
+#ifdef MLSTREAM_32BIT_INT_AND_LONG
+inline mlStream & operator >> (mlStream &ml, std::vector<long> &vec) {
+  ml >> reinterpret_cast<std::vector<int> &>(vec);
+}
+#endif
 
 
 #endif // MLSTREAM_H
