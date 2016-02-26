@@ -13,7 +13,7 @@ extern std::map<mint, IG *> IG_collection; // TODO this is a hack pending proper
 typedef int(*igraph_i_maximal_clique_func_t)(const igraph_vector_t*, void*, igraph_bool_t*);
 extern "C" int igraph_i_maximal_cliques(const igraph_t *graph, igraph_i_maximal_clique_func_t func, void* data);
 
-class IG {    
+class IG {
     igraph_t graph;
     igVector weights;
     bool weighted;
@@ -48,6 +48,31 @@ class IG {
     // return the weights if weighted, return NULL otherwise
     // use this to pass weights to igraph functions
     const igraph_vector_t *passWeights() const { return weighted ? &weights.vec : NULL; }
+
+    // packs an igList (usually representing vertex sets) into
+    // a single IntTensor for fast transfer
+    mma::IntTensorRef packListIntoIntTensor(const igList &list) const {
+        std::vector<mint> lengths;
+        long list_length = list.length();
+        mint total_length = 0;
+        for (int i=0; i < list_length; ++i) {
+            mint len = igraph_vector_size(static_cast<igraph_vector_t *>(VECTOR(list.list)[i]));
+            total_length += len;
+            total_length += 1;
+            lengths.push_back(len);
+        }
+        total_length += 1;
+        mma::IntTensorRef t = mma::makeVector<mint>(total_length);
+        t[0] = list_length;
+        std::copy(lengths.begin(), lengths.end(), t.begin() + 1);
+        mint *ptr = t.begin() + 1 + list_length;
+        for (int i=0; i < list_length; ++i) {
+            double *b = &VECTOR(*static_cast<igraph_vector_t *>(VECTOR(list.list)[i]))[0];
+            std::copy(b, b+lengths[i], ptr);
+            ptr += lengths[i];
+        }
+        return t;
+    }
 
 public:
     IG() : weighted{false} { empty(); }
@@ -173,6 +198,26 @@ public:
         igConstructorCheck(igraph_forest_fire_game(&graph, n, fwprob, bwratio, nambs, directed));
     }
 
+    void bipartiteGameGNM(mint n1, mint n2, mint m, bool directed, bool bidirectional) {
+        destroy();
+        igConstructorCheck(igraph_bipartite_game(
+                               &graph, NULL, IGRAPH_ERDOS_RENYI_GNM,
+                               n1, n2, 0, m, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
+    }
+
+    void bipartiteGameGNP(mint n1, mint n2, double p, bool directed, bool bidirectional) {
+        destroy();
+        igConstructorCheck(igraph_bipartite_game(
+                               &graph, NULL, IGRAPH_ERDOS_RENYI_GNP,
+                               n1, n2, p, 0, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
+    }
+
+    // Modification
+
+    void connectNeighborhood(mint order) {
+        igCheck(igraph_connect_neighborhood(&graph, order, IGRAPH_OUT));
+    }
+
     // Structure
 
     mma::RealTensorRef edgeList() const {
@@ -206,6 +251,12 @@ public:
     bool connectedQ(bool strong) const {
         igraph_bool_t res;
         igCheck(igraph_is_connected(&graph, &res, strong ? IGRAPH_STRONG : IGRAPH_WEAK));
+        return res;
+    }
+
+    bool bipartiteQ() const {
+        igraph_bool_t res;
+        igCheck(igraph_is_bipartite(&graph, &res, NULL));
         return res;
     }
 
@@ -652,6 +703,28 @@ public:
         ml << list;
     }
 
+    mint ladCountSubisomorphisms(const IG &ig, bool induced) {
+        igraph_bool_t iso;
+        igList list;
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, NULL, &list.list, induced, 0));
+        return list.length();
+    }
+
+    void ladCountSubisomorphismsColored(MLINK link) {
+        mlStream ml{link, "ladCountSubisomorphismsColored"};
+        mint id;
+        igraph_bool_t induced;
+        igList domain;
+        ml >> mlCheckArgs(3) >> id >> induced >> domain;
+
+        igList list;
+        igraph_bool_t iso;
+        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+
+        ml.newPacket();
+        ml << list.length();
+    }
+
     // Topological sorting, directed acylic graphs
 
     // see also dagQ() under Testing
@@ -722,17 +795,130 @@ public:
 
     // Shortest paths
 
-    mma::RealMatrixRef shortestPaths() const {
+    mma::RealMatrixRef shortestPaths(mma::RealTensorRef from, mma::RealTensorRef to) const {
         igMatrix res;
-        igCheck(igraph_shortest_paths(&graph, &res.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
+        igraph_vector_t fromv = igVectorView(from);
+        igraph_vector_t tov   = igVectorView(to);
+        igCheck(igraph_shortest_paths(
+                    &graph, &res.mat,
+                    from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+                    to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+                    IGRAPH_OUT));
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef shortestPathHistogram() const {
+    mma::RealTensorRef shortestPathsDijkstra(mma::RealTensorRef from, mma::RealTensorRef to) const {
+        igMatrix res;
+        igraph_vector_t fromv = igVectorView(from);
+        igraph_vector_t tov   = igVectorView(to);
+        igCheck(igraph_shortest_paths_dijkstra(
+                    &graph, &res.mat,
+                    from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+                    to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+                    passWeights(), IGRAPH_OUT));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef shortestPathsBellmanFord(mma::RealTensorRef from, mma::RealTensorRef to) const {
+        igMatrix res;
+        igraph_vector_t fromv = igVectorView(from);
+        igraph_vector_t tov   = igVectorView(to);
+        igCheck(igraph_shortest_paths_bellman_ford(
+                    &graph, &res.mat,
+                    from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+                    to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+                    passWeights(), IGRAPH_OUT));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef shortestPathsJohnson(mma::RealTensorRef from, mma::RealTensorRef to) const {
+        igMatrix res;
+        igraph_vector_t fromv = igVectorView(from);
+        igraph_vector_t tov   = igVectorView(to);
+        igCheck(igraph_shortest_paths_johnson(
+                    &graph, &res.mat,
+                    from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+                    to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+                    passWeights()));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef shortestPathCounts() const {
         igVector res;
         double unconnected;
         igCheck(igraph_path_length_hist(&graph, &res.vec, &unconnected, true));
         return res.makeMTensor();
+    }
+
+    mma::IntTensorRef shortestPathWeightedHistogram(double binsize, mma::RealTensorRef from, mma::RealTensorRef to, mint method) const {
+        if (weighted && igraph_vector_min(&weights.vec) < 0)
+            throw mma::LibraryError("shortestPathWeightedHistogram: Negative edge weights are not supported.");
+
+        std::vector<mint> hist;
+        igMatrix mat;
+
+        const bool toall = to.length() == 0;
+        igraph_vector_t tov = igVectorView(to);
+        const mint tolen = toall ? igraph_vcount(&graph) : to.length();
+
+        for (mint i=0; i < from.length(); ++i) {
+            mma::check_abort();
+            switch (method) {
+            case 0:
+                igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT);
+                break;
+            case 1:
+                igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT);
+                break;
+            default:
+                throw mma::LibraryError("shortestPathWeightedHistogram: Unknown method.");
+            }
+
+            for (igraph_integer_t j=0; j < tolen; ++j) {
+                if (toall) {
+                    if (from[i] == j)
+                        continue;
+                } else {
+                    if (from[i] == to[j])
+                        continue;
+                }
+                double length = VECTOR(mat.mat.data)[j];
+                if (igraph_is_inf(length))
+                    continue;
+                mint idx = std::floor(length / binsize);
+                if (idx >= hist.size()) {
+                    hist.reserve(std::ceil(1.5*(idx + 1)));
+                    hist.resize(idx+1, 0);
+                }
+                hist[idx] += 1;
+            }
+        }
+        mma::IntTensorRef res = mma::makeVector<mint>(hist.size(), &hist[0]);
+        return res;
+    }
+
+    mint diameter(bool components) const {
+        igraph_integer_t diam;
+        igCheck(igraph_diameter(&graph, &diam, NULL, NULL, NULL, true, components));
+        return diam;
+    }
+
+    mma::RealTensorRef findDiameter(bool components) const {
+        igVector path;
+        igCheck(igraph_diameter(&graph, NULL, NULL, NULL, &path.vec, true, components));
+        return path.makeMTensor();
+    }
+
+    double diameterDijkstra(bool components) const {
+        double diam;
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), &diam, NULL, NULL, NULL, true, components));
+        return diam;
+    }
+
+    mma::RealTensorRef findDiameterDijkstra(bool components) const {
+        igVector path;
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), NULL, NULL, NULL, &path.vec, true, components));
+        return path.makeMTensor();
     }
 
     double averagePathLength() const {
@@ -749,16 +935,10 @@ public:
 
     // Cliques
 
-    void cliques(MLINK link) const {
-        mlStream ml{link, "cliques"};
-        int min, max;
-        ml >> mlCheckArgs(2) >> min >> max;
-
+    mma::IntTensorRef cliques(mint min, mint max) const {
         igList list;
         igCheck(igraph_cliques(&graph, &list.list, min, max));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     mma::RealTensorRef cliqueDistribution(mint min, mint max) const {
@@ -767,16 +947,10 @@ public:
         return hist.makeMTensor();
     }
 
-    void maximalCliques(MLINK link) const {
-        mlStream ml{link, "maximalCliques"};
-        int min, max;
-        ml >> mlCheckArgs(2) >> min >> max;
-
+    mma::IntTensorRef maximalCliques(mint min, mint max) const {
         igList list;
         igCheck(igraph_maximal_cliques(&graph, &list.list, min, max));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     mint maximalCliquesCount(mint min, mint max) const {
@@ -815,15 +989,10 @@ public:
         return mma::makeVector<mint>(cd.hist.size(), &cd.hist[0]);
     }
 
-    void largestCliques(MLINK link) const {
-        mlStream ml{link, "largestCliques"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef largestCliques() const {
         igList list;
         igCheck(igraph_largest_cliques(&graph, &list.list));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     mint cliqueNumber() const {
@@ -832,40 +1001,47 @@ public:
         return res;
     }
 
+    // Weighted cliques
+
+    mma::IntTensorRef cliquesWeighted(mint wmin, mint wmax, mma::RealTensorRef vertex_weights, bool maximal) const {
+        igraph_vector_t weights = igVectorView(vertex_weights);
+        igList list;
+        igCheck(igraph_weighted_cliques(&graph, &weights, &list.list, wmin, wmax, maximal));
+        return packListIntoIntTensor(list);
+    }
+
+    mma::IntTensorRef largestCliquesWeighted(mma::RealTensorRef vertex_weights) const {
+        igraph_vector_t weights = igVectorView(vertex_weights);
+        igList list;
+        igCheck(igraph_largest_weighted_cliques(&graph, &weights, &list.list));
+        return packListIntoIntTensor(list);
+    }
+
+    mint cliqueNumberWeighted(mma::RealTensorRef vertex_weights) const {
+        igraph_vector_t weights = igVectorView(vertex_weights);
+        double res;
+        igCheck(igraph_weighted_clique_number(&graph, &weights, &res));
+        return res;
+    }
+
     // Independent vertex sets
 
-    void independentVertexSets(MLINK link) const {
-        mlStream ml{link, "independentVertexSets"};
-        int min, max;
-        ml >> mlCheckArgs(2) >> min >> max;
-
+    mma::IntTensorRef independentVertexSets(mint min, mint max) const {
         igList list;
         igCheck(igraph_independent_vertex_sets(&graph, &list.list, min, max));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
-    void largestIndependentVertexSets(MLINK link) const {
-        mlStream ml{link, "largestIndependentVertexSets"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef largestIndependentVertexSets() const {
         igList list;
         igCheck(igraph_largest_independent_vertex_sets(&graph, &list.list));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
-    void maximalIndependentVertexSets(MLINK link) const {
-        mlStream ml{link, "maximalIndependentVertexSets"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef maximalIndependentVertexSets() const {
         igList list;
         igCheck(igraph_maximal_independent_vertex_sets(&graph, &list.list));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     mint independenceNumber() const {
@@ -941,7 +1117,7 @@ public:
         case 0: grid = IGRAPH_LAYOUT_GRID; break;
         case 1: grid = IGRAPH_LAYOUT_NOGRID; break;
         case 2: grid = IGRAPH_LAYOUT_AUTOGRID; break;
-        default: throw mma::LibraryError("layoutFruchtermanReingold: unknown method option.");
+        default: throw mma::LibraryError("layoutFruchtermanReingold: Unknown method option.");
         }
 
         igCheck(igraph_layout_fruchterman_reingold(
@@ -1139,15 +1315,10 @@ public:
 
     // Vertex separators
 
-    void minimumSizeSeparators(MLINK link) const {
-        mlStream ml{link, "minimumSizeSeparators"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef minimumSizeSeparators() const {
         igList list;
         igCheck(igraph_minimum_size_separators(&graph, &list.list));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     // Maximum flow
@@ -1169,16 +1340,11 @@ public:
         return vec.makeMTensor();
     }
 
-    void biconnectedComponents(MLINK link) const {
-        mlStream ml{link, "biconnectedComponents"};
-        ml >> mlCheckArgs(0);
-
+    mma::IntTensorRef biconnectedComponents() const {
         igList list;
         igraph_integer_t count;
         igCheck(igraph_biconnected_components(&graph, &count, NULL, NULL, &list.list, NULL));
-
-        ml.newPacket();
-        ml << list;
+        return packListIntoIntTensor(list);
     }
 
     // Connectivity
@@ -1433,7 +1599,7 @@ public:
         case 0: method_e = IGRAPH_SPINCOMM_IMP_ORIG; break;
         case 1: method_e = IGRAPH_SPINCOMM_IMP_NEG; break;
         default:
-            throw mma::LibraryError("communitySpinGlass: invalid method option.");
+            throw mma::LibraryError("communitySpinGlass: Invalid method option.");
         }
 
         igraph_spincomm_update_t update_rule_e;
@@ -1441,7 +1607,7 @@ public:
         case 0: update_rule_e = IGRAPH_SPINCOMM_UPDATE_SIMPLE; break;
         case 1: update_rule_e = IGRAPH_SPINCOMM_UPDATE_CONFIG; break;
         default:
-            throw mma::LibraryError("communitySpinGlass: invalid update rule option.");
+            throw mma::LibraryError("communitySpinGlass: Invalid update rule option.");
         }
 
         double modularity, temperature;
@@ -1494,6 +1660,19 @@ public:
         destroy();
         igConstructorCheck(igraph_unfold_tree(&source.graph, &graph, directed ? IGRAPH_OUT : IGRAPH_ALL, &roots, &mapping.vec));
         return mapping.makeMTensor();
+    }
+
+    // Bipartite partitions
+
+    mma::IntTensorRef bipartitePartitions() const {
+        igraph_bool_t res;
+        igBoolVector map;
+
+        igCheck(igraph_is_bipartite(&graph, &res, &map.vec));
+        if (! res)
+            throw mma::LibraryError("bipartitePartitions: The graph is not bipartite.");
+
+        return map.makeMTensor();
     }
 };
 

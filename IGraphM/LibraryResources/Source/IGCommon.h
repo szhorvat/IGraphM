@@ -83,6 +83,8 @@ public:
 
     void clear() { igraph_vector_bool_clear(&vec); }
     void resize(long newsize) { igraph_vector_bool_resize(&vec, newsize); }
+
+    mma::IntTensorRef makeMTensor() const { return mma::makeVector<mint>(length(), begin()); }
 };
 
 
