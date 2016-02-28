@@ -1618,7 +1618,7 @@ IGLADGetSubisomorphism[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?
         IGLADGetSubisomorphism[subgraph, graph, opt]
         ,
         Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
-          result = igIndexVec@check@ig1@"ladGetSubisomorphism"[
+          result = igIndexVec@check@ig1@"ladGetSubisomorphismColored"[
             ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"],
             Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub
           ];
