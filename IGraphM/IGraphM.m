@@ -1753,7 +1753,7 @@ igAdjacentTriangleCount[graph_, vs_] :=
 
 SyntaxInformation[IGAdjacentTriangleCount] = {"ArgumentsPattern" -> {_, _.}};
 IGAdjacentTriangleCount[graph_?igGraphQ, {}] := {}
-IGAdjacentTriangleCount[graph_?igGraphQ, vs_List : All] := catch@igAdjacentTriangleCount[graph, vs]
+IGAdjacentTriangleCount[graph_?igGraphQ, vs : (_List | All) : All] := catch@igAdjacentTriangleCount[graph, vs]
 IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCount[graph, {v}]
 
 (* Shortest paths *)
