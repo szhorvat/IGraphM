@@ -497,8 +497,14 @@ LoadTemplate[tem_] :=
 
 loadTemplate[tem : LTemplate[libname_String, classes_]] := (
   Quiet@unloadTemplate[tem];
-  LoadLibrary[libname]; (* fail early when the library is not found *)
-  loadClass[libname] /@ classes;
+  (* Use FindLibrary to fail early when the library is not found
+     Warning: using LibraryLoad instead of FindLibrary here would
+     prevent unloading from working at least on OS X.
+  *)
+  If[FindLibrary[libname] =!= $Failed,
+    loadClass[libname] /@ classes,
+    Message[LibraryFunction::notfound, libname]
+  ];
 )
 
 loadClass[libname_][tem : LClass[classname_String, funs_]] := (
