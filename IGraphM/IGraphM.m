@@ -287,12 +287,12 @@ IGGraphletProject::usage =
     "IGGraphletProject[graph, cliques, nIterations]";
 
 IGVertexConnectivity::usage =
-    "IGVertexConnectivity[graph]\n" <>
-    "IGVertexConnectivity[graph, s, t]";
+    "IGVertexConnectivity[graph] returns the smalest number of vertices whose deletion disconnects graph.\n" <>
+    "IGVertexConnectivity[graph, s, t] returns the smallest number of vertices whose deletion disconnects vertices s and t in graph.";
 
 IGEdgeConnectivity::usage =
-    "IGEdgeConnectivity[graph]" <>
-    "IGEdgeConnectivity[graph, s, t]";
+    "IGEdgeConnectivity[graph] returns the smallest number of edges whose deletion disconnects graph." <>
+    "IGEdgeConnectivity[graph, s, t] returns the smallest number of edges whose deletion disconnects vertices s and t in graph.";
 
 IGClusterData::usage = "IGClusterData[association] represents the output of community detection functions. Properties can be queried using IGClusterData[\[Ellipsis]][\"property\"].";
 
