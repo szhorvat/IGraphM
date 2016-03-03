@@ -6,50 +6,65 @@ These tests use MicroTest from https://github.com/szhorvat/MicroTest\
 Cell["Restart the kernel before evaluating this notebook.", "Text"],
 
 Cell[BoxData[{
- RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]",
+ RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]", 
  RowBox[{"<<", "MicroTest`"}]}], "Input"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"SetDirectory", "@",
+  RowBox[{"SetDirectory", "@", 
    RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"AbsoluteTiming", "@",
-  RowBox[{"MTRun", "[", "\[IndentingNewLine]",
-   RowBox[{"Get", "[", "\"\<Tests.m\>\"", "]"}], "\[IndentingNewLine]",
+ RowBox[{"AbsoluteTiming", "@", 
+  RowBox[{"MTRun", "[", "\[IndentingNewLine]", 
+   RowBox[{"Get", "[", "\"\<Tests.m\>\"", "]"}], "\[IndentingNewLine]", 
    "]"}]}]], "Input"],
 
 Cell[BoxData[
  RowBox[{"IGVersion", "[", "]"}]], "Input"],
 
 Cell[BoxData[
+ RowBox[{"FindLibrary", "[", "\"\<IGraphM\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"ToString", "[", "\"\<asd\>\"", "]"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{" ", "\"\<asd\>\""}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"<<", "IGraphM`"}]], "Input"],
+
+Cell[BoxData[
  RowBox[{"IGraphM`Developer`GetInfo", "[", "]"}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"Select", "[",
+ RowBox[{"Select", "[", 
   RowBox[{
-   RowBox[{"Complement", "[",
+   RowBox[{"Complement", "[", 
     RowBox[{
-     RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",",
-     RowBox[{"{", "\"\<IGraphM\>\"", "}"}]}], "]"}], ",",
+     RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
+     RowBox[{"{", "\"\<IGraphM\>\"", "}"}]}], "]"}], ",", 
    RowBox[{
     RowBox[{
-     RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ",
+     RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
     "&"}]}], "]"}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"Scan", "[",
+ RowBox[{"Scan", "[", 
   RowBox[{
    RowBox[{
-    RowBox[{"Information", "[",
-     RowBox[{"#", ",",
-      RowBox[{"LongForm", "\[Rule]", "False"}]}], "]"}], "&"}], ",",
+    RowBox[{"Information", "[", 
+     RowBox[{"#", ",", 
+      RowBox[{"LongForm", "\[Rule]", "False"}]}], "]"}], "&"}], ",", 
    RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], "]"}]], "Input"]
 },
-WindowSize->{838, 822},
-WindowMargins->{{82, Automatic}, {10, Automatic}},
+WindowSize->{838, 507},
+WindowMargins->{{82, Automatic}, {Automatic, 19}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (February 25, \
+2016)",
 StyleDefinitions->"Default.nb"
 ]
+

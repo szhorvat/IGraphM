@@ -344,6 +344,14 @@ MT[
 ]
 
 
+(* IGMakeLattice *)
+
+MT[
+  IGIsomorphicQ[IGMakeLattice[{3,4}], GridGraph[{3,4}]],
+  True
+]
+
+
 (*******************************************************************************)
 MTSection["Acyclic graphs"]
 
@@ -524,6 +532,64 @@ MT[
 ]
 
 (*******************************************************************************)
+MTSection["Isomorphism: coloured graphs"]
+
+gvcol1 = {Graph[{1,2}, {1<->2}], "VertexColors" -> {1,2}};
+gvcol2 = {Graph[{1,2}, {1<->2}], "VertexColors" -> {2,1}};
+gvcol3 = {Graph[{1,2}, {1<->2}], "VertexColors" -> {3,4}};
+
+MT[
+  #[gvcol1, gvcol2],
+  {<|1 -> 2, 2 -> 1|>}
+]& /@ {IGVF2FindIsomorphisms, IGVF2FindSubisomorphisms, IGBlissGetIsomorphism, IGLADGetSubisomorphism, IGLADFindSubisomorphisms}
+
+MT[
+  #[gvcol1, gvcol2],
+  1
+]& /@ {IGVF2IsomorphismCount, IGVF2SubisomorphismCount, IGLADSubisomorphismCount}
+
+MT[
+  #[gvcol1, gvcol2],
+  True
+]& /@ {IGVF2IsomorphicQ, IGVF2SubisomorphicQ, IGBlissIsomorphicQ, IGLADSubisomorphicQ}
+
+MT[
+  #[gvcol1, gvcol3],
+  False
+]& /@ {IGVF2IsomorphicQ, IGVF2SubisomorphicQ, IGBlissIsomorphicQ, IGLADSubisomorphicQ}
+
+MT[
+  IGBlissAutomorphismCount[gvcol1],
+  1
+]
+
+MT[
+  IGBlissAutomorphismGroup[gvcol1],
+  {}
+]
+
+MT[
+  IGBlissCanonicalLabeling[gvcol1],
+  <|1 -> 1, 2 -> 2|>
+]
+
+MT[
+  IGBlissCanonicalLabeling[gvcol2],
+  <|1 -> 2, 2 -> 1|>
+]
+
+MT[
+  IGBlissCanonicalPermutation[gvcol1],
+  {1, 2}
+]
+
+MT[
+  IGBlissCanonicalPermutation[gvcol2],
+  {2, 1}
+]
+
+
+(*******************************************************************************)
 MTSection["Isomorphism: multigraphs"]
 
 gm1 = EdgeAdd[PathGraph@Range[5], 1 <-> 2];
@@ -601,6 +667,42 @@ MT[
   ClosenessCentrality[#] == IGCloseness[#, Normalized -> True],
   True
 ]& /@ {ug, dg, wug, wdg, umulti, dmulti}
+
+
+(*******************************************************************************)
+MTSection["Clustering coefficients"]
+
+MT[
+  IGGlobalClusteringCoefficient[#] == GlobalClusteringCoefficient[#],
+  True
+]& /@ ulist
+
+MT[
+  IGLocalClusteringCoefficient[#] == LocalClusteringCoefficient[#],
+  True
+]& /@ ulist
+
+MT[
+  IGAverageLocalClusteringCoefficient[#] == Mean@LocalClusteringCoefficient[#],
+  True
+]& /@ ulist
+
+MT[
+  GlobalClusteringCoefficient[umulti] == IGGlobalClusteringCoefficient[umulti],
+  True
+]
+
+MT[
+  LocalClusteringCoefficient[umulti] == IGLocalClusteringCoefficient[umulti],
+  True
+]
+
+MT[
+  Mean@LocalClusteringCoefficient[umulti] == IGAverageLocalClusteringCoefficient[umulti],
+  True
+]
+
+
 
 
 (*******************************************************************************)
@@ -1023,6 +1125,51 @@ MT[
 ]
 
 MT[
+  IGVertexConnectivity[empty],
+  0
+]
+
+MT[
+  IGVertexConnectivity[edgeless],
+  0
+]
+
+MT[
+  IGEdgeConnectivity[empty],
+  0
+]
+
+MT[
+  IGEdgeConnectivity[edgeless],
+  0
+]
+
+MT[
+  IGVertexConnectivity[umulti],
+  VertexConnectivity[umulti]
+]
+
+MT[
+  IGVertexConnectivity[dmulti],
+  VertexConnectivity[dmulti]
+]
+
+MT[
+  IGEdgeConnectivity[umulti],
+  EdgeConnectivity[umulti]
+]
+
+MT[
+  IGEdgeConnectivity[dmulti],
+  EdgeConnectivity[dmulti]
+]
+
+MT[
+  IGEdgeConnectivity[Graph[{2 <-> 1, 1 <-> 2, 1 <-> 3, 2 <-> 3, 3 <-> 1, 4 <-> 2}], 2, 3],
+  3
+]
+
+MT[
   IGVertexConnectivity[ug, 1, 2],
   LibraryFunctionError["LIBRARY_FUNCTION_ERROR", 6],
   {IGraphM::error}
@@ -1357,29 +1504,35 @@ MT[
   True
 ]
 
+
 (*******************************************************************************)
-MTSection["Test remaining functions"]
+MTSection["Chordal graphs"]
 
-(* IGData *)
-
-MT[
-  IGData /@ IGData[];,
-  Null
-]
+(* Chordal graphs *)
 
 MT[
-  And @@ MapThread[IGIsomorphicQ, {IGData[{"AllDirectedGraphs", 3}], Values@IGData["MANTriadLabels"]}],
+  IGChordalQ[empty],
   True
 ]
 
-
-(* IGMakeLattice *)
-
 MT[
-  IGIsomorphicQ[IGMakeLattice[{3,4}], GridGraph[{3,4}]],
+  IGChordalQ[edgeless],
   True
 ]
 
+MT[
+  IGChordalQ[CycleGraph[3]],
+  True
+]
+
+MT[
+  IGChordalQ[CycleGraph[4]],
+  False
+]
+
+
+(*******************************************************************************)
+MTSection["Rewiring"]
 
 (* IGRewire *)
 
@@ -1391,7 +1544,7 @@ MT[
 MT[
   With[{r = IGRewire[dg, 100]},
     VertexInDegree[r] == VertexInDegree[dg] &&
-    VertexOutDegree[r] == VertexOutDegree[dg]
+        VertexOutDegree[r] == VertexOutDegree[dg]
   ],
   True
 ]
@@ -1430,6 +1583,21 @@ MT[
   True
 ]
 
+
+(*******************************************************************************)
+MTSection["Test remaining functions"]
+
+(* IGData *)
+
+MT[
+  IGData /@ IGData[];,
+  Null
+]
+
+MT[
+  And @@ MapThread[IGIsomorphicQ, {IGData[{"AllDirectedGraphs", 3}], Values@IGData["MANTriadLabels"]}],
+  True
+]
 
 (* IGConnectNeighborhood *)
 
@@ -1560,24 +1728,3 @@ MT[
 ]
 
 
-(* Chordal graphs *)
-
-MT[
-  IGChordalQ[empty],
-  True
-]
-
-MT[
-  IGChordalQ[edgeless],
-  True
-]
-
-MT[
-  IGChordalQ[CycleGraph[3]],
-  True
-]
-
-MT[
-  IGChordalQ[CycleGraph[4]],
-  False
-]
