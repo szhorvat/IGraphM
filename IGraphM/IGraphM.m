@@ -287,12 +287,12 @@ IGGraphletProject::usage =
     "IGGraphletProject[graph, cliques, nIterations]";
 
 IGVertexConnectivity::usage =
-    "IGVertexConnectivity[graph]\n" <>
-    "IGVertexConnectivity[graph, s, t]";
+    "IGVertexConnectivity[graph] returns the smalest number of vertices whose deletion disconnects graph.\n" <>
+    "IGVertexConnectivity[graph, s, t] returns the smallest number of vertices whose deletion disconnects vertices s and t in graph.";
 
 IGEdgeConnectivity::usage =
-    "IGEdgeConnectivity[graph]" <>
-    "IGEdgeConnectivity[graph, s, t]";
+    "IGEdgeConnectivity[graph] returns the smallest number of edges whose deletion disconnects graph." <>
+    "IGEdgeConnectivity[graph, s, t] returns the smallest number of edges whose deletion disconnects vertices s and t in graph.";
 
 IGClusterData::usage = "IGClusterData[association] represents the output of community detection functions. Properties can be queried using IGClusterData[\[Ellipsis]][\"property\"].";
 
@@ -345,9 +345,13 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 
 (***** Package variables *****)
 
-$packageVersion    = "0.2.0pre1";
+
+$packageVersion    = "0.2.0pre2";
 $packageDirectory  = DirectoryName[$InputFileName];
-$libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
+$systemID = $SystemID;
+(* On OS X libraries use libc++ ABI since M10.4 and libstdc++ ABI up to M10.3.  We need separate binaries. *)
+If[$OperatingSystem === "MacOSX", $systemID = $systemID <> If[$VersionNumber <= 10.3, "-libstdc++", "-libc++"]];
+$libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $systemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
 $buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}];
 
@@ -717,14 +721,15 @@ GetInfo[] :=
     Module[{res = "", igver, osver},
       res = StringJoin[res, "Mathematica version: \n", $Version, "; Release number: ", ToString[$ReleaseNumber], "\n\n"];
       res = StringJoin[res, "Package version: \n", $packageVersion, "\n\n"];
-      res = StringJoin[res, "Package location: \n", FindFile["IGraphM`"], "\n\n"];
+      res = StringJoin[res, "Package location: \n", ToString@FindFile["IGraphM`"], "\n\n"];
+      res = StringJoin[res, "Library location: \n", ToString@FindLibrary["IGraphM"], "\n\n"];
       igver = Quiet@IGVersion[];
       res = StringJoin[res, "IGVersion[]: \n", If[StringQ[igver], igver, "Failed."], "\n\n"];
       res = StringJoin[res, "Build settings: \n", ToString[$buildSettings], "\n\n"];
-      osver = Quiet@Switch[$OperatingSystem,
+      osver = Quiet@StringTrim@Switch[$OperatingSystem,
         "MacOSX", Import["!sw_vers", "String"],
         "Unix", Import["!uname -a", "String"] <> Import["!lsb_release -a 2>/dev/null", "String"],
-        "Windows", StringReplace[Import["!systeminfo | findstr /B /C:\"OS Name\" /C:\"OS Version\" /C:\"System Type\"", "String"], "\r" -> ""]
+        "Windows", Import["!cmd /C ver", "String"]
       ];
       res = StringJoin[res, "Operating system: \n", If[StringQ[osver], osver, "Failed."]]; (* no newline after last item *)
       res
@@ -1618,7 +1623,7 @@ IGLADGetSubisomorphism[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?
         IGLADGetSubisomorphism[subgraph, graph, opt]
         ,
         Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
-          result = igIndexVec@check@ig1@"ladGetSubisomorphism"[
+          result = igIndexVec@check@ig1@"ladGetSubisomorphismColored"[
             ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"],
             Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub
           ];
@@ -1753,7 +1758,7 @@ igAdjacentTriangleCount[graph_, vs_] :=
 
 SyntaxInformation[IGAdjacentTriangleCount] = {"ArgumentsPattern" -> {_, _.}};
 IGAdjacentTriangleCount[graph_?igGraphQ, {}] := {}
-IGAdjacentTriangleCount[graph_?igGraphQ, vs_List : All] := catch@igAdjacentTriangleCount[graph, vs]
+IGAdjacentTriangleCount[graph_?igGraphQ, vs : (_List | All) : All] := catch@igAdjacentTriangleCount[graph, vs]
 IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCount[graph, {v}]
 
 (* Shortest paths *)

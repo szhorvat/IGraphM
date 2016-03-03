@@ -16,12 +16,12 @@ igraph is one of the broadest open source graph manipulation packages available.
 
  - Interruption support: using Evaluate → Abort Evaluation in Mathematica works with most IGraph/M functions.
  - Centrality measures for weighted graphs
- - Estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs
+ - Fast estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs
  - Community detection algorithms
  - Minimum feedback arc set for weighted and unweighted graphs
- - Find all cliques (not just maximal ones), count cliques of different sizes without listing them, weighted cliques
+ - Find all cliques (not just maximal ones), count cliques of different sizes without listing them, work with weighted cliques
  - Count 3- and 4-motifs, list triangles
- - Histogram for shortest path lengths
+ - Histogram for shortest path lengths (weighted and unweighted)
  - Rewire edges, keeping either the density or the degree sequence
  - Alternative fast algorithms for isomorphism testing: Bliss, VF2, LAD
  - Subgraph isomorphism (including induced subgraphs with LAD)
@@ -98,6 +98,20 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
 During the version 0.1.x series IGraph/M should be considered unstable.  Function names, options, and the structure of return values may change without notice.  Thus I do encourage you to use it interactively, but at this point I do not recommend basing other packages on IGraph/M.  Starting from version 0.2.0 I will try to avoid making any breaking changes.
 
+### Troubleshooting
+
+* "Cannot open ``LTemplate`LTemplatePrivate` ``"
+
+  Loading fails with this error if one tries to use the `master` branch (development branch) without the necessary dependencies.
+
+  Please download IGraph/M from the releases page instead: https://github.com/szhorvat/IGraphM/releases  It includes everything needed to run the package.
+
+* "No build settings found. Please check `BuildSettings.m`"
+
+  This error is shown when trying to load IGraph/M on an incompatible platform.  Currently the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux 64-bit with gcc 4.8 or later, Raspberry Pi with Raspbian Jessie.
+
+  It may be possible to run IGraph/M on other platforms, however, it will be necessary to compile it form source.
+
 ### Known issues and workarounds
 
  * `Graph[Graph[...], ...]` returned
@@ -111,6 +125,8 @@ During the version 0.1.x series IGraph/M should be considered unstable.  Functio
  * Graphlet decomposition functions may crash the kernel. This is due to [a bug in the igraph C core](https://github.com/igraph/igraph/issues/869).
 
  * The graphs returned by `IGBipartiteGameGNM` and `IGBipartiteGameGNP` may not render when using the `DirectedEdges -> True` and `"Bidirectional" -> True` options.  This is due to a bug in Mathematica's  `"BipartiteEmbdding"` graph layout and can be corrected by passing `GraphLayout -> Automatic` to these functions.
+
+ * See also https://github.com/szhorvat/IGraphM/issues
 
 ## License
 
