@@ -720,14 +720,15 @@ GetInfo[] :=
     Module[{res = "", igver, osver},
       res = StringJoin[res, "Mathematica version: \n", $Version, "; Release number: ", ToString[$ReleaseNumber], "\n\n"];
       res = StringJoin[res, "Package version: \n", $packageVersion, "\n\n"];
-      res = StringJoin[res, "Package location: \n", FindFile["IGraphM`"], "\n\n"];
+      res = StringJoin[res, "Package location: \n", ToString@FindFile["IGraphM`"], "\n\n"];
+      res = StringJoin[res, "Library location: \n", ToString@FindLibrary["IGraphM"], "\n\n"];
       igver = Quiet@IGVersion[];
       res = StringJoin[res, "IGVersion[]: \n", If[StringQ[igver], igver, "Failed."], "\n\n"];
       res = StringJoin[res, "Build settings: \n", ToString[$buildSettings], "\n\n"];
-      osver = Quiet@Switch[$OperatingSystem,
+      osver = Quiet@StringTrim@Switch[$OperatingSystem,
         "MacOSX", Import["!sw_vers", "String"],
         "Unix", Import["!uname -a", "String"] <> Import["!lsb_release -a 2>/dev/null", "String"],
-        "Windows", StringReplace[Import["!systeminfo | findstr /B /C:\"OS Name\" /C:\"OS Version\" /C:\"System Type\"", "String"], "\r" -> ""]
+        "Windows", Import["!cmd /C ver", "String"]
       ];
       res = StringJoin[res, "Operating system: \n", If[StringQ[osver], osver, "Failed."]]; (* no newline after last item *)
       res
