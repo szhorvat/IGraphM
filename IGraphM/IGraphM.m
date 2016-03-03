@@ -347,7 +347,10 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 
 $packageVersion    = "0.2.0pre1";
 $packageDirectory  = DirectoryName[$InputFileName];
-$libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $SystemID}];
+$systemID = $SystemID;
+(* On OS X libraries use libc++ ABI since M10.4 and libstdc++ ABI up to M10.3.  We need separate binaries. *)
+If[$OperatingSystem === "MacOSX", $systemID = $systemID <> If[$VersionNumber <= 10.3, "-libstdc++", "-libc++"]];
+$libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $systemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
 $buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}];
 
