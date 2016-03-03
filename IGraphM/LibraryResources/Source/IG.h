@@ -1232,24 +1232,36 @@ public:
     // Clusterig coefficient
 
     double transitivityUndirected() const {
+        if (directedQ())
+            mma::message("Edge directions are ignored for clustering coefficient calculations", mma::M_WARNING);
+
         double res;
         igCheck(igraph_transitivity_undirected(&graph, &res, IGRAPH_TRANSITIVITY_ZERO));
         return res;
     }
 
     mma::RealTensorRef transitivityLocalUndirected() const {
+        if (directedQ())
+            mma::message("Edge directions are ignored for clustering coefficient calculations", mma::M_WARNING);
+
         igVector vec;
         igCheck(igraph_transitivity_local_undirected(&graph, &vec.vec, igraph_vss_all(), IGRAPH_TRANSITIVITY_ZERO));
         return vec.makeMTensor();
     }
 
     double transitivityAverageLocalUndirected() const {
+        if (directedQ())
+            mma::message("Edge directions are ignored for clustering coefficient calculations", mma::M_WARNING);
+
         double res;
         igCheck(igraph_transitivity_avglocal_undirected(&graph, &res, IGRAPH_TRANSITIVITY_ZERO));
         return res;
     }
 
     mma::RealTensorRef transitivityBarrat() const {
+        if (directedQ())
+            mma::message("Edge directions are ignored for clustering coefficient calculations", mma::M_WARNING);
+
         igVector vec;
         igCheck(igraph_transitivity_barrat(&graph, &vec.vec, igraph_vss_all(), passWeights(), IGRAPH_TRANSITIVITY_ZERO));
         return vec.makeMTensor();
