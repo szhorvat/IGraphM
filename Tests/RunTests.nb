@@ -24,18 +24,6 @@ Cell[BoxData[
  RowBox[{"IGVersion", "[", "]"}]], "Input"],
 
 Cell[BoxData[
- RowBox[{"FindLibrary", "[", "\"\<IGraphM\>\"", "]"}]], "Input"],
-
-Cell[BoxData[
- RowBox[{"ToString", "[", "\"\<asd\>\"", "]"}]], "Input"],
-
-Cell[BoxData[
- RowBox[{" ", "\"\<asd\>\""}]], "Input"],
-
-Cell[BoxData[
- RowBox[{"<<", "IGraphM`"}]], "Input"],
-
-Cell[BoxData[
  RowBox[{"IGraphM`Developer`GetInfo", "[", "]"}]], "Input"],
 
 Cell[BoxData[
