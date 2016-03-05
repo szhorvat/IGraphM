@@ -211,7 +211,7 @@ inline mlStream & operator >> (mlStream &ml, igList &list) {
         ml.error("List of lists expected");
     igraph_vector_ptr_resize(&list.list, len);    
     for (int i=0; i < len; ++i) {
-        igraph_vector_t *vec = static_cast<igraph_vector_t *>(malloc(sizeof(igraph_vector_t)));        
+        igraph_vector_t *vec = static_cast<igraph_vector_t *>(igraph_malloc(sizeof(igraph_vector_t)));
         double *data;
         int listlen;
         if (! MLGetReal64List(ml.link(), &data, &listlen))
