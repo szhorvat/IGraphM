@@ -893,7 +893,7 @@ public:
                 hist[idx] += 1;
             }
         }
-        mma::IntTensorRef res = mma::makeVector<mint>(hist.size(), &hist[0]);
+        mma::IntTensorRef res = mma::makeVector<mint>(hist.size(), hist.data());
         return res;
     }
 
@@ -986,7 +986,7 @@ public:
 
         igCheck(igraph_i_maximal_cliques(&graph, &clique_counter.handle, &cd));
 
-        return mma::makeVector<mint>(cd.hist.size(), &cd.hist[0]);
+        return mma::makeVector<mint>(cd.hist.size(), cd.hist.data());
     }
 
     mma::IntTensorRef largestCliques() const {
