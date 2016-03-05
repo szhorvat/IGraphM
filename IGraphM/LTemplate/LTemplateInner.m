@@ -1,6 +1,6 @@
 (* Mathematica Package *)
 
-(* :Copyright: (c) 2015 Szabolcs Horvát *)
+(* :Copyright: (c) 2016 Szabolcs Horvát *)
 (* :License: MIT license, see LICENSE.txt *)
 
 (* This file is read directly with Get in LTemplate.m or LTemplatePrivate.m *)
@@ -46,7 +46,7 @@ LOFun::usage =
 packageAbort[] := (End[]; EndPackage[]; Abort[]) (* Avoid polluting the context path when aborting early. *)
 
 minVersion = {10.0, 0}; (* oldest supported Mathematica version *)
-maxVersion = {10.3, 1}; (* latest Mathematica version the package was tested with *)
+maxVersion = {10.4, 0}; (* latest Mathematica version the package was tested with *)
 version    = {$VersionNumber, $ReleaseNumber}
 versionString[{major_, release_}] := StringJoin[ToString /@ {NumberForm[major, {Infinity, 1}], ".", release}]
 

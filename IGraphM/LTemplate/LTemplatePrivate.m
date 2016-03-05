@@ -1,6 +1,6 @@
 (* Mathematica Package *)
 
-(* :Copyright: (c) 2015 Szabolcs Horvát *)
+(* :Copyright: (c) 2016 Szabolcs Horvát *)
 (* :License: MIT license, see LICENSE.txt *)
 
 (*
