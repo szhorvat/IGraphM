@@ -12,7 +12,9 @@
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
 
-BeginPackage["IGraphM`", {"HierarchicalClustering`"}];
+BeginPackage["IGraphM`"];
+
+Needs["HierarchicalClustering`"];
 
 Unprotect /@ Names["IGraphM`*"];
 
