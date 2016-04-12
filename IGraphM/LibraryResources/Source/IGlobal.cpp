@@ -12,14 +12,14 @@ int igInterruptionHandler(void *) {
 }
 
 
-void igWarningHandler(const char *reason, const char *file, int line, int igraph_errno) {
+void igWarningHandler(const char *reason, const char *file, int line, int /* igraph_errno */) {
     std::ostringstream msg;
     msg << file << ":" << line << " - " << reason;
     mma::message(msg.str(), mma::M_WARNING);
 }
 
 
-void igErrorHandler(const char *reason, const char *file, int line, int igraph_errno) {
+void igErrorHandler(const char *reason, const char *file, int line, int /* igraph_errno */) {
     // avoid printing empty messages
     if (strlen(reason) != 0) {
         std::ostringstream msg;

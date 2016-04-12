@@ -534,7 +534,7 @@ public:
         ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
 
         struct {
-            static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t *map21, void *arg) {
+            static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t * /* map21 */, void *arg) {
                 VF2data &data = *static_cast<VF2data *>(arg);
                 data.list.push_back(map12);
                 data.remaining--;
@@ -584,7 +584,7 @@ public:
         ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
 
         struct {
-            static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t *map21, void *arg) {
+            static igraph_bool_t handle(const igraph_vector_t * /* map12 */,  const igraph_vector_t *map21, void *arg) {
                 VF2data &data = *static_cast<VF2data *>(arg);
                 data.list.push_back(map21);
                 data.remaining--;
@@ -968,6 +968,7 @@ public:
         cd.hist.reserve(50);
         cd.min = min;
         cd.max = max;
+        // TODO interruptability
         struct {
             static int handle(const igraph_vector_t *clique, void *data, igraph_bool_t *cont) {
                 clique_data *cd = static_cast<clique_data *>(data);
@@ -1021,7 +1022,7 @@ public:
         igraph_vector_t weights = igVectorView(vertex_weights);
         double res;
         igCheck(igraph_weighted_clique_number(&graph, &weights, &res));
-        return res;
+        return mint(res);
     }
 
     // Independent vertex sets

@@ -209,7 +209,7 @@ inline mlStream & operator >> (mlStream &ml, igList &list) {
     int len;
     if (! MLTestHead(ml.link(), "List", &len))
         ml.error("List of lists expected");
-    igraph_vector_ptr_resize(&list.list, len);    
+    igraph_vector_ptr_resize(&list.list, len);
     for (int i=0; i < len; ++i) {
         igraph_vector_t *vec = static_cast<igraph_vector_t *>(igraph_malloc(sizeof(igraph_vector_t)));
         double *data;
