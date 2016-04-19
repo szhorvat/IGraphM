@@ -212,6 +212,60 @@ public:
                                n1, n2, p, 0, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
     }
 
+    mma::RealTensorRef geometricGame(mint n, double radius, bool periodic) {        
+        destroy();
+        igVector x, y;
+        igConstructorCheck(igraph_grg_game(
+                               &graph, n, radius, periodic,
+                               &x.vec, &y.vec));
+
+        const int len = x.length();
+        mma::RealMatrixRef coord = mma::makeMatrix<double>(len, 2);
+        auto xp = x.begin();
+        auto yp = y.begin();
+        for (int i=0; i < len; ++i) {
+            coord(i, 0) = *xp++;
+            coord(i, 1) = *yp++;
+        }
+        return coord;
+    }
+
+    void barabasiAlbertGame(mint n, double power, double A, mint m, mma::RealTensorRef mtens, bool directed, bool totalDegree, mint method) {
+        destroy();
+        igraph_vector_t mvec = igVectorView(mtens);
+        igraph_barabasi_algorithm_t algo;
+        switch (method) {
+        case 0: algo = IGRAPH_BARABASI_BAG; break;
+        case 1: algo = IGRAPH_BARABASI_PSUMTREE; break;
+        case 2: algo = IGRAPH_BARABASI_PSUMTREE_MULTIPLE; break;
+        default:
+            empty();
+            throw mma::LibraryError("Unknown method for Barabasi-Albert game.");
+        }
+
+        igConstructorCheck(igraph_barabasi_game(&graph, n, power, m, &mvec, totalDegree, A, directed, algo, NULL));
+    }
+
+    void staticFitnessGame(mint m /* edges */, mma::RealTensorRef fit_in_ten, mma::RealTensorRef fit_out_ten, bool loops, bool multiple) {
+        destroy();
+        igraph_vector_t fit_in = igVectorView(fit_in_ten);
+        igraph_vector_t fit_out = igVectorView(fit_out_ten);
+        igConstructorCheck(igraph_static_fitness_game(
+                               &graph, m,
+                               &fit_in, fit_out_ten.length() == 0 ? NULL : &fit_out,
+                               loops, multiple));
+    }
+
+    void staticPowerLawGame(mint n, mint m, double exp_out, double exp_in, bool loops, bool multiple, bool finite_size_correction) {
+        destroy();
+        igConstructorCheck(igraph_static_power_law_game(&graph, n, m, exp_out, exp_in, loops, multiple, finite_size_correction));
+    }
+
+    void growingGame(mint n, mint m, bool directed, bool citation) {
+        destroy();
+        igConstructorCheck(igraph_growing_random_game(&graph, n, m, directed, citation));
+    }
+
     // Modification
 
     void connectNeighborhood(mint order) {

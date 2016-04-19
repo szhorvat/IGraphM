@@ -171,6 +171,23 @@ IGForestFireGame::usage = "IGForestFireGame[n, fwprob]";
 IGBipartiteGameGNM::usage = "IGBipartiteGameGNM[n1, n2, m] generates a bipartite random graph with n1 and n2 vertices in the two partitions and m edges.";
 IGBipartiteGameGNP::usage = "IGBipartiteGameGNP[n1, n2, p] generates a bipartite Bernoulli random graph with n1 and n2 vertices in the two partitions and connection probability p.";
 
+IGGeometricGame::usage = "IGGeometricGame[n, radius] generates an n-vertex geometric random graph on the unit square.";
+
+IGBarabasiAlbertGame::usage =
+    "IGBarabasiAlbertGame[n, k] generates an n-vertex Barabasi–Albert random graph by adding a new vertex with k out-edges in each step.\n" <>
+    "IGBarabasiAlbertGame[n, {k2, k3, \[Ellipsis]}] generates an n-vertex Barabasi–Albert random graph by adding a new vertex with k2, k3, \[Ellipsis] out-edges in each step.\n" <>
+    "IGBarabasiAlbertGame[n, k, {\[Beta], a}] generates a Barabasi–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + a where d is the vertex (in-)degree.";
+
+IGStaticFitnessGame::usage =
+    "IGStaticFitnessGame[m, {f1, f2, \[Ellipsis]}] generates a random undirected graph with m edges where edge i <-> j is inserted with probability proportional to f_i\[Times]f_j.\n" <>
+    "IGStaticFitnessGame[m, {fout1, fout2, \[Ellipsis]}, {fin1, fin2, \[Ellipsis]}] generates a random directed graph with m edges where edge i -> j is inserted with probability proportional to fout_i\[Times]fin_j.";
+
+IGStaticPowerLawGame::usage =
+    "IGStaticPowerLawGame[n, m, exp] generates a random graph with n vertices and m edges, having a power-law degree distribution with the given exponent.\n" <>
+    "IGStaticPowerLawGame[n, m, expOut, expIn] generates a random directed graph with n vertices and m edges, having power-law in- and out-degree distributions with the given exponents.";
+
+IGGrowingGame::usage = "IGGrowingGame[n, k] generates a growing random graph with n vertices, adding a new vertex and k new edges in each step.";
+
 IGDistanceMatrix::usage =
     "IGDistanceMatrix[graph] computes the shortest path length between each vertex pair in graph.\n" <>
     "IGDistanceMatrix[graph, fromVertices] computes the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
@@ -398,6 +415,16 @@ template = LTemplate["IGraphM",
 
         LFun["bipartiteGameGNM", {Integer (* n1 *), Integer (* n2 *), Integer (* m *), True|False (* directed *), True|False (* bidirectional *)}, "Void"],
         LFun["bipartiteGameGNP", {Integer (* n1 *), Integer (* n2 *), Real (* p *), True|False (* directed *), True|False (* bidirectional *)}, "Void"],
+
+        LFun["geometricGame", {Integer (* n *), Real (* radius *), True|False (* periodic *)}, {Real, 2} (* coordinates *)],
+
+        LFun["barabasiAlbertGame", {Integer (* n *), Real (* power *), Real (* A *), Integer (* m *), {Real, 1, "Constant"} (* mvec *), True|False (* directed *), True|False (* totalDegree *), Integer (* method *)}, "Void"],
+
+        LFun["staticFitnessGame", {Integer (* edges *), {Real, 1, "Constant"} (* out-fitness *), {Real, 1, "Constant"} (* in-fitness *), True|False (* loops *), True|False (* multiple *)}, "Void"],
+
+        LFun["staticPowerLawGame", {Integer (* n *), Integer (* m *), Real (* expOut *), Real (* expIn *), True|False (* loops *), True|False (* multiple *), True|False (* finiteSizeCorrection *)}, "Void"],
+
+        LFun["growingGame", {Integer (* n *), Integer (* m *), True|False (* directed *), True|False (* citation *)}, "Void"],
 
         (* Modification *)
 
@@ -771,6 +798,7 @@ sck[val_] := val
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 intVecQ = VectorQ[#, Developer`MachineIntegerQ]&
 positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&
+nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&
 
 (* Zero out the diagonal of a square matrix. *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
@@ -1030,6 +1058,81 @@ IGBipartiteGameGNP[n1_?Internal`NonNegativeMachineIntegerQ, n2_?Internal`NonNega
       check@ig@"bipartiteGameGNP"[n1, n2, p, OptionValue[DirectedEdges], OptionValue["Bidirectional"]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
+
+Options[IGGeometricGame] = {"Periodic" -> False};
+SyntaxInformation[IGGeometricGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGGeometricGame, Graph]};
+IGGeometricGame[n_?Internal`NonNegativeMachineIntegerQ, radius_?nonnegativeNumericQ, opt : OptionsPattern[{IGGeometricGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"], coord},
+      coord = check@ig@"geometricGame"[n, radius, OptionValue["Periodic"]];
+      applyGraphOpt[VertexCoordinates -> coord, opt]@igToGraph[ig]
+    ]
+
+Options[IGBarabasiAlbertGame] = { DirectedEdges -> True, "TotalDegreeAttraction" -> False, Method -> "PSumTree" };
+SyntaxInformation[IGBarabasiAlbertGame] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGBarabasiAlbertGame, Graph]};
+igBarabasiAlbertGameMethods = <|"Bag" -> 0, "PSumTree" -> 1, "PSumTreeMultiple" -> 2|>;
+amendUsage[IGBarabasiAlbertGame, "Available Method options: <*Keys[igBarabasiAlbertGameMethods]*>."];
+
+IGBarabasiAlbertGame[
+  n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
+  opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
+    igBarabasiAlbertGame[n, m, {1,1}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], opt]
+
+IGBarabasiAlbertGame[
+  n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
+  power_?nonnegativeNumericQ,
+  opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
+    igBarabasiAlbertGame[n, m, {power,1}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], opt]
+
+IGBarabasiAlbertGame[
+  n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
+  {power_?nonnegativeNumericQ, a_?nonnegativeNumericQ},
+  opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
+    igBarabasiAlbertGame[n, m, {power, a}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], opt]
+
+igBarabasiAlbertGame[n_, m_, {power_, a_}, directed_, totalDegree_, method_, opt___] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"barabasiAlbertGame"[
+        n, power, a,
+        If[ListQ[m], 0, m], If[ListQ[m], Prepend[m,0], {}],
+        directed, totalDegree, Lookup[igBarabasiAlbertGameMethods, method, -1]
+      ];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+
+Options[IGStaticFitnessGame] = { SelfLoops -> False, "MultipleEdges" -> False };
+SyntaxInformation[IGStaticFitnessGame] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticFitnessGame, Graph]};
+IGStaticFitnessGame[
+  m_?Internal`NonNegativeMachineIntegerQ,
+  inFitness_?nonNegIntVecQ, outFitness : _?nonNegIntVecQ : {}, opt : OptionsPattern[{IGStaticFitnessGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"staticFitnessGame"[m, inFitness, outFitness, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+
+Options[IGStaticPowerLawGame] = { SelfLoops -> False, "MultipleEdges" -> False, "FiniteSizeCorrection" -> True };
+SyntaxInformation[IGStaticPowerLawGame] = {"ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticFitnessGame, Graph]};
+IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, exp_?nonnegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"staticPowerLawGame"[n, m, exp, -1, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, expOut_?nonnegativeNumericQ, expIn_?nonnegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"staticPowerLawGame"[n, m, expOut, expIn, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+
+Options[IGGrowingGame] = { DirectedEdges -> False, "Citation" -> False };
+SyntaxInformation[IGGrowingGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGGrowingGame, Graph]};
+IGGrowingGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGGrowingGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"growingGame"[n, m, OptionValue[DirectedEdges], OptionValue["Citation"]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
 
 (* Modification *)
 
