@@ -2653,9 +2653,10 @@ IGCompareCommunities[c1_?igClusterDataQ, c2_?igClusterDataQ, methods : {__String
 IGCompareCommunities[c1_?igClusterDataQ, c2_?igClusterDataQ, method_String] := IGCompareCommunities[c1, c2, {method}]
 
 
+(* Note: edge ordering matters, use igMake instead of igMakeFastWeighted. *)
 SyntaxInformation[IGCommunitiesEdgeBetweenness] = {"ArgumentsPattern" -> {_}};
 IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], result, merges, betweenness, bridges, modularity, membership, removed},
+    catch@Module[{ig = igMake[graph], result, merges, betweenness, bridges, modularity, membership, removed},
       {result, merges, betweenness, bridges, modularity, membership} = check@ig@"communityEdgeBetweenness"[];
       removed = Part[EdgeList[graph], igIndexVec[result]];
       igClusterData[graph]@<|
@@ -2664,7 +2665,7 @@ IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
         "Merges" -> igIndexVec[merges],
         "RemovedEdges" -> removed,
         "EdgeBetweenness" -> betweenness,
-        "Bridges" -> Round[bridges] (*Part[removed, Round[bridges]]*),
+        "Bridges" -> Round[bridges],
         "Algorithm" -> "EdgeBetweenness"
       |>
     ]
