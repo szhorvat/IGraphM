@@ -2605,7 +2605,8 @@ igClusterDataQ[_] := False
 
 hierarchicalQ[asc_] := KeyExistsQ[asc, "Merges"]
 
-IGClusterData::hier = "The provided clustering is not hierarchical."
+IGClusterData::hier   = "The provided clustering is not hierarchical.";
+IGClusterData::noprop = "There is no property `` for IGClusterData objects.";
 
 IGClusterData[asc_?AssociationQ]["Properties"] :=
     Sort@Join[
@@ -2659,7 +2660,7 @@ IGClusterData[asc_?AssociationQ]["Tree"] :=
 
 IGClusterData[asc_?AssociationQ]["ElementCount"] := Length[asc["Elements"]]
 
-IGClusterData[asc_?AssociationQ][key_String] := asc[key]
+IGClusterData[asc_?AssociationQ][key_String] := Lookup[asc, key, Message[IGClusterData::noprop, key]; $Failed]
 
 
 grid[g_] := Column[Row /@ MapAt[Style[#, Gray]&, g, Table[{i, 1}, {i, Length[g]}]]]
