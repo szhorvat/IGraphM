@@ -2886,7 +2886,7 @@ Options[IGCommunitiesSpinGlass] = {
   "CoolingFactor" -> 0.99,
   "Gamma" -> 1,
   "GammaMinus" -> 1,
-  Method -> "Original"
+  Method -> Automatic
 };
 
 SyntaxInformation[IGCommunitiesSpinGlass] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -2901,13 +2901,21 @@ amendUsage[IGCommunitiesSpinGlass,
 ];
 
 IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, temp},
+    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, temp, method},
+      method = OptionValue[Method];
+      If[method === Automatic,
+        method = If[
+          igWeightedGraphQ[graph] && TrueQ@NonPositive@Min@PropertyValue[graph, EdgeWeight],
+          "Negative",
+          "Original"
+        ]
+      ];
       {membership, modularity, temp} = check@ig@"communitySpinGlass"[
         OptionValue["SpinCount"], Boole@OptionValue["ParallelUpdating"],
         OptionValue["StartingTemperature"], OptionValue["StoppingTemperature"], OptionValue["CoolingFactor"],
         Lookup[igSpinGlassUpdateRulesAsc, OptionValue["UpdateRule"], -1],
         OptionValue["Gamma"],
-        Lookup[igSpinGlassMethodsAsc, OptionValue[Method], -1],
+        Lookup[igSpinGlassMethodsAsc, method, -1],
         OptionValue["GammaMinus"]
       ];
       igClusterData[graph]@<|
