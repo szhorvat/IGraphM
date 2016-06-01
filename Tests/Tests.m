@@ -355,6 +355,15 @@ MT[
 (*******************************************************************************)
 MTSection["Acyclic graphs"]
 
+cycGraph = Graph[{13 -> 7, 7 -> 0, 0 -> 16, 16 -> 2, 2 -> 15, 10 -> 5, 5 -> 12,
+  12 -> 18, 18 -> 15, 17 -> 18, 15 -> 6, 6 -> 8, 8 -> 4, 9 -> 8,
+  4 -> 19, 19 -> 11, 11 -> 1, 1 -> 20, 20 -> 3, 3 -> 4, 14 -> 19}];
+
+MT[
+  AcyclicGraphQ[EdgeDelete[cycGraph, IGFeedbackArcSet[cycGraph]]],
+  True
+]
+
 MT[
   AllTrue[EdgeDelete[#, IGFeedbackArcSet[#]]& /@ ulist, AcyclicGraphQ],
   True
