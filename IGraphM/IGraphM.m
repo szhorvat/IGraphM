@@ -1815,7 +1815,7 @@ IGFeedbackArcSet::bdmtd =
 amendUsage[IGFeedbackArcSet, "Available Method options: <*Keys[igFeedbackArcSetMethods]*>. \"IntegerProgramming\" is guaranteed to find a minimum feedback arc set."];
 
 IGFeedbackArcSet[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]}, (* use igMake because edge ordering matters *)
       Part[
         EdgeList[graph],
         igIndexVec@check@ig@"feedbackArcSet"[Lookup[igFeedbackArcSetMethods, OptionValue[Method], Message[IGFeedbackArcSet::bdmtd, OptionValue[Method]]; throw[$Failed]]]
