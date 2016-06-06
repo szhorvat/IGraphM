@@ -6,7 +6,7 @@
 (* :Author: szhorvat  *)
 (* :Date: 2015-08-28  *)
 
-(* :Package Version: 0.2.0 *)
+(* :Package Version: 0.2.1 *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2016 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
@@ -348,7 +348,7 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 (***** Package variables *****)
 
 
-$packageVersion    = "0.2.0";
+$packageVersion    = "0.2.1";
 $packageDirectory  = DirectoryName[$InputFileName];
 $systemID = $SystemID;
 (* On OS X libraries use libc++ ABI since M10.4 and libstdc++ ABI up to M10.3.  We need separate binaries. *)
