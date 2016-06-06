@@ -6,13 +6,15 @@
 (* :Author: szhorvat  *)
 (* :Date: 2015-08-28  *)
 
-(* :Package Version: 0.2.0 *)
+(* :Package Version: 0.2.1 *)
 (* :Mathematica Version: 10.0 *)
 (* :Copyright: (c) 2016 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
 
-BeginPackage["IGraphM`", {"HierarchicalClustering`"}];
+BeginPackage["IGraphM`"];
+
+Needs["HierarchicalClustering`"];
 
 Unprotect /@ Names["IGraphM`*"];
 
@@ -178,7 +180,7 @@ IGDistanceHistogram::usage =
     "IGDistanceHistogram[graph, binsize] computes a histogram of weighted all-pair shortest path lengths in graph with the given bin size. In case of undirected graphs, path lengths are double counted.\n" <>
     "IGDistanceHistogram[graph, binsize, from] computes a histogram of weighted shortest path lengths in graph for the given starting vertices and bin size.\n" <>
     "IGDistanceHistogram[graph, binsize, from, to] computes a histogram of weighted shortest path lengths in graph for the given starting and ending vertices and bin size.";
-IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of all-pair unweighted shortest path lengths of the graph.";
+IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of all-pair unweighted shortest path lengths of the graph. Vertex pairs between which there is no path are excluded.";
 IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the graph. The graph is treated as undirected, self-loops and multi-edges are ignored.";
 IGDiameter::usage = "IGDiameter[graph] computes the diameter of graph.";
 IGFindDiameter::usage = "IGFindDiameter[graph] returns a longest shortest path in graph, i.e. a shortest path with length equal to the graph diameter.";
@@ -346,7 +348,7 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 (***** Package variables *****)
 
 
-$packageVersion    = "0.2.0";
+$packageVersion    = "0.2.1";
 $packageDirectory  = DirectoryName[$InputFileName];
 $systemID = $SystemID;
 (* On OS X libraries use libc++ ABI since M10.4 and libstdc++ ABI up to M10.3.  We need separate binaries. *)
@@ -1710,7 +1712,7 @@ IGFeedbackArcSet::bdmtd =
 amendUsage[IGFeedbackArcSet, "Available Method options: <*Keys[igFeedbackArcSetMethods]*>. \"IntegerProgramming\" is guaranteed to find a minimum feedback arc set."];
 
 IGFeedbackArcSet[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]}, (* use igMake because edge ordering matters *)
       Part[
         EdgeList[graph],
         igIndexVec@check@ig@"feedbackArcSet"[Lookup[igFeedbackArcSetMethods, OptionValue[Method], Message[IGFeedbackArcSet::bdmtd, OptionValue[Method]]; throw[$Failed]]]
@@ -2500,7 +2502,8 @@ igClusterDataQ[_] := False
 
 hierarchicalQ[asc_] := KeyExistsQ[asc, "Merges"]
 
-IGClusterData::hier = "The provided clustering is not hierarchical."
+IGClusterData::hier   = "The provided clustering is not hierarchical.";
+IGClusterData::noprop = "There is no property `` for IGClusterData objects.";
 
 IGClusterData[asc_?AssociationQ]["Properties"] :=
     Sort@Join[
@@ -2535,14 +2538,20 @@ IGClusterData[asc_?AssociationQ]["HierarchicalClusters"] :=
     ]
 
 mergesToTree[asc_] :=
-    Module[{len, root, merges = asc["Merges"]},
-      len = Length[merges];
-      root = 2 len + 1;
+    Module[{mc, root, ec, merges = asc["Merges"], leafIndices, g},
+      mc = Length[merges];
+      ec = Length[asc["Elements"]];
+      root = ec + mc;
+      leafIndices = Intersection[Range[ec], Flatten[merges]];
       TreeGraph[
         Append[Flatten[merges], root],
-        Append[1 + len + Range[len] /. n_Integer :> Sequence[n, n], root],
+        Append[ec + Range[mc] /. n_Integer :> Sequence[n, n], root],
         GraphLayout -> {"LayeredEmbedding", "RootVertex" -> root},
-        DirectedEdges -> True
+        DirectedEdges -> True,
+        EdgeShapeFunction -> "Line",
+        EdgeStyle -> Gray,
+        VertexShapeFunction -> None,
+        VertexLabels -> Thread[ leafIndices -> (Placed[Short[#], Below]&) /@ asc["Elements"][[ leafIndices ]] ]
       ]
     ]
 
@@ -2554,7 +2563,7 @@ IGClusterData[asc_?AssociationQ]["Tree"] :=
 
 IGClusterData[asc_?AssociationQ]["ElementCount"] := Length[asc["Elements"]]
 
-IGClusterData[asc_?AssociationQ][key_String] := asc[key]
+IGClusterData[asc_?AssociationQ][key_String] := Lookup[asc, key, Message[IGClusterData::noprop, key]; $Failed]
 
 
 grid[g_] := Column[Row /@ MapAt[Style[#, Gray]&, g, Table[{i, 1}, {i, Length[g]}]]]
@@ -2644,9 +2653,10 @@ IGCompareCommunities[c1_?igClusterDataQ, c2_?igClusterDataQ, methods : {__String
 IGCompareCommunities[c1_?igClusterDataQ, c2_?igClusterDataQ, method_String] := IGCompareCommunities[c1, c2, {method}]
 
 
+(* Note: edge ordering matters, use igMake instead of igMakeFastWeighted. *)
 SyntaxInformation[IGCommunitiesEdgeBetweenness] = {"ArgumentsPattern" -> {_}};
 IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], result, merges, betweenness, bridges, modularity, membership, removed},
+    catch@Module[{ig = igMake[graph], result, merges, betweenness, bridges, modularity, membership, removed},
       {result, merges, betweenness, bridges, modularity, membership} = check@ig@"communityEdgeBetweenness"[];
       removed = Part[EdgeList[graph], igIndexVec[result]];
       igClusterData[graph]@<|
@@ -2655,7 +2665,7 @@ IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
         "Merges" -> igIndexVec[merges],
         "RemovedEdges" -> removed,
         "EdgeBetweenness" -> betweenness,
-        "Bridges" -> Round[bridges] (*Part[removed, Round[bridges]]*),
+        "Bridges" -> Round[bridges],
         "Algorithm" -> "EdgeBetweenness"
       |>
     ]
@@ -2773,7 +2783,7 @@ Options[IGCommunitiesSpinGlass] = {
   "CoolingFactor" -> 0.99,
   "Gamma" -> 1,
   "GammaMinus" -> 1,
-  Method -> "Original"
+  Method -> Automatic
 };
 
 SyntaxInformation[IGCommunitiesSpinGlass] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -2788,13 +2798,21 @@ amendUsage[IGCommunitiesSpinGlass,
 ];
 
 IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, temp},
+    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, temp, method},
+      method = OptionValue[Method];
+      If[method === Automatic,
+        method = If[
+          igWeightedGraphQ[graph] && TrueQ@NonPositive@Min@PropertyValue[graph, EdgeWeight],
+          "Negative",
+          "Original"
+        ]
+      ];
       {membership, modularity, temp} = check@ig@"communitySpinGlass"[
         OptionValue["SpinCount"], Boole@OptionValue["ParallelUpdating"],
         OptionValue["StartingTemperature"], OptionValue["StoppingTemperature"], OptionValue["CoolingFactor"],
         Lookup[igSpinGlassUpdateRulesAsc, OptionValue["UpdateRule"], -1],
         OptionValue["Gamma"],
-        Lookup[igSpinGlassMethodsAsc, OptionValue[Method], -1],
+        Lookup[igSpinGlassMethodsAsc, method, -1],
         OptionValue["GammaMinus"]
       ];
       igClusterData[graph]@<|
