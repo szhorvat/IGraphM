@@ -140,6 +140,16 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
 ## Revision history
 
+##### v0.2.1
+
+This is a bugfix release.  The following changes require special mention:
+
+ - `IGFeedbackArcSet` could return wrong results for some graphs. This is now fixed.
+ - The `"RemovedEdges"` property returned by `IGCommunitiesEdgeBetweenness` could be incorrect for some graphs.  This is now fixed.  Other properties were not affected.
+ - The Hierarchical Clustering package is no longer auto-loaded by IGraph/M to avoid shadowing `DistanceMatrix`, a new builtin added in Mathematica 10.3.  Load this package manually (``<<HierarchicalClustering` ``) to  work with the `"HierarchicalClusters"` property of `IGClusterData` objects.
+ 
+A number of other small bugs were also fixed.
+
 ##### v0.2.0
 
 - Significant performance improvements for many functions
