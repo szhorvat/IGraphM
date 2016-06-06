@@ -4,6 +4,7 @@
 #include "IGCommon.h"
 
 #include <list>
+#include <map>
 
 class IG;
 
