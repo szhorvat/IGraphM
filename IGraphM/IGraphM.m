@@ -315,7 +315,7 @@ IGEdgeConnectivity::usage =
 
 IGClusterData::usage = "IGClusterData[association] represents the output of community detection functions. Properties can be queried using IGClusterData[\[Ellipsis]][\"property\"].";
 
-IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph]";
+IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph] computes the cohesive block structure of a simple undirected graph.";
 
 IGCompareCommunities::usage =
     "IGCompareCommunities[clusterdata1, clusterdata2] compares two community structures given as IGClusterData objects using all available methods.\n" <>
@@ -2568,9 +2568,11 @@ IGEdgeConnectivity[graph_?igGraphQ, s_, t_] :=
     ]
 
 
+IGCohesiveBlocks::badarg = "The input must be a simple undirected graph.";
 SyntaxInformation[IGCohesiveBlocks] = {"ArgumentsPattern" -> {_}};
 IGCohesiveBlocks[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph], blocks, cohesion, parents},
+      If[Not@SimpleGraphQ[graph], Message[IGCohesiveBlocks::badarg]; Return[$Failed]];
       {blocks, cohesion, parents} = check@ig@"cohesiveBlocks"[];
       {igVertexNames[graph] /@ igIndexVec[blocks], Round[cohesion](*, igIndexVec[parents]*)}
     ]
