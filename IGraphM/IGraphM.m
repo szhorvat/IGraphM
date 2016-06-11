@@ -210,12 +210,12 @@ IGCliques::usage =
 IGCliqueSizeCounts::usage =
     "IGCliqueSizeCounts[graph] computes a histogram of clique sizes in graph. The kth element of the result is the number of k-cliques.\n" <>
     "IGCliqueSizeCounts[graph, {min, max}] computes a histogram of clique sizes between min and max in graph.\n" <>
-    "IGCliqueSizeCounts[graph, max] computed a histogram of clique sizes no larger than max in graph.\n" <>
+    "IGCliqueSizeCounts[graph, max] computes a histogram of clique sizes no larger than max in graph.\n" <>
     "IGCliqueSizeCounts[graph, {n}] counts cliques of size n in graph.";
 IGMaximalCliqueSizeCounts::usage =
     "IGMaximalCliqueSizeCounts[graph] computes a histogram of maximal clique sizes in graph. The kth element of the result is the number of maximal k-cliques.\n" <>
     "IGMaximalCliqueSizeCounts[graph, {min, max}] computes a histogram of maximal clique sizes between min and max in graph.\n" <>
-    "IGMaximalCliqueSizeCounts[graph, max] computed a histogram of maximal clique sizes no larger than max in graph.\n" <>
+    "IGMaximalCliqueSizeCounts[graph, max] computes a histogram of maximal clique sizes no larger than max in graph.\n" <>
     "IGMaximalCliqueSizeCounts[graph, {n}] counts maximal cliques of size n in graph.";
 IGMaximalCliques::usage =
     "IGMaximalCliques[graph] returns all maximal cliques in graph.\n" <>
@@ -331,7 +331,7 @@ IGModularity::usage =
 IGCommunitiesEdgeBetweenness::usage = "IGCommunitiesEdgeBetweenness[graph] finds communities using the Girvan-Newman algorithm.";
 IGCommunitiesGreedy::usage = "IGCommunitiesGreedy[graph] finds communities using greedy optimization of modularity.";
 IGCommunitiesWalktrap::usage =
-    "IGCommunitiesWalktrap[graph] finds communities vie short random walks (of length 4 by default).\n" <>
+    "IGCommunitiesWalktrap[graph] finds communities via short random walks (of length 4 by default).\n" <>
     "IGCommunitiesWalktrap[graph, steps] finds communities via random walks of length steps.";
 IGCommunitiesOptimalModularity::usage = "IGCommunitiesOptimalModularity[graph] finds communities by maximizing the modularity through integer programming.";
 IGCommunitiesMultilevel::usage = "IGCommunitiesMultilevel[graph] finds communities using the Louvain method.";
@@ -852,7 +852,7 @@ igMake[g_] :=
       ig
     ]
 
-(* Fast version. Use only for unweighted graphs and when edge ordering doens't matter. *)
+(* Fast version. Use only for unweighted graphs and when edge ordering doesn't matter. *)
 igMakeFast[g_?MultigraphQ] := igMake[g]
 igMakeFast[g_?EmptyGraphQ] :=
     With[{ig = Make["IG"]},
@@ -868,7 +868,7 @@ igMakeFast[g_] :=
       ig
     ]
 
-(* Fast version. Use for graphs that may be weighted when edge ordering doens't matter. *)
+(* Fast version. Use for graphs that may be weighted when edge ordering doesn't matter. *)
 igMakeFastWeighted[g_?MultigraphQ] := igMake[g]
 igMakeFastWeighted[g_?EmptyGraphQ] :=
     With[{ig = Make["IG"]},
@@ -2979,7 +2979,6 @@ IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
 
 (* Bipartite partitions *)
 
-(* TODO: Return $Failed and issue message if not bipartite. *)
 SyntaxInformation[IGBipartitePartitions] = {"ArgumentsPattern" -> {_}};
 IGBipartitePartitions[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph], parts},
