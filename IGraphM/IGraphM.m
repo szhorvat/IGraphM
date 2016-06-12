@@ -776,6 +776,9 @@ IGraphM::lytaln = "`` is not a valid value for the \"Align\" layout option."
 
 (***** Helper functions *****)
 
+(* Common definitions *)
+Get["IGraphM`Common`"]
+
 (* For error handling: *)
 
 igTag (* private tag for throw/catch *)
@@ -920,10 +923,6 @@ igUnpackVertexSet[graph_][packed_] :=
       ]
     ]
 
-(* check if the argument is an igraph compatible graph *)
-igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &
-
-
 (* convert vertex list to IG format *)
 vss[graph_][All] := {}
 vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, throw[$Failed]]
@@ -935,15 +934,6 @@ vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexW
 
 applyGraphOpt[opt___][graph_] := Graph[graph, Sequence@@FilterRules[{opt}, Options[Graph]]]
 applyGraphOpt3D[opt___][graph_] := Graph3D[graph, Sequence@@FilterRules[{opt}, Options[Graph3D]]]
-
-amendUsage[sym_Symbol, amend_, args___] :=
-    Module[{lines},
-      lines = StringSplit[sym::usage, "\n"];
-      lines[[1]] = lines[[1]] <> " " <> StringTemplate[amend, InsertionFunction -> (ToString[#, InputForm]&)][args];
-      sym::usage = StringJoin@Riffle[lines, "\n"]
-    ]
-
-optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
 
 (***** Public functions *****)
 
