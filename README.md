@@ -1,18 +1,22 @@
 # IGraph/M – igraph for Mathematica
 
-## What is IGraph/M?
+For the impatient – download the zip archive from [the releases page](https://github.com/szhorvat/IGraphM/releases), extract it, and move the `IGraphM` directory into `FileNameJoin[{$UserBaseDirectory, "Applications"}]`.  Do not use the `master` branch of the git repo.
+
+## Introduction
+
+#### What is IGraph/M?
 
 IGraph/M is a *Mathematica* interface to the [igraph](http://igraph.org/) graph manipulation and analysis library.  It works directly with *Mathematica*'s builtin `Graph` datatype and focuses on functionality that is either not already present in *Mathematica* (such as motifs, minimum feedback arc set, random rewiring, coloured graph isomorphism, etc.), or for which igraph uses different implementations (isomorphism, sampling random graphs with given degree sequence, etc.)
 
-## What IGraph/M is not
+#### What IGraph/M is not
 
 IGraph/M is *not a replacement* for Mathematica's graph manipulation functionality.  Instead it is meant to complement it.  Thus it works directly with standard `Graph` objects instead of introducing its own graph type.  Functions for trivial tasks such as adding or removing vertices or edges, returning the vertex or edge count, creating standard graphs like cycle graphs, complete graphs, etc. are not provided.
 
-## Why create IGraph/M?
+#### Why create IGraph/M?
 
-igraph is one of the most complete open source graph manipulation packages available.  Many of its functions are of use to Mathematica users, either because equivalents don't already exist in Mathematica, or because they can be used to verify Mathematica's own results.
+igraph is one of the most complete open source graph manipulation libraries available.  Many of its functions are of use to *Mathematica* users, either because equivalents don't already exist in *Mathematica*, or because they can be used to verify *Mathematica*'s own results.
 
-### Functionality highlights
+#### Functionality highlights
 
  - Interruption support: using Evaluate → Abort Evaluation in Mathematica works with most IGraph/M functions.
  - Centrality measures for weighted graphs.
