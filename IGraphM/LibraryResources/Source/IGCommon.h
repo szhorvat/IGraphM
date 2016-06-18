@@ -30,7 +30,9 @@ inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
 class igVector {
     bool moved;
 
-    igVector(const igVector &source); // avoid accidental expensive implicit copy
+    // avoid accidental expensive implicit copy
+    igVector(const igVector &) = delete;
+    igVector & operator = (const igVector &) = delete;
 
 public:
     igraph_vector_t vec;
@@ -95,7 +97,9 @@ public:
 // note that igraph_integer_t and mint may not be the same type
 class igIntVector {
 
-    igIntVector(const igIntVector &source); // avoid accidental implicit copy
+    // avoid accidental implicit copy
+    igIntVector(const igIntVector &) = delete;
+    igIntVector & operator = (const igIntVector &) = delete;
 
 public:
     igraph_vector_int_t vec;
