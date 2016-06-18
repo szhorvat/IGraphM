@@ -1748,7 +1748,7 @@ public:
 
         igCheck(igraph_is_bipartite(&graph, &res, &map.vec));
         if (! res)
-            throw mma::LibraryError("bipartitePartitions: The graph is not bipartite.");
+            throw mma::LibraryError();
 
         return map.makeMTensor();
     }

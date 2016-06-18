@@ -3059,9 +3059,14 @@ IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
 (* Bipartite partitions *)
 
 SyntaxInformation[IGBipartitePartitions] = {"ArgumentsPattern" -> {_}};
+IGBipartitePartitions::nbipart = "The graph is not bipartite.";
 IGBipartitePartitions[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph], parts},
-      parts = check@ig@"bipartitePartitions"[];
+      parts = ig@"bipartitePartitions"[];
+      If[MatchQ[parts, _LibraryFunctionError],
+        Message[IGBipartitePartitions::nbipart];
+        Return[$Failed]
+      ];
       {Pick[VertexList[graph], parts, 0], Pick[VertexList[graph], parts, 1]}
     ]
 
