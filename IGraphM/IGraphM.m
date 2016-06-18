@@ -2605,12 +2605,20 @@ communitiesToMembership[elems_, communities_] :=
       Lookup[AssociationThread[Flatten[communities, 1], Flatten[copy, 1]], elems]
     ]
 
+IGraphM::invcomm = "Invalid community specification for the given vertices.";
+
+communitiesToMembershipChecked[elems_, communities_] :=
+    If[Sort[elems] === Union@@communities && Length[elems] === Length@Flatten[communities, 1],
+      communitiesToMembership[elems, communities],
+      Message[IGraphM::invcomm]; throw[$Failed]
+    ]
+
 
 SyntaxInformation[IGModularity] = {"ArgumentsPattern" -> {_, _}};
 IGModularity[graph_?igGraphQ, clusters_?igClusterDataQ] := IGModularity[graph, clusters["Communities"]]
 IGModularity[graph_?igGraphQ, communities : {__List}] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      check@ig@"modularity"[communitiesToMembership[VertexList[graph], communities]]
+      check@ig@"modularity"[communitiesToMembershipChecked[VertexList[graph], communities]]
     ]
 
 igCompareCommunitiesMethods = {
@@ -2625,7 +2633,7 @@ igCompareCommunitiesMethodsAsc = AssociationThread[igCompareCommunitiesMethods, 
 
 igCompareCommunities[elems_, c1_, c2_, method_] :=
     Block[{ig = Make["IG"]},
-      res = check@ig@"compareCommunities"[communitiesToMembership[elems, c1], communitiesToMembership[elems, c2],
+      res = check@ig@"compareCommunities"[communitiesToMembershipChecked[elems, c1], communitiesToMembershipChecked[elems, c2],
         Lookup[igCompareCommunitiesMethodsAsc, method, -1]
       ];
       If[method === "SplitJoinDistance", res = Round[res]];
