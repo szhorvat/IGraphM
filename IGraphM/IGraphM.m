@@ -258,6 +258,7 @@ IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options] lays o
 IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options] lays out a tree radially using the Reingold–Tilford algorithm.";
 IGLayoutDrL::usage = "IGLayoutDrL[graph, options] lays out the graph using the DrL layout generator.";
 IGLayoutDrL3D::usage = "IGLayoutDrL3D[graph, options] lays out the graph in 3D using the DrL layout generator.";
+IGLayoutBipartite::usage = "IGLayoutBipartite[graph, options] lays out a bipartite graph, minimizing the number of edge crossings.";
 
 IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph] returns the global clustering coefficient of graph.";
 IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph] returns the local clustering coefficient of each vertex.";
@@ -604,6 +605,8 @@ template = LTemplate["IGraphM",
 
         LFun["layoutDrL", {{Real, 2, "Constant"} (* initial positions *), True|False (* use initial *), Integer (* settings template *)}, {Real, 2}],
         LFun["layoutDrL3D", {{Real, 2, "Constant"} (* initial positions *), True|False (* use initial *), Integer (* settings template *)}, {Real, 2}],
+
+        LFun["layoutBipartite", {{Integer, 1, "Constant"} (* types *), Real (* hgap *), Real (* vgap *), Integer (* maxiter *)}, {Real, 2}],
 
         (* Clustering coefficient *)
 
@@ -2428,6 +2431,84 @@ IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL3D,Graph3D}]] :=
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
           Lookup[igLayoutDrLSettingsAsc, OptionValue["Settings"], -1]
         ]
+      ]
+    ]
+
+
+blockLayout[n_, gap_, height_, mult_, offset_] :=
+    Module[{nrow = Ceiling[1.01 height/gap]},
+      Table[gap QuotientRemainder[i, nrow] mult + offset, {i, 0, n - 1}]
+    ]
+
+Options[IGLayoutBipartite] = {
+  "VertexGap" -> 0.1,
+  "PartitionGap" -> 1,
+  "Orientation" -> Vertical,
+  MaxIterations -> 100,
+  "BipartitePartitions" -> Automatic
+};
+SyntaxInformation[IGLayoutBipartite] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutBipartite, Graph]};
+IGLayoutBipartite::invopt = "The option value `` is not valid.";
+IGLayoutBipartite::notbp = "Graph is not bipartite.";
+IGLayoutBipartite::bdprt = "`` is not a valid partitioning vertices.";
+IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Graph}]] :=
+    catch@Module[{sg, ig, parts, isolated, connected, vertical, types, coord, coordAsc},
+      parts = OptionValue["BipartitePartitions"];
+      If[parts === Automatic,
+        isolated = Pick[VertexList[graph], VertexDegree[graph], 0];
+        connected = Complement[VertexList[graph], isolated];
+        sg = Subgraph[graph, connected];
+        ig = igMakeFast[sg];
+        If[Not@ig@"bipartiteQ"[],
+          Message[IGLayoutBipartite::notbp];
+          Return[$Failed]
+        ];
+        types = ig@"bipartitePartitions"[]
+        ,
+        If[Not[ MatchQ[parts, {_?ListQ, _?ListQ}] && SubsetQ[VertexList[graph], Join@@parts] && Intersection@@parts === {} ],
+          Message[IGLayoutBipartite::bdprt, "BipartitePartitions" -> parts];
+          Return[$Failed]
+        ];
+        connected = Join @@ parts;
+        isolated = Complement[VertexList[graph], connected];
+        sg = Subgraph[graph, connected];
+        ig = igMakeFast[sg];
+        types = communitiesToMembership[VertexList[sg], parts];
+      ];
+
+      Switch[OptionValue["Orientation"],
+        Horizontal|"Horizontal", vertical = False,
+        Vertical|"Vertical", vertical = True,
+        _, Message[IGLayoutBipartite::invopt, "Orientation" -> OptionValue["Orientation"]]; Return[$Failed]
+      ];
+
+      If[Not@positiveNumericQ@OptionValue["VertexGap"],
+        Message[IGLayoutBipartite::invopt, "VertexGap" -> OptionValue["VertexGap"]]; Return[$Failed]
+      ];
+
+      If[Not@positiveNumericQ@OptionValue["PartitionGap"],
+        Message[IGLayoutBipartite::invopt, "PartitionGap" -> OptionValue["PartitionGap"]]; Return[$Failed]
+      ];
+
+      coord = check@ig@"layoutBipartite"[types, OptionValue["VertexGap"], OptionValue["PartitionGap"], OptionValue[MaxIterations]];
+      coordAsc = Join[
+        AssociationThread[connected -> coord],
+        AssociationThread[
+          isolated -> blockLayout[
+            Length[isolated],
+            OptionValue["VertexGap"], OptionValue["PartitionGap"],
+            If[vertical, {-1, -1}, {1, -1}],
+            If[vertical,
+              {Min[coord[[All, 1]]] -1.5 OptionValue["VertexGap"], OptionValue["PartitionGap"]}
+              ,
+              {Max[coord[[All, 1]]] + 1.5 OptionValue["VertexGap"], OptionValue["PartitionGap"]}
+            ]
+          ]
+        ]
+      ];
+
+      applyGraphOpt[opt]@setVertexCoords[graph,
+        If[vertical, RotationTransform[Pi/2], Identity]@Lookup[coordAsc, VertexList[graph]]
       ]
     ]
 

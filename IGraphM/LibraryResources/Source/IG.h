@@ -1285,6 +1285,16 @@ public:
         return mat.makeMTensor();
     }
 
+    mma::RealTensorRef layoutBipartite(mma::IntTensorRef typevec, double hgap, double vgap, mint maxiter) const {
+        igMatrix mat;
+
+        igBoolVector types(typevec.length());
+        std::copy(typevec.begin(), typevec.end(), types.begin());
+
+        igCheck(igraph_layout_bipartite(&graph, &types.vec, &mat.mat, hgap, vgap, maxiter));
+        return mat.makeMTensor();
+    }
+
     // Clusterig coefficient
 
     double transitivityUndirected() const {

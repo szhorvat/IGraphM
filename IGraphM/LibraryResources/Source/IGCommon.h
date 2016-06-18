@@ -64,12 +64,15 @@ public:
 // RAII for graph_vector_bool_t
 class igBoolVector {
 
-    igBoolVector(const igBoolVector &source); // avoid accidental implicit copy
+    // avoid accidental implicit copy
+    igBoolVector(const igBoolVector &) = delete;
+    igBoolVector & operator = (const igBoolVector &) = delete;
 
 public:
 
     igraph_vector_bool_t vec;
 
+    igBoolVector(long sz) { igraph_vector_bool_init(&vec, sz); }
     igBoolVector() { igraph_vector_bool_init(&vec, 0); }
     ~igBoolVector() { igraph_vector_bool_destroy(&vec); }
 
