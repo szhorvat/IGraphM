@@ -1,63 +1,141 @@
 Notebook[{
+
+Cell[CellGroupData[{
 Cell[BoxData[
  RowBox[{"<<", "IGraphM`"}]], "Input"],
 
+Cell[BoxData["\<\"Evaluate IGDocumentation[] to get started.\"\>"], "Print"]
+}, Open  ]],
+
 Cell[BoxData[
  RowBox[{
-  RowBox[{"motifs", "[", "k_", "]"}], ":=", "\[IndentingNewLine]", 
-  RowBox[{"DeleteDuplicates", "[", "\[IndentingNewLine]", 
-   RowBox[{
+  RowBox[{"toMat", "[", 
+   RowBox[{"vec_", ",", "n_"}], "]"}], ":=", 
+  RowBox[{"SparseArray", "@", 
+   RowBox[{"Partition", "[", 
     RowBox[{
-     RowBox[{
-      RowBox[{"AdjacencyGraph", "[", 
-       RowBox[{"#", ",", 
-        RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}], "&"}], "/@", 
-     RowBox[{"Select", "[", 
+     RowBox[{"Flatten", "@", 
+      RowBox[{"Riffle", "[", 
+       RowBox[{
+        RowBox[{"Partition", "[", 
+         RowBox[{"vec", ",", "n"}], "]"}], ",", "0", ",", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", 
+          RowBox[{"-", "1"}], ",", "2"}], "}"}]}], "]"}]}], ",", "n"}], 
+    "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.675143799751005*^9, 3.675143849046874*^9}, {
+  3.6751438794092607`*^9, 3.675143944286613*^9}, {3.675144162840683*^9, 
+  3.675144164761527*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"allDirectedGraphs", "[", "n_", "]"}], ":=", "\[IndentingNewLine]", 
+  
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "graphs", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"graphs", "=", 
       RowBox[{
        RowBox[{
+        RowBox[{"AdjacencyGraph", "[", 
+         RowBox[{
+          RowBox[{"toMat", "[", 
+           RowBox[{"#", ",", "n"}], "]"}], ",", 
+          RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}], "&"}], "/@", 
+       
+       RowBox[{"IntegerDigits", "[", 
         RowBox[{
-         RowBox[{"Partition", "[", 
-          RowBox[{"#", ",", "k"}], "]"}], "&"}], "/@", 
-        RowBox[{"IntegerDigits", "[", 
          RowBox[{
           RowBox[{"Range", "[", 
            RowBox[{"2", "^", 
             RowBox[{"(", 
-             RowBox[{"k", "^", "2"}], ")"}]}], "]"}], ",", "2", ",", 
-          RowBox[{"k", "^", "2"}]}], "]"}]}], ",", 
-       RowBox[{
-        RowBox[{
-         RowBox[{"Diagonal", "[", "#", "]"}], "==", 
-         RowBox[{"ConstantArray", "[", 
-          RowBox[{"0", ",", "k"}], "]"}]}], "&"}]}], "]"}]}], ",", 
-    "\[IndentingNewLine]", "IsomorphicGraphQ"}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input"],
+             RowBox[{"n", "*", 
+              RowBox[{"(", 
+               RowBox[{"n", "-", "1"}], ")"}]}], ")"}]}], "]"}], "-", "1"}], 
+         ",", "2", ",", 
+         RowBox[{"n", "*", 
+          RowBox[{"(", 
+           RowBox[{"n", "-", "1"}], ")"}]}]}], "]"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"DeleteDuplicatesBy", "[", 
+      RowBox[{"graphs", ",", "CanonicalGraph"}], "]"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.6751445951220512`*^9, 3.675144633474648*^9}, 
+   3.675144838053624*^9}],
+
+Cell[CellGroupData[{
 
 Cell[BoxData[{
  RowBox[{
-  RowBox[{"m3", "=", 
-   RowBox[{
+  RowBox[{
+   RowBox[{"m2", "=", 
     RowBox[{
-     RowBox[{"Graph", "[", 
-      RowBox[{"#", ",", 
-       RowBox[{"VertexCoordinates", "\[Rule]", 
-        RowBox[{"CirclePoints", "[", "3", "]"}]}]}], "]"}], "&"}], "/@", 
-    RowBox[{"SortBy", "[", 
      RowBox[{
-      RowBox[{"motifs", "[", "3", "]"}], ",", "IGIsoclass"}], "]"}]}]}], 
-  ";"}], "\[IndentingNewLine]", 
+      RowBox[{"Graph", "[", 
+       RowBox[{"#", ",", 
+        RowBox[{"VertexCoordinates", "\[Rule]", 
+         RowBox[{"CirclePoints", "[", "2", "]"}]}]}], "]"}], "&"}], "/@", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"allDirectedGraphs", "[", "2", "]"}], ",", "EdgeCount"}], 
+      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"m4", "=", 
-   RowBox[{
+  RowBox[{
+   RowBox[{"m3", "=", 
     RowBox[{
-     RowBox[{"Graph", "[", 
-      RowBox[{"#", ",", 
-       RowBox[{"VertexCoordinates", "\[Rule]", 
-        RowBox[{"CirclePoints", "[", "4", "]"}]}]}], "]"}], "&"}], "/@", 
-    RowBox[{"SortBy", "[", 
      RowBox[{
-      RowBox[{"motifs", "[", "4", "]"}], ",", "IGIsoclass"}], "]"}]}]}], 
-  ";"}]}], "Input"],
+      RowBox[{"Graph", "[", 
+       RowBox[{"#", ",", 
+        RowBox[{"VertexCoordinates", "\[Rule]", 
+         RowBox[{"CirclePoints", "[", "3", "]"}]}]}], "]"}], "&"}], "/@", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"allDirectedGraphs", "[", "3", "]"}], ",", "IGIsoclass"}], 
+      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m4", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Graph", "[", 
+       RowBox[{"#", ",", 
+        RowBox[{"VertexCoordinates", "\[Rule]", 
+         RowBox[{"CirclePoints", "[", "4", "]"}]}]}], "]"}], "&"}], "/@", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"allDirectedGraphs", "[", "4", "]"}], ",", "IGIsoclass"}], 
+      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"m5", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Graph", "[", 
+       RowBox[{"#", ",", 
+        RowBox[{"VertexCoordinates", "\[Rule]", 
+         RowBox[{"CirclePoints", "[", "5", "]"}]}]}], "]"}], "&"}], "/@", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"allDirectedGraphs", "[", "5", "]"}], ",", "EdgeCount"}], 
+      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.571637`", ",", "Null"}], "}"}]], "Output"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.021653`", ",", "Null"}], "}"}]], "Output"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1.058198`", ",", "Null"}], "}"}]], "Output"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"280.763423`", ",", "Null"}], "}"}]], "Output"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -103,12 +181,20 @@ Cell[BoxData[
     RowBox[{
      RowBox[{
       RowBox[{"{", 
+       RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "2"}], "}"}], "\[Rule]", 
+      "m2"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
        RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "3"}], "}"}], "\[Rule]", 
       "m3"}], ",", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{"{", 
        RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "4"}], "}"}], "\[Rule]", 
       "m4"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "5"}], "}"}], "\[Rule]", 
+      "m5"}], ",", "\[IndentingNewLine]", 
      RowBox[{"\"\<MANTriadLabels\>\"", "\[Rule]", 
       RowBox[{"AssociationThread", "[", 
        RowBox[{"MANlabels", ",", "m3"}], "]"}]}]}], "\[IndentingNewLine]", 
@@ -121,12 +207,12 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"ResetDirectory", "[", "]"}], ";"}]], "Input"]
 },
-WindowSize->{808, 751},
-WindowMargins->{{12, Automatic}, {Automatic, 24}},
+WindowSize->{1051, 751},
+WindowMargins->{{178, Automatic}, {Automatic, 23}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
-2015)",
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (June 9, \
+2016)",
 StyleDefinitions->"Default.nb"
 ]
 
