@@ -65,7 +65,7 @@ IGPersonalizedPageRank::usage =
     "IGPersonalizedPageRank[graph, reset] gives a list of personalized PageRank centralities for the vertices of the graph.\n" <>
     "IGPersonalizedPageRank[graph, reset, damping] gives a list of personalized PageRank centralities for the vertices of the graph using damping factor damping.";
 
-IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph]";
+IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph] return the eigenvector centrality of each vertex.";
 IGHubScore::usage = "IGHubScore[graph] returns Kleinberg's hub score for each vertex.";
 IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority score for each vertex.";
 IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint score for each vertex.";
@@ -1826,7 +1826,7 @@ igDiameterMethods = <|
   "Dijkstra" -> igDiameterDijkstra
 |>;
 
-SyntaxInformation[IGDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGDiameter]};
+SyntaxInformation[IGDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 amendUsage[IGDiameter, "Available Method options: <*Keys[igDiameterMethods]*>."];
 
@@ -1867,7 +1867,7 @@ igFindDiameterMethods = <|
   "Dijkstra" -> igFindDiameterDijkstra
 |>;
 
-SyntaxInformation[IGFindDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGFindDiameter]};
+SyntaxInformation[IGFindDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 amendUsage[IGFindDiameter, "Available Method options: <*Keys[igDiameterMethods]*>."];
 
@@ -1908,7 +1908,7 @@ IGDistanceCounts[graph_?igGraphQ] :=
 
 
 Options[IGDistanceHistogram] = { Method -> "Dijkstra" };
-SyntaxInformation[IGDistanceHistogram] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGDistanceHistogram]};
+SyntaxInformation[IGDistanceHistogram] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}};
 igDistanceHistogramMethods = <| "Dijkstra" -> 0, "BellmanFord" -> 1 |>;
 amendUsage[IGDistanceHistogram, "Available Method options: <*Keys[igDistanceHistogramMethods]*>."];
 IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_?ListQ | All) : All, to : (_?ListQ | All) : All, opt : OptionsPattern[]] :=
