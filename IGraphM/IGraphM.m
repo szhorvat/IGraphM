@@ -116,6 +116,8 @@ IGVF2FindIsomorphisms::usage =
     "IGVF2FindIsomorphisms[graph1, graph2, n] finds at most n isomorphisms between graph1 and graph2.\n" <>
     "IGVF2FindIsomorphisms[{graph1, colorSpec}, {graph2, colorSpec}] finds all isomorphisms between vertex or edge coloured graphs graph1 and graph2.\n" <>
     "IGVF2FindIsomorphisms[{graph1, colorSpec}, {graph2, colorSpec}, n] finds at most n isomorphisms between vertex or edge coloured graphs graph1 and graph2.";
+IGVF2GetIsomorphism::usage = "IGVF2GetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.\n" <>
+    "IGVF2GetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] returns one isomorphism between two vertex or edge colored graphs, if it exists.";
 IGVF2SubisomorphicQ::usage =
     "IGVF2SubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph using the VF2 algorithm.\n" <>
     "IGVF2SubisomorphicQ[{subgraph, colorSpec}, {graph, colorSpec}] tests if vertex or edge coloured subgraph is contained in graph.";
@@ -124,6 +126,8 @@ IGVF2FindSubisomorphisms::usage =
     "IGVF2FindSubisomorphisms[subgraph, graph, n] finds at most n subisomorphisms from subgraph to graph.\n" <>
     "IGVF2FindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] finds all subisomorphisms from vertex or edge coloured subgraph to graph.\n" <>
     "IGVF2FindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}, n] finds at most n subisomorphisms from vertex or edge coloured subgraph to graph.";
+IGVF2GetSubisomorphism::usage = "IGVF2GetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.\n" <>
+    "IGVF2GetSubisomorphism[{subgraph, colorSpec}, {graph, colorSpec}] returns one subisomorphism from a vertex or edge coloured subgraph to graph, if it exists.";
 IGVF2IsomorphismCount::usage =
     "IGVF2IsomorphismCount[graph1, graph2] returns the number of isomorphisms between graph1 and graph2.\n" <>
     "IGVF2IsomorphismCount[{graph1, colorSpec}, {graph2, colorSpec}] returns the number of isomorphisms between vertex or edge coloured graphs graph1 and graph2. Note that this is not the same as simply counting the automorphisms of one graph if their colourings differ.";
@@ -1583,6 +1587,14 @@ IGVF2FindIsomorphisms[graph1_?igGraphQ, graph2_?igGraphQ, max : (_?Internal`Posi
     ]
 
 
+SyntaxInformation[IGVF2GetIsomorphism] = {"ArgumentsPattern" -> {{__}, {__}}};
+
+IGVF2GetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ] :=
+    IGVF2FindIsomorphisms[graph1, graph2, 1]
+IGVF2GetIsomorphism[cg1: {graph1_?igGraphQ, opt1 : OptionsPattern[]}, cg2: {graph2_?igGraphQ, opt2 : OptionsPattern[]}] :=
+    IGVF2FindIsomorphisms[cg1, cg2, 1]
+
+
 SyntaxInformation[IGVF2SubisomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}}};
 
 IGVF2SubisomorphicQ[{subgraph_?igGraphQ, optsub : OptionsPattern[]}, {graph_?igGraphQ, opt : OptionsPattern[]}] :=
@@ -1629,6 +1641,14 @@ IGVF2FindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, max : (_?Internal`
         igVertexNames[graph][#]
       ]& /@ result
     ]
+
+
+SyntaxInformation[IGVF2GetSubisomorphism] = {"ArgumentsPattern" -> {{__}, {__}}};
+
+IGVF2GetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ] :=
+    IGVF2FindSubisomorphisms[subgraph, graph, 1]
+IGVF2GetSubisomorphism[cg1: {subgraph_?igGraphQ, opt1 : OptionsPattern[]}, cg2: {graph_?igGraphQ, opt2 : OptionsPattern[]}] :=
+    IGVF2FindSubisomorphisms[cg1, cg2, 1]
 
 
 SyntaxInformation[IGVF2IsomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}}};
