@@ -107,34 +107,32 @@ Cell[BoxData[{
        RowBox[{"allDirectedGraphs", "[", "4", "]"}], ",", "IGIsoclass"}], 
       "]"}]}]}], ";"}], "//", "AbsoluteTiming"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{
-   RowBox[{"m5", "=", 
+  RowBox[{"(*", 
+   RowBox[{
     RowBox[{
-     RowBox[{
-      RowBox[{"Graph", "[", 
-       RowBox[{"#", ",", 
-        RowBox[{"VertexCoordinates", "\[Rule]", 
-         RowBox[{"CirclePoints", "[", "5", "]"}]}]}], "]"}], "&"}], "/@", 
-     RowBox[{"SortBy", "[", 
+     RowBox[{"m5", "=", 
       RowBox[{
-       RowBox[{"allDirectedGraphs", "[", "5", "]"}], ",", "EdgeCount"}], 
-      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}]}], "Input"],
+       RowBox[{
+        RowBox[{"Graph", "[", 
+         RowBox[{"#", ",", 
+          RowBox[{"VertexCoordinates", "\[Rule]", 
+           RowBox[{"CirclePoints", "[", "5", "]"}]}]}], "]"}], "&"}], "/@", 
+       RowBox[{"SortBy", "[", 
+        RowBox[{
+         RowBox[{"allDirectedGraphs", "[", "5", "]"}], ",", "EdgeCount"}], 
+        "]"}]}]}], ";"}], "//", "AbsoluteTiming"}], "*)"}]}]}], "Input"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.571637`", ",", "Null"}], "}"}]], "Output"],
+  RowBox[{"0.54493`", ",", "Null"}], "}"}]], "Output"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.021653`", ",", "Null"}], "}"}]], "Output"],
+  RowBox[{"0.038473`", ",", "Null"}], "}"}]], "Output"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"1.058198`", ",", "Null"}], "}"}]], "Output"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"280.763423`", ",", "Null"}], "}"}]], "Output"]
+  RowBox[{"1.043558`", ",", "Null"}], "}"}]], "Output"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -191,10 +189,12 @@ Cell[BoxData[
       RowBox[{"{", 
        RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "4"}], "}"}], "\[Rule]", 
       "m4"}], ",", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "5"}], "}"}], "\[Rule]", 
-      "m5"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"(*", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "5"}], "}"}], "\[Rule]", 
+        "m5"}], ","}], "*)"}], "\[IndentingNewLine]", 
      RowBox[{"\"\<MANTriadLabels\>\"", "\[Rule]", 
       RowBox[{"AssociationThread", "[", 
        RowBox[{"MANlabels", ",", "m3"}], "]"}]}]}], "\[IndentingNewLine]", 
