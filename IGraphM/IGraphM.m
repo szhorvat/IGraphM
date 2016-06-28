@@ -20,7 +20,7 @@ Unprotect /@ Names["IGraphM`*"];
 
 (* Privately load and configure LTemplate *)
 Get["LTemplate`LTemplatePrivate`"];
-ConfigureLTemplate["MessageSymbol" -> IGraphM];
+ConfigureLTemplate["MessageSymbol" -> IGraphM, "LazyLoading" -> False];
 
 (***** Usage mesages *****)
 
