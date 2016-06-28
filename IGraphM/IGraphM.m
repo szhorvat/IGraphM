@@ -1352,13 +1352,12 @@ IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Opt
     ]
 
 
-(* TODO: Investigate speeding up VertexReplace *)
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
 SyntaxInformation[IGBlissCanonicalGraph] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
-IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
-      catch@VertexReplace[graph, Normal@check@IGBlissCanonicalLabeling[graph, opt]]
-IGBlissCanonicalGraph[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@VertexReplace[graph, Normal@check@IGBlissCanonicalLabeling[{graph, col}, opt]]
+IGBlissCanonicalGraph[spec: (graph_?igGraphQ) | {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+      catch@With[{perm = check@IGBlissCanonicalPermutation[spec], am = AdjacencyMatrix[graph]},
+        AdjacencyGraph[ am[[perm, perm]] ]
+      ]
 
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
