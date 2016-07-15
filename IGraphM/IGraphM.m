@@ -2594,6 +2594,9 @@ MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (StandardForm|TraditionalF
       ]
     ]
 
+Format[c : IGClusterData[asc_?clusterAscQ], OutputForm] := StringTemplate["IGClusterData[\"Elements\" -> <``>, \"Communities\" -> <``>]"][c["ElementCount"], Length@c["Communities"]]
+
+
 igClusterData[graph_][asc_] := IGClusterData@Join[<|"Elements" -> VertexList[graph]|>, asc]
 
 communitiesFromMembership[graph_, membership_] := Values@GroupBy[Transpose[{VertexList[graph], Round[membership]}], Last -> First]
