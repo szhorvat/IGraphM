@@ -149,7 +149,7 @@ IGLADSubisomorphismCount::usage =
     "IGLADSubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] counts subisomorphisms from a vertex coloured subgraph to graph.";
 
 IGTopologicalOrdering::usage =
-    "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order." <>
+    "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order. " <>
     "Note that the values returned are vertex indices, not vertex names.";
 IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph] computes a feedback edge set of graph. Removing these edges makes the graph acyclic.";
 
@@ -178,9 +178,9 @@ IGBipartiteGameGNP::usage = "IGBipartiteGameGNP[n1, n2, p] generates a bipartite
 IGGeometricGame::usage = "IGGeometricGame[n, radius] generates an n-vertex geometric random graph on the unit square.";
 
 IGBarabasiAlbertGame::usage =
-    "IGBarabasiAlbertGame[n, k] generates an n-vertex Barabasi–Albert random graph by adding a new vertex with k out-edges in each step.\n" <>
-    "IGBarabasiAlbertGame[n, {k2, k3, \[Ellipsis]}] generates an n-vertex Barabasi–Albert random graph by adding a new vertex with k2, k3, \[Ellipsis] out-edges in each step.\n" <>
-    "IGBarabasiAlbertGame[n, k, {\[Beta], a}] generates a Barabasi–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + a where d is the vertex (in-)degree.";
+    "IGBarabasiAlbertGame[n, k] generates an n-vertex Barabási–Albert random graph by adding a new vertex with k out-edges in each step.\n" <>
+    "IGBarabasiAlbertGame[n, {k2, k3, \[Ellipsis]}] generates an n-vertex Barabási–Albert random graph by adding a new vertex with k2, k3, \[Ellipsis] out-edges in each step.\n" <>
+    "IGBarabasiAlbertGame[n, k, {\[Beta], a}] generates a Barabási–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + a where d is the vertex (in-)degree.";
 
 IGStaticFitnessGame::usage =
     "IGStaticFitnessGame[m, {f1, f2, \[Ellipsis]}] generates a random undirected graph with m edges where edge i <-> j is inserted with probability proportional to f_i\[Times]f_j.\n" <>
@@ -256,7 +256,7 @@ IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options] lays out t
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options] lays out the graph using the Fruchterman–Reingold algorithm (similar to \"SpringElectricalEmbedding\").";
 IGLayoutFruchtermanReingold3D::usage = "IGLayoutFruchtermanReingold3D[graph, options] lays out the graph using the Fruchterman–Reingold algorithm (similar to \"SpringElectricalEmbedding\").";
 IGLayoutGEM::usage = "IGLayoutGEM[graph, options] lays out the graph using the GEM algorithm.";
-IGLayoutDavidsonHarel::usage = "IGLayoutDavidsonHarel[graph, options] lays out the graph using the Davidson-Harel algorithm, based on simulated annealing.";
+IGLayoutDavidsonHarel::usage = "IGLayoutDavidsonHarel[graph, options] lays out the graph using the Davidson–Harel algorithm, based on simulated annealing.";
 (* IGLayoutMDS::usage = "IGLayoutMDS[graph]"; *)
 IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options] lays out a tree using the Reingold–Tilford algorithm.";
 IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options] lays out a tree radially using the Reingold–Tilford algorithm.";
@@ -311,11 +311,11 @@ IGGraphletProject::usage =
     "IGGraphletProject[graph, cliques, nIterations]";
 
 IGVertexConnectivity::usage =
-    "IGVertexConnectivity[graph] returns the smalest number of vertices whose deletion disconnects graph.\n" <>
+    "IGVertexConnectivity[graph] returns the smallest number of vertices whose deletion disconnects graph.\n" <>
     "IGVertexConnectivity[graph, s, t] returns the smallest number of vertices whose deletion disconnects vertices s and t in graph.";
 
 IGEdgeConnectivity::usage =
-    "IGEdgeConnectivity[graph] returns the smallest number of edges whose deletion disconnects graph." <>
+    "IGEdgeConnectivity[graph] returns the smallest number of edges whose deletion disconnects graph.\n" <>
     "IGEdgeConnectivity[graph, s, t] returns the smallest number of edges whose deletion disconnects vertices s and t in graph.";
 
 IGClusterData::usage = "IGClusterData[association] represents the output of community detection functions. Properties can be queried using IGClusterData[\[Ellipsis]][\"property\"].";
@@ -2928,7 +2928,7 @@ IGCommunitiesMultilevel[graph_?igGraphQ] :=
 Options[IGCommunitiesLabelPropagation] = { "Initial" -> None, "Fixed" -> None };
 SyntaxInformation[IGCommunitiesLabelPropagation] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
-IGCommunitiesLabelPropagation::invopt = "Invalid value for the `` option.";
+IGCommunitiesLabelPropagation::invopt = "The option value `` is not valid.";
 
 IGCommunitiesLabelPropagation[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Module[{ig = igMakeFastWeighted[graph], membership, modularity, initial, fixed, vl},
