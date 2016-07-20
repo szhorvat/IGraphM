@@ -65,7 +65,7 @@ IGPersonalizedPageRank::usage =
     "IGPersonalizedPageRank[graph, reset] gives a list of personalized PageRank centralities for the vertices of the graph.\n" <>
     "IGPersonalizedPageRank[graph, reset, damping] gives a list of personalized PageRank centralities for the vertices of the graph using damping factor damping.";
 
-IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph]";
+IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph] return the eigenvector centrality of each vertex.";
 IGHubScore::usage = "IGHubScore[graph] returns Kleinberg's hub score for each vertex.";
 IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority score for each vertex.";
 IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint score for each vertex.";
@@ -298,7 +298,7 @@ IGEdgeConnectivity::usage =
 
 IGClusterData::usage = "IGClusterData[association] represents the output of community detection functions. Properties can be queried using IGClusterData[\[Ellipsis]][\"property\"].";
 
-IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph]";
+IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph] computes the cohesive block structure of a simple undirected graph.";
 
 IGCompareCommunities::usage =
     "IGCompareCommunities[clusterdata1, clusterdata2] compares two community structures given as IGClusterData objects using all available methods.\n" <>
@@ -1329,7 +1329,7 @@ IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
 IGBlissCanonicalLabeling[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph], vcol},
       blissCheckMulti[graph];
-      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, col, "VertexColors"];
+      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
       AssociationThread[
         VertexList[graph],
         igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
@@ -1347,18 +1347,17 @@ IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
 IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph], vcol},
       blissCheckMulti[graph];
-      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, col, "VertexColors"];
+      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
       InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
     ]
 
 
-(* TODO: Investigate speeding up VertexReplace *)
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
 SyntaxInformation[IGBlissCanonicalGraph] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
-IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
-      catch@VertexReplace[graph, Normal@check@IGBlissCanonicalLabeling[graph, opt]]
-IGBlissCanonicalGraph[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@VertexReplace[graph, Normal@check@IGBlissCanonicalLabeling[{graph, col}, opt]]
+IGBlissCanonicalGraph[spec: (graph_?igGraphQ) | {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+      catch@With[{perm = check@IGBlissCanonicalPermutation[spec], am = AdjacencyMatrix[graph]},
+        AdjacencyGraph[ am[[perm, perm]] ]
+      ]
 
 
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
@@ -1371,8 +1370,8 @@ IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :
 IGBlissIsomorphicQ[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGraphQ, col2 : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], vcol1, vcol2},
       blissCheckMulti /@ {graph1, graph2};
-      vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, col1, "VertexColors"];
-      vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, col2, "VertexColors"];
+      vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, {col1}, "VertexColors"];
+      vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, {col2}, "VertexColors"];
       check@ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol1, vcol2]
     ]
 
@@ -1392,8 +1391,8 @@ IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]
 IGBlissGetIsomorphism[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGraphQ, col2 : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], result, vcol1, vcol2},
       blissCheckMulti /@ {graph1, graph2};
-      vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, col1, "VertexColors"];
-      vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, col2, "VertexColors"];
+      vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, {col1}, "VertexColors"];
+      vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, {col2}, "VertexColors"];
       result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol1, vcol2];
       If[result === {}, Return[{}]];
       List@AssociationThread[
@@ -1414,7 +1413,7 @@ IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
 IGBlissAutomorphismCount[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph], vcol},
       blissCheckMulti[graph];
-      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, col, "VertexColors"];
+      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
       ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
     ]
 
@@ -1430,7 +1429,7 @@ IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
 IGBlissAutomorphismGroup[{graph_?GraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph], vcol},
       blissCheckMulti[graph];
-      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, col, "VertexColors"];
+      vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
       igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
     ]
 
@@ -1444,10 +1443,10 @@ SyntaxInformation[IGVF2IsomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}}};
 IGVF2IsomorphicQ[{graph1_?igGraphQ, opt1 : OptionsPattern[]}, {graph2_?igGraphQ, opt2 : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
       vf2CheckMulti /@ {graph1, graph2};
-      vcol1 = parseVertexColors[graph1]@OptionValue[defaultVF2Colors, opt1, "VertexColors"];
-      vcol2 = parseVertexColors[graph2]@OptionValue[defaultVF2Colors, opt2, "VertexColors"];
-      ecol1 = parseEdgeColors[graph1]@OptionValue[defaultVF2Colors, opt1, "EdgeColors"];
-      ecol2 = parseEdgeColors[graph2]@OptionValue[defaultVF2Colors, opt2, "EdgeColors"];
+      vcol1 = parseVertexColors[graph1]@OptionValue[defaultVF2Colors, {opt1}, "VertexColors"];
+      vcol2 = parseVertexColors[graph2]@OptionValue[defaultVF2Colors, {opt2}, "VertexColors"];
+      ecol1 = parseEdgeColors[graph1]@OptionValue[defaultVF2Colors, {opt1}, "EdgeColors"];
+      ecol2 = parseEdgeColors[graph2]@OptionValue[defaultVF2Colors, {opt2}, "EdgeColors"];
       check@ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
@@ -1464,10 +1463,10 @@ IGVF2FindIsomorphisms[{graph1_?igGraphQ, opt1 : OptionsPattern[]}, {graph2_?igGr
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2, n, result},
       vf2CheckMulti /@ {graph1, graph2};
       n = Replace[max, All|Infinity -> -1];
-      vcol1 = parseVertexColors[graph1]@OptionValue[defaultVF2Colors, opt1, "VertexColors"];
-      vcol2 = parseVertexColors[graph2]@OptionValue[defaultVF2Colors, opt2, "VertexColors"];
-      ecol1 = parseEdgeColors[graph1]@OptionValue[defaultVF2Colors, opt1, "EdgeColors"];
-      ecol2 = parseEdgeColors[graph2]@OptionValue[defaultVF2Colors, opt2, "EdgeColors"];
+      vcol1 = parseVertexColors[graph1]@OptionValue[defaultVF2Colors, {opt1}, "VertexColors"];
+      vcol2 = parseVertexColors[graph2]@OptionValue[defaultVF2Colors, {opt2}, "VertexColors"];
+      ecol1 = parseEdgeColors[graph1]@OptionValue[defaultVF2Colors, {opt1}, "EdgeColors"];
+      ecol2 = parseEdgeColors[graph2]@OptionValue[defaultVF2Colors, {opt2}, "EdgeColors"];
       result = igIndexVec@check@ig1@"vf2FindIsomorphisms"[ManagedLibraryExpressionID[ig2], n, vcol1, vcol2, ecol1, ecol2];
       AssociationThread[
         VertexList[graph1],
@@ -1492,10 +1491,10 @@ SyntaxInformation[IGVF2SubisomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}}};
 IGVF2SubisomorphicQ[{subgraph_?igGraphQ, optsub : OptionsPattern[]}, {graph_?igGraphQ, opt : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol, vcolsub, ecol, ecolsub},
       vf2CheckMulti /@ {subgraph, graph};
-      vcol    = parseVertexColors[graph]@OptionValue[defaultVF2Colors, opt, "VertexColors"];
-      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultVF2Colors, optsub, "VertexColors"];
-      ecol    = parseEdgeColors[graph]@OptionValue[defaultVF2Colors, opt, "EdgeColors"];
-      ecolsub = parseEdgeColors[subgraph]@OptionValue[defaultVF2Colors, optsub, "EdgeColors"];
+      vcol    = parseVertexColors[graph]@OptionValue[defaultVF2Colors, {opt}, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultVF2Colors, {optsub}, "VertexColors"];
+      ecol    = parseEdgeColors[graph]@OptionValue[defaultVF2Colors, {opt}, "EdgeColors"];
+      ecolsub = parseEdgeColors[subgraph]@OptionValue[defaultVF2Colors, {optsub}, "EdgeColors"];
       check@ig1@"vf2Subisomorphic"[ManagedLibraryExpressionID[ig2], vcol, vcolsub, ecol, ecolsub]
     ]
 
@@ -1512,10 +1511,10 @@ IGVF2FindSubisomorphisms[{subgraph_?igGraphQ, optsub : OptionsPattern[]}, {graph
     catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol, vcolsub, ecol, ecolsub, n, result},
       vf2CheckMulti /@ {subgraph, graph};
       n = Replace[max, All|Infinity -> -1];
-      vcol    = parseVertexColors[graph]@OptionValue[defaultVF2Colors, opt, "VertexColors"];
-      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultVF2Colors, optsub, "VertexColors"];
-      ecol    = parseEdgeColors[graph]@OptionValue[defaultVF2Colors, opt, "EdgeColors"];
-      ecolsub = parseEdgeColors[subgraph]@OptionValue[defaultVF2Colors, optsub, "EdgeColors"];
+      vcol    = parseVertexColors[graph]@OptionValue[defaultVF2Colors, {opt}, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultVF2Colors, {optsub}, "VertexColors"];
+      ecol    = parseEdgeColors[graph]@OptionValue[defaultVF2Colors, {opt}, "EdgeColors"];
+      ecolsub = parseEdgeColors[subgraph]@OptionValue[defaultVF2Colors, {optsub}, "EdgeColors"];
       result = igIndexVec@check@ig1@"vf2FindSubisomorphisms"[ManagedLibraryExpressionID[ig2], n, vcol, vcolsub, ecol, ecolsub];
       AssociationThread[
         VertexList[subgraph],
@@ -1540,10 +1539,10 @@ SyntaxInformation[IGVF2IsomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}}};
 IGVF2IsomorphismCount[{graph1_?igGraphQ, opt1 : OptionsPattern[]}, {graph2_?igGraphQ, opt2 : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph1], ig2 = igMake[graph2], vcol1, vcol2, ecol1, ecol2},
       vf2CheckMulti /@ {graph1, graph2};
-      vcol1 = parseVertexColors[graph1]@OptionValue[defaultVF2Colors, opt1, "VertexColors"];
-      vcol2 = parseVertexColors[graph2]@OptionValue[defaultVF2Colors, opt2, "VertexColors"];
-      ecol1 = parseEdgeColors[graph1]@OptionValue[defaultVF2Colors, opt1, "EdgeColors"];
-      ecol2 = parseEdgeColors[graph2]@OptionValue[defaultVF2Colors, opt2, "EdgeColors"];
+      vcol1 = parseVertexColors[graph1]@OptionValue[defaultVF2Colors, {opt1}, "VertexColors"];
+      vcol2 = parseVertexColors[graph2]@OptionValue[defaultVF2Colors, {opt2}, "VertexColors"];
+      ecol1 = parseEdgeColors[graph1]@OptionValue[defaultVF2Colors, {opt1}, "EdgeColors"];
+      ecol2 = parseEdgeColors[graph2]@OptionValue[defaultVF2Colors, {opt2}, "EdgeColors"];
       check@ig1@"vf2IsomorphismCount"[ManagedLibraryExpressionID[ig2], vcol1, vcol2, ecol1, ecol2]
     ]
 
@@ -1559,10 +1558,10 @@ SyntaxInformation[IGVF2SubisomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}
 IGVF2SubisomorphismCount[{subgraph_?igGraphQ, optsub : OptionsPattern[]}, {graph_?igGraphQ, opt : OptionsPattern[]}] :=
     catch@Block[{ig1 = igMake[graph], ig2 = igMake[subgraph], vcol, vcolsub, ecol, ecolsub},
       vf2CheckMulti /@ {subgraph, graph};
-      vcol    = parseVertexColors[graph]@OptionValue[defaultVF2Colors, opt, "VertexColors"];
-      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultVF2Colors, optsub, "VertexColors"];
-      ecol    = parseEdgeColors[graph]@OptionValue[defaultVF2Colors, opt, "EdgeColors"];
-      ecolsub = parseEdgeColors[subgraph]@OptionValue[defaultVF2Colors, optsub, "EdgeColors"];
+      vcol    = parseVertexColors[graph]@OptionValue[defaultVF2Colors, {opt}, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultVF2Colors, {optsub}, "VertexColors"];
+      ecol    = parseEdgeColors[graph]@OptionValue[defaultVF2Colors, {opt}, "EdgeColors"];
+      ecolsub = parseEdgeColors[subgraph]@OptionValue[defaultVF2Colors, {optsub}, "EdgeColors"];
       check@ig1@"vf2SubisomorphismCount"[ManagedLibraryExpressionID[ig2], vcol, vcolsub, ecol, ecolsub]
     ]
 
@@ -1587,8 +1586,8 @@ IGLADSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]]
 
 IGLADSubisomorphicQ[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{vcol, vcolsub},
-      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, col, "VertexColors"];
-      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, colsub, "VertexColors"];
+      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, {col}, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, {colsub}, "VertexColors"];
       If[vcol === {} || vcolsub === {},
         If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
         IGLADSubisomorphicQ[subgraph, graph, opt]
@@ -1618,8 +1617,8 @@ IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern
 
 IGLADGetSubisomorphism[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{vcol, vcolsub},
-      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, col, "VertexColors"];
-      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, colsub, "VertexColors"];
+      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, {col}, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, {colsub}, "VertexColors"];
       If[vcol === {} || vcolsub === {},
         If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
         IGLADGetSubisomorphism[subgraph, graph, opt]
@@ -1653,8 +1652,8 @@ IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPatte
 
 IGLADFindSubisomorphisms[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result, vcol, vcolsub, domain},
-      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, col, "VertexColors"];
-      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, colsub, "VertexColors"];
+      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, {col}, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, {colsub}, "VertexColors"];
       If[vcol === {} || vcolsub === {},
         If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
         domain = {}
@@ -1679,8 +1678,8 @@ IGLADSubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPatte
 
 IGLADSubisomorphismCount[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result, vcol, vcolsub, domain},
-      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, col, "VertexColors"];
-      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, colsub, "VertexColors"];
+      vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, {col}, "VertexColors"];
+      vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, {colsub}, "VertexColors"];
       If[vcol === {} || vcolsub === {},
         If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
         domain = {}
@@ -1826,7 +1825,7 @@ igDiameterMethods = <|
   "Dijkstra" -> igDiameterDijkstra
 |>;
 
-SyntaxInformation[IGDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGDiameter]};
+SyntaxInformation[IGDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 amendUsage[IGDiameter, "Available Method options: <*Keys[igDiameterMethods]*>."];
 
@@ -1867,7 +1866,7 @@ igFindDiameterMethods = <|
   "Dijkstra" -> igFindDiameterDijkstra
 |>;
 
-SyntaxInformation[IGFindDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGFindDiameter]};
+SyntaxInformation[IGFindDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 amendUsage[IGFindDiameter, "Available Method options: <*Keys[igDiameterMethods]*>."];
 
@@ -1908,7 +1907,7 @@ IGDistanceCounts[graph_?igGraphQ] :=
 
 
 Options[IGDistanceHistogram] = { Method -> "Dijkstra" };
-SyntaxInformation[IGDistanceHistogram] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGDistanceHistogram]};
+SyntaxInformation[IGDistanceHistogram] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}};
 igDistanceHistogramMethods = <| "Dijkstra" -> 0, "BellmanFord" -> 1 |>;
 amendUsage[IGDistanceHistogram, "Available Method options: <*Keys[igDistanceHistogramMethods]*>."];
 IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_?ListQ | All) : All, to : (_?ListQ | All) : All, opt : OptionsPattern[]] :=
@@ -2465,9 +2464,11 @@ IGEdgeConnectivity[graph_?igGraphQ, s_, t_] :=
     ]
 
 
+IGCohesiveBlocks::badarg = "The input must be a simple undirected graph.";
 SyntaxInformation[IGCohesiveBlocks] = {"ArgumentsPattern" -> {_}};
 IGCohesiveBlocks[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph], blocks, cohesion, parents},
+      If[Not@SimpleGraphQ[graph], Message[IGCohesiveBlocks::badarg]; Return[$Failed]];
       {blocks, cohesion, parents} = check@ig@"cohesiveBlocks"[];
       {igVertexNames[graph] /@ igIndexVec[blocks], Round[cohesion](*, igIndexVec[parents]*)}
     ]
@@ -2593,6 +2594,9 @@ MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (StandardForm|TraditionalF
       ]
     ]
 
+Format[c : IGClusterData[asc_?clusterAscQ], OutputForm] := StringTemplate["IGClusterData[\"Elements\" -> <``>, \"Communities\" -> <``>]"][c["ElementCount"], Length@c["Communities"]]
+
+
 igClusterData[graph_][asc_] := IGClusterData@Join[<|"Elements" -> VertexList[graph]|>, asc]
 
 communitiesFromMembership[graph_, membership_] := Values@GroupBy[Transpose[{VertexList[graph], Round[membership]}], Last -> First]
@@ -2603,12 +2607,20 @@ communitiesToMembership[elems_, communities_] :=
       Lookup[AssociationThread[Flatten[communities, 1], Flatten[copy, 1]], elems]
     ]
 
+IGraphM::invcomm = "Invalid community specification for the given vertices.";
+
+communitiesToMembershipChecked[elems_, communities_] :=
+    If[Sort[elems] === Union@@communities && Length[elems] === Length@Flatten[communities, 1],
+      communitiesToMembership[elems, communities],
+      Message[IGraphM::invcomm]; throw[$Failed]
+    ]
+
 
 SyntaxInformation[IGModularity] = {"ArgumentsPattern" -> {_, _}};
 IGModularity[graph_?igGraphQ, clusters_?igClusterDataQ] := IGModularity[graph, clusters["Communities"]]
 IGModularity[graph_?igGraphQ, communities : {__List}] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      check@ig@"modularity"[communitiesToMembership[VertexList[graph], communities]]
+      check@ig@"modularity"[communitiesToMembershipChecked[VertexList[graph], communities]]
     ]
 
 igCompareCommunitiesMethods = {
@@ -2623,7 +2635,7 @@ igCompareCommunitiesMethodsAsc = AssociationThread[igCompareCommunitiesMethods, 
 
 igCompareCommunities[elems_, c1_, c2_, method_] :=
     Block[{ig = Make["IG"]},
-      res = check@ig@"compareCommunities"[communitiesToMembership[elems, c1], communitiesToMembership[elems, c2],
+      res = check@ig@"compareCommunities"[communitiesToMembershipChecked[elems, c1], communitiesToMembershipChecked[elems, c2],
         Lookup[igCompareCommunitiesMethodsAsc, method, -1]
       ];
       If[method === "SplitJoinDistance", res = Round[res]];
