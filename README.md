@@ -144,6 +144,13 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
 ## Revision history
 
+##### v0.2.2
+
+This is a bugfix release with several minor fixes.  Important changes to be aware of:
+
+ - VF2 isomorphism functions now work when *both* vertex and edge colours are specified at the same time.
+ - `IGBlissCanonicalGraph` is now suitable for filtering isomorphic duplicates. Its output may be different form previous releases.
+
 ##### v0.2.1
 
 This is a bugfix release.  The following changes require special mention:
