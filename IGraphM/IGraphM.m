@@ -205,6 +205,11 @@ IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of 
 IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the graph. The graph is treated as undirected, self-loops and multi-edges are ignored.";
 IGDiameter::usage = "IGDiameter[graph] computes the diameter of graph.";
 IGFindDiameter::usage = "IGFindDiameter[graph] returns a longest shortest path in graph, i.e. a shortest path with length equal to the graph diameter.";
+IGEccentricity::usage =
+    "IGEccentricity[graph]\n" <>
+    "IGEccentricity[graph, vertex]\n" <>
+    "IGEccentricity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+IGRadius::usage = "IGRadius[graph] computes the unweighted graph radius.";
 
 IGCliques::usage =
     "IGCliques[graph] returns all complete subgraphs (cliques) in graph. Note that this is different from the builtin FindCliques[], which finds maximal cliques.\n" <>
@@ -519,6 +524,8 @@ template = LTemplate["IGraphM",
         LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
         LFun["averagePathLength", {}, Real],
         LFun["girth", {}, Real],
+        LFun["radius", {}, Real],
+        LFun["eccentricity", {{Real, 1, "Constant"}}, {Real, 1}],
 
         LFun["shortestPathsDijkstra", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathsBellmanFord", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
@@ -2051,6 +2058,26 @@ IGGirth[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       Round@check@ig@"girth"[]
     ]
+
+
+igEccentricity[graph_, vs_] :=
+    Block[{ig = igMakeFast[graph]},
+      Round@check@ig@"eccentricity"[vss[graph][vs]]
+    ]
+
+SyntaxInformation[IGEccentricity] = {"ArgumentsPattern" -> {_, _.}};
+IGEccentricity[graph_?igGraphQ, {}] := {}
+IGEccentricity[graph_?igGraphQ, vs : (_List | All) : All] := catch@igEccentricity[graph, vs]
+IGEccentricity[graph_?igGraphQ, v_] := catch@First@igEccentricity[graph, {v}]
+
+
+SyntaxInformation[IGRadius] = {"ArgumentsPattern" -> {_}};
+IGRadius[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Round@check@ig@"radius"[]
+    ]
+
+
 
 (* Cliques *)
 

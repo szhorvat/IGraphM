@@ -988,6 +988,19 @@ public:
         return res;
     }
 
+    mma::RealTensorRef eccentricity(mma::RealTensorRef vs) const {
+        igraph_vector_t vsvec = igVectorView(vs);
+        igVector res;
+        igCheck(igraph_eccentricity(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT));
+        return res.makeMTensor();
+    }
+
+    double radius() const {
+        double res;
+        igCheck(igraph_radius(&graph, &res, IGRAPH_OUT));
+        return res;
+    }
+
     // Cliques
 
     mma::IntTensorRef cliques(mint min, mint max) const {
