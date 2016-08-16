@@ -206,10 +206,10 @@ IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the
 IGDiameter::usage = "IGDiameter[graph] computes the diameter of graph.";
 IGFindDiameter::usage = "IGFindDiameter[graph] returns a longest shortest path in graph, i.e. a shortest path with length equal to the graph diameter.";
 IGEccentricity::usage =
-    "IGEccentricity[graph]\n" <>
-    "IGEccentricity[graph, vertex]\n" <>
-    "IGEccentricity[graph, {vertex1, vertex2, \[Ellipsis]}]";
-IGRadius::usage = "IGRadius[graph] computes the unweighted graph radius.";
+    "IGEccentricity[graph] returns the eccentricity of all vertices.\n" <>
+    "IGEccentricity[graph, vertex] returns the eccentricity of the given vertex.\n" <>
+    "IGEccentricity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the eccentricity of the given vertices.";
+IGRadius::usage = "IGRadius[graph] returns the unweighted graph radius.";
 
 IGCliques::usage =
     "IGCliques[graph] returns all complete subgraphs (cliques) in graph. Note that this is different from the builtin FindCliques[], which finds maximal cliques.\n" <>
