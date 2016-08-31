@@ -303,6 +303,10 @@ IGChordalCompletion::usage = "IGChordalCompletion[graph] returns a set of edges 
 
 IGMinSeparators::usage = "IGMinSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph.";
 
+IGVertexSeparatorQ::usage = "IGVertexSeparatorQ[graph, {vertex1, vertex2, \[Ellipsis]}] tests if the given set of vertices disconnects the graph.";
+
+IGMinimalVertexSeparatorQ::usage = "IGMinimalVertexSeparatorQ[graph, {vertex1, vertex2, \[Ellipsis]}] tests if the given vertex set is a minimal separator.";
+
 IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulation points of graph. A vertex is an articulation point if its removal increases the number of connected components in the graph.";
 
 IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Size-one components are not returned.";
@@ -643,6 +647,9 @@ template = LTemplate["IGraphM",
         (* Vertex separators *)
 
         LFun["minimumSizeSeparators", {}, {Integer, 1}],
+        LFun["separatorQ", {{Real, 1, "Constant"}}, True|False],
+        LFun["minSeparatorQ", {{Real, 1, "Constant"}}, True|False],
+
         LFun["vertexConnectivity", {}, Integer],
         LFun["edgeConnectivity", {}, Integer],
         LFun["vertexConnectivityST", {Integer, Integer}, Integer],
@@ -2641,6 +2648,18 @@ SyntaxInformation[IGMinSeparators] = {"ArgumentsPattern" -> {_}};
 IGMinSeparators[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"minimumSizeSeparators"[]
+    ]
+
+SyntaxInformation[IGVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};
+IGVertexSeparatorQ[graph_?igGraphQ, vs_?ListQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      check@ig@"separatorQ"[vss[graph][vs]]
+    ]
+
+SyntaxInformation[IGMinimalVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};
+IGMinimalVertexSeparatorQ[graph_?igGraphQ, vs_?ListQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      check@ig@"minSeparatorQ"[vss[graph][vs]]
     ]
 
 (* Connected components *)

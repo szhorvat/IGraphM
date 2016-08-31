@@ -1412,6 +1412,22 @@ public:
         return packListIntoIntTensor(list);
     }
 
+    bool separatorQ(mma::RealTensorRef vs) const {
+        igraph_bool_t res;
+        igraph_vector_t vsvec = igVectorView(vs);
+
+        igCheck(igraph_is_separator(&graph, igraph_vss_vector(&vsvec), &res));
+        return res;
+    }
+
+    bool minSeparatorQ(mma::RealTensorRef vs) const {
+        igraph_bool_t res;
+        igraph_vector_t vsvec = igVectorView(vs);
+
+        igCheck(igraph_is_minimal_separator(&graph, igraph_vss_vector(&vsvec), &res));
+        return res;
+    }
+
     // Maximum flow
 
     // note that this is a constructor!
