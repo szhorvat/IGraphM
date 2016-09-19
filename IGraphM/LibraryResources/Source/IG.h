@@ -1781,6 +1781,14 @@ public:
 
         return map.makeMTensor();
     }
+
+    // Contract vertices
+
+    // note this is a constructor!
+    void contractVertices(mma::RealTensorRef t) {
+        igraph_vector_t mapping = igVectorView(t);
+        igCheck(igraph_contract_vertices(&graph, &mapping, NULL));
+    }
 };
 
 #endif // IG_H

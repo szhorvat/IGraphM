@@ -362,6 +362,8 @@ IGUnfoldTree::usage = "IGUnfoldTree[graph]";
 
 IGBipartitePartitions::usage = "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.";
 
+IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsis]}] returns graph in which the specified vertex sets are contracted into single vertices.";
+
 
 Begin["`Private`"];
 
@@ -691,7 +693,10 @@ template = LTemplate["IGraphM",
 
         (* Bipartite graphs *)
 
-        LFun["bipartitePartitions", {}, {Integer, 1}]
+        LFun["bipartitePartitions", {}, {Integer, 1}],
+
+        (* Vertex contraction *)
+        LFun["contractVertices", {{Real, 1}}, "Void"]
       }
     ]
   }
@@ -3139,6 +3144,27 @@ IGBipartitePartitions[graph_?igGraphQ] :=
     ]
 
 
+(* Vertex contraction *)
+
+IGVertexContract::inv = "The vertices `` are not present in the graph.";
+IGVertexContract::vset = "`` must be a list of vertex sets.";
+
+Options[IGVertexContract] = { SelfLoops -> False };
+SyntaxInformation[IGVertexContract] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFast[graph], allElements = Join @@ sets},
+      If[Not@SubsetQ[VertexList[graph], allElements],
+        Message[IGVertexContract::inv, Complement[allElements, VertexList[graph]]];
+        Return[$Failed]
+      ];
+      check@ig@"contractVertices"@communitiesToMembership[
+        VertexList[graph],
+        Join[sets, List /@ Complement[VertexList[graph], allElements]]
+      ];
+      If[TrueQ@OptionValue[SelfLoops], Identity, SimpleGraph]@igToGraph[ig]
+    ]
+
+IGVertexContract[graph_?igGraphQ, arg_, opt : OptionsPattern[]] := Null /; Message[IGVertexContract::vset, arg]
 
 (***** Finalize *****)
 
