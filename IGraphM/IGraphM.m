@@ -2797,7 +2797,9 @@ mergesToTree[asc_] :=
         EdgeShapeFunction -> "Line",
         EdgeStyle -> Gray,
         VertexShapeFunction -> None,
-        VertexLabels -> Thread[ leafIndices -> (Placed[Short[#], Below]&) /@ asc["Elements"][[ leafIndices ]] ]
+        VertexLabels -> Thread[ leafIndices -> (Placed[Short[#], Below]&) /@ asc["Elements"][[ leafIndices ]] ],
+        VertexWeight -> Join[Thread[ec + Range[mc] -> Range[mc]], Thread[leafIndices -> 0]],
+        Properties -> {"GraphProperties" -> {"LeafLabels" -> AssociationThread[leafIndices, asc["Elements"][[ leafIndices ]] ]}}
       ]
     ]
 
