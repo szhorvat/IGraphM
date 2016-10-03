@@ -2784,11 +2784,15 @@ IGClusterData[asc_?AssociationQ]["HierarchicalClusters"] :=
     ]
 
 mergesToTree[asc_] :=
-    Module[{mc, root, ec, merges = asc["Merges"], leafIndices, g},
+    Module[{mc, root, ec, merges = asc["Merges"], leafIndices, g, s},
       mc = Length[merges];
       ec = Length[asc["Elements"]];
       root = ec + mc;
       leafIndices = Intersection[Range[ec], Flatten[merges]];
+      Switch[asc@"Algorithm",
+        "EdgeBetweenness", s = 1 + Length@asc@"RemovedEdges" - asc@"Bridges",
+        _, s = Range[mc]
+      ];
       TreeGraph[
         Append[Flatten[merges], root],
         Append[ec + Range[mc] /. n_Integer :> Sequence[n, n], root],
@@ -2798,7 +2802,7 @@ mergesToTree[asc_] :=
         EdgeStyle -> Gray,
         VertexShapeFunction -> None,
         VertexLabels -> Thread[ leafIndices -> (Placed[Short[#], Below]&) /@ asc["Elements"][[ leafIndices ]] ],
-        VertexWeight -> Join[Thread[ec + Range[mc] -> Range[mc]], Thread[leafIndices -> 0]],
+        VertexWeight -> Join[Thread[ec + Range[mc] -> s], Thread[leafIndices -> 0]],
         Properties -> {"GraphProperties" -> {"LeafLabels" -> AssociationThread[leafIndices, asc["Elements"][[ leafIndices ]] ]}}
       ]
     ]
