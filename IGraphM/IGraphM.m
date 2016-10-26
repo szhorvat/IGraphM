@@ -400,6 +400,8 @@ template = LTemplate["IGraphM",
         LFun["version", {}, "UTF8String"],
         LFun["compilationDate", {}, "UTF8String"],
 
+        LFun["infOrNanQ", {{Real, _, "Constant"}}, True|False],
+
         (* Graph related functions that do not use the graph data structure *)
 
         LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *)}, True|False]
@@ -835,10 +837,10 @@ zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
 
-(* Unpack array containing infinities *)
-(* TODO: Test on all platforms *)
-fixInf[arr_?Developer`PackedArrayQ] := If[FreeQ[arr,Infinity], arr, Developer`FromPackedArray[arr]]
-fixInf[arr_] := arr
+(* Unpack array containing infinities or indeterminates *)
+(* TODO: Test on all platforms that unpacking such arrays produces usable Infinity and Indeterminate *)
+fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Developer`FromPackedArray[arr], arr]
+fixInfNaN[arr_] := arr
 
 (* Import compressed expressions. Used in IGData. *)
 zimport[filename_] := Uncompress@Import[filename, "String"]
@@ -1934,22 +1936,22 @@ IGDistanceMatrix[graph_?igGraphQ, from : (_?ListQ | All) : All, to : (_?ListQ | 
 
 igDistanceMatrixUnweighted[graph_, from_, to_] :=
     catch@Block[{ig = igMakeFast[graph]},
-      Round@fixInf@check@ig@"shortestPaths"[from, to]
+      Round@fixInfNaN@check@ig@"shortestPaths"[from, to]
     ]
 
 igDistanceMatrixDijkstra[graph_, from_, to_] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      fixInf@check@ig@"shortestPathsDijkstra"[from, to]
+      fixInfNaN@check@ig@"shortestPathsDijkstra"[from, to]
     ]
 
 igDistanceMatrixBellmanFord[graph_, from_, to_] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      fixInf@check@ig@"shortestPathsBellmanFord"[from, to]
+      fixInfNaN@check@ig@"shortestPathsBellmanFord"[from, to]
     ]
 
 igDistanceMatrixJohnson[graph_, from_, to_] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      fixInf@check@ig@"shortestPathsJohnson"[from, to]
+      fixInfNaN@check@ig@"shortestPathsJohnson"[from, to]
     ]
 
 

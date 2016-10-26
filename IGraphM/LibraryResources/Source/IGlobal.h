@@ -4,6 +4,7 @@
 #include "IGCommon.h"
 
 #include <random>
+#include <cmath>
 
 
 void igWarningHandler(const char *reason, const char *file, int line, int igraph_errno);
@@ -45,6 +46,13 @@ public:
         else
             igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, &ig_indeg, &res));
         return res;
+    }
+
+    bool infOrNanQ(mma::RealTensorRef t) {
+        for (double *x = t.begin(); x != t.end(); ++x)
+            if (std::isnan(*x) || std::isinf(*x))
+                return true;
+        return false;
     }
 };
 
