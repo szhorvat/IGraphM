@@ -20,3 +20,9 @@ amendUsage[sym_Symbol, amend_, args___] :=
     ]
 
 optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
+
+
+addCompletion[fun_Symbol, argSpec_List] :=
+    With[{compl = SymbolName[fun] -> argSpec},
+      FE`Evaluate[FEPrivate`AddSpecialArgCompletion[compl]]
+    ]

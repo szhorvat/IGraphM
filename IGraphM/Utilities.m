@@ -36,6 +36,8 @@ IGUndirectedGraph[g_, All, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, 
 IGUndirectedGraph[g_, "Collapse", opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simple", opt]
 IGUndirectedGraph[g_, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simple", opt]
 
+addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Reciprocal"}}]
+
 (***** Finalize *****)
 
 (* Protect all package symbols *)

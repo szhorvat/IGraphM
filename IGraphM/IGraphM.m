@@ -977,6 +977,8 @@ SyntaxInformation[IGData] = {"ArgumentsPattern" -> {_.}};
 IGData[] := Keys[$igData]
 IGData[item_] := Lookup[$igDataAll, Key[item], Missing["NotAvailable"]]
 
+addCompletion[IGData, {Join[Keys[$igDataCategories], Select[Keys[$igData], StringQ]]}];
+
 (* General (global) *)
 
 SyntaxInformation[IGVersion] = {"ArgumentsPattern" -> {}};
