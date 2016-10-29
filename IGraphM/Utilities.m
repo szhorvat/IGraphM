@@ -8,16 +8,16 @@
 
 (* :Copyright: (c) 2016 Szabolcs Horvát *)
 
-BeginPackage["IGraphM`Utilities`"]
+BeginPackage["IGraphM`Utilities`"];
 
 Unprotect /@ Names["IGraphM`Utilities`*"];
 
 IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undedirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Reciprocal\" creates a single undirected edge only between reciprocally connected vertices.";
 
-Begin["`Private`"]
+Begin["`Private`"];
 
 (* Common definitions *)
-Get["IGraphM`Common`"]
+Get["IGraphM`Common`"];
 
 SyntaxInformation[IGUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 
@@ -43,6 +43,6 @@ addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Reciprocal"}}]
 (* Protect all package symbols *)
 With[{syms = Names["IGraphM`Utilities`*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
 
-End[] (* `Private` *)
+End[]; (* `Private` *)
 
-EndPackage[]
+EndPackage[];

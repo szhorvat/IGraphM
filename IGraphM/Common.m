@@ -10,7 +10,7 @@
 (* The following definitions are used in multiple, independently loadable packages. *)
 
 (* check if the argument is an igraph compatible graph *)
-igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &
+igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &;
 
 amendUsage[sym_Symbol, amend_, args___] :=
     Module[{lines},
