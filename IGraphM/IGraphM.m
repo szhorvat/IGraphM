@@ -971,9 +971,11 @@ IGDocumentation[] := (NotebookOpen[FileNameJoin[{$packageDirectory, "Documentati
 (*  IGData  *)
 
 $igData = zimport@FileNameJoin[{$packageDirectory, "IGData.mz"}];
+$igDataCategories = GroupBy[Select[Keys[$igData], ListQ], First];
+$igDataAll = Join[$igData, $igDataCategories];
 SyntaxInformation[IGData] = {"ArgumentsPattern" -> {_.}};
 IGData[] := Keys[$igData]
-IGData[item_] := Lookup[$igData, Key[item], Missing["NotAvailable"]]
+IGData[item_] := Lookup[$igDataAll, Key[item], Missing["NotAvailable"]]
 
 (* General (global) *)
 
