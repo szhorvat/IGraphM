@@ -885,7 +885,7 @@ MT[
 
 (* weights must be positive *)
 MT[
-  IGWeightedCliques[Graph[{1,2,3}, { 1<-> 2}], VertexWeight -> {0,1,2}];,
+  IGWeightedCliques[Graph[{1,2,3}, { 1<-> 2}, VertexWeight -> {0,1,2}], {0, Infinity}];,
   Null,
   {IGraphM::error}
 ]
