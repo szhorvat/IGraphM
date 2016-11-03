@@ -22,7 +22,21 @@ amendUsage[sym_Symbol, amend_, args___] :=
 optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
 
 
+(*
+	Numeric codes are for certain special types of completions. Zero means 'don't complete':
+
+	Normal argument     0
+	AbsoluteFilename    2
+	RelativeFilename    3
+	Color               4
+	PackageName         7
+	DirectoryName       8
+	InterpreterType     9
+*)
+
 addCompletion[fun_Symbol, argSpec_List] :=
-    With[{compl = SymbolName[fun] -> argSpec},
-      FE`Evaluate[FEPrivate`AddSpecialArgCompletion[compl]]
+    If[$Notebooks,
+      With[{compl = SymbolName[fun] -> argSpec},
+        FE`Evaluate[FEPrivate`AddSpecialArgCompletion[compl]]
+      ]
     ]
