@@ -1257,6 +1257,7 @@ igPageRankPowerOptions = <| "Epsilon" -> 0.001, "MaxIterations" -> 1000 |>;
 
 Options[IGPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
 SyntaxInformation[IGPageRank] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+amendUsage[IGPageRank, "Available Method options: <*igPageRankMethods*>."];
 
 IGPageRank[graph_?GraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}, powerOpt},
