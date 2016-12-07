@@ -12,6 +12,13 @@
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
 
+
+If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
+  Print["IGraph/M requires Mathematica 10.0.2 or later.  Aborting."];
+  Abort[]
+]
+
+
 BeginPackage["IGraphM`"];
 
 Needs["HierarchicalClustering`"];
@@ -371,11 +378,6 @@ Begin["`Private`"];
 
 (* Abort loading and leave a clean $ContextPath behind *)
 packageAbort[] := (End[]; EndPackage[]; Abort[])
-
-If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
-  Print["IGraph/M requires Mathematica 10.0.2 or later.  Aborting."];
-  packageAbort[]
-]
 
 
 (***** Package variables *****)
