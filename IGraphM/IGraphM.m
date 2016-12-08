@@ -33,6 +33,7 @@ ConfigureLTemplate["MessageSymbol" -> IGraphM, "LazyLoading" -> False];
 
 IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
+`Information`$Version::usage = "IGraphM`Information`$Version is a string that gives the version of the currently loaded IGraph/M package.";
 `Developer`Recompile::usage = "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
 `Developer`GetInfo::usage = "IGraphM`Developer`GetInfo[] returns useful information about IGraph/M and the system it is running on, for debugging and troubleshooting purposes.";
 PrependTo[$ContextPath, $Context <> "Developer`"];
@@ -391,6 +392,9 @@ If[$OperatingSystem === "MacOSX", $systemID = $systemID <> If[$VersionNumber <= 
 $libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $systemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
 $buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}];
+
+
+IGraphM`Information`$Version = $packageVersion;
 
 
 template = LTemplate["IGraphM",
@@ -770,7 +774,10 @@ If[LoadIGraphM[] === $Failed,
     Print[Style["Successfully compiled and loaded the library. \[HappySmiley]", Red]];
   ]
   ,
-  Print["Evaluate IGDocumentation[] to get started."]
+  If[Not@MemberQ[Stack[], BeginPackage],
+    Print["IGraph/M " <> $packageVersion];
+    Print["Evaluate IGDocumentation[] to get started."]
+  ]
 ]
 
 
@@ -778,7 +785,7 @@ If[LoadIGraphM[] === $Failed,
 
 GetInfo[] :=
     Module[{res = "", igver, osver},
-      res = StringJoin[res, "Mathematica version: \n", $Version, "; Release number: ", ToString[$ReleaseNumber], "\n\n"];
+      res = StringJoin[res, "Mathematica version: \n", System`$Version, "; Release number: ", ToString[$ReleaseNumber], "\n\n"];
       res = StringJoin[res, "Package version: \n", $packageVersion, "\n\n"];
       res = StringJoin[res, "Package location: \n", ToString@FindFile["IGraphM`"], "\n\n"];
       res = StringJoin[res, "Library location: \n", ToString@FindLibrary["IGraphM"], "\n\n"];
