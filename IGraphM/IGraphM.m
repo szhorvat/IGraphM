@@ -6,8 +6,8 @@
 (* :Author: szhorvat  *)
 (* :Date: 2015-08-28  *)
 
-(* :Package Version: 0.3.0dev *)
-(* :Mathematica Version: 10.0 *)
+(* :Package Version: %%version%% *)
+(* :Mathematica Version: %%mathversion%% *)
 (* :Copyright: (c) 2016 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
@@ -383,7 +383,7 @@ packageAbort[] := (End[]; EndPackage[]; Abort[])
 (***** Package variables *****)
 
 
-$packageVersion    = "0.3.0dev";
+$packageVersion    = "%%version%% (%%date%%)";
 $packageDirectory  = DirectoryName[$InputFileName];
 $systemID = $SystemID;
 (* On OS X libraries use libc++ ABI since M10.4 and libstdc++ ABI up to M10.3.  We need separate binaries. *)
