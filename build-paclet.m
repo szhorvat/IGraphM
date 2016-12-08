@@ -121,6 +121,7 @@ Print["\nProcessing documentation."]
 SetDirectory@FileNameJoin[{"Documentation", "English"}]
 AddPath["PackageTools"]
 Needs["PackageTools`"]
+
 Print["Evaluating..."]
 With[{$buildDir = $buildDir},
   MRun[
@@ -134,6 +135,7 @@ With[{$buildDir = $buildDir},
     "10.3"
   ]
 ]
+
 Print["Rewriting..."]
 MRun[
   MCode[
@@ -142,9 +144,9 @@ MRun[
       NBRemoveChangeTimes /*
       NBResetWindow /*
       NBDisableSpellCheck /*
-      NBRemoveOptions[PrivateNotebookOptions] /*
+      NBRemoveOptions[{PrivateNotebookOptions, Visible}] /*
       NBSetOptions[StyleDefinitions -> NBImport["Stylesheet.nb"]]
-    ]["IGDocumentation.nb"]
+    ]["IGDocumentation.nb"];
   ],
   "10.0"
 ]
@@ -156,6 +158,9 @@ ResetDirectory[] (* $appTarget *)
 
 Print["\nPacking paclet..."]
 PackPaclet[$appTarget]
+
+
+Print["\nFinished.\n"]
 
 
 ResetDirectory[] (* $dir *)
