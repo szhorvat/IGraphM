@@ -10,12 +10,15 @@ Cell[TextData[{
 }], "Subtitle"],
 
 Cell[TextData[{
- "This notebook can (and should) be opened using the command ",
+ "This notebook can be opened using the command ",
  Cell[BoxData[
   FormBox[
    RowBox[{"IGDocumentation", "[", "]"}], TraditionalForm]]],
- ". When opened like this, it cannot be saved, so feel free to re-evaluate \
-cells and experiment."
+ " or through the ",
+ ButtonBox["Documentation Center",
+  BaseStyle->"Link",
+  ButtonData->"paclet:IGraphM"],
+ ". It cannot be saved, so feel free to re-evaluate cells and experiment."
 }], "Text"],
 
 Cell["\<\
@@ -29,7 +32,8 @@ Cell["Basic usage", "Section"],
 Cell["The package can be loaded using", "Text"],
 
 Cell[BoxData[
- RowBox[{"<<", "IGraphM`"}]], "Input"],
+ RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]], "Input",
+ InitializationCell->True],
 
 Cell[TextData[{
  "The list of included functions is below. Notice that their names always \
@@ -120,7 +124,8 @@ Cell[TextData[{
  "Notice that ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " 11.0 does not include functionality to compute weighted betweenness. ",
+ " 11.0 does not include functionality to compute weighted betweenness. The \
+builtin function ",
  Cell[BoxData[
   FormBox[
    RowBox[{"BetweennessCentrality", "[", "]"}], TraditionalForm]]],
@@ -343,7 +348,7 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Radius\"\>", TraditionalForm]]],
+  FormBox["\"\<Radius\>\"", TraditionalForm]]],
  " controls the size of the neighbourhood within which vertices will be \
 connected."
 }], "Item"],
@@ -351,14 +356,14 @@ connected."
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Periodic\"\>", "\[Rule]", "True"}], TraditionalForm]]],
+   RowBox[{"\"\<Periodic\>\"", "\[Rule]", "True"}], TraditionalForm]]],
  " to creates a periodic lattice."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Mutual\"\>", "\[Rule]", "True"}], TraditionalForm]]],
+   RowBox[{"\"\<Mutual\>\"", "\[Rule]", "True"}], TraditionalForm]]],
  " inserts directed edges in both directions when ",
  Cell[BoxData[
   FormBox[
@@ -388,20 +393,20 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Simple\"\>", TraditionalForm]]],
+  FormBox["\"\<Simple\>\"", TraditionalForm]]],
  " may generate both self-loops and multiple edges."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"SimpleNoMultiple\"\>", TraditionalForm]]],
+  FormBox["\"\<SimpleNoMultiple\>\"", TraditionalForm]]],
  " avoids self-loops and multiple edges, but it does not guarantee uniform \
 sampling from the space of all graphs with the given degree sequence."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"VigerLatapy\"\>", TraditionalForm]]],
+  FormBox["\"\<VigerLatapy\>\"", TraditionalForm]]],
  " can sample undirected, connected simple graphs uniformly and uses \
 Monte-Carlo methods to randomize the graphs. This generator should be \
 favoured if undirected and connected graphs are to be generated and execution \
@@ -473,7 +478,7 @@ Cell[TextData[{
  "With ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Citation\"\>", "\[Rule]", "True"}], TraditionalForm]]],
+   RowBox[{"\"\<Citation\>\"", "\[Rule]", "True"}], TraditionalForm]]],
  ", the newly added edges are connected to the newly added vertices."
 }], "Text"],
 
@@ -496,7 +501,7 @@ Cell[TextData[{
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Citation\"\>", "\[Rule]", "True"}], TraditionalForm]]],
+   RowBox[{"\"\<Citation\>\"", "\[Rule]", "True"}], TraditionalForm]]],
  " connects newly added edges to the newly added vertex."
 }], "Item"]
 }, Open  ]]
@@ -538,7 +543,7 @@ Cell[TextData[{
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"TotalDegreeAttraction\"\>", "\[Rule]", "True"}], 
+   RowBox[{"\"\<TotalDegreeAttraction\>\"", "\[Rule]", "True"}], 
    TraditionalForm]]],
  " computes the attachment probability based on the the total degree of \
 existing vertices (i.e. in- and out-degree), not their in-degree."
@@ -556,7 +561,7 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Bag\"\>", TraditionalForm]]],
+  FormBox["\"\<Bag\>\"", TraditionalForm]]],
  " works by putting the ids of the vertices into a bag exactly as many times \
 as their (in-)degree, plus once more. Then the required number of cited \
 vertices are drawn from the bag, with replacement. This method might generate \
@@ -573,7 +578,7 @@ multiple edges. It only works if ",
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"PSumTree\"\>", TraditionalForm]]],
+  FormBox["\"\<PSumTree\>\"", TraditionalForm]]],
  " uses a partial prefix-sum tree to generate the graph. It does not generate \
 multiple edges and works for any ",
  Cell[BoxData[
@@ -586,10 +591,10 @@ multiple edges and works for any ",
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"PSumTreeMultiple\"\>", TraditionalForm]]],
+  FormBox["\"\<PSumTreeMultiple\>\"", TraditionalForm]]],
  " works like ",
  Cell[BoxData[
-  FormBox["\<\"PSumTree\"\>", TraditionalForm]]],
+  FormBox["\"\<PSumTree\>\"", TraditionalForm]]],
  " but allowed multiple edges."
 }], "Item"]
 }, Open  ]]
@@ -777,13 +782,13 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Precise\"\>", TraditionalForm]]],
+  FormBox["\"\<Precise\>\"", TraditionalForm]]],
  " is accurate, but slow. This is the default."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Fast\"\>", TraditionalForm]]],
+  FormBox["\"\<Fast\>\"", TraditionalForm]]],
  " is fast, but may give incorrect results for large graphs with lots of \
 shortest paths."
 }], "Item"]
@@ -815,7 +820,7 @@ Cell[BoxData[
 Cell[TextData[{
  "For this large grid graph, the ",
  Cell[BoxData[
-  FormBox["\<\"Fast\"\>", TraditionalForm]]],
+  FormBox["\"\<Fast\>\"", TraditionalForm]]],
  " method no longer gives accurate results:"
 }], "Text"],
 
@@ -1057,25 +1062,25 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"PowerIteration\"\>", TraditionalForm]]],
+  FormBox["\"\<PowerIteration\>\"", TraditionalForm]]],
  ", deprecated, not recommended. Takes suboptions ",
  Cell[BoxData[
-  FormBox["\<\"MaxIterations\"\>", TraditionalForm]]],
+  FormBox["\"\<MaxIterations\>\"", TraditionalForm]]],
  " and ",
  Cell[BoxData[
-  FormBox["\<\"Epsilon\"\>", TraditionalForm]]],
+  FormBox["\"\<Epsilon\>\"", TraditionalForm]]],
  "."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Arnoldi\"\>", TraditionalForm]]],
+  FormBox["\"\<Arnoldi\>\"", TraditionalForm]]],
  " uses ARPACK"
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"PRPACK\"\>", TraditionalForm]]],
+  FormBox["\"\<PRPACK\>\"", TraditionalForm]]],
  " uses ",
  ButtonBox["PRPACK",
   BaseStyle->"Hyperlink",
@@ -1129,11 +1134,11 @@ Cell[TextData[{
  " returns a set of edges the removal of which makes the graph acyclic. With ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Exact\"\>", "\[Rule]", "True"}], TraditionalForm]]],
+   RowBox[{"\"\<Exact\>\"", "\[Rule]", "True"}], TraditionalForm]]],
  " it finds a minimal feedback arc set. With ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Exact\"\>", "\[Rule]", "False"}], TraditionalForm]]],
+   RowBox[{"\"\<Exact\>\"", "\[Rule]", "False"}], TraditionalForm]]],
  " it finds a feedback arc set (not necessarily minimal) using the heuristic \
 of Eades, Lin and Smyth (1993)."
 }], "Text"],
@@ -1302,39 +1307,39 @@ Cell[TextData[{
   FormBox["Automatic", TraditionalForm]]],
  " selects a method automatically. As of version 0.3.0, ",
  Cell[BoxData[
-  FormBox["\<\"Unweighted\"\>", TraditionalForm]]],
+  FormBox["\"\<Unweighted\>\"", TraditionalForm]]],
  " is selected for unweighted graphs, ",
  Cell[BoxData[
-  FormBox["\<\"Dijkstra\"\>", TraditionalForm]]],
+  FormBox["\"\<Dijkstra\>\"", TraditionalForm]]],
  " for weighted graphs with only positive weights, and ",
  Cell[BoxData[
-  FormBox["\<\"Johnson\"\>", TraditionalForm]]],
+  FormBox["\"\<Johnson\>\"", TraditionalForm]]],
  " otherwise."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Unweighted\"\>", TraditionalForm]]],
+  FormBox["\"\<Unweighted\>\"", TraditionalForm]]],
  " ignores weights"
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Dijkstra\"\>", TraditionalForm]]],
+  FormBox["\"\<Dijkstra\>\"", TraditionalForm]]],
  " uses Dijkstra\[CloseCurlyQuote]s algorithm. All weights must be \
 non-negative."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"BellmanFord\"\>", TraditionalForm]]],
+  FormBox["\"\<BellmanFord\>\"", TraditionalForm]]],
  " uses the Bellman\[Dash]Ford algorithm. Negative weights are supported but \
 all cycles must have a non-negative total weight."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Johnson\"\>", TraditionalForm]]],
+  FormBox["\"\<Johnson\>\"", TraditionalForm]]],
  " uses the Johnson algorithm. Negative weights are supported but all cycles \
 must have a non-negative total weight."
 }], "Item"]
@@ -1344,7 +1349,7 @@ Cell[TextData[{
  "The igraph C core may override explicit method settings when appropriate. \
 For example, if the graph is not weighted, it always uses ",
  Cell[BoxData[
-  FormBox["\<\"Unweighted\"\>", TraditionalForm]]],
+  FormBox["\"\<Unweighted\>\"", TraditionalForm]]],
  "."
 }], "Text"]
 }, Closed]],
@@ -1720,16 +1725,16 @@ Cell[TextData[{
   FormBox["Method", TraditionalForm]]],
  " can take the values ",
  Cell[BoxData[
-  FormBox["\<\"Unweighted\"\>", TraditionalForm]]],
+  FormBox["\"\<Unweighted\>\"", TraditionalForm]]],
  ", ",
  Cell[BoxData[
-  FormBox["\<\"Dijkstra\"\>", TraditionalForm]]],
+  FormBox["\"\<Dijkstra\>\"", TraditionalForm]]],
  " or ",
  Cell[BoxData[
   FormBox["Automatic", TraditionalForm]]],
  ". ",
  Cell[BoxData[
-  FormBox["\<\"Dijkstra\"\>", TraditionalForm]]],
+  FormBox["\"\<Dijkstra\>\"", TraditionalForm]]],
  " takes edge weights into account. ",
  Cell[BoxData[
   FormBox["Automatic", TraditionalForm]]],
@@ -1738,7 +1743,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"ByComponents\"\>", TraditionalForm]]],
+  FormBox["\"\<ByComponents\>\"", TraditionalForm]]],
  " controls how unconnected graphs are handled. If ",
  Cell[BoxData[
   FormBox["False", TraditionalForm]]],
@@ -1986,7 +1991,7 @@ Cell[TextData[{
  "See ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"IGData", "[", "\<\"MANTriadLabels\"\>", "]"}], 
+   RowBox[{"IGData", "[", "\"\<MANTriadLabels\>\"", "]"}], 
    TraditionalForm]]],
  " for the mapping between MAN labels and graphs."
 }], "Text"],
@@ -2019,7 +2024,7 @@ Cell[BoxData[
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"IGData", "[", "\<\"MANTriadLabels\"\>", "]"}], 
+   RowBox[{"IGData", "[", "\"\<MANTriadLabels\>\"", "]"}], 
    TraditionalForm]]],
  " are ordered according to isoclass."
 }], "Text"]
@@ -2132,7 +2137,7 @@ Cell[BoxData[
 Cell[TextData[{
  "Bliss functions take a ",
  Cell[BoxData[
-  FormBox["\<\"SplittingHeuristics\"\>", TraditionalForm]]],
+  FormBox["\"\<SplittingHeuristics\>\"", TraditionalForm]]],
  " option, which can influence the performance of the method. Possible values \
 are:"
 }], "Text"],
@@ -2141,76 +2146,76 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"First\"\>", TraditionalForm]]],
+  FormBox["\"\<First\>\"", TraditionalForm]]],
  " \[Dash] First non-unit cell. Very fast but may result in large search \
 spaces on difficult graphs. Use for large but easy graphs."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"FirstSmallest\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstSmallest\>\"", TraditionalForm]]],
  " \[Dash] First smallest non-unit cell. Fast, should usually produce smaller \
 search spaces than ",
  Cell[BoxData[
-  FormBox["\<\"First\"\>", TraditionalForm]]],
+  FormBox["\"\<First\>\"", TraditionalForm]]],
  "."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"FirstLargest\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstLargest\>\"", TraditionalForm]]],
  " \[Dash] First largest non-unit cell. Fast, should usually produce smaller \
 search spaces than ",
  Cell[BoxData[
-  FormBox["\<\"First\"\>", TraditionalForm]]],
+  FormBox["\"\<First\>\"", TraditionalForm]]],
  "."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"FirstMaximallyConnected\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstMaximallyConnected\>\"", TraditionalForm]]],
  " \[Dash] First maximally non-trivially connected non-unit cell. Not so \
 fast, should usually produce smaller search spaces than ",
  Cell[BoxData[
-  FormBox["\<\"First\"\>", TraditionalForm]]],
+  FormBox["\"\<First\>\"", TraditionalForm]]],
  ", ",
  Cell[BoxData[
-  FormBox["\<\"FirstSmallest\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstSmallest\>\"", TraditionalForm]]],
  " and ",
  Cell[BoxData[
-  FormBox["\<\"FirstLargest\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstLargest\>\"", TraditionalForm]]],
  "."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"FirstSmallestMaximallyConnected\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstSmallestMaximallyConnected\>\"", TraditionalForm]]],
  " \[Dash] First smallest maximally non-trivially connected non-unit cell. \
 Not so fast, should usually produce smaller search spaces than ",
  Cell[BoxData[
-  FormBox["\<\"First\"\>", TraditionalForm]]],
+  FormBox["\"\<First\>\"", TraditionalForm]]],
  ", ",
  Cell[BoxData[
-  FormBox["\<\"FirstSmallest\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstSmallest\>\"", TraditionalForm]]],
  " and ",
  Cell[BoxData[
-  FormBox["\<\"FirstLargest\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstLargest\>\"", TraditionalForm]]],
  "."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"FirstLargestMaximallyConnected\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstLargestMaximallyConnected\>\"", TraditionalForm]]],
  " \[Dash] First largest maximally non-trivially connected non-unit cell. Not \
 so fast, should usually produce smaller search spaces than ",
  Cell[BoxData[
-  FormBox["\<\"First\"\>", TraditionalForm]]],
+  FormBox["\"\<First\>\"", TraditionalForm]]],
  ", ",
  Cell[BoxData[
-  FormBox["\<\"FirstSmallest\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstSmallest\>\"", TraditionalForm]]],
  " and ",
  Cell[BoxData[
-  FormBox["\<\"FirstLargest\"\>", TraditionalForm]]],
+  FormBox["\"\<FirstLargest\>\"", TraditionalForm]]],
  "."
 }], "Item"]
 }, Open  ]],
@@ -2229,7 +2234,7 @@ Cell[TextData[{
   FormBox["IGBlissanonicalGraph", TraditionalForm]]],
  " functions depend on the choice of ",
  Cell[BoxData[
-  FormBox["\<\"SplittingHeuristics\"\>", TraditionalForm]]],
+  FormBox["\"\<SplittingHeuristics\>\"", TraditionalForm]]],
  ". See the ",
  ButtonBox["Bliss documentation",
   BaseStyle->"Hyperlink",
@@ -2482,10 +2487,10 @@ Cell[TextData[{
  "VF2 supports vertex coloured and edge coloured graphs. A colour \
 specification consists of one of more of the ",
  Cell[BoxData[
-  FormBox["\<\"VertexColors\"\>", TraditionalForm]]],
+  FormBox["\"\<VertexColors\>\"", TraditionalForm]]],
  " and ",
  Cell[BoxData[
-  FormBox["\<\"EdgeColors\"\>", TraditionalForm]]],
+  FormBox["\"\<EdgeColors\>\"", TraditionalForm]]],
  " options. Allowed formats for these options are a list of integers, an \
 association assigning integers to the vertices/edges, or ",
  Cell[BoxData[
@@ -2662,7 +2667,7 @@ Cell[TextData[{
  "With the ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Induced\"\>", "\[Rule]", "True"}], TraditionalForm]]],
+   RowBox[{"\"\<Induced\>\"", "\[Rule]", "True"}], TraditionalForm]]],
  " option LAD will search for induced subgraphs."
 }], "Text"],
 
@@ -3180,13 +3185,13 @@ Cell[TextData[{
  "If you are looking for the Sugiyama layout from igraph, try the built-in ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"GraphLayout", " ", "\[Rule]", " ", "\<\"LayeredEmbedding\"\>"}], 
+   RowBox[{"GraphLayout", " ", "\[Rule]", " ", "\"\<LayeredEmbedding\>\""}], 
    TraditionalForm]]],
  ", ",
  Cell[BoxData[
   FormBox[
    RowBox[{
-   "GraphLayout", " ", "\[Rule]", " ", "\<\"LayeredDigraphEmbedding\"\>"}], 
+   "GraphLayout", " ", "\[Rule]", " ", "\"\<LayeredDigraphEmbedding\>\""}], 
    TraditionalForm]]],
  ", or ",
  Cell[BoxData[
@@ -3211,7 +3216,7 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"MaxIterations\"\>", TraditionalForm]]],
+  FormBox["\"\<MaxIterations\>\"", TraditionalForm]]],
  " controls either the ",
  StyleBox["maximum",
   FontSlant->"Italic"],
@@ -3226,7 +3231,7 @@ interchange them when visualizing dynamic graphs."
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Align\"\>", "\[Rule]", "True"}], TraditionalForm]]],
+   RowBox[{"\"\<Align\>\"", "\[Rule]", "True"}], TraditionalForm]]],
  " aligns the output horizontally. Examples:"
 }], "Item"]
 }, Open  ]],
@@ -3254,7 +3259,7 @@ Cell[BoxData[
 Cell[TextData[{
  Cell[BoxData[
   FormBox[
-   RowBox[{"\<\"Continue\"\>", " ", "\[Rule]", " ", "True"}], 
+   RowBox[{"\"\<Continue\>\"", " ", "\[Rule]", " ", "True"}], 
    TraditionalForm]]],
  " allows using existing vertex coordinates as starting points for algorithms \
 that update vertex positions incrementally. We can use this to visualize how \
@@ -3335,7 +3340,7 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"RootVertices\"\>", TraditionalForm]]],
+  FormBox["\"\<RootVertices\>\"", TraditionalForm]]],
  " allows nodes to be used as the root nodes in the layout. It must be a \
 list, even if there is a single root node. Multiple root nodes are meant to \
 be used with forests."
@@ -3351,7 +3356,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Rotation\"\>", TraditionalForm]]],
+  FormBox["\"\<Rotation\>\"", TraditionalForm]]],
  " controls the orientation of the layout. It must be given in radians."
 }], "Item"]
 }, Open  ]]
@@ -3412,7 +3417,7 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Orientation\"\>", TraditionalForm]]],
+  FormBox["\"\<Orientation\>\"", TraditionalForm]]],
  " can be ",
  Cell[BoxData[
   FormBox["Horizontal", TraditionalForm]]],
@@ -3423,13 +3428,13 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"PartitionGap\"\>", TraditionalForm]]],
+  FormBox["\"\<PartitionGap\>\"", TraditionalForm]]],
  " controls the size of the gap between the two partitions"
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"VertexGap\"\>", TraditionalForm]]],
+  FormBox["\"\<VertexGap\>\"", TraditionalForm]]],
  " controls the minimum size of the gap between vertices in a partition"
 }], "Item"],
 
@@ -3442,7 +3447,7 @@ minimization."
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"BipartitePartitions\"\>", TraditionalForm]]],
+  FormBox["\"\<BipartitePartitions\>\"", TraditionalForm]]],
  " can be used to explicitly specify the partitioning of the graph."
 }], "Item"]
 }, Open  ]]
@@ -19568,7 +19573,7 @@ Cell[TextData[{
   FormBox[
    RowBox[{"GraphAssortativity", "[", 
     RowBox[{"graph", ",", "communities", ",", 
-     RowBox[{"\<\"Normalized\"\>", "\[Rule]", "False"}]}], "]"}], 
+     RowBox[{"\"\<Normalized\>\"", "\[Rule]", "False"}]}], "]"}], 
    TraditionalForm]]]
 }], "Text"]
 }, Closed]],
@@ -19656,7 +19661,7 @@ Cell["It supports weighted graphs.", "Text"],
 Cell[TextData[{
  "Option values for ",
  Cell[BoxData[
-  FormBox["\<\"Method\"\>", TraditionalForm]]],
+  FormBox["\"\<Method\>\"", TraditionalForm]]],
  " are:"
 }], "Text"],
 
@@ -19664,14 +19669,14 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Original\"\>", TraditionalForm]]],
+  FormBox["\"\<Original\>\"", TraditionalForm]]],
  " only supports positive edge weights, but doesn\[CloseCurlyQuote]t check \
 that the supplied weights are actually positive."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Negative\"\>", TraditionalForm]]],
+  FormBox["\"\<Negative\>\"", TraditionalForm]]],
  " supports negative weights as well."
 }], "Item"],
 
@@ -19680,10 +19685,10 @@ Cell[TextData[{
   FormBox["Automatic", TraditionalForm]]],
  " selects ",
  Cell[BoxData[
-  FormBox["\<\"Negative\"\>", TraditionalForm]]],
+  FormBox["\"\<Negative\>\"", TraditionalForm]]],
  " if negative weights are presents and ",
  Cell[BoxData[
-  FormBox["\<\"Original\"\>", TraditionalForm]]],
+  FormBox["\"\<Original\>\"", TraditionalForm]]],
  " otherwise."
 }], "Item"]
 }, Open  ]],
@@ -19691,13 +19696,13 @@ Cell[TextData[{
 Cell[TextData[{
  "Option values for ",
  Cell[BoxData[
-  FormBox["\<\"UpdateRule\"\>", TraditionalForm]]],
+  FormBox["\"\<UpdateRule\>\"", TraditionalForm]]],
  " are: ",
  Cell[BoxData[
-  FormBox["\<\"Simple\"\>", TraditionalForm]]],
+  FormBox["\"\<Simple\>\"", TraditionalForm]]],
  ", ",
  Cell[BoxData[
-  FormBox["\<\"Configuration\"\>", TraditionalForm]]]
+  FormBox["\"\<Configuration\>\"", TraditionalForm]]]
 }], "Text"],
 
 Cell["References:", "Text"],
@@ -19715,7 +19720,7 @@ Cell[TextData[{
  "For ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"Method", "\[Rule]", "\<\"Negative\"\>"}], TraditionalForm]]],
+   RowBox[{"Method", "\[Rule]", "\"\<Negative\>\""}], TraditionalForm]]],
  ", see ",
  "V.A. Traag and Jeroen Bruggeman: Community detection in networks with \
 positive and negative links, http://arxiv.org/abs/0811.2329 "
@@ -19836,31 +19841,31 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Properties\"\>", TraditionalForm]]],
+  FormBox["\"\<Properties\>\"", TraditionalForm]]],
  " returns all available properties."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Algorithm\"\>", TraditionalForm]]],
+  FormBox["\"\<Algorithm\>\"", TraditionalForm]]],
  " returns the algorithm used for community detection."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Communities\"\>", TraditionalForm]]],
+  FormBox["\"\<Communities\>\"", TraditionalForm]]],
  " returns the list of communities."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Elements\"\>", TraditionalForm]]],
+  FormBox["\"\<Elements\>\"", TraditionalForm]]],
  " returns the vertices of the graph."
 }], "Item"],
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"ElementCount\"\>", TraditionalForm]]],
+  FormBox["\"\<ElementCount\>\"", TraditionalForm]]],
  " returns the vertex count of the graph."
 }], "Item"]
 }, Open  ]],
@@ -19871,7 +19876,7 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"HierarchicalClusters\"\>", TraditionalForm]]],
+  FormBox["\"\<HierarchicalClusters\>\"", TraditionalForm]]],
  " returns the clustering in a format compatible with the Hierarchical \
 Clustering standard package. ",
  StyleBox["Note: ",
@@ -19881,7 +19886,7 @@ Clustering standard package. ",
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Merges\"\>", TraditionalForm]]],
+  FormBox["\"\<Merges\>\"", TraditionalForm]]],
  " represents the hierarchical clustering as a sequence of element merges. \
 Elements are represented by their integer indices, and higher indices are \
 introduced for the subclusters formed by the merges. This format is similar \
@@ -19899,7 +19904,7 @@ to the one used by ",
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Tree\"\>", TraditionalForm]]],
+  FormBox["\"\<Tree\>\"", TraditionalForm]]],
  " gives a binary tree representation of the merges. ",
  StyleBox["Note: ",
   FontWeight->"Bold"],
@@ -19914,7 +19919,7 @@ present:\
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"Modularity\"\>", TraditionalForm]]],
+  FormBox["\"\<Modularity\>\"", TraditionalForm]]],
  " is a list of modularities for each step of the algorithm. What constitutes \
 a step depends on the particular algorithm."
 }], "Item"],
@@ -20012,7 +20017,7 @@ Cell[BoxData[
 
 Cell[TextData[{
  Cell[BoxData[
-  FormBox["\<\"MANTriadLabels\"\>", TraditionalForm]]],
+  FormBox["\"\<MANTriadLabels\>\"", TraditionalForm]]],
  " refers to the mutual, asymmetric, null labelling of triads used by ",
  Cell[BoxData[
   FormBox[
@@ -20053,6 +20058,7 @@ Cell[BoxData[
 },
 WindowSize->{964, 659},
 WindowMargins->{{238, Automatic}, {Automatic, 96}},
+WindowTitle->"IGraph/M Documentation",
 PrintingStartingPageNumber->1,
 PageHeaders->{{
    Cell[
@@ -20089,6 +20095,7 @@ PrintingOptions->{"FacingPages"->True,
 "PrintingMargins"->{{28.346457, 28.346457}, {72.00000078000001, \
 72.00000078000001}}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
+ShowCellTags->True,
 TrackCellChangeTimes->False,
 FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 1, \
 2016)",
@@ -20107,3 +20114,4 @@ StyleDefinitions->Notebook[{
   "11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 1, 2016)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
+
