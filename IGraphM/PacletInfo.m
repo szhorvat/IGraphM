@@ -6,11 +6,13 @@ Paclet[
     Name -> "IGraphM",
     Version -> "0.3.0",
     MathematicaVersion -> "10.0+",
-    Description -> "igraph interface for Mathematica.",
+    Description -> "IGraph/M \[Dash] the igraph interface for Mathematica.",
     Creator -> "Szabolcs Horvát",
+    URL -> "https://github.com/szhorvat/IGraphM",
     Extensions -> 
         {    
             {"Kernel", Root -> ".", Context -> "IGraphM`"},
-            {"LibraryLink"}
+            {"LibraryLink"},
+            {"Documentation", Language -> "English", MainPage -> "IGDocumentation"}
         }
 ]
