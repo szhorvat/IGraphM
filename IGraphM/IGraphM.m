@@ -975,7 +975,13 @@ applyGraphOpt3D[opt___][graph_] := Graph3D[graph, Sequence@@FilterRules[{opt}, O
 (***** Public functions *****)
 
 SyntaxInformation[IGDocumentation] = {"ArgumentsPattern" -> {}};
-IGDocumentation[] := (NotebookOpen[FileNameJoin[{$packageDirectory, "Documentation", "IGDocumentation.nb"}], Saveable -> False, WindowTitle -> "IGraph/M Documentation"]; Null)
+IGDocumentation[] :=
+    If[$Notebooks,
+      Documentation`HelpLookupPacletURI["paclet:IGraphM/IGDocumentation"];
+      ,
+      Print["Documentation is only available when running with a Front End."]
+    ]
+
 
 (*  IGData  *)
 
