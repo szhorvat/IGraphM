@@ -86,7 +86,7 @@ Needs[$appName <> "`"]
 versionData = <|
   "version" -> Lookup[PacletInformation[$appName], "Version"],
   "mathversion" -> Lookup[PacletInformation[$appName], "WolframVersion"],
-  "date" -> DateString[{"MonthName", " ", "Day", ", ", "Year"}]
+  "date" -> DateString[{"MonthName", " ", "DayShort", ", ", "Year"}]
 |>
 
 
@@ -132,25 +132,65 @@ With[{$buildDir = $buildDir},
         NBFEProcess[NotebookEvaluate[#, InsertResults -> True]&]
       ]["IGDocumentation.nb"]
     ],
-    "10.3"
+    "10.3" (* 10.0 can't evaluate from a MathLink-controlled kernel due to a bug, use newer version *)
   ]
 ]
 
 Print["Rewriting..."]
-MRun[
-  MCode[
-    RewriteNotebook[
-      NBSetOptions[Saveable -> False] /*
-      NBRemoveChangeTimes /*
-      NBResetWindow /*
-      NBDisableSpellCheck /*
-      NBRemoveOptions[{PrivateNotebookOptions, Visible}] /*
-      NBSetOptions[StyleDefinitions -> NBImport["Stylesheet.nb"]]
-    ]["IGDocumentation.nb"];
-  ],
-  "10.0"
+
+taggingRules = {
+  "ModificationHighlight" -> False,
+  "ColorType" -> "GuideColor",
+  "Metadata" -> {
+    "built" -> ToString@DateList[],
+  (* "history" -> {"0.3.0", "", "", ""}, *)
+    "context" -> $appName <> "`",
+    "keywords" -> {"igraph", "IGraph/M", "IGraphM"},
+    "specialkeywords" -> {},
+    "tutorialcollectionlinks" -> {},
+    "index" -> True,
+    "label" -> "IGraph/M Guide",
+    "language" -> "en",
+    "paclet" -> $appName,
+    "status" -> "None",
+    "summary" -> "IGraph/M is the igraph interface for Mathematica.",
+    "synonyms" -> {},
+    "tabletags" -> {},
+    "title" -> "IGraph/M",
+    "titlemodifier" -> "",
+    "windowtitle" -> "IGraph/M Documentation",
+    "type" -> "Guide",
+    "uri" -> "IGraphM/IGDocumentation"}
+};
+
+With[{taggingRules = taggingRules},
+  MRun[
+    MCode[
+      RewriteNotebook[
+        NBSetOptions[TaggingRules -> taggingRules] /*
+            NBSetOptions[Saveable -> False] /*
+            NBRemoveChangeTimes /*
+            NBResetWindow /*
+            NBDisableSpellCheck /*
+            NBDeleteOutputByTag /*
+            NBDeleteCellTags["DeleteOutput"] /*
+            NBRemoveOptions[{PrivateNotebookOptions, Visible, ShowCellTags}] /*
+            NBSetOptions[StyleDefinitions -> NBImport["Stylesheet.nb"]]
+      ]["IGDocumentation.nb"];
+    ],
+    "10.0" (* compatibility with 10.0 *)
+  ]
 ]
+
 DeleteFile["Stylesheet.nb"]
+
+Print["Indexing..."]
+Needs["DocumentationSearch`"]
+indexDir = CreateDirectory["Index"];
+ind = NewDocumentationNotebookIndexer[indexDir];
+AddDocumentationNotebook[ind, "IGDocumentation.nb"];
+CloseDocumentationNotebookIndexer[ind];
+
 ResetDirectory[] (* Documentation *)
 
 
