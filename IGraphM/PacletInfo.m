@@ -7,7 +7,7 @@ Paclet[
     Version -> "0.3.0",
     MathematicaVersion -> "10.0+",
     Description -> "IGraph/M \[Dash] the igraph interface for Mathematica.",
-    Creator -> "Szabolcs Horvát",
+    Creator -> "Szabolcs Horvát <szhorvat@gmail.com>",
     URL -> "https://github.com/szhorvat/IGraphM",
     Extensions -> 
         {    
