@@ -852,7 +852,15 @@ fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Deve
 fixInfNaN[arr_] := arr
 
 (* Import compressed expressions. Used in IGData. *)
-zimport[filename_] := Uncompress@Import[filename, "String"]
+(* Avoid Import because it doesn't work during kernel initialization. *)
+zimport[filename_] :=
+    Module[{stream, str},
+      stream = OpenRead[filename];
+      str = Read[stream, Record, RecordSeparators -> {}];
+      Close[stream];
+      Uncompress[str]
+    ]
+
 
 (* Get an IG compatible edge list. *)
 (* This implementation attempts to select the fastest method based on the internal representation
