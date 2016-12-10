@@ -26,6 +26,7 @@ Needs["HierarchicalClustering`"];
 Unprotect /@ Names["IGraphM`*"];
 
 (* Privately load and configure LTemplate *)
+(* NOTE: replaced in build script *)
 Get["LTemplate`LTemplatePrivate`"];
 ConfigureLTemplate["MessageSymbol" -> IGraphM, "LazyLoading" -> False];
 
@@ -993,13 +994,14 @@ IGDocumentation[] :=
 
 (*  IGData  *)
 
-$igData = zimport@FileNameJoin[{$packageDirectory, "IGData.mz"}];
-$igDataCategories = GroupBy[Select[Keys[$igData], ListQ], First];
-$igDataAll = Join[$igData, $igDataCategories];
+$igData := $igData = zimport@FileNameJoin[{$packageDirectory, "IGData.mz"}];
+$igDataCategories := $igDataCategories = GroupBy[Select[Keys[$igData], ListQ], First];
+$igDataAll := $igDataAll = Join[$igData, $igDataCategories];
 SyntaxInformation[IGData] = {"ArgumentsPattern" -> {_.}};
 IGData[] := Keys[$igData]
 IGData[item_] := Lookup[$igDataAll, Key[item], Missing["NotAvailable"]]
 
+(* NOTE: replaced in build script *)
 addCompletion[IGData, {Join[Keys[$igDataCategories], Select[Keys[$igData], StringQ]]}];
 
 (* General (global) *)

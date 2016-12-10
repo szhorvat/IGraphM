@@ -63,12 +63,24 @@ DeleteFile[$gitArch]
 SetDirectory[$appTarget]
 
 
+Print["Loading IGraphM paclet..."]
+PacletDirectoryAdd[$dir]
+Needs[$appName <> "`"]
+
+
 source = Import["IGraphM.m", "String"];
 
 
+igDataCompletionRepl = StringTemplate["addCompletion[IGData, ``];"]@
+    ToString[{Join[Keys[IGraphM`Private`$igDataCategories],
+      Select[Keys[IGraphM`Private`$igData], StringQ]]},
+      InputForm
+    ]
+
 repl = {
   "Get[\"LTemplate`LTemplatePrivate`\"]" -> "Get[\"IGraphM`LTemplate`LTemplatePrivate`\"]",
-  "\"LazyLoading\" -> False" -> "\"LazyLoading\" -> True"
+  "\"LazyLoading\" -> False" -> "\"LazyLoading\" -> True",
+  "addCompletion[IGData, {Join[Keys[$igDataCategories], Select[Keys[$igData], StringQ]]}];" -> igDataCompletionRepl
 };
 
 
@@ -76,11 +88,6 @@ source = StringReplace[source, repl, Length[repl]];
 
 
 template = StringTemplate[source, Delimiters -> {"%%", "%%", "<%", "%>"}];
-
-
-Print["Loading IGraphM paclet."]
-PacletDirectoryAdd[$dir]
-Needs[$appName <> "`"]
 
 
 versionData = <|
