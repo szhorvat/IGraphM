@@ -13,6 +13,7 @@
 (* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
 
 
+(* Mathematica version check *)
 If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
   Print["IGraph/M requires Mathematica 10.0.2 or later.  Aborting."];
   Abort[]
@@ -21,9 +22,9 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 
 BeginPackage["IGraphM`"];
 
-Needs["HierarchicalClustering`"];
+Needs["HierarchicalClustering`"]; (* do not place in BeginPackage -- we do not want this context exported *)
 
-Unprotect /@ Names["IGraphM`*"];
+Unprotect["IGraphM`*", "IGraphM`Developer`*", "IGraphM`Information`*"];
 
 (* Privately load and configure LTemplate *)
 (* NOTE: replaced in build script *)
@@ -376,9 +377,7 @@ IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsi
 
 Begin["`Private`"];
 
-(***** Mathematica version check *****)
-
-(* Abort loading and leave a clean $ContextPath behind *)
+(* Function to abort loading and leave a clean $ContextPath behind *)
 packageAbort[] := (End[]; EndPackage[]; Abort[])
 
 
@@ -3207,7 +3206,9 @@ IGVertexContract[graph_?igGraphQ, arg_, opt : OptionsPattern[]] := Null /; Messa
 (***** Finalize *****)
 
 (* Protect all package symbols *)
-With[{syms = Names["IGraphM`*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
+With[{syms = Join @@ Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"}},
+  SetAttributes[syms, {Protected, ReadProtected}]
+];
 
 End[]; (* `Private` *)
 
