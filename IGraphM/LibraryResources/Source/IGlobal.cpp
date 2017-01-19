@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017 Szabolcs Horvát.
+ *
+ * See the file LICENSE.txt for copying permission.
+ */
 
 #include "IGlobal.h"
 #include <cstring>

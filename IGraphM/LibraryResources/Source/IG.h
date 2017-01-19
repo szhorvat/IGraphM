@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2017 Szabolcs Horvát.
+ *
+ * See the file LICENSE.txt for copying permission.
+ */
+
 #ifndef IG_H
 #define IG_H
 

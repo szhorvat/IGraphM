@@ -6,7 +6,7 @@
 (* :Author: szhorvat *)
 (* :Date: 2016-06-11 *)
 
-(* :Copyright: (c) 2016 Szabolcs Horvát *)
+(* :Copyright: (c) 2017 Szabolcs Horvát *)
 
 BeginPackage["IGraphM`Utilities`"];
 
