@@ -958,11 +958,13 @@ igToGraph[ig_] :=
 igVertexNames[graph_][indices_] := Part[VertexList[graph], indices]
 
 
+partitionRagged[v_List, l_?VectorQ] := MapThread[Take[v, {#1, #2}] &, Module[{a = Accumulate[l]}, {a - l + 1, a}]]
+
 (* Unpacks an index list representing vertex sets from an integer array,
    To be used in conunction with IG::packListIntoIntTensor() *)
 igUnpackVertexSet[graph_][packed_] :=
     With[{len = First[packed]},
-      Internal`PartitionRagged[
+      partitionRagged[
         Part[VertexList[graph], 1 + packed[[len + 2 ;; All]]],
         packed[[2 ;; len + 1]]
       ]
