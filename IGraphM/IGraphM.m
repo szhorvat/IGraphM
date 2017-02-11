@@ -2833,7 +2833,7 @@ mergesToTree[asc_] :=
         DirectedEdges -> True,
         EdgeShapeFunction -> "Line",
         EdgeStyle -> Gray,
-        VertexShapeFunction -> None,
+        VertexShapeFunction -> ({}&), (* Using VertexShapeFunction -> None does not work in M10.0-10.3 due to a bug. *)
         VertexLabels -> Thread[ leafIndices -> (Placed[Short[#], Below]&) /@ asc["Elements"][[ leafIndices ]] ],
         VertexWeight -> Join[Thread[ec + Range[mc] -> s], Thread[leafIndices -> 0]],
         Properties -> {"GraphProperties" -> {"LeafLabels" -> AssociationThread[leafIndices, asc["Elements"][[ leafIndices ]] ]}}
