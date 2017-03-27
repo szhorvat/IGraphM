@@ -1795,6 +1795,14 @@ public:
         igraph_vector_t mapping = igVectorView(t);
         igCheck(igraph_contract_vertices(&graph, &mapping, NULL));
     }
+
+    // Random walks
+
+    mma::RealTensorRef randomWalk(mint start, mint steps) const {
+        igVector walk;
+        igCheck(igraph_random_walk(&graph, &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
+        return walk.makeMTensor();
+    }
 };
 
 #endif // IG_H

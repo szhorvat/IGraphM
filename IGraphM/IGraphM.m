@@ -374,6 +374,8 @@ IGBipartitePartitions::usage = "IGBipartitePartitions[graph] partitions the vert
 
 IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsis]}] returns graph in which the specified vertex sets are contracted into single vertices.";
 
+IGRandomWalk::usage = "IGRandomWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed vertices is returned.";
+
 
 Begin["`Private`"];
 
@@ -704,7 +706,10 @@ template = LTemplate["IGraphM",
         LFun["bipartitePartitions", {}, {Integer, 1}],
 
         (* Vertex contraction *)
-        LFun["contractVertices", {{Real, 1}}, "Void"]
+        LFun["contractVertices", {{Real, 1}}, "Void"],
+
+        (* Random walk *)
+        LFun["randomWalk", {Integer, Integer}, {Real, 1}]
       }
     ]
   }
@@ -3204,6 +3209,17 @@ IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[]] :=
     ]
 
 IGVertexContract[graph_?igGraphQ, arg_, opt : OptionsPattern[]] := Null /; Message[IGVertexContract::vset, arg]
+
+
+(* Random walk *)
+
+IGRandomWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Part[
+        VertexList[graph],
+        1 + Round@check@ig@"randomWalk"[vs[graph][start], steps]
+      ]
+    ]
 
 (***** Finalize *****)
 
