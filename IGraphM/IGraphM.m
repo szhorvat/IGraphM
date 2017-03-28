@@ -180,7 +180,10 @@ IGDegreeSequenceGame::usage =
 
 IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n vertices, i.e. a graph in which all vertices have degree k.";
 IGStochasticBlockModelGame::usage = "IGStochasticBlockModelGame[ratesMatrix, blockSizes] samples from a stochastic block model.";
-IGForestFireGame::usage = "IGForestFireGame[n, fwprob]";
+IGForestFireGame::usage =
+    "IGForestFireGame[n, fwprob]\n" <>
+    "IGForestFireGame[n, fwprob, bwfactor]\n" <>
+    "IGForestFireGame[n, fwprob, bwfactor, nambassadors]";
 
 IGBipartiteGameGNM::usage = "IGBipartiteGameGNM[n1, n2, m] generates a bipartite random graph with n1 and n2 vertices in the two partitions and m edges.";
 IGBipartiteGameGNP::usage = "IGBipartiteGameGNP[n1, n2, p] generates a bipartite Bernoulli random graph with n1 and n2 vertices in the two partitions and connection probability p.";
