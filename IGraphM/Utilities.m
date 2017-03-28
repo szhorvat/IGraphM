@@ -14,6 +14,8 @@ Unprotect /@ Names["IGraphM`Utilities`*"];
 
 IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undedirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Reciprocal\" creates a single undirected edge only between reciprocally connected vertices.";
 
+IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in graph while preserving edge weights.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -37,6 +39,22 @@ IGUndirectedGraph[g_, "Collapse", opt : OptionsPattern[Graph]] := IGUndirectedGr
 IGUndirectedGraph[g_, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simple", opt]
 
 addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Reciprocal"}}]
+
+
+IGReverseGraph::nmg = "Multigraphs are not currently supported.";
+
+IGReverseGraph[g_?igGraphQ] :=
+    Module[{},
+      If[MultigraphQ[g],
+        Message[IGReverseGraph::nmg];
+        Return[$Failed]
+      ];
+      Graph[
+        VertexList[g],
+        Reverse /@ EdgeList[g],
+        Options[g, {EdgeWeight, EdgeCapacity, EdgeCost, VertexWeight, VertexCapacity}]
+      ]
+    ]
 
 (***** Finalize *****)
 
