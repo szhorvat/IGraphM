@@ -559,7 +559,7 @@ template = LTemplate["IGraphM",
         LFun["maximalCliques", {Integer, Integer}, {Integer, 1}],
         LFun["largestCliques", {}, {Integer, 1}],
         LFun["maximalCliquesCount", {Integer, Integer}, Integer],
-        LFun["maximalCliqueDistribution", {Integer, Integer}, {Integer, 1}],
+        LFun["maximalCliqueDistribution", {Integer, Integer}, {Real, 1}],
         LFun["cliqueNumber", {}, Integer],
         LFun["cliquesWeighted", {Integer (* min_weight *), Integer (* max_weight *), {Real, 1, "Constant"} (* vertex_weights *), True|False (* maximal *)}, {Integer, 1}],
         LFun["largestCliquesWeighted", {{Real, 1, "Constant"} (* vertex_weights *)}, {Integer, 1}],
@@ -2160,8 +2160,8 @@ IGMaximalCliqueSizeCounts[graph_, {size_}] := IGMaximalCliqueSizeCounts[graph, {
 IGMaximalCliqueSizeCounts[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igMaximalCliqueSizeCounts[graph, {min, infToZero[max]}]
 igMaximalCliqueSizeCounts[graph_, {min_, max_}] :=
-    Block[{ig = igMakeFast[graph]},
-      sck@ig@"maximalCliqueDistribution"[min, max]
+    catch@Block[{ig = igMakeFast[graph]},
+      Round@check@ig@"maximalCliqueDistribution"[min, max]
     ]
 
 SyntaxInformation[IGMaximalCliques] = {"ArgumentsPattern" -> {_, _.}};

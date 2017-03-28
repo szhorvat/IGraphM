@@ -1033,35 +1033,40 @@ public:
         return res;
     }
 
-    mma::IntTensorRef maximalCliqueDistribution(mint min, mint max) const {
+    // mma::IntTensorRef
+    mma::RealTensorRef
+    maximalCliqueDistribution(mint min, mint max) const {
+        /*
         struct clique_data {
             std::vector<mint> hist;
-            long min, max;
         } cd;
 
         cd.hist.reserve(50);
-        cd.min = min;
-        cd.max = max;
+
         // TODO interruptability
         struct {
-            static int handle(const igraph_vector_t *clique, void *data, igraph_bool_t *cont) {
+            static igraph_bool_t handle(igraph_vector_t *clique, void *data) {
                 clique_data *cd = static_cast<clique_data *>(data);
                 long clique_size = igraph_vector_size(clique);
-                if (clique_size < cd->min || (clique_size > cd->max && cd->max > 0))
-                    return IGRAPH_SUCCESS;
                 if (cd->hist.size() < clique_size) {
                     if (cd->hist.capacity() < clique_size)
                         cd->hist.reserve(2*clique_size);
                     cd->hist.resize(clique_size, 0);
                 }
                 cd->hist[clique_size-1] += 1;
-                return IGRAPH_SUCCESS;
+                igraph_vector_destroy(clique);
+                igraph_free(clique);
+                return true;
             }
         } clique_counter;
 
-        igCheck(igraph_i_maximal_cliques(&graph, &clique_counter.handle, &cd));
+        igCheck(igraph_maximal_cliques_callback(&graph, &clique_counter.handle, &cd, min, max));
 
         return mma::makeVector<mint>(cd.hist.size(), cd.hist.data());
+        */
+        igVector hist;
+        igCheck(igraph_maximal_cliques_hist(&graph, &hist.vec, min, max));
+        return hist.makeMTensor();
     }
 
     mma::IntTensorRef largestCliques() const {
