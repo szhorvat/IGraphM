@@ -2861,7 +2861,7 @@ IGClusterData[asc_?AssociationQ][key_String] := Lookup[asc, key, Message[IGClust
 
 grid[g_] := Column[Row /@ MapAt[Style[#, Gray]&, g, Table[{i, 1}, {i, Length[g]}]]]
 
-MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (StandardForm|TraditionalForm)] :=
+IGClusterData /: MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (StandardForm|TraditionalForm)] :=
     With[{boxes = RowBox[{"IGClusterData", "[",
       ToBoxes[
         Panel[OpenerView[{
