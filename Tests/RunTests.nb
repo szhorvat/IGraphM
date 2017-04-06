@@ -1,30 +1,49 @@
 Notebook[{
 Cell["\<\
 These tests use MicroTest from https://github.com/szhorvat/MicroTest\
-\>", "Text"],
+\>", "Text",ExpressionUUID->"521071e9-8c5a-4fcf-89a6-64f5be7e9e42"],
 
-Cell["Restart the kernel before evaluating this notebook.", "Text"],
+Cell["Restart the kernel before evaluating this notebook.", \
+"Text",ExpressionUUID->"ab995c80-1261-4e9b-a0aa-7e0daf7cbc81"],
+
+Cell[BoxData["Quit"], \
+"Input",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
 
 Cell[BoxData[{
  RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]", 
- RowBox[{"<<", "MicroTest`"}]}], "Input"],
+ RowBox[{"<<", 
+  "MicroTest`"}]}], \
+"Input",ExpressionUUID->"beaced15-7689-473c-bbb0-3134308362ce"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"SetDirectory", "@", 
-   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]], "Input"],
+   RowBox[{"NotebookDirectory", "[", "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
+
+Cell[BoxData[
+ RowBox[{"PacletDirectoryAdd", "@", 
+  RowBox[{
+  "AbsoluteFileName", "[", "\"\<..\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"94f5c87e-9e49-4612-9a4d-1269df8f9fe6"],
+
+Cell[BoxData[
+ RowBox[{"FindFile", "[", "\"\<IGraphM`\>\"", 
+  "]"}]], "Input",ExpressionUUID->"386b65bd-e1f9-4266-9bf6-2eeaeac0c57d"],
 
 Cell[BoxData[
  RowBox[{"AbsoluteTiming", "@", 
   RowBox[{"MTRun", "[", "\[IndentingNewLine]", 
    RowBox[{"Get", "[", "\"\<Tests.m\>\"", "]"}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input"],
+   "]"}]}]], "Input",ExpressionUUID->"69acd0fe-74d5-4037-829c-7bfa013beb69"],
 
 Cell[BoxData[
- RowBox[{"IGVersion", "[", "]"}]], "Input"],
+ RowBox[{"IGVersion", "[", 
+  "]"}]], "Input",ExpressionUUID->"98f62a49-3a36-4627-8677-abf025cc67f6"],
 
 Cell[BoxData[
- RowBox[{"IGraphM`Developer`GetInfo", "[", "]"}]], "Input"],
+ RowBox[{"IGraphM`Developer`GetInfo", "[", 
+  "]"}]], "Input",ExpressionUUID->"fd205d26-5c77-4015-bd7d-573598871284"],
 
 Cell[BoxData[
  RowBox[{"Select", "[", 
@@ -36,23 +55,35 @@ Cell[BoxData[
    RowBox[{
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
-    "&"}]}], "]"}]], "Input"],
+    "&"}]}], 
+  "]"}]], "Input",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
 
 Cell[BoxData[
  RowBox[{"Scan", "[", 
   RowBox[{
    RowBox[{
-    RowBox[{"Information", "[", 
-     RowBox[{"#", ",", 
-      RowBox[{"LongForm", "\[Rule]", "False"}]}], "]"}], "&"}], ",", 
-   RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], "]"}]], "Input"]
+    RowBox[{"ToExpression", "[", 
+     RowBox[{"#", ",", "InputForm", ",", 
+      RowBox[{
+       RowBox[{"CellPrint", "[", 
+        RowBox[{"TextCell", "[", 
+         RowBox[{
+          RowBox[{"#", "::", "usage"}], ",", "\"\<Text\>\"", ",", 
+          RowBox[{"GeneratedCell", "\[Rule]", "True"}]}], "]"}], "]"}], 
+       "&"}]}], "]"}], "&"}], ",", 
+   RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
-WindowSize->{838, 507},
+WindowSize->{1025, 768},
 WindowMargins->{{82, Automatic}, {Automatic, 19}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (February 25, \
-2016)",
+SpellingDictionaries->{"CorrectWords"->{
+ "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
+  "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
+  "builtin"}},
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 16, \
+2017)",
 StyleDefinitions->"Default.nb"
 ]
 
