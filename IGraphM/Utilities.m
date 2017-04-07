@@ -43,6 +43,8 @@ addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Reciprocal"}}]
 
 IGReverseGraph::nmg = "Multigraphs are not currently supported.";
 
+IGReverseGraph[g_?UndirectedGraphQ] := g
+
 IGReverseGraph[g_?igGraphQ] :=
     Module[{},
       If[MultigraphQ[g],
