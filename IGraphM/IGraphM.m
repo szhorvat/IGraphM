@@ -997,7 +997,7 @@ IGDocumentation[] :=
     If[$Notebooks,
       Documentation`HelpLookupPacletURI["paclet:IGraphM/IGDocumentation"];
       ,
-      Print["Documentation is only available when running with a Front End."]
+      Print["Built-in documentation is only available when running with a Front End.\nSee the online version at http://szhorvat.net/mathematica/IGraphM"]
     ]
 
 
