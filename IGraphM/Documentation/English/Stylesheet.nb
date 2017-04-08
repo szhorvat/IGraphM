@@ -1,102 +1,69 @@
-(* Content-type: application/vnd.wolfram.mathematica *)
-
-(*** Wolfram Notebook File ***)
-(* http://www.wolfram.com/nb *)
-
-(* CreatedBy='Mathematica 11.1' *)
-
-(*CacheID: 234*)
-(* Internal cache information:
-NotebookFileLineBreakTest
-NotebookFileLineBreakTest
-NotebookDataPosition[       158,          7]
-NotebookDataLength[      2527,         94]
-NotebookOptionsPosition[      1500,         69]
-NotebookOutlinePosition[      1878,         85]
-CellTagsIndexPosition[      1835,         82]
-WindowFrame->Normal*)
-
-(* Beginning of Notebook Content *)
 Notebook[{
-Cell[StyleData[StyleDefinitions -> "Default.nb"]],
+Cell[StyleData[StyleDefinitions -> \
+"Default.nb"],ExpressionUUID->"49aa09e6-984a-4765-a66e-c68cdbd26385"],
 
 Cell[StyleData[All, "Printout"],
- Magnification->0.66],
+ Magnification->0.66,ExpressionUUID->"893ebaf3-0a19-4a2a-bf35-2cfba5ef52c5"],
 
 Cell[StyleData["Title"],
  Editable->False,
- ShowCellBracket->False],
+ ShowCellBracket->
+  False,ExpressionUUID->"fbd35bf5-d370-47fb-bea2-82eb4d9292d6"],
 
 Cell[StyleData["Subtitle"],
  Editable->False,
- ShowCellBracket->False],
+ ShowCellBracket->
+  False,ExpressionUUID->"4ac6b473-3fff-4c41-8e4a-e0d64aebea5d"],
 
 Cell[StyleData["Section"],
  Editable->False,
  ShowCellBracket->False,
  ShowGroupOpener->True,
- WholeCellGroupOpener->True],
+ WholeCellGroupOpener->
+  True,ExpressionUUID->"b80f8ca6-0b85-43a5-bfd8-e8fd0bef0d31"],
 
 Cell[StyleData["Subsection"],
  Editable->False,
  ShowCellBracket->False,
  ShowGroupOpener->True,
- WholeCellGroupOpener->True],
+ WholeCellGroupOpener->
+  True,ExpressionUUID->"58ad628c-7abb-44e8-a528-ee7cef73c636"],
 
 Cell[StyleData["Subsubsection"],
  Editable->False,
  ShowCellBracket->False,
  ShowGroupOpener->True,
- WholeCellGroupOpener->True],
+ WholeCellGroupOpener->
+  True,ExpressionUUID->"509ab077-6c93-46eb-b89d-5454f72c0a4b"],
 
 Cell[StyleData["Input"],
- Editable->True],
+ Editable->True,ExpressionUUID->"30b4d6dd-f62c-44ac-a200-29a4790e51e2"],
 
 Cell[StyleData["Output"],
- Editable->True],
+ Editable->True,ExpressionUUID->"4c22dd8d-8b7b-4b10-a119-cdd4792560f8"],
 
 Cell[StyleData["Text"],
  Editable->False,
- ShowCellBracket->False],
+ ShowCellBracket->
+  False,ExpressionUUID->"cd0e586c-8129-49a6-a547-ca823597b0b0"],
 
 Cell[StyleData["Item"],
  Editable->False,
- ShowCellBracket->False],
+ ShowCellBracket->
+  False,ExpressionUUID->"8c41d117-7598-4338-8712-edd837005dba"],
 
 Cell[StyleData["ItemParagraph"],
  Editable->False,
- ShowCellBracket->False]
+ ShowCellBracket->
+  False,ExpressionUUID->"a3e976b4-04b1-4044-a327-3cac89b8ef8f"],
+
+Cell[StyleData["DisplayFormula"],
+ Editable->False,
+ ShowCellBracket->False,ExpressionUUID->"fa9864b2-0487-4f93-a916-afd05337614f"]
 },
 WindowSize->{808, 751},
 WindowMargins->{{316, Automatic}, {Automatic, 50}},
-FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 1, \
-2016)",
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 16, \
+2017)",
 StyleDefinitions->"PrivateStylesheetFormatting.nb"
 ]
-(* End of Notebook Content *)
-
-(* Internal cache information *)
-(*CellTagsOutline
-CellTagsIndex->{}
-*)
-(*CellTagsIndex
-CellTagsIndex->{}
-*)
-(*NotebookFileOutline
-Notebook[{
-Cell[558, 20, 49, 0, 36, 49, 0, "StyleData", "StyleDefinitions", ""],
-Cell[610, 22, 54, 1, 28, 32, 0, "StyleData", "All", "Printout"],
-Cell[667, 25, 67, 2, 107, 24, 0, "StyleData", "Title", "All"],
-Cell[737, 29, 70, 2, 66, 27, 0, "StyleData", "Subtitle", "All"],
-Cell[810, 33, 122, 4, 79, 26, 0, "StyleData", "Section", "All"],
-Cell[935, 39, 125, 4, 51, 29, 0, "StyleData", "Subsection", "All"],
-Cell[1063, 45, 128, 4, 44, 32, 0, "StyleData", "Subsubsection", "All"],
-Cell[1194, 51, 41, 1, 38, 24, 0, "StyleData", "Input", "All"],
-Cell[1238, 54, 42, 1, 44, 25, 0, "StyleData", "Output", "All"],
-Cell[1283, 57, 66, 2, 46, 23, 0, "StyleData", "Text", "All"],
-Cell[1352, 61, 66, 2, 44, 23, 0, "StyleData", "Item", "All"],
-Cell[1421, 65, 75, 2, 37, 32, 0, "StyleData", "ItemParagraph", "All"]
-}
-]
-*)
-
