@@ -377,7 +377,7 @@ IGUnfoldTree::usage = "IGUnfoldTree[graph]";
 
 IGBipartitePartitions::usage = "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.";
 
-IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsis]}] returns graph in which the specified vertex sets are contracted into single vertices.";
+IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsis]}] returns a graph in which the specified vertex sets are contracted into single vertices.";
 
 IGRandomWalk::usage = "IGRandomWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed vertices is returned.";
 
@@ -3198,10 +3198,10 @@ IGBipartitePartitions[graph_?igGraphQ] :=
 IGVertexContract::inv = "The vertices `` are not present in the graph.";
 IGVertexContract::vset = "`` must be a list of vertex sets.";
 
-Options[IGVertexContract] = { SelfLoops -> False };
-SyntaxInformation[IGVertexContract] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph], allElements = Join @@ sets},
+Options[IGVertexContract] = { SelfLoops -> False, "MultipleEdges" -> False };
+SyntaxInformation[IGVertexContract] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGVertexContract, Graph]};
+IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[{IGVertexContract, Graph}]] :=
+    catch@Module[{ig = igMakeFast[graph], allElements = Join @@ sets, g, self, multi},
       If[Not@SubsetQ[VertexList[graph], allElements],
         Message[IGVertexContract::inv, Complement[allElements, VertexList[graph]]];
         Return[$Failed]
@@ -3210,7 +3210,15 @@ IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[]] :=
         VertexList[graph],
         Join[sets, List /@ Complement[VertexList[graph], allElements]]
       ];
-      If[TrueQ@OptionValue[SelfLoops], Identity, SimpleGraph]@igToGraph[ig]
+      self = Not@TrueQ@OptionValue[SelfLoops];
+      multi = Not@TrueQ@OptionValue["MultipleEdges"];
+      g = igToGraph[ig];
+      applyGraphOpt[opt]@Which[
+        self && multi, SimpleGraph[g],
+        self, removeSelfLoops[g],
+        multi, removeMultiEdges[g],
+        True, g
+      ]
     ]
 
 IGVertexContract[graph_?igGraphQ, arg_, opt : OptionsPattern[]] := Null /; Message[IGVertexContract::vset, arg]
