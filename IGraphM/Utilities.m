@@ -16,6 +16,8 @@ IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed g
 
 IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in graph while preserving edge weights.";
 
+IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self loops and multi edges, according to the given options.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -57,6 +59,23 @@ IGReverseGraph[g_?igGraphQ] :=
         Options[g, {EdgeWeight, EdgeCapacity, EdgeCost, VertexWeight, VertexCapacity}]
       ]
     ]
+
+
+SyntaxInformation[IGSimpleGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+
+Options[IGSimpleGraph] = { SelfLoops -> False, "MultipleEdges" -> False };
+
+IGSimpleGraph[g_?SimpleGraphQ, opt : OptionsPattern[]] := g
+IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
+    Module[{self = Not@TrueQ@OptionValue[SelfLoops], multi = Not@TrueQ@OptionValue["MultipleEdges"]},
+      Which[
+        self && multi, SimpleGraph[g],
+        self, removeSelfLoops[g],
+        multi, removeMultiEdges[g],
+        True, g
+      ]
+    ]
+
 
 (***** Finalize *****)
 

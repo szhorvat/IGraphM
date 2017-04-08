@@ -22,6 +22,14 @@ amendUsage[sym_Symbol, amend_, args___] :=
 optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
 
 
+zeroDiagonal[m_] := UpperTriangularize[m, 1] + LowerTriangularize[m, -1]
+
+removeSelfLoops[g_?LoopFreeGraphQ] := g
+removeSelfLoops[g_?igGraphQ] := AdjacencyGraph[VertexList[g], zeroDiagonal@AdjacencyMatrix[g], DirectedEdges -> DirectedGraphQ[g]]
+
+removeMultiEdges[g_ /; igGraphQ[g] && MultigraphQ[g]] := AdjacencyGraph[VertexList[g], Unitize@AdjacencyMatrix[g], DirectedEdges -> DirectedGraphQ[g]]
+removeMultiEdges[g_] := g
+
 (*
 	Numeric codes are for certain special types of completions. Zero means 'don't complete':
 
