@@ -6,9 +6,11 @@ If you are interested in extending IGraph/M, send me an email to get technical g
 
 ## Compiling igraph
 
+The following tools are required for building: a C++11-capable C++ compiler (gcc 4.8 works), `autoconf`, `automake`, `libtool`, `flex`, `bison`.
+
 ### OS X and Linux
 
-In this guide I will use `$HOME/local` as the installation directory for the various needed libraries.  You may want to use a different location for your system.
+In this guide, I will use `$HOME/local` as the installation directory for the various needed libraries.  You may want to use a different location for your system.
 
 On OS X, set the following environment variable before compiling the libraries:
 
@@ -46,10 +48,10 @@ One option for compiling igraph on Windows is to use an MSYS shell to run the co
 
 Once the toolchain is set up, we can compile GMP.  [Download](https://gmplib.org/) and extract it.  Compile using
 
-    ./configure --prefix=$HOME/local --with-pic
+    ./configure --prefix=$HOME/local
     make
     make check
-    
+
 To maximize compatibility with different types of CPUs, consider using the `--host=...` option to the `configure` script. Use the output of `configfsf.guess` as the target host.
 
 If the tests have passed, install it with `make install`
@@ -78,7 +80,7 @@ To compile IGraph/M, you will need:
 
 Then follow these steps:
 
- 1. Clone the IGraphM repository and check out the master branch (do not use the release branch).  
+ 1. Clone the IGraphM repository and check out the master branch (do not use the release branch).
  2. Edit `BuildSettings.m` and set the path to your igraph installation, where necessary.  The available options are the same as for [CreateLibrary](http://reference.wolfram.com/language/CCompilerDriver/ref/CreateLibrary.html).
  3. Append the repository's root directory (i.e. the same directory where this readme file is found) to Mathematica's `$Path`.
  4. Load the package with ``<<IGraphM` ``.  It should automatically be compiled. It can also be recompiled using ``IGraphM`Developer`Recompile[]``.
@@ -157,8 +159,4 @@ Most IGraph/M functions that create graphs take all standard `Graph` options suc
 
 
 
-
-
-
-
-  [1]: https://bitbucket.org/szhorvat/ltemplate
+  [1]: https://github.com/szhorvat/LTemplate/
