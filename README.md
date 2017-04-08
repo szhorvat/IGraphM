@@ -1,16 +1,24 @@
 # IGraph/M – igraph for Mathematica
 
-For the impatient – download the zip archive from [the releases page](https://github.com/szhorvat/IGraphM/releases), extract it, and move the `IGraphM` directory into `FileNameJoin[{$UserBaseDirectory, "Applications"}]`.  Do not use the `master` branch of the git repo.
+For the impatient:
+
+ - Download the `.paclet` file from [the releases page](https://github.com/szhorvat/IGraphM/releases).
+ - Install it using the `PacletInstall` function, as explained [here](http://mathematica.stackexchange.com/q/141887/12).
+ - Evaluate ``<<IGraphM` `` to load the package.
+
+Requirements: _Mathematica_ 10.0 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
+
+Do _not_ use the `master` branch of the GitHub repository. It is for development only, and does not work out of the box.
 
 ## Introduction
 
 #### What is IGraph/M?
 
-IGraph/M is a *Mathematica* interface to the [igraph](http://igraph.org/) graph manipulation and analysis library.  It works directly with *Mathematica*'s builtin `Graph` datatype and focuses on functionality that is either not already present in *Mathematica* (such as motifs, minimum feedback arc set, random rewiring, coloured graph isomorphism, etc.), or for which igraph uses different implementations (isomorphism, sampling random graphs with given degree sequence, etc.)
+IGraph/M is a *Mathematica* interface to the [igraph](http://igraph.org/) graph manipulation and analysis library.  It works directly with *Mathematica*'s builtin `Graph` expressions and focuses on functionality that is either not already present in *Mathematica* (such as motifs, minimum feedback arc set, random rewiring, coloured graph isomorphism, etc.), or for which igraph uses different implementations (isomorphism, sampling random graphs with given degree sequence, etc.)
 
 #### What IGraph/M is not
 
-IGraph/M is *not a replacement* for Mathematica's graph manipulation functionality.  Instead it is meant to complement it.  Thus it works directly with standard `Graph` objects instead of introducing its own graph type.  Functions for trivial tasks such as adding or removing vertices or edges, returning the vertex or edge count, creating standard graphs like cycle graphs, complete graphs, etc. are not provided.
+IGraph/M is *not a replacement* for Mathematica's graph manipulation functionality.  Instead, it is meant to complement it.  Thus it works directly with standard `Graph` expressions instead of introducing its own graph type.  Functions for trivial tasks such as adding or removing vertices or edges, returning the vertex or edge count, creating standard graphs like cycle graphs, complete graphs, etc. are not provided.
 
 #### Why create IGraph/M?
 
@@ -41,9 +49,9 @@ The documentation contains many examples and can be accessed using the `IGDocume
 
 IGraph/M can be installed like any other Mathematica application.
 
- - [Download the zip archive from GitHub's releases page](https://github.com/szhorvat/IGraphM/releases). Use the "Source code (zip)" link.
- - Open Mathematica's "Applications" directory by evaluating `SystemOpen@FileNameJoin[{$UserBaseDirectory, "Applications"}]`.
- - Unzip the downloaded archive.  It will contain this `README.md` file, and a directory called `IGraphM`.  Move the `IGraphM` directory into Mathematica's "Applications" directory.  If earlier versions of the package were installed, they must be fully removed first.
+Download the `.paclet` files from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and install it using the `PacletInstall` function in Mathematica.  For example, assuming that the file `IGraphM-0.3.0.paclet` was downloaded into the directory `~/Downloads`, evaluate
+
+        PacletInstall["~/Downloads/IGraphM-0.3.0.paclet"]
 
  IGraph/M requires Mathematica 10.0 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
@@ -59,20 +67,20 @@ and test that it works by evaluating `IGVersion[]`.
 
 ## Documentation
 
-Currently IGraph/M is still incomplete and under development.  Use
+Use
 
     <<IGraphM`
     IGDocumentation[]
 
 to open the documentation notebook.
 
-The documentation is not yet complete and contributions are most welcome.  If you would like to help out with the documentation, please see the Contributions section below.
+The documentation is not yet complete and contributions are very welcome.  If you would like to help out with the documentation, send me an email.
 
-For additional details about functions or for references, check also [the igraph documentation pages](http://igraph.org/c/doc/).
+For additional details about functions, or for references, check also [the igraph documentation pages](http://igraph.org/c/doc/).
 
 ## Contributions
 
-Contributions to IGraph/M are most welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all of igraph.  However, the main framework is there, and adding new functions is relatively quick and easy.
+Contributions to IGraph/M are very welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all of igraph.  However, the main framework is there, and adding new functions is relatively quick and easy.
 
 If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][1] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
 
@@ -94,7 +102,7 @@ Remember, if you need to use any of these from *Mathematica* today, there is alw
  - write documentation
  - write unit tests
 
-You can contact me in email.  Evaluate the following in Mathematica to get my email address:
+You can contact me by email.  Evaluate the following in Mathematica to get my email address:
 
     Uncompress["1:eJxTTMoPChZiYGAorsrILypLLHFIz03MzNFLzs8FAG/xCOI="]
 
@@ -104,25 +112,30 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
 ### Troubleshooting
 
+  * **"Cannot open ``IGraphM` ``"**
+
+    This message will be shown in the following situations:
+
+    - IGraph/M is not installed. Please follow the installation instructions above.
+
+    - IGraph/M is not compatible with your system. Please review the requirements in the Installation section above.  Additional symptoms will be that `PacletFind["IGraphM"]` returns `{}` but `PacletFind["IGraphM", "MathematicaVersion" -> All, "SystemID" -> All]` returns a non-empty list.
+
   * **"Cannot open ``LTemplate`LTemplatePrivate` ``"**
 
     Loading fails with this error if one tries to use the `master` branch (development branch) without the necessary dependencies.
 
-    Please download IGraph/M from the releases page instead: https://github.com/szhorvat/IGraphM/releases  It includes everything needed to run the package.  
+    Please download IGraph/M from the [GitHub releases page instead](https://github.com/szhorvat/IGraphM/releases).  It includes everything needed to run the package.
 
     Do not clone the git repository and do not use the `master` branch unless you want to develop IGraph/M.
 
   * **"No build settings found. Please check `BuildSettings.m`"**
 
-    This error is shown when trying to load IGraph/M on an incompatible platform.  Currently the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux x86_64 with gcc 4.8 or later, Raspberry Pi with Raspbian Jessie.
+    This error may be shown when trying to load IGraph/M on an incompatible platform.  Currently, the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux x86_64 with gcc 4.8 or later, Raspberry Pi with Raspbian Jessie.
 
-    It may be possible to run IGraph/M on other platforms, however, it will be necessary to compile it form source.
+    It may be possible to run IGraph/M on other platforms, however, it will be necessary to compile it from source.
 
     If you see this error on a supported platform, please file a bug report and include the output of ``IGraphM`Developer`GetInfo[]``.
 
-  * **``<<IGraphM` `` hangs on Raspberry Pi**
-
-    On a Raspberry Pi 1 computer, it takes about 30-40 seconds to load the package.  Please wait patiently.
 
 ### Known issues and workarounds
 
@@ -144,6 +157,19 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
 ## Revision history
 
+##### v0.3.0
+
+ - Compatibility with *Mathematica* 11.1.
+ - Additional random graph generators (`IGBarabasiAlbertGame`, `IGStaticFitnessGame`, `IGStaticPowerLawGame`, `IGGeometricGame`, `IGGrowingGame`, `IGForestFireGame`).
+ - Bipartite graph layout, `IGLayoutBipartite`.
+ - Performance improvements in `IGMaximalCliqueSizeCounts`.
+ - `IGEccentricity` and `IGRadius`.
+ - `IGVertexContract`, to contract multiple vertex sets simultaneously.
+ - `IGRandomWalk`, to take a random walk on a graph.
+ - ``IGraphM`Utilities` `` package.
+ - Significantly improved package loading performance.
+ - Bug fixes and polish.
+
 ##### v0.2.2
 
 This is a bugfix release with several minor fixes.  Important changes to be aware of:
@@ -157,8 +183,8 @@ This is a bugfix release.  The following changes require special mention:
 
  - `IGFeedbackArcSet` could return wrong results for some graphs. This is now fixed.
  - The `"RemovedEdges"` property returned by `IGCommunitiesEdgeBetweenness` could be incorrect for some graphs.  This is now fixed.  Other properties were not affected.
- - The Hierarchical Clustering package is no longer auto-loaded by IGraph/M to avoid shadowing `DistanceMatrix`, a new builtin added in Mathematica 10.3.  Load this package manually (``<<HierarchicalClustering` ``) to  work with the `"HierarchicalClusters"` property of `IGClusterData` objects.
- 
+ - The Hierarchical Clustering package is no longer auto-loaded by IGraph/M to avoid shadowing `DistanceMatrix`, a new built-in function added in Mathematica 10.3.  Load this package manually (``<<HierarchicalClustering` ``) to work with the `"HierarchicalClusters"` property of `IGClusterData` objects.
+
 A number of other small bugs were also fixed.
 
 ##### v0.2.0
@@ -178,5 +204,5 @@ The IGraph/M source code is released under the MIT license, see [LICENSE.txt](IG
 
 igraph (and consequently the IGraph/M binary packages) can be distributed under the terms of the [GPLv2](http://opensource.org/licenses/GPL-2.0).
 
- [1]: https://bitbucket.org/szhorvat/ltemplate
+ [1]: https://github.com/szhorvat/LTemplate/
  [2]: http://szhorvat.net/pelican/using-igraph-from-mathematica.html
