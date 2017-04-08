@@ -43,6 +43,8 @@ IGUndirectedGraph[g_, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simp
 addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Reciprocal"}}]
 
 
+SyntaxInformation[IGReverseGraph] = {"ArgumentsPattern" -> {_}};
+
 IGReverseGraph::nmg = "Multigraphs are not currently supported.";
 
 IGReverseGraph[g_?UndirectedGraphQ] := g
