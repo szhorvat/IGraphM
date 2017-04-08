@@ -57,7 +57,9 @@ IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
 
-IGConnectNeighborhood::usage = "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighborhood. Warning: weights and other graph properties are discarded.";
+IGConnectNeighborhood::usage =
+    "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighborhood.\n" <>
+    "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighborhood. Warning: weights and other graph properties are discarded.";
 
 IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph.";
@@ -1199,11 +1201,11 @@ vertexRename[names_][graph_] :=
       AdjacencyGraph[names, AdjacencyMatrix[graph], DirectedEdges -> DirectedGraphQ[graph]]
     ]
 
-SyntaxInformation[IGConnectNeighborhood] = {"ArgumentsPattern" -> {_, _}};
-IGConnectNeighborhood[graph_?igGraphQ, k_?Internal`NonNegativeMachineIntegerQ] :=
+SyntaxInformation[IGConnectNeighborhood] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGConnectNeighborhood[graph_?igGraphQ, k : _?Internal`NonNegativeMachineIntegerQ : 2, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMakeFast[graph]},
       check@ig@"connectNeighborhood"[k];
-      vertexRename[VertexList[graph]]@igToGraph[ig]
+      Graph[vertexRename[VertexList[graph]]@igToGraph[ig], opt]
     ]
 
 (* Testing *)
