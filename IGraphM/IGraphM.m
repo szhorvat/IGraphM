@@ -300,17 +300,17 @@ IGBibliographicCoupling::usage =
     "IGBibliographicCoupling[graph, {vertex1, vertex2, \[Ellipsis]}] returns the bibliographic coupling of vertex1, vertex2, \[Ellipsis] with all other vertices in graph.";
 
 IGJaccardSimilarity::usage =
-    "IGJaccardSimilarity[graph]\n" <>
-    "IGJaccardSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+    "IGJaccardSimilarity[graph] returns the Jaccard similarity between all pairs of vertices.\n" <>
+    "IGJaccardSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the Jaccard similarity between the given vertices.";
 
 IGDiceSimilarity::usage =
-    "IGDiceSimilarity[graph]\n" <>
-    "IGDiceSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+    "IGDiceSimilarity[graph] returns the Dice similarity between all pairs of vertices.\n" <>
+    "IGDiceSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the Dice similarity between the given vertices.";
 
 IGInverseLogWeightedSimilarity::usage =
-    "IGInverseLogWeightedSimilarity[graph]\n" <>
-    "IGInverseLogWeightedSimilarity[graph, vertex]\n" <>
-    "IGInverseLogWeightedSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}]";
+    "IGInverseLogWeightedSimilarity[graph] returns the inverse log-weighted similarity between all pairs of vertices.\n" <>
+    "IGInverseLogWeightedSimilarity[graph, vertex] returns the inverse log-weighted similarity of vertex to all other vertices.\n" <>
+    "IGInverseLogWeightedSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the inverse log-weighted similarity between the given vertices.";
 
 IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a rank to each vertex, from 1 to n, according to the maximum cardinality search algorithm. Visiting the vertices of the graph by decreasing rank is equivalent to always visiting the next vertex with the most already visited neighbours. Ties are broken randomly.";
 IGChordalQ::usage = "IGChordalQ[graph] tests if graph is chordal.";
