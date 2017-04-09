@@ -316,7 +316,11 @@ IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a
 IGChordalQ::usage = "IGChordalQ[graph] tests if graph is chordal.";
 IGChordalCompletion::usage = "IGChordalCompletion[graph] returns a set of edges that, when added to graph, make it chordal. The edge-set this function returns is usually not minimal.";
 
-IGMinSeparators::usage = "IGMinSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph.";
+IGMinSeparators (* deprecated in favout of IGMinimumSeparators *)
+
+IGMinimumSeparators::usage = "IGMinSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph.";
+
+IGMinimalSeparators::usage = "IGMinimalSeparators[graph] returns all minimal separator vertex sets. A vertex set is a separator if its removal disconnects the graph."
 
 IGVertexSeparatorQ::usage = "IGVertexSeparatorQ[graph, {vertex1, vertex2, \[Ellipsis]}] tests if the given set of vertices disconnects the graph. Edge directions are ignored.";
 
@@ -664,6 +668,7 @@ template = LTemplate["IGraphM",
         (* Vertex separators *)
 
         LFun["minimumSizeSeparators", {}, {Integer, 1}],
+        LFun["minimalSeparators", {}, {Integer, 1}],
         LFun["separatorQ", {{Real, 1, "Constant"}}, True|False],
         LFun["minSeparatorQ", {{Real, 1, "Constant"}}, True|False],
 
@@ -2692,10 +2697,20 @@ IGChordalCompletion[graph_?igGraphQ] :=
 
 (* Vertex cuts *)
 
-SyntaxInformation[IGMinSeparators] = {"ArgumentsPattern" -> {_}};
-IGMinSeparators[graph_?igGraphQ] :=
+IGMinSeparators::deprec = "IGMinSeparators is deprecated and will be removed from future versions of IGraph/M. Use IGMinimumSeparators instead.";
+
+IGMinSeparators[graph_] := (Message[IGMinSeparators::deprec]; IGMinimumSeparators[graph])
+
+SyntaxInformation[IGMinimumSeparators] = {"ArgumentsPattern" -> {_}};
+IGMinimumSeparators[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"minimumSizeSeparators"[]
+    ]
+
+SyntaxInformation[IGMinimalSeparators] = {"ArgumentsPattern" -> {_}};
+IGMinimalSeparators[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      igUnpackVertexSet[graph]@check@ig@"minimalSeparators"[]
     ]
 
 SyntaxInformation[IGVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};

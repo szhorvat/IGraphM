@@ -1423,6 +1423,12 @@ public:
         return packListIntoIntTensor(list);
     }
 
+    mma::IntTensorRef minimalSeparators() const {
+        igList list;
+        igCheck(igraph_all_minimal_st_separators(&graph, &list.list));
+        return packListIntoIntTensor(list);
+    }
+
     bool separatorQ(mma::RealTensorRef vs) const {
         igraph_bool_t res;
         igraph_vector_t vsvec = igVectorView(vs);
