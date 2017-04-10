@@ -143,7 +143,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
      Sometimes layout functions may return an expression which looks like
 
-        Graph[ Graph[...], VertexCoordinates -> {...} ]
+         Graph[ Graph[...], VertexCoordinates -> {...} ]
 
      or similar. A property does not get correctly applied to the graph.  This is due to a bug in Mathematica. I believe I have worked around most of these issues, but if you encounter them, one possible workaround is to cycle the graph `g` through some other representation, e.g. `g = Uncompress@Compress[g]`.
 
@@ -152,6 +152,8 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
    * The graphs returned by `IGBipartiteGameGNM` and `IGBipartiteGameGNP` may not render when using the `DirectedEdges -> True` and `"Bidirectional" -> True` options.  This is due to a bug in Mathematica's  `"BipartiteEmbdding"` graph layout and can be corrected by passing `GraphLayout -> Automatic` to these functions.
 
    * LAD functions may crash with certain inputs.  [This is a bug in the igraph C core.](https://github.com/szhorvat/IGraphM/issues/1)
+   
+   * `IGDocumentation[]` may not work with Mathematica 11.1.0 on Linux.  Please enter `IGraphM/IGDocumentation` in the Documentation Center address bar to access it (or simply search for `igraph` in the Documentation Center).
 
    * See also https://github.com/szhorvat/IGraphM/issues
 
