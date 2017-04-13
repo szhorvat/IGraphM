@@ -855,9 +855,6 @@ intVecQ = VectorQ[#, Developer`MachineIntegerQ]&
 positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&
 nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&
 
-(* Zero out the diagonal of a square matrix. *)
-zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
-
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
 

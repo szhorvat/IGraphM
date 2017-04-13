@@ -22,7 +22,9 @@ amendUsage[sym_Symbol, amend_, args___] :=
 optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
 
 
-zeroDiagonal[m_] := UpperTriangularize[m, 1] + LowerTriangularize[m, -1]
+(* Zero out the diagonal of a square matrix. *)
+zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
+
 
 removeSelfLoops[g_?LoopFreeGraphQ] := g
 removeSelfLoops[g_?igGraphQ] := AdjacencyGraph[VertexList[g], zeroDiagonal@AdjacencyMatrix[g], DirectedEdges -> DirectedGraphQ[g]]
