@@ -18,6 +18,13 @@ IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in gr
 
 IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self loops and multi edges, according to the given options.";
 
+IGWeightedAdjacencyGraph::usage =
+    "IGWeightedAdjacencyGraph[matrix] creates a graph from a weighted adjacency matrix, taking the 0 weight to mean unconnected.\n" <>
+    "IGWeightedAdjacencyGraph[vertices, matrix] uses vertices as the vertex names.\n" <>
+    "IGWeightedAdjacencyGraph[matrix, z] creates a graph from a weighted adjacency matrix, taking the weight z to mean unconnected.\n" <>
+    "IGWeightedAdjacencyGraph[vertices, matrix, z] uses vertices as the vertex names.";
+
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -76,6 +83,22 @@ IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
         multi, removeMultiEdges[g],
         True, g
       ]
+    ]
+
+
+SyntaxInformation[IGWeightedAdjacencyGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[WeightedAdjacencyGraph]};
+
+IGWeightedAdjacencyGraph[wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[WeightedAdjacencyGraph]] :=
+      WeightedAdjacencyGraph[
+        SparseArray[Most@ArrayRules[wam, unconnected], Dimensions[wam], Infinity],
+        opt
+      ]
+
+IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[WeightedAdjacencyGraph]] :=
+    WeightedAdjacencyGraph[
+      vertices,
+      SparseArray[Most@ArrayRules[wam, unconnected], Dimensions[wam], Infinity],
+      opt
     ]
 
 
