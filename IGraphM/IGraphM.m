@@ -819,7 +819,6 @@ GetInfo[] :=
 
 (***** General messages *****)
 
-IGraphM::mixed = "Mixed graphs are not supported by IGraph/M.";
 IGraphM::lytcrd = "The graph doesn't already have existing vertex coordinates. The \"Continue\" -> True layout option will be ignored.";
 IGraphM::lytdim = "The existing vertex coordinates do not have the appropriate dimension for this layout algorithm. The \"Continue\" -> True layout option will be ignored.";
 IGraphM::lytcnt = "`` is not a valid value for the \"Continue\" layout option.";

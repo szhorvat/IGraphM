@@ -9,6 +9,8 @@
 
 (* The following definitions are used in multiple, independently loadable packages. *)
 
+IGraphM::mixed = "Mixed graphs are not supported by IGraph/M.";
+
 (* check if the argument is an igraph compatible graph *)
 igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &;
 
