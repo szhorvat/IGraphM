@@ -385,6 +385,9 @@ IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsi
 
 IGRandomWalk::usage = "IGRandomWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed vertices is returned.";
 
+IGVertexTransitiveQ::usage = "IGVertexTransitiveQ[graph] tests if graph is vertex transitive.";
+IGEdgeTransitiveQ::usage = "IGEdgeTransitiveQ[graph] tests if graph is edge transitive.";
+IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it is both vertex transitive and edge transitive.";
 
 Begin["`Private`"];
 
@@ -3247,6 +3250,43 @@ IGRandomWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ
         1 + Round@check@ig@"randomWalk"[vs[graph][start], steps]
       ]
     ]
+
+(* Transitivity *)
+
+IGVertexTransitiveQ::nmg = "Multigraphs are not supported.";
+SyntaxInformation[IGVertexTransitiveQ] = {"ArgumentsPattern" -> {_}};
+IGVertexTransitiveQ[graph_?EmptyGraphQ] = True;
+IGVertexTransitiveQ[graph_?igGraphQ] :=
+    If[MultigraphQ[graph],
+      Message[IGVertexTransitiveQ::nmg];
+      $Failed
+      ,
+      With[{elems = Range@VertexCount[graph]},
+        GroupOrbits[PermutationGroup@IGBlissAutomorphismGroup[graph], elems] === {elems}
+      ]
+    ]
+IGVertexTransitiveQ[_] = False;
+
+IGEdgeTransitiveQ::nmg = IGVertexTransitiveQ::nmg;
+SyntaxInformation[IGEdgeTransitiveQ] = {"ArgumentsPattern" -> {_}};
+IGEdgeTransitiveQ[graph_?igGraphQ] :=
+    If[MultigraphQ[graph],
+      Message[IGEdgeTransitiveQ::nmg];
+      $Failed
+      ,
+      IGVertexTransitiveQ@LineGraph[graph]
+    ]
+IGEdgeTransitiveQ[_] = False;
+
+IGSymmetricQ::nmg = IGVertexTransitiveQ::nmg;
+IGSymmetricQ[graph_?igGraphQ] :=
+    If[MultigraphQ[graph],
+      Message[IGSymmetricQ::nmg];
+      $Failed
+      ,
+      IGVertexTransitiveQ[graph] && IGEdgeTransitiveQ[graph]
+    ]
+IGSymmetricQ[_] = False;
 
 (***** Finalize *****)
 
