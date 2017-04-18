@@ -1046,8 +1046,11 @@ Options[IGMakeLattice] = {
 SyntaxInformation[IGMakeLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGMakeLattice, Graph]};
 IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
-      check@ig@"makeLattice"[dims, OptionValue["Radius"], OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Periodic"]];
-      applyGraphOpt[opt]@igToGraph[ig]
+      check@ig@"makeLattice"[dims, OptionValue["Radius"], TrueQ@OptionValue[DirectedEdges], TrueQ@OptionValue["Mutual"], TrueQ@OptionValue["Periodic"]];
+      If[Length[dims] === 2 && Not@TrueQ@OptionValue["Periodic"],
+        applyGraphOpt[GraphLayout -> {"GridEmbedding", "Dimension" -> dims}, opt]@igToGraph[ig],
+        applyGraphOpt[opt]@igToGraph[ig]
+      ]
     ]
 
 SyntaxInformation[IGGraphAtlas] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGGraphAtlas, Graph]};
