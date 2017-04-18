@@ -24,6 +24,9 @@ IGWeightedAdjacencyGraph::usage =
     "IGWeightedAdjacencyGraph[matrix, z] creates a graph from a weighted adjacency matrix, taking the weight z to mean unconnected.\n" <>
     "IGWeightedAdjacencyGraph[vertices, matrix, z] uses vertices as the vertex names.";
 
+IGVertexWeightedQ::usage = "IGVertexWeightedQ[graph] tests if graph is a vertex weighted graph.";
+IGEdgeWeightedQ::usage = "IGEdgeWeightedQ[graph] tests if graph is an edge weighted graph.";
+
 
 Begin["`Private`"];
 
@@ -100,6 +103,13 @@ IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except
       SparseArray[Most@ArrayRules[wam, unconnected], Dimensions[wam], Infinity],
       opt
     ]
+
+
+SyntaxInformation[IGVertexWeightedQ] = {"ArgumentsPattern" -> {_}};
+IGVertexWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, VertexWeight] =!= Automatic
+
+SyntaxInformation[IGEdgeWeightedQ] = {"ArgumentsPattern" -> {_}};
+IGEdgeWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, EdgeWeight] =!= Automatic
 
 
 (***** Finalize *****)
