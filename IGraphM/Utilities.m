@@ -102,18 +102,21 @@ IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 
+arrayRules[am_SparseArray, u_] := ArrayRules[SparseArray[am], u]
+arrayRules[am_, u_] := ArrayRules[am, u]
+
 SyntaxInformation[IGWeightedAdjacencyGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[WeightedAdjacencyGraph]};
 
 IGWeightedAdjacencyGraph[wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[WeightedAdjacencyGraph]] :=
       WeightedAdjacencyGraph[
-        SparseArray[Most@ArrayRules[wam, unconnected], Dimensions[wam], Infinity],
+        SparseArray[Most@arrayRules[wam, unconnected], Dimensions[wam], Infinity],
         opt
       ]
 
 IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[WeightedAdjacencyGraph]] :=
     WeightedAdjacencyGraph[
       vertices,
-      SparseArray[Most@ArrayRules[wam, unconnected], Dimensions[wam], Infinity],
+      SparseArray[Most@arrayRules[wam, unconnected], Dimensions[wam], Infinity],
       opt
     ]
 
