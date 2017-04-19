@@ -18,6 +18,8 @@ IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in gr
 
 IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self loops and multi edges, according to the given options.";
 
+IGUnweighted::usage = "IGUnweighted[graph] returns an unweighted version of an edge-weighted graph, while preserving other graph properties.";
+
 IGWeightedAdjacencyGraph::usage =
     "IGWeightedAdjacencyGraph[matrix] creates a graph from a weighted adjacency matrix, taking the 0 weight to mean unconnected.\n" <>
     "IGWeightedAdjacencyGraph[vertices, matrix] uses vertices as the vertex names.\n" <>
@@ -100,6 +102,12 @@ IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
         True, g
       ]
     ]
+
+
+SyntaxInformation[IGUnweighted] = {"ArgumentsPattern" -> {_}};
+
+IGUnweighted[g_?IGEdgeWeightedQ] := Graph[VertexList[g], EdgeList[g], FilterRules[Options[g], Except[EdgeWeight]]]
+IGUnweighted[g_?GraphQ] := g
 
 
 arrayRules[am_SparseArray, u_] := ArrayRules[SparseArray[am], u]
