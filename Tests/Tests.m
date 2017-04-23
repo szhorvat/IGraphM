@@ -6,6 +6,12 @@ tolEq[a_, b_, tol_ : 1*^-8 ] := Max@Abs[a-b] < tol
 takeUpper[mat_?SquareMatrixQ] := Extract[mat, Subsets[Range@Length[mat], {2}]]
 takeLower[mat_?SquareMatrixQ] := takeUpper@Transpose[mat]
 
+sameGraphQ[g1_, g2_] :=
+    Block[{UndirectedEdge},
+      SetAttributes[UndirectedEdge, Orderless];
+      Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
+    ]
+
 (*******************************************************************************)
 MTSection["Basic"]
 
@@ -35,7 +41,12 @@ nameFromUsage[symname_] :=
       First@StringCases[sym::usage, Shortest[name__] ~~ "[" :> name]]
 
 MT[
-  AllTrue[Complement[Names["IGraphM`*"], {"IGraphM"}], nameFromUsage[#] === # &],
+  AllTrue[Complement[Names["IGraphM`*"], {"IGraphM", "IGMinSeparators"}], nameFromUsage[#] === # &],
+  True
+]
+
+MT[
+  AllTrue[Complement[Names["IGraphM`Utilities`*"], {}], nameFromUsage[#] === # &],
   True
 ]
 
@@ -70,6 +81,8 @@ wdgs = Graph[dgs, EdgeWeight->dsweights];
 
 diweights = RandomReal[1, EdgeCount[dgi]];
 wdgi = Graph[dgi, EdgeWeight->diweights];
+
+bidi = DirectedGraph[RandomGraph[{10, 20}]];
 
 empty = Graph[{},{}];
 edgeless = Graph[{1,2,3},{}];
@@ -1796,10 +1809,10 @@ MT[
 ]
 
 
-(* IGMinSeparators *)
+(* IGMinimumSeparators *)
 
 MT[
-  IGMinSeparators[#] =!= {} & /@ ulist,
+  IGMinimumSeparators[#] =!= {} & /@ ulist,
   ConnectedGraphQ /@ ulist
 ]
 
@@ -1858,3 +1871,246 @@ MT[
 ]
 
 
+MTSection["Utilities package"]
+
+(* IGUndirectedGraph *)
+
+Outer[
+  MT[
+    sameGraphQ[
+      IGUndirectedGraph[#1, #2],
+      #1
+    ],
+    True
+  ]&,
+  {empty, edgeless, ugi, ugs, umulti},
+  {"Simple", "All", "Reciprocal"}
+]
+
+g = Graph[{1,2,3,4,5}, {1->2, 1->2, 3->3, 3->4, 4->3}];
+
+MT[
+  IGUndirectedGraph[g],
+  IGUndirectedGraph[g, "Simple"]
+]
+
+MT[
+  sameGraphQ[
+    IGUndirectedGraph[g, "Simple"],
+    Graph[{1,2,3,4,5}, {1<->2, 3<->3, 3<->4}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGUndirectedGraph[g, "All"],
+    Graph[{1, 2, 3, 4, 5}, {1 <-> 2, 1 <-> 2, 3 <-> 3, 3 <-> 4, 4 <-> 3}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGUndirectedGraph[g, "Reciprocal"],
+    Graph[{1, 2, 3, 4, 5}, {3 <-> 3, 3 <-> 4}]
+  ],
+  True
+]
+
+(* IGNullGraphQ *)
+
+MT[
+  IGNullGraphQ[1], (* False for non-graph *)
+  False
+]
+
+MT[
+  IGNullGraphQ[empty],
+  True
+]
+
+MT[
+  IGNullGraphQ[edgeless],
+  False
+]
+
+MT[
+  IGNullGraphQ[ugi],
+  False
+]
+
+MT[
+  IGNullGraphQ[ugs],
+  False
+]
+
+(* IGSimpleGraph *)
+
+MT[
+  sameGraphQ[
+    IGSimpleGraph[#],
+    #
+  ],
+  True
+]& /@ {empty, edgeless, ugi, ugs, dgi, dgs, bidi}
+
+ug = Graph[{7, 9, 10, 5, 6, 0, 8, 2, 4, 3, 1}, {7 <-> 9, 10 <-> 5,
+  6 <-> 5, 10 <-> 0, 5 <-> 8, 9 <-> 9, 2 <-> 4, 9 <-> 3, 3 <-> 1,
+  6 <-> 0, 7 <-> 3, 0 <-> 5, 7 <-> 3, 0 <-> 0, 8 <-> 6, 8 <-> 0,
+  10 <-> 7, 9 <-> 0, 5 <-> 3, 3 <-> 0, 6 <-> 1, 3 <-> 10, 8 <-> 8,
+  7 <-> 8, 6 <-> 8, 4 <-> 8, 6 <-> 8, 4 <-> 0, 6 <-> 3, 3 <-> 5,
+  5 <-> 0, 6 <-> 0, 2 <-> 1, 5 <-> 0, 10 <-> 0, 0 <-> 0, 5 <-> 6,
+  1 <-> 1, 1 <-> 2, 3 <-> 10, 0 <-> 0, 10 <-> 6, 2 <-> 1, 10 <-> 10,
+  7 <-> 10, 2 <-> 10, 9 <-> 5, 1 <-> 10, 7 <-> 3, 0 <-> 10}];
+
+MT[
+  sameGraphQ[
+    IGSimpleGraph[ug],
+    Graph[{7, 9, 10, 5, 6, 0, 8, 2, 4, 3, 1}, {6 <-> 1, 2 <-> 1, 10 <-> 6,
+      2 <-> 10, 1 <-> 10, 10 <-> 5, 6 <-> 5, 5 <-> 8, 8 <-> 6, 3 <-> 1,
+      5 <-> 3, 3 <-> 10, 6 <-> 3, 10 <-> 0, 6 <-> 0, 0 <-> 5, 8 <-> 0,
+      3 <-> 0, 2 <-> 4, 4 <-> 8, 4 <-> 0, 9 <-> 3, 9 <-> 0, 9 <-> 5,
+      7 <-> 9, 7 <-> 3, 10 <-> 7, 7 <-> 8}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGSimpleGraph[ug, SelfLoops -> True],
+    Graph[{7, 9, 10, 5, 6, 0, 8, 2, 4, 3, 1}, {7 <-> 9, 7 <-> 10, 7 <-> 8,
+      7 <-> 3, 9 <-> 9, 9 <-> 5, 9 <-> 0, 9 <-> 3, 10 <-> 10, 10 <-> 5,
+      10 <-> 6, 10 <-> 0, 10 <-> 2, 10 <-> 3, 10 <-> 1, 5 <-> 6, 5 <-> 0,
+      5 <-> 8, 5 <-> 3, 6 <-> 0, 6 <-> 8, 6 <-> 3, 6 <-> 1, 0 <-> 0,
+      0 <-> 8, 0 <-> 4, 0 <-> 3, 8 <-> 8, 8 <-> 4, 2 <-> 4, 2 <-> 1,
+      3 <-> 1, 1 <-> 1}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGSimpleGraph[ug, "MultipleEdges" -> True],
+    Graph[{7, 9, 10, 5, 6, 0, 8, 2, 4, 3, 1}, {7 <-> 9, 7 <-> 10, 7 <-> 10,
+      7 <-> 8, 7 <-> 3, 7 <-> 3, 7 <-> 3, 9 <-> 5, 9 <-> 0, 9 <-> 3,
+      10 <-> 5, 10 <-> 6, 10 <-> 0, 10 <-> 0, 10 <-> 0, 10 <-> 2, 10 <-> 3,
+      10 <-> 3, 10 <-> 1, 5 <-> 6, 5 <-> 6, 5 <-> 0, 5 <-> 0, 5 <-> 0,
+      5 <-> 8, 5 <-> 3, 5 <-> 3, 6 <-> 0, 6 <-> 0, 6 <-> 8, 6 <-> 8,
+      6 <-> 8, 6 <-> 3, 6 <-> 1, 0 <-> 8, 0 <-> 4, 0 <-> 3, 8 <-> 4,
+      2 <-> 4, 2 <-> 1, 2 <-> 1, 2 <-> 1, 3 <-> 1}]
+  ],
+  True
+]
+
+dg = Graph[{7, 9, 10, 5, 6, 0, 8, 2, 4, 3, 1}, {7 \[DirectedEdge] 9,
+  10 \[DirectedEdge] 5, 6 \[DirectedEdge] 5, 10 \[DirectedEdge] 0,
+  5 \[DirectedEdge] 8, 9 \[DirectedEdge] 9, 2 \[DirectedEdge] 4,
+  9 \[DirectedEdge] 3, 3 \[DirectedEdge] 1, 6 \[DirectedEdge] 0,
+  7 \[DirectedEdge] 3, 0 \[DirectedEdge] 5, 7 \[DirectedEdge] 3,
+  0 \[DirectedEdge] 0, 8 \[DirectedEdge] 6, 8 \[DirectedEdge] 0,
+  10 \[DirectedEdge] 7, 9 \[DirectedEdge] 0, 5 \[DirectedEdge] 3,
+  3 \[DirectedEdge] 0, 6 \[DirectedEdge] 1, 3 \[DirectedEdge] 10,
+  8 \[DirectedEdge] 8, 7 \[DirectedEdge] 8, 6 \[DirectedEdge] 8,
+  4 \[DirectedEdge] 8, 6 \[DirectedEdge] 8, 4 \[DirectedEdge] 0,
+  6 \[DirectedEdge] 3, 3 \[DirectedEdge] 5, 5 \[DirectedEdge] 0,
+  6 \[DirectedEdge] 0, 2 \[DirectedEdge] 1, 5 \[DirectedEdge] 0,
+  10 \[DirectedEdge] 0, 0 \[DirectedEdge] 0, 5 \[DirectedEdge] 6,
+  1 \[DirectedEdge] 1, 1 \[DirectedEdge] 2, 3 \[DirectedEdge] 10,
+  0 \[DirectedEdge] 0, 10 \[DirectedEdge] 6, 2 \[DirectedEdge] 1,
+  10 \[DirectedEdge] 10, 7 \[DirectedEdge] 10, 2 \[DirectedEdge] 10,
+  9 \[DirectedEdge] 5, 1 \[DirectedEdge] 10, 7 \[DirectedEdge] 3,
+  0 \[DirectedEdge] 10}];
+
+MT[
+  sameGraphQ[
+    IGSimpleGraph[dg],
+    Graph[{7, 9, 10, 5, 6, 0, 8, 2, 4, 3, 1}, {6 \[DirectedEdge] 1,
+      2 \[DirectedEdge] 1, 1 \[DirectedEdge] 2, 10 \[DirectedEdge] 6,
+      2 \[DirectedEdge] 10, 1 \[DirectedEdge] 10, 5 \[DirectedEdge] 6,
+      10 \[DirectedEdge] 5, 6 \[DirectedEdge] 5, 8 \[DirectedEdge] 6,
+      5 \[DirectedEdge] 8, 6 \[DirectedEdge] 8, 3 \[DirectedEdge] 1,
+      3 \[DirectedEdge] 10, 3 \[DirectedEdge] 5, 5 \[DirectedEdge] 3,
+      6 \[DirectedEdge] 3, 0 \[DirectedEdge] 5, 0 \[DirectedEdge] 10,
+      10 \[DirectedEdge] 0, 6 \[DirectedEdge] 0, 8 \[DirectedEdge] 0,
+      3 \[DirectedEdge] 0, 5 \[DirectedEdge] 0, 4 \[DirectedEdge] 8,
+      4 \[DirectedEdge] 0, 2 \[DirectedEdge] 4, 9 \[DirectedEdge] 3,
+      9 \[DirectedEdge] 0, 9 \[DirectedEdge] 5, 7 \[DirectedEdge] 9,
+      7 \[DirectedEdge] 3, 7 \[DirectedEdge] 8, 7 \[DirectedEdge] 10,
+      10 \[DirectedEdge] 7}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGSimpleGraph[dg, SelfLoops -> True],
+    Graph[{7, 9, 10, 5, 6, 0, 8, 2, 4, 3, 1}, {7 \[DirectedEdge] 9,
+    7 \[DirectedEdge] 10, 7 \[DirectedEdge] 8, 7 \[DirectedEdge] 3,
+    9 \[DirectedEdge] 9, 9 \[DirectedEdge] 5, 9 \[DirectedEdge] 0,
+    9 \[DirectedEdge] 3, 10 \[DirectedEdge] 7, 10 \[DirectedEdge] 10,
+    10 \[DirectedEdge] 5, 10 \[DirectedEdge] 6, 10 \[DirectedEdge] 0,
+    5 \[DirectedEdge] 6, 5 \[DirectedEdge] 0, 5 \[DirectedEdge] 8,
+    5 \[DirectedEdge] 3, 6 \[DirectedEdge] 5, 6 \[DirectedEdge] 0,
+    6 \[DirectedEdge] 8, 6 \[DirectedEdge] 3, 6 \[DirectedEdge] 1,
+    0 \[DirectedEdge] 10, 0 \[DirectedEdge] 5, 0 \[DirectedEdge] 0,
+    8 \[DirectedEdge] 6, 8 \[DirectedEdge] 0, 8 \[DirectedEdge] 8,
+    2 \[DirectedEdge] 10, 2 \[DirectedEdge] 4, 2 \[DirectedEdge] 1,
+    4 \[DirectedEdge] 0, 4 \[DirectedEdge] 8, 3 \[DirectedEdge] 10,
+    3 \[DirectedEdge] 5, 3 \[DirectedEdge] 0, 3 \[DirectedEdge] 1,
+    1 \[DirectedEdge] 10, 1 \[DirectedEdge] 2, 1 \[DirectedEdge] 1}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGSimpleGraph[dg, "MultipleEdges" -> True],
+    Graph[{7, 9, 10, 5, 6, 0, 8, 2, 4, 3, 1}, {7 \[DirectedEdge] 9,
+    7 \[DirectedEdge] 10, 7 \[DirectedEdge] 8, 7 \[DirectedEdge] 3,
+    7 \[DirectedEdge] 3, 7 \[DirectedEdge] 3, 9 \[DirectedEdge] 5,
+    9 \[DirectedEdge] 0, 9 \[DirectedEdge] 3, 10 \[DirectedEdge] 7,
+    10 \[DirectedEdge] 5, 10 \[DirectedEdge] 6, 10 \[DirectedEdge] 0,
+    10 \[DirectedEdge] 0, 5 \[DirectedEdge] 6, 5 \[DirectedEdge] 0,
+    5 \[DirectedEdge] 0, 5 \[DirectedEdge] 8, 5 \[DirectedEdge] 3,
+    6 \[DirectedEdge] 5, 6 \[DirectedEdge] 0, 6 \[DirectedEdge] 0,
+    6 \[DirectedEdge] 8, 6 \[DirectedEdge] 8, 6 \[DirectedEdge] 3,
+    6 \[DirectedEdge] 1, 0 \[DirectedEdge] 10, 0 \[DirectedEdge] 5,
+    8 \[DirectedEdge] 6, 8 \[DirectedEdge] 0, 2 \[DirectedEdge] 10,
+    2 \[DirectedEdge] 4, 2 \[DirectedEdge] 1, 2 \[DirectedEdge] 1,
+    4 \[DirectedEdge] 0, 4 \[DirectedEdge] 8, 3 \[DirectedEdge] 10,
+    3 \[DirectedEdge] 10, 3 \[DirectedEdge] 5, 3 \[DirectedEdge] 0,
+    3 \[DirectedEdge] 1, 1 \[DirectedEdge] 10, 1 \[DirectedEdge] 2}]
+  ],
+  True
+]
+
+(* IGEdgeWeightedQ, IGVertexWeightedQ *)
+
+vwg = Graph[{1,2,3},{1<->2},VertexWeight->{1,2,3}];
+
+MT[
+  IGEdgeWeightedQ[#],
+  False
+]& /@ {
+  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
+  vwg
+}
+
+MT[
+  IGVertexWeightedQ[#],
+  False
+]& /@ {
+  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
+  wugi, wugs, wdgi, wdgs
+}
+
+MT[
+  IGEdgeWeightedQ[#],
+  True
+]& /@ {wugi, wugs, wdgi, wdgs}
+
+MT[
+  IGVertexWeightedQ[vwg],
+  True
+]

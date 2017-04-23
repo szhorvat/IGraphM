@@ -1,7 +1,12 @@
 Notebook[{
-Cell["\<\
-These tests use MicroTest from https://github.com/szhorvat/MicroTest\
-\>", "Text",ExpressionUUID->"521071e9-8c5a-4fcf-89a6-64f5be7e9e42"],
+Cell[TextData[{
+ "These tests use MicroTest from ",
+ ButtonBox["https://github.com/szhorvat/MicroTest",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://github.com/szhorvat/MicroTest"], None},
+  ButtonNote->"https://github.com/szhorvat/MicroTest"]
+}], "Text",ExpressionUUID->"521071e9-8c5a-4fcf-89a6-64f5be7e9e42"],
 
 Cell["Restart the kernel before evaluating this notebook.", \
 "Text",ExpressionUUID->"ab995c80-1261-4e9b-a0aa-7e0daf7cbc81"],
@@ -51,12 +56,27 @@ Cell[BoxData[
    RowBox[{"Complement", "[", 
     RowBox[{
      RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
-     RowBox[{"{", "\"\<IGraphM\>\"", "}"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<IGraphM\>\"", ",", "\"\<IGMinSeparators\>\""}], "}"}]}], 
+    "]"}], ",", 
    RowBox[{
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
-    "&"}]}], 
-  "]"}]], "Input",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
+    "&"}]}], "]"}]], \
+"Input",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", 
+  RowBox[{
+   RowBox[{"Complement", "[", 
+    RowBox[{
+     RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}], ",", 
+     RowBox[{"{", "}"}]}], "]"}], ",", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
+    "&"}]}], "]"}]], \
+"Input",ExpressionUUID->"d7a025cd-0556-4c57-8562-f08bf8bcb27f"],
 
 Cell[BoxData[
  RowBox[{"Scan", "[", 
@@ -71,7 +91,9 @@ Cell[BoxData[
           RowBox[{"#", "::", "usage"}], ",", "\"\<Text\>\"", ",", 
           RowBox[{"GeneratedCell", "\[Rule]", "True"}]}], "]"}], "]"}], 
        "&"}]}], "]"}], "&"}], ",", 
-   RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], 
+   RowBox[{
+    RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], "~", "Join", "~", 
+    RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}]}]}], 
   "]"}]], "Input",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
 WindowSize->{1025, 768},
