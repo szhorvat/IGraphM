@@ -31,8 +31,8 @@ IGWeightedAdjacencyGraph::usage =
 IGVertexWeightedQ::usage = "IGVertexWeightedQ[graph] tests if graph is a vertex weighted graph.";
 IGEdgeWeightedQ::usage = "IGEdgeWeightedQ[graph] tests if graph is an edge weighted graph.";
 
-IGVProp::usage = "IGVProp[prop] is an operator that extracts the values of vertex property prop from a graph.";
-IGEProp::usage = "IGEProp[prop] is an operator that extracts the values of edge property prop from a graph.";
+IGVertexProp::usage = "IGVertexProp[prop] is an operator that extracts the values of vertex property prop from a graph.";
+IGEdgeProp::usage   = "IGEdgeProp[prop] is an operator that extracts the values of edge property prop from a graph.";
 
 IGVertexMap::usage =
     "IGVertexMap[f, prop, graph] maps the function f to the vertex property list of property prop in graph.\n" <>
@@ -145,9 +145,9 @@ IGEdgeWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, EdgeWeight] =!= Aut
 
 gmiss = Missing["Nonexistent"];
 
-SyntaxInformation[IGVProp] = {"ArgumentsPattern" -> {_}};
-IGVProp[prop_][g_?GraphQ] := Replace[PropertyValue[{g,#}, prop]& /@ VertexList[g], $Failed -> gmiss, {1}]
-IGVProp[prop : VertexWeight|VertexCapacity (* not VertexCoordinates! *)][g_?GraphQ] :=
+SyntaxInformation[IGVertexProp] = {"ArgumentsPattern" -> {_}};
+IGVertexProp[prop_][g_?GraphQ] := Replace[PropertyValue[{g,#}, prop]& /@ VertexList[g], $Failed -> gmiss, {1}]
+IGVertexProp[prop : VertexWeight|VertexCapacity (* not VertexCoordinates! *)][g_?GraphQ] :=
     With[{values = PropertyValue[g, prop]},
       If[values === Automatic,
         ConstantArray[gmiss, VertexCount[g]],
@@ -157,19 +157,19 @@ IGVProp[prop : VertexWeight|VertexCapacity (* not VertexCoordinates! *)][g_?Grap
 
 specialEdgeProps = EdgeWeight|EdgeCost|EdgeCapacity;
 
-IGEProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgeProps] <> ".";
+IGEdgeProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgeProps] <> ".";
 
-SyntaxInformation[IGEProp] = {"ArgumentsPattern" -> {_}};
-IGEProp[prop : specialEdgeProps][g_?GraphQ] :=
+SyntaxInformation[IGEdgeProp] = {"ArgumentsPattern" -> {_}};
+IGEdgeProp[prop : specialEdgeProps][g_?GraphQ] :=
     With[{values = PropertyValue[g, prop]},
       If[values === Automatic,
         ConstantArray[gmiss, EdgeCount[g]],
         values
       ]
     ]
-IGEProp[prop_][g_?GraphQ] :=
+IGEdgeProp[prop_][g_?GraphQ] :=
     Module[{multi = MultigraphQ[g]},
-      If[multi, Message[IGEProp::nmg]];
+      If[multi, Message[IGEdgeProp::nmg]];
       Replace[PropertyValue[{g, #}, prop]& /@ EdgeList[g], $Failed -> gmiss, {1}] /; Not[multi]
     ]
 
@@ -218,14 +218,14 @@ IGVertexMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
       ];
       igSetVertexProperty[g, prop, MapThread[fun, Through[pfunlist[g]]]]
     ]
-IGVertexMap[fun_, prop : Except[_Rule], g_?GraphQ] := IGVertexMap[fun, prop -> IGVProp[prop], g]
+IGVertexMap[fun_, prop : Except[_Rule], g_?GraphQ] := IGVertexMap[fun, prop -> IGVertexProp[prop], g]
 IGVertexMap[fun_, spec_][g_] := IGVertexMap[fun, spec, g]
 
 
 IGEdgeMap::vprop = "Warning: `` is a vertex property. It should not be used as an edge property name.";
 IGEdgeMap::list  = IGVertexMap::list;
 IGEdgeMap::list2 = IGVertexMap::list2;
-IGEdgeMap::nmg = IGEProp::nmg;
+IGEdgeMap::nmg = IGEdgeProp::nmg;
 
 checkEdgeProp[prop:
   VertexWeight|VertexCapacity|
@@ -262,7 +262,7 @@ IGEdgeMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
       ];
       igSetEdgeProperty[g, prop, MapThread[fun, values]]
     ]
-IGEdgeMap[fun_, prop : Except[_Rule], g_?GraphQ] := IGEdgeMap[fun, prop -> IGEProp[prop], g]
+IGEdgeMap[fun_, prop : Except[_Rule], g_?GraphQ] := IGEdgeMap[fun, prop -> IGEdgeProp[prop], g]
 IGEdgeMap[fun_, spec_][g_] := IGEdgeMap[fun, spec, g]
 
 
