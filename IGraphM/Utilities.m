@@ -146,9 +146,10 @@ IGEdgeWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, EdgeWeight] =!= Aut
 gmiss = Missing["Nonexistent"];
 
 SyntaxInformation[IGVertexProp] = {"ArgumentsPattern" -> {_}};
+IGVertexProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
 IGVertexProp[prop_][g_?GraphQ] := Replace[PropertyValue[{g,#}, prop]& /@ VertexList[g], $Failed -> gmiss, {1}]
 IGVertexProp[prop : VertexWeight|VertexCapacity (* not VertexCoordinates! *)][g_?GraphQ] :=
-    With[{values = PropertyValue[g, prop]},
+    With[{values = PropertyValue[g, prop]}, (* fails on null graph, but that is caught by the first pattern *)
       If[values === Automatic,
         ConstantArray[gmiss, VertexCount[g]],
         values
@@ -160,8 +161,9 @@ specialEdgeProps = EdgeWeight|EdgeCost|EdgeCapacity;
 IGEdgeProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgeProps] <> ".";
 
 SyntaxInformation[IGEdgeProp] = {"ArgumentsPattern" -> {_}};
+IGEdgeProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
 IGEdgeProp[prop : specialEdgeProps][g_?GraphQ] :=
-    With[{values = PropertyValue[g, prop]},
+    With[{values = PropertyValue[g, prop]}, (* fails on null graph, but that is caught by the first pattern *)
       If[values === Automatic,
         ConstantArray[gmiss, EdgeCount[g]],
         values
