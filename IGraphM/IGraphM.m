@@ -316,9 +316,9 @@ IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a
 IGChordalQ::usage = "IGChordalQ[graph] tests if graph is chordal.";
 IGChordalCompletion::usage = "IGChordalCompletion[graph] returns a set of edges that, when added to graph, make it chordal. The edge-set this function returns is usually not minimal.";
 
-IGMinSeparators (* deprecated in favout of IGMinimumSeparators *)
+IGMinSeparators::usage = "IGMinSeparators is deprecated. Use IGMinimumSeparators instead."; (* deprecated in favout of IGMinimumSeparators *)
 
-IGMinimumSeparators::usage = "IGMinSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph.";
+IGMinimumSeparators::usage = "IGMinimumSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph.";
 
 IGMinimalSeparators::usage = "IGMinimalSeparators[graph] returns all minimal separator vertex sets. A vertex set is a separator if its removal disconnects the graph."
 
