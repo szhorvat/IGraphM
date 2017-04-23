@@ -12,9 +12,9 @@ BeginPackage["IGraphM`Utilities`"];
 
 Unprotect /@ Names["IGraphM`Utilities`*"];
 
-IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undedirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Reciprocal\" creates a single undirected edge only between reciprocally connected vertices.";
 IGNullGraphQ::usage = "IGNullGraphQ[graph] tests whether graph has no vertices.";
 
+IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Reciprocal\" creates a single undirected edge only between reciprocally connected vertices.";
 
 IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in graph while preserving edge weights.";
 
@@ -37,7 +37,7 @@ IGEProp::usage = "IGEProp[prop] is an operator that extracts the values of edge 
 IGVertexMap::usage =
     "IGVertexMap[f, prop, graph] maps the function f to the vertex property list of property prop in graph.\n" <>
     "IGVertexMap[f, prop -> pf, graph] maps the function f to the values returned by pf[graph] and assigns the result to the vertex property prop.\n" <>
-    "IGVertexMap[f, prop -> {pf1, pf2, \[Ellipsis]}, graph] threads f over {pf1[graph], pf2[graph], \[Ellipsis]} and assigns the result to the vetex property prop.\n" <>
+    "IGVertexMap[f, prop -> {pf1, pf2, \[Ellipsis]}, graph] threads f over {pf1[graph], pf2[graph], \[Ellipsis]} and assigns the result to the vertex property prop.\n" <>
     "IGVertexMap[f, spec] represents an operator form of IGVertexMap that can be applied to a graph.";
 IGEdgeMap::usage =
     "IGEdgeMap[f, prop, graph] maps the function f to the edge property list of property prop in graph.\n" <>
@@ -116,6 +116,7 @@ IGUnweighted[g_?IGEdgeWeightedQ] := Graph[VertexList[g], EdgeList[g], FilterRule
 IGUnweighted[g_?GraphQ] := g
 
 
+(* When am is a SparseArray, we need to canonicalize it and ensure that it has no explicit that is the same as the implicit one. *)
 arrayRules[am_SparseArray, u_] := ArrayRules[SparseArray[am], u]
 arrayRules[am_, u_] := ArrayRules[am, u]
 
