@@ -13,6 +13,8 @@ BeginPackage["IGraphM`Utilities`"];
 Unprotect /@ Names["IGraphM`Utilities`*"];
 
 IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undedirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Reciprocal\" creates a single undirected edge only between reciprocally connected vertices.";
+IGNullGraphQ::usage = "IGNullGraphQ[graph] tests whether graph has no vertices.";
+
 
 IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in graph while preserving edge weights.";
 
@@ -47,6 +49,9 @@ Begin["`Private`"];
 
 (* Common definitions *)
 Get["IGraphM`Common`"];
+
+IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
+IGNullGraphQ[_] = False;
 
 SyntaxInformation[IGUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 
