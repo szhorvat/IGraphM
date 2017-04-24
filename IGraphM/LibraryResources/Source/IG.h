@@ -141,6 +141,11 @@ public:
         igConstructorCheck(igraph_atlas(&graph, n));
     }
 
+    void kautz(mint m, mint n) {
+        destroy();
+        igConstructorCheck(igraph_kautz(&graph, m, n));
+    }
+
     // Weights
 
     void setWeights(mma::RealTensorRef w) {

@@ -56,6 +56,7 @@ IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice
 IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
+IGKautzGraph::usage = "IGKautzGraph[m, n] creates a Kautz graph on \!\(m+1\) characters with string length \!\(n+1\).";
 
 IGConnectNeighborhood::usage =
     "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighborhood.\n" <>
@@ -435,6 +436,7 @@ template = LTemplate["IGraphM",
         (* LFun["fromEdgeListML", LinkObject], *)
         LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
         LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
+        LFun["kautz", {Integer, Integer}, "Void"],
         LFun["graphAtlas", {Integer}, "Void"],
 
         (* Weights *)
@@ -1054,6 +1056,13 @@ IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]]
         applyGraphOpt[GraphLayout -> {"GridEmbedding", "Dimension" -> dims}, opt]@igToGraph[ig],
         applyGraphOpt[opt]@igToGraph[ig]
       ]
+    ]
+
+SyntaxInformation[IGKautzGraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGKautzGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"kautz"[m, n];
+      applyGraphOpt[opt]@igToGraph[ig]
     ]
 
 SyntaxInformation[IGGraphAtlas] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGGraphAtlas, Graph]};
