@@ -1063,7 +1063,7 @@ IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]]
     catch@Block[{ig = Make["IG"]},
       check@ig@"makeLattice"[dims, OptionValue["Radius"], TrueQ@OptionValue[DirectedEdges], TrueQ@OptionValue["Mutual"], TrueQ@OptionValue["Periodic"]];
       If[Length[dims] === 2 && Not@TrueQ@OptionValue["Periodic"],
-        applyGraphOpt[GraphLayout -> {"GridEmbedding", "Dimension" -> dims}, opt]@igToGraph[ig],
+        applyGraphOpt[opt, GraphLayout -> {"GridEmbedding", "Dimension" -> dims}]@igToGraph[ig],
         applyGraphOpt[opt]@igToGraph[ig]
       ]
     ]
