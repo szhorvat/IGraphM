@@ -57,6 +57,11 @@ IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
 IGKautzGraph::usage = "IGKautzGraph[m, n] creates a Kautz graph on \!\(m+1\) characters with string length \!\(n+1\).";
+IGKaryTree::usage = "IGKaryTree[m, n]";
+IGCompleteGraph::usage = "IGCompleteGraph[m]";
+IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[m]";
+IGDeBruijnGraph::usage = "IGDeBruijnGraph[m]";
+IGChordalRing::usage = "IGChordalRing[m, w]";
 
 IGConnectNeighborhood::usage =
     "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighborhood.\n" <>
@@ -437,6 +442,11 @@ template = LTemplate["IGraphM",
         LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
         LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
         LFun["kautz", {Integer, Integer}, "Void"],
+        LFun["tree", {Integer, Integer, True|False (* directed *)}, "Void"],
+        LFun["completeGraph", {Integer, True|False (* directed *), True|False (* loops *)}, "Void"],
+        LFun["completeCitationGraph", {Integer, True|False (* directed *)}, "Void"],
+        LFun["deBruijn", {Integer, Integer}, "Void"],
+        LFun["extendedChordalRing", {Integer, {Real, 2}}, "Void"],
         LFun["graphAtlas", {Integer}, "Void"],
 
         (* Weights *)
@@ -1064,6 +1074,49 @@ IGKautzGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMach
       check@ig@"kautz"[m, n];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
+
+Options[IGKaryTree] = {
+  DirectedEdges -> False
+};
+SyntaxInformation[IGKaryTree] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGKaryTree, Graph]};
+IGKaryTree[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[{IGKaryTree, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"tree"[m, n, OptionValue[DirectedEdges]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+Options[IGCompleteGraph] = {
+  DirectedEdges -> False, SelfLoops -> False,
+  GraphLayout -> "CircularEmbedding"
+};
+SyntaxInformation[IGCompleteGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGCompleteGraph, Graph]};
+IGCompleteGraph[m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGCompleteGraph, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"completeGraph"[m, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
+      applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
+    ]
+
+SyntaxInformation[IGCompleteAcyclicGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGCompleteAcyclicGraph[m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"completeCitationGraph"[m, True];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+SyntaxInformation[IGDeBruijnGraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGDeBruijnGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"deBruijn"[m, n];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+SyntaxInformation[IGChordalRing] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGChordalRing[m_?Internal`NonNegativeMachineIntegerQ, w_?(MatrixQ[#, NonNegative]&), opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"extendedChordalRing"[m, w];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
 
 SyntaxInformation[IGGraphAtlas] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGGraphAtlas, Graph]};
 IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=

@@ -146,6 +146,34 @@ public:
         igConstructorCheck(igraph_kautz(&graph, m, n));
     }
 
+    void tree(mint n, mint k, bool directed) {
+        destroy();
+        igConstructorCheck(igraph_tree(&graph, n, k, directed ? IGRAPH_TREE_OUT : IGRAPH_TREE_UNDIRECTED));
+    }
+
+    void completeGraph(mint n, bool directed, bool loops) {
+        destroy();
+        igConstructorCheck(igraph_full(&graph, n, directed, loops));
+    }
+
+    void completeCitationGraph(mint n, bool directed) {
+        destroy();
+        igConstructorCheck(igraph_full_citation(&graph, n, directed));
+    }
+
+    void deBruijn(mint m, mint n) {
+        destroy();
+        igConstructorCheck(igraph_de_bruijn(&graph, m, n));
+    }
+
+    void extendedChordalRing(mint n, mma::RealMatrixRef mat) {
+        igMatrix w;
+
+        destroy();
+        w.copyFromMTensor(mat);
+        igConstructorCheck(igraph_extended_chordal_ring(&graph, n, &w.mat));
+    }
+
     // Weights
 
     void setWeights(mma::RealTensorRef w) {
