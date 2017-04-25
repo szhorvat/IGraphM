@@ -487,6 +487,12 @@ public:
         return vec.makeMTensor();
     }
 
+    mma::RealTensorRef meanNeighborStrength() const {
+        igVector vector;
+        igCheck(igraph_avg_nearest_neighbor_degree(&graph, igraph_vss_all(), &vector.vec, NULL, passWeights()));
+        return vector.makeMTensor();
+    }
+
     // Centrality measures (estimates)
 
     mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint) const {
