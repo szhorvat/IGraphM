@@ -65,6 +65,10 @@ IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete ac
 IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m characters and string length n.";
 IGChordalRing::usage = "IGChordalRing[m, w] returns an extended chrodal ring on n vertices, based on the matrix w.";
 
+IGEmptyGraph::usage =
+    "IGEmptyGraph[] returns a graph with no edges or vetices.\n" <>
+    "IGEmptyGraph[n] returns a graph with no edges and n vertices.";
+
 IGConnectNeighborhood::usage =
     "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighborhood.\n" <>
     "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighborhood. Warning: weights and other graph properties are discarded.";
@@ -1119,6 +1123,8 @@ IGChordalRing[m_?Internal`NonNegativeMachineIntegerQ, w_?(MatrixQ[#, NonNegative
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
+SyntaxInformation[IGEmptyGraph] = {"ArgumentsPattern" -> {_., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGEmptyGraph[n : _?Internal`NonNegativeIntegerQ : 0, opt : OptionsPattern[Graph]] := Graph[Range[n], {}, opt]
 
 SyntaxInformation[IGGraphAtlas] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGGraphAtlas, Graph]};
 IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
