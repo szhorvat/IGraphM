@@ -56,12 +56,14 @@ IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice
 IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
-IGKautzGraph::usage = "IGKautzGraph[m, n] creates a Kautz graph on \!\(m+1\) characters with string length \!\(n+1\).";
-IGKaryTree::usage = "IGKaryTree[m, n]";
-IGCompleteGraph::usage = "IGCompleteGraph[m]";
-IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[m]";
-IGDeBruijnGraph::usage = "IGDeBruijnGraph[m]";
-IGChordalRing::usage = "IGChordalRing[m, w]";
+IGKautzGraph::usage = "IGKautzGraph[m, n] returns a Kautz graph on \!\(m+1\) characters with string length \!\(n+1\).";
+IGKaryTree::usage =
+    "IGKaryTree[n] returns a binary tree with n vertices.\n" <>
+    "IGKaryTree[n, k] returns a k-ary tree with n vertices.";
+IGCompleteGraph::usage = "IGCompleteGraph[n] returns a complete graph on n vertices.";
+IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.";
+IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m characters and string length n.";
+IGChordalRing::usage = "IGChordalRing[m, w] returns an extended chrodal ring on n vertices, based on the matrix w.";
 
 IGConnectNeighborhood::usage =
     "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighborhood.\n" <>
@@ -1078,8 +1080,8 @@ IGKautzGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMach
 Options[IGKaryTree] = {
   DirectedEdges -> False
 };
-SyntaxInformation[IGKaryTree] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGKaryTree, Graph]};
-IGKaryTree[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[{IGKaryTree, Graph}]] :=
+SyntaxInformation[IGKaryTree] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGKaryTree, Graph]};
+IGKaryTree[m_?Internal`NonNegativeMachineIntegerQ, n : _?Internal`PositiveMachineIntegerQ : 2, opt : OptionsPattern[{IGKaryTree, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"tree"[m, n, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
