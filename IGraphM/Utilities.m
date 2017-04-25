@@ -48,6 +48,16 @@ IGEdgeMap::usage =
 IGVertexPropertyList::usage = "IGVertexPropertyList[g] returns the list of available vertex properties in g.";
 IGEdgePropertyList::usage = "IGEdgePropertyList[g] returns the list of available edge properties in g.";
 
+IGVertexStrength::usage =
+    "IGVertexStrength[graph] returns the sum of edge weights for edges connecting to each vertex in graph.\n" <>
+    "IGVertexStrength[graph, v] returns the sum of edge weights for edges connecting to vertex v in graph.";
+IGVertexInStrength::usage =
+    "IGVertexInStrength[graph] returns the sum of edge weights for the incoming edges of each vertex in graph.\n" <>
+    "IGVertexInStrength[graph, v] returns the sum of edge weights for incoming edges of vertex v in graph.";
+IGVertexOutStrength::usage =
+    "IGVertexOutStrength[graph] returns the sum of edge weights for the outgoing edges of each vertex in graph.\n" <>
+    "IGVertexOutStrength[graph, v] returns the sum of edge weights for outgoing edges of vertex v in graph.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -144,6 +154,43 @@ IGVertexWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, VertexWeight] =!=
 
 SyntaxInformation[IGEdgeWeightedQ] = {"ArgumentsPattern" -> {_}};
 IGEdgeWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, EdgeWeight] =!= Automatic
+
+
+SyntaxInformation[IGVertexStrength] = {"ArgumentsPattern" -> {_, _.}};
+IGVertexStrength[g_?igGraphQ] :=
+    With[{am = WeightedAdjacencyMatrix[g]}, (* WeightedAdjacencyMatrix adds up weights in multigraphs. *)
+      If[DirectedGraphQ[g],
+        Total[am] + Total[am, {2}],
+        Total[am]
+      ]
+    ]
+IGVertexStrength[g_?igGraphQ, v_] :=
+    With[{index= VertexIndex[g, v]},
+      With[{am = WeightedAdjacencyMatrix[g]},
+        If[DirectedGraphQ[g],
+          Total[am[[index]]] + Total[am[[;;, index]]],
+          Total[am[[index]]]
+        ]
+      ] /; IntegerQ[index]
+    ]
+
+SyntaxInformation[IGVertexInStrength] = {"ArgumentsPattern" -> {_, _.}};
+IGVertexInStrength[g_?igGraphQ] := Total@WeightedAdjacencyMatrix[g]
+IGVertexInStrength[g_?igGraphQ, v_] :=
+    With[{index = VertexIndex[g, v]},
+      With[{am = WeightedAdjacencyMatrix[g]},
+        Total[am[[index]]]
+      ] /; IntegerQ[index]
+    ]
+
+SyntaxInformation[IGVertexOutStrength] = {"ArgumentsPattern" -> {_, _.}};
+IGVertexOutStrength[g_?igGraphQ] := Total[WeightedAdjacencyMatrix[g], {2}]
+IGVertexOutStrength[g_?igGraphQ, v_] :=
+    With[{index = VertexIndex[g, v]},
+      With[{am = WeightedAdjacencyMatrix[g]},
+        Total[am[[;;, index]]]
+      ] /; IntegerQ[index]
+    ]
 
 
 gmiss = Missing["Nonexistent"];
