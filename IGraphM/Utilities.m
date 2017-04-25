@@ -45,6 +45,9 @@ IGEdgeMap::usage =
     "IGEdgeMap[f, prop -> {pf1, pf2, \[Ellipsis]}, graph] threads f over {pf1[graph], pf2[graph], \[Ellipsis]} and assigns the result to the edge property prop.\n" <>
     "IGEdgeMap[f, spec] represents an operator form of IGEdgeMap that can be applied to a graph.";
 
+IGVertexPropertyList::usage = "IGVertexPropertyList[g] returns the list of available vertex properties in g.";
+IGEdgePropertyList::usage = "IGEdgePropertyList[g] returns the list of available edge properties in g.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -267,6 +270,30 @@ IGEdgeMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
 IGEdgeMap[fun_, prop : Except[_Rule], g_?GraphQ] := IGEdgeMap[fun, prop -> IGEdgeProp[prop], g]
 IGEdgeMap[fun_, spec_][g_] := IGEdgeMap[fun, spec, g]
 
+
+hasCustomProp[g_] := OptionValue[Options[g, Properties], Properties] =!= {}
+
+standardVertexProperties = {
+  VertexCoordinates,
+  VertexShape, VertexShapeFunction, VertexSize, VertexStyle,
+  VertexLabels, VertexLabelStyle,
+  VertexWeight, VertexCapacity
+};
+
+SyntaxInformation[IGVertexPropertyList] = {"ArgumentsPattern" -> {_}};
+IGVertexPropertyList[g_?IGNullGraphQ] = {};
+IGVertexPropertyList[g_ /; GraphQ[g] && hasCustomProp[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, VertexList[g]}]]
+IGVertexPropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardVertexProperties]
+
+standardEdgeProperties = {
+  EdgeStyle, EdgeShapeFunction, EdgeLabels, EdgeLabelStyle,
+  EdgeWeight, EdgeCapacity, EdgeCost
+};
+
+SyntaxInformation[IGEdgePropertyList] = {"ArgumentsPattern" -> {_}};
+IGEdgePropertyList[g_?EmptyGraphQ] = {};
+IGEdgePropertyList[g_ /; GraphQ[g] && hasCustomProp[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, EdgeList[g]}]]
+IGEdgePropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardEdgeProperties]
 
 (***** Finalize *****)
 
