@@ -455,6 +455,11 @@ template = LTemplate["IGraphM",
         LFun["extendedChordalRing", {Integer, {Real, 2}}, "Void"],
         LFun["graphAtlas", {Integer}, "Void"],
 
+        (* Directedness *)
+
+        LFun["makeDirected", {}, "Void"],
+        LFun["makeUndirected", {}, "Void"],
+
         (* Weights *)
 
         LFun["setWeights", {{Real, 1, "Constant"}}, "Void"],
@@ -1988,19 +1993,39 @@ IGTriadCensus[graph_?igGraphQ] :=
       ]
     ]
 
-SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _}};
-IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
+SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+Options[IGMotifs] = { DirectedEdges -> Automatic };
+IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
-      Round@Developer`FromPackedArray@check@ig@"motifs"[size, ConstantArray[0, size]]
+      Switch[OptionValue[DirectedEdges],
+        True, ig@"makeDirected"[],
+        False, ig@"makeUndirected"[]
+      ];
+      Round@Developer`FromPackedArray@check@ig@"motifs"[size, ConstantArray[0, size]
+      ]
     ]
 
-SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _}};
-IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
-    Block[{ig = igMakeFast[graph]}, sck@ig@"motifsNo"[size, ConstantArray[0, size]] ]
+SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+Options[IGMotifsTotalCount] = { DirectedEdges -> Automatic };
+IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMakeFast[graph]},
+      Switch[OptionValue[DirectedEdges],
+        True, ig@"makeDirected"[],
+        False, ig@"makeUndirected"[]
+      ];
+      sck@ig@"motifsNo"[size, ConstantArray[0, size]]
+    ]
 
-SyntaxInformation[IGMotifsEstimateTotalCount] = {"ArgumentsPattern" -> {_, _, _}};
-IGMotifsEstimateTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
-    Block[{ig = igMakeFast[graph]}, sck@ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize] ]
+SyntaxInformation[IGMotifsEstimateTotalCount] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
+Options[IGMotifsEstimateTotalCount] = { DirectedEdges -> Automatic };
+IGMotifsEstimateTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMakeFast[graph]},
+      Switch[OptionValue[DirectedEdges],
+        True, ig@"makeDirected"[],
+        False, ig@"makeUndirected"[]
+      ];
+      sck@ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize]
+    ]
 
 SyntaxInformation[IGTriangles] = {"ArgumentsPattern" -> {_}};
 IGTriangles[graph_?igGraphQ] :=

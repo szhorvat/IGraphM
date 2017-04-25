@@ -194,6 +194,16 @@ public:
 
     bool weightedQ() const { return weighted; }
 
+    // Directedness
+
+    void makeDirected() {
+        igraph_to_directed(&graph, IGRAPH_TO_DIRECTED_MUTUAL);
+    }
+
+    void makeUndirected() {
+        igraph_to_undirected(&graph, IGRAPH_TO_UNDIRECTED_COLLAPSE, NULL);
+    }
+
     // Create (games)
 
     void degreeSequenceGame(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, mint method) {
