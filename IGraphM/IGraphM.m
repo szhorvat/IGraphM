@@ -93,7 +93,6 @@ IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph] return the eige
 IGHubScore::usage = "IGHubScore[graph] returns Kleinberg's hub score for each vertex.";
 IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority score for each vertex.";
 IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint score for each vertex.";
-IGMeanNeighborStrength::usage = "IGMeanNeighborStrength[graph] returns a list of mean neighbor strengths for graph. Edge directions are ignored.";
 
 IGRewire::usage = "IGRewire[graph, n] attempts to rewire the edges of graph n times while preserving its degree sequence.";
 IGRewireEdges::usage = "IGRewireEdges[graph, p] rewires each edge of the graph with probability p.";
@@ -525,7 +524,6 @@ template = LTemplate["IGraphM",
         LFun["hubScore", {True|False (* nornalized *)}, {Real, 1}],
         LFun["authorityScore", {True|False (* nornalized *)}, {Real, 1}],
         LFun["constraintScore", {}, {Real, 1}],
-        LFun["meanNeighborStrength", {}, {Real, 1}],
 
         (* Randomize *)
 
@@ -1452,12 +1450,6 @@ SyntaxInformation[IGConstraintScore] = {"ArgumentsPattern" -> {_}};
 IGConstraintScore[graph_?igGraphQ] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"constraintScore"[]
-    ]
-
-SyntaxInformation[IGMeanNeighborStrength] = {"ArgumentsPattern" -> {_}};
-IGMeanNeighborStrength[graph_?igGraphQ] :=
-    Block[{ig = igMakeFastWeighted[graph]},
-      sck@ig@"meanNeighborStrength"[]
     ]
 
 (* Randomization and rewiring *)
