@@ -402,6 +402,8 @@ IGVertexTransitiveQ::usage = "IGVertexTransitiveQ[graph] tests if graph is verte
 IGEdgeTransitiveQ::usage = "IGEdgeTransitiveQ[graph] tests if graph is edge transitive.";
 IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it is both vertex transitive and edge transitive.";
 
+IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge weights are taken into account and are preserved in the tree.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -747,7 +749,10 @@ template = LTemplate["IGraphM",
         LFun["contractVertices", {{Real, 1}}, "Void"],
 
         (* Random walk *)
-        LFun["randomWalk", {Integer, Integer}, {Real, 1}]
+        LFun["randomWalk", {Integer, Integer}, {Real, 1}],
+
+        (* Spanning tree *)
+        LFun["spanningTree", {}, {Real, 1}]
       }
     ]
   }
@@ -3391,6 +3396,22 @@ IGSymmetricQ[graph_?igGraphQ] :=
       IGVertexTransitiveQ[graph] && IGEdgeTransitiveQ[graph]
     ]
 IGSymmetricQ[_] = False;
+
+
+(* Spanning tree *)
+
+SyntaxInformation[IGSpanningTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      With[{indices = 1 + Round@check@ig@"spanningTree"[]},
+        Graph[
+          VertexList[graph],
+          EdgeList[graph][[indices]],
+          If[igWeightedGraphQ[graph], EdgeWeight -> PropertyValue[graph, EdgeWeight][[indices]], Unevaluated@Sequence[]],
+          opt
+        ]
+      ]
+    ]
 
 (***** Finalize *****)
 

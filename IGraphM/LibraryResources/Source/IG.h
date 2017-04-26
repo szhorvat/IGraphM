@@ -1863,6 +1863,14 @@ public:
         igCheck(igraph_random_walk(&graph, &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
         return walk.makeMTensor();
     }
+
+    // Spanning tree
+
+    mma::RealTensorRef spanningTree() const {
+        igVector vector;
+        igCheck(igraph_minimum_spanning_tree(&graph, &vector.vec, passWeights()));
+        return vector.makeMTensor();
+    }
 };
 
 #endif // IG_H
