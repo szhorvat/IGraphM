@@ -2667,8 +2667,10 @@ SyntaxInformation[IGLayoutBipartite] = {"ArgumentsPattern" -> {_, OptionsPattern
 IGLayoutBipartite::invopt = "The option value `` is not valid.";
 IGLayoutBipartite::notbp = "Graph is not bipartite.";
 IGLayoutBipartite::bdprt = "`` is not a valid partitioning vertices.";
+IGLayoutBipartite[graph_ /; VertexCount[graph] == 0, opt : OptionsPattern[{IGLayoutBipartite, Graph}]] :=
+    applyGraphOpt[opt][graph]
 IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Graph}]] :=
-    catch@Module[{sg, ig, parts, isolated, connected, vertical, types, coord, coordAsc},
+    catch@Module[{sg, ig, parts, isolated, connected, vertical, types, coord, coordAsc, min, max},
       parts = OptionValue["BipartitePartitions"];
       If[parts === Automatic,
         isolated = Pick[VertexList[graph], VertexDegree[graph], 0];
@@ -2706,6 +2708,10 @@ IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Grap
         Message[IGLayoutBipartite::invopt, "PartitionGap" -> OptionValue["PartitionGap"]]; Return[$Failed]
       ];
 
+      (* use below instead of Min/Max to avoid obtaining Infinity for empty lists *)
+      min[{}] = 0; min[x_] := Min[x];
+      max[{}] = 0; max[x_] := Max[x];
+
       coord = check@ig@"layoutBipartite"[types, OptionValue["VertexGap"], OptionValue["PartitionGap"], OptionValue[MaxIterations]];
       coordAsc = Join[
         AssociationThread[connected -> coord],
@@ -2715,9 +2721,9 @@ IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Grap
             OptionValue["VertexGap"], OptionValue["PartitionGap"],
             If[vertical, {-1, -1}, {1, -1}],
             If[vertical,
-              {Min[coord[[All, 1]]] -1.5 OptionValue["VertexGap"], OptionValue["PartitionGap"]}
+              {min[coord[[All, 1]]] - 1.5 OptionValue["VertexGap"], OptionValue["PartitionGap"]}
               ,
-              {Max[coord[[All, 1]]] + 1.5 OptionValue["VertexGap"], OptionValue["PartitionGap"]}
+              {max[coord[[All, 1]]] + 1.5 OptionValue["VertexGap"], OptionValue["PartitionGap"]}
             ]
           ]
         ]
