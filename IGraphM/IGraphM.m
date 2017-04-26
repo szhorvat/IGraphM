@@ -2816,7 +2816,6 @@ IGChordalCompletion[graph_?igGraphQ] :=
 (* Vertex cuts *)
 
 IGMinSeparators::deprec = "IGMinSeparators is deprecated and will be removed from future versions of IGraph/M. Use IGMinimumSeparators instead.";
-
 IGMinSeparators[graph_] := (Message[IGMinSeparators::deprec]; IGMinimumSeparators[graph])
 
 SyntaxInformation[IGMinimumSeparators] = {"ArgumentsPattern" -> {_}};

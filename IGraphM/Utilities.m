@@ -45,8 +45,8 @@ IGEdgeMap::usage =
     "IGEdgeMap[f, prop -> {pf1, pf2, \[Ellipsis]}, graph] threads f over {pf1[graph], pf2[graph], \[Ellipsis]} and assigns the result to the edge property prop.\n" <>
     "IGEdgeMap[f, spec] represents an operator form of IGEdgeMap that can be applied to a graph.";
 
-IGVertexPropertyList::usage = "IGVertexPropertyList[g] returns the list of available vertex properties in g.";
-IGEdgePropertyList::usage = "IGEdgePropertyList[g] returns the list of available edge properties in g.";
+IGVertexPropertyList::usage = "IGVertexPropertyList[graph] returns the list of available vertex properties in graph.";
+IGEdgePropertyList::usage = "IGEdgePropertyList[graph] returns the list of available edge properties in graph.";
 
 IGVertexStrength::usage =
     "IGVertexStrength[graph] returns the sum of edge weights for edges connecting to each vertex in graph.\n" <>
