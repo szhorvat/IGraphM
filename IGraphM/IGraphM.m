@@ -937,11 +937,18 @@ igDirectedQ[graph_] := DirectedGraphQ[graph] && Not@EmptyGraphQ[graph]
 (* Warning: PropertyValue[g, EdgeWeight] fails on the null graph. This is why we test with WeightedGraphQ first. *)
 igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &;
 
+IGraphM::invw = "Invalid edge weight vector. Edge weights will be ignored.";
+
 (* Create IG object from Mathematica Graph. Must be used when edge ordering matters. *)
 igMake[g_] :=
     With[{ig = Make["IG"]},
       ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
-      If[igWeightedGraphQ[g], ig@"setWeights"[PropertyValue[g, EdgeWeight]]];
+      If[igWeightedGraphQ[g],
+        Check[
+          ig@"setWeights"[PropertyValue[g, EdgeWeight]],
+          Message[IGraphM::invw]
+        ]
+      ];
       ig
     ]
 
@@ -954,7 +961,7 @@ igMakeFast[g_?EmptyGraphQ] :=
     ]
 igMakeFast[g_] :=
     With[{ig = Make["IG"]},
-      If[DirectedGraphQ[g],
+      If[DirectedGraphQ[g], (* empty graphs handled as undirected above *)
         ig@"fromEdgeList"[AdjacencyMatrix[g]["NonzeroPositions"] - 1, VertexCount[g], True],
         ig@"fromEdgeList"[UpperTriangularize[AdjacencyMatrix[g]]["NonzeroPositions"] - 1, VertexCount[g], False]
       ];
@@ -971,15 +978,15 @@ igMakeFastWeighted[g_?EmptyGraphQ] :=
 igMakeFastWeighted[g_] :=
     With[{ig = Make["IG"]},
       If[igWeightedGraphQ[g],
-        If[DirectedGraphQ[g],
+        If[DirectedGraphQ[g], (* empty graphs handled as undirected above *)
           With[{wam = WeightedAdjacencyMatrix[g]},
             ig@"fromEdgeList"[wam["NonzeroPositions"] - 1, VertexCount[g], True];
-            ig@"setWeights"[wam["NonzeroValues"]]
+            Check[ig@"setWeights"[wam["NonzeroValues"]], Message[IGraphM::invw]]
           ]
           ,
           With[{wam = UpperTriangularize@WeightedAdjacencyMatrix[g]},
             ig@"fromEdgeList"[wam["NonzeroPositions"] - 1, VertexCount[g], False];
-            ig@"setWeights"[wam["NonzeroValues"]]
+            Check[ig@"setWeights"[wam["NonzeroValues"]], Message[IGraphM::invw]]
           ]
         ]
         ,
