@@ -2404,8 +2404,8 @@ continueLayout3D[graph_, cont_, scale_ : 1] := continueLayout[graph, cont, scale
    that won't work on some graphs, such as those returns by KaryTree.
    Thus we use SetProperty with GraphLayout instead.
 *)
-setVertexCoords[g_, coords_] := SetProperty[g, VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
-setVertexCoords3D[g_, coords_] := SetProperty[SetProperty[g, GraphLayout -> {"Dimension" -> 3}], VertexCoordinates -> Thread[ VertexList[g] -> coords ]]
+setVertexCoords[g_, coords_] := SetProperty[g, {VertexCoordinates -> Thread[ VertexList[g] -> coords ], PlotRange -> All}]
+setVertexCoords3D[g_, coords_] := SetProperty[g, {GraphLayout -> {"Dimension" -> 3}, VertexCoordinates -> Thread[ VertexList[g] -> coords ], PlotRange -> All}]
 
 
 igAlign[{}] := {}
