@@ -157,6 +157,7 @@ IGEdgeWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, EdgeWeight] =!= Aut
 
 
 SyntaxInformation[IGVertexStrength] = {"ArgumentsPattern" -> {_, _.}};
+IGVertexStrength[g_?IGNullGraphQ] := {}
 IGVertexStrength[g_?igGraphQ] :=
     With[{am = WeightedAdjacencyMatrix[g]}, (* WeightedAdjacencyMatrix adds up weights in multigraphs. *)
       If[DirectedGraphQ[g],
@@ -175,6 +176,7 @@ IGVertexStrength[g_?igGraphQ, v_] :=
     ]
 
 SyntaxInformation[IGVertexInStrength] = {"ArgumentsPattern" -> {_, _.}};
+IGVertexInStrength[g_?IGNullGraphQ] := {}
 IGVertexInStrength[g_?igGraphQ] := Total@WeightedAdjacencyMatrix[g]
 IGVertexInStrength[g_?igGraphQ, v_] :=
     With[{index = VertexIndex[g, v]},
@@ -184,6 +186,7 @@ IGVertexInStrength[g_?igGraphQ, v_] :=
     ]
 
 SyntaxInformation[IGVertexOutStrength] = {"ArgumentsPattern" -> {_, _.}};
+IGVertexOutStrength[g_?IGNullGraphQ] := {}
 IGVertexOutStrength[g_?igGraphQ] := Total[WeightedAdjacencyMatrix[g], {2}]
 IGVertexOutStrength[g_?igGraphQ, v_] :=
     With[{index = VertexIndex[g, v]},
