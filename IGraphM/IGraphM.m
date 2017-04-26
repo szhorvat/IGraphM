@@ -56,7 +56,7 @@ IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice
 IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
-IGKautzGraph::usage = "IGKautzGraph[m, n] returns a Kautz graph on \!\(m+1\) characters with string length \!\(n+1\).";
+IGKautzGraph::usage = "IGKautzGraph[m, n] returns a Kautz graph on m+1 characters with string length n+1.";
 IGKaryTree::usage =
     "IGKaryTree[n] returns a binary tree with n vertices.\n" <>
     "IGKaryTree[n, k] returns a k-ary tree with n vertices.";
@@ -71,7 +71,7 @@ IGEmptyGraph::usage =
 
 IGConnectNeighborhood::usage =
     "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighborhood.\n" <>
-    "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighborhood. Warning: weights and other graph properties are discarded.";
+    "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighborhood. Weights and other graph properties are discarded.";
 
 IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph.";
@@ -94,8 +94,8 @@ IGHubScore::usage = "IGHubScore[graph] returns Kleinberg's hub score for each ve
 IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority score for each vertex.";
 IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint score for each vertex.";
 
-IGRewire::usage = "IGRewire[graph, n] attempts to rewire the edges of graph n times while preserving its degree sequence.";
-IGRewireEdges::usage = "IGRewireEdges[graph, p] rewires each edge of the graph with probability p.";
+IGRewire::usage = "IGRewire[graph, n] attempts to rewire the edges of graph n times while preserving its degree sequence. Weights and other graph properties are discarded.";
+IGRewireEdges::usage = "IGRewireEdges[graph, p] rewires each edge of the graph with probability p. Weights and other graph properties are discarded.";
 
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] tests if graph is directed and acyclic.";
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
@@ -160,7 +160,7 @@ IGVF2SubisomorphismCount::usage =
     "IGVF2SubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] returns the number of mappings from vertex or edge coloured subgraph to graph.";
 
 IGLADSubisomorphicQ::usage =
-    "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs." <>
+    "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs.\n" <>
     "IGLADSubisomorphicQ[{subgraph, colorSpec}, {graph, colorSpec}] tests if a vertex coloured subgraph is contained in graph.";
 IGLADGetSubisomorphism::usage =
     "IGLADGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.\n" <>
@@ -294,12 +294,12 @@ IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options] lays o
 IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options] lays out a tree radially using the Reingold–Tilford algorithm.";
 IGLayoutDrL::usage = "IGLayoutDrL[graph, options] lays out the graph using the DrL layout generator.";
 IGLayoutDrL3D::usage = "IGLayoutDrL3D[graph, options] lays out the graph in 3D using the DrL layout generator.";
-IGLayoutBipartite::usage = "IGLayoutBipartite[graph, options] lays out a bipartite graph, minimizing the number of edge crossings.";
+IGLayoutBipartite::usage = "IGLayoutBipartite[graph, options] lays out a bipartite graph, minimizing the number of edge crossings. Partitions can be specified manually using the \"BipartitePartitions\" option.";
 
 IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph] returns the global clustering coefficient of graph.";
 IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph] returns the local clustering coefficient of each vertex.";
 IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficient[graph] returns the average local clustering coefficient of graph.";
-IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph] computes the weighted local clustering coefficient, as defined by A. Barrat et al. (2004) http://arxiv.org/abs/cond-mat/0311416";
+IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph] computes the weighted local clustering coefficient, as defined by A. Barrat et al. (2004) http://dx.doi.org/10.1073/pnas.0400087101";
 
 IGCocitationCoupling::usage =
     "IGCocitationCoupling[graph] returns the cocitation coupling between all vertex pairs in graph. The cocitation coupling of two vertices is the number of vertices connecting to both of them (with directed edges).\n" <>
@@ -307,7 +307,7 @@ IGCocitationCoupling::usage =
     "IGCocitationCoupling[graph, {vertex1, vertex2, \[Ellipsis]}] returns the cocitation coupling of vertex1, vertex2, \[Ellipsis] with all other vertices in graph.";
 
 IGBibliographicCoupling::usage =
-    "IGBibliographicCoupling[graph] returns the bibliographic coupling between all vertex pairs in graph. The bibliographic coupling of two vertices is the number of vertices they both connect to (with directed edges)\n" <>
+    "IGBibliographicCoupling[graph] returns the bibliographic coupling between all vertex pairs in graph. The bibliographic coupling of two vertices is the number of vertices they both connect to (with directed edges).\n" <>
     "IGBibliographicCoupling[graph, vertex] returns the bibliographic coupling of vertex with all other vertices in graph.\n" <>
     "IGBibliographicCoupling[graph, {vertex1, vertex2, \[Ellipsis]}] returns the bibliographic coupling of vertex1, vertex2, \[Ellipsis] with all other vertices in graph.";
 
@@ -373,7 +373,7 @@ IGCompareCommunities::usage =
 IGModularity::usage =
     "IGModularity[graph, {{v11, v12, \[Ellipsis]}, {v21, v22, \[Ellipsis]}, \[Ellipsis]}] computes the modularity of graph based on the given partitioning of the vertex list into communities.\n" <>
     "IGModularity[graph, clusterdata] computes the modularity of graph based on the community structure represented as an IGClusterData object.";
-IGCommunitiesEdgeBetweenness::usage = "IGCommunitiesEdgeBetweenness[graph] finds communities using the Girvan-Newman algorithm.";
+IGCommunitiesEdgeBetweenness::usage = "IGCommunitiesEdgeBetweenness[graph] finds communities using the Girvan–Newman algorithm.";
 IGCommunitiesGreedy::usage = "IGCommunitiesGreedy[graph] finds communities using greedy optimization of modularity.";
 IGCommunitiesWalktrap::usage =
     "IGCommunitiesWalktrap[graph] finds communities via short random walks (of length 4 by default).\n" <>
@@ -401,7 +401,7 @@ IGVertexTransitiveQ::usage = "IGVertexTransitiveQ[graph] tests if graph is verte
 IGEdgeTransitiveQ::usage = "IGEdgeTransitiveQ[graph] tests if graph is edge transitive.";
 IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it is both vertex transitive and edge transitive.";
 
-IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge weights are taken into account and are preserved in the tree.";
+IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge directions are ignored. Edge weights are taken into account and are preserved in the tree.";
 
 Begin["`Private`"];
 
