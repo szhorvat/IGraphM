@@ -1,34 +1,32 @@
 Notebook[{
-
-Cell[CellGroupData[{
 Cell[BoxData[
- RowBox[{"<<", "IGraphM`"}]], "Input"],
+ RowBox[{"Off", "[", 
+  RowBox[{"General", "::", "stop"}], 
+  "]"}]], "Input",ExpressionUUID->"6869e0a7-b9b9-4850-9e52-0529b62a2912"],
 
-Cell[BoxData["\<\"Evaluate IGDocumentation[] to get started.\"\>"], "Print"]
-}, Open  ]],
-
-Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"<<", 
+  "IGraphM`"}]], \
+"Input",ExpressionUUID->"8e1d63c3-7f89-456e-8de8-c2f2c258d8fd"],
 
 Cell[BoxData[
  RowBox[{"layouts", "=", 
   RowBox[{"Symbol", "/@", 
-   RowBox[{"Names", "[", "\"\<IGLayout*\>\"", "]"}]}]}]], "Input"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-  "IGLayoutCircle", ",", "IGLayoutDavidsonHarel", ",", "IGLayoutDrL", ",", 
-   "IGLayoutDrL3D", ",", "IGLayoutFruchtermanReingold", ",", 
-   "IGLayoutFruchtermanReingold3D", ",", "IGLayoutGEM", ",", 
-   "IGLayoutGraphOpt", ",", "IGLayoutKamadaKawai", ",", 
-   "IGLayoutKamadaKawai3D", ",", "IGLayoutRandom", ",", 
-   "IGLayoutReingoldTilford", ",", "IGLayoutReingoldTilfordCircular", ",", 
-   "IGLayoutSphere"}], "}"}]], "Output"]
-}, Open  ]],
+   RowBox[{
+   "Names", "[", "\"\<IGLayout*\>\"", 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"da13cc9b-041a-48ff-a629-326d9db61f17"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{"SeedRandom", "[", "42", "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "[", "0", "]"}], "=", 
+   RowBox[{"Graph", "[", 
+    RowBox[{
+     RowBox[{"{", "}"}], ",", 
+     RowBox[{"{", "}"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "[", "1", "]"}], "=", 
@@ -52,20 +50,18 @@ Cell[BoxData[{
      "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{
-    RowBox[{"g", "[", "4", "]"}], "=", 
-    RowBox[{"Graph", "[", 
-     RowBox[{
-      RowBox[{"Range", "[", "128", "]"}], ",", 
-      RowBox[{"{", "}"}]}], "]"}]}], ";"}], 
+   RowBox[{"g", "[", "4", "]"}], "=", 
+   RowBox[{"Graph", "[", 
+    RowBox[{
+     RowBox[{"Range", "[", "128", "]"}], ",", 
+     RowBox[{"{", "}"}]}], "]"}]}], ";", 
   RowBox[{"(*", 
    RowBox[{
     RowBox[{"ExampleData", "[", 
      RowBox[{"{", 
       RowBox[{
       "\"\<NetworkGraph\>\"", ",", "\"\<BipartiteDiseasomeNetwork\>\""}], 
-      "}"}], "]"}], ";"}], "*)"}]}], "\[IndentingNewLine]", 
- RowBox[{
+      "}"}], "]"}], ";"}], "*)"}], "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{"g", "[", "5", "]"}], "=", 
    RowBox[{"ExampleData", "[", 
@@ -155,13 +151,13 @@ Cell[BoxData[{
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<PowerGrid\>\""}], "}"}], 
-    "]"}]}], ";"}]}], "Input"],
+    "]"}]}], ";"}]}], \
+"Input",ExpressionUUID->"22510cb5-9ae0-4799-a4b4-645bec10fa4a"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"n", "=", "18"}], ";"}]], "Input"],
-
-Cell[CellGroupData[{
+  RowBox[{"n", "=", "18"}], 
+  ";"}]], "Input",ExpressionUUID->"a1dc8ba3-b034-4b63-b039-ef5ff99946e1"],
 
 Cell[BoxData[
  RowBox[{"Table", "[", 
@@ -169,15 +165,8 @@ Cell[BoxData[
    RowBox[{"VertexCount", "[", 
     RowBox[{"g", "[", "i", "]"}], "]"}], ",", 
    RowBox[{"{", 
-    RowBox[{"i", ",", "n"}], "}"}]}], "]"}]], "Input"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-  "77", ",", "62", ",", "34", ",", "128", ",", "840", ",", "1453", ",", "15", 
-   ",", "48", ",", "100", ",", "100", ",", "15", ",", "150", ",", "256", ",", 
-   "56", ",", "34", ",", "20", ",", "30", ",", "4941"}], "}"}]], "Output"]
-}, Open  ]],
+    RowBox[{"i", ",", "0", ",", "n"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"41429fb8-878a-42d6-9309-72affe4fe907"],
 
 Cell[BoxData[{
  RowBox[{"IGSeedRandom", "[", "42", "]"}], "\[IndentingNewLine]", 
@@ -198,6 +187,19 @@ Cell[BoxData[{
     RowBox[{"Do", "[", "\[IndentingNewLine]", 
      RowBox[{
       RowBox[{
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ly", "===", "IGLayoutBipartite"}], "&&", 
+          RowBox[{"Not", "@", 
+           RowBox[{"IGBipartiteQ", "[", 
+            RowBox[{"g", "[", "i", "]"}], "]"}]}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Print", "[", "\"\<Graph not bipartite\>\"", "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Continue", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+       ";", "\[IndentingNewLine]", 
        RowBox[{"If", "[", 
         RowBox[{
          RowBox[{
@@ -268,15 +270,15 @@ Cell[BoxData[{
        RowBox[{"ly", ",", "layouts"}], "}"}]}], "]"}], ";"}], 
    "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
    RowBox[{"{", 
-    RowBox[{"i", ",", "n"}], "}"}]}], "\[IndentingNewLine]", 
-  "]"}]}], "Input"]
+    RowBox[{"i", ",", "0", ",", "n"}], "}"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"5d843435-a778-4c1b-b60f-3c56630b56f5"]
 },
 WindowSize->{808, 751},
 WindowMargins->{{20, Automatic}, {Automatic, 44}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"10.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 10, \
-2015)",
+FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, \
+2017)",
 StyleDefinitions->"Default.nb"
 ]
 
