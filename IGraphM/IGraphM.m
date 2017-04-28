@@ -1034,7 +1034,10 @@ vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexW
 SyntaxInformation[IGDocumentation] = {"ArgumentsPattern" -> {}};
 IGDocumentation[] :=
     If[$Notebooks,
-      Documentation`HelpLookupPacletURI["paclet:IGraphM/IGDocumentation"];
+      If[$Version == 11.1 && $OperatingSystem === "Unix", (* work around dyfunctional address bar in 11.1/Linux *)
+        NotebookOpen@Documentation`ResolveLink["paclet:IGraphM/IGDocumentation"],
+        Documentation`HelpLookupPacletURI["paclet:IGraphM/IGDocumentation"]
+      ];
       ,
       Print["Built-in documentation is only available when running with a Front End.\nSee the online version at http://szhorvat.net/mathematica/IGraphM"]
     ]
