@@ -88,12 +88,9 @@ addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Reciprocal"}}]
 
 
 SyntaxInformation[IGReverseGraph] = {"ArgumentsPattern" -> {_}};
-
 IGReverseGraph::nmg = "Multigraphs are not currently supported.";
-
-IGReverseGraph[g_?UndirectedGraphQ] := g
-
-IGReverseGraph[g_?igGraphQ] :=
+IGReverseGraph[g_?UndirectedGraphQ, opt : OptionsPattern[]] := Graph[g, opt]
+IGReverseGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
     Module[{},
       If[MultigraphQ[g],
         Message[IGReverseGraph::nmg];
@@ -102,19 +99,18 @@ IGReverseGraph[g_?igGraphQ] :=
       Graph[
         VertexList[g],
         Reverse /@ EdgeList[g],
+        opt,
         Options[g, {EdgeWeight, EdgeCapacity, EdgeCost, VertexWeight, VertexCapacity}]
       ]
     ]
 
 
-SyntaxInformation[IGSimpleGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-
 Options[IGSimpleGraph] = { SelfLoops -> False, "MultipleEdges" -> False };
-
-IGSimpleGraph[g_?SimpleGraphQ, opt : OptionsPattern[]] := g
+SyntaxInformation[IGSimpleGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSimpleGraph, Graph]};
+IGSimpleGraph[g_?SimpleGraphQ, opt : OptionsPattern[]] := applyGraphOpt[opt][g]
 IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
     Module[{self = Not@TrueQ@OptionValue[SelfLoops], multi = Not@TrueQ@OptionValue["MultipleEdges"]},
-      Which[
+      applyGraphOpt[opt]@Which[
         self && multi, SimpleGraph[g],
         self, removeSelfLoops[g],
         multi, removeMultiEdges[g],
