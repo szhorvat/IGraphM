@@ -1029,9 +1029,6 @@ vs[graph_][v_] := Check[VertexIndex[graph, v] - 1, throw[$Failed]]
 
 vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexWeight] =!= Automatic
 
-applyGraphOpt[opt___][graph_] := Graph[graph, Sequence@@FilterRules[{opt}, Options[Graph]]]
-applyGraphOpt3D[opt___][graph_] := Graph3D[graph, Sequence@@FilterRules[{opt}, Options[Graph3D]]]
-
 (***** Public functions *****)
 
 SyntaxInformation[IGDocumentation] = {"ArgumentsPattern" -> {}};

@@ -24,6 +24,10 @@ amendUsage[sym_Symbol, amend_, args___] :=
 optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
 
 
+applyGraphOpt[opt___][graph_] := Graph[graph, Sequence@@FilterRules[{opt}, Options[Graph]]]
+applyGraphOpt3D[opt___][graph_] := Graph3D[graph, Sequence@@FilterRules[{opt}, Options[Graph3D]]]
+
+
 (* Zero out the diagonal of a square matrix. *)
 zeroDiagonal[arg_] := UpperTriangularize[arg, 1] + LowerTriangularize[arg, -1]
 
