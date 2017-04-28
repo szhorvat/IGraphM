@@ -4431,17 +4431,6 @@ and characters\
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"IGVertexMap", "[", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"Placed", "[", 
-      RowBox[{"#", ",", 
-       RowBox[{"If", "[", 
-        RowBox[{
-         RowBox[{"IntegerQ", "[", "#", "]"}], ",", "Before", ",", "After"}], 
-        "]"}]}], "]"}], "&"}], ",", 
-    RowBox[{"VertexLabels", "\[Rule]", "VertexList"}]}], "]"}], "@", 
-  "\[IndentingNewLine]", 
   RowBox[{"IGLayoutBipartite", "[", "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{"Graph", "@", 
@@ -4453,7 +4442,17 @@ Cell[BoxData[
           RowBox[{"Length", "[", "cliques", "]"}]}], "<->", "cliques"}], 
         "]"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
     RowBox[{"VertexSize", "\[Rule]", "0.5"}], ",", 
-    RowBox[{"ImageSize", "\[Rule]", "220"}]}], "\[IndentingNewLine]", 
+    RowBox[{"ImageSize", "\[Rule]", "220"}]}], "\[IndentingNewLine]", "]"}], "//", 
+  RowBox[{"IGVertexMap", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Placed", "[", 
+      RowBox[{"#", ",", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"IntegerQ", "[", "#", "]"}], ",", "Before", ",", "After"}], 
+        "]"}]}], "]"}], "&"}], ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "VertexList"}]}], 
    "]"}]}]], "Input",ExpressionUUID->"3bbe4e66-3e58-4d39-86d9-011ce1277555"]
 }, Closed]]
 }, Closed]],
@@ -4609,7 +4608,61 @@ Cell[BoxData[{
     "\[IndentingNewLine]", "g", ",", "\[IndentingNewLine]", "30"}], 
    "\[IndentingNewLine]", "]"}]}]}], "Input",
  CellTags->
-  "DeleteOutput",ExpressionUUID->"c3f288fb-7ab4-431b-8dd0-7e6b7f706b55"]
+  "DeleteOutput",ExpressionUUID->"c3f288fb-7ab4-431b-8dd0-7e6b7f706b55"],
+
+Cell[TextData[{
+ "Visualize a planar graph without edge crossings using the \
+Davidson\[Dash]Harel simulated annealing method, and taking starting \
+coordinates from ",
+ Cell[BoxData[
+  RowBox[{"GraphLayout", " ", "\[Rule]", " ", "\"\<PlanarEmbedding\>\""}]],
+  ExpressionUUID->"cfd6ada6-1272-45f7-8be1-7ed8eb8ab70d"],
+ "."
+}], "Text",ExpressionUUID->"e42590a9-d4e0-4371-8efc-9bb12bd11286"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"Graph", "@", 
+   RowBox[{"GraphData", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\"\<Fullerene\>\"", ",", 
+       RowBox[{"{", 
+        RowBox[{"60", ",", "1"}], "}"}]}], "}"}], ",", "\"\<EdgeList\>\""}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"d8eca005-776a-4e40-8ff9-4c6526bbb70a"],
+
+Cell["This layout avoids crossings, but it is not pleasing:", \
+"Text",ExpressionUUID->"6efb0742-04d6-4bf2-8b84-60bdad127e91"],
+
+Cell[BoxData[
+ RowBox[{"Graph", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"GraphLayout", "\[Rule]", "\"\<PlanarEmbedding\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"e19cad6e-870c-4cce-8187-560890d0649a"],
+
+Cell["\<\
+We can post process it while avoiding the introduction of any edge crossings:\
+\
+\>", "Text",ExpressionUUID->"f084f1af-242d-471b-8bd1-3a2ded0e5dfd"],
+
+Cell[BoxData[
+ RowBox[{"IGLayoutDavidsonHarel", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"SetProperty", "[", 
+    RowBox[{"g", ",", 
+     RowBox[{"VertexCoordinates", "\[Rule]", 
+      RowBox[{"Thread", "[", 
+       RowBox[{
+        RowBox[{"VertexList", "[", "g", "]"}], "\[Rule]", 
+        RowBox[{"Rescale", "@", 
+         RowBox[{"GraphEmbedding", "[", 
+          RowBox[{"g", ",", "\"\<PlanarEmbedding\>\""}], "]"}]}]}], "]"}]}]}],
+     "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<Continue\>\"", "\[Rule]", "True"}], ",", 
+   RowBox[{"\"\<EdgeCrossingWeight\>\"", "\[Rule]", "1000"}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"9441cdb7-8ea3-40f9-922b-6b086b1f3896"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -4619,11 +4672,11 @@ Cell["Drawing trees", \
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"IGLayoutRengoldTilford", "[", "]"}]],ExpressionUUID->
+  RowBox[{"IGLayoutReingoldTilford", "[", "]"}]],ExpressionUUID->
   "481b318b-df29-491e-9bcd-ee12684f96f4"],
  " and ",
  Cell[BoxData[
-  RowBox[{"IGLayoutRengoldTilfordCircular", "[", "]"}]],ExpressionUUID->
+  RowBox[{"IGLayoutReingoldTilfordCircular", "[", "]"}]],ExpressionUUID->
   "94c4c9d0-5b1c-455d-bb47-a5d0deeb258c"],
  " are designed for laying out trees. The following options are available:"
 }], "Text",ExpressionUUID->"d5c6c009-02c4-4e64-85bf-32c9444b3696"],
@@ -24319,6 +24372,72 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"2", ",", "1"}], "}"}]}]}], "]"}], 
   "]"}]], "Input",ExpressionUUID->"5e9929a9-e490-447a-a241-950af97be3a8"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGVertexStrength", \
+"Subsubsection",ExpressionUUID->"c2681b27-7686-480a-bc9f-c9535467be75"],
+
+Cell[TextData[{
+ Cell[BoxData["IGVertexStrength"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "78671b93-d8f2-43c3-b0f0-aedb061aad0b"],
+ " returns the strength of each vertex, i.e. the total edge weight of edges \
+adjacent to it."
+}], "Text",ExpressionUUID->"fca91790-ccf8-446a-a1d9-b830077e3064"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGVertex*Strength"}]], \
+"Input",ExpressionUUID->"b49e9332-23f8-43dc-974a-425e2eb55bfa"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EurovisionVotes\>\""}], "}"}], 
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexStrength", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"dd7eb0c4-addf-41b6-9621-6595fe9eeee1"],
+
+Cell["\<\
+In- and out-strength can be calculated separately for directed graphs.\
+\>", "Text",ExpressionUUID->"130dba5f-0ef2-4116-b6a8-2d277565defc"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"IGVertexInStrength", "[", "g", "]"}], ",", 
+   RowBox[{"IGVertexOutStrength", "[", "g", "]"}]}], 
+  "}"}]], "Input",ExpressionUUID->"7daf8efa-a4b3-4d82-ad36-22be7851b04d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGVertexInStrength", "[", "g", "]"}], "+", 
+   RowBox[{"IGVertexOutStrength", "[", "g", "]"}]}], "==", 
+  RowBox[{
+  "IGVertexStrength", "[", "g", 
+   "]"}]}]], "Input",ExpressionUUID->"8e72e104-7708-4012-88ef-cf04881de896"],
+
+Cell["Scale vertices by strength:", \
+"Text",ExpressionUUID->"126e1316-bd7b-494f-a9e0-b862cbfc39a5"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexMap", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"\"\<Scaled\>\"", ",", 
+      RowBox[{"0.1", "#"}]}], "}"}], "&"}], ",", 
+   RowBox[{"VertexSize", "\[Rule]", 
+    RowBox[{"Rescale", "@*", "IGVertexStrength"}]}], ",", "g"}], 
+  "]"}]], "Input",ExpressionUUID->"bcfeaeb9-01ed-4d0f-af45-3212a0718848"]
 }, Closed]]
 }, Closed]],
 
@@ -24337,7 +24456,7 @@ Cell[BoxData[
       "\"\<NetworkGraph\>\"", ",", "\"\<EastAfricaEmbassyAttacks\>\""}], 
       "}"}], "]"}], ",", 
     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"a7014871-f1d6-4e22-9f41-012678c9c5f6"],
+   "]"}]}]], "Input",ExpressionUUID->"ebc7be50-ca83-454c-bb74-1b6cbfdd385b"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -24372,9 +24491,8 @@ Cell[BoxData[
 
 Cell[TextData[{
  "Extract the ",
- Cell[BoxData["\"\<Group\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
-  "80f744c4-6ff7-408b-9487-22edf33d56f9"],
+ Cell[BoxData[
+ "\"\<Group\>\""],ExpressionUUID->"80f744c4-6ff7-408b-9487-22edf33d56f9"],
  " property of each node:"
 }], "Text",ExpressionUUID->"7ee6847e-0ad9-48cb-80fb-c1b081aa3311"],
 
@@ -24416,6 +24534,24 @@ Cell[BoxData[
     RowBox[{"IGVertexProp", "[", "\"\<FullName\>\"", "]"}]}], ",", "g"}], 
   "]"}]], "Input",ExpressionUUID->"fe3136a0-cc68-44b1-b084-193e83c1351a"],
 
+Cell[CellGroupData[{
+
+Cell["Styling graphs according to stored or computed properties", \
+"Subsubsection",ExpressionUUID->"3ae6d3fc-e754-4ea5-a868-095fc7913d83"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"Graph", "[", 
+    RowBox[{
+     RowBox[{"ExampleData", "[", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<NetworkGraph\>\"", ",", "\"\<EastAfricaEmbassyAttacks\>\""}], 
+       "}"}], "]"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"5c06d8b1-c2ee-4e29-bf04-762527b4d1f2"],
+
 Cell["Scale vertices according to degree:", \
 "Text",ExpressionUUID->"a06df826-de80-4ba2-8529-8dbe4a918781"],
 
@@ -24435,38 +24571,33 @@ Betweenness calculations treat high weight values as a \
  "EdgeWeight"],ExpressionUUID->"8f45a87a-4f99-4217-aabe-357f4a0228cd"],
  " before calculating the betweenness. To be able to use the original \
 weights, we save them into a new ",
- Cell[BoxData["\"\<weight\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
-  "0a9a7708-8fda-4d2f-b4b6-063b14344184"],
+ Cell[BoxData[
+ "\"\<weight\>\""],ExpressionUUID->"0a9a7708-8fda-4d2f-b4b6-063b14344184"],
  " property."
 }], "Text",ExpressionUUID->"76175f63-9b95-4f6b-ac83-df04abf7b033"],
 
 Cell[TextData[{
  "Calls to ",
- Cell[BoxData["IGEdgeMap"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "e7af92e2-2ebf-4e28-8dcf-16f5e3f406ef"],
+ Cell[BoxData[
+ "IGEdgeMap"],ExpressionUUID->"e7af92e2-2ebf-4e28-8dcf-16f5e3f406ef"],
  " or ",
- Cell[BoxData["IGVertexMap"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "edbf94fd-3fc6-48f7-87bc-f3391d835b2b"],
+ Cell[BoxData[
+ "IGVertexMap"],ExpressionUUID->"edbf94fd-3fc6-48f7-87bc-f3391d835b2b"],
  " can be conveniently chained together using their operator form."
 }], "Text",ExpressionUUID->"1976e416-c81e-4f06-a433-6eb4c4cb78a5"],
 
 Cell[BoxData[
- RowBox[{
+ RowBox[{"g", "//", "\[IndentingNewLine]", 
   RowBox[{
-   RowBox[{"g", "//", "\[IndentingNewLine]", 
-    RowBox[{"IGEdgeMap", "[", " ", 
-     RowBox[{"(*", " ", 
-      RowBox[{
-      "save", " ", "original", " ", "weight", " ", "in", " ", 
-       "\"\<weight\>\"", " ", "property"}], " ", "*)"}], 
-     "\[IndentingNewLine]", 
-     RowBox[{"Identity", ",", 
-      RowBox[{"\"\<weight\>\"", "\[Rule]", 
-       RowBox[{"IGEdgeProp", "[", "EdgeWeight", "]"}]}]}], 
-     "\[IndentingNewLine]", "]"}]}], "//", "\[IndentingNewLine]", 
+   RowBox[{"IGEdgeMap", "[", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "save", " ", "original", " ", "weight", " ", "in", " ", "\"\<weight\>\"",
+       " ", "property"}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{"Identity", ",", 
+     RowBox[{"\"\<weight\>\"", "\[Rule]", 
+      RowBox[{"IGEdgeProp", "[", "EdgeWeight", "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}], "/*", "\[IndentingNewLine]", 
    RowBox[{"IGEdgeMap", "[", " ", 
     RowBox[{"(*", " ", 
      RowBox[{
@@ -24475,65 +24606,32 @@ Cell[BoxData[
     RowBox[{
      RowBox[{
       RowBox[{"1", "/", "#"}], "&"}], ",", "EdgeWeight"}], 
-    "\[IndentingNewLine]", "]"}]}], "//", "\[IndentingNewLine]", 
-  RowBox[{"IGEdgeMap", "[", " ", 
-   RowBox[{"(*", " ", 
-    RowBox[{
-     RowBox[{"thickness", " ", "by", " ", "original", " ", "weight"}], ",", 
-     " ", 
+    "\[IndentingNewLine]", "]"}], "/*", "\[IndentingNewLine]", 
+   RowBox[{"IGEdgeMap", "[", " ", 
+    RowBox[{"(*", " ", 
      RowBox[{
-     "colour", " ", "by", " ", "betweenness", " ", "based", " ", "on", " ", 
-      "inverse", " ", "weight"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"Directive", "[", 
+      RowBox[{"thickness", " ", "by", " ", "original", " ", "weight"}], ",", 
+      " ", 
       RowBox[{
-       RowBox[{"AbsoluteThickness", "[", 
-        RowBox[{"9", "#1"}], "]"}], ",", 
+      "colour", " ", "by", " ", "betweenness", " ", "based", " ", "on", " ", 
+       "inverse", " ", "weight"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Directive", "[", 
        RowBox[{
-        RowBox[{"ColorData", "[", 
-         RowBox[{"{", 
-          RowBox[{"\"\<Rainbow\>\"", ",", 
-           RowBox[{"{", 
-            RowBox[{"0", ",", "60"}], "}"}]}], "}"}], "]"}], "[", "#2", 
-        "]"}]}], "]"}], "&"}], ",", "\[IndentingNewLine]", 
-    RowBox[{"EdgeStyle", "\[Rule]", 
-     RowBox[{"{", 
-      RowBox[{
-       RowBox[{"IGEdgeProp", "[", "\"\<weight\>\"", "]"}], ",", 
-       "EdgeBetweennessCentrality"}], "}"}]}]}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input",ExpressionUUID->"6eebd448-3a0d-47ce-a394-88d7820fb82a"],
-
-Cell["Transform the vertex coordinates of a graph:", \
-"Text",ExpressionUUID->"976e8497-1496-45cd-9abf-202e659f3df0"],
-
-Cell[BoxData[
- RowBox[{"g", "=", 
-  RowBox[{"Graph", "[", 
-   RowBox[{
-    RowBox[{"GraphData", "[", 
-     RowBox[{
+        RowBox[{"AbsoluteThickness", "[", 
+         RowBox[{"9", "#1"}], "]"}], ",", 
+        RowBox[{
+         RowBox[{"ColorData", "[", "\"\<Rainbow\>\"", "]"}], "[", "#2", 
+         "]"}]}], "]"}], "&"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"EdgeStyle", "\[Rule]", 
       RowBox[{"{", 
-       RowBox[{"\"\<Apollonian\>\"", ",", "5"}], "}"}], ",", 
-      "\"\<EdgeList\>\""}], "]"}], ",", 
-    RowBox[{"GraphLayout", "\[Rule]", "\"\<PlanarEmbedding\>\""}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"b2a6b249-9202-47f1-a48c-5c7c7a6268dc"],
-
-Cell[BoxData[
- RowBox[{"IGVertexMap", "[", 
-  RowBox[{
-   RowBox[{"AffineTransform", "[", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"1", ",", 
-        FractionBox["1", "2"]}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"0", ",", 
-        FractionBox[
-         SqrtBox["3"], "2"]}], "}"}]}], "}"}], "]"}], ",", 
-   "VertexCoordinates", ",", "g"}], 
-  "]"}]], "Input",ExpressionUUID->"7a2457c5-5337-4609-972f-d7ac04f8eaf0"],
+       RowBox[{
+        RowBox[{"IGEdgeProp", "[", "\"\<weight\>\"", "]"}], ",", 
+        RowBox[{"Rescale", "@*", "EdgeBetweennessCentrality"}]}], "}"}]}]}], 
+    "\[IndentingNewLine]", 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"6eebd448-3a0d-47ce-a394-88d7820fb82a"],
 
 Cell["Label a graph with circular layout:", \
 "Text",ExpressionUUID->"38db27d6-debd-41a1-8f86-3499c0aba8b1"],
@@ -24579,6 +24677,153 @@ Cell[BoxData[
       RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}],
       "]"}], "]"}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"768b0e92-3b53-42e5-bba5-60f4ac445fd0"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Transform vertex coordinates", \
+"Subsubsection",ExpressionUUID->"e6e84082-02ff-4c77-b61b-b8e52bcca5ef"],
+
+Cell["\<\
+Transform the vertex coordinates of a graph to obtain a more pleasing layout:\
+\
+\>", "Text",ExpressionUUID->"cf909ffc-cdf8-4499-a30d-6ae6bef2862a"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"Graph", "[", 
+   RowBox[{
+    RowBox[{"GraphData", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<Apollonian\>\"", ",", "5"}], "}"}], ",", 
+      "\"\<EdgeList\>\""}], "]"}], ",", 
+    RowBox[{"GraphLayout", "\[Rule]", "\"\<PlanarEmbedding\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"d4316526-3401-4e99-8eeb-e937959ae21d"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexMap", "[", 
+  RowBox[{
+   RowBox[{"AffineTransform", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"1", ",", 
+        FractionBox["1", "2"]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", 
+        FractionBox[
+         SqrtBox["3"], "2"]}], "}"}]}], "}"}], "]"}], ",", 
+   "VertexCoordinates", ",", "g"}], 
+  "]"}]], "Input",ExpressionUUID->"7a2457c5-5337-4609-972f-d7ac04f8eaf0"],
+
+Cell["\<\
+Project coordinates from the sphere to the plane using stereographic \
+projection:\
+\>", "Text",ExpressionUUID->"07e1277b-bf82-49e9-9f35-69cb9b474191"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"Graph3D", "[", 
+   RowBox[{"GraphData", "[", 
+    RowBox[{"\"\<DodecahedralGraph\>\"", ",", "\"\<EdgeList\>\""}], "]"}], 
+   "]"}]}]], "Input",ExpressionUUID->"57127d0c-b17f-4896-95cb-cd2c910fca7f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"project", "=", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"CoordinateTransform", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"\"\<Standard\>\"", "\[Rule]", "\"\<Stereographic\>\""}], ",", 
+        RowBox[{"{", 
+         RowBox[{"\"\<Sphere\>\"", ",", "1"}], "}"}]}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"Rest", "@", 
+       RowBox[{"CoordinateTransform", "[", 
+        RowBox[{
+         RowBox[{"\"\<Cartesian\>\"", "\[Rule]", "\"\<Spherical\>\""}], ",", 
+         "#"}], "]"}]}]}], "\[IndentingNewLine]", "]"}], "&"}]}], 
+  ";"}]], "Input",ExpressionUUID->"9696c104-9c95-4036-bd4c-9b40a6a792cd"],
+
+Cell[BoxData[
+ RowBox[{"Graph", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"IGVertexMap", "[", 
+    RowBox[{"project", ",", 
+     RowBox[{"VertexCoordinates", "\[Rule]", 
+      RowBox[{"Standardize", "@*", 
+       RowBox[{"IGVertexProp", "[", "VertexCoordinates", "]"}]}]}], ",", 
+     "g"}], "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"GraphLayout", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<Dimension\>\"", "\[Rule]", "2"}], "}"}]}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"0d1c2b92-0527-4224-8eb3-b1197a2a9d8c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Copy one property into another", \
+"Subsubsection",ExpressionUUID->"6f1193a0-a603-48e7-b38b-92d3d2e5437f"],
+
+Cell["Copy the values of one property into another.", \
+"Text",ExpressionUUID->"aa49859f-d64f-4e41-88fd-7c6f7e3b1cf1"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+  "Import", "[", 
+   "\"\<http://networkdata.ics.uci.edu/data/lesmis/lesmis.gml\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"c7bca739-9428-4101-94cf-830144cabc16"],
+
+Cell["\<\
+According to the description, this should be a weighted graph:\
+\>", "Text",ExpressionUUID->"dc21a67a-df17-446f-aeba-f9dddf08b8f5"],
+
+Cell[BoxData[
+ RowBox[{"Import", "[", 
+  "\"\<http://networkdata.ics.uci.edu/data/lesmis/lesmis.txt\>\"", 
+  "]"}]], "Input",ExpressionUUID->"fccfd2cf-6476-42a2-b841-f67772a3f9b1"],
+
+Cell["But as imported by Mathematica, it is not edge-weighted:", \
+"Text",ExpressionUUID->"37712bf3-e547-44a0-993c-9699049d39e8"],
+
+Cell[BoxData[
+ RowBox[{"IGEdgeWeightedQ", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"6ba96223-f1a3-4ff5-ba3b-90a161b6c18b"],
+
+Cell[TextData[{
+ "This is because the edge weights are imported into the ",
+ Cell[BoxData["\"\<value\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "7ad45e19-e3f1-48db-9bd3-54231c276243"],
+ " property instead of the standard ",
+ Cell[BoxData["EdgeWeight"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "fd1c12e8-9967-42a5-aa0b-4ebd65080d6b"],
+ ":"
+}], "Text",ExpressionUUID->"55d25a43-b67a-48db-b748-de439804167b"],
+
+Cell[BoxData[
+ RowBox[{"IGEdgePropertyList", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"8a076542-bbb3-4229-ae3e-55095fc61121"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGEdgeMap", "[", 
+   RowBox[{
+    RowBox[{"#", "&"}], ",", 
+    RowBox[{"EdgeWeight", "\[Rule]", 
+     RowBox[{"IGEdgeProp", "[", "\"\<value\>\"", "]"}]}], ",", "g"}], 
+   "]"}]}]], "Input",ExpressionUUID->"2ebd253f-d2db-4b2f-bff9-9275221380cc"],
+
+Cell[BoxData[
+ RowBox[{"IGEdgeWeightedQ", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"52b8522d-1e91-45c8-a165-94b1d7caddaf"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -24637,8 +24882,8 @@ Cell[BoxData[
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{956, 656},
-WindowMargins->{{202, Automatic}, {72, Automatic}},
+WindowSize->{956, 862},
+WindowMargins->{{202, Automatic}, {Automatic, 67}},
 WindowTitle->"IGraph/M Documentation",
 PrintingStartingPageNumber->1,
 PageHeaders->{{
