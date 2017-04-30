@@ -102,13 +102,26 @@ source = template[versionData];
 
 Export[FileNameJoin[{$appTarget, "IGraphM.m"}], source, "String"]
 
+Print["\nRe-encoding source files as ASCII"]
+AddPath["PackageTools"]
+Needs["PackageTools`"]
+With[{$appTarget = $appTarget},
+  MRun[
+    MCode[
+      UsingFrontEnd[
+        NotebookSave@NotebookOpen[FileNameJoin[{$appTarget, #}]]& /@
+            {"IGraphM.m", "PacletInfo.m", "Common.m", "Utilities.m"}
+      ]
+    ]
+  ]
+]
 
 DeleteFile["BuildSettings.m"]
 
 
 (***** Copy LTemplate *****)
 
-Print["git-archive LTemplate"]
+Print["\ngit-archive LTemplate"]
 
 SetDirectory@CreateDirectory["LTemplate"]
 
@@ -126,8 +139,6 @@ ResetDirectory[] (* LTemplate *)
 
 Print["\nProcessing documentation."]
 SetDirectory@FileNameJoin[{"Documentation", "English"}]
-AddPath["PackageTools"]
-Needs["PackageTools`"]
 
 Print["Evaluating..."]
 With[{$buildDir = $buildDir},
