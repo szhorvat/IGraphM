@@ -5,7 +5,13 @@ Cell["IGraph/M", \
 "Title",ExpressionUUID->"9456953a-e186-4c32-b417-e426e66d0378"],
 
 Cell[TextData[{
- "use igraph from ",
+ "use ",
+ ButtonBox["igraph",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://igraph.org/"], None},
+  ButtonNote->"http://igraph.org/"],
+ " from ",
  StyleBox["Mathematica",
   FontSlant->"Italic"]
 }], "Subtitle",ExpressionUUID->"a8b17106-dee9-45d7-88b0-2ab32fe4908a"],
@@ -230,11 +236,19 @@ Cell[TextData[{
  Cell[BoxData[
  "VertexLabels"],ExpressionUUID->"0f7c3399-9f76-4514-a513-8ef409d2f346"],
  ", ",
- Cell[BoxData[
- "GraphStyle"],ExpressionUUID->"a8e178c5-60ea-4001-ad76-092c5ea94e9e"],
+ Cell[BoxData["EdgeLabels"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "e2b7d8ad-d50d-4c1f-8b5c-0463b368fdf1"],
  ", ",
  Cell[BoxData[
  "VertexStyle"],ExpressionUUID->"4c83a535-b0bf-461b-b904-3b3108756d0a"],
+ ", ",
+ Cell[BoxData[
+ "GraphStyle"],ExpressionUUID->"decff222-ed20-4899-b3f2-e401bef6ff41"],
+ ", ",
+ Cell[BoxData["PlotTheme"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "a3f5e2a8-329e-44f9-bcc3-c2d9f05fe098"],
  ", etc."
 }], "Text",ExpressionUUID->"d265aa47-c222-422f-9f0c-41be0308e577"],
 
@@ -308,7 +322,13 @@ Cell[BoxData[
 
 Cell[TextData[{
  Cell[BoxData["IGLCF"],ExpressionUUID->"3cdfbdff-fdcf-4042-8a5f-0e6a8c12ee13"],
- " creates a graph based on LCF notation."
+ " creates a graph based on ",
+ ButtonBox["LCF notation",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://mathworld.wolfram.com/LCFNotation.html"], None},
+  ButtonNote->"http://mathworld.wolfram.com/LCFNotation.html"],
+ "."
 }], "Text",ExpressionUUID->"7f614131-ba8f-4e11-9fe4-29c04a22e0b9"],
 
 Cell[TextData[{
@@ -423,7 +443,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"\"\<Periodic\>\"", "\[Rule]", "True"}]],ExpressionUUID->
   "e16847e6-22f3-4730-8f46-8e5bf443a43e"],
- " to creates a periodic lattice."
+ " creates a periodic lattice."
 }], "Item",ExpressionUUID->"6aa22085-8443-4d9f-9ec4-ab2bc8df3300"],
 
 Cell[TextData[{
@@ -469,7 +489,42 @@ Cell[BoxData[
  RowBox[{"Graph3D", "@", 
   RowBox[{"IGKautzGraph", "[", 
    RowBox[{"2", ",", "2"}], 
-   "]"}]}]], "Input",ExpressionUUID->"da8cfbf2-03c1-4ca7-a0a7-7c1aa8253be5"]
+   "]"}]}]], "Input",ExpressionUUID->"da8cfbf2-03c1-4ca7-a0a7-7c1aa8253be5"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"labels", "=", 
+   RowBox[{"StringJoin", "/@", 
+    RowBox[{"DeleteCases", "[", 
+     RowBox[{
+      RowBox[{"Tuples", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"\"\<A\>\"", ",", "\"\<B\>\"", ",", "\"\<C\>\""}], "}"}], 
+        ",", 
+        RowBox[{"{", "2", "}"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"c_", ",", "c_"}], "}"}]}], "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"IGKautzGraph", "[", 
+  RowBox[{"2", ",", "1", ",", "\[IndentingNewLine]", 
+   RowBox[{"VertexLabels", "\[Rule]", 
+    RowBox[{"Thread", "[", 
+     RowBox[{
+      RowBox[{"Range", "[", "6", "]"}], "\[Rule]", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Placed", "[", 
+          RowBox[{"#", ",", "Center"}], "]"}], "&"}], ")"}], "/@", 
+       "labels"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
+   RowBox[{"VertexShapeFunction", "\[Rule]", "\"\<Capsule\>\""}], ",", 
+   RowBox[{"PerformanceGoal", "\[Rule]", "\"\<Quality\>\""}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"PlotTheme", "\[Rule]", "\"\<CoolColor\>\""}], ",", 
+   RowBox[{"VertexLabelStyle", "\[Rule]", "White"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"7851f285-8166-4553-a7a7-1ef883fbe201"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -482,13 +537,14 @@ Cell[BoxData[
   "IGKaryTree"}]], \
 "Input",ExpressionUUID->"757f30d6-5539-46b8-beb0-3c3c53456e9d"],
 
-Cell["Available options:", \
+Cell["The available options are:", \
 "Text",ExpressionUUID->"d4d4a569-95b3-4a98-9e91-db9554242fd2"],
 
 Cell[TextData[{
  Cell[BoxData[
- "DirectedEdges"],ExpressionUUID->"b53560f4-426c-4dd4-9535-9e8306597893"],
- ", whether to make edges directed."
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  "b53560f4-426c-4dd4-9535-9e8306597893"],
+ " creates a directed tree."
 }], "Item",ExpressionUUID->"acef4ff0-3508-471b-870b-5d509ed25f45"],
 
 Cell[BoxData[
@@ -512,21 +568,23 @@ Cell[BoxData[
   "IGCompleteGraph"}]], \
 "Input",ExpressionUUID->"7b5291c3-e0c3-436f-94e8-cf220a1a6ed3"],
 
-Cell["Available options:", \
+Cell["The available options are:", \
 "Text",ExpressionUUID->"f7472edf-a98e-40e6-a21b-f6584632abfa"],
 
 Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
- "DirectedEdges"],ExpressionUUID->"5ab86c10-135e-40b1-a26f-c83fc89070b6"],
- ", whether to return a directed graph"
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  "5ab86c10-135e-40b1-a26f-c83fc89070b6"],
+ " creates a directed graph."
 }], "Item",ExpressionUUID->"6d1c1a58-3758-4d90-9f70-eab76564e067"],
 
 Cell[TextData[{
  Cell[BoxData[
- "SelfLoops"],ExpressionUUID->"243dcc99-7547-45d6-af22-e3c52937aa37"],
- ", whether to include self loops"
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "243dcc99-7547-45d6-af22-e3c52937aa37"],
+ " includes self loops."
 }], "Item",ExpressionUUID->"b25bfb9b-a0b6-4e58-bd77-2eb68b772358"]
 }, Open  ]],
 
@@ -595,8 +653,12 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["Random graphs", \
+Cell["Random graph generators", \
 "Subsection",ExpressionUUID->"b89dc32a-e174-42d1-95f1-9235e92851b0"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "*Game"}]], "Input",ExpressionUUID->"3a8f3f3a-7f1d-403f-8980-f78ccd984e79"],
 
 Cell[CellGroupData[{
 
@@ -663,6 +725,40 @@ Cell[BoxData[
   "IGKRegularGame"}]], \
 "Input",ExpressionUUID->"56fd3bc8-5f5a-4a1b-bb83-b9a1606ee326"],
 
+Cell[TextData[{
+ "In a ",
+ Cell[BoxData[
+  FormBox["k", TraditionalForm]],ExpressionUUID->
+  "e46b5f1d-c140-4005-8ca7-2523e757357d"],
+ "-regular graph all vertices have degree ",
+ Cell[BoxData[
+  FormBox["k", TraditionalForm]],ExpressionUUID->
+  "f2de07b9-2312-49c3-9581-cb0e790b5977"],
+ "."
+}], "Text",ExpressionUUID->"785e3193-163a-402d-a79d-fc45349db7da"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"40bbb75b-df8b-418a-8527-b94e521adf3c"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "309b7ed5-cfa4-46f4-8974-d1390a986290"],
+ " creates a directed graph."
+}], "Item",ExpressionUUID->"6bc5a75c-bbcf-4c9f-9b95-ad2ea63730b9"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "4dd049df-28de-4582-9faa-72d9fc573a78"],
+ " allows the creation of parallel edges."
+}], "Item",ExpressionUUID->"1ec5c395-dde7-4a5b-a925-b1baa5e3407f"]
+}, Open  ]],
+
 Cell[BoxData[
  RowBox[{"IGKRegularGame", "[", 
   RowBox[{"10", ",", "3"}], 
@@ -709,6 +805,26 @@ the vertex count ",
  " new edges are added as well."
 }], "Text",ExpressionUUID->"7f3188b6-17ca-48ee-a849-87ef7d8465fb"],
 
+Cell["The available options are:", \
+"Text",ExpressionUUID->"06ccf31f-b4ce-4c3c-aa7f-f7eab022794a"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  "6b132ddb-7b61-4b73-bdaf-8b38d3c4f335"],
+ " creates a directed graph."
+}], "Item",ExpressionUUID->"319424e6-db37-4edc-9bd7-28a2ec3fe8cb"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<Citation\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  "2da57b6c-0994-4ecb-bbf4-0b12ad8169cf"],
+ " connects newly added edges to the newly added vertex."
+}], "Item",ExpressionUUID->"25849582-3ab5-477a-8b62-292779208aa1"]
+}, Open  ]],
+
 Cell[BoxData[
  RowBox[{"IGGrowingGame", "[", 
   RowBox[{"50", ",", "2"}], 
@@ -726,27 +842,7 @@ Cell[BoxData[
  RowBox[{"IGGrowingGame", "[", 
   RowBox[{"50", ",", "1", ",", 
    RowBox[{"\"\<Citation\>\"", "\[Rule]", "True"}]}], 
-  "]"}]], "Input",ExpressionUUID->"7fe3203f-1216-4319-9cbf-06b952295f34"],
-
-Cell["Options:", \
-"Text",ExpressionUUID->"06ccf31f-b4ce-4c3c-aa7f-f7eab022794a"],
-
-Cell[CellGroupData[{
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
-  "93be817c-0087-4550-b273-8a07bd931466"],
- " creates a directed graph."
-}], "Item",ExpressionUUID->"319424e6-db37-4edc-9bd7-28a2ec3fe8cb"],
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"\"\<Citation\>\"", "\[Rule]", "True"}]],ExpressionUUID->
-  "1564a8ff-90a1-4dc3-919e-90ff2eccd2ff"],
- " connects newly added edges to the newly added vertex."
-}], "Item",ExpressionUUID->"25849582-3ab5-477a-8b62-292779208aa1"]
-}, Open  ]]
+  "]"}]], "Input",ExpressionUUID->"7fe3203f-1216-4319-9cbf-06b952295f34"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -758,6 +854,76 @@ Cell[BoxData[
  RowBox[{"?", 
   "IGBarabasiAlbertGame"}]], \
 "Input",ExpressionUUID->"fa37a6de-b6b0-4fea-97a4-b6ab611e166c"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"16d23d45-39b6-46e0-8fe4-1bc9fe709ed6"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  "49c4d5a3-affe-4f5c-99d8-35f9d5c5c417"],
+ " creates a directed graph."
+}], "Item",ExpressionUUID->"b70dd1d9-30fe-43e4-8b34-ada755e3d8e0"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<TotalDegreeAttraction\>\"", "\[Rule]", "True"}]],
+  ExpressionUUID->"4ef8a113-b41f-4d01-913a-35ef3aa96344"],
+ " computes the attachment probability based on the the total degree of \
+existing vertices (i.e. in- and out-degree), not their in-degree."
+}], "Item",ExpressionUUID->"b26fa31a-30f1-4b43-9d94-5fc52d940fa1"]
+}, Open  ]],
+
+Cell[TextData[{
+ "Available ",
+ Cell[BoxData[
+ "Method"],ExpressionUUID->"9230c53a-edd4-497e-963d-06ee79d68e66"],
+ " option values:"
+}], "Text",ExpressionUUID->"693e460b-a67f-44f7-8d8b-8b474f9600fb"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+ "\"\<Bag\>\""],ExpressionUUID->"00ac7cee-1729-49bc-bb62-92a2e9661c6c"],
+ " works by putting the ids of the vertices into a bag exactly as many times \
+as their (in-)degree, plus once more. Then the required number of cited \
+vertices are drawn from the bag, with replacement. This method might generate \
+multiple edges. It only works if ",
+ Cell[BoxData[
+  RowBox[{"\[Beta]", "=", "1"}]],ExpressionUUID->
+  "198ea9ce-515c-4d70-a1b0-2c1082236e12"],
+ " and ",
+ Cell[BoxData[
+  RowBox[{"a", "=", "1"}]],ExpressionUUID->
+  "70d1f5e5-9e94-4f41-acea-123df9f8a7e8"],
+ "."
+}], "Item",ExpressionUUID->"f3b84f0a-d4db-4839-a02c-3ae0cbafce5d"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "\"\<PSumTree\>\""],ExpressionUUID->"d6a29c08-23fa-424d-ad7a-7fa12075cc19"],
+ " uses a partial prefix-sum tree to generate the graph. It does not generate \
+multiple edges and works for any ",
+ Cell[BoxData[
+ "\[Beta]"],ExpressionUUID->"8405e407-1233-4200-bf54-5ce17cf76220"],
+ " and ",
+ Cell[BoxData["a"],ExpressionUUID->"dbacef4c-a4f9-4a8d-b3d8-ba4e5972c702"],
+ " values."
+}], "Item",ExpressionUUID->"f3757cfc-234a-4210-836f-0360343d1259"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "\"\<PSumTreeMultiple\>\""],ExpressionUUID->
+  "adb8bb68-cd2e-4485-b4fd-4e515f4e246b"],
+ " works like ",
+ Cell[BoxData[
+ "\"\<PSumTree\>\""],ExpressionUUID->"f0184989-e548-456c-a497-621585538a13"],
+ " but allowed multiple edges."
+}], "Item",ExpressionUUID->"70379514-1ab5-44f5-bf88-0fa52fbed671"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{"IGBarabasiAlbertGame", "[", 
@@ -777,75 +943,75 @@ Cell[BoxData[
    RowBox[{"Method", "\[Rule]", "\"\<Bag\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"11fe9a2a-c76b-43fc-bdaa-2d7432443e10"],
 
-Cell["Options:", \
-"Text",ExpressionUUID->"16d23d45-39b6-46e0-8fe4-1bc9fe709ed6"],
-
-Cell[CellGroupData[{
-
 Cell[TextData[{
+ "Create a graph with the given out-degree sequence. The ",
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
-  "672c7008-0e30-4296-ae0f-6bf22ac6d75b"],
- " creates a directed graph."
-}], "Item",ExpressionUUID->"b70dd1d9-30fe-43e4-8b34-ada755e3d8e0"],
-
-Cell[TextData[{
+  FormBox[
+   SuperscriptBox["k", "th"], TraditionalForm]],ExpressionUUID->
+  "b9b34ab3-d7b9-4899-a985-81944748c35f"],
+ " entry in the degree sequence list must be no greater than ",
  Cell[BoxData[
-  RowBox[{"\"\<TotalDegreeAttraction\>\"", "\[Rule]", "True"}]],
-  ExpressionUUID->"c980cf73-b4be-436a-87f6-40cadcf61b5d"],
- " computes the attachment probability based on the the total degree of \
-existing vertices (i.e. in- and out-degree), not their in-degree."
-}], "Item",ExpressionUUID->"b26fa31a-30f1-4b43-9d94-5fc52d940fa1"]
-}, Open  ]],
-
-Cell[TextData[{
- "Available ",
- Cell[BoxData[
- "Method"],ExpressionUUID->"3196667c-fe0a-48d1-9f63-30b7683e1ee6"],
- " option values:"
-}], "Text",ExpressionUUID->"693e460b-a67f-44f7-8d8b-8b474f9600fb"],
-
-Cell[CellGroupData[{
-
-Cell[TextData[{
- Cell[BoxData[
- "\"\<Bag\>\""],ExpressionUUID->"784b1fc6-9f64-470e-8425-d1292c962d1a"],
- " works by putting the ids of the vertices into a bag exactly as many times \
-as their (in-)degree, plus once more. Then the required number of cited \
-vertices are drawn from the bag, with replacement. This method might generate \
-multiple edges. It only works if ",
- Cell[BoxData[
-  RowBox[{"\[Beta]", "=", "1"}]],ExpressionUUID->
-  "38eac492-b2fd-4626-8a48-a14045f86530"],
- " and ",
- Cell[BoxData[
-  RowBox[{"a", "=", "1"}]],ExpressionUUID->
-  "8277a41e-84f1-4c61-a076-e99a8abe2f45"],
+  FormBox["k", TraditionalForm]],ExpressionUUID->
+  "f4b478bb-84c8-49f4-a926-0e7c79f5521c"],
  "."
-}], "Item",ExpressionUUID->"f3b84f0a-d4db-4839-a02c-3ae0cbafce5d"],
+}], "Text",ExpressionUUID->"6fdf7e9b-4a04-412f-968a-25b5748620c4"],
+
+Cell[BoxData[
+ RowBox[{"IGBarabasiAlbertGame", "[", 
+  RowBox[{"12", ",", 
+   RowBox[{"{", 
+    RowBox[{
+    "1", ",", "2", ",", "3", ",", "2", ",", "1", ",", "3", ",", "4", ",", "5",
+      ",", "1", ",", "5", ",", "2"}], "}"}], ",", 
+   RowBox[{"PlotTheme", "\[Rule]", "\"\<Minimal\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"ca7f092a-a9fa-41b1-bebe-84095820d313"],
+
+Cell[BoxData[
+ RowBox[{"VertexOutDegree", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"657cc855-c546-4dd1-b032-0cfc8a2a706d"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGWattsStrogatzGame", \
+"Subsubsection",ExpressionUUID->"3116cd63-c7f2-4bba-aa72-389e03e95129"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGWattsStrogatzGame"}]], \
+"Input",ExpressionUUID->"07429fd1-8e96-4fad-a67b-1e880ac91937"],
 
 Cell[TextData[{
+ "The two-argument form produces results equivalent to that of the built-in \
+",
  Cell[BoxData[
- "\"\<PSumTree\>\""],ExpressionUUID->"3a73101d-4e6d-4d77-ae3f-ccd1f9d14e6e"],
- " uses a partial prefix-sum tree to generate the graph. It does not generate \
-multiple edges and works for any ",
- Cell[BoxData[
- "\[Beta]"],ExpressionUUID->"f41d1bdf-56f0-474b-a96c-72c6f7f67a09"],
- " and ",
- Cell[BoxData["a"],ExpressionUUID->"52eaf659-d1f9-425e-b682-e65e50aafd69"],
- " values."
-}], "Item",ExpressionUUID->"f3757cfc-234a-4210-836f-0360343d1259"],
+ "WattsStrogatzGraphDistribution"],ExpressionUUID->
+  "093d4419-bc19-432e-8804-8f07a4fd15cb"],
+ "."
+}], "Text",ExpressionUUID->"be4ce83e-c6bc-4f15-915a-39d173669790"],
+
+Cell[BoxData[
+ RowBox[{"IGWattsStrogatzGame", "[", 
+  RowBox[{"30", ",", "0.05", ",", 
+   RowBox[{"PlotTheme", "\[Rule]", "\"\<Web\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"c9e1f1f6-f2ce-4aba-bc4d-479c02625433"],
 
 Cell[TextData[{
+ "The extended form allows for multi-dimensional lattices. Create a graph by \
+randomly rewiring a two-dimensional toroidal lattice of ",
  Cell[BoxData[
- "\"\<PSumTreeMultiple\>\""],ExpressionUUID->
-  "ab0a7c20-7635-4e36-8647-e47888f0eb52"],
- " works like ",
- Cell[BoxData[
- "\"\<PSumTree\>\""],ExpressionUUID->"ece529a7-aa44-4089-9a76-39503959387a"],
- " but allowed multiple edges."
-}], "Item",ExpressionUUID->"70379514-1ab5-44f5-bf88-0fa52fbed671"]
-}, Open  ]]
+  RowBox[{"10", "\[Times]", "10"}]],ExpressionUUID->
+  "0d0ec139-53db-4faa-9424-fa3168f60f4a"],
+ " nodes:"
+}], "Text",ExpressionUUID->"cc766858-c973-436c-8dea-26f2ca9989ac"],
+
+Cell[BoxData[
+ RowBox[{"Graph3D", "@", 
+  RowBox[{"IGWattsStrogatzGame", "[", 
+   RowBox[{"10", ",", "0.01", ",", 
+    RowBox[{"{", 
+     RowBox[{"2", ",", "1"}], "}"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"dea22010-d155-45f9-a3bc-0d66e85dcc64"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -864,15 +1030,39 @@ Cell[TextData[{
   "4b44f71f-e9e3-4aae-b405-b9ba9cf1d104"],
  " generates a random graph by connecting vertices based on their fitness \
 score. The algorithm starts with ",
- Cell[BoxData["n"],ExpressionUUID->"9392dfca-b1ed-4b94-af2a-b6e463b2786f"],
+ Cell[BoxData[
+  FormBox["n", TraditionalForm]],ExpressionUUID->
+  "cf5ceaba-fe27-4fb7-acfc-f95a2d5b8974"],
  " vertices and no edges. Two vertices are selected with probabilities \
 proportional to their fitness scores (for directed graphs, a starting vertex \
 is selected based on its out-fitness and an end vertex based on its \
 in-fitness).  If they are not yet connected, and edge is inserted between \
 them. The procedure is repeated until the number of edges reached ",
- Cell[BoxData["m"],ExpressionUUID->"c25e9a28-cbd3-4468-afbf-d96c218d69d6"],
+ Cell[BoxData[
+  FormBox["m", TraditionalForm]],ExpressionUUID->
+  "a76c1392-3a3b-4da8-8aa2-75bc56895965"],
  "."
 }], "Text",ExpressionUUID->"ff0aa66a-6567-4415-b0d0-c517b900216a"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"6365a0e1-fba3-444a-80b7-23bd7bdeb67d"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "ab928b5c-13ca-4a1f-af14-ed9c3c820af0"],
+ " allows the creation of self loops."
+}], "Item",ExpressionUUID->"8a53b0a8-3a34-4cf3-81b0-1d9c6af27a06"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  "0bac0963-c90f-4b75-a278-1c95abdee203"],
+ " allows the creation of parallel edges."
+}], "Item",ExpressionUUID->"b4055413-d59c-4e2f-9d27-043ab919cb17"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{"IGStaticFitnessGame", "[", 
@@ -899,6 +1089,109 @@ Cell[BoxData[
  RowBox[{"?", 
   "IGStaticPowerLawGame"}]], \
 "Input",ExpressionUUID->"93a34807-8ff6-49d7-9e68-0d99fb822fc7"],
+
+Cell["\<\
+This game generates a directed or undirected random graph where the degrees \
+of vertices follow power-law distributions with prescribed exponents. For \
+directed graphs, the exponents of the in- and out-degree distributions may be \
+specified separately.\
+\>", "Text",ExpressionUUID->"ef87fa4a-7f50-4242-9ce8-f1a5575268ed"],
+
+Cell[TextData[{
+ "This function is equivalent to ",
+ Cell[BoxData["IGStaticFitnessGame"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "a0aa6587-024f-4af3-892e-35c19f9cca95"],
+ " with a fitness vector ",
+ Cell[BoxData[
+  FormBox["f", TraditionalForm]],ExpressionUUID->
+  "ec938f75-972f-4092-a919-21a9711ad2c3"],
+ " where ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["f", "i"], "=", 
+    FractionBox["1", 
+     RowBox[{"exponent", "-", "1"}]]}], TraditionalForm]],ExpressionUUID->
+  "fe62cb71-4e27-4325-8203-91dd4a047eab"],
+ "."
+}], "Text",ExpressionUUID->"74bf74a7-ca01-433d-826f-a107e1ab31b4"],
+
+Cell[TextData[{
+ "Note that significant finite size effects may be observed for exponents \
+smaller than 3 in the original formulation of the game. This function removes \
+the finite size effects by default by assuming that the fitness of vertex ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "1064a76a-1108-4a36-8347-a6f94fda3ff6"],
+ " is ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox[
+    RowBox[{"(", 
+     RowBox[{"i", "+", 
+      SubscriptBox["i", "0"], "-", "1"}], ")"}], 
+    RowBox[{"-", "\[Alpha]"}]], TraditionalForm]],ExpressionUUID->
+  "ec81b276-df77-4c00-b2d2-131645e511aa"],
+ ", where ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["i", "0"], TraditionalForm]],ExpressionUUID->
+  "2ae9672d-2060-475b-98b3-bd99a25ad4f1"],
+ " is a constant chosen appropriately to ensure that the maximum degree is \
+less than the square root of the number of edges times the average degree; \
+see the paper of Chung and Lu, and Cho et al for more details."
+}], "Text",ExpressionUUID->"6ec6b7d7-2b2b-4011-af1a-8d5cf37c7a41"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"1ada5d10-f7e0-458b-b1cb-d4d7287c240a"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "82e5332f-fc55-4757-9cd5-c980d5da9c2f"],
+ " allows the creation of self loops."
+}], "Item",ExpressionUUID->"38b7e755-3b6f-4f66-a991-6e7176f3902d"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  "dd3a1159-12bf-4599-83e2-4c39998a9070"],
+ " allows the creation of parallel edges."
+}], "Item",ExpressionUUID->"7b951afb-8717-47a7-aff8-83ad5a372a39"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<FiniteSizeCorrection\>\"", "\[Rule]", "False"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "5e5b5d6f-357e-4960-8a6b-84a7e85a5e42"],
+ " disables finite size correction, which is used by default."
+}], "Item",ExpressionUUID->"a6d9489d-7b89-4032-8a20-93eab0cd330d"]
+}, Open  ]],
+
+Cell[TextData[StyleBox["References:",
+ FontWeight->
+  "Bold"]], "Text",ExpressionUUID->"3afdf528-5350-409c-80ce-df9822e8c22c"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Goh K-I, Kahng B, Kim D: Universal behaviour of load distribution in \
+scale-free networks. Phys Rev Lett 87(27):278701, 2001.\
+\>", "Item",ExpressionUUID->"7b5856a3-a213-4c0c-98e2-4f30b9fec1d4"],
+
+Cell["\<\
+Chung F and Lu L: Connected components in a random graph with given degree \
+sequences. Annals of Combinatorics 6, 125-145, 2002.\
+\>", "Item",ExpressionUUID->"7c5d9bef-fbed-41fc-b0d5-e709c7c9434f"],
+
+Cell["\<\
+Cho YS, Kim JS, Park J, Kahng B, Kim D: Percolation transitions in scale-free \
+networks under the Achlioptas process. Phys Rev Lett 103:135702, 2009.\
+\>", "Item",ExpressionUUID->"59d6f99c-3442-42b3-92a6-f302582ce9c2"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{
@@ -946,6 +1239,26 @@ Cell[TextData[{
  "blockSizes"],ExpressionUUID->"187c63ab-0fa9-429b-9492-f645f572017e"],
  " argument gives the size of each block (vertex group)."
 }], "Text",ExpressionUUID->"ad500921-cd6c-4738-9a31-27f1326907ff"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"99fe4e87-5df9-43a4-a48a-5e55e721e2ae"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "6fc50f27-b700-47ca-b85d-b16828466792"],
+ " allows the creation of self loops."
+}], "Item",ExpressionUUID->"90efc1be-9415-4369-940a-9ed7e7bd6a40"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  "90a6636b-1c73-4277-a319-d5dd06c9b28f"],
+ " allows the creation of parallel edges."
+}], "Item",ExpressionUUID->"7f91cbd0-3cd3-4c5b-824f-fb495fad10e2"]
+}, Open  ]],
 
 Cell[BoxData[
  RowBox[{"IGStochasticBlockModelGame", "[", 
@@ -1005,6 +1318,99 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGCallawayTraitsGame", \
+"Subsubsection",ExpressionUUID->"bf479b16-a841-4f5c-8d67-8b16992a74e6"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCallawayTraitsGame"}]], \
+"Input",ExpressionUUID->"e22d1d87-c5ee-43cc-b6e3-229b4c38ecb4"],
+
+Cell["\<\
+This function simulates a growing random graph according to the following \
+algorithm:\
+\>", "Text",ExpressionUUID->"5f9a63f6-1ad3-49e5-a6f0-735233970108"],
+
+Cell[TextData[{
+ "At each time step, a new vertex is added. Its type is randomly selected \
+according to the type weights. Then ",
+ Cell[BoxData["k"],ExpressionUUID->"0f571551-e08e-49c7-b5c7-d29d06d84533"],
+ " existing pairs of vertices are selected randomly, and each pair attempts \
+to connect. The probability of success for given types of vertices is given \
+by the preference matrix."
+}], "Text",ExpressionUUID->"ffeecc36-8b4b-47b2-b73c-6baa0427dbdd"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"c741b1f1-ff9c-4d32-a8f0-459838ab6394"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  "b742ed41-056b-4c77-a00d-9c05f9a720ef"],
+ " creates a directed graph."
+}], "Item",ExpressionUUID->"40f8fa65-ed5f-4302-b1a4-918a1b4780e2"],
+
+Cell[BoxData[
+ RowBox[{"IGCallawayTraitsGame", "[", 
+  RowBox[{"20", ",", "2", ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"(", GridBox[{
+      {"1", ".5", ".3"},
+      {".5", ".7", ".2"},
+      {".3", ".2", ".1"}
+     }], ")"}]}], 
+  "]"}]], "Input",ExpressionUUID->"7417ba1b-7569-46d0-9a08-9678615d1bea"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGEstablishmentGame", \
+"Subsubsection",ExpressionUUID->"79960340-d2fd-4c0f-8810-b00da4e4689f"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGEstablishmentGame"}]], \
+"Input",ExpressionUUID->"5a6d466c-99a8-410c-a41c-737a88fe88e0"],
+
+Cell["\<\
+This function simulates a growing random graph according to the following \
+algorithm:\
+\>", "Text",ExpressionUUID->"ae5201db-bf03-4c4d-8a26-aa5a5e57ce4b"],
+
+Cell[TextData[{
+ "At each time step, a new vertex is added. Its type is randomly selected \
+according to the type weights. It attempts to connect to ",
+ Cell[BoxData["k"],ExpressionUUID->"335700c2-5355-466a-9292-26a27736a4a6"],
+ " existing vertices. The probability of success for given types of vertices \
+is given by the preference matrix."
+}], "Text",ExpressionUUID->"a7ce2da8-ba7a-40b1-94b1-285e130e2b9f"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"ea017bf4-9f40-4c61-98a5-a3364d525f16"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  "1d84d8ad-aed8-4c38-96c1-5f190d45eba8"],
+ " creates a directed graph."
+}], "Item",ExpressionUUID->"cefe91bf-854b-47a3-b201-79382eab0239"],
+
+Cell[BoxData[
+ RowBox[{"IGEstablishmentGame", "[", 
+  RowBox[{"20", ",", "3", ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "1", ",", "2"}], "}"}], ",", 
+   RowBox[{"(", GridBox[{
+      {"1", ".5", ".3"},
+      {".5", ".7", ".2"},
+      {".3", ".2", ".1"}
+     }], ")"}]}], 
+  "]"}]], "Input",ExpressionUUID->"4cc0b97e-c5b1-4644-b274-bc81a2809a5c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["Random bipartite graphs", \
 "Subsubsection",ExpressionUUID->"f607e9ad-9c23-4bfa-b957-39380c83d7f7"],
 
@@ -1047,8 +1453,9 @@ Cell["The available options are:", \
 
 Cell[TextData[{
  Cell[BoxData[
- "SelfLoops"],ExpressionUUID->"fd69ebcd-280f-4d88-9909-c123d984dff2"],
- ", whether to allow the creation of self loops"
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "fd69ebcd-280f-4d88-9909-c123d984dff2"],
+ " allows the creation of self loops."
 }], "Item",ExpressionUUID->"9d4498ba-08ed-49b5-86e4-68e29515828a"],
 
 Cell["\<\
@@ -1087,15 +1494,16 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
- "SelfLoops"],ExpressionUUID->"99c230b2-817e-4ac6-b738-bf43b7e8dae7"],
- ", whether to allow the creation of self loops"
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "99c230b2-817e-4ac6-b738-bf43b7e8dae7"],
+ " allows the creation of self loops."
 }], "Item",ExpressionUUID->"1fac8189-02e3-4f66-89d4-f98006fa6725"],
 
 Cell[TextData[{
  Cell[BoxData[
- "\"\<MultipleEdges\>\""],ExpressionUUID->
+  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
   "3aee6336-5504-4df8-a471-b1c4c5e94dc3"],
- ", whether to allow the creation of multiple edges"
+ " allows the creation of multiple edges."
 }], "Item",ExpressionUUID->"a9124eac-016d-40f7-8972-159eb70c8bb2"]
 }, Open  ]],
 
@@ -1146,15 +1554,16 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
- "SelfLoops"],ExpressionUUID->"1ef01eee-5a20-489d-b2b3-39b501ac9136"],
- ", whether to keep self loops."
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "1ef01eee-5a20-489d-b2b3-39b501ac9136"],
+ " keeps any self loops created during contraction."
 }], "Item",ExpressionUUID->"ae3f5d7a-d216-4134-974b-f88474c07af8"],
 
 Cell[TextData[{
  Cell[BoxData[
- "\"\<MultipleEdges\>\""],ExpressionUUID->
+  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
   "729a5ba9-dff1-44eb-a97e-8c1608eb2fbf"],
- ", whether to keep multiple edges."
+ " keeps any parallel edges created during contraction."
 }], "Item",ExpressionUUID->"e7a46974-dd64-497f-92fc-a54a62860d12"]
 }, Open  ]],
 
@@ -3435,7 +3844,8 @@ Cell["VF2", \
 
 Cell[BoxData[
  RowBox[{"?", 
-  "IGVF2*"}]], "Input",ExpressionUUID->"b92173ac-7d82-44c1-b9da-4682b5d885a9"],
+  "IGVF2*"}]], "Input",ExpressionUUID->"b92173ac-7d82-44c1-b9da-4682b5d885a9"]
+,
 
 Cell[TextData[{
  "VF2 supports vertex coloured and edge coloured graphs. A colour \
@@ -4766,7 +5176,7 @@ Cell[BoxData[
        RowBox[{"4", ",", "1"}], "}"}]}], "}"}]}]}], 
   "]"}]], "Input",ExpressionUUID->"ebd8d663-c71f-4203-ae34-69119afbb288"],
 
-Cell["Options:", \
+Cell["The available options are:", \
 "Text",ExpressionUUID->"67835348-e663-4dbd-9240-1b5495205784"],
 
 Cell[CellGroupData[{
@@ -21548,8 +21958,7 @@ PzrHvfyAyOS/5E8HPA==
               13}, {14}, {15}, {16}, {26}, {23}, {10}, {11}, {17}, {19}, {
               25}, {29}, {30}, {20}, {22}, {27}, {28}}}, {1, 1, 1, 1, 1, 1, 1,
               1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-             1}}]}, {
-          GraphLayout -> {"Dimension" -> 2}, PlotLabel -> 
+             1}}]}, {GraphLayout -> {"Dimension" -> 2}, PlotLabel -> 
            IGraphM`IGLayoutFruchtermanReingold3D, PlotRange -> All, 
            VertexCoordinates -> CompressedData["
 1:eJwB4QIe/SFib1JlAgAAAB4AAAADAAAA1smlXDxpwj8SUnZ5ZEDIP6WIJ6Go
@@ -22382,8 +22791,7 @@ OuhxEM3j7D/O7fYCs/zQv+tBE2MFWuE/cd6Igw==
               13}, {14}, {15}, {16}, {26}, {23}, {10}, {11}, {17}, {19}, {
               25}, {29}, {30}, {20}, {22}, {27}, {28}}}, {1, 1, 1, 1, 1, 1, 1,
               1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-             1}}]}, {
-          GraphLayout -> {"Dimension" -> 2}, PlotLabel -> 
+             1}}]}, {GraphLayout -> {"Dimension" -> 2}, PlotLabel -> 
            IGraphM`IGLayoutRandom, PlotRange -> All, 
            VertexCoordinates -> CompressedData["
 1:eJxTTMoPSmViYGCQA2IQDQSLCjM272dgaOCJtLkNpA8YS3W+BNIOBXGJr+yB
@@ -22490,8 +22898,7 @@ kjex0AXpa9ixbT84fhTaLcD2zBTqOAASr3l35/J+ALVmwGU=
               13}, {14}, {15}, {16}, {26}, {23}, {10}, {11}, {17}, {19}, {
               25}, {29}, {30}, {20}, {22}, {27}, {28}}}, {1, 1, 1, 1, 1, 1, 1,
               1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-             1}}]}, {
-          GraphLayout -> {"Dimension" -> 2}, PlotLabel -> 
+             1}}]}, {GraphLayout -> {"Dimension" -> 2}, PlotLabel -> 
            IGraphM`IGLayoutReingoldTilford, PlotRange -> All, 
            VertexCoordinates -> CompressedData["
 1:eJxTTMoPSmViYGCQA2IQjQ6OF8oAkawDhPdhP4QvicYXhfP7HlsAEROc/wTE
@@ -22787,7 +23194,6 @@ mHH+xIWWt3L0IHMFtJChKPqnKfAV+oVqnfuxkswhUP5bZvgDS2JxXw==
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.506309316117289, 
                0.022090158552538968`, -0.8620689655172414}, {
-               
                0.0643844413619903, -0.9829181693600876, \
 -0.17241379310344834`}}}], 0.04522292993630572]}, 
              {Arrowheads[0.], 
@@ -23618,7 +24024,7 @@ Cell["Processes on graphs", \
 Cell[CellGroupData[{
 
 Cell["IGRandomWalk", \
-"Subsection",ExpressionUUID->"bb27ecba-c592-4b1d-b977-2800e7e81c42"],
+"Subsubsection",ExpressionUUID->"bb27ecba-c592-4b1d-b977-2800e7e81c42"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -23631,11 +24037,6 @@ Cell[BoxData[
  RowBox[{"?", 
   "IGRandomWalk"}]], \
 "Input",ExpressionUUID->"d6bb65bb-9a9d-4b89-8f02-417a9fef8e42"],
-
-Cell[CellGroupData[{
-
-Cell["Example", \
-"Subsubsection",ExpressionUUID->"f3220d2a-f89d-49b1-974f-b0df14efb300"],
 
 Cell["\<\
 How much time does a random walker spend on each node of a network?\
@@ -23712,7 +24113,6 @@ Cell[BoxData[
  CellChangeTimes->{{3.700471352214169*^9, 3.700471354865036*^9}, {
   3.700471518429431*^9, 3.700471554958321*^9}, {3.7004715954909286`*^9, 
   3.70047163117698*^9}},ExpressionUUID->"4f53d052-090f-4156-9740-749ead274d5c"]
-}, Closed]]
 }, Closed]]
 }, Closed]],
 
@@ -24015,15 +24415,16 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
- "SelfLoops"],ExpressionUUID->"f2df03bd-7b7d-4d6a-8eec-96a267118054"],
- ", whether to keep self loops."
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "f2df03bd-7b7d-4d6a-8eec-96a267118054"],
+ " keeps self loops in the graph."
 }], "Item",ExpressionUUID->"36c21515-bb7c-468e-b7d0-b70970d583e2"],
 
 Cell[TextData[{
  Cell[BoxData[
- "\"\<MultipleEdges\>\""],ExpressionUUID->
+  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
   "3bc76cc3-d4f0-443c-bd64-bd2b28330c4d"],
- ", whether to keep multiple edges."
+ " keeps parallel edges in the graph."
 }], "Item",ExpressionUUID->"563c984a-50fa-4425-9b9b-3287e571c34b"]
 }, Open  ]],
 
@@ -24380,9 +24781,8 @@ Cell["IGVertexStrength", \
 "Subsubsection",ExpressionUUID->"c2681b27-7686-480a-bc9f-c9535467be75"],
 
 Cell[TextData[{
- Cell[BoxData["IGVertexStrength"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "78671b93-d8f2-43c3-b0f0-aedb061aad0b"],
+ Cell[BoxData[
+ "IGVertexStrength"],ExpressionUUID->"78671b93-d8f2-43c3-b0f0-aedb061aad0b"],
  " returns the strength of each vertex, i.e. the total edge weight of edges \
 adjacent to it."
 }], "Text",ExpressionUUID->"fca91790-ccf8-446a-a1d9-b830077e3064"],
@@ -24797,13 +25197,11 @@ Cell[BoxData[
 
 Cell[TextData[{
  "This is because the edge weights are imported into the ",
- Cell[BoxData["\"\<value\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
-  "7ad45e19-e3f1-48db-9bd3-54231c276243"],
+ Cell[BoxData[
+ "\"\<value\>\""],ExpressionUUID->"7ad45e19-e3f1-48db-9bd3-54231c276243"],
  " property instead of the standard ",
- Cell[BoxData["EdgeWeight"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "fd1c12e8-9967-42a5-aa0b-4ebd65080d6b"],
+ Cell[BoxData[
+ "EdgeWeight"],ExpressionUUID->"fd1c12e8-9967-42a5-aa0b-4ebd65080d6b"],
  ":"
 }], "Text",ExpressionUUID->"55d25a43-b67a-48db-b748-de439804167b"],
 
@@ -24883,7 +25281,7 @@ Cell[BoxData[
 }, Open  ]]
 },
 WindowSize->{956, 862},
-WindowMargins->{{202, Automatic}, {Automatic, 67}},
+WindowMargins->{{Automatic, 176}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 PrintingStartingPageNumber->1,
 PageHeaders->{{
