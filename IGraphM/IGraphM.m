@@ -1304,7 +1304,9 @@ IGStaticFitnessGame[
 
 
 Options[IGStaticPowerLawGame] = { SelfLoops -> False, "MultipleEdges" -> False, "FiniteSizeCorrection" -> True };
-SyntaxInformation[IGStaticPowerLawGame] = {"ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticFitnessGame, Graph]};
+SyntaxInformation[IGStaticPowerLawGame] = {
+  "ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]
+};
 IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, exp_?nonnegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"staticPowerLawGame"[n, m, exp, -1, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
