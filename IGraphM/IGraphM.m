@@ -70,8 +70,8 @@ IGEmptyGraph::usage =
     "IGEmptyGraph[n] returns a graph with no edges and n vertices.";
 
 IGConnectNeighborhood::usage =
-    "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighborhood.\n" <>
-    "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighborhood. Weights and other graph properties are discarded.";
+    "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighbourhood.\n" <>
+    "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighbourhood. Weights and other graph properties are discarded.";
 
 IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph.";
@@ -388,7 +388,7 @@ IGCommunitiesWalktrap::usage =
     "IGCommunitiesWalktrap[graph, steps] finds communities via random walks of length steps.";
 IGCommunitiesOptimalModularity::usage = "IGCommunitiesOptimalModularity[graph] finds communities by maximizing the modularity through integer programming.";
 IGCommunitiesMultilevel::usage = "IGCommunitiesMultilevel[graph] finds communities using the Louvain method.";
-IGCommunitiesLabelPropagation::usage = "IGCommunitiesLabelPropagation[graph] finds communities by assigning labels to each vertex and then updating them by majority voting in the neighborhood of the vertex.";
+IGCommunitiesLabelPropagation::usage = "IGCommunitiesLabelPropagation[graph] finds communities by assigning labels to each vertex and then updating them by majority voting in the neighbourhood of the vertex.";
 IGCommunitiesInfoMAP::usage =
     "IGCommunitiesInfoMAP[graph] finds communities using the InfoMAP algorithm. The default number of trials is 10.\n" <>
     "IGCommunitiesInfoMAP[graph, trials]";
@@ -758,7 +758,7 @@ template = LTemplate["IGraphM",
         LFun["bipartitePartitions", {}, {Integer, 1}],
 
         (* Vertex contraction *)
-        LFun["contractVertices", {{Real, 1}}, "Void"],
+        LFun["contractVertices", {{Real, 1, "Constant"}}, "Void"],
 
         (* Random walk *)
         LFun["randomWalk", {Integer, Integer}, {Real, 1}],
@@ -894,10 +894,10 @@ sck[val_] := val
 
 (* For argument checking: *)
 
-nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
-intVecQ = VectorQ[#, Developer`MachineIntegerQ]&
-positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&
-nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&
+nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&;
+intVecQ = VectorQ[#, Developer`MachineIntegerQ]&;
+positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&;
+nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&;
 positiveVecQ = VectorQ[#, Positive]&;
 
 (* Replace Infinity by 0 *)
@@ -1293,7 +1293,9 @@ IGWattsStrogatzGame[
 
 
 Options[IGStaticFitnessGame] = { SelfLoops -> False, "MultipleEdges" -> False };
-SyntaxInformation[IGStaticFitnessGame] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticFitnessGame, Graph]};
+SyntaxInformation[IGStaticFitnessGame] = {
+  "ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticFitnessGame, Graph]
+};
 IGStaticFitnessGame[
   m_?Internal`NonNegativeMachineIntegerQ,
   inFitness_?nonNegIntVecQ, outFitness : _?nonNegIntVecQ : {}, opt : OptionsPattern[{IGStaticFitnessGame, Graph}]] :=
