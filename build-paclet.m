@@ -150,7 +150,9 @@ With[{$buildDir = $buildDir},
         NBFEProcess[NotebookEvaluate[#, InsertResults -> True]&]
       ]["IGDocumentation.nb"]
     ],
-    "10.3" (* 10.0 can't evaluate from a MathLink-controlled kernel due to a bug, use newer version *)
+    (* Note 1: 10.0 can't evaluate from a MathLink-controlled kernel due to a bug, use newer version *)
+    (* Note 2: Use 10.4, which supports PlotTheme. *)
+    "10.4"
   ]
 ]
 
