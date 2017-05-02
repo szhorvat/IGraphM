@@ -224,6 +224,9 @@ IGStaticPowerLawGame::usage =
 
 IGGrowingGame::usage = "IGGrowingGame[n, k] generates a growing random graph with n vertices, adding a new vertex and k new edges in each step.";
 
+IGCallawayTraitsGame::usage = "IGCallawayTraitsGame[n, k, typeWeights, preferenceMatrix]";
+IGEstablishmentGame::usage = "IGEstablishmentGame[n, k, typeWeights, preferenceMatrix]";
+
 IGDistanceMatrix::usage =
     "IGDistanceMatrix[graph] computes the shortest path length between each vertex pair in graph.\n" <>
     "IGDistanceMatrix[graph, fromVertices] computes the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
@@ -495,6 +498,10 @@ template = LTemplate["IGraphM",
         LFun["staticPowerLawGame", {Integer (* n *), Integer (* m *), Real (* expOut *), Real (* expIn *), True|False (* loops *), True|False (* multiple *), True|False (* finiteSizeCorrection *)}, "Void"],
 
         LFun["growingGame", {Integer (* n *), Integer (* m *), True|False (* directed *), True|False (* citation *)}, "Void"],
+
+        LFun["callawayTraitsGame", {Integer (* n *), Integer (* types *), Integer (* k *), {Real, 1, "Constant"} (* type distribution *), {Real, 2, "Constant"} (* pref matrix *), True|False (* directed *)}, "Void"],
+
+        LFun["establishmentGame", {Integer (* n *), Integer (* types *), Integer (* k *), {Real, 1, "Constant"} (* type distribution *), {Real, 2} (* pref matrix *), True|False (* directed *)}, "Void"],
 
         (* Modification *)
 
@@ -891,6 +898,7 @@ nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&
 intVecQ = VectorQ[#, Developer`MachineIntegerQ]&
 positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&
 nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&
+positiveVecQ = VectorQ[#, Positive]&;
 
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
@@ -1314,6 +1322,70 @@ SyntaxInformation[IGGrowingGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[
 IGGrowingGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGGrowingGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"growingGame"[n, m, OptionValue[DirectedEdges], OptionValue["Citation"]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+
+IGEstablishmentGame::prefmsym  = IGCallawayTraitsGame::prefmsym = "The preference matrix must be symmetric when generating undirected graphs.";
+IGEstablishmentGame::prefmdim = IGCallawayTraitsGame::prefmdim = "The preference matrix must be square and agree in size with the number of vertex types.";
+IGEstablishmentGame::prefmel  = IGCallawayTraitsGame::prefmel  = "The elements of the preference matrix must be probabilities between 0 and 1.";
+IGEstablishmentGame::weightnn = IGCallawayTraitsGame::weightnn = "The vertex type weights must be non-negative.";
+
+Options[IGCallawayTraitsGame] = { DirectedEdges -> False };
+SyntaxInformation[IGCallawayTraitsGame] = {
+  "ArgumentsPattern" -> {_, _, _, _, OptionsPattern[]}, "OptionNames" -> optNames[IGCallawayTraitsGame, Graph]
+};
+IGCallawayTraitsGame[
+  n_?Internal`NonNegativeMachineIntegerQ, k_?Internal`NonNegativeMachineIntegerQ,
+  typeWeights_?VectorQ, prefMatrix_?MatrixQ,
+  opt : OptionsPattern[{IGCallawayTraitsGame, Graph}]] :=
+      catch@Block[{ig = Make["IG"]},
+        If[Not@positiveVecQ[typeWeights],
+          Message[IGCallawayTraitsGame::weightnn];
+          Return[$Failed];
+        ];
+        If[Dimensions[prefMatrix] != {Length[typeWeights], Length[typeWeights]},
+          Message[IGCallawayTraitsGame::prefmdim];
+          Return[$Failed]
+        ];
+        If[Not@MatrixQ[prefMatrix, 0 <= # <= 1&],
+          Message[IGCallawayTraitsGame::prefmel];
+          Return[$Failed]
+        ];
+        If[Not@TrueQ@OptionValue[DirectedEdges] && Not@SymmetricMatrixQ[prefMatrix],
+          Message[IGCallawayTraitsGame::prefmsym];
+          Return[$Failed]
+        ];
+        check@ig@"callawayTraitsGame"[n, Length[typeWeights], k, typeWeights, prefMatrix, OptionValue[DirectedEdges]];
+        applyGraphOpt[opt]@igToGraph[ig]
+      ]
+
+Options[IGEstablishmentGame] = { DirectedEdges -> False };
+SyntaxInformation[IGEstablishmentGame] = {
+  "ArgumentsPattern" -> {_, _, _, _, OptionsPattern[]}, "OptionNames" -> optNames[IGEstablishmentGame, Graph]
+};
+IGEstablishmentGame[
+  n_?Internal`NonNegativeMachineIntegerQ, k_?Internal`NonNegativeMachineIntegerQ,
+  typeWeights_?VectorQ, prefMatrix_?MatrixQ,
+  opt : OptionsPattern[{IGEstablishmentGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      If[Not@positiveVecQ[typeWeights],
+        Message[IGEstablishmentGame::weightnn];
+        Return[$Failed];
+      ];
+      If[Dimensions[prefMatrix] != {Length[typeWeights], Length[typeWeights]},
+        Message[IGEstablishmentGame::prefmdim];
+        Return[$Failed]
+      ];
+      If[Not@MatrixQ[prefMatrix, 0 <= # <= 1&],
+        Message[IGEstablishmentGame::prefmel];
+        Return[$Failed]
+      ];
+      If[Not@TrueQ@OptionValue[DirectedEdges] && Not@SymmetricMatrixQ[prefMatrix],
+        Message[IGEstablishmentGame::prefmsym];
+        Return[$Failed]
+      ];
+      check@ig@"establishmentGame"[n, Length[typeWeights], k, typeWeights, prefMatrix, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 

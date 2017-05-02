@@ -321,6 +321,22 @@ public:
         igConstructorCheck(igraph_growing_random_game(&graph, n, m, directed, citation));
     }
 
+    void callawayTraitsGame(mint n, mint types, mint edge_per_step, mma::RealTensorRef type_distr_ten, mma::RealMatrixRef pref_matrix_ten, bool directed) {
+        destroy();
+        igraph_vector_t type_distr = igVectorView(type_distr_ten);
+        igMatrix pref_matrix;
+        pref_matrix.copyFromMTensor(pref_matrix_ten);
+        igConstructorCheck(igraph_callaway_traits_game(&graph, n, types, edge_per_step, &type_distr, &pref_matrix.mat, directed));
+    }
+
+    void establishmentGame(mint n, mint types, mint k, mma::RealTensorRef type_distr_ten, mma::RealMatrixRef pref_matrix_ten, bool directed) {
+        destroy();
+        igraph_vector_t type_distr = igVectorView(type_distr_ten);
+        igMatrix pref_matrix;
+        pref_matrix.copyFromMTensor(pref_matrix_ten);
+        igConstructorCheck(igraph_establishment_game(&graph, n, types, k, &type_distr, &pref_matrix.mat, directed));
+    }
+
     // Modification
 
     void connectNeighborhood(mint order) {
