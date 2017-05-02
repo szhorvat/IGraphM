@@ -296,6 +296,11 @@ public:
         igConstructorCheck(igraph_barabasi_game(&graph, n, power, m, &mvec, totalDegree, A, directed, algo, NULL));
     }
 
+    void wattsStrogatzGame(mint dim, mint size, mint radius, double p, bool loops, bool multiple) {
+        destroy();
+        igConstructorCheck(igraph_watts_strogatz_game(&graph, dim, size, radius, p, loops, multiple));
+    }
+
     void staticFitnessGame(mint m /* edges */, mma::RealTensorRef fit_in_ten, mma::RealTensorRef fit_out_ten, bool loops, bool multiple) {
         destroy();
         igraph_vector_t fit_in = igVectorView(fit_in_ten);

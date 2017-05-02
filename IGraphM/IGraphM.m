@@ -209,6 +209,11 @@ IGBarabasiAlbertGame::usage =
     "IGBarabasiAlbertGame[n, {k2, k3, \[Ellipsis]}] generates an n-vertex Barabási–Albert random graph by adding a new vertex with k2, k3, \[Ellipsis] out-edges in each step.\n" <>
     "IGBarabasiAlbertGame[n, k, {\[Beta], a}] generates a Barabási–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + a where d is the vertex (in-)degree.";
 
+IGWattsStrogatzGame::usage =
+    "IGWattsStrogatzGame[n, p] generates an n-vertex Watts-Strogatz random graph using rewiring probability\n" <>
+    "IGWattsStrogatzGame[n, p, k] rewires a lattice where each node is connected to its k-neighbourhood.\n" <>
+    "IGWattsStrogatzGame[n, p, {dim, k}] rewires a dim dimensional lattice of n^dim vertices, where each node is connected to its k-neighbourhood.";
+
 IGStaticFitnessGame::usage =
     "IGStaticFitnessGame[m, {f1, f2, \[Ellipsis]}] generates a random undirected graph with m edges where edge i <-> j is inserted with probability proportional to f_i\[Times]f_j.\n" <>
     "IGStaticFitnessGame[m, {fout1, fout2, \[Ellipsis]}, {fin1, fin2, \[Ellipsis]}] generates a random directed graph with m edges where edge i -> j is inserted with probability proportional to fout_i\[Times]fin_j.";
@@ -482,6 +487,8 @@ template = LTemplate["IGraphM",
         LFun["geometricGame", {Integer (* n *), Real (* radius *), True|False (* periodic *)}, {Real, 2} (* coordinates *)],
 
         LFun["barabasiAlbertGame", {Integer (* n *), Real (* power *), Real (* A *), Integer (* m *), {Real, 1, "Constant"} (* mvec *), True|False (* directed *), True|False (* totalDegree *), Integer (* method *)}, "Void"],
+
+        LFun["wattsStrogatzGame", {Integer (* dim *), Integer (* size *), Integer (* radius *), Real (* p *), True|False (* loops *), True|False (* multiple *)}, "Void"],
 
         LFun["staticFitnessGame", {Integer (* edges *), {Real, 1, "Constant"} (* out-fitness *), {Real, 1, "Constant"} (* in-fitness *), True|False (* loops *), True|False (* multiple *)}, "Void"],
 
@@ -1251,6 +1258,30 @@ igBarabasiAlbertGame[n_, m_, {power_, a_}, directed_, totalDegree_, method_, opt
       ];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
+
+
+Options[IGWattsStrogatzGame] = {
+  SelfLoops -> False, "MultipleEdges" -> False
+};
+SyntaxInformation[IGWattsStrogatzGame] = {
+  "ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGWattsStrogatzGame, Graph]
+};
+IGWattsStrogatzGame[
+  n_?Internal`NonNegativeMachineIntegerQ, p_?NonNegative,
+  {dim_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineIntegerQ},
+  opt : OptionsPattern[{IGWattsStrogatzGame, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"wattsStrogatzGame"[dim, n, k, p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+IGWattsStrogatzGame[
+  n_?Internal`NonNegativeMachineIntegerQ, p_?NonNegative,
+  k_?Internal`PositiveMachineIntegerQ, opt : OptionsPattern[]] :=
+      IGWattsStrogatzGame[n, p, {1, k}, opt]
+IGWattsStrogatzGame[
+  n_?Internal`NonNegativeMachineIntegerQ, p_?NonNegative,
+  opt : OptionsPattern[]] :=
+    IGWattsStrogatzGame[n, p, {1, 2}, opt]
 
 
 Options[IGStaticFitnessGame] = { SelfLoops -> False, "MultipleEdges" -> False };
