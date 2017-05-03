@@ -165,16 +165,35 @@ struct igMatrix {
 
 
 // RAII for igraph_vector_ptr_t
-struct igList {
+class igList {
+
+    void destroy_items() {
+        for (void **ptr = list.stor_begin; ptr < list.end; ++ptr)
+            igraph_vector_destroy(reinterpret_cast<igraph_vector_t *>(*ptr));
+    }
+
+public:
     igraph_vector_ptr_t list;
 
     igList() {
         igraph_vector_ptr_init(&list, 0);
-        IGRAPH_VECTOR_PTR_SET_ITEM_DESTRUCTOR(&list, igraph_vector_destroy);
     }
-    ~igList() { igraph_vector_ptr_destroy_all(&list); }
+    ~igList() {
+        // we destroy items manually ...
+        destroy_items();
 
-    void clear() { igraph_vector_ptr_clear(&list); }
+        // ... and avoid calling any items destructors that may have been set
+        igraph_vector_ptr_set_item_destructor(&list, NULL);
+        igraph_vector_ptr_free_all(&list);
+        igraph_vector_ptr_destroy(&list);
+    }
+
+    void clear() {
+        // this mirrors igraph_vector_ptr_clear(), but does not call
+        // any item desctructors automatically to avoid double-free
+        destroy_items();
+        list.end = list.stor_begin;
+    }
 
     long length() const { return igraph_vector_ptr_size(&list); }
 
