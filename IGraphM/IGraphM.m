@@ -2925,7 +2925,7 @@ IGMinSeparators[graph_] := (Message[IGMinSeparators::deprec]; IGMinimumSeparator
 
 SyntaxInformation[IGMinimumSeparators] = {"ArgumentsPattern" -> {_}};
 IGMinimumSeparators[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeFast@UndirectedGraph[graph]},
       igUnpackVertexSet[graph]@check@ig@"minimumSizeSeparators"[]
     ]
 
