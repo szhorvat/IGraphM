@@ -1088,9 +1088,14 @@ IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := sck@igraphGlobal@"see
 Options[IGLCF] = { GraphLayout -> "CircularEmbedding" };
 SyntaxInformation[IGLCF] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGLCF, Graph]};
 IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[{IGLCF, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
-      check@ig@"fromLCF"[Replace[n, Automatic :> Length[shifts] repeats], shifts, repeats];
-      applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
+    catch@Block[{ig = Make["IG"], numVertices},
+      numVertices = Replace[n, Automatic :> Length[shifts] repeats];
+      If[numVertices < 2,
+        IGEmptyGraph[numVertices]
+        ,
+        check@ig@"fromLCF"[numVertices, shifts, repeats];
+        applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
+      ]
     ]
 
 
