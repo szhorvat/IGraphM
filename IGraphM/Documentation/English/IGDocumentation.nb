@@ -34,6 +34,48 @@ The documentation is currently incomplete. Contributions are welcome!\
 
 Cell[CellGroupData[{
 
+Cell["Introduction", \
+"Section",ExpressionUUID->"9b2696d4-873c-4717-af1b-c072cf2f5100"],
+
+Cell[TextData[{
+ "IGraph/M is a Mathematica interface to the popular ",
+ ButtonBox["igraph network analysis package",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://igraph.org/"], None},
+  ButtonNote->"http://igraph.org/"],
+ ". The purpose of IGraph/M is not to replace Mathematica\[CloseCurlyQuote]s \
+built-in graph theory functionality, but to complement it. Thus the IGraph/M \
+interface is designed to interoperate seamlessly with built-in functions and \
+datatypes, while also being familiar to users of other igraph interfaces (R, \
+Python or C)."
+}], "Text",ExpressionUUID->"05c9b49b-5a7a-44f7-822f-981911a91788"],
+
+Cell[TextData[{
+ "Only functionality not already available in Mathematica is exposed. While \
+many of the functions that IGraph/M provides overlap with built-in ones, like \
+",
+ Cell[BoxData["IGBetweenness"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "6ef1b7e2-1a3c-4012-ae22-f179614c393f"],
+ " and ",
+ Cell[BoxData["BetweeneessCentrality"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8c622ce4-aa31-4ada-a6ce-652c1273fb3f"],
+ ", there are usually some relevant differences. For example, ",
+ Cell[BoxData["IGBetweenness"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "518fdf49-d031-4dd3-8c53-97bf9e3bf300"],
+ " uses edge weights, while ",
+ Cell[BoxData["BetweennessCentrality"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8cb01d14-6c13-46a1-96b2-fe12555f6bd6"],
+ " does not."
+}], "Text",ExpressionUUID->"efb9a54b-1884-4f09-af9c-f0bea50712b3"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["Basic usage", \
 "Section",ExpressionUUID->"3a41d2fa-be34-4272-b853-89becc4ea4f4"],
 
@@ -4006,7 +4048,8 @@ Cell["VF2", \
 
 Cell[BoxData[
  RowBox[{"?", 
-  "IGVF2*"}]], "Input",ExpressionUUID->"b92173ac-7d82-44c1-b9da-4682b5d885a9"],
+  "IGVF2*"}]], "Input",ExpressionUUID->"b92173ac-7d82-44c1-b9da-4682b5d885a9"]
+,
 
 Cell[TextData[{
  "VF2 supports vertex coloured and edge coloured graphs. A colour \
@@ -21859,6 +21902,7 @@ KAZEM1aN2r8PrYpioUW7P7ogYt5eY9C/LhJuzg==
               Arrow3DBox[TubeBox[{{{
                0.3075608658809885, -0.029253219106485963`, 
                0.029782448818163516`}, {
+               
                0.25003054667523783`, -0.13517792026410452`, \
 -0.0848060264230593}}}], 0.031174196475995175`]}, 
              {Arrowheads[0.], 
@@ -21907,6 +21951,7 @@ KAZEM1aN2r8PrYpioUW7P7ogYt5eY9C/LhJuzg==
                0.031174196475995175`]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.3301695449386568, 
+               
                0.08232921770108698, -0.07663317634321393}, \
 {-0.418614272428473, 0.06413551102930629, -0.15424153168540758`}}}], 
                0.031174196475995175`]}, 
@@ -22175,6 +22220,7 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{0.14383654140290386`, 
                0.18946510248919474`, 0.015099828165095206`}, {
+               
                0.12973585722882486`, -0.17919700973623295`, \
 -0.11690688044705924`}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
@@ -22220,7 +22266,8 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
 -0.09270051391150287, 0.3775461943713044}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.9764903830043342, -0.07975892805908305,
-                0.0021386652419478703`}, {-1.223302234618379, \
+                
+               0.0021386652419478703`}, {-1.223302234618379, \
 -0.6295634305659729, -0.1475591584311636}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.9764903830043342, -0.07975892805908305,
@@ -22261,7 +22308,6 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
               Arrow3DBox[TubeBox[{{{
                1.1853437060218888`, -0.19563359099249428`, 
                0.017131308134482322`}, {
-               
                1.8077188605070778`, -0.4744559376234581, \
 -0.06963990161054155}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
@@ -22312,8 +22358,7 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
                 0.3333028452477068}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-1.4596017433715383`, -0.3949369215700444,
-                
-               0.28638216473442046`}, {-1.8288968182117327`, \
+                0.28638216473442046`}, {-1.8288968182117327`, \
 -0.6214735476598927, 0.4950179568479962}}}], 0.07684870779209396]}}, 
             {Hue[0.6, 0.6, 1], SphereBox[1, 0.07684870779209396], 
              SphereBox[2, 0.07684870779209396], 
@@ -22796,6 +22841,7 @@ OuhxEM3j7D/O7fYCs/zQv+tBE2MFWuE/cd6Igw==
 -0.4268039625941762}}}], 0.05464886727683735]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.526292378079561, -0.08316371362977998, 
+               
                0.0352455658139679}, {-0.6632206366457675, -0.57473201555877, \
 -0.22138386900129384`}}}], 0.05464886727683735]}, 
              {Arrowheads[0.], 
@@ -23422,6 +23468,7 @@ mHH+xIWWt3L0IHMFtJChKPqnKfAV+oVqnfuxkswhUP5bZvgDS2JxXw==
                0.04522292993630572]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.397396517024618, 
+               
                0.8007026662519793, -0.4482758620689654}, \
 {-0.9503046915317327, -0.02463901871556368, 0.3103448275862069}}}], 
                0.04522292993630572]}, 
