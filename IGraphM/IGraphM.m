@@ -63,7 +63,7 @@ IGKaryTree::usage =
 IGCompleteGraph::usage = "IGCompleteGraph[n] returns a complete graph on n vertices.";
 IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.";
 IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m characters and string length n.";
-IGChordalRing::usage = "IGChordalRing[m, w] returns an extended chrodal ring on n vertices, based on the matrix w.";
+IGChordalRing::usage = "IGChordalRing[m, w] returns an extended chordal ring on n vertices, based on the matrix w.";
 
 IGEmptyGraph::usage =
     "IGEmptyGraph[] returns a graph with no edges or vetices.\n" <>
@@ -210,7 +210,7 @@ IGBarabasiAlbertGame::usage =
     "IGBarabasiAlbertGame[n, k, {\[Beta], a}] generates a Barabási–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + a where d is the vertex (in-)degree.";
 
 IGWattsStrogatzGame::usage =
-    "IGWattsStrogatzGame[n, p] generates an n-vertex Watts-Strogatz random graph using rewiring probability\n" <>
+    "IGWattsStrogatzGame[n, p] generates an n-vertex Watts–Strogatz random graph using rewiring probability\n" <>
     "IGWattsStrogatzGame[n, p, k] rewires a lattice where each node is connected to its k-neighbourhood.\n" <>
     "IGWattsStrogatzGame[n, p, {dim, k}] rewires a dim dimensional lattice of n^dim vertices, where each node is connected to its k-neighbourhood.";
 
