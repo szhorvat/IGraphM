@@ -99,7 +99,7 @@ public:
 };
 
 
-// RAII for igraph_vector_t
+// RAII for igraph_vector_int_t
 // note that igraph_integer_t and mint may not be the same type
 class igIntVector {
 
