@@ -282,6 +282,132 @@ Print["Cycle timing: ", First@Timing[IGraphM`Private`igMake /@ cycleTestList;] ]
 (*******************************************************************************)
 MTSection["Creation"]
 
+(* IGGraphAtlas *)
+
+MT[
+  IGNullGraphQ@IGGraphAtlas[0],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGGraphAtlas[14],
+    PathGraph@Range[4]
+  ],
+  True
+]
+
+(* IGKautzGraph *)
+
+MT[
+  VertexCount@IGKautzGraph[0, 0],
+  1
+]
+
+MT[
+  IGIsomorphicQ[
+    IGKautzGraph[2, 2],
+    Graph[{1 -> 5, 1 -> 6, 2 -> 7, 2 -> 8, 3 -> 9, 3 -> 10, 4 -> 11, 4 -> 12,
+      5 -> 1, 5 -> 2, 6 -> 3, 6 -> 4, 7 -> 9, 7 -> 10, 8 -> 11, 8 -> 12,
+      9 -> 1, 9 -> 2, 10 -> 3, 10 -> 4, 11 -> 5, 11 -> 6, 12 -> 7, 12 -> 8}]
+  ],
+  True
+]
+
+(* IGKaryTree *)
+
+MT[
+  IGIsomorphicQ[IGKaryTree[10, 3], KaryTree[10, 3]],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGKaryTree[9, 4, DirectedEdges -> True],
+    KaryTree[9, 4, DirectedEdges -> True]
+  ],
+  True
+]
+
+(* IGCompleteGraph *)
+
+MT[
+  IGIsomorphicQ[IGCompleteGraph[4], CompleteGraph[4]],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGCompleteGraph[5, DirectedEdges -> True],
+    CompleteGraph[5, DirectedEdges -> True]
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGCompleteGraph[3, SelfLoops -> True],
+    Graph[{1 <-> 1, 2 <-> 2, 3 <-> 3, 1 <-> 2, 2 <-> 3, 3 <-> 1}]
+  ],
+  True
+]
+
+(* IGCompleteAcyclicGraph *)
+
+MT[
+  IGIsomorphicQ[
+    IGCompleteAcyclicGraph[4],
+    DirectedGraph[CompleteGraph[4], "Acyclic"]
+  ],
+  True
+]
+
+(* IGDeBruijnGraph *)
+
+MT[
+  IGIsomorphicQ[
+    IGDeBruijnGraph[3, 4],
+    DeBruijnGraph[3, 4]
+  ],
+  True
+]
+
+(* IGChordalRing *)
+
+MT[
+  IGIsomorphicQ[
+    IGChordalRing[15, {{3, 12, 4}, {7, 8, 11}}],
+    Graph[{1 -> 2, 2 -> 3, 3 -> 4, 4 -> 5, 5 -> 6, 6 -> 7, 7 -> 8, 8 -> 9,
+      9 -> 10, 10 -> 11, 11 -> 12, 12 -> 13, 13 -> 14, 14 -> 15, 1 -> 15,
+      1 -> 4, 1 -> 8, 2 -> 14, 2 -> 10, 3 -> 7, 3 -> 14, 4 -> 7, 4 -> 11,
+      5 -> 13, 6 -> 10, 7 -> 10, 7 -> 14, 9 -> 13, 10 -> 13}, DirectedEdges -> False]
+  ],
+  True
+]
+
+MT[
+  IGChordalRing[15, {{3, 12, 4, 3}, {7, 8, 11, 3}}];,
+  Null,
+  {IGraphM::error}
+]
+
+(* IGEmptyGraph *)
+
+MT[
+  IGEmptyGraph[],
+  IGEmptyGraph[0]
+]
+
+MT[
+  IGNullGraphQ@IGEmptyGraph[],
+  True
+]
+
+MT[
+  IGIsomorphicQ[IGEmptyGraph[3], Graph[{1,2,3}, {}]],
+  True
+]
+
 (* IGLCF *)
 
 MT[
@@ -300,6 +426,11 @@ MT[
 
 MT[
   IGIsomorphicQ[PetersenGraph[6, 2], IGLCF[{-5, 2, 4, -2, -5, 4, -4, 5, 2, -4, -2, 5}]],
+  True
+]
+
+MT[
+  IGNullGraphQ@IGLCF[{}],
   True
 ]
 
@@ -405,6 +536,61 @@ MT[
   True
 ]
 
+MT[
+  PathGraphQ@IGMakeLattice[{5}],
+  True
+]
+
+MT[
+  IGIsomorphicQ[IGMakeLattice[{5}, "Periodic" -> True], CycleGraph[5]],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGMakeLattice[{9}, "Periodic" -> True, "Radius" -> 2],
+    GraphPower[CycleGraph[9], 2]
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGMakeLattice[{2, 3}, DirectedEdges -> True, "Mutual" -> True],
+    DirectedGraph[GridGraph[{2, 3}]]
+  ],
+  True
+]
+
+(*******************************************************************************)
+
+MTSection["Modification"]
+
+(* IGConnectNeighborhood *)
+
+MT[
+  IGIsomorphicQ[
+    IGConnectNeighborhood[Graph@{1 <-> 2, 2 <-> 3}],
+    Graph[{1 <-> 2, 1 <-> 3, 2 <-> 3}]
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGConnectNeighborhood[Graph@{1 <-> 2, 2 <-> 3, 1 <-> 1}],
+    Graph[{1 <-> 1, 1 <-> 2, 1 <-> 3, 2 <-> 3}]
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGConnectNeighborhood[Graph@{1 <-> 2, 2 <-> 3, 2 <-> 3}],
+    Graph[{1 <-> 2, 1 <-> 3, 2 <-> 3, 2 <-> 3}]
+  ],
+  True
+]
 
 (*******************************************************************************)
 MTSection["Acyclic graphs"]
@@ -606,6 +792,32 @@ MT[
   GraphData["PerkelGraph", "AutomorphismCount"]
 ]
 
+(* Self loop handling *)
+
+MT[
+  #[
+      Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3, 3 <-> 3}],
+      Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3}]
+      ],
+  False
+]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGVF2IsomorphicQ, IGSubisomorphicQ, IGVF2SubisomorphicQ}
+
+MT[
+  #[
+      Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3, 3 <-> 3}],
+      Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3, 1 <-> 1}]
+      ],
+  True
+]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGVF2IsomorphicQ, IGSubisomorphicQ, IGVF2SubisomorphicQ}
+
+MT[
+  #[
+      Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3, 3 <-> 3}],
+      Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3, 2 <-> 2}]
+      ],
+  False
+]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGVF2IsomorphicQ, IGSubisomorphicQ, IGVF2SubisomorphicQ}
+
 (*******************************************************************************)
 MTSection["Isomorphism: coloured graphs"]
 
@@ -733,6 +945,23 @@ MT[
   ClosenessCentrality[#] == IGCloseness[#, Normalized -> True],
   True
 ]& /@ {ugs, dgs, wugs, wdgs, umulti, dmulti}
+
+
+MT[
+  PageRankCentrality[#] ~tolEq~ IGPageRank[#],
+  True
+]& /@ {ugs, dgs}
+
+(* check that edge multiplicity is taken to be equivalent with edge weights *)
+MT[
+  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}, EdgeWeight -> {1, 2}]],
+  IGPageRank[Graph[{1 <-> 2, 2 <-> 3, 2 <-> 3}]]
+]
+
+MT[
+  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "Arnoldi"],
+  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "PRPACK"]
+]
 
 
 (*******************************************************************************)
