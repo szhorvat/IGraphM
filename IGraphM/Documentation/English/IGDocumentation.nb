@@ -1445,7 +1445,7 @@ Cell["Graph modification", \
 Cell[CellGroupData[{
 
 Cell["IGRewire", \
-"Subsection",ExpressionUUID->"16028fd2-8ba3-49f6-9355-3a0dd0fffe06"],
+"Subsubsection",ExpressionUUID->"16028fd2-8ba3-49f6-9355-3a0dd0fffe06"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -1478,7 +1478,7 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell["IGRewireEdges", \
-"Subsection",ExpressionUUID->"5be1e2b4-bc25-4d2b-9e53-80446018d6f9"],
+"Subsubsection",ExpressionUUID->"5be1e2b4-bc25-4d2b-9e53-80446018d6f9"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -1533,7 +1533,7 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell["IGVertexContract", \
-"Subsection",ExpressionUUID->"33701803-3094-4b54-ae0a-0b02fdc04735"],
+"Subsubsection",ExpressionUUID->"33701803-3094-4b54-ae0a-0b02fdc04735"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -1704,7 +1704,7 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell["IGConnectNeighborhood", \
-"Subsection",ExpressionUUID->"1b9534c4-b08b-49ac-85b6-cae07b5d79c7"],
+"Subsubsection",ExpressionUUID->"1b9534c4-b08b-49ac-85b6-cae07b5d79c7"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -1722,6 +1722,16 @@ Cell[TextData[{
   "92b84da6-f397-479e-acd7-5b36f9e442bb"],
  " power of the graph."
 }], "Text",ExpressionUUID->"9ab01d07-f015-4502-a820-46a57f3aa518"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGConnectNeighborhood"],ExpressionUUID->
+  "1e0f70aa-4c5b-4b14-a8da-b8141bda38e5"],
+ " differs from the builtin ",
+ Cell[BoxData[
+ "GraphPower"],ExpressionUUID->"dcd4b1e0-39be-4141-8fec-b9b95f3ff97d"],
+ " in that it preserves parallel edges and self loops."
+}], "Text",ExpressionUUID->"8738eb89-9011-4cdb-86a8-2917b1f7b24c"],
 
 Cell[TextData[{
  StyleBox["Warning:",
@@ -2105,7 +2115,7 @@ Cell[BoxData[
   "IGPersonalizedPageRank"}]], \
 "Input",ExpressionUUID->"1124b243-c547-4d0a-b829-e55ec7587b42"],
 
-Cell["Weighted graphs are supported.", \
+Cell["Weighted graphs and multigraphs are supported.", \
 "Text",ExpressionUUID->"0f2ff807-300b-4204-977a-1584131f57db"],
 
 Cell["The default damping factor is 0.85.", \
@@ -2131,7 +2141,7 @@ Cell[TextData[{
  " and ",
  Cell[BoxData[
  "\"\<Epsilon\>\""],ExpressionUUID->"432ce28c-59e8-4930-a66f-3b2acdb44014"],
- "."
+ ". Does not support weights or multigraphs."
 }], "Item",ExpressionUUID->"c62fdaf2-405d-4c28-a831-58c54f699eb9"],
 
 Cell[TextData[{
@@ -2167,8 +2177,8 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["Kleinberg\[CloseCurlyQuote]s hub and authority scores", "Subsubsection",
- ExpressionUUID->"858073d6-3c87-4e76-a08e-b5b305de5446"],
+Cell["Kleinberg\[CloseCurlyQuote]s hub and authority scores", \
+"Subsubsection",ExpressionUUID->"858073d6-3c87-4e76-a08e-b5b305de5446"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -3996,8 +4006,7 @@ Cell["VF2", \
 
 Cell[BoxData[
  RowBox[{"?", 
-  "IGVF2*"}]], "Input",ExpressionUUID->"b92173ac-7d82-44c1-b9da-4682b5d885a9"]
-,
+  "IGVF2*"}]], "Input",ExpressionUUID->"b92173ac-7d82-44c1-b9da-4682b5d885a9"],
 
 Cell[TextData[{
  "VF2 supports vertex coloured and edge coloured graphs. A colour \
@@ -5213,20 +5222,20 @@ We can post process it while avoiding the introduction of any edge crossings:\
 Cell[BoxData[
  RowBox[{"IGLayoutDavidsonHarel", "[", "\[IndentingNewLine]", 
   RowBox[{
-   RowBox[{"SetProperty", "[", 
-    RowBox[{"g", ",", 
+   RowBox[{"IGVertexMap", "[", 
+    RowBox[{
+     RowBox[{"#", "&"}], ",", 
      RowBox[{"VertexCoordinates", "\[Rule]", 
-      RowBox[{"Thread", "[", 
+      RowBox[{"(", 
        RowBox[{
-        RowBox[{"VertexList", "[", "g", "]"}], "\[Rule]", 
         RowBox[{"Rescale", "@", 
          RowBox[{"GraphEmbedding", "[", 
-          RowBox[{"g", ",", "\"\<PlanarEmbedding\>\""}], "]"}]}]}], "]"}]}]}],
-     "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"#", ",", "\"\<PlanarEmbedding\>\""}], "]"}]}], "&"}], 
+       ")"}]}], ",", "g"}], "]"}], ",", "\[IndentingNewLine]", 
    RowBox[{"\"\<Continue\>\"", "\[Rule]", "True"}], ",", 
    RowBox[{"\"\<EdgeCrossingWeight\>\"", "\[Rule]", "1000"}]}], 
   "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"9441cdb7-8ea3-40f9-922b-6b086b1f3896"]
+  "]"}]], "Input",ExpressionUUID->"629fa14b-e7fb-40cb-af7f-2e2fdc5e5d6f"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -21850,7 +21859,6 @@ KAZEM1aN2r8PrYpioUW7P7ogYt5eY9C/LhJuzg==
               Arrow3DBox[TubeBox[{{{
                0.3075608658809885, -0.029253219106485963`, 
                0.029782448818163516`}, {
-               
                0.25003054667523783`, -0.13517792026410452`, \
 -0.0848060264230593}}}], 0.031174196475995175`]}, 
              {Arrowheads[0.], 
@@ -21899,7 +21907,6 @@ KAZEM1aN2r8PrYpioUW7P7ogYt5eY9C/LhJuzg==
                0.031174196475995175`]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.3301695449386568, 
-               
                0.08232921770108698, -0.07663317634321393}, \
 {-0.418614272428473, 0.06413551102930629, -0.15424153168540758`}}}], 
                0.031174196475995175`]}, 
@@ -22168,7 +22175,6 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{0.14383654140290386`, 
                0.18946510248919474`, 0.015099828165095206`}, {
-               
                0.12973585722882486`, -0.17919700973623295`, \
 -0.11690688044705924`}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
@@ -22214,8 +22220,7 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
 -0.09270051391150287, 0.3775461943713044}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.9764903830043342, -0.07975892805908305,
-                
-               0.0021386652419478703`}, {-1.223302234618379, \
+                0.0021386652419478703`}, {-1.223302234618379, \
 -0.6295634305659729, -0.1475591584311636}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.9764903830043342, -0.07975892805908305,
@@ -22256,6 +22261,7 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
               Arrow3DBox[TubeBox[{{{
                1.1853437060218888`, -0.19563359099249428`, 
                0.017131308134482322`}, {
+               
                1.8077188605070778`, -0.4744559376234581, \
 -0.06963990161054155}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
@@ -22306,7 +22312,8 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
                 0.3333028452477068}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-1.4596017433715383`, -0.3949369215700444,
-                0.28638216473442046`}, {-1.8288968182117327`, \
+                
+               0.28638216473442046`}, {-1.8288968182117327`, \
 -0.6214735476598927, 0.4950179568479962}}}], 0.07684870779209396]}}, 
             {Hue[0.6, 0.6, 1], SphereBox[1, 0.07684870779209396], 
              SphereBox[2, 0.07684870779209396], 
@@ -22789,7 +22796,6 @@ OuhxEM3j7D/O7fYCs/zQv+tBE2MFWuE/cd6Igw==
 -0.4268039625941762}}}], 0.05464886727683735]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.526292378079561, -0.08316371362977998, 
-               
                0.0352455658139679}, {-0.6632206366457675, -0.57473201555877, \
 -0.22138386900129384`}}}], 0.05464886727683735]}, 
              {Arrowheads[0.], 
@@ -23416,7 +23422,6 @@ mHH+xIWWt3L0IHMFtJChKPqnKfAV+oVqnfuxkswhUP5bZvgDS2JxXw==
                0.04522292993630572]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.397396517024618, 
-               
                0.8007026662519793, -0.4482758620689654}, \
 {-0.9503046915317327, -0.02463901871556368, 0.3103448275862069}}}], 
                0.04522292993630572]}, 
@@ -23702,6 +23707,118 @@ Cell[TextData[{
 }], "Text",ExpressionUUID->"8e214ee5-9e3c-4d9d-9e18-cb8549aa3b66"],
 
 Cell[TextData[{
+ "Modularity characterizes the tendency of vertices to connect more within \
+their own group than with other groups. For a given partitioning, it can be \
+computed using ",
+ Cell[BoxData[
+ "IGModularity"],ExpressionUUID->"0e1737c0-c6de-4542-bcfe-1a6de5696de6"],
+ ". Community detection functions find a partitioning of the graph which \
+results in high modularity."
+}], "Text",ExpressionUUID->"c11fee25-659a-49d2-9ede-c257fdd6356c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Basic usage and utility functions", \
+"Subsection",ExpressionUUID->"901cc908-6911-43e0-99fb-b242f9c4ea9c"],
+
+Cell[TextData[{
+ "Community detection functions return ",
+ Cell[BoxData[
+ "IGClusterData"],ExpressionUUID->"0c92f110-96b9-4563-b0c9-a8d71c6e1a1c"],
+ " objects."
+}], "Text",ExpressionUUID->"37dea2e9-8e6d-488d-85d5-6cfdc0e14889"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"ExampleData", "[", 
+   RowBox[{"{", 
+    RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"5dd9befc-53a1-436e-af4e-58d3b08233bc"],
+
+Cell[BoxData[
+ RowBox[{"cl", "=", 
+  RowBox[{
+  "IGCommunitiesGreedy", "[", "g", 
+   "]"}]}]], "Input",ExpressionUUID->"1c8262de-c098-4d73-b626-3475223f1635"],
+
+Cell[TextData[{
+ "The data available in the object can be queries using ",
+ Cell[BoxData[
+  RowBox[{
+   RowBox[{"IGClusterData", "[", "\[Ellipsis]", "]"}], "[", 
+   "\"\<Properties\>\"", "]"}]],ExpressionUUID->
+  "1b859d6e-ace3-4a15-a8b0-b18e8cc142ce"],
+ ". See the Examples section below for more information."
+}], "Text",ExpressionUUID->"152e33a9-caa6-4498-a657-2db2d7c817a5"],
+
+Cell[BoxData[
+ RowBox[{"cl", "[", "\"\<Properties\>\"", 
+  "]"}]], "Input",ExpressionUUID->"a35d19fc-a799-47c8-b845-81a9304b1b74"],
+
+Cell[BoxData[
+ RowBox[{"cl", "[", "\"\<Communities\>\"", 
+  "]"}]], "Input",ExpressionUUID->"6357dbd4-14fc-40d2-966b-df70f0a94782"],
+
+Cell[BoxData[
+ RowBox[{"CommunityGraphPlot", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"cl", "[", "\"\<Communities\>\"", "]"}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], 
+  "]"}]], "Input",ExpressionUUID->"8092978c-876d-450a-8c21-8710814c8ae2"],
+
+Cell[BoxData[
+ RowBox[{"IGModularity", "[", 
+  RowBox[{"g", ",", "cl"}], 
+  "]"}]], "Input",ExpressionUUID->"923c4c17-7729-408c-ad88-83cc59224de8"],
+
+Cell[CellGroupData[{
+
+Cell["IGClusterData", \
+"Subsubsection",ExpressionUUID->"c97e25c5-8eff-4387-ab26-d08c2923c8c5"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGClusterData"}]], \
+"Input",ExpressionUUID->"cc384d24-6f92-4f71-8247-5b7871a5f4f1"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGClusterData"],ExpressionUUID->"96fd34b7-4054-4baf-aeda-d267415e85ce"],
+ " represents a partitioning of a graph into communities. This object cannot \
+be created directly. It is returned by community detection functions. See the \
+Examples section below for more information."
+}], "Text",ExpressionUUID->"eead296e-dbd4-44ac-864f-dd81266c4014"],
+
+Cell[BoxData[
+ RowBox[{"cl", "=", 
+  RowBox[{"IGCommunitiesLabelPropagation", "@", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"b3c72c3a-8e31-4668-b734-213b7ad7e206"],
+
+Cell[BoxData[
+ RowBox[{"cl", "[", "\"\<Properties\>\"", 
+  "]"}]], "Input",ExpressionUUID->"9a352754-891d-4482-8a34-8e67488346a2"],
+
+Cell[BoxData[
+ RowBox[{"cl", "[", "\"\<Communities\>\"", 
+  "]"}]], "Input",ExpressionUUID->"f73673f4-38fc-437e-b5fa-b0b94e1af63b"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGModularity", \
+"Subsubsection",ExpressionUUID->"5d08b147-d4e7-4bf1-9843-dbf5516e8761"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGModularity"}]], \
+"Input",ExpressionUUID->"3f7514eb-2c6d-48c3-b0fe-3987fe1c043c"],
+
+Cell[TextData[{
  Cell[BoxData[
   RowBox[{"IGModularity", "[", 
    RowBox[{"graph", ",", "communities"}], "]"}]],ExpressionUUID->
@@ -23711,13 +23828,50 @@ Cell[TextData[{
   RowBox[{"GraphAssortativity", "[", 
    RowBox[{"graph", ",", "communities", ",", 
     RowBox[{"\"\<Normalized\>\"", "\[Rule]", "False"}]}], "]"}]],
-  ExpressionUUID->"5938fc9e-e6bc-4cbf-905f-0c56fa5f9a98"]
+  ExpressionUUID->"5938fc9e-e6bc-4cbf-905f-0c56fa5f9a98"],
+ "."
 }], "Text",ExpressionUUID->"d12a502c-09a3-4f88-874e-411636bfbd62"]
 }, Closed]],
 
 Cell[CellGroupData[{
 
-Cell["Functions", \
+Cell["IGCompareCommunities", \
+"Subsubsection",ExpressionUUID->"454e7336-20e4-4e70-8a3c-b38639528b25"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCompareCommunities"}]], \
+"Input",ExpressionUUID->"1520b29f-9278-4f1b-865c-8d598f097d8d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}], 
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"{", 
+   RowBox[{"cl1", ",", "cl2"}], "}"}], "=", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"IGCommunitiesGreedy", "[", "g", "]"}], ",", 
+    RowBox[{"IGCommunitiesEdgeBetweenness", "[", "g", "]"}]}], 
+   "}"}]}]], "Input",ExpressionUUID->"eda1c826-6862-451a-9bbb-abaa9ffa87dd"],
+
+Cell[BoxData[
+ RowBox[{"IGCompareCommunities", "[", 
+  RowBox[{"cl1", ",", "cl2"}], 
+  "]"}]], "Input",ExpressionUUID->"e26fb495-accc-42cb-ae57-eeed10722a0a"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Community detection methods", \
 "Subsection",ExpressionUUID->"c1d995c9-e58f-495a-badc-3fbfe1829747"],
 
 Cell[CellGroupData[{
@@ -25022,7 +25176,12 @@ Cell[BoxData[
      RowBox[{"\"\<Scaled\>\"", ",", 
       RowBox[{"0.1", "#"}]}], "}"}], "&"}], ",", 
    RowBox[{"VertexSize", "\[Rule]", 
-    RowBox[{"Rescale", "@*", "IGVertexStrength"}]}], ",", "g"}], 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"Normalize", "[", 
+       RowBox[{
+        RowBox[{"IGVertexStrength", "[", "#", "]"}], ",", "Max"}], "]"}], 
+      "&"}], ")"}]}], ",", "g"}], 
   "]"}]], "Input",ExpressionUUID->"bcfeaeb9-01ed-4d0f-af45-3212a0718848"]
 }, Closed]]
 }, Closed]],
@@ -25262,7 +25421,94 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}],
       "]"}], "]"}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"768b0e92-3b53-42e5-bba5-60f4ac445fd0"]
+  "]"}]], "Input",ExpressionUUID->"768b0e92-3b53-42e5-bba5-60f4ac445fd0"],
+
+Cell["\<\
+Use edge weights as edge labels, and line up labels with edges:\
+\>", "Text",ExpressionUUID->"f49581cd-ea17-48dd-9fb5-33ae2bf902a7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"10", ",", "20"}], "}"}], ",", 
+     RowBox[{"EdgeWeight", "\[Rule]", 
+      RowBox[{"RandomReal", "[", 
+       RowBox[{"1", ",", "20"}], "]"}]}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.702909631389135*^9, 3.702909639053191*^9}, {
+   3.702909679780795*^9, 3.702909684995865*^9}, 
+   3.7029102210111237`*^9},ExpressionUUID->"3d72ff0b-e612-4873-9c02-\
+b3bb0f49bf70"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "returns", " ", "edge", " ", "angle", " ", "for", " ", "each", " ", 
+    "edge"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"edgeAngle", "[", "g_", "]"}], ":=", "\[IndentingNewLine]", 
+   RowBox[{"With", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"asc", "=", 
+       RowBox[{"AssociationThread", "[", 
+        RowBox[{
+         RowBox[{"VertexList", "[", "g", "]"}], ",", 
+         RowBox[{"GraphEmbedding", "[", "g", "]"}]}], "]"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"ArcTan", "@@", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"asc", "[", "#1", "]"}], "-", 
+          RowBox[{"asc", "[", "#2", "]"}]}], ")"}]}], "&"}], "@@@", 
+      RowBox[{"EdgeList", "[", "g", "]"}]}]}], "\[IndentingNewLine]", 
+    "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.702909689917468*^9, 3.702909762993664*^9}, {
+  3.702910344236474*^9, 
+  3.702910353228096*^9}},ExpressionUUID->"2e0d0c4d-648a-4094-bfec-\
+9999f8c1a64f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGLayoutDavidsonHarel", "[", "g", "]"}], "//", 
+  "\[IndentingNewLine]", 
+  RowBox[{"IGEdgeMap", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Function", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"weight", ",", "angle"}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Placed", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Style", "[", 
+         RowBox[{
+          RowBox[{"NumberForm", "[", 
+           RowBox[{"weight", ",", "2"}], "]"}], ",", 
+          RowBox[{"Background", "\[Rule]", "White"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", "Center", ",", 
+        RowBox[{
+         RowBox[{"Rotate", "[", 
+          RowBox[{"#", ",", 
+           RowBox[{"Mod", "[", 
+            RowBox[{"angle", ",", "Pi", ",", 
+             RowBox[{
+              RowBox[{"-", "Pi"}], "/", "2"}]}], "]"}]}], "]"}], "&"}]}], 
+       "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"EdgeLabels", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"IGEdgeProp", "@", "EdgeWeight"}], ",", "edgeAngle"}], 
+      "}"}]}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.7029096412502003`*^9, 3.702909676684216*^9}, {
+  3.702909770785358*^9, 3.702909959548255*^9}, {3.702910021776483*^9, 
+  3.702910026584179*^9}},ExpressionUUID->"2f857965-e471-4334-b687-\
+9d78e5c8b273"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -25469,8 +25715,8 @@ Cell[BoxData[
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{956, 862},
-WindowMargins->{{Automatic, 48}, {Automatic, 0}},
+WindowSize->{917, 838},
+WindowMargins->{{Automatic, 87}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 PrintingStartingPageNumber->1,
 PageHeaders->{{
