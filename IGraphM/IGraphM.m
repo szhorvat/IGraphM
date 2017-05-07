@@ -1573,7 +1573,7 @@ SyntaxInformation[IGRewire] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGRewire[g_?igGraphQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[g]},
       check@ig@"rewire"[n, OptionValue[SelfLoops]];
-      igToGraph[ig]
+      vertexRename[VertexList[g]]@igToGraph[ig]
     ]
 
 Options[IGRewireEdges] = { SelfLoops -> False, "MultipleEdges" -> False };
@@ -1581,7 +1581,7 @@ SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[
 IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[g]},
       check@ig@"rewireEdges"[p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
-      igToGraph[ig]
+      vertexRename[VertexList[g]]@igToGraph[ig]
     ]
 
 (* Isomorphism *)
