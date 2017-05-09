@@ -255,7 +255,7 @@ checkVertexProp[prop:
   EdgeStyle|EdgeShapeFunction|EdgeLabels|EdgeLabelStyle] := Message[IGVertexMap::eprop, prop]
 
 SyntaxInformation[IGVertexMap] = {"ArgumentsPattern" -> {_, _, _.}};
-IGVertexMap[fun_, prop_ -> pfun_, g_?GraphQ] :=
+IGVertexMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
     Module[{values},
       checkVertexProp[prop];
       values = pfun[g];
@@ -265,7 +265,7 @@ IGVertexMap[fun_, prop_ -> pfun_, g_?GraphQ] :=
       ];
       igSetVertexProperty[g, prop, fun /@ pfun[g]]
     ]
-IGVertexMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
+IGVertexMap[fun_, (Rule|RuleDelayed)[prop_, pfunlist_List], g_?GraphQ] :=
     Module[{values, badpos},
       checkVertexProp[prop];
       values = Through[pfunlist[g]];
@@ -276,7 +276,7 @@ IGVertexMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
       ];
       igSetVertexProperty[g, prop, MapThread[fun, Through[pfunlist[g]]]]
     ]
-IGVertexMap[fun_, prop : Except[_Rule], g_?GraphQ] := IGVertexMap[fun, prop -> IGVertexProp[prop], g]
+IGVertexMap[fun_, prop : Except[_Rule|_RuleDelayed], g_?GraphQ] := IGVertexMap[fun, prop -> IGVertexProp[prop], g]
 IGVertexMap[fun_, spec_][g_] := IGVertexMap[fun, spec, g]
 
 
@@ -291,7 +291,7 @@ checkEdgeProp[prop:
   VertexCoordinates] := Message[IGEdgeMap::vprop, prop]
 
 SyntaxInformation[IGEdgeMap] = {"ArgumentsPattern" -> {_, _, _.}};
-IGEdgeMap[fun_, prop_ -> pfun_, g_?GraphQ] :=
+IGEdgeMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
     Module[{values},
       If[MultigraphQ[g] && Not@MatchQ[prop, specialEdgePropsPattern],
         Message[IGEdgeMap::nmg];
@@ -305,7 +305,7 @@ IGEdgeMap[fun_, prop_ -> pfun_, g_?GraphQ] :=
       ];
       igSetEdgeProperty[g, prop, fun /@ values]
     ]
-IGEdgeMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
+IGEdgeMap[fun_, (Rule|RuleDelayed)[prop_, pfunlist_List], g_?GraphQ] :=
     Module[{values, badpos},
       If[MultigraphQ[g] && Not@MatchQ[prop, specialEdgePropsPattern],
         Message[IGEdgeMap::nmg];
@@ -320,7 +320,7 @@ IGEdgeMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
       ];
       igSetEdgeProperty[g, prop, MapThread[fun, values]]
     ]
-IGEdgeMap[fun_, prop : Except[_Rule], g_?GraphQ] := IGEdgeMap[fun, prop -> IGEdgeProp[prop], g]
+IGEdgeMap[fun_, prop : Except[_Rule|_RuleDelayed], g_?GraphQ] := IGEdgeMap[fun, prop -> IGEdgeProp[prop], g]
 IGEdgeMap[fun_, spec_][g_] := IGEdgeMap[fun, spec, g]
 
 
