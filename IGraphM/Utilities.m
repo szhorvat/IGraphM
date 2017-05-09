@@ -63,8 +63,10 @@ Begin["`Private`"];
 (* Common definitions *)
 Get["IGraphM`Common`"];
 
+
 IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
 IGNullGraphQ[_] = False;
+
 
 SyntaxInformation[IGUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 
@@ -124,7 +126,9 @@ IGUnweighted[g_?IGEdgeWeightedQ] := Graph[VertexList[g], EdgeList[g], FilterRule
 IGUnweighted[g_?GraphQ] := g
 
 
-(* When am is a SparseArray, we need to canonicalize it and ensure that it has no explicit that is the same as the implicit one. *)
+(* Weighted adjacency matrix handling *)
+
+(* When am is a SparseArray, we need to canonicalize it and ensure that it has no explicit value that is the same as the implicit one. *)
 arrayRules[am_SparseArray, u_] := ArrayRules[SparseArray[am], u]
 arrayRules[am_, u_] := ArrayRules[am, u]
 
@@ -142,12 +146,16 @@ IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except
     ]
 
 
+(* Test for edge and vertex weightedness separately *)
+
 SyntaxInformation[IGVertexWeightedQ] = {"ArgumentsPattern" -> {_}};
 IGVertexWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, VertexWeight] =!= Automatic
 
 SyntaxInformation[IGEdgeWeightedQ] = {"ArgumentsPattern" -> {_}};
 IGEdgeWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, EdgeWeight] =!= Automatic
 
+
+(* Vertex strengths, i.e. sums of the weights of incident edges *)
 
 SyntaxInformation[IGVertexStrength] = {"ArgumentsPattern" -> {_, _.}};
 IGVertexStrength[g_?IGNullGraphQ] := {}
@@ -189,36 +197,38 @@ IGVertexOutStrength[g_?igGraphQ, v_] :=
     ]
 
 
-gmiss = Missing["Nonexistent"];
+(* Property transformation functions *)
+
+missing = Missing["Nonexistent"]; (* this will be used for non-existent property values *)
 
 SyntaxInformation[IGVertexProp] = {"ArgumentsPattern" -> {_}};
 IGVertexProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
-IGVertexProp[prop_][g_?GraphQ] := Replace[PropertyValue[{g,#}, prop]& /@ VertexList[g], $Failed -> gmiss, {1}]
+IGVertexProp[prop_][g_?GraphQ] := Replace[PropertyValue[{g,#}, prop]& /@ VertexList[g], $Failed -> missing, {1}]
 IGVertexProp[prop : VertexWeight|VertexCapacity (* not VertexCoordinates! *)][g_?GraphQ] :=
     With[{values = PropertyValue[g, prop]}, (* fails on null graph, but that is caught by the first pattern *)
       If[values === Automatic,
-        ConstantArray[gmiss, VertexCount[g]],
+        ConstantArray[missing, VertexCount[g]],
         values
       ]
     ]
 
-specialEdgeProps = EdgeWeight|EdgeCost|EdgeCapacity;
+specialEdgePropsPattern = EdgeWeight|EdgeCost|EdgeCapacity;
 
-IGEdgeProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgeProps] <> ".";
+IGEdgeProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgePropsPattern] <> ".";
 
 SyntaxInformation[IGEdgeProp] = {"ArgumentsPattern" -> {_}};
 IGEdgeProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
-IGEdgeProp[prop : specialEdgeProps][g_?GraphQ] :=
+IGEdgeProp[prop : specialEdgePropsPattern][g_?GraphQ] :=
     With[{values = PropertyValue[g, prop]}, (* fails on null graph, but that is caught by the first pattern *)
       If[values === Automatic,
-        ConstantArray[gmiss, EdgeCount[g]],
+        ConstantArray[missing, EdgeCount[g]],
         values
       ]
     ]
 IGEdgeProp[prop_][g_?GraphQ] :=
     Module[{multi = MultigraphQ[g]},
       If[multi, Message[IGEdgeProp::nmg]];
-      Replace[PropertyValue[{g, #}, prop]& /@ EdgeList[g], $Failed -> gmiss, {1}] /; Not[multi]
+      Replace[PropertyValue[{g, #}, prop]& /@ EdgeList[g], $Failed -> missing, {1}] /; Not[multi]
     ]
 
 
@@ -231,7 +241,7 @@ igSetVertexProperty[g_, prop_, values_] := $Failed
 
 igSetEdgeProperty[g_, prop_, values_] /; Length[values] == EdgeCount[g] :=
     SetProperty[g, Properties -> Thread[EdgeList[g] -> List /@ Thread[prop -> values]]]
-igSetEdgeProperty[g_, prop : specialEdgeProps, values_] /; Length[values] == EdgeCount[g] :=
+igSetEdgeProperty[g_, prop : specialEdgePropsPattern, values_] /; Length[values] == EdgeCount[g] :=
     Graph[VertexList[g], EdgeList[g], prop -> values, FilterRules[Options[g], Except[prop]]]
 igSetEdgeProperty[g_, prop_, values_] := $Failed
 
@@ -283,7 +293,7 @@ checkEdgeProp[prop:
 SyntaxInformation[IGEdgeMap] = {"ArgumentsPattern" -> {_, _, _.}};
 IGEdgeMap[fun_, prop_ -> pfun_, g_?GraphQ] :=
     Module[{values},
-      If[MultigraphQ[g] && Not@MatchQ[prop, specialEdgeProps],
+      If[MultigraphQ[g] && Not@MatchQ[prop, specialEdgePropsPattern],
         Message[IGEdgeMap::nmg];
         Return[$Failed]
       ];
@@ -297,7 +307,7 @@ IGEdgeMap[fun_, prop_ -> pfun_, g_?GraphQ] :=
     ]
 IGEdgeMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
     Module[{values, badpos},
-      If[MultigraphQ[g] && Not@MatchQ[prop, specialEdgeProps],
+      If[MultigraphQ[g] && Not@MatchQ[prop, specialEdgePropsPattern],
         Message[IGEdgeMap::nmg];
         Return[$Failed]
       ];
@@ -313,6 +323,8 @@ IGEdgeMap[fun_, prop_ -> pfunlist_List, g_?GraphQ] :=
 IGEdgeMap[fun_, prop : Except[_Rule], g_?GraphQ] := IGEdgeMap[fun, prop -> IGEdgeProp[prop], g]
 IGEdgeMap[fun_, spec_][g_] := IGEdgeMap[fun, spec, g]
 
+
+(* Retrieve available edge and vertex property names *)
 
 hasCustomProp[g_] := OptionValue[Options[g, Properties], Properties] =!= {}
 
