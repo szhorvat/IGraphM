@@ -246,13 +246,16 @@ igSetEdgeProperty[g_, prop : specialEdgePropsPattern, values_] /; Length[values]
 igSetEdgeProperty[g_, prop_, values_] := $Failed
 
 
-IGVertexMap::eprop = "Warning: `` is an edge property. It should not be used as a vertex property name.";
-IGVertexMap::list = "`` did not return a list of appropriate length when applied to the graph.";
-IGVertexMap::list2 = "The following functions did not return lists of approprate length when applied to the graph: ``.";
+IGVertexMap::eprop    = "Warning: `` is an edge property. It should not be used as a vertex property name.";
+IGVertexMap::propname = "Warning: Property name `` is not a symbol or string.";
+IGVertexMap::list     = "`` did not return a list of appropriate length when applied to the graph.";
+IGVertexMap::list2    = "The following functions did not return lists of approprate length when applied to the graph: ``.";
 
 checkVertexProp[prop:
   EdgeWeight|EdgeCapacity|EdgeCost|
   EdgeStyle|EdgeShapeFunction|EdgeLabels|EdgeLabelStyle] := Message[IGVertexMap::eprop, prop]
+checkVertexProp[_Symbol | _String] := Null
+checkVertexProp[prop_] := Message[IGVertexMap::propname, prop]
 
 SyntaxInformation[IGVertexMap] = {"ArgumentsPattern" -> {_, _, _.}};
 IGVertexMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
@@ -280,15 +283,18 @@ IGVertexMap[fun_, prop : Except[_Rule|_RuleDelayed], g_?GraphQ] := IGVertexMap[f
 IGVertexMap[fun_, spec_][g_] := IGVertexMap[fun, spec, g]
 
 
-IGEdgeMap::vprop = "Warning: `` is a vertex property. It should not be used as an edge property name.";
-IGEdgeMap::list  = IGVertexMap::list;
-IGEdgeMap::list2 = IGVertexMap::list2;
-IGEdgeMap::nmg = IGEdgeProp::nmg;
+IGEdgeMap::vprop    = "Warning: `` is a vertex property. It should not be used as an edge property name.";
+IGEdgeMap::propname = IGVertexMap::propname;
+IGEdgeMap::list     = IGVertexMap::list;
+IGEdgeMap::list2    = IGVertexMap::list2;
+IGEdgeMap::nmg      = IGEdgeProp::nmg;
 
 checkEdgeProp[prop:
   VertexWeight|VertexCapacity|
   VertexSize|VertexShape|VertexShapeFunction|VertexStyle|VertexLabels|VertexLabelStyle|
   VertexCoordinates] := Message[IGEdgeMap::vprop, prop]
+checkEdgeProp[_Symbol | _String] := Null
+checkEdgeProp[prop_] := Message[IGEdgeMap::propname, prop]
 
 SyntaxInformation[IGEdgeMap] = {"ArgumentsPattern" -> {_, _, _.}};
 IGEdgeMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
