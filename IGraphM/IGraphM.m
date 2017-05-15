@@ -2777,7 +2777,7 @@ Options[IGLayoutBipartite] = {
 };
 SyntaxInformation[IGLayoutBipartite] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutBipartite, Graph]};
 IGLayoutBipartite::invopt = "The option value `` is not valid.";
-IGLayoutBipartite::notbp = "Graph is not bipartite.";
+IGLayoutBipartite::notbp = "Cannot determine partitions because the graph is not bipartite. Specify partitions explicitly using the \"BipartitePartitions\" option.";
 IGLayoutBipartite::bdprt = "`` is not a valid partitioning vertices.";
 IGLayoutBipartite[graph_ /; VertexCount[graph] == 0, opt : OptionsPattern[{IGLayoutBipartite, Graph}]] :=
     applyGraphOpt[opt][graph]
