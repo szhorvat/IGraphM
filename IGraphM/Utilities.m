@@ -58,11 +58,29 @@ IGVertexOutStrength::usage =
     "IGVertexOutStrength[graph] returns the sum of edge weights for the outgoing edges of each vertex in graph.\n" <>
     "IGVertexOutStrength[graph, v] returns the sum of edge weights for outgoing edges of vertex v in graph.";
 
+IGExportString::usage = "IGExportString[graph, format]";
+
+IGExport::usage =
+    "IGExport[file, graph]\n" <>
+    "IGExport[file, graph, format]";
+
+$IGExportFormats::usg = "$IGExportFormats is a list of export formats supported by IGExport.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
 Get["IGraphM`Common`"];
 
+
+(* Utility functions *)
+
+If[$VersionNumber >= 10.1,
+  keyValueMap = KeyValueMap,
+  keyValueMap[f_, asc_] := f @@@ Normal[asc]
+]
+
+
+(* Main definitions *)
 
 IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
 IGNullGraphQ[_] = False;
@@ -355,6 +373,181 @@ SyntaxInformation[IGEdgePropertyList] = {"ArgumentsPattern" -> {_}};
 IGEdgePropertyList[g_?EmptyGraphQ] = {};
 IGEdgePropertyList[g_ /; GraphQ[g] && hasCustomProp[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, EdgeList[g]}]]
 IGEdgePropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardEdgeProperties]
+
+
+(* Import and export *)
+
+$IGExportFormats = {"GraphML"};
+
+IGExport::format   = "`` is not a recognized IGExport format.";
+IGExport::infer    = "Cannot infer format of file ``";
+IGExport::mixed    = "Exporting mixed graphs to `` is not supported.";
+IGExport::propname = "Only string or symbol property names are allowed when exporting to ``.";
+
+igExportStringTag (* create symbol, used to signal use of ExportString instead of Export *)
+
+IGExportString[g_?GraphQ, format_]  := IGExport[igExportStringTag, g, format]
+
+IGExport[file_, g_?GraphQ, format_] :=
+    Switch[format,
+      "GraphML", ExportGraphML[file, g],
+      _, Message[IGExport::format, format]; $Failed
+    ]
+
+IGExport[file_, g_?GraphQ] :=
+    Switch[ToLowerCase@FileExtension[file],
+      "graphml", IGExport[file, g, "GraphML"],
+      _, Message[IGExport::infer, FileNameTake[file]]; $Failed
+    ]
+
+
+(* Converting to an exportable format, with properties *)
+
+properties (* wrapper head to associate properties with a vertex or edge *)
+
+$ignoredEdgeProperties = {EdgeShapeFunction, EdgeStyle, EdgeLabelStyle};
+$ignoredVertexProperties = {VertexShapeFunction, VertexShape, VertexStyle, VertexLabelStyle, VertexCoordinates, VertexSize};
+
+(* Memoized *)
+propType[propName_, g_, extractor_] := propType[propName, g, extractor] =
+    With[{list = DeleteMissing[extractor[propName][g]]},
+      Which[
+        VectorQ[list, Developer`MachineIntegerQ], "Integer",
+        VectorQ[list, Internal`RealValuedNumericQ], "Real",
+        VectorQ[list, StringQ], "String",
+        VectorQ[list, BooleanQ], "Boolean",
+        True, "Expression"
+      ]
+    ]
+
+vPropType[propName_, g_] := propType[propName, g, IGVertexProp]
+ePropType[propName_, g_] := propType[propName, g, IGEdgeProp]
+
+(* Memoized *)
+vPropNames[g_] := vPropNames[g] = Complement[IGVertexPropertyList[g], $ignoredVertexProperties]
+ePropNames[g_] := ePropNames[g] = Complement[IGEdgePropertyList[g], $ignoredEdgeProperties]
+
+value[_][m_Missing] := m
+value["Expression"][e_] := ToString[e, InputForm]
+value["String"][e_] := e
+value["Boolean"|"Integer"][e_] := ToString[e]
+value["Real"][e_] := ToString@CForm@N[e]
+
+getVertexProp[name_, g_] := value[vPropType[name, g]] /@ IGVertexProp[name][g]
+getEdgeProp[name_, g_]   := value[ePropType[name, g]] /@ IGEdgeProp[name][g]
+
+getObj[g_, getProp_, propNames_, list_] :=
+    MapThread[
+      properties,
+      {
+        list,
+        With[{a = AssociationMap[getProp[#, g] &, propNames[g]]},
+          If[a === <||>,
+            ConstantArray[a, Length[list]],
+            DeleteMissing /@ Transpose[a, AllowedHeads -> All]
+          ]
+        ]
+      }
+    ]
+
+getVertices[g_] := getObj[g, getVertexProp, vPropNames, VertexList[g]]
+getEdges[g_] := getObj[g, getEdgeProp, ePropNames, List @@@ EdgeList[g]]
+
+
+(* GraphML *)
+
+graphmlAttrType = <|"Real" -> "double", "Integer" -> "long", "String" -> "string", "Expression" -> "string", "Boolean" -> "boolean"|>;
+
+graphmlAttrName[name_String] := graphmlAttrName[name] = name
+graphmlAttrName[name_Symbol] := graphmlAttrName[name] = ToString[name]
+graphmlAttrName[expr_] := (Message[IGExport::propname, "GraphML"]; Throw[$Failed, graphmlTag])
+
+(* Memoized *)
+graphmlVertexKeyID[name_] := graphmlVertexKeyID[name] = "v_" <> graphmlAttrName[name]
+graphmlEdgeKeyID[name_] := graphmlEdgeKeyID[name] = "e_" <> graphmlAttrName[name]
+
+graphmlEdgeKey[g_][name_] :=
+    XMLElement["key",
+      {"for" -> "edge", "id" -> graphmlEdgeKeyID[name],
+        "attr.name" -> graphmlAttrName[name],
+        "attr.type" -> graphmlAttrType@ePropType[name, g]}, {}
+    ]
+
+graphmlVertexKey[g_][name_] :=
+    XMLElement["key",
+      {"for" -> "node", "id" -> graphmlVertexKeyID[name],
+        "attr.name" -> graphmlAttrName[name],
+        "attr.type" -> graphmlAttrType@vPropType[name, g]}, {}
+    ]
+
+graphmlNode[properties[v_, asc_]] :=
+    XMLElement["node",
+      {"id" -> ToString[v]},
+      graphmlData[asc, graphmlVertexKeyID]
+    ]
+
+graphmlEdge[properties[{v1_, v2_}, asc_]] :=
+    XMLElement["edge",
+      {"source" -> ToString[v1], "target" -> ToString[v2]},
+      graphmlData[asc, graphmlEdgeKeyID]
+    ]
+
+graphmlData[asc_, keyID_] :=
+    keyValueMap[
+      Function[{name, value},
+        XMLElement["data", {"key" -> keyID[name]}, {value}]
+      ],
+      asc
+    ]
+
+graphmlTemplate =
+    XMLObject["Document"][
+      {XMLObject["Declaration"]["Version" -> "1.0", "Encoding" -> "UTF-8"],
+       XMLObject["Comment"][" created by IGraph/M, http://szhorvat.net/mathematica/IGraphM "]},
+      XMLElement["graphml",
+        {{"http://www.w3.org/2000/xmlns/", "xmlns"} ->
+            "http://graphml.graphdrawing.org/xmlns",
+          {"http://www.w3.org/2000/xmlns/", "xsi"} ->
+              "http://www.w3.org/2001/XMLSchema-instance",
+          {"http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"} ->
+              "http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"},
+        {Sequence @@ #Keys,
+          XMLElement["graph",
+            {"id" -> "Graph", "edgedefault" -> #Directed},
+            {Sequence @@ #Nodes, Sequence @@ #Edges}]}
+      ], {}
+    ] &;
+
+graphmlGraph[g_?GraphQ] :=
+    Internal`InheritedBlock[
+      (* all memoized functions will be Block'ed *)
+      {propType, vPropNames, ePropNames, graphmlEdgeKeyID, graphmlVertexKeyID, graphmlAttrName},
+      If[MixedGraphQ[g],
+        Message[IGExport::mixed, "GraphML"];
+        Return[$Failed]
+      ];
+      Catch[
+        graphmlTemplate[<|
+          "Keys" -> Join[graphmlEdgeKey[g] /@ ePropNames[g], graphmlVertexKey[g] /@ vPropNames[g]],
+          "Nodes" -> (graphmlNode /@ getVertices[g]),
+          "Edges" -> (graphmlEdge /@ getEdges[g]),
+          "Directed" -> If[DirectedGraphQ[g], "directed", "undirected"]
+        |>],
+        graphMLTag
+      ]
+    ]
+
+ExportGraphML[file_, g_?GraphQ] :=
+    With[{xml = graphmlGraph[g]},
+      If[xml =!= $Failed,
+        If[file === igExportStringTag,
+          ExportString[xml, "XML"],
+          Export[file, xml, "XML"]
+        ],
+        $Failed
+      ]
+    ]
+
 
 (***** Finalize *****)
 
