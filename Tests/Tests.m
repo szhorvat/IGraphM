@@ -46,7 +46,7 @@ MT[
 ]
 
 MT[
-  AllTrue[Complement[Names["IGraphM`Utilities`*"], {}], nameFromUsage[#] === # &],
+  AllTrue[Complement[Names["IGraphM`Utilities`*"], {"$IGExportFormats"}], nameFromUsage[#] === # &],
   True
 ]
 
@@ -919,6 +919,11 @@ MT[
 
 (*******************************************************************************)
 MTSection["Centralities"]
+
+MT[
+  #@IGEmptyGraph[],
+  {}
+]& /@ {IGBetweenness, IGEdgeBetweenness, IGCloseness, IGPageRank, IGEigenvectorCentrality, IGHubScore, IGAuthorityScore, IGConstraintScore}
 
 MT[
   BetweennessCentrality[#] == IGBetweenness[#, Method -> "Fast"],
@@ -2099,6 +2104,11 @@ MT[
   True
 ]
 
+MT[
+  IGGraphicalQ[{}],
+  True
+]
+
 
 MTSection["Utilities package"]
 
@@ -2343,3 +2353,7 @@ MT[
   IGVertexWeightedQ[vwg],
   True
 ]
+
+(* Property map operators *)
+
+
