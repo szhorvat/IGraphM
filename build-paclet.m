@@ -35,7 +35,7 @@ $buildDir = FileNameJoin[{$dir, "release"}]
 
 
 If[DirectoryQ[$buildDir],
-  Print["Deleting release directory."]
+  Print["Deleting release directory."];
   DeleteDirectory[$buildDir, DeleteContents->True]
 ]
 
