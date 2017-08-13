@@ -64,7 +64,7 @@ IGExport::usage =
     "IGExport[file, graph]\n" <>
     "IGExport[file, graph, format]";
 
-$IGExportFormats::usg = "$IGExportFormats is a list of export formats supported by IGExport.";
+$IGExportFormats::usage = "$IGExportFormats is a list of export formats supported by IGExport.";
 
 Begin["`Private`"];
 
@@ -430,7 +430,8 @@ ePropNames[g_] := ePropNames[g] = Complement[IGEdgePropertyList[g], $ignoredEdge
 value[_][m_Missing] := m
 value["Expression"][e_] := ToString[e, InputForm]
 value["String"][e_] := e
-value["Boolean"|"Integer"][e_] := ToString[e]
+value["Boolean"][e_] := ToString[e]
+value["Integer"][e_] := ToString[e]
 value["Real"][e_] := ToString@CForm@N[e]
 
 getVertexProp[name_, g_] := value[vPropType[name, g]] /@ IGVertexProp[name][g]
@@ -531,7 +532,7 @@ graphmlGraph[g_?GraphQ] :=
           "Keys" -> Join[graphmlEdgeKey[g] /@ ePropNames[g], graphmlVertexKey[g] /@ vPropNames[g]],
           "Nodes" -> (graphmlNode /@ getVertices[g]),
           "Edges" -> (graphmlEdge /@ getEdges[g]),
-          "Directed" -> If[DirectedGraphQ[g], "directed", "undirected"]
+          "Directed" -> If[igDirectedQ[g], "directed", "undirected"]
         |>],
         graphMLTag
       ]
