@@ -541,6 +541,10 @@ public:
         igCheck(igraph_rewire_edges(&graph, prob, loops, multiple));
     }
 
+    void rewireDirectedEdges(double prob, bool loops, bool out) {
+        igCheck(igraph_rewire_directed_edges(&graph, prob, loops, out ? IGRAPH_OUT : IGRAPH_IN));
+    }
+
     // Isomorphism (general)
 
     bool isomorphic(const IG &ig) const {

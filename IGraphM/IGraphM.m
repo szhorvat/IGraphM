@@ -95,7 +95,10 @@ IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority
 IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint score for each vertex.";
 
 IGRewire::usage = "IGRewire[graph, n] attempts to rewire the edges of graph n times while preserving its degree sequence. Weights and other graph properties are discarded.";
-IGRewireEdges::usage = "IGRewireEdges[graph, p] rewires each edge of the graph with probability p. Weights and other graph properties are discarded.";
+IGRewireEdges::usage =
+    "IGRewireEdges[graph, p] rewires each edge of the graph with probability p. Weights and other graph properties are discarded.\n" <>
+    "IGRewireEdges[graph, p, \"In\"] rewires the starting point of each edge with probability p. The in-degree sequence is preserved.\n" <>
+    "IGRewireEdges[graph, p, \"Out\"] rewires the endpoint of each edge with probability p. The out-degree sequence is preserved.";
 
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] tests if graph is directed and acyclic.";
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
@@ -543,6 +546,7 @@ template = LTemplate["IGraphM",
 
         LFun["rewire", {Integer (* n_trials *), True|False (* loops *)}, "Void"],
         LFun["rewireEdges", {Real (* probability *), True|False (* loops *), True|False (* multiple *)}, "Void"],
+        LFun["rewireDirectedEdges", {Real (* probability *), True|False (* loops *), True|False (* outEdges *)}, "Void"],
 
         (* Isomorphism *)
 
@@ -1578,9 +1582,18 @@ IGRewire[g_?igGraphQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPatte
 
 Options[IGRewireEdges] = { SelfLoops -> False, "MultipleEdges" -> False };
 SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, opt : OptionsPattern[]] :=
+IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : All|"All"|"In"|"Out" : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[g]},
-      check@ig@"rewireEdges"[p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
+      Switch[mode,
+        All|"All",
+        check@ig@"rewireEdges"[p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]]
+        ,
+        "In",
+        check@ig@"rewireDirectedEdges"[p, OptionValue[SelfLoops], False]
+        ,
+        "Out",
+        check@ig@"rewireDirectedEdges"[p, OptionValue[SelfLoops], True]
+      ];
       vertexRename[VertexList[g]]@igToGraph[ig]
     ]
 
