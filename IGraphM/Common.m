@@ -14,6 +14,9 @@ IGraphM::mixed = "Mixed graphs are not supported by IGraph/M.";
 (* check if the argument is an igraph compatible graph *)
 igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &;
 
+(* Check if graph is directed. Empty graphs are considered undrected. *)
+igDirectedQ[graph_] := DirectedGraphQ[graph] && Not@EmptyGraphQ[graph]
+
 amendUsage[sym_Symbol, amend_, args___] :=
     Module[{lines},
       lines = StringSplit[sym::usage, "\n"];
