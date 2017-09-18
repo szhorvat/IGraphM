@@ -1052,8 +1052,8 @@ SyntaxInformation[IGDocumentation] = {"ArgumentsPattern" -> {}};
 IGDocumentation[] :=
     If[$Notebooks,
       If[$Version == 11.1 && $OperatingSystem === "Unix", (* work around dysfunctional address bar in 11.1/Linux *)
-        NotebookOpen@Documentation`ResolveLink["paclet:IGraphM/IGDocumentation"],
-        Documentation`HelpLookupPacletURI["paclet:IGraphM/IGDocumentation"]
+        NotebookOpen@Documentation`ResolveLink["paclet:IGraphM"],
+        Documentation`HelpLookupPacletURI["paclet:IGraphM"]
       ];
       ,
       Print["Built-in documentation is only available when running with a Front End.\nSee the online version at http://szhorvat.net/mathematica/IGraphM"]
