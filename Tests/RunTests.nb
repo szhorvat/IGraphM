@@ -71,7 +71,7 @@ Cell[BoxData[
    RowBox[{"Complement", "[", 
     RowBox[{
      RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}], ",", 
-     RowBox[{"{", "}"}]}], "]"}], ",", 
+     RowBox[{"{", "\"\<$IGExportFormats\>\"", "}"}]}], "]"}], ",", 
    RowBox[{
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
@@ -79,21 +79,25 @@ Cell[BoxData[
 "Input",ExpressionUUID->"d7a025cd-0556-4c57-8562-f08bf8bcb27f"],
 
 Cell[BoxData[
- RowBox[{"Scan", "[", 
+ RowBox[{"Scan", "[", "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{
-    RowBox[{"ToExpression", "[", 
-     RowBox[{"#", ",", "InputForm", ",", 
-      RowBox[{
-       RowBox[{"CellPrint", "[", 
-        RowBox[{"TextCell", "[", 
-         RowBox[{
-          RowBox[{"#", "::", "usage"}], ",", "\"\<Text\>\"", ",", 
-          RowBox[{"GeneratedCell", "\[Rule]", "True"}]}], "]"}], "]"}], 
-       "&"}]}], "]"}], "&"}], ",", 
+    RowBox[{"ToExpression", "[", "\[IndentingNewLine]", 
+     RowBox[{
+     "#", ",", "\[IndentingNewLine]", "InputForm", ",", "\[IndentingNewLine]", 
+      RowBox[{"Function", "[", 
+       RowBox[{"sym", ",", 
+        RowBox[{"CellPrint", "[", 
+         RowBox[{"TextCell", "[", 
+          RowBox[{
+           RowBox[{"sym", "::", "usage"}], ",", "\"\<Text\>\"", ",", 
+           RowBox[{"GeneratedCell", "\[Rule]", "True"}]}], "]"}], "]"}], ",", 
+        "HoldAll"}], "]"}]}], "\[IndentingNewLine]", "]"}], "&"}], ",", 
+   "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], "~", "Join", "~", 
     RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}]}]}], 
+  "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
 WindowSize->{1025, 768},
@@ -104,8 +108,8 @@ SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
   "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
   "builtin"}},
-FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 16, \
-2017)",
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
 StyleDefinitions->"Default.nb"
 ]
 
