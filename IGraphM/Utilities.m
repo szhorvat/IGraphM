@@ -389,8 +389,8 @@ igExportStringTag (* create symbol, used to signal use of ExportString instead o
 IGExportString[g_?GraphQ, format_]  := IGExport[igExportStringTag, g, format]
 
 IGExport[file_, g_?GraphQ, format_] :=
-    Switch[format,
-      "GraphML", ExportGraphML[file, g],
+    Switch[ToLowerCase[format], (* ToLowerCase doesn't error for non-Strings *)
+      "graphml", ExportGraphML[file, g],
       _, Message[IGExport::format, format]; $Failed
     ]
 
