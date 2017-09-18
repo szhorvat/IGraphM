@@ -66,7 +66,7 @@ IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m c
 IGChordalRing::usage = "IGChordalRing[m, w] returns an extended chordal ring on n vertices, based on the matrix w.";
 
 IGEmptyGraph::usage =
-    "IGEmptyGraph[] returns a graph with no edges or vetices.\n" <>
+    "IGEmptyGraph[] returns a graph with no edges or vertices.\n" <>
     "IGEmptyGraph[n] returns a graph with no edges and n vertices.";
 
 IGConnectNeighborhood::usage =
@@ -339,7 +339,7 @@ IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a
 IGChordalQ::usage = "IGChordalQ[graph] tests if graph is chordal.";
 IGChordalCompletion::usage = "IGChordalCompletion[graph] returns a set of edges that, when added to graph, make it chordal. The edge-set this function returns is usually not minimal.";
 
-IGMinSeparators::usage = "IGMinSeparators is deprecated. Use IGMinimumSeparators instead."; (* deprecated in favout of IGMinimumSeparators *)
+IGMinSeparators::usage = "IGMinSeparators is deprecated. Use IGMinimumSeparators instead."; (* deprecated in favour of IGMinimumSeparators *)
 
 IGMinimumSeparators::usage = "IGMinimumSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph. Edge directions are ignored.";
 
@@ -537,9 +537,9 @@ template = LTemplate["IGraphM",
 
         LFun["pageRank", {Integer (* method *), Real (* damping *), True|False (* directed *), Integer (* powerNiter *), Real (* powerEpsilon *)}, {Real, 1}],
         LFun["personalizedPageRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *), Integer (* powerNiter *), Real (* powerEpsilon *)}, {Real, 1}],
-        LFun["eigenvectorCentrality", {True|False (* directed *), True|False (* nornalized *)}, {Real, 1}],
-        LFun["hubScore", {True|False (* nornalized *)}, {Real, 1}],
-        LFun["authorityScore", {True|False (* nornalized *)}, {Real, 1}],
+        LFun["eigenvectorCentrality", {True|False (* directed *), True|False (* normalized *)}, {Real, 1}],
+        LFun["hubScore", {True|False (* normalized *)}, {Real, 1}],
+        LFun["authorityScore", {True|False (* normalized *)}, {Real, 1}],
         LFun["constraintScore", {}, {Real, 1}],
 
         (* Randomize *)
@@ -572,7 +572,7 @@ template = LTemplate["IGraphM",
         LFun["ladCountSubisomorphisms", {LExpressionID["IG"], True|False (* induced *)}, Integer],
         LFun["ladCountSubisomorphismsColored", LinkObject],
 
-        (* Topological sorting and directed acylic graphs *)
+        (* Topological sorting and directed acyclic graphs *)
 
         LFun["topologicalSorting", {}, {Real, 1}],
         LFun["feedbackArcSet", {True|False}, {Real, 1}],
@@ -1028,7 +1028,7 @@ igVertexNames[graph_][indices_] := Part[VertexList[graph], indices]
 partitionRagged[v_List, l_?VectorQ] := MapThread[Take[v, {#1, #2}] &, Module[{a = Accumulate[l]}, {a - l + 1, a}]]
 
 (* Unpacks an index list representing vertex sets from an integer array,
-   To be used in conunction with IG::packListIntoIntTensor() *)
+   To be used in conjunction with IG::packListIntoIntTensor() *)
 igUnpackVertexSet[graph_][packed_] :=
     With[{len = First[packed]},
       partitionRagged[
@@ -1437,23 +1437,23 @@ IGBipartiteQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"bipartiteQ"[]]
 
 (* Centrality *)
 
-igBetwennessMethods = <| "Precise" -> False, "Fast" -> True |>;
+igBetweennessMethods = <| "Precise" -> False, "Fast" -> True |>;
 
 Options[IGBetweenness] = { Method -> "Precise" };
 
 IGBetweenness::bdmtd =
     "Value of option Method -> `` is not one of " <>
-        ToString[Keys[igBetwennessMethods], InputForm] <>
+        ToString[Keys[igBetweennessMethods], InputForm] <>
         ". Defaulting to " <> ToString[OptionValue[IGBetweenness, Method], InputForm] <> ".";
 
-amendUsage[IGBetweenness, "Available Method options: <*Keys[igBetwennessMethods]*>."];
+amendUsage[IGBetweenness, "Available Method options: <*Keys[igBetweennessMethods]*>."];
 
 SyntaxInformation[IGBetweenness] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[g]},
       sck@ig@"betweenness"[
-        Lookup[igBetwennessMethods, OptionValue[Method], Message[IGBetweenness::bdmtd, OptionValue[Method]]; False]
+        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweenness::bdmtd, OptionValue[Method]]; False]
       ]
     ]
 
@@ -1472,13 +1472,13 @@ IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
 
 Options[IGBetweennessEstimate] = { Method -> "Precise" };
 IGBetweennessEstimate::bdmtd = IGBetweenness::bdmtd;
-amendUsage[IGBetweennessEstimate, "Available Method options: <*Keys[igBetwennessMethods]*>."];
+amendUsage[IGBetweennessEstimate, "Available Method options: <*Keys[igBetweennessMethods]*>."];
 SyntaxInformation[IGBetweennessEstimate] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[g]},
       sck@ig@"betweennessEstimate"[
         infToZero[cutoff],
-        Lookup[igBetwennessMethods, OptionValue[Method], Message[IGBetweennessEstimate::bdmtd, OptionValue[Method]]; False]
+        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweennessEstimate::bdmtd, OptionValue[Method]]; False]
       ]
     ]
 
