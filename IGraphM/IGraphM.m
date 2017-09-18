@@ -27,7 +27,7 @@ Needs["HierarchicalClustering`"]; (* do not place in BeginPackage -- we do not w
 Unprotect["IGraphM`*", "IGraphM`Developer`*", "IGraphM`Information`*"];
 
 (* Privately load and configure LTemplate *)
-(* NOTE: replaced in build script *)
+(* NOTE: replaced in build script. Remember to update build script if editing these two lines. *)
 Get["LTemplate`LTemplatePrivate`"];
 ConfigureLTemplate["MessageSymbol" -> IGraphM, "LazyLoading" -> False];
 
@@ -1051,7 +1051,7 @@ vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexW
 SyntaxInformation[IGDocumentation] = {"ArgumentsPattern" -> {}};
 IGDocumentation[] :=
     If[$Notebooks,
-      If[$Version == 11.1 && $OperatingSystem === "Unix", (* work around dyfunctional address bar in 11.1/Linux *)
+      If[$Version == 11.1 && $OperatingSystem === "Unix", (* work around dysfunctional address bar in 11.1/Linux *)
         NotebookOpen@Documentation`ResolveLink["paclet:IGraphM/IGDocumentation"],
         Documentation`HelpLookupPacletURI["paclet:IGraphM/IGDocumentation"]
       ];
@@ -1069,7 +1069,7 @@ SyntaxInformation[IGData] = {"ArgumentsPattern" -> {_.}};
 IGData[] := Keys[$igData]
 IGData[item_] := Lookup[$igDataAll, Key[item], Missing["NotAvailable"]]
 
-(* NOTE: replaced in build script *)
+(* NOTE: replaced in build script. Remember to update build script if editing this line. *)
 addCompletion[IGData, {Join[Keys[$igDataCategories], Select[Keys[$igData], StringQ]]}];
 
 (* General (global) *)

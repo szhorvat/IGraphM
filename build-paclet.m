@@ -5,15 +5,25 @@
 (* :Author: szhorvat *)
 (* :Date: 2016-12-02 *)
 
+(* This script requires the following versions of Mathematica:
+ * 10.0 for writing 10.0-compatible notebooks
+ * 10.4 for evaluating the documentation notebook and obtaining a result that renders correctly in 10.x
+ * 11.1 for creating old-style documentation indexes
+ * 11.2 for creating new-style documentation indexes
+ *)
 
 $appName = "IGraphM";
 $LTemplateRepo = "~/Repos/LTemplate";
 
+Print["\nScript running in Mathematica ", $Version];
 
+(* Prints an error message and aborts the script *)
 printAbort[str_] := (Print["ABORTING: ", Style[str, Red, Bold]]; Quit[])
 If[$VersionNumber < 10.0, printAbort["Mathematica 10.0 or later required."]]
 
 
+(* Determine script directory, whether the script is run in the terminal,
+   is read with Get[], or is evaluated within the front end. *)
 $dir =
     Which[
       $InputFileName =!= "", DirectoryName[$InputFileName],
@@ -22,6 +32,7 @@ $dir =
     ]
 
 
+(* Verify that we have git *)
 rg = RunProcess[{"git", "--version"}];
 If[rg === $Failed || rg["ExitCode"] != 0,
   printAbort["git is not available."]
@@ -44,17 +55,15 @@ $appSource = FileNameJoin[{$dir, $appName}]
 $appTarget = FileNameJoin[{$buildDir, $appName}]
 
 
-CreateDirectory[$appTarget, CreateIntermediateDirectories->True]
+CreateDirectory[$appTarget, CreateIntermediateDirectories -> True]
 
 
+(* Copy tracked files into the release directory *)
 Print["git-archive IGraphM"]
-
 
 $gitArch = FileNameJoin[{$buildDir, $appName<>".tar"}]
 
-
 RunProcess[{"git", "archive", "--format", "tar", "-o", $gitArch, "HEAD:IGraphM"}]
-
 
 ExtractArchive[$gitArch, $appTarget]
 DeleteFile[$gitArch]
@@ -102,6 +111,9 @@ source = template[versionData];
 
 Export[FileNameJoin[{$appTarget, "IGraphM.m"}], source, "String"]
 
+
+(* Replace unicode characters with their Mathematica FullForm, to ensure that
+   source file work identically regardless of the value of $CharacterEncoding *)
 Print["\nRe-encoding source files as ASCII"]
 AddPath["PackageTools"]
 Needs["PackageTools`"]
@@ -144,7 +156,7 @@ Print["Evaluating..."]
 With[{$buildDir = $buildDir},
   MRun[
     MCode[
-      PacletDirectoryAdd[$buildDir];
+      PacletManager`PacletDirectoryAdd[$buildDir];
       SetOptions[First[$Output], FormatType -> StandardForm];
       RewriteNotebook[
         NBFEProcess[NotebookEvaluate[#, InsertResults -> True]&]
