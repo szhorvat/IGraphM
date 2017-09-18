@@ -138,7 +138,7 @@ ResetDirectory[] (* LTemplate *)
 (***** Clean up documentation *****)
 
 Print["\nProcessing documentation."]
-SetDirectory@FileNameJoin[{"Documentation", "English"}]
+SetDirectory@FileNameJoin[{"Documentation", "English", "Tutorials"}]
 
 Print["Evaluating..."]
 With[{$buildDir = $buildDir},
@@ -160,16 +160,16 @@ Print["Rewriting..."]
 
 taggingRules = {
   "ModificationHighlight" -> False,
-  "ColorType" -> "GuideColor",
+  "ColorType" -> "TutorialColor",
   "Metadata" -> {
     "built" -> ToString@DateList[],
-  (* "history" -> {"0.3.0", "", "", ""}, *)
+    "history" -> {versionData["version"], "", "", ""},
     "context" -> $appName <> "`",
     "keywords" -> {"igraph", "IGraph/M", "IGraphM"},
     "specialkeywords" -> {},
     "tutorialcollectionlinks" -> {},
     "index" -> True,
-    "label" -> "IGraph/M Guide",
+    "label" -> "IGraph/M Documentation",
     "language" -> "en",
     "paclet" -> $appName,
     "status" -> "None",
@@ -179,8 +179,8 @@ taggingRules = {
     "title" -> "IGraph/M",
     "titlemodifier" -> "",
     "windowtitle" -> "IGraph/M Documentation",
-    "type" -> "Guide",
-    "uri" -> "IGraphM/IGDocumentation"}
+    "type" -> "Tutorial",
+    "uri" -> "IGraphM/tutorial/IGDocumentation"}
 };
 
 With[{taggingRules = taggingRules},
@@ -204,12 +204,31 @@ With[{taggingRules = taggingRules},
 
 DeleteFile["Stylesheet.nb"]
 
-Print["Indexing..."]
-Needs["DocumentationSearch`"]
-indexDir = CreateDirectory["Index"];
-ind = NewDocumentationNotebookIndexer[indexDir];
-AddDocumentationNotebook[ind, "IGDocumentation.nb"];
-CloseDocumentationNotebookIndexer[ind];
+SetDirectory[".."]
+Print["Indexing for -11.1 ..."]
+MRun[
+  MCode[
+    Needs["DocumentationSearch`"];
+    indexDir = CreateDirectory["Index"];
+    ind = DocumentationSearch`NewDocumentationNotebookIndexer[indexDir];
+    DocumentationSearch`AddDocumentationDirectory[ind, "Tutorials"];
+    DocumentationSearch`CloseDocumentationNotebookIndexer[ind];
+    indexSpellDir = CreateDirectory["SpellIndex"];
+    DocumentationSearch`CreateSpellIndex[indexDir, indexSpellDir];
+  ],
+  "11.1"
+]
+
+Print["Indexing for 11.2+ ..."]
+MRun[
+  MCode[
+    Needs["DocumentationSearch`"];
+    DocumentationSearch`CreateDocumentationIndex@Directory[];
+  ],
+  "11.2"
+]
+ResetDirectory[] (* .. *)
+
 
 ResetDirectory[] (* Documentation *)
 

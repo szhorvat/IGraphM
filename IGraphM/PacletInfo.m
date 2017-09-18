@@ -15,6 +15,6 @@ Paclet[
         {    
             {"Kernel", Root -> ".", Context -> "IGraphM`"},
             {"LibraryLink"},
-            {"Documentation", MainPage -> "IGDocumentation"}
+            {"Documentation", MainPage -> "Tutorials/IGDocumentation"}
         }
 ]
