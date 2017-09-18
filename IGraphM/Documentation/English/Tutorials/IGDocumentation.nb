@@ -5327,16 +5327,16 @@ accounts. How the weights are used during layout differs between them.\
 Cell[CellGroupData[{
 
 Cell[TextData[{
- Cell[BoxData["IGLayoutFruchtermanReingold"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGLayoutFruchtermanReingold"],ExpressionUUID->
   "d84dbc44-a29a-41e8-9053-6790612afff2"],
  " multiplies the attraction between vertices by the weights. Thus higher \
 weights result in shorter edges."
 }], "Item",ExpressionUUID->"cf382e78-e0f5-495d-816e-6b4386ad472e"],
 
 Cell[TextData[{
- Cell[BoxData["IGLayoutKamadaKawai"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGLayoutKamadaKawai"],ExpressionUUID->
   "efc575c4-fd15-41c8-8872-455eecfd19aa"],
  " produces longer edges for higher weights"
 }], "Item",ExpressionUUID->"4da957c5-5afd-4106-b239-5cedb10cb56c"]
@@ -25915,6 +25915,865 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["Import and export functions", \
+"Subsection",ExpressionUUID->"6b9020ef-f404-441e-bbc5-4d72cffdd136"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "*IGExport*"}]], \
+"Input",ExpressionUUID->"e4b9e197-4693-4c71-bfb4-2b7914df65dc"],
+
+Cell[BoxData[
+ DynamicModuleBox[{Typeset`open$$ = True}, 
+  PaneSelectorBox[{False->
+   RowBox[{
+    OpenerBox[Dynamic[Typeset`open$$],
+     ImageSize->Small], 
+    StyleBox["IGraphM`Utilities`", "InfoHeading"]}], True->GridBox[{
+     {
+      RowBox[{
+       OpenerBox[Dynamic[Typeset`open$$],
+        ImageSize->Small], 
+       StyleBox["IGraphM`Utilities`", "InfoHeading"]}]},
+     {GridBox[{
+        {
+         ButtonBox["IGExport",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info43714738067-9221623", {"IGExport", "IGraphM`Utilities`"}},
+          ButtonNote->"IGraphM`Utilities`"], 
+         ButtonBox["IGExportString",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info43714738067-9221623", {
+            "IGExportString", "IGraphM`Utilities`"}},
+          ButtonNote->"IGraphM`Utilities`"], 
+         ButtonBox["$IGExportFormats",
+          BaseStyle->"InformationLink",
+          
+          ButtonData:>{
+           "Info43714738067-9221623", {
+            "$IGExportFormats", "IGraphM`Utilities`"}},
+          ButtonNote->"IGraphM`Utilities`"]}
+       },
+       DefaultBaseStyle->"InfoGrid",
+       GridBoxItemSize->{"Columns" -> {{
+            Scaled[0.31666666666666665`]}}}]}
+    },
+    GridBoxAlignment->{"Columns" -> {{Left}}, "Rows" -> {{Baseline}}}]}, 
+   Dynamic[Typeset`open$$],
+   ImageSize->
+    Automatic]]], "Print", \
+"InfoCell",ExpressionUUID->"eb8dabcd-ce6c-4c5e-b8e4-8f096b9c8298"]
+}, Open  ]],
+
+Cell[TextData[{
+ "IGraph/M provides its own exporters for certain graph formats. The \
+supported export formats are listed in ",
+ Cell[BoxData["$IGExportFormats"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "a641c5e6-b119-4e12-a602-a7a10e4f14aa"],
+ ":"
+}], "Text",ExpressionUUID->"a6f22f3a-286b-4325-b582-64605b4bc71e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["$IGExportFormats"], \
+"Input",ExpressionUUID->"1fa19489-a270-4f1f-b5fa-4c5a36d3a3c5"],
+
+Cell[BoxData[
+ RowBox[{"{", "\<\"GraphML\"\>", 
+  "}"}]], "Output",ExpressionUUID->"163cb6e3-41d1-4129-aa99-3745dc8391d5"]
+}, Open  ]],
+
+Cell[TextData[{
+ Cell[BoxData["IGExport"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "a3538485-c9f3-4bc9-8d12-f6a058af74b0"],
+ " and ",
+ Cell[BoxData["IGExportString"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "ddff5c25-c2d2-42d4-a58c-9101d6d390e6"],
+ " work analogously to the builtin ",
+ Cell[BoxData["Export"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8b1bbd39-a1b9-4400-8c26-af7b0ec5c25e"],
+ " and ",
+ Cell[BoxData["ExportString"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "5ed63e81-7c8e-4dd4-958b-c23b14384097"],
+ "."
+}], "Text",ExpressionUUID->"d4c68123-4674-4474-a858-56d2d9aaec72"],
+
+Cell[CellGroupData[{
+
+Cell["GraphML", \
+"Subsubsection",ExpressionUUID->"524e6974-8e0c-4f4d-8bef-d9f7cd9f4bd9"],
+
+Cell[TextData[{
+ "As of Mathematica 11.2, the built-in Export produces non-standard GraphML \
+files that cannot be read by some other graph manipulation packages, such as \
+the igraph library itself. ",
+ Cell[BoxData["IGExport"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "313910a3-4a83-4e07-92cc-5449033c782a"],
+ " provides a standards compliant implementation."
+}], "Text",ExpressionUUID->"9a15030c-6ebb-4d30-a3b0-c4c3c8203a9e"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"IGExportString", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EurovisionVotes\>\""}], "}"}], 
+    "]"}], ",", "\[IndentingNewLine]", "\"\<GraphML\>\""}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"9127ab6f-c4f0-4e4c-8086-bbb412a1b452"],
+
+Cell[BoxData["\<\"<?xml version='1.0' encoding='UTF-8'?>\\n<!-- created by \
+IGraph/M, http://szhorvat.net/mathematica/IGraphM -->\\n<graphml \
+xmlns='http://graphml.graphdrawing.org/xmlns'\\n    \
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\\n    \
+xsi:schemaLocation='http://graphml.graphdrawing.org/xmlns \
+http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd'>\\n <key for='edge'\\n \
+    id='e_EdgeWeight'\\n     attr.name='EdgeWeight'\\n     attr.type='long' \
+/>\\n <key for='node'\\n     id='v_VertexWeight'\\n     \
+attr.name='VertexWeight'\\n     attr.type='long' />\\n <graph id='Graph'\\n   \
+  edgedefault='directed'>\\n  <node id='Albania' />\\n  <node id='Andorra' />\
+\\n  <node id='Armenia' />\\n  <node id='Austria' />\\n  <node \
+id='Azerbaijan' />\\n  <node id='Belarus' />\\n  <node id='Belgium' />\\n  \
+<node id='Bosnia and Herzegovina' />\\n  <node id='Bulgaria' />\\n  <node \
+id='Croatia' />\\n  <node id='Cyprus' />\\n  <node id='Czech Republic' />\\n  \
+<node id='Denmark' />\\n  <node id='Estonia' />\\n  <node id='Finland' />\\n  \
+<node id='France' />\\n  <node id='Georgia' />\\n  <node id='Germany' />\\n  \
+<node id='Greece' />\\n  <node id='Hungary' />\\n  <node id='Iceland' />\\n  \
+<node id='Ireland' />\\n  <node id='Israel' />\\n  <node id='Latvia' />\\n  \
+<node id='Lithuania' />\\n  <node id='Macedonia' />\\n  <node id='Malta' \
+/>\\n  <node id='Moldova' />\\n  <node id='Monaco' />\\n  <node \
+id='Montenegro' />\\n  <node id='Netherlands' />\\n  <node id='Norway' />\\n  \
+<node id='Poland' />\\n  <node id='Portugal' />\\n  <node id='Romania' />\\n  \
+<node id='Russia' />\\n  <node id='San Marino' />\\n  <node id='Serbia' />\\n \
+ <node id='Slovakia' />\\n  <node id='Slovenia' />\\n  <node id='Spain' />\\n \
+ <node id='Sweden' />\\n  <node id='Switzerland' />\\n  <node id='Turkey' \
+/>\\n  <node id='Ukraine' />\\n  <node id='United Kingdom' />\\n  <edge \
+source='Albania'\\n      target='Bosnia and Herzegovina'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Albania'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Albania'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge source='Albania'\\n      \
+target='Macedonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Albania'\\n      target='Spain'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Albania'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Albania'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Andorra'\\n      \
+target='Finland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Andorra'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Andorra'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Andorra'\\n      target='Portugal'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Andorra'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Andorra'\\n      target='Spain'>\\n   <data \
+key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge source='Andorra'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Armenia'\\n      target='Belarus'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Armenia'\\n      \
+target='Georgia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Armenia'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Armenia'\\n      \
+target='Russia'>\\n   <data key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge \
+source='Armenia'\\n      target='Ukraine'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Austria'\\n      \
+target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>2</data>\\n  \
+</edge>\\n  <edge source='Austria'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Austria'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='Austria'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Austria'\\n      \
+target='Montenegro'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Austria'\\n      target='Poland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Austria'\\n      \
+target='Serbia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Austria'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Austria'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Azerbaijan'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Azerbaijan'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='Belarus'\\n      target='Azerbaijan'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Belarus'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Belarus'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>6</data>\\n  </edge>\\n  <edge source='Belarus'\\n      \
+target='Switzerland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Belarus'\\n      target='Ukraine'>\\n   <data \
+key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge source='Belgium'\\n      \
+target='Armenia'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='Belgium'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Belgium'\\n      \
+target='France'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Belgium'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Belgium'\\n      \
+target='Greece'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge \
+source='Belgium'\\n      target='Israel'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Belgium'\\n      \
+target='Latvia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Belgium'\\n      target='Netherlands'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Belgium'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Belgium'\\n      target='Romania'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Belgium'\\n      \
+target='Spain'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Belgium'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>6</data>\\n  </edge>\\n  <edge source='Bosnia and \
+Herzegovina'\\n      target='Belgium'>\\n   <data key='e_EdgeWeight'>1</data>\
+\\n  </edge>\\n  <edge source='Bosnia and Herzegovina'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>5</data>\\n  </edge>\\n  \
+<edge source='Bosnia and Herzegovina'\\n      target='Estonia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Bosnia and \
+Herzegovina'\\n      target='France'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Bosnia and \
+Herzegovina'\\n      target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\
+\\n  </edge>\\n  <edge source='Bosnia and Herzegovina'\\n      \
+target='Montenegro'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Bosnia and Herzegovina'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Bosnia and \
+Herzegovina'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Bosnia and \
+Herzegovina'\\n      target='Slovenia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Bosnia and \
+Herzegovina'\\n      target='Sweden'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Bosnia and \
+Herzegovina'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Bulgaria'\\n      \
+target='Azerbaijan'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Bulgaria'\\n      target='Cyprus'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Bulgaria'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Bulgaria'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge source='Bulgaria'\\n      \
+target='Macedonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Bulgaria'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Bulgaria'\\n      \
+target='Turkey'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Croatia'\\n      target='Azerbaijan'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Croatia'\\n      \
+target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>9</data>\\n  \
+</edge>\\n  <edge source='Croatia'\\n      target='Cyprus'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Croatia'\\n      \
+target='Denmark'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Croatia'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Croatia'\\n      \
+target='Macedonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Croatia'\\n      target='Malta'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Croatia'\\n      \
+target='Montenegro'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Croatia'\\n      target='Netherlands'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Croatia'\\n      \
+target='Russia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Croatia'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Croatia'\\n      \
+target='Slovenia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Croatia'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Croatia'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Cyprus'\\n      target='Armenia'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Cyprus'\\n      \
+target='Azerbaijan'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Cyprus'\\n      target='Bulgaria'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Cyprus'\\n      \
+target='Greece'>\\n   <data key='e_EdgeWeight'>9</data>\\n  </edge>\\n  <edge \
+source='Cyprus'\\n      target='Iceland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Cyprus'\\n      \
+target='Israel'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Cyprus'\\n      target='Malta'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Cyprus'\\n      \
+target='Montenegro'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Cyprus'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Cyprus'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Cyprus'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Cyprus'\\n      \
+target='Serbia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Cyprus'\\n      target='Spain'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Cyprus'\\n      \
+target='Turkey'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Czech Republic'\\n      target='Armenia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Czech Republic'\\n  \
+    target='Azerbaijan'>\\n   <data key='e_EdgeWeight'>2</data>\\n  \
+</edge>\\n  <edge source='Czech Republic'\\n      target='Ukraine'>\\n   \
+<data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Denmark'\\n   \
+   target='Belgium'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Denmark'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Denmark'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Denmark'\\n      target='Iceland'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Denmark'\\n      \
+target='Malta'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge \
+source='Denmark'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Denmark'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>7</data>\\n  </edge>\\n  <edge \
+source='Denmark'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Estonia'\\n      \
+target='Denmark'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Estonia'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Estonia'\\n      \
+target='France'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Estonia'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Estonia'\\n      \
+target='Iceland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Estonia'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Estonia'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Estonia'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>8</data>\\n  </edge>\\n  <edge source='Estonia'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge \
+source='Estonia'\\n      target='Switzerland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Estonia'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Finland'\\n      target='Bosnia and Herzegovina'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Finland'\\n      \
+target='Denmark'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Finland'\\n      target='Estonia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Finland'\\n      \
+target='France'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Finland'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Finland'\\n      \
+target='Hungary'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Finland'\\n      target='Iceland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Finland'\\n      \
+target='Israel'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Finland'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Finland'\\n      \
+target='Montenegro'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Finland'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Finland'\\n      \
+target='Russia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Finland'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Finland'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Finland'\\n      target='Switzerland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='France'\\n      \
+target='Armenia'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='France'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='France'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='France'\\n      target='Israel'>\\n   <data \
+key='e_EdgeWeight'>6</data>\\n  </edge>\\n  <edge source='France'\\n      \
+target='Portugal'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='France'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='France'\\n      \
+target='Spain'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='France'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>9</data>\\n  </edge>\\n  <edge source='Georgia'\\n      \
+target='Armenia'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='Georgia'\\n      target='Belarus'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Georgia'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Germany'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Germany'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Germany'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Germany'\\n      \
+target='Estonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Germany'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Germany'\\n      \
+target='Greece'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge \
+source='Germany'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Germany'\\n      \
+target='Malta'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Germany'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Germany'\\n      \
+target='Poland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Germany'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Germany'\\n      \
+target='Turkey'>\\n   <data key='e_EdgeWeight'>11</data>\\n  </edge>\\n  \
+<edge source='Greece'\\n      target='Albania'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Greece'\\n      \
+target='Armenia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Greece'\\n      target='Bulgaria'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Greece'\\n      \
+target='Cyprus'>\\n   <data key='e_EdgeWeight'>6</data>\\n  </edge>\\n  <edge \
+source='Greece'\\n      target='Estonia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Greece'\\n      \
+target='Finland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Greece'\\n      target='Israel'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Greece'\\n      \
+target='Latvia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Greece'\\n      target='Moldova'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Greece'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Greece'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Greece'\\n      \
+target='Turkey'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Greece'\\n      target='United Kingdom'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Hungary'\\n      \
+target='Azerbaijan'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Hungary'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Hungary'\\n      \
+target='Bulgaria'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Hungary'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Hungary'\\n      \
+target='Greece'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Hungary'\\n      target='Netherlands'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Hungary'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Hungary'\\n      target='Romania'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Hungary'\\n      \
+target='Russia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Hungary'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Hungary'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Iceland'\\n      target='Austria'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Iceland'\\n      \
+target='Belgium'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Iceland'\\n      target='Cyprus'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Iceland'\\n      \
+target='Denmark'>\\n   <data key='e_EdgeWeight'>6</data>\\n  </edge>\\n  \
+<edge source='Iceland'\\n      target='Estonia'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Iceland'\\n      \
+target='Finland'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Iceland'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Iceland'\\n      \
+target='Lithuania'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Iceland'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Iceland'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Iceland'\\n      target='Ukraine'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='Armenia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Ireland'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='Cyprus'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Ireland'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='Estonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Ireland'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='Iceland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Ireland'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='Lithuania'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Ireland'\\n      target='Malta'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='Netherlands'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Ireland'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='Poland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Ireland'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='Slovenia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Ireland'\\n      target='Sweden'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Ireland'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Israel'\\n      target='Belarus'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Israel'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Israel'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Israel'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Israel'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Israel'\\n      \
+target='Iceland'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Israel'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Israel'\\n      \
+target='Malta'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Israel'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Israel'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Israel'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Israel'\\n      \
+target='Spain'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Israel'\\n      target='Ukraine'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Israel'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Latvia'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Latvia'\\n      \
+target='Denmark'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='Latvia'\\n      target='Estonia'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Latvia'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Latvia'\\n      target='Lithuania'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Latvia'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Latvia'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>6</data>\\n  </edge>\\n  <edge source='Latvia'\\n      \
+target='Switzerland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Latvia'\\n      target='Ukraine'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Lithuania'\\n      \
+target='Estonia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Lithuania'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Lithuania'\\n      \
+target='Georgia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Lithuania'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Lithuania'\\n      \
+target='Greece'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Lithuania'\\n      target='Ireland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Lithuania'\\n      \
+target='Latvia'>\\n   <data key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge \
+source='Lithuania'\\n      target='Moldova'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Lithuania'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Lithuania'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Lithuania'\\n      \
+target='Slovenia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Lithuania'\\n      target='Sweden'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Lithuania'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Macedonia'\\n      target='Albania'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Macedonia'\\n      \
+target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>2</data>\\n  \
+</edge>\\n  <edge source='Macedonia'\\n      target='Croatia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Macedonia'\\n      \
+target='Malta'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Macedonia'\\n      target='Montenegro'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Macedonia'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Macedonia'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Macedonia'\\n      \
+target='Turkey'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge \
+source='Macedonia'\\n      target='United Kingdom'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Albania'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Malta'\\n      target='Azerbaijan'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Belarus'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Malta'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Malta'\\n      target='Cyprus'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Estonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Malta'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Iceland'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='Malta'\\n      target='Ireland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Israel'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Malta'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Poland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Malta'\\n      target='Romania'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Russia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Malta'\\n      target='Sweden'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='Switzerland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Malta'\\n      target='Ukraine'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Malta'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>3</data>\\n  \
+</edge>\\n  <edge source='Moldova'\\n      target='Azerbaijan'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Moldova'\\n      \
+target='Belarus'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Moldova'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Moldova'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>5</data>\\n  </edge>\\n  \
+<edge source='Moldova'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Monaco'\\n      \
+target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Monaco'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Monaco'\\n      \
+target='France'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Monaco'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Monaco'\\n      \
+target='Ireland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Monaco'\\n      target='Israel'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Montenegro'\\n      \
+target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>2</data>\\n  \
+</edge>\\n  <edge source='Montenegro'\\n      target='Croatia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Montenegro'\\n      \
+target='Greece'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Montenegro'\\n      target='Macedonia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Montenegro'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Montenegro'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Netherlands'\\n     \
+ target='Armenia'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='Netherlands'\\n      target='Azerbaijan'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Netherlands'\\n     \
+ target='Belgium'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='Netherlands'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Netherlands'\\n     \
+ target='Estonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Netherlands'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Netherlands'\\n     \
+ target='Greece'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Netherlands'\\n      target='Israel'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Netherlands'\\n     \
+ target='Montenegro'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Netherlands'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Netherlands'\\n     \
+ target='Turkey'>\\n   <data key='e_EdgeWeight'>6</data>\\n  </edge>\\n  \
+<edge source='Norway'\\n      target='Azerbaijan'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Norway'\\n      \
+target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>2</data>\\n  \
+</edge>\\n  <edge source='Norway'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Norway'\\n      \
+target='Estonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Norway'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Norway'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Norway'\\n      target='Iceland'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Norway'\\n      \
+target='Latvia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Norway'\\n      target='Malta'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Norway'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Norway'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Norway'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge \
+source='Norway'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Poland'\\n      \
+target='Armenia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Poland'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Poland'\\n      \
+target='Denmark'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Poland'\\n      target='Estonia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Poland'\\n      \
+target='Finland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Poland'\\n      target='France'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Poland'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Poland'\\n      target='Hungary'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Poland'\\n      \
+target='Israel'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Poland'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Poland'\\n      \
+target='Russia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Poland'\\n      target='Sweden'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Poland'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>6</data>\\n  </edge>\\n  \
+<edge source='Portugal'\\n      target='Austria'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Portugal'\\n      \
+target='France'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Portugal'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Portugal'\\n      \
+target='Israel'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Portugal'\\n      target='Moldova'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Portugal'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Portugal'\\n      target='Spain'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Portugal'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Portugal'\\n      target='Ukraine'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Portugal'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Romania'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Romania'\\n      \
+target='Greece'>\\n   <data key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge \
+source='Romania'\\n      target='Iceland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Romania'\\n      \
+target='Macedonia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Romania'\\n      target='Moldova'>\\n   <data \
+key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge source='Romania'\\n      \
+target='Poland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Romania'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Romania'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Romania'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Romania'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Russia'\\n      target='Armenia'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Russia'\\n      \
+target='Azerbaijan'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Russia'\\n      target='Belarus'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Russia'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Russia'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Russia'\\n      \
+target='France'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge \
+source='Russia'\\n      target='Georgia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Russia'\\n      \
+target='Latvia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Russia'\\n      target='Lithuania'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Russia'\\n      \
+target='Malta'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Russia'\\n      target='Moldova'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Russia'\\n      \
+target='Netherlands'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Russia'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Russia'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Russia'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Russia'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='San Marino'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='San Marino'\\n      \
+target='Israel'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Serbia'\\n      target='Bosnia and Herzegovina'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Serbia'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Serbia'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Serbia'\\n      \
+target='Hungary'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Serbia'\\n      target='Macedonia'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Serbia'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Serbia'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Serbia'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Slovakia'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Slovakia'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Slovakia'\\n      target='Estonia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Slovakia'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Slovakia'\\n      target='Malta'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Slovakia'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Slovenia'\\n      target='Bosnia and Herzegovina'>\\n   <data \
+key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge source='Slovenia'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>5</data>\\n  </edge>\\n  \
+<edge source='Slovenia'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Slovenia'\\n      \
+target='Estonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Slovenia'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Slovenia'\\n      \
+target='Macedonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Slovenia'\\n      target='Malta'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Slovenia'\\n      \
+target='Montenegro'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Slovenia'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Slovenia'\\n      \
+target='Russia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Slovenia'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Slovenia'\\n      \
+target='Turkey'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Spain'\\n      target='Armenia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Spain'\\n      \
+target='Belgium'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Spain'\\n      target='Bulgaria'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Spain'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Spain'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Spain'\\n      \
+target='Finland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Spain'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge source='Spain'\\n      \
+target='Greece'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Spain'\\n      target='Iceland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Spain'\\n      \
+target='Israel'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Spain'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Spain'\\n      \
+target='Malta'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Spain'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Spain'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>7</data>\\n  </edge>\\n  \
+<edge source='Spain'\\n      target='United Kingdom'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Sweden'\\n      \
+target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>2</data>\\n  \
+</edge>\\n  <edge source='Sweden'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Sweden'\\n      \
+target='Estonia'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Sweden'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Sweden'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Sweden'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Sweden'\\n      \
+target='Iceland'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Sweden'\\n      target='Latvia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Sweden'\\n      \
+target='Montenegro'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Sweden'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Sweden'\\n      \
+target='Romania'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Sweden'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Sweden'\\n      \
+target='Ukraine'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Switzerland'\\n      target='Albania'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Switzerland'\\n     \
+ target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Switzerland'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Switzerland'\\n     \
+ target='France'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Switzerland'\\n      target='Germany'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Switzerland'\\n     \
+ target='Israel'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Switzerland'\\n      target='Montenegro'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Switzerland'\\n     \
+ target='Portugal'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Switzerland'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Switzerland'\\n     \
+ target='Spain'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Switzerland'\\n      target='Turkey'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='Albania'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Turkey'\\n      target='Armenia'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='Austria'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Turkey'\\n      target='Azerbaijan'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='Belgium'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Turkey'\\n      target='Bosnia and Herzegovina'>\\n   <data \
+key='e_EdgeWeight'>4</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='Croatia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Turkey'\\n      target='Estonia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='Germany'>\\n   <data key='e_EdgeWeight'>2</data>\\n  </edge>\\n  \
+<edge source='Turkey'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='Iceland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Turkey'\\n      target='Malta'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Turkey'\\n      target='Russia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='Sweden'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge \
+source='Turkey'\\n      target='Ukraine'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Turkey'\\n      \
+target='United Kingdom'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Ukraine'\\n      target='Azerbaijan'>\\n   <data \
+key='e_EdgeWeight'>3</data>\\n  </edge>\\n  <edge source='Ukraine'\\n      \
+target='Belarus'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Ukraine'\\n      target='Belgium'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Ukraine'\\n      \
+target='Bosnia and Herzegovina'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
+</edge>\\n  <edge source='Ukraine'\\n      target='Malta'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Ukraine'\\n      \
+target='Moldova'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='Ukraine'\\n      target='Norway'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='Ukraine'\\n      \
+target='Russia'>\\n   <data key='e_EdgeWeight'>6</data>\\n  </edge>\\n  <edge \
+source='Ukraine'\\n      target='Serbia'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
+    target='Cyprus'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='United Kingdom'\\n      target='Denmark'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
+    target='Estonia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='United Kingdom'\\n      target='Finland'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
+    target='France'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='United Kingdom'\\n      target='Greece'>\\n   <data \
+key='e_EdgeWeight'>5</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
+    target='Iceland'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='United Kingdom'\\n      target='Ireland'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
+    target='Latvia'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='United Kingdom'\\n      target='Lithuania'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
+    target='Malta'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n  \
+<edge source='United Kingdom'\\n      target='Netherlands'>\\n   <data \
+key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
+    target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  \
+<edge source='United Kingdom'\\n      target='Sweden'>\\n   <data \
+key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
+    target='Turkey'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n \
+</graph>\\n</graphml>\"\>"], \
+"Output",ExpressionUUID->"80226aaa-4cdb-4641-bec1-4420e1e8033b"]
+}, Open  ]]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["Other utility functions", \
 "Subsection",ExpressionUUID->"386f6d4b-3666-4959-8f2d-185c7480a101"],
 
@@ -25970,7 +26829,7 @@ Cell[BoxData[
 }, Open  ]]
 },
 WindowSize->{917, 838},
-WindowMargins->{{Automatic, 87}, {Automatic, 0}},
+WindowMargins->{{Automatic, 96}, {Automatic, 72}},
 WindowTitle->"IGraph/M Documentation",
 PrintingStartingPageNumber->1,
 PageHeaders->{{
@@ -26011,8 +26870,8 @@ PrivateNotebookOptions->{"FileOutlineCache"->False},
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSize->250},
-FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, \
-2017)",
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -26029,7 +26888,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Item"], DefaultInlineFormatType -> StandardForm]}, Visible -> 
   False, FrontEndVersion -> 
-  "11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, 2017)", 
+  "11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September 10, 2017)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
