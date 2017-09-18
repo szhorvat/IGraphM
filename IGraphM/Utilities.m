@@ -58,11 +58,11 @@ IGVertexOutStrength::usage =
     "IGVertexOutStrength[graph] returns the sum of edge weights for the outgoing edges of each vertex in graph.\n" <>
     "IGVertexOutStrength[graph, v] returns the sum of edge weights for outgoing edges of vertex v in graph.";
 
-IGExportString::usage = "IGExportString[graph, format]";
+IGExportString::usage = "IGExportString[graph, format] generates a string corresponding to graph in the given format. See $IGExportFormats for supported formats.";
 
 IGExport::usage =
-    "IGExport[file, graph]\n" <>
-    "IGExport[file, graph, format]";
+    "IGExport[file, graph] exports graph to file in a format inferred from the file name.\n" <>
+    "IGExport[file, graph, format] exports graph to file in the given format. See $IGExportFormats for supported formats.";
 
 $IGExportFormats::usage = "$IGExportFormats is a list of export formats supported by IGExport.";
 
@@ -380,7 +380,7 @@ IGEdgePropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardEdg
 $IGExportFormats = {"GraphML"};
 
 IGExport::format   = "`` is not a recognized IGExport format.";
-IGExport::infer    = "Cannot infer format of file ``";
+IGExport::infer    = "Cannot infer format of file \"``\".";
 IGExport::mixed    = "Exporting mixed graphs to `` is not supported.";
 IGExport::propname = "Only string or symbol property names are allowed when exporting to ``.";
 
