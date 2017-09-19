@@ -210,14 +210,14 @@ With[{taggingRules = taggingRules},
             NBSetOptions[StyleDefinitions -> NBImport["Stylesheet.nb"]]
       ]["IGDocumentation.nb"];
     ],
-    "10.0" (* compatibility with 10.0 *)
+    "10.0" (* write notebooks with 10.0 to avoid InsufficientVersionWarning *)
   ]
 ]
 
 DeleteFile["Stylesheet.nb"]
 
 SetDirectory[".."]
-Print["Indexing for -11.1 ..."]
+Print["Indexing for 11.1- ..."]
 MRun[
   MCode[
     Needs["DocumentationSearch`"];
@@ -235,7 +235,7 @@ Print["Indexing for 11.2+ ..."]
 MRun[
   MCode[
     Needs["DocumentationSearch`"];
-    DocumentationSearch`CreateDocumentationIndex@Directory[];
+    DocumentationSearch`CreateDocumentationIndex[Directory[], Directory[], "TextSearchIndex", "UseWolframLanguageData" -> False];
   ],
   "11.2"
 ]
