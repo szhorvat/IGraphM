@@ -1051,7 +1051,7 @@ vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexW
 SyntaxInformation[IGDocumentation] = {"ArgumentsPattern" -> {}};
 IGDocumentation[] :=
     If[$Notebooks,
-      If[$Version == 11.1 && $OperatingSystem === "Unix", (* work around dysfunctional address bar in 11.1/Linux *)
+      If[$VersionNumber == 11.1 && $OperatingSystem === "Unix", (* work around dysfunctional address bar in 11.1/Linux *)
         NotebookOpen@Documentation`ResolveLink["paclet:IGraphM"],
         Documentation`HelpLookupPacletURI["paclet:IGraphM"]
       ];
