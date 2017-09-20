@@ -1,6 +1,8 @@
-# IGraph/M – igraph for Mathematica
+[![GitHub (pre-)release](https://img.shields.io/github/release/szhorvat/IGraphM/all.svg)](https://github.com/szhorvat/IGraphM/releases)
 
-For the impatient:
+# [IGraph/M – igraph for Mathematica](http://szhorvat.net/mathematica/IGraphM)
+
+**For the impatient:**
 
  - Download the `.paclet` file from [the releases page](https://github.com/szhorvat/IGraphM/releases).
  - Install it using the `PacletInstall` function, as explained [here](http://mathematica.stackexchange.com/q/141887/12).
@@ -8,7 +10,7 @@ For the impatient:
 
 Requirements: _Mathematica_ 10.0 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
 
-Do _not_ use the `master` branch of the GitHub repository. It is for development only, and does not work out of the box.
+Do _not_ use the `master` branch of the GitHub repository. It contains only the source code of the package, and cannot be used without building it first.
 
 ## Introduction
 
@@ -41,6 +43,7 @@ igraph is one of the most complete open source graph manipulation libraries avai
  - Alternative algorithms for generating random graphs with given degree sequence; test for degree sequence graphicality.
  - Additional layout algorithms: most work with weighted graphs and can continue the layout optimization starting from a given set of vertex positions.
  - Biconnected components, articulation points, find all minimum vertex cuts.
+ - Functions for easy graph property transformations and graph styling.
  - Several other specialized functions not mentioned here ...
 
 The documentation contains many examples and can be accessed using the `IGDocumentation[]` command.
@@ -49,13 +52,14 @@ The documentation contains many examples and can be accessed using the `IGDocume
 
 IGraph/M can be installed like any other Mathematica application.
 
-Download the `.paclet` files from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and install it using the `PacletInstall` function in Mathematica.  For example, assuming that the file `IGraphM-0.3.0.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` files from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.92.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
-        PacletInstall["~/Downloads/IGraphM-0.3.0.paclet"]
+        Needs["PacletManager`"]
+        PacletInstall["~/Downloads/IGraphM-0.3.92.paclet"]
 
  IGraph/M requires Mathematica 10.0 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
-The package can be loaded with
+The package can now be loaded with
 
     << IGraphM`
 
@@ -72,7 +76,7 @@ Use
     <<IGraphM`
     IGDocumentation[]
 
-to open the documentation notebook.
+to open the documentation notebook, or search for "igraphm" in Mathematica's Documentation Centre.
 
 The documentation is not yet complete and contributions are very welcome.  If you would like to help out with the documentation, send me an email.
 
@@ -92,6 +96,7 @@ Please see [Development.md](Development.md) for additional information.
  - spectral coarse graining
  - maximum flows, minimum cuts
  - additional structural properties
+ - update LAD isomorphism finder
 
 Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2].
 
