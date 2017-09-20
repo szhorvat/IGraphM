@@ -3114,34 +3114,28 @@ IGClusterData[asc_?AssociationQ]["ElementCount"] := Length[asc["Elements"]]
 IGClusterData[asc_?AssociationQ][key_String] := Lookup[asc, key, Message[IGClusterData::noprop, key]; $Failed]
 
 
-grid[g_] := Column[Row /@ MapAt[Style[#, Gray]&, g, Table[{i, 1}, {i, Length[g]}]]]
-
+(* Switch to using built-in summary boxes. Since the construction syntax hasn't changed between 10.0-11.2,
+   it seems to be relatively safe to use this undocumented functionality *)
 IGClusterData /: MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (StandardForm|TraditionalForm)] :=
-    With[{boxes = RowBox[{"IGClusterData", "[",
-      ToBoxes[
-        Panel[OpenerView[{
-          grid[
-            {
-              {"Elements: ", Length@asc@"Elements"},
-              {"Communities: ", Length@asc@"Communities"}
-            }
-          ],
-          grid[{
-            {"Modularity: ", If[KeyExistsQ[asc, "Modularity"], Max@asc@"Modularity", "unknown"]},
-            {"Hierarchical: ", hierarchicalQ[asc]},
-            {"Algorithm: ", asc@"Algorithm"}
-          }
-          ]
-        }], BaselinePosition -> Baseline],
-        form],
-      "]"}]},
-      InterpretationBox[
-        boxes,
-        c
-      ]
+    BoxForm`ArrangeSummaryBox[
+      IGClusterData,
+      c,
+      None,
+      {
+        BoxForm`SummaryItem[{"Elements: ", Length@asc@"Elements"}],
+        BoxForm`SummaryItem[{"Communities: ", Length@asc@"Communities"}]
+      },
+      {
+        BoxForm`SummaryItem[{"Modularity: ", If[KeyExistsQ[asc, "Modularity"], Max@asc@"Modularity", "unknown"]}],
+        BoxForm`SummaryItem[{"Hierarchical: ", hierarchicalQ[asc]}],
+        BoxForm`SummaryItem[{"Algorithm: ", asc@"Algorithm"}]
+      },
+      form
     ]
 
-Format[c : IGClusterData[asc_?clusterAscQ], OutputForm] := StringTemplate["IGClusterData[\"Elements\" -> <``>, \"Communities\" -> <``>]"][c["ElementCount"], Length@c["Communities"]]
+(* Provide short formatting for text mode as well. *)
+Format[c : IGClusterData[asc_?clusterAscQ], OutputForm] :=
+    StringTemplate["IGClusterData[\"Elements\" -> <``>, \"Communities\" -> <``>]"][c["ElementCount"], Length@c["Communities"]]
 
 
 igClusterData[graph_][asc_] := IGClusterData@Join[<|"Elements" -> VertexList[graph]|>, asc]
