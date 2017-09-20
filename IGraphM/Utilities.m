@@ -387,6 +387,7 @@ IGExport::propname = "Only string or symbol property names are allowed when expo
 igExportStringTag (* create symbol, used to signal use of ExportString instead of Export *)
 
 IGExportString[g_?GraphQ, format_]  := IGExport[igExportStringTag, g, format]
+addCompletion[IGExportString, {0, $IGExportFormats}]
 
 IGExport[file_, g_?GraphQ, format_] :=
     Switch[ToLowerCase[format], (* ToLowerCase doesn't error for non-Strings *)
@@ -399,6 +400,8 @@ IGExport[file_, g_?GraphQ] :=
       "graphml", IGExport[file, g, "GraphML"],
       _, Message[IGExport::infer, FileNameTake[file]]; $Failed
     ]
+
+addCompletion[IGExport, {3, 0, $IGExportFormats}]
 
 
 (* Converting to an exportable format, with properties *)
