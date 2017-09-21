@@ -31,7 +31,7 @@ Unprotect["IGraphM`*", "IGraphM`Developer`*", "IGraphM`Information`*"];
 Get["LTemplate`LTemplatePrivate`"];
 ConfigureLTemplate["MessageSymbol" -> IGraphM, "LazyLoading" -> False];
 
-(***** Usage mesages *****)
+(***** Usage messages *****)
 
 IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
@@ -878,6 +878,9 @@ IGraphM::lytaln = "`` is not a valid value for the \"Align\" layout option."
 
 (* Common definitions *)
 Get["IGraphM`Common`"]
+
+(* Get resources such as icon graphics *)
+Get["IGraphM`Resources`"]
 
 (* For error handling: *)
 
@@ -3120,7 +3123,7 @@ IGClusterData /: MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (Standard
     BoxForm`ArrangeSummaryBox[
       IGClusterData,
       c,
-      None,
+      $igClusterDataIcon,
       {
         BoxForm`SummaryItem[{"Elements: ", Length@asc@"Elements"}],
         BoxForm`SummaryItem[{"Communities: ", Length@asc@"Communities"}]
