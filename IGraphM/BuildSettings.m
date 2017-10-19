@@ -13,7 +13,7 @@ Switch[$OperatingSystem,
   $buildSettings = {
     (* IGraphM requires C++11. With OS X's default compiler this is supported 10.9 and up only,
        thus we need to override the default -mmacosx-version-min=10.6 option. *)
-    "CompileOptions" -> {"-std=c++11", "-mmacosx-version-min=10.9"},
+    "CompileOptions" -> {"-mmacosx-version-min=10.9"}
 
     (* Statically link the igraph library *)
     "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a"},
@@ -25,19 +25,14 @@ Switch[$OperatingSystem,
 
   "Unix", (* Compilation settings for Linux *)
   $buildSettings = {
-    "CompileOptions" -> {"-std=c++11"},
+    "CompileOptions" -> { },
 
     (* Statically link the igraph library *)
     "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
-    "LibraryDirectories" -> {"$HOME/local/lib"},
-
-    If[$SystemWordLength == 32,
-      "Defines" -> {"MLSTREAM_32BIT_INT_AND_LONG"},
-      Unevaluated@Sequence[]
-    ]
+    "LibraryDirectories" -> {"$HOME/local/lib"}
   },
 
   "Windows",
