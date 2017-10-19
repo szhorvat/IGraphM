@@ -21,7 +21,9 @@ extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph 
 
 
 static_assert(std::is_same<double, igraph_real_t>::value, "IGraphM assumes igraph_real_t to be double.");
-
+static_assert(sizeof(igraph_integer_t) == 4, "IGraphM assumed igraph_integer_t to be 32-bit.");
+static_assert(std::is_same<int, igraph_bool_t>::value, "IGraphM assumed igraph_bool_t to be int.");
+// See mlstream extractors, which are defined for integer types of particular widths.
 
 inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
     static double dummy = 0.0; // work around igraph not liking zero-length vectors will NULL pointers
