@@ -13,7 +13,7 @@ Switch[$OperatingSystem,
   $buildSettings = {
     (* IGraphM requires C++11. With OS X's default compiler this is supported 10.9 and up only,
        thus we need to override the default -mmacosx-version-min=10.6 option. *)
-    "CompileOptions" -> {"-mmacosx-version-min=10.9"}
+    "CompileOptions" -> {"-mmacosx-version-min=10.9"},
 
     (* Statically link the igraph library *)
     "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a"},
