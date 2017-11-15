@@ -14,8 +14,6 @@
 
 class IG;
 
-extern std::map<mint, IG *> IG_collection; // TODO this is a hack pending proper implementation in LTemplate
-
 // TODO this is a hack, should patch igraph to expose this interface
 typedef int(*igraph_i_maximal_clique_func_t)(const igraph_vector_t*, void*, igraph_bool_t*);
 extern "C" int igraph_i_maximal_cliques(const igraph_t *graph, igraph_i_maximal_clique_func_t func, void* data);
@@ -87,6 +85,9 @@ public:
     ~IG() {
         igraph_destroy(&graph);
     }
+
+    IG(const IG &) = delete;
+    IG &operator = (const IG &) = delete;
 
     // Create (basic)
 
@@ -672,7 +673,7 @@ public:
         } isohandler;
 
         igCheck(igraph_isomorphic_function_vf2(
-                    &graph, &IG_collection[id]->graph,
+                    &graph, &(mma::getInstance<IG>(id).graph),
                     vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
                     ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
                     NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
@@ -722,7 +723,7 @@ public:
         } isohandler;
 
         igCheck(igraph_subisomorphic_function_vf2(
-                    &graph, &IG_collection[id]->graph,
+                    &graph, &(mma::getInstance<IG>(id).graph),
                     vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
                     ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
                     NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
@@ -785,7 +786,7 @@ public:
            >> id >> induced >> domain;
 
         igraph_bool_t res;
-        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, &domain.list, &res, NULL, NULL, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&(mma::getInstance<IG>(id).graph), &graph, &domain.list, &res, NULL, NULL, induced, 0));
 
         ml.newPacket();
         if (res)
@@ -811,7 +812,7 @@ public:
 
         igraph_bool_t iso;
         igVector map;
-        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, &domain.list, &iso, &map.vec, NULL, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&(mma::getInstance<IG>(id).graph), &graph, &domain.list, &iso, &map.vec, NULL, induced, 0));
 
         ml.newPacket();
         ml << map;
@@ -826,7 +827,7 @@ public:
 
         igList list;
         igraph_bool_t iso;
-        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&(mma::getInstance<IG>(id).graph), &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
 
         ml.newPacket();
         ml << list;
@@ -848,7 +849,7 @@ public:
 
         igList list;
         igraph_bool_t iso;
-        igCheck(igraph_subisomorphic_lad(&IG_collection[id]->graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&(mma::getInstance<IG>(id).graph), &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
 
         ml.newPacket();
         ml << list.length();
