@@ -3450,19 +3450,20 @@ IGVertexContract::vset = "`` must be a list of vertex sets.";
 Options[IGVertexContract] = { SelfLoops -> False, "MultipleEdges" -> False };
 SyntaxInformation[IGVertexContract] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGVertexContract, Graph]};
 IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[{IGVertexContract, Graph}]] :=
-    catch@Module[{ig = igMakeFast[graph], allElements = Join @@ sets, g, self, multi},
+    catch@Module[{ig = igMakeFast[graph], allElements = Join @@ sets, fullSets, g, self, multi},
       If[Not@SubsetQ[VertexList[graph], allElements],
         Message[IGVertexContract::inv, Complement[allElements, VertexList[graph]]];
         Return[$Failed]
       ];
+      fullSets = Join[sets, List /@ Complement[VertexList[graph], allElements]];
       check@ig@"contractVertices"@communitiesToMembership[
         VertexList[graph],
-        Join[sets, List /@ Complement[VertexList[graph], allElements]]
+        fullSets
       ];
       self = Not@TrueQ@OptionValue[SelfLoops];
       multi = Not@TrueQ@OptionValue["MultipleEdges"];
       g = igToGraph[ig];
-      applyGraphOpt[opt]@Which[
+      applyGraphOpt[opt]@vertexRename[ fullSets[[All,1]] ]@Which[
         self && multi, SimpleGraph[g],
         self, removeSelfLoops[g],
         multi, removeMultiEdges[g],
