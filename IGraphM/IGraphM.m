@@ -799,7 +799,6 @@ Recompile[] :=
         CreateDirectory[$libraryDirectory]
       ];
       SetDirectory[$sourceDirectory];
-      Quiet@UnloadTemplate[template];
       CompileTemplate[template, {"IGlobal.cpp"},
         "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
         "TargetDirectory" -> $libraryDirectory,
