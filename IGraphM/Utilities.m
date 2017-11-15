@@ -66,6 +66,8 @@ IGExport::usage =
 
 $IGExportFormats::usage = "$IGExportFormats is a list of export formats supported by IGExport.";
 
+IGShorthand::usage = "IGShorthand[\"...\"] builds a graph from a shorthand notation such as \"a->b<-c\" or \"a-b,c-d\".";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -549,6 +551,63 @@ ExportGraphML[file_, g_?GraphQ] :=
           Export[file, xml, "XML"]
         ],
         $Failed
+      ]
+    ]
+
+
+(***** Shorthand *****)
+
+(* Notes:
+
+    - We cannot use removeSelfLoops[] and removeMultiEdges[] due to the need to support mixed graphs in this function.
+    - The symbol sep should not be localized in IGShorthand because it is used in shSplitGroup[].
+ *)
+
+SetAttributes[shToExpr, Listable];
+shToExpr[s_String] :=
+    Which[
+      StringMatchQ[s, DigitCharacter ..], ToExpression[s],
+      True, s
+    ]
+
+shSplitGroup[s_sep] := s
+shSplitGroup[s_String] := shToExpr@StringTrim@StringSplit[s, ":"]
+
+Options[IGShorthand] = {SelfLoops -> False, "MultipleEdges" -> False, DirectedEdges -> False};
+SyntaxInformation[IGShorthand] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGShorthand, Graph]};
+IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
+    Module[{comp, seq, edgeSeq, eh, edges, vertices},
+      comp = StringSplit[s, ","];
+      seq = StringSplit[#, (x : "<" | "") ~~ ("-" ..) ~~ (y : "" | ">") :> sep[x <> y]] & /@ comp;
+      seq = Replace[{__sep, mid___, __sep} :> {mid}] /@ seq;
+      seq = Map[shSplitGroup, seq, {2}];
+      edgeSeq = Select[seq, Length[#] > 1 &];
+      eh = If[TrueQ@OptionValue[DirectedEdges], DirectedEdge, UndirectedEdge];
+      edgeSeq = Replace[
+        Catenate[Partition[#, 3, 2] & /@ edgeSeq],
+        {
+          {x_, sep[""], y_}   :> eh[x,y],
+          {x_, sep[">"], y_}  :> DirectedEdge[x,y],
+          {x_, sep["<"], y_}  :> DirectedEdge[y,x],
+          {x_, sep["<>"], y_} :> Sequence[DirectedEdge[x,y], DirectedEdge[y,x]]
+        },
+        {1}
+      ];
+      edges = Catenate[Tuples /@ edgeSeq];
+      Internal`InheritedBlock[{UndirectedEdge},
+        SetAttributes[UndirectedEdge, Orderless];
+        If[Not@TrueQ@OptionValue[SelfLoops],
+          edges = DeleteCases[edges, _[x_, x_]];
+        ];
+        If[Not@TrueQ@OptionValue["MultipleEdges"],
+          edges = DeleteDuplicates[edges];
+        ]
+      ];
+      vertices = Catenate@DeleteCases[Level[seq, {2}], _sep];
+      Graph[
+        vertices,
+        edges,
+        Sequence@@FilterRules[{opt}, Options[Graph]]
       ]
     ]
 
