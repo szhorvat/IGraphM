@@ -68,6 +68,8 @@ $IGExportFormats::usage = "$IGExportFormats is a list of export formats supporte
 
 IGShorthand::usage = "IGShorthand[\"...\"] builds a graph from a shorthand notation such as \"a->b<-c\" or \"a-b,c-d\".";
 
+IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a graph.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -608,6 +610,44 @@ IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
         vertices,
         edges,
         Sequence@@FilterRules[{opt}, Options[Graph]]
+      ]
+    ]
+
+
+meshQ[_?MeshRegionQ] := True
+meshQ[_?BoundaryMeshRegionQ] := True
+meshQ[_] := False
+
+IGMeshGraph::noprop = "The edge property `1` is not present in the mesh.";
+
+Options[IGMeshGraph] = { EdgeWeight -> MeshCellMeasure };
+SyntaxInformation[IGMeshGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGMeshGraph[mesh_?meshQ, opt : OptionsPattern[{IGMeshGraph, Graph}]] :=
+    Module[{edgeWeightRule, ew = OptionValue[EdgeWeight], pv},
+      edgeWeightRule = Switch[ew,
+        None,
+        Unevaluated@Sequence[]
+        ,
+        _String | _Symbol,
+        pv = PropertyValue[{mesh, 1}, ew];
+        If[pv === $Failed,
+          Message[IGMeshGraph::noprop, ew];
+          Return[$Failed]
+        ];
+        EdgeWeight -> pv
+        ,
+        _List,
+        EdgeWeight -> ew
+        ,
+        _,
+        Message[IGMeshGraph::invopt, ew, EdgeWeight, OptionValue[IGMeshGraph, EdgeWeight]];
+        EdgeWeight -> PropertyValue[{mesh, 1}, MeshCellMeasure]
+      ];
+      Graph[Developer`ToPackedArray@MeshCells[mesh, 0][[All, 1]],
+        Developer`ToPackedArray@MeshCells[mesh, 1][[All, 1]],
+        edgeWeightRule,
+        Sequence @@ FilterRules[FilterRules[{opt}, Options[Graph]], Except@Options[IGMeshGraph]],
+        VertexCoordinates -> MeshCoordinates[mesh]
       ]
     ]
 
