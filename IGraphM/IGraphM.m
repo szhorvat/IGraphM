@@ -888,7 +888,8 @@ Get["IGraphM`Resources`"]
 
 (* For error handling: *)
 
-igTag (* private tag for throw/catch *)
+igTag::usage = "igTag is a private tag for Throw/Catch within IGraphM.";
+
 throw[val_] := Throw[val, igTag]
 
 SetAttributes[catch, HoldFirst]
