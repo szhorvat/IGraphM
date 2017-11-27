@@ -9,6 +9,11 @@
 
 (* The following definitions are used in multiple, independently loadable packages. *)
 
+(* General::invopt is not present before Mathematica version 10.3. We set it up manually when needed. *)
+If[Not@ValueQ[General::invopt],
+  General::invopt = "Invalid value `1` for parameter `2`. Using default value `3`.";
+]
+
 IGraphM::mixed = "Mixed graphs are not supported by IGraph/M.";
 
 (* check if the argument is an igraph compatible graph *)
