@@ -1639,14 +1639,14 @@ IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
 
 (* Transform multigraph subisomorphism to edge-coloured graph subisomorphism. *)
 igMultigraphSubisomorphicQ[subgraph_, graph_] :=
-(* no catch *) Block[{ig, igs, ec, ecs},
+    (* no catch *) Block[{ig, igs, ec, ecs},
       Internal`InheritedBlock[{UndirectedEdge},
         SetAttributes[UndirectedEdge, Orderless];
         ec = Counts@EdgeList[graph]; ecs = Counts@EdgeList[subgraph];
         ig = igMake@Graph@Keys[ec]; igs = igMake@Graph@Keys[ecs];
         check@ig@"vf2Subisomorphic"[ManagedLibraryExpressionID[igs], {}, {}, Values[ec], Values[ecs]]
       ]
-]
+    ]
 
 
 SyntaxInformation[IGIsoclass] = {"ArgumentsPattern" -> {_}};
