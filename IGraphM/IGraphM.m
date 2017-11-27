@@ -414,6 +414,9 @@ IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it 
 
 IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge directions are ignored. Edge weights are taken into account and are preserved in the tree.";
 
+IGVertexColoring::usage = "IGVertexColoring[graph] returns a vertex colouring of graph.";
+IGEdgeColoring::usage = "IGEdgeColoring[graph] returns an edge colouring of graph.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -768,7 +771,9 @@ template = LTemplate["IGraphM",
         LFun["randomWalk", {Integer, Integer}, {Real, 1}],
 
         (* Spanning tree *)
-        LFun["spanningTree", {}, {Real, 1}]
+        LFun["spanningTree", {}, {Real, 1}],
+
+        LFun["vertexColoring", {}, {Integer, 1}]
       }
     ]
   }
@@ -3536,6 +3541,15 @@ IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
         ]
       ]
     ]
+
+
+IGVertexColoring[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      1 + check@ig@"vertexColoring"[]
+    ]
+
+IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph[graph]
+
 
 (***** Finalize *****)
 

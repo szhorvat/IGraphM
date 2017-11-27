@@ -1891,6 +1891,14 @@ public:
         igCheck(igraph_minimum_spanning_tree(&graph, &vector.vec, passWeights()));
         return vector.makeMTensor();
     }
+
+    // Vertex colouring
+
+    mma::IntTensorRef vertexColoring() const {
+        igIntVector igcolor;
+        igCheck(igraph_vertex_coloring_greedy(&graph, &igcolor.vec, IGRAPH_COLORING_GREEDY_COLORED_NEIGHBORS));
+        return igcolor.makeMTensor();
+    }
 };
 
 #endif // IG_H
