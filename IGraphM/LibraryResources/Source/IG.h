@@ -1884,6 +1884,12 @@ public:
         return walk.makeMTensor();
     }
 
+    mma::RealTensorRef randomEdgeWalk(mint start, mint steps) const {
+        igVector walk;
+        igCheck(igraph_random_edge_walk(&graph, passWeights(), &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
+        return walk.makeMTensor();
+    }
+
     // Spanning tree
 
     mma::RealTensorRef spanningTree() const {

@@ -407,6 +407,8 @@ IGBipartitePartitions::usage = "IGBipartitePartitions[graph] partitions the vert
 IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsis]}] returns a graph in which the specified vertex sets are contracted into single vertices.";
 
 IGRandomWalk::usage = "IGRandomWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed vertices is returned.";
+IGRandomEdgeWalk::usage = "IGRandomEdgeWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed edges is returned.";
+IGRandomEdgeIndexWalk::usage = "IGRandomEdgeIndexWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of indices for traversed edges is returned.";
 
 IGVertexTransitiveQ::usage = "IGVertexTransitiveQ[graph] tests if graph is vertex transitive.";
 IGEdgeTransitiveQ::usage = "IGEdgeTransitiveQ[graph] tests if graph is edge transitive.";
@@ -769,6 +771,7 @@ template = LTemplate["IGraphM",
 
         (* Random walk *)
         LFun["randomWalk", {Integer, Integer}, {Real, 1}],
+        LFun["randomEdgeWalk", {Integer, Integer}, {Real, 1}],
 
         (* Spanning tree *)
         LFun["spanningTree", {}, {Real, 1}],
@@ -3486,7 +3489,20 @@ IGRandomWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ
     catch@Block[{ig = igMakeFast[graph]},
       Part[
         VertexList[graph],
-        1 + Round@check@ig@"randomWalk"[vs[graph][start], steps]
+        igIndexVec@check@ig@"randomWalk"[vs[graph][start], steps]
+      ]
+    ]
+
+IGRandomEdgeIndexWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ] :=
+    catch@Block[{ig = igMake[graph]},
+      igIndexVec@check@ig@"randomEdgeWalk"[vs[graph][start], steps]
+    ]
+
+IGRandomEdgeWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ] :=
+    catch@Block[{ig = igMake[graph]},
+      Part[
+        EdgeList[graph],
+        igIndexVec@check@ig@"randomEdgeWalk"[vs[graph][start], steps]
       ]
     ]
 
