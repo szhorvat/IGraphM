@@ -2203,7 +2203,7 @@ SyntaxInformation[IGDistanceMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[
 amendUsage[IGDistanceMatrix, "Available Method options: <*Keys[igDistanceMatrixMethods]*>."];
 
 IGDistanceMatrix[graph_?igGraphQ, from : (_?ListQ | All) : All, to : (_?ListQ | All) : All, opt : OptionsPattern[]] :=
-    Module[{method},
+    catch@Module[{method},
       method = OptionValue[Method];
       If[from === {}, Return[{}]];
       If[to === {}, Return[ConstantArray[{}, Length[from]]]];
@@ -2222,22 +2222,22 @@ IGDistanceMatrix[graph_?igGraphQ, from : (_?ListQ | All) : All, to : (_?ListQ | 
     ]
 
 igDistanceMatrixUnweighted[graph_, from_, to_] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeFast[graph]},
       Round@fixInfNaN@check@ig@"shortestPaths"[from, to]
     ]
 
 igDistanceMatrixDijkstra[graph_, from_, to_] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMakeFastWeighted[graph]},
       fixInfNaN@check@ig@"shortestPathsDijkstra"[from, to]
     ]
 
 igDistanceMatrixBellmanFord[graph_, from_, to_] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMakeFastWeighted[graph]},
       fixInfNaN@check@ig@"shortestPathsBellmanFord"[from, to]
     ]
 
 igDistanceMatrixJohnson[graph_, from_, to_] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMakeFastWeighted[graph]},
       fixInfNaN@check@ig@"shortestPathsJohnson"[from, to]
     ]
 
