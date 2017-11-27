@@ -609,7 +609,8 @@ IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
       Graph[
         vertices,
         edges,
-        Sequence@@FilterRules[{opt}, Options[Graph]]
+        Sequence@@FilterRules[{opt}, Options[Graph]],
+        VertexLabels -> "Name"
       ]
     ]
 
