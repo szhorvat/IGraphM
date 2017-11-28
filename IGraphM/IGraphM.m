@@ -405,7 +405,9 @@ IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 
 IGUnfoldTree::usage = "IGUnfoldTree[graph]";
 
-IGBipartitePartitions::usage = "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.";
+IGBipartitePartitions::usage =
+     "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.\n" <>
+     "IGBipartitePartitions[graph, vertex] ensures that the first partition which is returned contains vertex.";
 
 IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsis]}] returns a graph in which the specified vertex sets are contracted into single vertices.";
 
@@ -3449,16 +3451,26 @@ IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
 
 (* Bipartite partitions *)
 
-SyntaxInformation[IGBipartitePartitions] = {"ArgumentsPattern" -> {_}};
+SyntaxInformation[IGBipartitePartitions] = {"ArgumentsPattern" -> {_, _.}};
 IGBipartitePartitions::nbipart = "The graph is not bipartite.";
 IGBipartitePartitions[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph], parts},
       parts = ig@"bipartitePartitions"[];
       If[MatchQ[parts, _LibraryFunctionError],
         Message[IGBipartitePartitions::nbipart];
-        Return[$Failed]
+        throw[$Failed]
       ];
       {Pick[VertexList[graph], parts, 0], Pick[VertexList[graph], parts, 1]}
+    ]
+IGBipartitePartitions[graph_?igGraphQ, vertex_] :=
+    catch@Block[{ig = igMakeFast[graph], parts, ind},
+      parts = ig@"bipartitePartitions"[];
+      If[MatchQ[parts, _LibraryFunctionError],
+        Message[IGBipartitePartitions::nbipart];
+        throw[$Failed]
+      ];
+      Check[ind = VertexIndex[graph, vertex], throw[$Failed]];
+      {Pick[VertexList[graph], parts, parts[[ind]] ], Pick[VertexList[graph], parts, 1 - parts[[ind]] ]}
     ]
 
 
