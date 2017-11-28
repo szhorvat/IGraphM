@@ -106,7 +106,10 @@ IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly 
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if degrees is the degree sequence of any simple undirected graph.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any simple directed graph.";
-IGBipartiteQ::usage = "IGBipartiteQ[graph] tests if graph is bipartite.";
+
+IGBipartiteQ::usage =
+    "IGBipartiteQ[graph] tests if graph is bipartite." <>
+    "IGBipartiteQ[graph, {vertices1, vertices2}] verifies that no edges are running between the two given vertex subsets.";
 
 IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic.";
 IGSubisomorphicQ::usage = "IGSubisomorphicQ[subgraph, graph] tests if subgraph is contained within graph.";
@@ -1443,8 +1446,16 @@ SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
 IGGraphicalQ[degrees_?nonNegIntVecQ] := IGGraphicalQ[{}, degrees]
 IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"graphicalQ"[outdeg, indeg]
 
-SyntaxInformation[IGBipartiteQ] = {"ArgumentsPattern" -> {_}};
+SyntaxInformation[IGBipartiteQ] = {"ArgumentsPattern" -> {_, _.}};
+IGBipartiteQ::bdprt = "`` are not two disjoint subsets of the graph vertices."
 IGBipartiteQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"bipartiteQ"[]]
+IGBipartiteQ[g_?igGraphQ, {vertices1_List, vertices2_List}] :=
+    With[{vertexList = VertexList[g]},
+      If[Not[SubsetQ[vertexList, vertices1] && SubsetQ[vertexList, vertices2] && Intersection[vertices1, vertices2] === {}],
+        Message[IGBipartiteQ::bdprt, {vertices1, vertices2}]
+      ];
+      EmptyGraphQ@Subgraph[g, vertices1] && EmptyGraphQ@Subgraph[g, vertices2]
+    ]
 
 (* Centrality *)
 
