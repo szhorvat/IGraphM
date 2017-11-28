@@ -409,6 +409,14 @@ IGBipartitePartitions::usage =
      "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.\n" <>
      "IGBipartitePartitions[graph, vertex] ensures that the first partition which is returned contains vertex.";
 
+IGBipartiteIncidenceMatrix::usage =
+    "IGBipartiteIncidenceMatrix[graph] returns the incidence matrix of a bipartite graph.\n" <>
+    "IGBipartiteIncidenceMatrix[graph, {vertices1, vertices2}] uses the provided vertex partitioning.";
+
+IGBipartiteIncidenceGraph::usage =
+    "IGBipartiteIncidenceGraph[mat] creates a bipartite graph from the given incidence matrix.\n" <>
+    "IGBipartiteIncidenceGraph[{vertices1, vertices2}, mat] uses vertices1 and vertices2 as the vertex names in the two partitions.";
+
 IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsis]}] returns a graph in which the specified vertex sets are contracted into single vertices.";
 
 IGRandomWalk::usage = "IGRandomWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed vertices is returned.";
@@ -3471,6 +3479,69 @@ IGBipartitePartitions[graph_?igGraphQ, vertex_] :=
       ];
       Check[ind = VertexIndex[graph, vertex], throw[$Failed]];
       {Pick[VertexList[graph], parts, parts[[ind]] ], Pick[VertexList[graph], parts, 1 - parts[[ind]] ]}
+    ]
+
+(* Bipartite incidence matrices *)
+
+undirectedAdjacencyMatrix[g_?DirectedGraphQ] := With[{am = AdjacencyMatrix[g]}, am + Transpose[am]]
+undirectedAdjacencyMatrix[g_] := AdjacencyMatrix[g]
+
+IGBipartiteIncidenceMatrix::nbipart = IGBipartitePartitions::nbipart;
+IGBipartiteIncidenceMatrix::bdpart  = "`` is not a valid bipartite partitioning of the graph.";
+IGBipartiteIncidenceMatrix::empty   = "One of the graph partitions is empty.";
+
+SyntaxInformation[IGBipartiteIncidenceMatrix] = {"ArgumentsPattern" -> {_, _.}};
+
+IGBipartiteIncidenceMatrix[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph], parts, posIndex, ind},
+      parts = ig@"bipartitePartitions"[];
+      If[MatchQ[parts, _LibraryFunctionError],
+        Message[IGBipartiteIncidenceMatrix::nbipart];
+        throw[$Failed]
+      ];
+      posIndex = PositionIndex[parts];
+      If[Sort@Keys[posIndex] =!= {0,1},
+        Message[IGBipartiteIncidenceMatrix::empty];
+        throw[$Failed]
+      ];
+      undirectedAdjacencyMatrix[graph][[posIndex[0], posIndex[1]]]
+    ]
+
+IGBipartiteIncidenceMatrix[graph_?igGraphQ, Automatic] := IGBipartiteIncidenceMatrix[graph]
+
+IGBipartiteIncidenceMatrix[graph_?igGraphQ, parts : {vertices1_, vertices2_}] :=
+    catch@Module[{asc},
+      If[Not@Check[IGBipartiteQ[graph, parts], False],
+        Message[IGBipartiteIncidenceMatrix::bdpart, parts];
+        throw[$Failed]
+      ];
+      If[vertices1 === {} || vertices2 === {},
+        Message[IGBipartiteIncidenceMatrix::empty];
+        throw[$Failed]
+      ];
+      asc = AssociationThread[VertexList[graph], Range@VertexCount[graph]];
+      undirectedAdjacencyMatrix[graph][[ Lookup[asc, vertices1], Lookup[asc, vertices2] ]]
+    ]
+
+
+SyntaxInformation[IGBipartiteIncidenceGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+Options[IGBipartiteIncidenceGraph] = { DirectedEdges -> False };
+
+IGBipartiteIncidenceGraph[bm_, opt : OptionsPattern[{IGBipartiteIncidenceGraph, Graph}]] :=
+    With[{sbm = SparseArray[bm]},
+      AdjacencyGraph[
+        ArrayFlatten[{{0, sbm},{If[TrueQ@OptionValue[DirectedEdges], SparseArray[{}, Reverse@Dimensions[sbm]], Transpose[sbm]], 0}}],
+        opt
+      ]
+    ]
+
+IGBipartiteIncidenceGraph[{vertices1_List, vertices2_List}, bm_, opt : OptionsPattern[Graph]] :=
+    With[{sbm = SparseArray[bm]},
+      AdjacencyGraph[
+        Join[vertices1, vertices2],
+        ArrayFlatten[{{0, sbm},{If[TrueQ@OptionValue[DirectedEdges], SparseArray[{}, Reverse@Dimensions[sbm]], Transpose[sbm]], 0}}],
+        opt
+      ]
     ]
 
 
