@@ -2,6 +2,8 @@
 
 # [IGraph/M – igraph for Mathematica](http://szhorvat.net/mathematica/IGraphM)
 
+[![Join the chat at https://gitter.im/IGraphM/Lobby](https://badges.gitter.im/IGraphM/Lobby.svg)](https://gitter.im/IGraphM/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 **For the impatient:**
 
  - Download the `.paclet` file from [the releases page](https://github.com/szhorvat/IGraphM/releases).
