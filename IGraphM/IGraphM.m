@@ -933,7 +933,11 @@ sck[val_] := val
 (* For argument checking: *)
 
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&;
-intVecQ = VectorQ[#, Developer`MachineIntegerQ]&;
+intVecQ =
+    If[$VersionNumber < 11.0,
+      VectorQ[#, IntegerQ]&, (* In M10.4 and earlier VectorQ[{}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
+      VectorQ[#, Developer`MachineIntegerQ]&
+    ];
 positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&;
 nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&;
 positiveVecQ = VectorQ[#, Positive]&;
