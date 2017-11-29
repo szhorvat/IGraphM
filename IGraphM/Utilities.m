@@ -216,8 +216,7 @@ IGVertexOutStrength[g_?igGraphQ, v_] :=
       ] /; IntegerQ[index]
     ]
 
-
-(* Property transformation functions *)
+(***** Property transformation functions *****)
 
 missing = Missing["Nonexistent"]; (* this will be used for non-existent property values *)
 
@@ -377,7 +376,7 @@ IGEdgePropertyList[g_ /; GraphQ[g] && hasCustomProp[g]] := Sort@DeleteDuplicates
 IGEdgePropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardEdgeProperties]
 
 
-(* Import and export *)
+(***** Import and export *****)
 
 $IGExportFormats = {"GraphML"};
 
@@ -611,7 +610,6 @@ IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
         VertexLabels -> "Name"
       ]
     ]
-
 
 
 (***** Finalize *****)
