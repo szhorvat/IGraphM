@@ -964,8 +964,8 @@ MT[
 ]
 
 MT[
-  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "Arnoldi"],
-  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "PRPACK"]
+  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "Arnoldi"] == IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "PRPACK"],
+  True
 ]
 
 
@@ -2109,6 +2109,248 @@ MT[
   True
 ]
 
+MTSection["Mesh graphs"]
+
+(* Mesh operations *)
+
+MT[
+  With[{g =
+      IGMeshGraph@BoundaryDiscretizeRegion[Rectangle[], MaxCellMeasure -> Infinity]},
+    {sameGraphQ[g, Graph[{1, 2, 3, 4}, {1 <-> 2, 2 <-> 3, 3 <-> 4, 4 <-> 1}]],
+      GraphEmbedding[g], IGEdgeProp[EdgeWeight][g]}
+  ]
+  ,
+  {True,
+    {{0., 0.}, {1., 0.}, {1., 1.}, {0., 1.}},
+    {1., 1., 1., 1.}}
+]
+
+MT[
+  With[{r = DiscretizeRegion[Cuboid[], MaxCellMeasure -> 1]},
+    Table[EdgeList@IGMeshCellAdjacencyGraph[r, d1, d2], {d1, 0, 3}, {d2, 0, 3}]
+  ],
+  {{{{0, 1} \[UndirectedEdge] {0, 2}, {0, 1} \[UndirectedEdge] {0, 3}, {0, 1} \[UndirectedEdge] {0, 4}, {0,
+    1} \[UndirectedEdge] {0, 5}, {0, 1} \[UndirectedEdge] {0, 6}, {0, 1} \[UndirectedEdge] {0, 7}, {0,
+    1} \[UndirectedEdge] {0, 8}, {0, 2} \[UndirectedEdge] {0, 3}, {0, 2} \[UndirectedEdge] {0, 6}, {0,
+    2} \[UndirectedEdge] {0, 7}, {0, 3} \[UndirectedEdge] {0, 4}, {0, 3} \[UndirectedEdge] {0, 7}, {0,
+    3} \[UndirectedEdge] {0, 8}, {0, 4} \[UndirectedEdge] {0, 8}, {0, 5} \[UndirectedEdge] {0, 6}, {0,
+    5} \[UndirectedEdge] {0, 7}, {0, 5} \[UndirectedEdge] {0, 8}, {0, 6} \[UndirectedEdge] {0, 7}, {0,
+    7} \[UndirectedEdge] {0, 8}}, {{0, 1} \[UndirectedEdge] {1, 1}, {0, 1} \[UndirectedEdge] {1, 3}, {0,
+    1} \[UndirectedEdge] {1, 4}, {0, 1} \[UndirectedEdge] {1, 8}, {0, 1} \[UndirectedEdge] {1, 9}, {0,
+    1} \[UndirectedEdge] {1, 12}, {0, 1} \[UndirectedEdge] {1, 14}, {0, 2} \[UndirectedEdge] {1, 14}, {0,
+    2} \[UndirectedEdge] {1, 15}, {0, 2} \[UndirectedEdge] {1, 16}, {0, 2} \[UndirectedEdge] {1, 17}, {0,
+    3} \[UndirectedEdge] {1, 7}, {0, 3} \[UndirectedEdge] {1, 9}, {0, 3} \[UndirectedEdge] {1, 10}, {0,
+    3} \[UndirectedEdge] {1, 13}, {0, 3} \[UndirectedEdge] {1, 16}, {0, 4} \[UndirectedEdge] {1, 10}, {0,
+    4} \[UndirectedEdge] {1, 11}, {0, 4} \[UndirectedEdge] {1, 12}, {0, 5} \[UndirectedEdge] {1, 4}, {0,
+    5} \[UndirectedEdge] {1, 5}, {0, 5} \[UndirectedEdge] {1, 6}, {0, 5} \[UndirectedEdge] {1, 19}, {0,
+    6} \[UndirectedEdge] {1, 2}, {0, 6} \[UndirectedEdge] {1, 3}, {0, 6} \[UndirectedEdge] {1, 6}, {0,
+    6} \[UndirectedEdge] {1, 17}, {0, 7} \[UndirectedEdge] {1, 1}, {0, 7} \[UndirectedEdge] {1, 2}, {0,
+    7} \[UndirectedEdge] {1, 5}, {0, 7} \[UndirectedEdge] {1, 13}, {0, 7} \[UndirectedEdge] {1, 15}, {0,
+    7} \[UndirectedEdge] {1, 18}, {0, 8} \[UndirectedEdge] {1, 7}, {0, 8} \[UndirectedEdge] {1, 8}, {0,
+    8} \[UndirectedEdge] {1, 11}, {0, 8} \[UndirectedEdge] {1, 18}, {0, 8} \[UndirectedEdge] {1, 19}}, {{0,
+    1} \[UndirectedEdge] {2, 1}, {0, 1} \[UndirectedEdge] {2, 2}, {0, 1} \[UndirectedEdge] {2, 3}, {0,
+    1} \[UndirectedEdge] {2, 5}, {0, 1} \[UndirectedEdge] {2, 7}, {0, 1} \[UndirectedEdge] {2, 8}, {0,
+    1} \[UndirectedEdge] {2, 9}, {0, 1} \[UndirectedEdge] {2, 10}, {0, 1} \[UndirectedEdge] {2, 11}, {0,
+    1} \[UndirectedEdge] {2, 14}, {0, 1} \[UndirectedEdge] {2, 16}, {0, 1} \[UndirectedEdge] {2, 17}, {0,
+    2} \[UndirectedEdge] {2, 10}, {0, 2} \[UndirectedEdge] {2, 11}, {0, 2} \[UndirectedEdge] {2, 12}, {0,
+    2} \[UndirectedEdge] {2, 13}, {0, 2} \[UndirectedEdge] {2, 14}, {0, 3} \[UndirectedEdge] {2, 5}, {0,
+    3} \[UndirectedEdge] {2, 6}, {0, 3} \[UndirectedEdge] {2, 7}, {0, 3} \[UndirectedEdge] {2, 9}, {0,
+    3} \[UndirectedEdge] {2, 11}, {0, 3} \[UndirectedEdge] {2, 12}, {0, 3} \[UndirectedEdge] {2, 15}, {0,
+    4} \[UndirectedEdge] {2, 6}, {0, 4} \[UndirectedEdge] {2, 7}, {0, 4} \[UndirectedEdge] {2, 8}, {0,
+    5} \[UndirectedEdge] {2, 2}, {0, 5} \[UndirectedEdge] {2, 3}, {0, 5} \[UndirectedEdge] {2, 4}, {0,
+    5} \[UndirectedEdge] {2, 17}, {0, 5} \[UndirectedEdge] {2, 18}, {0, 6} \[UndirectedEdge] {2, 1}, {0,
+    6} \[UndirectedEdge] {2, 3}, {0, 6} \[UndirectedEdge] {2, 4}, {0, 6} \[UndirectedEdge] {2, 13}, {0,
+    6} \[UndirectedEdge] {2, 14}, {0, 7} \[UndirectedEdge] {2, 1}, {0, 7} \[UndirectedEdge] {2, 2}, {0,
+    7} \[UndirectedEdge] {2, 4}, {0, 7} \[UndirectedEdge] {2, 9}, {0, 7} \[UndirectedEdge] {2, 10}, {0,
+    7} \[UndirectedEdge] {2, 12}, {0, 7} \[UndirectedEdge] {2, 13}, {0, 7} \[UndirectedEdge] {2, 15}, {0,
+    7} \[UndirectedEdge] {2, 16}, {0, 7} \[UndirectedEdge] {2, 18}, {0, 8} \[UndirectedEdge] {2, 5}, {0,
+    8} \[UndirectedEdge] {2, 6}, {0, 8} \[UndirectedEdge] {2, 8}, {0, 8} \[UndirectedEdge] {2, 15}, {0,
+    8} \[UndirectedEdge] {2, 16}, {0, 8} \[UndirectedEdge] {2, 17}, {0, 8} \[UndirectedEdge] {2, 18}}, {{0,
+    1} \[UndirectedEdge] {3, 1}, {0, 1} \[UndirectedEdge] {3, 2}, {0, 1} \[UndirectedEdge] {3, 3}, {0,
+    1} \[UndirectedEdge] {3, 4}, {0, 1} \[UndirectedEdge] {3, 5}, {0, 1} \[UndirectedEdge] {3, 6}, {0,
+    2} \[UndirectedEdge] {3, 3}, {0, 2} \[UndirectedEdge] {3, 4}, {0, 3} \[UndirectedEdge] {3, 2}, {0,
+    3} \[UndirectedEdge] {3, 3}, {0, 3} \[UndirectedEdge] {3, 5}, {0, 4} \[UndirectedEdge] {3, 2}, {0,
+    5} \[UndirectedEdge] {3, 1}, {0, 5} \[UndirectedEdge] {3, 6}, {0, 6} \[UndirectedEdge] {3, 1}, {0,
+    6} \[UndirectedEdge] {3, 4}, {0, 7} \[UndirectedEdge] {3, 1}, {0, 7} \[UndirectedEdge] {3, 3}, {0,
+    7} \[UndirectedEdge] {3, 4}, {0, 7} \[UndirectedEdge] {3, 5}, {0, 7} \[UndirectedEdge] {3, 6}, {0,
+    8} \[UndirectedEdge] {3, 2}, {0, 8} \[UndirectedEdge] {3, 5}, {0, 8} \[UndirectedEdge] {3, 6}}}, {{{1,
+    1} \[UndirectedEdge] {0, 1}, {1, 1} \[UndirectedEdge] {0, 7}, {1, 2} \[UndirectedEdge] {0, 6}, {1,
+    2} \[UndirectedEdge] {0, 7}, {1, 3} \[UndirectedEdge] {0, 1}, {1, 3} \[UndirectedEdge] {0, 6}, {1,
+    4} \[UndirectedEdge] {0, 1}, {1, 4} \[UndirectedEdge] {0, 5}, {1, 5} \[UndirectedEdge] {0, 5}, {1,
+    5} \[UndirectedEdge] {0, 7}, {1, 6} \[UndirectedEdge] {0, 5}, {1, 6} \[UndirectedEdge] {0, 6}, {1,
+    7} \[UndirectedEdge] {0, 3}, {1, 7} \[UndirectedEdge] {0, 8}, {1, 8} \[UndirectedEdge] {0, 1}, {1,
+    8} \[UndirectedEdge] {0, 8}, {1, 9} \[UndirectedEdge] {0, 1}, {1, 9} \[UndirectedEdge] {0, 3}, {1,
+    10} \[UndirectedEdge] {0, 3}, {1, 10} \[UndirectedEdge] {0, 4}, {1, 11} \[UndirectedEdge] {0, 4}, {1,
+    11} \[UndirectedEdge] {0, 8}, {1, 12} \[UndirectedEdge] {0, 1}, {1, 12} \[UndirectedEdge] {0, 4}, {1,
+    13} \[UndirectedEdge] {0, 3}, {1, 13} \[UndirectedEdge] {0, 7}, {1, 14} \[UndirectedEdge] {0, 1}, {1,
+    14} \[UndirectedEdge] {0, 2}, {1, 15} \[UndirectedEdge] {0, 2}, {1, 15} \[UndirectedEdge] {0, 7}, {1,
+    16} \[UndirectedEdge] {0, 2}, {1, 16} \[UndirectedEdge] {0, 3}, {1, 17} \[UndirectedEdge] {0, 2}, {1,
+    17} \[UndirectedEdge] {0, 6}, {1, 18} \[UndirectedEdge] {0, 7}, {1, 18} \[UndirectedEdge] {0, 8}, {1,
+    19} \[UndirectedEdge] {0, 5}, {1, 19} \[UndirectedEdge] {0, 8}}, {{1, 1} \[UndirectedEdge] {1, 2}, {1,
+    1} \[UndirectedEdge] {1, 3}, {1, 1} \[UndirectedEdge] {1, 4}, {1, 1} \[UndirectedEdge] {1, 5}, {1,
+    1} \[UndirectedEdge] {1, 8}, {1, 1} \[UndirectedEdge] {1, 9}, {1, 1} \[UndirectedEdge] {1, 12}, {1,
+    1} \[UndirectedEdge] {1, 13}, {1, 1} \[UndirectedEdge] {1, 14}, {1, 1} \[UndirectedEdge] {1, 15}, {1,
+    1} \[UndirectedEdge] {1, 18}, {1, 2} \[UndirectedEdge] {1, 3}, {1, 2} \[UndirectedEdge] {1, 5}, {1,
+    2} \[UndirectedEdge] {1, 6}, {1, 2} \[UndirectedEdge] {1, 13}, {1, 2} \[UndirectedEdge] {1, 15}, {1,
+    2} \[UndirectedEdge] {1, 17}, {1, 2} \[UndirectedEdge] {1, 18}, {1, 3} \[UndirectedEdge] {1, 4}, {1,
+    3} \[UndirectedEdge] {1, 6}, {1, 3} \[UndirectedEdge] {1, 8}, {1, 3} \[UndirectedEdge] {1, 9}, {1,
+    3} \[UndirectedEdge] {1, 12}, {1, 3} \[UndirectedEdge] {1, 14}, {1, 3} \[UndirectedEdge] {1, 17}, {1,
+    4} \[UndirectedEdge] {1, 5}, {1, 4} \[UndirectedEdge] {1, 6}, {1, 4} \[UndirectedEdge] {1, 8}, {1,
+    4} \[UndirectedEdge] {1, 9}, {1, 4} \[UndirectedEdge] {1, 12}, {1, 4} \[UndirectedEdge] {1, 14}, {1,
+    4} \[UndirectedEdge] {1, 19}, {1, 5} \[UndirectedEdge] {1, 6}, {1, 5} \[UndirectedEdge] {1, 13}, {1,
+    5} \[UndirectedEdge] {1, 15}, {1, 5} \[UndirectedEdge] {1, 18}, {1, 5} \[UndirectedEdge] {1, 19}, {1,
+    6} \[UndirectedEdge] {1, 17}, {1, 6} \[UndirectedEdge] {1, 19}, {1, 7} \[UndirectedEdge] {1, 8}, {1,
+    7} \[UndirectedEdge] {1, 9}, {1, 7} \[UndirectedEdge] {1, 10}, {1, 7} \[UndirectedEdge] {1, 11}, {1,
+    7} \[UndirectedEdge] {1, 13}, {1, 7} \[UndirectedEdge] {1, 16}, {1, 7} \[UndirectedEdge] {1, 18}, {1,
+    7} \[UndirectedEdge] {1, 19}, {1, 8} \[UndirectedEdge] {1, 9}, {1, 8} \[UndirectedEdge] {1, 11}, {1,
+    8} \[UndirectedEdge] {1, 12}, {1, 8} \[UndirectedEdge] {1, 14}, {1, 8} \[UndirectedEdge] {1, 18}, {1,
+    8} \[UndirectedEdge] {1, 19}, {1, 9} \[UndirectedEdge] {1, 10}, {1, 9} \[UndirectedEdge] {1, 12}, {1,
+    9} \[UndirectedEdge] {1, 13}, {1, 9} \[UndirectedEdge] {1, 14}, {1, 9} \[UndirectedEdge] {1, 16}, {1,
+    10} \[UndirectedEdge] {1, 11}, {1, 10} \[UndirectedEdge] {1, 12}, {1, 10} \[UndirectedEdge] {1, 13}, {1,
+    10} \[UndirectedEdge] {1, 16}, {1, 11} \[UndirectedEdge] {1, 12}, {1, 11} \[UndirectedEdge] {1, 18}, {1,
+    11} \[UndirectedEdge] {1, 19}, {1, 12} \[UndirectedEdge] {1, 14}, {1, 13} \[UndirectedEdge] {1, 15}, {1,
+    13} \[UndirectedEdge] {1, 16}, {1, 13} \[UndirectedEdge] {1, 18}, {1, 14} \[UndirectedEdge] {1, 15}, {1,
+    14} \[UndirectedEdge] {1, 16}, {1, 14} \[UndirectedEdge] {1, 17}, {1, 15} \[UndirectedEdge] {1, 16}, {1,
+    15} \[UndirectedEdge] {1, 17}, {1, 15} \[UndirectedEdge] {1, 18}, {1, 16} \[UndirectedEdge] {1, 17}, {1,
+    18} \[UndirectedEdge] {1, 19}}, {{1, 1} \[UndirectedEdge] {2, 1}, {1, 1} \[UndirectedEdge] {2, 2}, {1,
+    1} \[UndirectedEdge] {2, 9}, {1, 1} \[UndirectedEdge] {2, 10}, {1, 1} \[UndirectedEdge] {2, 16}, {1,
+    2} \[UndirectedEdge] {2, 1}, {1, 2} \[UndirectedEdge] {2, 4}, {1, 2} \[UndirectedEdge] {2, 13}, {1,
+    3} \[UndirectedEdge] {2, 1}, {1, 3} \[UndirectedEdge] {2, 3}, {1, 3} \[UndirectedEdge] {2, 14}, {1,
+    4} \[UndirectedEdge] {2, 2}, {1, 4} \[UndirectedEdge] {2, 3}, {1, 4} \[UndirectedEdge] {2, 17}, {1,
+    5} \[UndirectedEdge] {2, 2}, {1, 5} \[UndirectedEdge] {2, 4}, {1, 5} \[UndirectedEdge] {2, 18}, {1,
+    6} \[UndirectedEdge] {2, 3}, {1, 6} \[UndirectedEdge] {2, 4}, {1, 7} \[UndirectedEdge] {2, 5}, {1,
+    7} \[UndirectedEdge] {2, 6}, {1, 7} \[UndirectedEdge] {2, 15}, {1, 8} \[UndirectedEdge] {2, 5}, {1,
+    8} \[UndirectedEdge] {2, 8}, {1, 8} \[UndirectedEdge] {2, 16}, {1, 8} \[UndirectedEdge] {2, 17}, {1,
+    9} \[UndirectedEdge] {2, 5}, {1, 9} \[UndirectedEdge] {2, 7}, {1, 9} \[UndirectedEdge] {2, 9}, {1,
+    9} \[UndirectedEdge] {2, 11}, {1, 10} \[UndirectedEdge] {2, 6}, {1, 10} \[UndirectedEdge] {2, 7}, {1,
+    11} \[UndirectedEdge] {2, 6}, {1, 11} \[UndirectedEdge] {2, 8}, {1, 12} \[UndirectedEdge] {2, 7}, {1,
+    12} \[UndirectedEdge] {2, 8}, {1, 13} \[UndirectedEdge] {2, 9}, {1, 13} \[UndirectedEdge] {2, 12}, {1,
+    13} \[UndirectedEdge] {2, 15}, {1, 14} \[UndirectedEdge] {2, 10}, {1, 14} \[UndirectedEdge] {2, 11}, {1,
+    14} \[UndirectedEdge] {2, 14}, {1, 15} \[UndirectedEdge] {2, 10}, {1, 15} \[UndirectedEdge] {2, 12}, {1,
+    15} \[UndirectedEdge] {2, 13}, {1, 16} \[UndirectedEdge] {2, 11}, {1, 16} \[UndirectedEdge] {2, 12}, {1,
+    17} \[UndirectedEdge] {2, 13}, {1, 17} \[UndirectedEdge] {2, 14}, {1, 18} \[UndirectedEdge] {2, 15}, {1,
+    18} \[UndirectedEdge] {2, 16}, {1, 18} \[UndirectedEdge] {2, 18}, {1, 19} \[UndirectedEdge] {2, 17}, {1,
+    19} \[UndirectedEdge] {2, 18}}, {{1, 1} \[UndirectedEdge] {3, 1}, {1, 1} \[UndirectedEdge] {3, 3}, {1,
+    1} \[UndirectedEdge] {3, 4}, {1, 1} \[UndirectedEdge] {3, 5}, {1, 1} \[UndirectedEdge] {3, 6}, {1,
+    2} \[UndirectedEdge] {3, 1}, {1, 2} \[UndirectedEdge] {3, 4}, {1, 3} \[UndirectedEdge] {3, 1}, {1,
+    3} \[UndirectedEdge] {3, 4}, {1, 4} \[UndirectedEdge] {3, 1}, {1, 4} \[UndirectedEdge] {3, 6}, {1,
+    5} \[UndirectedEdge] {3, 1}, {1, 5} \[UndirectedEdge] {3, 6}, {1, 6} \[UndirectedEdge] {3, 1}, {1,
+    7} \[UndirectedEdge] {3, 2}, {1, 7} \[UndirectedEdge] {3, 5}, {1, 8} \[UndirectedEdge] {3, 2}, {1,
+    8} \[UndirectedEdge] {3, 5}, {1, 8} \[UndirectedEdge] {3, 6}, {1, 9} \[UndirectedEdge] {3, 2}, {1,
+    9} \[UndirectedEdge] {3, 3}, {1, 9} \[UndirectedEdge] {3, 5}, {1, 10} \[UndirectedEdge] {3, 2}, {1,
+    11} \[UndirectedEdge] {3, 2}, {1, 12} \[UndirectedEdge] {3, 2}, {1, 13} \[UndirectedEdge] {3, 3}, {1,
+    13} \[UndirectedEdge] {3, 5}, {1, 14} \[UndirectedEdge] {3, 3}, {1, 14} \[UndirectedEdge] {3, 4}, {1,
+    15} \[UndirectedEdge] {3, 3}, {1, 15} \[UndirectedEdge] {3, 4}, {1, 16} \[UndirectedEdge] {3, 3}, {1,
+    17} \[UndirectedEdge] {3, 4}, {1, 18} \[UndirectedEdge] {3, 5}, {1, 18} \[UndirectedEdge] {3, 6}, {1,
+    19} \[UndirectedEdge] {3, 6}}}, {{{2, 1} \[UndirectedEdge] {0, 1}, {2, 1} \[UndirectedEdge] {0, 6}, {2,
+    1} \[UndirectedEdge] {0, 7}, {2, 2} \[UndirectedEdge] {0, 1}, {2, 2} \[UndirectedEdge] {0, 5}, {2,
+    2} \[UndirectedEdge] {0, 7}, {2, 3} \[UndirectedEdge] {0, 1}, {2, 3} \[UndirectedEdge] {0, 5}, {2,
+    3} \[UndirectedEdge] {0, 6}, {2, 4} \[UndirectedEdge] {0, 5}, {2, 4} \[UndirectedEdge] {0, 6}, {2,
+    4} \[UndirectedEdge] {0, 7}, {2, 5} \[UndirectedEdge] {0, 1}, {2, 5} \[UndirectedEdge] {0, 3}, {2,
+    5} \[UndirectedEdge] {0, 8}, {2, 6} \[UndirectedEdge] {0, 3}, {2, 6} \[UndirectedEdge] {0, 4}, {2,
+    6} \[UndirectedEdge] {0, 8}, {2, 7} \[UndirectedEdge] {0, 1}, {2, 7} \[UndirectedEdge] {0, 3}, {2,
+    7} \[UndirectedEdge] {0, 4}, {2, 8} \[UndirectedEdge] {0, 1}, {2, 8} \[UndirectedEdge] {0, 4}, {2,
+    8} \[UndirectedEdge] {0, 8}, {2, 9} \[UndirectedEdge] {0, 1}, {2, 9} \[UndirectedEdge] {0, 3}, {2,
+    9} \[UndirectedEdge] {0, 7}, {2, 10} \[UndirectedEdge] {0, 1}, {2, 10} \[UndirectedEdge] {0, 2}, {2,
+    10} \[UndirectedEdge] {0, 7}, {2, 11} \[UndirectedEdge] {0, 1}, {2, 11} \[UndirectedEdge] {0, 2}, {2,
+    11} \[UndirectedEdge] {0, 3}, {2, 12} \[UndirectedEdge] {0, 2}, {2, 12} \[UndirectedEdge] {0, 3}, {2,
+    12} \[UndirectedEdge] {0, 7}, {2, 13} \[UndirectedEdge] {0, 2}, {2, 13} \[UndirectedEdge] {0, 6}, {2,
+    13} \[UndirectedEdge] {0, 7}, {2, 14} \[UndirectedEdge] {0, 1}, {2, 14} \[UndirectedEdge] {0, 2}, {2,
+    14} \[UndirectedEdge] {0, 6}, {2, 15} \[UndirectedEdge] {0, 3}, {2, 15} \[UndirectedEdge] {0, 7}, {2,
+    15} \[UndirectedEdge] {0, 8}, {2, 16} \[UndirectedEdge] {0, 1}, {2, 16} \[UndirectedEdge] {0, 7}, {2,
+    16} \[UndirectedEdge] {0, 8}, {2, 17} \[UndirectedEdge] {0, 1}, {2, 17} \[UndirectedEdge] {0, 5}, {2,
+    17} \[UndirectedEdge] {0, 8}, {2, 18} \[UndirectedEdge] {0, 5}, {2, 18} \[UndirectedEdge] {0, 7}, {2,
+    18} \[UndirectedEdge] {0, 8}}, {{2, 1} \[UndirectedEdge] {1, 1}, {2, 1} \[UndirectedEdge] {1, 2}, {2,
+    1} \[UndirectedEdge] {1, 3}, {2, 2} \[UndirectedEdge] {1, 1}, {2, 2} \[UndirectedEdge] {1, 4}, {2,
+    2} \[UndirectedEdge] {1, 5}, {2, 3} \[UndirectedEdge] {1, 3}, {2, 3} \[UndirectedEdge] {1, 4}, {2,
+    3} \[UndirectedEdge] {1, 6}, {2, 4} \[UndirectedEdge] {1, 2}, {2, 4} \[UndirectedEdge] {1, 5}, {2,
+    4} \[UndirectedEdge] {1, 6}, {2, 5} \[UndirectedEdge] {1, 7}, {2, 5} \[UndirectedEdge] {1, 8}, {2,
+    5} \[UndirectedEdge] {1, 9}, {2, 6} \[UndirectedEdge] {1, 7}, {2, 6} \[UndirectedEdge] {1, 10}, {2,
+    6} \[UndirectedEdge] {1, 11}, {2, 7} \[UndirectedEdge] {1, 9}, {2, 7} \[UndirectedEdge] {1, 10}, {2,
+    7} \[UndirectedEdge] {1, 12}, {2, 8} \[UndirectedEdge] {1, 8}, {2, 8} \[UndirectedEdge] {1, 11}, {2,
+    8} \[UndirectedEdge] {1, 12}, {2, 9} \[UndirectedEdge] {1, 1}, {2, 9} \[UndirectedEdge] {1, 9}, {2,
+    9} \[UndirectedEdge] {1, 13}, {2, 10} \[UndirectedEdge] {1, 1}, {2, 10} \[UndirectedEdge] {1, 14}, {2,
+    10} \[UndirectedEdge] {1, 15}, {2, 11} \[UndirectedEdge] {1, 9}, {2, 11} \[UndirectedEdge] {1, 14}, {2,
+    11} \[UndirectedEdge] {1, 16}, {2, 12} \[UndirectedEdge] {1, 13}, {2, 12} \[UndirectedEdge] {1, 15}, {2,
+    12} \[UndirectedEdge] {1, 16}, {2, 13} \[UndirectedEdge] {1, 2}, {2, 13} \[UndirectedEdge] {1, 15}, {2,
+    13} \[UndirectedEdge] {1, 17}, {2, 14} \[UndirectedEdge] {1, 3}, {2, 14} \[UndirectedEdge] {1, 14}, {2,
+    14} \[UndirectedEdge] {1, 17}, {2, 15} \[UndirectedEdge] {1, 7}, {2, 15} \[UndirectedEdge] {1, 13}, {2,
+    15} \[UndirectedEdge] {1, 18}, {2, 16} \[UndirectedEdge] {1, 1}, {2, 16} \[UndirectedEdge] {1, 8}, {2,
+    16} \[UndirectedEdge] {1, 18}, {2, 17} \[UndirectedEdge] {1, 4}, {2, 17} \[UndirectedEdge] {1, 8}, {2,
+    17} \[UndirectedEdge] {1, 19}, {2, 18} \[UndirectedEdge] {1, 5}, {2, 18} \[UndirectedEdge] {1, 18}, {2,
+    18} \[UndirectedEdge] {1, 19}}, {{2, 1} \[UndirectedEdge] {2, 2}, {2, 1} \[UndirectedEdge] {2, 3}, {2,
+    1} \[UndirectedEdge] {2, 4}, {2, 1} \[UndirectedEdge] {2, 9}, {2, 1} \[UndirectedEdge] {2, 10}, {2,
+    1} \[UndirectedEdge] {2, 13}, {2, 1} \[UndirectedEdge] {2, 14}, {2, 1} \[UndirectedEdge] {2, 16}, {2,
+    2} \[UndirectedEdge] {2, 3}, {2, 2} \[UndirectedEdge] {2, 4}, {2, 2} \[UndirectedEdge] {2, 9}, {2,
+    2} \[UndirectedEdge] {2, 10}, {2, 2} \[UndirectedEdge] {2, 16}, {2, 2} \[UndirectedEdge] {2, 17}, {2,
+    2} \[UndirectedEdge] {2, 18}, {2, 3} \[UndirectedEdge] {2, 4}, {2, 3} \[UndirectedEdge] {2, 14}, {2,
+    3} \[UndirectedEdge] {2, 17}, {2, 4} \[UndirectedEdge] {2, 13}, {2, 4} \[UndirectedEdge] {2, 18}, {2,
+    5} \[UndirectedEdge] {2, 6}, {2, 5} \[UndirectedEdge] {2, 7}, {2, 5} \[UndirectedEdge] {2, 8}, {2,
+    5} \[UndirectedEdge] {2, 9}, {2, 5} \[UndirectedEdge] {2, 11}, {2, 5} \[UndirectedEdge] {2, 15}, {2,
+    5} \[UndirectedEdge] {2, 16}, {2, 5} \[UndirectedEdge] {2, 17}, {2, 6} \[UndirectedEdge] {2, 7}, {2,
+    6} \[UndirectedEdge] {2, 8}, {2, 6} \[UndirectedEdge] {2, 15}, {2, 7} \[UndirectedEdge] {2, 8}, {2,
+    7} \[UndirectedEdge] {2, 9}, {2, 7} \[UndirectedEdge] {2, 11}, {2, 8} \[UndirectedEdge] {2, 16}, {2,
+    8} \[UndirectedEdge] {2, 17}, {2, 9} \[UndirectedEdge] {2, 10}, {2, 9} \[UndirectedEdge] {2, 11}, {2,
+    9} \[UndirectedEdge] {2, 12}, {2, 9} \[UndirectedEdge] {2, 15}, {2, 9} \[UndirectedEdge] {2, 16}, {2,
+    10} \[UndirectedEdge] {2, 11}, {2, 10} \[UndirectedEdge] {2, 12}, {2, 10} \[UndirectedEdge] {2, 13}, {2,
+    10} \[UndirectedEdge] {2, 14}, {2, 10} \[UndirectedEdge] {2, 16}, {2, 11} \[UndirectedEdge] {2, 12}, {2,
+    11} \[UndirectedEdge] {2, 14}, {2, 12} \[UndirectedEdge] {2, 13}, {2, 12} \[UndirectedEdge] {2, 15}, {2,
+    13} \[UndirectedEdge] {2, 14}, {2, 15} \[UndirectedEdge] {2, 16}, {2, 15} \[UndirectedEdge] {2, 18}, {2,
+    16} \[UndirectedEdge] {2, 17}, {2, 16} \[UndirectedEdge] {2, 18}, {2, 17} \[UndirectedEdge] {2, 18}}, {{2,
+    1} \[UndirectedEdge] {3, 1}, {2, 1} \[UndirectedEdge] {3, 4}, {2, 2} \[UndirectedEdge] {3, 1}, {2,
+    2} \[UndirectedEdge] {3, 6}, {2, 3} \[UndirectedEdge] {3, 1}, {2, 4} \[UndirectedEdge] {3, 1}, {2,
+    5} \[UndirectedEdge] {3, 2}, {2, 5} \[UndirectedEdge] {3, 5}, {2, 6} \[UndirectedEdge] {3, 2}, {2,
+    7} \[UndirectedEdge] {3, 2}, {2, 8} \[UndirectedEdge] {3, 2}, {2, 9} \[UndirectedEdge] {3, 3}, {2,
+    9} \[UndirectedEdge] {3, 5}, {2, 10} \[UndirectedEdge] {3, 3}, {2, 10} \[UndirectedEdge] {3, 4}, {2,
+    11} \[UndirectedEdge] {3, 3}, {2, 12} \[UndirectedEdge] {3, 3}, {2, 13} \[UndirectedEdge] {3, 4}, {2,
+    14} \[UndirectedEdge] {3, 4}, {2, 15} \[UndirectedEdge] {3, 5}, {2, 16} \[UndirectedEdge] {3, 5}, {2,
+    16} \[UndirectedEdge] {3, 6}, {2, 17} \[UndirectedEdge] {3, 6}, {2, 18} \[UndirectedEdge] {3, 6}}}, {{{3,
+    1} \[UndirectedEdge] {0, 1}, {3, 1} \[UndirectedEdge] {0, 5}, {3, 1} \[UndirectedEdge] {0, 6}, {3,
+    1} \[UndirectedEdge] {0, 7}, {3, 2} \[UndirectedEdge] {0, 1}, {3, 2} \[UndirectedEdge] {0, 3}, {3,
+    2} \[UndirectedEdge] {0, 4}, {3, 2} \[UndirectedEdge] {0, 8}, {3, 3} \[UndirectedEdge] {0, 1}, {3,
+    3} \[UndirectedEdge] {0, 2}, {3, 3} \[UndirectedEdge] {0, 3}, {3, 3} \[UndirectedEdge] {0, 7}, {3,
+    4} \[UndirectedEdge] {0, 1}, {3, 4} \[UndirectedEdge] {0, 2}, {3, 4} \[UndirectedEdge] {0, 6}, {3,
+    4} \[UndirectedEdge] {0, 7}, {3, 5} \[UndirectedEdge] {0, 1}, {3, 5} \[UndirectedEdge] {0, 3}, {3,
+    5} \[UndirectedEdge] {0, 7}, {3, 5} \[UndirectedEdge] {0, 8}, {3, 6} \[UndirectedEdge] {0, 1}, {3,
+    6} \[UndirectedEdge] {0, 5}, {3, 6} \[UndirectedEdge] {0, 7}, {3, 6} \[UndirectedEdge] {0, 8}}, {{3,
+    1} \[UndirectedEdge] {1, 1}, {3, 1} \[UndirectedEdge] {1, 2}, {3, 1} \[UndirectedEdge] {1, 3}, {3,
+    1} \[UndirectedEdge] {1, 4}, {3, 1} \[UndirectedEdge] {1, 5}, {3, 1} \[UndirectedEdge] {1, 6}, {3,
+    2} \[UndirectedEdge] {1, 7}, {3, 2} \[UndirectedEdge] {1, 8}, {3, 2} \[UndirectedEdge] {1, 9}, {3,
+    2} \[UndirectedEdge] {1, 10}, {3, 2} \[UndirectedEdge] {1, 11}, {3, 2} \[UndirectedEdge] {1, 12}, {3,
+    3} \[UndirectedEdge] {1, 1}, {3, 3} \[UndirectedEdge] {1, 9}, {3, 3} \[UndirectedEdge] {1, 13}, {3,
+    3} \[UndirectedEdge] {1, 14}, {3, 3} \[UndirectedEdge] {1, 15}, {3, 3} \[UndirectedEdge] {1, 16}, {3,
+    4} \[UndirectedEdge] {1, 1}, {3, 4} \[UndirectedEdge] {1, 2}, {3, 4} \[UndirectedEdge] {1, 3}, {3,
+    4} \[UndirectedEdge] {1, 14}, {3, 4} \[UndirectedEdge] {1, 15}, {3, 4} \[UndirectedEdge] {1, 17}, {3,
+    5} \[UndirectedEdge] {1, 1}, {3, 5} \[UndirectedEdge] {1, 7}, {3, 5} \[UndirectedEdge] {1, 8}, {3,
+    5} \[UndirectedEdge] {1, 9}, {3, 5} \[UndirectedEdge] {1, 13}, {3, 5} \[UndirectedEdge] {1, 18}, {3,
+    6} \[UndirectedEdge] {1, 1}, {3, 6} \[UndirectedEdge] {1, 4}, {3, 6} \[UndirectedEdge] {1, 5}, {3,
+    6} \[UndirectedEdge] {1, 8}, {3, 6} \[UndirectedEdge] {1, 18}, {3, 6} \[UndirectedEdge] {1, 19}}, {{3,
+    1} \[UndirectedEdge] {2, 1}, {3, 1} \[UndirectedEdge] {2, 2}, {3, 1} \[UndirectedEdge] {2, 3}, {3,
+    1} \[UndirectedEdge] {2, 4}, {3, 2} \[UndirectedEdge] {2, 5}, {3, 2} \[UndirectedEdge] {2, 6}, {3,
+    2} \[UndirectedEdge] {2, 7}, {3, 2} \[UndirectedEdge] {2, 8}, {3, 3} \[UndirectedEdge] {2, 9}, {3,
+    3} \[UndirectedEdge] {2, 10}, {3, 3} \[UndirectedEdge] {2, 11}, {3, 3} \[UndirectedEdge] {2, 12}, {3,
+    4} \[UndirectedEdge] {2, 1}, {3, 4} \[UndirectedEdge] {2, 10}, {3, 4} \[UndirectedEdge] {2, 13}, {3,
+    4} \[UndirectedEdge] {2, 14}, {3, 5} \[UndirectedEdge] {2, 5}, {3, 5} \[UndirectedEdge] {2, 9}, {3,
+    5} \[UndirectedEdge] {2, 15}, {3, 5} \[UndirectedEdge] {2, 16}, {3, 6} \[UndirectedEdge] {2, 2}, {3,
+    6} \[UndirectedEdge] {2, 16}, {3, 6} \[UndirectedEdge] {2, 17}, {3, 6} \[UndirectedEdge] {2, 18}}, {{3,
+    1} \[UndirectedEdge] {3, 4}, {3, 1} \[UndirectedEdge] {3, 6}, {3, 2} \[UndirectedEdge] {3, 5}, {3,
+    3} \[UndirectedEdge] {3, 4}, {3, 3} \[UndirectedEdge] {3, 5}, {3, 5} \[UndirectedEdge] {3, 6}}}}
+]
+
+
+MTSection["Graph colouring"]
+
+(* Vertex colouring *)
+
+With[{g = RandomGraph[{1000,3000}]},
+  MT[
+    With[{col = IGVertexColoring[g]},
+      And @@ Unequal @@@ Map[col[[#]]&, EdgeList[g], {2}]
+    ],
+    True
+  ]
+]
+
 
 MTSection["Utilities package"]
 
@@ -2356,4 +2598,27 @@ MT[
 
 (* Property map operators *)
 
+MT[
+  IGEdgeProp[EdgeWeight][Graph[{1<->2}, EdgeWeight -> {12}]],
+  {12}
+]
 
+MT[
+  IGEdgeProp["Foo"][ Graph[{Property[1<->2, "Foo" -> 37]}] ],
+  {37}
+]
+
+MT[
+  IGEdgeProp["Foo"][ Graph[{1<->2}] ],
+  {Missing["Nonexistent"]}
+]
+
+MT[
+  IGEdgeProp[EdgeWeight][IGEmptyGraph[0]],
+  {}
+]
+
+MT[
+  IGEdgeProp[EdgeWeight][IGEmptyGraph[1]],
+  {}
+]
