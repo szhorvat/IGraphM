@@ -400,6 +400,7 @@ IGCommunitiesInfoMAP::usage =
     "IGCommunitiesInfoMAP[graph, trials]";
 IGCommunitiesSpinGlass::usage = "IGCommunitiesSpinGlass[graph] finds communities using a spin glass model and simulated annealing.";
 IGCommunitiesLeadingEigenvector::usage = "IGCommunitiesLeadingEigenvector[graph] finds communities based on the leading eigenvector of the modularity matrix.";
+IGCommunitiesFluid::usage = "IGCommunitiesFluid[graph, clusterCount]";
 
 IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 
@@ -774,6 +775,7 @@ template = LTemplate["IGraphM",
         LFun["communityInfoMAP", LinkObject],
         LFun["communitySpinGlass", LinkObject],
         LFun["communityLeadingEigenvector", LinkObject],
+        LFun["communityFluid", LinkObject],
 
         (* Maximum flow *)
 
@@ -3247,14 +3249,24 @@ IGCompareCommunities[c1_?igClusterDataQ, c2_?igClusterDataQ, method_String] := I
 
 
 (* Note: edge ordering matters, use igMake instead of igMakeFastWeighted. *)
-SyntaxInformation[IGCommunitiesEdgeBetweenness] = {"ArgumentsPattern" -> {_}};
-IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
-    catch@Module[{ig = igMake[graph], result, merges, betweenness, bridges, modularity, membership, removed},
-      {result, merges, betweenness, bridges, modularity, membership} = check@ig@"communityEdgeBetweenness"[];
+Options[IGCommunitiesEdgeBetweenness] = { "ClusterCount" -> Automatic };
+SyntaxInformation[IGCommunitiesEdgeBetweenness] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGCommunitiesEdgeBetweenness[graph_?igGraphQ, OptionsPattern[]] :=
+    catch@Module[{ig = igMake[graph], result, merges, betweenness, bridges, modularity, membership, removed, clusterCount},
+      clusterCount = OptionValue["ClusterCount"];
+      If[clusterCount === Automatic,
+        clusterCount = 0
+        ,
+        If[Not@Internal`PositiveMachineIntegerQ[clusterCount],
+          Message[IGCommunitiesEdgeBetweenness::invopt, clusterCount, "ClusterCount", Automatic];
+          clusterCount = 0;
+        ]
+      ];
+      {result, merges, betweenness, bridges, membership, modularity} = check@ig@"communityEdgeBetweenness"[clusterCount];
       removed = Part[EdgeList[graph], igIndexVec[result]];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
-        "Modularity" -> modularity,
+        If[modularity === None, Unevaluated@Sequence[], "Modularity" -> modularity],
         "Merges" -> igIndexVec[merges],
         "RemovedEdges" -> removed,
         "EdgeBetweenness" -> betweenness,
@@ -3264,10 +3276,20 @@ IGCommunitiesEdgeBetweenness[graph_?igGraphQ] :=
     ]
 
 
-SyntaxInformation[IGCommunitiesWalktrap] = {"ArgumentsPattern" -> {_, _.}};
-IGCommunitiesWalktrap[graph_?igGraphQ, steps : _?Internal`PositiveMachineIntegerQ : 4] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], merges, modularity, membership},
-      {merges, modularity, membership} = check@ig@"communityWalktrap"[steps];
+Options[IGCommunitiesWalktrap] = { "ClusterCount" -> Automatic };
+SyntaxInformation[IGCommunitiesWalktrap] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+IGCommunitiesWalktrap[graph_?igGraphQ, steps : _?Internal`PositiveMachineIntegerQ : 4, opt : OptionsPattern[]] :=
+    catch@Module[{ig = igMakeFastWeighted[graph], merges, modularity, membership, clusterCount},
+      clusterCount = OptionValue["ClusterCount"];
+      If[clusterCount === Automatic,
+        clusterCount = 0
+        ,
+        If[Not@Internal`PositiveMachineIntegerQ[clusterCount],
+          Message[IGCommunitiesWalktrap::invopt, clusterCount, "ClusterCount", Automatic];
+          clusterCount = 0;
+        ]
+      ];
+      {merges, membership, modularity} = check@ig@"communityWalktrap"[steps, clusterCount];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
         "Modularity" -> modularity,
@@ -3356,12 +3378,12 @@ IGCommunitiesLabelPropagation[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 SyntaxInformation[IGCommunitiesInfoMAP] = {"ArgumentsPattern" -> {_, _.}};
 IGCommunitiesInfoMAP[graph_?igGraphQ, trials_ : 10] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], membership, codelen, vertexWeights},
+    catch@Module[{ig = igMakeFastWeighted[graph], membership, codeLength, vertexWeights},
       vertexWeights = If[vertexWeightedQ[graph], PropertyValue[graph, VertexWeight], {}];
-      {membership, codelen} = check@ig@"communityInfoMAP"[trials, vertexWeights];
+      {membership, codeLength} = check@ig@"communityInfoMAP"[trials, vertexWeights];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
-        "CodeLength" -> codelen,
+        "CodeLength" -> codeLength,
         "Algorithm" -> "InfoMAP"
       |>
     ]
@@ -3417,21 +3439,42 @@ IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 
-Options[IGCommunitiesLeadingEigenvector] = { "Steps" -> Automatic };
+Options[IGCommunitiesLeadingEigenvector] = { "Steps" -> Automatic, "ClusterCount" -> Automatic };
 SyntaxInformation[IGCommunitiesLeadingEigenvector] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, merges, eval, evec},
-      {membership, merges, modularity, eval, evec} = check@ig@"communityLeadingEigenvector"[
-        Replace[OptionValue["Steps"], Automatic :> VertexCount[graph]]
+    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, merges, eval, evec, clusterCount},
+      clusterCount = OptionValue["ClusterCount"];
+      If[clusterCount === Automatic,
+        clusterCount = 0
+        ,
+        If[Not@Internal`PositiveMachineIntegerQ[clusterCount],
+          Message[IGCommunitiesLeadingEigenvector::invopt, clusterCount, "ClusterCount", Automatic];
+          clusterCount = 0;
+        ]
+      ];
+      {membership, merges, eval, evec, modularity} = check@ig@"communityLeadingEigenvector"[
+        Replace[OptionValue["Steps"], Automatic :> VertexCount[graph]],
+        clusterCount
       ];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
+        "Merges" -> igIndexVec[merges], (* TODO handle partial dendrogram in IGClusterData methods *)
         "Modularity" -> {modularity},
-        "Merges" -> igIndexVec[merges], (* TODO *)
         "Eigenvalues" -> eval,
         "Eigenvectors" -> evec,
         "Algorithm" -> "LeadingEigenvector"
+      |>
+    ]
+
+
+IGCommunitiesFluid[graph_?igGraphQ, clusterCount_] :=
+    catch@Module[{ig = igMakeFast[graph], membership, modularity},
+      {membership, modularity} = check@ig@"communityFluid"[clusterCount];
+      igClusterData[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Modularity" -> {modularity},
+        "Algorithm" -> "FluidCommunities"
       |>
     ]
 

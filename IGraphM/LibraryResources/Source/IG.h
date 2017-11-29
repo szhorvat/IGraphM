@@ -79,6 +79,14 @@ class IG {
         return t;
     }
 
+    void computeMembership(const igraph_integer_t n_communities, const igMatrix &merges, igVector &membership) const {
+        igraph_integer_t vc = igraph_vcount(&graph);
+        igCheck(igraph_community_to_membership(
+                    &merges.mat, vc, vc - n_communities /* steps */,
+                    &membership.vec, NULL /* csize */
+                    ));
+    }
+
 public:
     IG() : weighted{false} { empty(); }
 
@@ -1665,33 +1673,59 @@ public:
 
     void communityEdgeBetweenness(MLINK link) const {
         mlStream ml{link, "communityEdgeBetweenness"};
-        ml >> mlCheckArgs(0);
 
-        igVector result, betweenness, bridges, modularity, membership;
+        igraph_integer_t n_communities;
+        ml >> mlCheckArgs(1) >> n_communities;
+
+        igVector result, betweenness, bridges, membership, modularity;
         igMatrix merges;
 
-        igCheck(igraph_community_edge_betweenness(
-                    &graph, &result.vec, &betweenness.vec, &merges.mat, &bridges.vec, &modularity.vec, &membership.vec, true, passWeights()
-                    ));
+        if (n_communities == 0) { // automatic communities based on max modularity
+            igCheck(igraph_community_edge_betweenness(
+                        &graph, &result.vec, &betweenness.vec, &merges.mat, &bridges.vec,
+                        &modularity.vec, &membership.vec,
+                        true /* directed */, passWeights()
+                        ));
+        } else { // communities based on cluster count
+            igCheck(igraph_community_edge_betweenness(
+                        &graph, &result.vec, &betweenness.vec, &merges.mat, &bridges.vec,
+                        NULL /* modularity */, NULL /* membership */,
+                        true /* directed */, passWeights()
+                        ));
+
+            computeMembership(n_communities, merges, membership);
+        }
 
         ml.newPacket();
         ml << mlHead("List", 6)
-           << result << merges << betweenness << bridges << modularity << membership;
+           << result << merges << betweenness << bridges << membership;
+
+        if (n_communities == 0)
+            ml << modularity;
+        else
+            ml << mlSymbol("None");
     }
 
     void communityWalktrap(MLINK link) const {
         mlStream ml{link, "communityWalktrap"};
-        igraph_integer_t steps;
-        ml >> mlCheckArgs(1) >> steps;
+        igraph_integer_t steps, n_communities;
+        ml >> mlCheckArgs(2) >> steps >> n_communities;
 
         igVector modularity, membership;
         igMatrix merges;
 
-        igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, &modularity.vec, &membership.vec));
+        if (n_communities == 0) {
+            igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, &modularity.vec, &membership.vec));
+        } else {
+            igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, NULL, NULL));
+            computeMembership(n_communities, merges, membership);
+            modularity.resize(1);
+            igraph_modularity(&graph, &membership.vec, modularity.begin() /* ptr to first vec elem */, passWeights());
+        }
 
         ml.newPacket();
         ml << mlHead("List", 3)
-           << merges << modularity << membership;
+           << merges << membership << modularity;
     }
 
     void communityFastGreedy(MLINK link) const {
@@ -1820,8 +1854,8 @@ public:
     void communityLeadingEigenvector(MLINK link) const {
         mlStream ml{link, "communityLeadingEigenvector"};
 
-        igraph_integer_t steps;
-        ml >> mlCheckArgs(1) >> steps;
+        igraph_integer_t steps, n_communities;
+        ml >> mlCheckArgs(2) >> steps >> n_communities;
 
         igraph_arpack_options_t options;
         igraph_arpack_options_init(&options);
@@ -1829,19 +1863,47 @@ public:
         igVector membership, eigenvalues;
         igMatrix merges;
         igList eigenvectors;
-        double modularity;
+        igraph_real_t modularity;
 
-        igCheck(igraph_community_leading_eigenvector(
-                    &graph, passWeights(),
-                    &merges.mat, &membership.vec,
-                    steps, &options, &modularity, false,
-                    &eigenvalues.vec, &eigenvectors.list, // eigenvalues, eigenvectors
-                    NULL, // history
-                    NULL, NULL // callback
-                    ));
+        if (n_communities == 0) {
+            igCheck(igraph_community_leading_eigenvector(
+                        &graph, passWeights(),
+                        &merges.mat, &membership.vec,
+                        steps, &options, &modularity, false,
+                        &eigenvalues.vec, &eigenvectors.list, // eigenvalues, eigenvectors
+                        NULL, // history
+                        NULL, NULL // callback
+                        ));
+        } else {
+            igCheck(igraph_community_leading_eigenvector(
+                        &graph, passWeights(),
+                        &merges.mat, &membership.vec /* membership */,
+                        steps, &options, NULL /* modularity */, false,
+                        &eigenvalues.vec, &eigenvectors.list, // eigenvalues, eigenvectors
+                        NULL, // history
+                        NULL, NULL // callback
+                        ));
+
+            igraph_integer_t cc = 1 + static_cast<igraph_integer_t>( *std::max_element(membership.begin(), membership.end()) );
+            igCheck(igraph_le_community_to_membership(&merges.mat, cc - n_communities, &membership.vec, NULL));
+            igraph_modularity(&graph, &membership.vec, &modularity, passWeights());
+        }
 
         ml.newPacket();
-        ml << mlHead("List", 5) << membership << merges << modularity << eigenvalues << eigenvectors;
+        ml << mlHead("List", 5) << membership << merges << eigenvalues << eigenvectors << modularity;
+    }
+
+    void communityFluid(MLINK link) {
+        mlStream ml{link, "communityFluid"};
+        igraph_integer_t nc;
+        ml >> mlCheckArgs(1) >> nc;
+
+        igVector membership;
+        igraph_real_t modularity;
+        igCheck(igraph_community_fluid_communities(&graph, nc, &membership.vec, &modularity));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << membership << modularity;
     }
 
     // Unfold tree
