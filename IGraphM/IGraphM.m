@@ -108,7 +108,7 @@ IGGraphicalQ::usage =
     "IGGraphicalQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any simple directed graph.";
 
 IGBipartiteQ::usage =
-    "IGBipartiteQ[graph] tests if graph is bipartite." <>
+    "IGBipartiteQ[graph] tests if graph is bipartite.\n" <>
     "IGBipartiteQ[graph, {vertices1, vertices2}] verifies that no edges are running between the two given vertex subsets.";
 
 IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic.";
