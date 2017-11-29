@@ -432,6 +432,14 @@ IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree o
 IGVertexColoring::usage = "IGVertexColoring[graph] returns a vertex colouring of graph.";
 IGEdgeColoring::usage = "IGEdgeColoring[graph] returns an edge colouring of graph.";
 
+IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a graph.";
+IGMeshCellAdjacencyMatrix::usage =
+    "IGMeshCellAdjacencyMatrix[mesh, d] returns the adjacency matrix of d-dimensional cells in mesh.\n" <>
+    "IGMeshCellAdjacencyMatrix[mesh, d1, d2] returns the incidence matrix of d1- and d2-dimensional cells in mesh.";
+IGMeshCellAdjacencyGraph::usage =
+    "IGMeshCellAdjacencyGraph[mesh, d] returns the connectivity structure of d-dimensional cells in mesh as a graph.\n" <>
+    "IGMeshCellAdjacencyGraph[mesh, d1, d2] returns the connectivity structure of d1 and d2 dimensional cells in mesh as a bipartite graph.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -3660,6 +3668,118 @@ IGVertexColoring[graph_?igGraphQ] :=
     ]
 
 IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph[graph]
+
+
+(***** Converting meshes to graphs *****)
+
+meshQ[_?MeshRegionQ] := True
+meshQ[_?BoundaryMeshRegionQ] := True
+meshQ[_] := False
+
+IGMeshGraph::noprop = "The edge property `1` is not present in the mesh.";
+
+Options[IGMeshGraph] = { EdgeWeight -> MeshCellMeasure };
+SyntaxInformation[IGMeshGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGMeshGraph[mesh_?meshQ, opt : OptionsPattern[{IGMeshGraph, Graph}]] :=
+    Module[{edgeWeightRule, ew = OptionValue[EdgeWeight], pv},
+      edgeWeightRule = Switch[ew,
+        None,
+        Unevaluated@Sequence[]
+        ,
+        _String | _Symbol,
+        pv = PropertyValue[{mesh, 1}, ew];
+        If[pv === $Failed,
+          Message[IGMeshGraph::noprop, ew];
+          Return[$Failed]
+        ];
+        EdgeWeight -> pv
+        ,
+        _List,
+        EdgeWeight -> ew
+        ,
+        _,
+        Message[IGMeshGraph::invopt, ew, EdgeWeight, OptionValue[IGMeshGraph, EdgeWeight]];
+        EdgeWeight -> PropertyValue[{mesh, 1}, MeshCellMeasure]
+      ];
+      Graph[Developer`ToPackedArray@MeshCells[mesh, 0][[All, 1]],
+        Developer`ToPackedArray@MeshCells[mesh, 1][[All, 1]],
+        edgeWeightRule,
+        Sequence @@ FilterRules[FilterRules[{opt}, Options[Graph]], Except@Options[IGMeshGraph]],
+        VertexCoordinates -> MeshCoordinates[mesh]
+      ]
+    ]
+
+
+
+(* Thanks to Henrik Schumacher for the following set of cell adjacency functions!
+   https://mathematica.stackexchange.com/a/160457/12 *)
+
+igMeshCellAdjacencyMatrix[mesh_, 0, 0] :=
+    With[{edges = Developer`ToPackedArray[MeshCells[mesh, 1][[All, 1]]]},
+      SparseArray[
+        Rule[
+          Join[edges, Transpose[Transpose[edges][[{2, 1}]]]],
+          ConstantArray[1, 2 Length[edges]]
+        ],
+        {MeshCellCount[mesh, 0], MeshCellCount[mesh, 0]}
+      ]
+    ]
+
+igMeshCellAdjacencyMatrix[mesh_, d_, 0] :=
+    Module[{pts, cells, A, lens, nn},
+      pts = MeshCoordinates[mesh];
+      (* The Check[] below is meant to catch errors such as those resulting from
+         trying to get 3D mesh cells of a BoundaryDiscretizeRegion[Ball[]]. *)
+      cells = Developer`ToPackedArray[ Check[MeshCells[mesh, d], throw[$Failed]][[All, 1]] ];
+      lens = Length /@ cells;
+      nn = Total[lens];
+      A = SparseArray @@ {Automatic, {Length[cells], Length[pts]},
+        0, {1, {Developer`ToPackedArray[Join[{0}, Accumulate[lens]]],
+          ArrayReshape[Flatten[Sort /@ cells], {nn, 1}]},
+          ConstantArray[1, nn]}}
+    ]
+
+igMeshCellAdjacencyMatrix[mesh_, 0, d_] :=
+    Transpose[igMeshCellAdjacencyMatrix[mesh, d, 0]]
+
+igMeshCellAdjacencyMatrix[mesh_, d1_, d2_] :=
+    With[{B = igMeshCellAdjacencyMatrix[mesh, d1, 0].igMeshCellAdjacencyMatrix[mesh, 0, d2]},
+      SparseArray[
+        If[d1 == d2,
+          UnitStep[B - DiagonalMatrix[Diagonal[B]] - d1],
+          UnitStep[B - (Min[d1, d2] + 1)]
+        ]
+      ]
+    ]
+
+checkDimension[dim_, d_, sym_] :=
+    If[d > dim,
+      Message[sym::bddim, d, dim];
+      throw[$Failed]
+    ]
+
+IGMeshCellAdjacencyGraph::bddim = "Requested dimension `1` is greater than the dimension of the mesh, `2`.";
+SyntaxInformation[IGMeshCellAdjacencyGraph] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGMeshCellAdjacencyGraph[mesh_?meshQ, d1_?Internal`NonNegativeIntegerQ, d2_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[Graph]] :=
+    catch@With[{dim = RegionDimension[mesh]},
+      Scan[checkDimension[dim, #, IGMeshCellAdjacencyGraph]&, {d1, d2}];
+      If[d1 == d2,
+        AdjacencyGraph[MeshCellIndex[mesh, d1], igMeshCellAdjacencyMatrix[mesh, d1, d2], opt],
+        IGBipartiteIncidenceGraph[{MeshCellIndex[mesh, d1], MeshCellIndex[mesh, d2]}, igMeshCellAdjacencyMatrix[mesh, d1, d2], opt]
+      ]
+    ]
+IGMeshCellAdjacencyGraph[mesh_?meshQ, d_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[Graph]] :=
+    IGMeshCellAdjacencyGraph[mesh, d, d, opt]
+
+IGMeshCellAdjacencyMatrix::bddim = IGMeshCellAdjacencyGraph::bddim;
+SyntaxInformation[IGMeshCellAdjacencyMatrix] = {"ArgumentsPattern" -> {_, _, _.}};
+IGMeshCellAdjacencyMatrix[mesh_?meshQ, d1_?Internal`NonNegativeIntegerQ, d2_?Internal`NonNegativeIntegerQ] :=
+    catch@With[{dim = RegionDimension[mesh]},
+      Scan[checkDimension[dim, #, IGMeshCellAdjacencyMatrix]&, {d1, d2}];
+      igMeshCellAdjacencyMatrix[mesh, d1, d2]
+    ]
+IGMeshCellAdjacencyMatrix[mesh_?meshQ, d_?Internal`NonNegativeIntegerQ] :=
+    IGMeshCellAdjacencyMatrix[mesh, d, d]
 
 
 (***** Finalize *****)
