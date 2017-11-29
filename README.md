@@ -157,12 +157,30 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
    * The graphs returned by `IGBipartiteGameGNM` and `IGBipartiteGameGNP` may not render when using the `DirectedEdges -> True` and `"Bidirectional" -> True` options.  This is due to a bug in Mathematica's  `"BipartiteEmbdding"` graph layout and can be corrected by passing `GraphLayout -> Automatic` to these functions.
 
    * LAD functions may crash with certain inputs.  [This is a bug in the igraph C core.](https://github.com/szhorvat/IGraphM/issues/1)
-   
-   * `IGDocumentation[]` may not work with Mathematica 11.1.0 on Linux.  Please enter `IGraphM/IGDocumentation` in the Documentation Center address bar to access it (or simply search for `igraph` in the Documentation Center).
+
+   * `IGDocumentation[]` may not work with Mathematica 11.1 on Linux.  Please enter `IGraphM/IGDocumentation` in the Documentation Center address bar to access it (or simply search for `igraph` in the Documentation Center).
 
    * See also https://github.com/szhorvat/IGraphM/issues
 
 ## Revision history
+
+##### v0.4.0dev (work in progress)
+
+ - New deterministic graph generators: `IGKautzGraph`, `IGKaryTree`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`.
+ - New random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`.
+ - Community detection: several functions support the `"ClusterCount"` option now, added `IGCommunitiesFluid"`
+ - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGVertexColoring`, `IGEdgeColoring`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`
+ - Updates: 
+    * `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges.
+    * `IGBipartiteQ` supports checking that a given partitioning is valid for a bipartite graph.
+    * `IGBipartitePartitions` now provides control over the ordering of partitions using its second argument.
+ - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
+ - New utility functions:
+    * Weighted graphs: `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
+    * Easier property handling and graph styling:  `IGVertexProp`, `IGEdgeProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
+    * Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML.
+    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`
+ - Bug fixes and polish.
 
 ##### v0.3.0
 
