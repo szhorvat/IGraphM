@@ -38,23 +38,24 @@ Cell["Introduction", \
 "Section",ExpressionUUID->"9b2696d4-873c-4717-af1b-c072cf2f5100"],
 
 Cell[TextData[{
- "IGraph/M is a Mathematica interface to the popular ",
+ "IGraph/M provides a Mathematica interface to the popular ",
  ButtonBox["igraph network analysis package",
   BaseStyle->"Hyperlink",
   ButtonData->{
     URL["http://igraph.org/"], None},
   ButtonNote->"http://igraph.org/"],
- ". The purpose of IGraph/M is not to replace Mathematica\[CloseCurlyQuote]s \
-built-in graph theory functionality, but to complement it. Thus the IGraph/M \
-interface is designed to interoperate seamlessly with built-in functions and \
-datatypes, while also being familiar to users of other igraph interfaces (R, \
-Python or C)."
+ ", as well as many other utility functions for working with graphs. The \
+purpose of IGraph/M is not to replace Mathematica\[CloseCurlyQuote]s built-in \
+graph theory functionality, but to complement it. Thus the IGraph/M interface \
+is designed to interoperate seamlessly with built-in functions and datatypes, \
+while also being familiar to users of other igraph interfaces (R, Python or \
+C)."
 }], "Text",ExpressionUUID->"05c9b49b-5a7a-44f7-822f-981911a91788"],
 
 Cell[TextData[{
- "Only functionality not already available in Mathematica is exposed. While \
-many of the functions that IGraph/M provides overlap with built-in ones, like \
-",
+ "Only igraph functionality not already available in Mathematica is exposed. \
+While many of the functions that IGraph/M provides overlap with built-in \
+ones, like ",
  Cell[BoxData[
  "IGBetweenness"],ExpressionUUID->"6ef1b7e2-1a3c-4012-ae22-f179614c393f"],
  " and ",
@@ -114,8 +115,9 @@ Cell[TextData[{
  "IGraph/M functions work directly with ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- "\[CloseCurlyQuote]s built-in Graph datatype. No new special graph datatype \
-is introduced."
+ "\[CloseCurlyQuote]s built-in ",
+ Cell[BoxData["Graph"],ExpressionUUID->"15a654a8-3e22-4074-909b-2a9699a6a1df"],
+ " datatype. No new special graph datatype is introduced."
 }], "Text",ExpressionUUID->"358b3b0b-6ed2-4db7-bbe7-7a080c8f19b0"],
 
 Cell[TextData[{
@@ -1597,6 +1599,11 @@ Cell[TextData[{
  " will simultaneously contract multiple vertex sets into single vertices."
 }], "Text",ExpressionUUID->"c15ff830-c504-4db1-b405-7f8073a4a29b"],
 
+Cell["\<\
+The name of a contracted vertex will be the same as the first element of the \
+corresponding set. Vertex ordering is not retained.\
+\>", "Text",ExpressionUUID->"8aa9b7e2-4d02-4214-9ca8-95a729bc9bb6"],
+
 Cell[TextData[{
  StyleBox["Warning:",
   FontWeight->"Bold"],
@@ -1712,7 +1719,8 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
      RowBox[{"{", 
-      RowBox[{"4", ",", "5"}], "}"}]}], "}"}]}], 
+      RowBox[{"4", ",", "5"}], "}"}]}], "}"}], ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"14fb4e2e-a489-4d73-850a-1838fcb685cd"],
 
 Cell[BoxData[
@@ -2688,6 +2696,7 @@ Cell[BoxData[
           ArrowBox[{{0.00007263143566471619, 0.}, {0., 0.9737145167850567}}, 
            0.1803414155696349]}}, 
         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], {
+          
           StyleBox[
            DiskBox[{1.944934484934091, 0.4869131293713701}, 
             0.1803414155696349],
@@ -3020,6 +3029,19 @@ Cell[BoxData[
 "Input",ExpressionUUID->"e9901006-7a7a-4deb-9712-0ff042bbf944"],
 
 Cell[BoxData[
+ RowBox[{"?", 
+  "IGBipartiteIncidenceMatrix"}]], \
+"Input",ExpressionUUID->"6720a33b-8801-4efa-a337-cfed55170bfb"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGBipartiteIncidenceGraph"}]], \
+"Input",ExpressionUUID->"bde9f461-5428-4bdd-b559-0cb9751a4f9a"],
+
+Cell["Generate a graph and verify that it is bipartite:", \
+"Text",ExpressionUUID->"b30577ce-5f4e-4cf6-bc58-8e5eb7380063"],
+
+Cell[BoxData[
  RowBox[{"g", "=", 
   RowBox[{"IGBipartiteGameGNM", "[", 
    RowBox[{"5", ",", "5", ",", "10", ",", 
@@ -3027,8 +3049,37 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"8139a392-ef82-4299-99f1-122071cbfcab"],
 
 Cell[BoxData[
+ RowBox[{"IGBipartiteQ", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"e5f21391-5eb0-4376-a811-0f13429c4732"],
+
+Cell["Verify that no edges run between two vertex subsets.", \
+"Text",ExpressionUUID->"022695fa-9c87-48b7-91e3-f9d4867dae60"],
+
+Cell[BoxData[
+ RowBox[{"IGBipartiteQ", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "7", ",", "8"}], "}"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"b596f52f-ce34-48f6-89d6-1fadc5c84d8f"],
+
+Cell["Find a bipartite partitioning of the graph.", \
+"Text",ExpressionUUID->"b073ccab-797a-4b31-96d5-e56c488e9cf2"],
+
+Cell[BoxData[
  RowBox[{"IGBipartitePartitions", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"ffc8be47-d15e-47a0-8725-5519b6afa1ee"],
+
+Cell["Let the first partition contain vertex 10.", \
+"Text",ExpressionUUID->"9dbd4e53-403e-490e-8ed8-bda8d3001475"],
+
+Cell[BoxData[
+ RowBox[{"IGBipartitePartitions", "[", 
+  RowBox[{"g", ",", "10"}], 
+  "]"}]], "Input",ExpressionUUID->"b6ea903c-7722-40ca-ac47-9628e3e9b700"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -3039,7 +3090,39 @@ Cell[TextData[{
 Cell[BoxData[
  RowBox[{"IGBipartitePartitions", "[", 
   RowBox[{"CompleteGraph", "[", "4", "]"}], 
-  "]"}]], "Input",ExpressionUUID->"bc83ba68-454a-4daa-bafa-2f0f2c4e523a"]
+  "]"}]], "Input",ExpressionUUID->"bc83ba68-454a-4daa-bafa-2f0f2c4e523a"],
+
+Cell["Compute an incidence matrix.", \
+"Text",ExpressionUUID->"19a6b76c-c297-42fb-a1bf-f3f0bd938e7a"],
+
+Cell[BoxData[
+ RowBox[{"bm", "=", 
+  RowBox[{
+  "IGBipartiteIncidenceMatrix", "[", "g", 
+   "]"}]}]], "Input",ExpressionUUID->"14c079b8-644c-4485-9294-a5986596813c"],
+
+Cell["Reconstruct a graph from an incidence matrix.", \
+"Text",ExpressionUUID->"e4ee9ae1-22a1-48da-b487-6a8cc8210fd0"],
+
+Cell[BoxData[
+ RowBox[{"IGBipartiteIncidenceGraph", "[", "bm", 
+  "]"}]], "Input",ExpressionUUID->"d7d2c6b0-9837-42dd-9601-a2037d5a7475"],
+
+Cell["\<\
+Compute an incidence matrix using a given partitioning / vertex ordering. It \
+is allowed to pass only a subset of vertices.\
+\>", "Text",ExpressionUUID->"694e75b6-6503-4f81-ad6a-3e8d26a94d28"],
+
+Cell[BoxData[
+ RowBox[{"IGBipartiteIncidenceMatrix", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "7", ",", "8"}], "}"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"21108a56-c86b-4a39-b6a4-74fe9d0ad106"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3939,6 +4022,30 @@ Cell[BoxData[
    ")"}]}]], "Input",ExpressionUUID->"8c425de4-93b2-4c4c-b3e2-166976a318fa"],
 
 Cell["\<\
+Visualize the groups of vertices members of which may be transformed into \
+each other by some graph automorphism.\
+\>", "Text",ExpressionUUID->"e83d34de-bf5e-4275-bca0-6c5ae8d2f00a"],
+
+Cell[BoxData[
+ RowBox[{"With", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"g", "=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Mycielski\>\"", ",", " ", "4"}], "}"}], "]"}]}], "}"}], 
+   ",", 
+   RowBox[{"HighlightGraph", "[", 
+    RowBox[{"g", ",", 
+     RowBox[{"GroupOrbits", "@", 
+      RowBox[{"PermutationGroup", "@", 
+       RowBox[{"IGBlissAutomorphismGroup", "[", "g", "]"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"28236d5f-b5e0-4115-8519-775449e0d325"],
+
+Cell["\<\
 Bliss works by computing a canonical labelling of vertices. Then isomorphism \
 can be tested for by comparing the canonically relabelled graphs.\
 \>", "Text",ExpressionUUID->"02f27dfc-97b2-4ed1-98ad-b992a9a9c9dd"],
@@ -4691,7 +4798,19 @@ Cell[BoxData[
     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
    FormatType->TraditionalForm,
    FrameTicks->None], 
-  "]"}]], "Input",ExpressionUUID->"0694fcef-86ba-429b-9fab-15289a382511"]
+  "]"}]], "Input",ExpressionUUID->"0694fcef-86ba-429b-9fab-15289a382511"],
+
+Cell["\<\
+The Folkman graph is not vertex transitive but it is edge transitive.\
+\>", "Text",ExpressionUUID->"0fa1eeda-d359-4a74-9334-5e714f2bdf71"],
+
+Cell[BoxData[
+ RowBox[{"Through", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"IGVertexTransitiveQ", ",", "IGEdgeTransitiveQ"}], "}"}], "@", 
+   RowBox[{"GraphData", "[", "\"\<FolkmanGraph\>\"", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"c0a6f1f4-6683-40e5-aeca-d27ab3d4aa42"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -22407,7 +22526,6 @@ opNiTZXG9j/0QF3SCXK/v/cSNH4JZNo/LQ6F1w==
               Arrow3DBox[TubeBox[{{{
                1.8077188605070778`, -0.4744559376234581, \
 -0.06963990161054155}, {
-               
                2.2508902053645965`, -0.6709499075330176, \
 -0.12117359466874848`}}}], 0.07684870779209396]}, 
              {Arrowheads[0.], 
@@ -22813,8 +22931,7 @@ P7OtBo9RV+S/NMMFnw==
               13}, {14}, {15}, {16}, {26}, {23}, {10}, {11}, {17}, {19}, {
               25}, {29}, {30}, {20}, {22}, {27}, {28}}}, {1, 1, 1, 1, 1, 1, 1,
               1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-             1}}]}, {
-          GraphLayout -> {"Dimension" -> 2}, PlotLabel -> 
+             1}}]}, {GraphLayout -> {"Dimension" -> 2}, PlotLabel -> 
            IGraphM`IGLayoutKamadaKawai3D, PlotRange -> All, 
            VertexCoordinates -> CompressedData["
 1:eJwB4QIe/SFib1JlAgAAAB4AAAADAAAA770UWWa9tj/FF8KvHOzDP0XkJegb
@@ -23422,7 +23539,6 @@ mHH+xIWWt3L0IHMFtJChKPqnKfAV+oVqnfuxkswhUP5bZvgDS2JxXw==
 -0.7931034482758621}}}], 0.04522292993630572]}, 
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{1.2246467991473532`*^-16, 0., -1.}, {
-               
                0.2797908580243922, -0.6303501666558619, \
 -0.724137931034483}}}], 0.04522292993630572]}, 
              {Arrowheads[0.], 
@@ -23465,6 +23581,7 @@ mHH+xIWWt3L0IHMFtJChKPqnKfAV+oVqnfuxkswhUP5bZvgDS2JxXw==
              {Arrowheads[0.], 
               Arrow3DBox[TubeBox[{{{-0.506309316117289, 
                0.022090158552538968`, -0.8620689655172414}, {
+               
                0.0643844413619903, -0.9829181693600876, \
 -0.17241379310344834`}}}], 0.04522292993630572]}, 
              {Arrowheads[0.], 
@@ -23905,13 +24022,38 @@ Cell[BoxData[
     "]"}]}]}]], \
 "Input",ExpressionUUID->"b3c72c3a-8e31-4668-b734-213b7ad7e206"],
 
+Cell["Query the available properties.", \
+"Text",ExpressionUUID->"73bf8735-1da3-4eb7-bf40-582aa41b329b"],
+
 Cell[BoxData[
  RowBox[{"cl", "[", "\"\<Properties\>\"", 
   "]"}]], "Input",ExpressionUUID->"9a352754-891d-4482-8a34-8e67488346a2"],
 
+Cell["Retrieve the communities.", \
+"Text",ExpressionUUID->"0508c96b-1062-485a-b252-16fc7a3c99db"],
+
 Cell[BoxData[
  RowBox[{"cl", "[", "\"\<Communities\>\"", 
-  "]"}]], "Input",ExpressionUUID->"f73673f4-38fc-437e-b5fa-b0b94e1af63b"]
+  "]"}]], "Input",ExpressionUUID->"f73673f4-38fc-437e-b5fa-b0b94e1af63b"],
+
+Cell[TextData[{
+ "When the ",
+ Cell[BoxData["\"\<Modularity\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "4e95b1f6-a32f-4dc6-973a-7d31d20fa631"],
+ " property is available, ",
+ Cell[BoxData[
+  RowBox[{"Max", "[", 
+   RowBox[{"cl", "[", "\"\<Modularity\>\"", "]"}], "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "cfe40ab6-a485-4d53-9801-5dc37f43df1a"],
+ " gives the modularity of the current partitioning."
+}], "Text",ExpressionUUID->"3f3ee0ff-51fd-444b-b9a0-d8a6e2e1a984"],
+
+Cell[BoxData[
+ RowBox[{"Max", "[", 
+  RowBox[{"cl", "[", "\"\<Modularity\>\"", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"7effcea6-e609-4e51-9a41-263a61f76192"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -23985,6 +24127,11 @@ Cell[CellGroupData[{
 Cell["IGCommunitiesEdgeBetweenness", \
 "Subsubsection",ExpressionUUID->"8f10ab14-3e69-46cb-b7d7-a136b2fba8b5"],
 
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesEdgeBetweenness"}]], \
+"Input",ExpressionUUID->"756fc83f-ff31-4936-b321-f259ac244d3c"],
+
 Cell[TextData[{
  Cell[BoxData[
   RowBox[{"IGCommunitiesEdgeBetweenness", "[", "]"}]],ExpressionUUID->
@@ -23992,8 +24139,25 @@ Cell[TextData[{
  " implements the Girvan\[Dash]Newman algorithm."
 }], "Text",ExpressionUUID->"8c51a20c-de11-41c9-8369-bbf9a7ab6441"],
 
-Cell["It works on weighted graphs.", \
-"Text",ExpressionUUID->"f2cc08ac-b1bd-43f7-b7eb-2841ccd9eb8c"],
+Cell["\<\
+Weighted graphs are supported. Weights are treated as \
+\[OpenCurlyDoubleQuote]distances\[CloseCurlyDoubleQuote], i.e. a large weight \
+represents a weak connection.\
+\>", "Text",ExpressionUUID->"f2cc08ac-b1bd-43f7-b7eb-2841ccd9eb8c"],
+
+Cell["Available option values:", \
+"Text",ExpressionUUID->"4178550c-d8a0-4db2-b4dc-861f3631e085"],
+
+Cell[TextData[{
+ Cell[BoxData["\"\<ClusterCount\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8040066d-c28f-4da6-afb3-6338b62c1676"],
+ ", the number of communities to return. Default: ",
+ Cell[BoxData["Automatic"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "9ad9bf8e-2f09-495e-8da1-29994dd460d9"],
+ "."
+}], "Item",ExpressionUUID->"b4376456-17b1-4004-acd1-c7a46b1c48b3"],
 
 Cell[TextData[{
  "Reference:  M. Girvan and M. E. J. Newman: Community structure in social \
@@ -24006,8 +24170,39 @@ and biological networks, ",
 
 Cell[CellGroupData[{
 
+Cell["IGCommunitiesFluid", \
+"Subsubsection",ExpressionUUID->"e4c37e74-cb01-4634-a4c7-8abecfe9c5af"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesFluid"}]], \
+"Input",ExpressionUUID->"bb1e78da-c299-491e-ac93-a10fea22873a"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGCommunitiesFluid", "[", "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "c96a24c6-55a5-4096-bdbf-d9d84549ea9a"],
+ " implements the fluid communities algorithm."
+}], "Text",ExpressionUUID->"87d2126d-3a35-4b11-b6d8-c488118b79bd"],
+
+Cell["\<\
+Reference: Ferran Par\[EAcute]s, Dario Garcia-Gasulla, Armand Vilalta, \
+Jonatan Moreno, Eduard Ayguad\[EAcute], Jes\[UAcute]s Labarta, Ulises Cort\
+\[EAcute]s, Toyotaro Suzumura: Fluid Communities: A Competitive, Scalable and \
+Diverse Community Detection Algorithm, https://arxiv.org/abs/1703.09307\
+\>", "Text",ExpressionUUID->"ffb39f02-c1cc-4e17-84c1-8499350b5053"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["IGCommunitiesGreedy", \
 "Subsubsection",ExpressionUUID->"6ddd00fd-77e9-415b-8962-bab06873a800"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesGreedy"}]], \
+"Input",ExpressionUUID->"b990fb22-52e9-4cba-bcc5-469e0606c9d3"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -24016,7 +24211,7 @@ Cell[TextData[{
  " implements greedy optimization of modularity."
 }], "Text",ExpressionUUID->"43433eac-4ac7-4568-8207-67bc57f2f35a"],
 
-Cell["It works on weighted graphs.", \
+Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"b802fb35-498e-4fda-b36c-1ccec37c5ef0"],
 
 Cell["\<\
@@ -24027,10 +24222,51 @@ very large networks, http://www.arxiv.org/abs/cond-mat/0408187\
 
 Cell[CellGroupData[{
 
+Cell["IGCommunitiesInfoMAP", \
+"Subsubsection",ExpressionUUID->"b9d31111-d569-4cb1-8ce1-1b07cde30dad"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesInfoMAP"}]], \
+"Input",ExpressionUUID->"96eb3813-df08-48e3-9430-5cef77385c37"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGCommunitiesInfoMAP", "[", "]"}]],ExpressionUUID->
+  "f2169028-23d3-42eb-a654-5b1876a97fe7"],
+ " implements the InfoMAP algorithm."
+}], "Text",ExpressionUUID->"7a200817-ca99-4a9e-a08d-7d17c5c1288f"],
+
+Cell["It supports both edge weights and vertex weights.", \
+"Text",ExpressionUUID->"9e001bf2-cdf0-4a5a-84dd-33dd3591b8b3"],
+
+Cell["The default number of trials is 10.", \
+"Text",ExpressionUUID->"2ad31c05-38d1-4c72-822e-41d307997f5b"],
+
+Cell[TextData[{
+ "References:\nM. Rosvall and C. T. Bergstrom, Maps of information flow \
+reveal community structure in complex networks, ",
+ StyleBox["PNAS",
+  FontSlant->"Italic"],
+ " 105, 1118 (2008)\nM. Rosvall, D. Axelsson, and C. T. Bergstrom, The map \
+equation, ",
+ StyleBox["Eur. Phys. J. Special Topics",
+  FontSlant->"Italic"],
+ " 178, 13 (2009)"
+}], "Text",ExpressionUUID->"a3247e92-6e99-46d7-a501-aca1f4a385e6"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["IGCommunitiesLabelPropagation", \
 "Subsubsection",ExpressionUUID->"57acf5a8-02ec-4cc5-93f2-ed8203c019d9"],
 
-Cell["It supports weighted graphs.", \
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesLabelPropagation"}]], \
+"Input",ExpressionUUID->"ce29392e-6d57-4e68-9320-0f6fb408e3df"],
+
+Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"9480008c-d945-4b67-a9c1-d640bca7b9da"],
 
 Cell[TextData[{
@@ -24044,20 +24280,31 @@ algorithm to detect community structures in large-scale networks. ",
 
 Cell[CellGroupData[{
 
-Cell["IGCommunitiesOptimalModularity", \
-"Subsubsection",ExpressionUUID->"3d818605-8547-4c1d-9319-7b2a46d00cc4"],
-
-Cell["It supports weighted graphs.", \
-"Text",ExpressionUUID->"f91b5e0d-8345-46b9-9652-505d978931ef"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
 Cell["IGCommunitiesLeadingEigenvector", \
 "Subsubsection",ExpressionUUID->"d928de66-327d-44a1-8d70-3d2539ef9e43"],
 
-Cell["It supports weighted graphs.", \
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesLeadingEigenvector"}]], \
+"Input",ExpressionUUID->"fccdf015-64be-4503-8745-b4bd4173f20d"],
+
+Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"86fab2c4-fae9-4451-8c56-adb3b7d91192"],
+
+Cell["Available option values:", \
+"Text",ExpressionUUID->"77e1ca42-9f1f-40bb-89dc-347698c23151"],
+
+Cell[TextData[{
+ Cell[BoxData["\"\<ClusterCount\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "25ddd142-8e19-4f7b-ab66-2e6643fe45ec"],
+ ", the number of communities to return. May return fewer communities than \
+requested. Default: ",
+ Cell[BoxData["Automatic"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "f09d9bdb-902d-472a-9fe3-f66fadd3e13f"],
+ "."
+}], "Item",ExpressionUUID->"2b65218d-1359-4b6b-89c6-95c7b91030fa"],
 
 Cell[TextData[{
  "Reference: MEJ Newman: Finding community structure using the eigenvectors \
@@ -24070,10 +24317,63 @@ of matrices, ",
 
 Cell[CellGroupData[{
 
+Cell["IGCommunitiesMultilevel", \
+"Subsubsection",ExpressionUUID->"e3c18900-4f57-4063-8b5a-6b179b6e6dd9"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesMultilevel"}]], \
+"Input",ExpressionUUID->"11e447aa-59e1-47fb-9294-0d76053cc554"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGCommunitiesMultilevel", "[", "]"}]],ExpressionUUID->
+  "181b4efb-7440-4305-9c7b-a5e8d9b83450"],
+ " implements the Louvain community detection method."
+}], "Text",ExpressionUUID->"13f27153-452a-471e-abab-7a9d348975e6"],
+
+Cell["Weighted graphs are supported.", \
+"Text",ExpressionUUID->"93673697-8300-463f-a446-08928f0297f1"],
+
+Cell[TextData[{
+ "Reference: VD Blondel, J-L Guillaume, R Lambiotte and E Lefebvre: Fast \
+unfolding of community hierarchies in large networks, ",
+ StyleBox["J. Stat. Mech.",
+  FontSlant->"Italic"],
+ " P10008 (2008)"
+}], "Text",ExpressionUUID->"8a9b05c6-3b1c-40b5-a2d2-22ec44539d42"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["IGCommunitiesOptimalModularity", \
+"Subsubsection",ExpressionUUID->"3d818605-8547-4c1d-9319-7b2a46d00cc4"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesOptimalModularity"}]], \
+"Input",ExpressionUUID->"6a3e9351-306c-4480-9809-968134385099"],
+
+Cell["\<\
+Finds the clustering that maximizes modularity exactly. This algorithm is \
+very slow.\
+\>", "Text",ExpressionUUID->"08eccb30-2c1f-487b-a14b-996f63ea7b48"],
+
+Cell["Weighted graphs are supported.", \
+"Text",ExpressionUUID->"f91b5e0d-8345-46b9-9652-505d978931ef"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
 Cell["IGCommunitiesSpinGlass", \
 "Subsubsection",ExpressionUUID->"965f4d02-cb40-4e82-b0f8-24de10506482"],
 
-Cell["It supports weighted graphs.", \
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesSpinGlass"}]], \
+"Input",ExpressionUUID->"04197db3-af51-49da-a53f-73012c90223f"],
+
+Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"8fb807d8-dd0c-4a1e-9b50-96ecd6d03856"],
 
 Cell[TextData[{
@@ -24149,63 +24449,13 @@ positive and negative links, http://arxiv.org/abs/0811.2329 "
 
 Cell[CellGroupData[{
 
-Cell["IGCommunitiesInfoMAP", \
-"Subsubsection",ExpressionUUID->"b9d31111-d569-4cb1-8ce1-1b07cde30dad"],
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"IGCommunitiesInfoMAP", "[", "]"}]],ExpressionUUID->
-  "fc2770a4-3f20-4a54-b47a-bf323b4f8a56"],
- " implements the InfoMAP algorithm."
-}], "Text",ExpressionUUID->"7a200817-ca99-4a9e-a08d-7d17c5c1288f"],
-
-Cell["It supports both edge weights and vertex weights.", \
-"Text",ExpressionUUID->"9e001bf2-cdf0-4a5a-84dd-33dd3591b8b3"],
-
-Cell["The default number of trials is 10.", \
-"Text",ExpressionUUID->"2ad31c05-38d1-4c72-822e-41d307997f5b"],
-
-Cell[TextData[{
- "References:\nM. Rosvall and C. T. Bergstrom, Maps of information flow \
-reveal community structure in complex networks, ",
- StyleBox["PNAS",
-  FontSlant->"Italic"],
- " 105, 1118 (2008)\nM. Rosvall, D. Axelsson, and C. T. Bergstrom, The map \
-equation, ",
- StyleBox["Eur. Phys. J. Special Topics",
-  FontSlant->"Italic"],
- " 178, 13 (2009)"
-}], "Text",ExpressionUUID->"a3247e92-6e99-46d7-a501-aca1f4a385e6"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell["IGCommunitiesMultilevel", \
-"Subsubsection",ExpressionUUID->"e3c18900-4f57-4063-8b5a-6b179b6e6dd9"],
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"IGCommunitiesMultilevel", "[", "]"}]],ExpressionUUID->
-  "db039c3f-b446-42e3-ba7d-f35c4b92f29f"],
- " implements the Louvain community detection method."
-}], "Text",ExpressionUUID->"13f27153-452a-471e-abab-7a9d348975e6"],
-
-Cell["It supports weighted graphs.", \
-"Text",ExpressionUUID->"93673697-8300-463f-a446-08928f0297f1"],
-
-Cell[TextData[{
- "Reference: VD Blondel, J-L Guillaume, R Lambiotte and E Lefebvre: Fast \
-unfolding of community hierarchies in large networks, ",
- StyleBox["J. Stat. Mech.",
-  FontSlant->"Italic"],
- " P10008 (2008)"
-}], "Text",ExpressionUUID->"8a9b05c6-3b1c-40b5-a2d2-22ec44539d42"]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
 Cell["IGCommunitiesWalktrap", \
 "Subsubsection",ExpressionUUID->"ff5947b4-29cb-4348-b31e-7844e7939f01"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCommunitiesWalktrap"}]], \
+"Input",ExpressionUUID->"f7890e02-5830-4117-a4ae-f01ff55c5b0b"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -24215,11 +24465,25 @@ Cell[TextData[{
 random walks tend to stay within the same cluster."
 }], "Text",ExpressionUUID->"95981374-1d60-4b1f-b97d-d58d82f904b9"],
 
-Cell["Is supports weighted graphs.", \
+Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"5929d9a8-bb88-458d-b9e2-68b4a7b159ee"],
 
 Cell["The default number of steps is 4.", \
 "Text",ExpressionUUID->"bf716760-8bde-4982-8a92-26924c1ab017"],
+
+Cell["Available option values:", \
+"Text",ExpressionUUID->"61973d41-364d-4247-b8dc-fcb0fe0abc33"],
+
+Cell[TextData[{
+ Cell[BoxData["\"\<ClusterCount\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "4a22a609-8995-49b1-91d7-b8b6b847eb45"],
+ ", the number of communities to return. Default: ",
+ Cell[BoxData["Automatic"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "4261f2f2-764d-44d0-b446-c24b6695ca51"],
+ "."
+}], "Item",ExpressionUUID->"fb817a5a-d497-474c-8f05-7a060bba2899"],
 
 Cell["\<\
 Reference: Pascal Pons, Matthieu Latapy: Computing communities in large \
@@ -24241,7 +24505,7 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"b694fd83-7fdd-43b0-9157-6ccc455afae3"],
 
 Cell[BoxData[
- RowBox[{"WeightedGraphQ", "[", "g", 
+ RowBox[{"IGEdgeWeightedQ", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"6cd6a216-6a74-4689-a4e0-e74af107ecfa"],
 
 Cell[TextData[{
@@ -24267,11 +24531,25 @@ Cell[BoxData[
  RowBox[{"cl1", "[", "\"\<Communities\>\"", 
   "]"}]], "Input",ExpressionUUID->"ccde2c8f-a127-46ef-814b-e4ec94719657"],
 
+Cell["Visualize the detected communities in two different ways:", \
+"Text",ExpressionUUID->"ac878135-a61e-446b-8af2-adee5806deea"],
+
 Cell[BoxData[
  RowBox[{"CommunityGraphPlot", "[", 
   RowBox[{"g", ",", 
    RowBox[{"cl1", "[", "\"\<Communities\>\"", "]"}]}], 
   "]"}]], "Input",ExpressionUUID->"57d087de-1861-48a8-a7f9-3bcc3c48d82e"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Subgraph", "[", 
+      RowBox[{"g", ",", "#"}], "]"}], "&"}], "/@", 
+    RowBox[{"cl1", "[", "\"\<Communities\>\"", "]"}]}], ",", 
+   RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<DehighlightGray\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"46a38d2e-69d9-4a52-9239-953bd1f61bfa"],
 
 Cell["\<\
 The available properties depend on which algorithm was used for community \
@@ -24408,7 +24686,8 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"7b79d2c1-8baf-41a5-8a3e-9b87e2e6d0df"],
 
 Cell["\<\
-Hierarchical community structures can also be obtained as a tree graph.\
+Hierarchical community structures can also be obtained as a vertex-weighted \
+tree graph.\
 \>", "Text",ExpressionUUID->"b10634cf-39c9-4c2f-92cf-9b235fe378e0"],
 
 Cell[BoxData[
@@ -24427,13 +24706,139 @@ Cell[BoxData[
   ";"}]], "Input",ExpressionUUID->"094d78fc-946c-446f-b9c3-eb2a04627bc2"],
 
 Cell[BoxData[
- RowBox[{"cl", "[", "\"\<Tree\>\"", 
-  "]"}]], "Input",ExpressionUUID->"1f6fb971-8611-4b42-9533-7aef05b0ac93"],
+ RowBox[{"clusteringTree", "=", 
+  RowBox[{
+  "cl", "[", "\"\<Tree\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"1f6fb971-8611-4b42-9533-7aef05b0ac93"],
 
 Cell[BoxData[
- RowBox[{"GraphQ", "[", "%", 
-  "]"}]], "Input",ExpressionUUID->"4314876c-7157-49ac-bacd-cd690f5e530e"]
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"GraphQ", "[", "clusteringTree", "]"}], ",", 
+   RowBox[{"IGVertexWeightedQ", "[", "clusteringTree", "]"}]}], 
+  "}"}]], "Input",ExpressionUUID->"4314876c-7157-49ac-bacd-cd690f5e530e"],
+
+Cell[TextData[{
+ "This tree can be supplied as input to ",
+ Cell[BoxData[
+ "Dendrogram"],ExpressionUUID->"caaa114d-56c2-45e1-bfe4-5605e127713c"],
+ "."
+}], "Text",ExpressionUUID->"17b9ab46-f70f-438d-ac60-b58c55af914d"],
+
+Cell[BoxData[
+ RowBox[{"Dendrogram", "[", 
+  RowBox[{"clusteringTree", ",", "Left"}], 
+  "]"}]], "Input",ExpressionUUID->"215ab481-f24a-4ce1-8ac4-ce7130b8dbe2"]
 }, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Graph colouring", \
+"Section",ExpressionUUID->"2b456f4e-dd43-4eeb-8a04-eab1e68fb7c3"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGVertexColoring"}]], \
+"Input",ExpressionUUID->"612386be-73a9-42b2-8d37-1f1fb83cbbdf"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGEdgeColoring"}]], \
+"Input",ExpressionUUID->"439df01f-c655-4037-9af3-1e6cad2e853f"],
+
+Cell["\<\
+Compute and visualize a vertex and edge colouring of a Mycielski graph.\
+\>", "Text",ExpressionUUID->"8a65c88a-676c-4b59-8dd5-e298da067c15"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"GraphData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<Mycielski\>\"", ",", " ", "4"}], "}"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"e905508f-a069-4a0d-842e-f106a0ca732e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Graph", "[", 
+   RowBox[{"g", ",", 
+    RowBox[{"VertexSize", "\[Rule]", 
+     RowBox[{"1", "/", "3"}]}], ",", 
+    RowBox[{"EdgeStyle", "\[Rule]", "Gray"}]}], "]"}], "//", 
+  "\[IndentingNewLine]", 
+  RowBox[{"IGVertexMap", "[", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "97", "]"}], ",", 
+    RowBox[{"VertexStyle", "\[Rule]", "IGVertexColoring"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"61293282-9e02-4012-9cdb-a027d63b58cb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Graph", "[", 
+   RowBox[{"g", ",", "\[IndentingNewLine]", 
+    RowBox[{"EdgeStyle", "\[Rule]", 
+     RowBox[{"Directive", "[", 
+      RowBox[{
+       RowBox[{"Opacity", "[", "0.75", "]"}], ",", 
+       RowBox[{"AbsoluteThickness", "[", "6", "]"}]}], "]"}]}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"VertexStyle", "\[Rule]", "Black"}]}], "]"}], "//", 
+  "\[IndentingNewLine]", 
+  RowBox[{"IGEdgeMap", "[", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "106", "]"}], ",", 
+    RowBox[{"EdgeStyle", "\[Rule]", "IGEdgeColoring"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"542f8d0a-a092-4885-8527-f7553b6a8c59"],
+
+Cell["\<\
+Compute a checkerboard-like colouring of a three-dimensional grid graph.\
+\>", "Text",ExpressionUUID->"accd31c9-5576-4665-99c6-4539aaa9ee6a"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexMap", "[", 
+  RowBox[{
+   RowBox[{"ColorData", "[", "97", "]"}], ",", 
+   RowBox[{"VertexStyle", "\[Rule]", "IGVertexColoring"}], ",", 
+   RowBox[{"Graph3D", "@", 
+    RowBox[{"GridGraph", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"4", ",", "4", ",", "4"}], "}"}], ",", 
+      RowBox[{"VertexSize", "\[Rule]", "0.8"}]}], "]"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"9b719ba8-2b84-4161-895e-4a5d356e06ae"],
+
+Cell["Compute a colouring of a Voronoi mesh.", \
+"Text",ExpressionUUID->"a9f13969-b191-49f1-b6bb-6385534434a5"],
+
+Cell[BoxData[
+ RowBox[{"mesh", "=", 
+  RowBox[{"VoronoiMesh", "[", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"20", ",", "2"}], "}"}]}], "]"}], 
+   "]"}]}]], "Input",ExpressionUUID->"e7342c9a-fcb6-49e6-ad12-12d405826810"],
+
+Cell[BoxData[
+ RowBox[{"col", "=", 
+  RowBox[{"IGVertexColoring", "@", 
+   RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+    RowBox[{"mesh", ",", "2"}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"497a8fd6-3a97-4cf7-841d-f4dace455a71"],
+
+Cell[BoxData[
+ RowBox[{"SetProperty", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"mesh", ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "All"}], "}"}]}], "}"}], ",", 
+   RowBox[{"MeshCellStyle", "\[Rule]", 
+    RowBox[{
+     RowBox[{"ColorData", "[", "97", "]"}], "/@", "col"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"bc230bb2-9212-47cc-8889-dadb718c3314"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -24532,6 +24937,296 @@ Cell[BoxData[
    RowBox[{"PlotStyle", "\[Rule]", 
     RowBox[{"PointSize", "[", "0.02", "]"}]}]}], 
   "]"}]], "Input",ExpressionUUID->"4f53d052-090f-4156-9740-749ead274d5c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGRandomEdgeWalk and IGRandomEdgeIndexWalk", \
+"Subsubsection",ExpressionUUID->"db51fa53-2dcc-4547-a770-4cbf91676ce0"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGRandomEdgeWalk"}]], \
+"Input",ExpressionUUID->"f2ccc595-8651-4279-b697-9ff268853856"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGRandomEdgeIndexWalk"}]], \
+"Input",ExpressionUUID->"d31255a3-f65d-4d13-aa77-7529e27fb7fd"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Geometrical meshes", \
+"Section",ExpressionUUID->"24d0e583-e2ae-4f11-8446-2c61dea61096"],
+
+Cell[CellGroupData[{
+
+Cell["IGMeshGraph", \
+"Subsubsection",ExpressionUUID->"56a0f36c-9354-46b2-a828-5e9989b37107"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMeshGraph"}]], \
+"Input",ExpressionUUID->"c4054c88-3a6c-4963-b636-9af6268fa0f2"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "EdgeWeight"],ExpressionUUID->"880c57c3-f15e-4519-9b80-c3fcb4ff5f60"],
+ " sets either the explicit edge weights, or the mesh property to be used as \
+edge weights. The default value is ",
+ Cell[BoxData[
+ "MeshCellMeasure"],ExpressionUUID->"e9ff82c6-20ef-43b9-8cac-dc7c53f8e295"],
+ ". Use ",
+ Cell[BoxData[
+ "None"],ExpressionUUID->"6063eb8c-01e2-449b-9276-339ad65583fa"],
+ " to obtain an unweighted graph."
+}], "Item",ExpressionUUID->"46327d9a-5801-4d37-80de-f69cb2876ea9"],
+
+Cell["\<\
+The following example demonstrates finding a shortest path on a geometric \
+mesh.\
+\>", "Text",ExpressionUUID->"b004cf61-81ef-44a3-b649-06fcab24b230"],
+
+Cell[BoxData[
+ RowBox[{"mesh", "=", 
+  RowBox[{"DiscretizeRegion", "[", 
+   RowBox[{
+    RowBox[{"RegionDifference", "[", 
+     RowBox[{
+      RowBox[{"Rectangle", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"0", ",", "0"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"3", ",", "3"}], "}"}]}], "]"}], ",", 
+      RowBox[{"Rectangle", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"0", ",", "1"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"2", ",", "2"}], "}"}]}], "]"}]}], "]"}], ",", 
+    RowBox[{"MaxCellMeasure", "\[Rule]", "0.02"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.720531666878605*^9, 
+  3.7205316727659683`*^9}},ExpressionUUID->"a537fe95-2997-4799-ba33-\
+9d3dc462bfbb"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGMeshGraph"],ExpressionUUID->"2fddd518-a182-416a-a3df-01cecc740ba2"],
+ " preserves the vertex coordinates, and uses edge lengths as edge weights by \
+default."
+}], "Text",ExpressionUUID->"07cb381b-59ad-45ab-8196-77fb8c618448"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGMeshGraph", "[", "mesh", "]"}]}]], "Input",
+ CellChangeTimes->{{3.720530403208596*^9, 3.720530468716012*^9}, {
+  3.720530879322616*^9, 3.7205308799057617`*^9}, {3.720531286387629*^9, 
+  3.720531359334012*^9}, {3.720531391142756*^9, 3.720531392092895*^9}, {
+  3.7205315084257793`*^9, 3.7205315153695374`*^9}, {3.720531563490065*^9, 
+  3.720531597060973*^9}, {3.7205316770381413`*^9, 
+  3.720531678733333*^9}},ExpressionUUID->"10b523c7-8208-4560-b634-\
+9fe7c31ffe81"],
+
+Cell["Find the corners:", \
+"Text",ExpressionUUID->"c7abf921-e541-4ec4-a186-a7ba034ace24"],
+
+Cell[BoxData[
+ RowBox[{"st", "=", 
+  RowBox[{"First", "/@", 
+   RowBox[{"Through", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"MinimalBy", ",", "MaximalBy"}], "}"}], "[", 
+     RowBox[{
+      RowBox[{"VertexList", "[", "g", "]"}], ",", 
+      RowBox[{
+       RowBox[{"Norm", "@", 
+        RowBox[{"PropertyValue", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"g", ",", "#"}], "}"}], ",", "VertexCoordinates"}], 
+         "]"}]}], "&"}]}], "]"}], "\[IndentingNewLine]", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.720530518656507*^9, 3.720530562973282*^9}, {
+  3.720530620354545*^9, 3.720530626072632*^9}, {3.720531443515697*^9, 
+  3.7205314443218803`*^9}, {3.720531526529374*^9, 
+  3.7205315417038794`*^9}},ExpressionUUID->"c5cca954-82a2-49c3-9b49-\
+eb95831486f7"],
+
+Cell["Highlight the shortest path:", \
+"Text",ExpressionUUID->"4a186f7a-8cdd-4129-a479-fa83f99de4e4"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"g", ",", "\[IndentingNewLine]", 
+   RowBox[{"PathGraph", "@", 
+    RowBox[{"FindShortestPath", "[", 
+     RowBox[{"g", ",", 
+      RowBox[{"First", "[", "st", "]"}], ",", 
+      RowBox[{"Last", "[", "st", "]"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+   RowBox[{"FrameTicks", "\[Rule]", "True"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.7205304720332737`*^9, 3.7205305062953997`*^9}, {
+  3.720530582743116*^9, 3.720530582854973*^9}, {3.720530634871773*^9, 
+  3.720530635192234*^9}, {3.7205314138673*^9, 3.720531426313422*^9}, {
+  3.720531488364881*^9, 3.720531488515215*^9}, {3.7205315468649187`*^9, 
+  3.7205315493858*^9}},ExpressionUUID->"cfed510e-d3b4-47a4-baa6-2fa2acfb027d"]\
+
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGMeshCellAdjacencyGraph and IGMeshCellAdjacencMatrix", \
+"Subsubsection",ExpressionUUID->"2edb0faf-b5eb-4603-ac19-4631d73704e6"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMeshCellAdjacencyGraph"}]], \
+"Input",ExpressionUUID->"24b29374-237b-4b15-93be-5e62006c343b"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMeshCellAdjacencyMatrix"}]], \
+"Input",ExpressionUUID->"6ee2f81c-e855-48d2-bb52-499a08addcc0"],
+
+Cell["\<\
+Compute the connectivity of mesh vertices (zero-dimensional cells).\
+\>", "Text",ExpressionUUID->"b51d2e78-9aa1-4e57-ba34-4ea2581b3a78"],
+
+Cell[BoxData[
+ RowBox[{"mesh", "=", 
+  RowBox[{"DiscretizeRegion", "[", 
+   RowBox[{
+    RowBox[{"Disk", "[", "]"}], ",", 
+    RowBox[{"MaxCellMeasure", "\[Rule]", "0.1"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"8d4cbebd-4d57-40cb-81f9-0239f16c0e39"],
+
+Cell[BoxData[
+ RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+  RowBox[{"mesh", ",", "0", ",", 
+   RowBox[{"VertexCoordinates", "\[Rule]", 
+    RowBox[{"MeshCoordinates", "[", "mesh", "]"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"279e2ff2-8dfa-4fc5-b116-b0d4e6614290"],
+
+Cell["Compute the connectivity of faces (two-dimensional cells).", \
+"Text",ExpressionUUID->"639ad28d-90a2-4d56-8c9f-7efe51d5554b"],
+
+Cell[BoxData[
+ RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+  RowBox[{"mesh", ",", "2"}], 
+  "]"}]], "Input",ExpressionUUID->"58076edb-189a-4ef3-bc07-fca9df005160"],
+
+Cell["Compute the connectivity of faces and edges.", \
+"Text",ExpressionUUID->"669c5e80-a7a4-4059-9d91-c060eb81d915"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+   RowBox[{"mesh", ",", "2", ",", "1"}], 
+   "]"}]}]], "Input",ExpressionUUID->"bfd368dc-2ac4-4a00-bfac-ea7d2c7fb5c2"],
+
+Cell["This is a bipartite graph.", \
+"Text",ExpressionUUID->"216534cf-af51-4d4b-a26b-c812eebff6b4"],
+
+Cell[BoxData[
+ RowBox[{"IGBipartiteQ", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"56dede61-45a9-42b9-a5a3-7a436248cb14"],
+
+Cell[TextData[{
+ "The vertex names are the same as the mesh cell indices (see ",
+ Cell[BoxData[
+ "MeshCellIndex"],ExpressionUUID->"400bea82-ab55-4647-8f64-1f3688b44c5d"],
+ ")."
+}], "Text",ExpressionUUID->"a00e7acf-4677-4071-bf04-c2950d61d26e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"VertexList", "[", "g", "]"}], "//", 
+  "Short"}]], "Input",ExpressionUUID->"13630291-5ff7-48d5-a95c-6aec014d97df"],
+
+Cell["Colour the faces of the mesh.", \
+"Text",ExpressionUUID->"56b30d58-06cb-48fa-80bb-2f5ba3314862"],
+
+Cell[BoxData[
+ RowBox[{"SetProperty", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"mesh", ",", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "All"}], "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"MeshCellStyle", "\[Rule]", 
+    RowBox[{
+     RowBox[{"ColorData", "[", "100", "]"}], "/@", 
+     RowBox[{"IGVertexColoring", "@", 
+      RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+       RowBox[{"mesh", ",", "2"}], "]"}]}]}]}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"de1606f3-24fa-4595-8eab-1bf02a5ffa7d"],
+
+Cell["\<\
+The edge-edge connectivity is identical to the line graph of the \
+vertex-vertex connectivity.\
+\>", "Text",ExpressionUUID->"becdb0f7-96e5-4e10-aa32-8bddf7a79b87"],
+
+Cell[BoxData[
+ RowBox[{"IGIsomorphicQ", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"LineGraph", "@", 
+    RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+     RowBox[{"mesh", ",", "0"}], "]"}]}], ",", 
+   RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+    RowBox[{"mesh", ",", "1"}], "]"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"decf1187-3cf9-4f89-a30d-9423c4fe7cd4"],
+
+Cell["\<\
+Compute the adjacency matrix of the vertex-vertex connectivity.\
+\>", "Text",ExpressionUUID->"d1f7d8dd-658f-4eca-928b-b5bb1a813a78"],
+
+Cell[BoxData[
+ RowBox[{"mesh", "=", 
+  RowBox[{"DiscretizeRegion", "[", 
+   RowBox[{
+    RowBox[{"Sphere", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"PrecisionGoal", "\[Rule]", "1.5"}], ",", 
+    RowBox[{"MaxCellMeasure", "\[Rule]", "1"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "Small"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"56b3d7b6-288c-44ee-801a-2d848e9bcb70"],
+
+Cell[BoxData[
+ RowBox[{"MatrixPlot", "@", 
+  RowBox[{"IGMeshCellAdjacencyMatrix", "[", 
+   RowBox[{"mesh", ",", "0"}], 
+   "]"}]}]], "Input",ExpressionUUID->"0a12996f-95d9-44a7-8b0e-94f3f2480f56"],
+
+Cell["Compute the adjacency matrix of the edge-face connectivity.", \
+"Text",ExpressionUUID->"9c4914ce-d4db-4024-93c0-323806be2490"],
+
+Cell[BoxData[
+ RowBox[{"bm", "=", 
+  RowBox[{"IGMeshCellAdjacencyMatrix", "[", 
+   RowBox[{"mesh", ",", "1", ",", "2"}], 
+   "]"}]}]], "Input",ExpressionUUID->"c557f7af-5990-47c5-a854-f53d083ffade"],
+
+Cell[BoxData[
+ RowBox[{"MatrixPlot", "[", "bm", 
+  "]"}]], "Input",ExpressionUUID->"c3b41ada-73e6-42ea-9dd9-ce6a61809648"],
+
+Cell[TextData[{
+ "This is the (non-square) incidence matrix of a bipartite graph. The graph \
+can be reconstructed using ",
+ Cell[BoxData[
+ "IGBipartiteIncidenceGraph"],ExpressionUUID->
+  "9d57e336-4360-4989-830f-7e9fbe3ed79c"],
+ "."
+}], "Text",ExpressionUUID->"60202725-2c00-4c70-ac4b-b118952861e3"],
+
+Cell[BoxData[
+ RowBox[{"Graph3D", "@", 
+  RowBox[{
+  "IGBipartiteIncidenceGraph", "[", "bm", 
+   "]"}]}]], "Input",ExpressionUUID->"ce660676-ffa3-4ba6-b72d-0cad389b29f1"]
 }, Closed]]
 }, Closed]],
 
@@ -25614,7 +26309,42 @@ Cell[BoxData[
  CellChangeTimes->{{3.7029096412502003`*^9, 3.702909676684216*^9}, {
   3.702909770785358*^9, 3.702909959548255*^9}, {3.702910021776483*^9, 
   3.702910026584179*^9}},ExpressionUUID->"2f857965-e471-4334-b687-\
-9d78e5c8b273"]
+9d78e5c8b273"],
+
+Cell["\<\
+Colour vertices based on their graph distance form a given vertex:\
+\>", "Text",ExpressionUUID->"782b9c47-018d-459c-8acb-e2da258f792d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<DolphinSocialNetwork\>\""}], 
+     "}"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"000c2408-75d8-4849-9ae7-c28f84f927fe"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Graph", "[", 
+   RowBox[{"g", ",", 
+    RowBox[{"EdgeStyle", "\[Rule]", "LightGray"}], ",", 
+    RowBox[{"VertexSize", "\[Rule]", "1"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}], "//", 
+  "\[IndentingNewLine]", 
+  RowBox[{"IGVertexMap", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "\"\<Rainbow\>\"", "]"}], ",", 
+    RowBox[{"VertexStyle", "->", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"Rescale", "@", 
+        RowBox[{"First", "@", 
+         RowBox[{"IGDistanceMatrix", "[", 
+          RowBox[{"#", ",", 
+           RowBox[{"{", "\"\<Feather\>\"", "}"}]}], "]"}]}]}], "&"}], 
+      ")"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input",ExpressionUUID->"b6b42fee-ba69-4faa-bf6d-09334b79f003"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -25938,15 +26668,8 @@ using ",
  ":"
 }], "Text",ExpressionUUID->"a6f22f3a-286b-4325-b582-64605b4bc71e"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData["$IGExportFormats"], \
 "Input",ExpressionUUID->"1fa19489-a270-4f1f-b5fa-4c5a36d3a3c5"],
-
-Cell[BoxData[
- RowBox[{"{", "\<\"GraphML\"\>", 
-  "}"}]], "Output",ExpressionUUID->"163cb6e3-41d1-4129-aa99-3745dc8391d5"]
-}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -25961,8 +26684,6 @@ such as the igraph library itself. ",
  "IGExport"],ExpressionUUID->"313910a3-4a83-4e07-92cc-5449033c782a"],
  " provides a standards compliant implementation."
 }], "Text",ExpressionUUID->"9a15030c-6ebb-4d30-a3b0-c4c3c8203a9e"],
-
-Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{
@@ -25980,31 +26701,7 @@ Cell[BoxData[
    RowBox[{
    "avoid", " ", "showing", " ", "more", " ", "than", " ", "15", " ", 
     "lines"}], " ", 
-   "*)"}]}]], "Input",ExpressionUUID->"9127ab6f-c4f0-4e4c-8086-bbb412a1b452"],
-
-Cell[BoxData[
- TagBox[
-  RowBox[{"\<\"<?xml version='1.0' encoding='UTF-8'?>\\n<!-- created by \
-IGraph/M, http://szhorvat.net/mathematica/IGraphM -->\\n<graphml \
-xmlns='http://graphml.graphdrawing.org/xmlns'\\n    \
-xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\\n    \
-xsi:schemaLocation='http://graphml.graphdrawing.org/xmlns \
-http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd'>\\n <key for='edge'\\n \
-    id='e_EdgeWeight'\\n     attr.name='EdgeWeight'\\n     attr.type='long' \
-/>\\n <key for='node'\\n     id='v_VertexWeight'\\n     \
-attr.name='VertexWeight'\\n     attr.type='long' />\\n <graph id='Graph'\\n   \
- \"\>", "\[Ellipsis]", "\<\"1</data>\\n  </edge>\\n  <edge source='United \
-Kingdom'\\n      target='Malta'>\\n   <data key='e_EdgeWeight'>3</data>\\n  \
-</edge>\\n  <edge source='United Kingdom'\\n      target='Netherlands'>\\n   \
-<data key='e_EdgeWeight'>1</data>\\n  </edge>\\n  <edge source='United \
-Kingdom'\\n      target='Norway'>\\n   <data key='e_EdgeWeight'>1</data>\\n  \
-</edge>\\n  <edge source='United Kingdom'\\n      target='Sweden'>\\n   <data \
-key='e_EdgeWeight'>2</data>\\n  </edge>\\n  <edge source='United Kingdom'\\n  \
-    target='Turkey'>\\n   <data key='e_EdgeWeight'>3</data>\\n  </edge>\\n \
-</graph>\\n</graphml>\"\>"}],
-  Short[#, 
-   15]& ]], "Output",ExpressionUUID->"fd4b2313-faa0-4297-9d66-cecaa50663a6"]
-}, Open  ]]
+   "*)"}]}]], "Input",ExpressionUUID->"9127ab6f-c4f0-4e4c-8086-bbb412a1b452"]
 }, Closed]]
 }, Closed]],
 
@@ -26012,6 +26709,187 @@ Cell[CellGroupData[{
 
 Cell["Other utility functions", \
 "Subsection",ExpressionUUID->"386f6d4b-3666-4959-8f2d-185c7480a101"],
+
+Cell[CellGroupData[{
+
+Cell["IGShorthand", \
+"Subsubsection",ExpressionUUID->"16b5f24d-d786-48d2-aee4-0d9f8f9aee55"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGShorthand"}]], \
+"Input",ExpressionUUID->"e1197ffb-6fd8-4da0-af4f-26ed479159d1"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"ffb9ab81-5abc-42de-b24d-2405b4d68693"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "78d5a4be-580c-420c-be8a-8b7561a3e44b"],
+ " keeps self loops in the graph."
+}], "Item",ExpressionUUID->"0fcba618-f6c4-4db9-a23f-e1a592bdbaee"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  "9abe6374-ffb2-4146-9287-1b60cfd8d82f"],
+ " keeps parallel edges in the graph."
+}], "Item",ExpressionUUID->"dab67fb7-a80d-4fe9-b7c1-226ef3d87a05"]
+}, Open  ]],
+
+Cell["Construct a cycle graph.", \
+"Text",ExpressionUUID->"a6f31a97-b4de-4cb2-b135-6472d89fe23e"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", "\"\<1-2-3-4-1\>\"", 
+  "]"}]], "Input",ExpressionUUID->"a4b56bf0-c66f-4b9c-b8db-f102ffb0cb6c"],
+
+Cell[TextData[{
+ "Vertex labels are shown by default. They can be turned off using ",
+ Cell[BoxData[
+  RowBox[{"VertexLabels", "\[Rule]", "None"}]],ExpressionUUID->
+  "8baa589a-26f7-493d-8ac0-767602eb0aa3"],
+ "."
+}], "Text",ExpressionUUID->"400af4e2-7e0f-40af-bf2d-429eee4fe89b"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", 
+  RowBox[{"\"\<1-2-3-1\>\"", ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "None"}]}], 
+  "]"}]], "Input",ExpressionUUID->"fd21e417-35a7-4cfd-bb3c-c979fc770e89"],
+
+Cell[TextData[{
+ "The interpretation of ",
+ Cell[BoxData["-"],ExpressionUUID->"cc9be28d-4b0c-4ed4-9ccf-327e8d407925"],
+ " as directed or undirected is controlled by the ",
+ Cell[BoxData[
+ "DirectedEdges"],ExpressionUUID->"961535a4-1b4c-4d70-920b-f3a0f4531fe9"],
+ " option."
+}], "Text",ExpressionUUID->"b3eb63b5-b25c-4d4d-89af-b8b07b6440cc"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", 
+  RowBox[{"\"\<1-2-3-1\>\"", ",", 
+   RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], 
+  "]"}]], "Input",ExpressionUUID->"022007c0-0c67-403f-8b3a-445dfd0f79e9"],
+
+Cell[TextData[{
+ "Directed edges can be input using ",
+ StyleBox["->", "Program"],
+ ", ",
+ StyleBox["<-", "Program"],
+ " or ",
+ StyleBox["<->", "Program"],
+ "."
+}], "Text",ExpressionUUID->"119937b4-c803-4097-a17e-9dad7d7ce0f3"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", "\"\<Jim -> Suzy <- Joe\>\"", 
+  "]"}]], "Input",ExpressionUUID->"8aa6f6ad-a08d-4cb8-8053-0be43404f5ac"],
+
+Cell[TextData[{
+ StyleBox["<->", "Program"],
+ " is interpreted as a pair of directed edges."
+}], "Text",ExpressionUUID->"d2f00832-2f84-40f9-a06a-5a4f57573324"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", "\"\<1<->2->3\>\"", 
+  "]"}]], "Input",ExpressionUUID->"bc9cd3ff-d13d-4fcf-9491-d78977ea0c1f"],
+
+Cell["\<\
+Mixed graphs, containing both directed and undirected edges, are supported. \
+Note that mixed graphs are not allowed as input to most IGraph/M functions.\
+\>", "Text",ExpressionUUID->"f0baea53-bdd7-435d-8e0e-58380212dea9"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", "\"\<1-2<-3\>\"", 
+  "]"}]], "Input",ExpressionUUID->"a52b7267-5915-4cfc-9f4b-fc5bf77da83d"],
+
+Cell["Disconnected components are separated by commas.", \
+"Text",ExpressionUUID->"d9d8c7c9-03d6-418a-a7e0-b3f6067a4e63"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", "\"\<1, 2-3, 4-5-6\>\"", 
+  "]"}]], "Input",ExpressionUUID->"c59b7db5-fc7b-4033-884e-f16212069848"],
+
+Cell["\<\
+Groups of vertices can be given using the colon separator. Edges will be \
+connected to each vertex in the group. This makes it easy to specify a \
+complete graph ...\
+\>", "Text",ExpressionUUID->"3aad68c7-fb04-4dc6-a8e1-68b5fbe3c3ca"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", "\"\<A:B:C:D:E -- A:B:C:D:E\>\"", 
+  "]"}]], "Input",ExpressionUUID->"49224e77-7179-4bd6-9217-2db45372cc11"],
+
+Cell["... or a complete bipartite graph.", \
+"Text",ExpressionUUID->"e880296f-bbb3-4f88-8f8f-53872b3cebea"],
+
+Cell[BoxData[
+ RowBox[{"IGLayoutBipartite", "@", 
+  RowBox[{
+  "IGShorthand", "[", "\"\<a:b:c - 1:2:3:4\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"e6861e09-4645-4a4b-86e8-80760b85647f"],
+
+Cell["\<\
+Vertex names are taken as strings, except when they can be interpreted as an \
+integer.\
+\>", "Text",ExpressionUUID->"1bbbf653-6e45-4939-9b5e-112116b25a14"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGShorthand", "[", "\"\<xyz - 137\>\"", "]"}], "//", 
+   "VertexList"}], "//", 
+  "InputForm"}]], \
+"Input",ExpressionUUID->"a7629a47-0651-4d32-8be1-57305b068713"],
+
+Cell[TextData[{
+ "Spaces are allowed in vertex names, and edges can be specified using any \
+number of ",
+ Cell[BoxData["-"],ExpressionUUID->"9054f9af-92d0-4ebd-9835-a6ee4e9a74d6"],
+ " characters."
+}], "Text",ExpressionUUID->"43203e39-416f-4fd8-8494-92cbf7ed12cd"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", "\"\<Sophus Lie --- Camille Jordan\>\"", 
+  "]"}]], "Input",ExpressionUUID->"8d0556e2-e3a1-4a14-bd9b-1b77f027527d"],
+
+Cell[TextData[{
+ "Self-loops and parallel edges are removed by default because these are \
+often created as an undesired by-product of vertex groups. They can be \
+re-enabled using the ",
+ Cell[BoxData[
+ "SelfLoops"],ExpressionUUID->"710a0828-d9fb-4b98-84a6-ccab867ffe09"],
+ " or ",
+ Cell[BoxData[
+ "\"\<MultipleEdges\>\""],ExpressionUUID->
+  "dd293516-3841-4a46-a3d9-1a8847019629"],
+ " options when desired."
+}], "Text",ExpressionUUID->"902cc1e8-8fa2-47be-a694-542eac87504c"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", 
+  RowBox[{"\"\<1:2:3 - 1:2:3\>\"", ",", 
+   RowBox[{"SelfLoops", "\[Rule]", "True"}]}], 
+  "]"}]], "Input",ExpressionUUID->"1daa86d6-080a-4ebb-b70f-05c648a71646"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", 
+  RowBox[{"\"\<1:2:3 - 1:2:3\>\"", ",", 
+   RowBox[{"SelfLoops", "\[Rule]", "True"}], ",", 
+   RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]}], 
+  "]"}]], "Input",ExpressionUUID->"3c1b8e11-f4e0-45d4-b4aa-8ce69f312a8f"],
+
+Cell[BoxData[
+ RowBox[{"IGShorthand", "[", 
+  RowBox[{"\"\<1-2-1-3\>\"", ",", 
+   RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]}], 
+  "]"}]], "Input",ExpressionUUID->"a3b2eb10-d775-41fa-b7e1-78267f23d0cd"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -26064,8 +26942,8 @@ Cell[BoxData[
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{917, 838},
-WindowMargins->{{Automatic, 96}, {Automatic, 72}},
+WindowSize->{746, 763},
+WindowMargins->{{Automatic, 106}, {Automatic, 30}},
 WindowTitle->"IGraph/M Documentation",
 PrintingStartingPageNumber->1,
 PageHeaders->{{
@@ -26106,8 +26984,8 @@ PrivateNotebookOptions->{"FileOutlineCache"->False},
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSize->250},
-FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
-10, 2017)",
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 12, \
+2017)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -26124,7 +27002,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Item"], DefaultInlineFormatType -> StandardForm]}, Visible -> 
   False, FrontEndVersion -> 
-  "11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September 10, 2017)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 12, 2017)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
