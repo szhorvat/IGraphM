@@ -34,6 +34,7 @@ igraph is one of the most complete open source graph manipulation libraries avai
  - Fast estimates of vertex betweenness, edge betweenness and closeness centrality; for large graphs.
  - Community detection algorithms.
  - Minimum feedback arc set for weighted and unweighted graphs.
+ - Vertex and edge colouring.
  - Find all cliques (not just maximal ones); count cliques of different sizes without storing them; work with weighted cliques.
  - Count 3- and 4-motifs; find triangles.
  - Histogram for shortest path lengths (weighted and unweighted).
@@ -45,20 +46,21 @@ igraph is one of the most complete open source graph manipulation libraries avai
  - Additional layout algorithms: most work with weighted graphs and can continue the layout optimization starting from a given set of vertex positions.
  - Biconnected components, articulation points, find all minimum vertex cuts.
  - Functions for easy graph property transformations and graph styling.
+ - Functions for converting geometric meshes to graphs.
  - Several other specialized functions not mentioned here ...
 
 The documentation contains many examples and can be accessed using the `IGDocumentation[]` command.
 
 ## Installation
 
-IGraph/M can be installed like any other Mathematica application.
+IGraph/M can be installed like any other Mathematica application distributed as a paclet.
 
-Download the `.paclet` files from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.92.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.93.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
         Needs["PacletManager`"]
-        PacletInstall["~/Downloads/IGraphM-0.3.92.paclet"]
+        PacletInstall["~/Downloads/IGraphM-0.3.93.paclet"]
 
- IGraph/M requires Mathematica 10.0 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
+IGraph/M requires Mathematica 10.0 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
 The package can now be loaded with
 
