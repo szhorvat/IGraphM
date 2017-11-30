@@ -3748,7 +3748,8 @@ IGMeshGraph[mesh_?meshQ, opt : OptionsPattern[{IGMeshGraph, Graph}]] :=
         Message[IGMeshGraph::invopt, ew, EdgeWeight, OptionValue[IGMeshGraph, EdgeWeight]];
         EdgeWeight -> PropertyValue[{mesh, 1}, MeshCellMeasure]
       ];
-      Graph[Developer`ToPackedArray@MeshCells[mesh, 0][[All, 1]],
+      Graph[
+        Developer`ToPackedArray@MeshCells[mesh, 0][[All, 1]],
         Developer`ToPackedArray@MeshCells[mesh, 1][[All, 1]],
         edgeWeightRule,
         Sequence @@ FilterRules[FilterRules[{opt}, Options[Graph]], Except@Options[IGMeshGraph]],
