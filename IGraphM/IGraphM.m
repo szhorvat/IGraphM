@@ -3765,7 +3765,7 @@ igMeshCellAdjacencyMatrix[mesh_, 0, 0] :=
     With[{edges = Developer`ToPackedArray[MeshCells[mesh, 1][[All, 1]]]},
       SparseArray[
         Rule[
-          Join[edges, Transpose[Transpose[edges][[{2, 1}]]]],
+          Join[edges, Reverse[edges, {2}]],
           ConstantArray[1, 2 Length[edges]]
         ],
         {MeshCellCount[mesh, 0], MeshCellCount[mesh, 0]}
