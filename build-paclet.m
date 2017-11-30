@@ -158,13 +158,15 @@ With[{$buildDir = $buildDir},
     MCode[
       PacletManager`PacletDirectoryAdd[$buildDir];
       SetOptions[First[$Output], FormatType -> StandardForm];
+      Internal`$MessageMenu = False;
       RewriteNotebook[
         NBFEProcess[NotebookEvaluate[#, InsertResults -> True]&]
       ]["IGDocumentation.nb"]
     ],
     (* Note 1: 10.0 can't evaluate from a MathLink-controlled kernel due to a bug, use newer version *)
-    (* Note 2: Use 10.4, which supports PlotTheme. *)
-    "10.4"
+    (* Note 2: Use at least 10.4, which supports PlotTheme. *)
+    (* Note 3: Use at least 11.0, which supports the Region property of PolyhedronData. *)
+    "11.0"
   ]
 ]
 
