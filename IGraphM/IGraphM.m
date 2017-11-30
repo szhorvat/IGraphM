@@ -400,7 +400,7 @@ IGCommunitiesInfoMAP::usage =
     "IGCommunitiesInfoMAP[graph, trials]";
 IGCommunitiesSpinGlass::usage = "IGCommunitiesSpinGlass[graph] finds communities using a spin glass model and simulated annealing.";
 IGCommunitiesLeadingEigenvector::usage = "IGCommunitiesLeadingEigenvector[graph] finds communities based on the leading eigenvector of the modularity matrix.";
-IGCommunitiesFluid::usage = "IGCommunitiesFluid[graph, clusterCount]";
+IGCommunitiesFluid::usage = "IGCommunitiesFluid[graph, clusterCount] finds communities using the fluid communities algorithm.";
 
 IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 
