@@ -3052,8 +3052,9 @@ Cell[BoxData[
  RowBox[{"IGBipartiteQ", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"e5f21391-5eb0-4376-a811-0f13429c4732"],
 
-Cell["Verify that no edges run between two vertex subsets.", \
-"Text",ExpressionUUID->"022695fa-9c87-48b7-91e3-f9d4867dae60"],
+Cell["\<\
+Verify that no edges run between two vertex subsets of the graph.\
+\>", "Text",ExpressionUUID->"022695fa-9c87-48b7-91e3-f9d4867dae60"],
 
 Cell[BoxData[
  RowBox[{"IGBipartiteQ", "[", 
@@ -3073,8 +3074,10 @@ Cell[BoxData[
  RowBox[{"IGBipartitePartitions", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"ffc8be47-d15e-47a0-8725-5519b6afa1ee"],
 
-Cell["Let the first partition contain vertex 10.", \
-"Text",ExpressionUUID->"9dbd4e53-403e-490e-8ed8-bda8d3001475"],
+Cell["\<\
+Ensure that the partitions are returned in such an order that the first one \
+contains vertex 10.\
+\>", "Text",ExpressionUUID->"9dbd4e53-403e-490e-8ed8-bda8d3001475"],
 
 Cell[BoxData[
  RowBox[{"IGBipartitePartitions", "[", 
@@ -3095,17 +3098,22 @@ Cell[BoxData[
 Cell["Compute an incidence matrix.", \
 "Text",ExpressionUUID->"19a6b76c-c297-42fb-a1bf-f3f0bd938e7a"],
 
-Cell[BoxData[
- RowBox[{"bm", "=", 
-  RowBox[{
-  "IGBipartiteIncidenceMatrix", "[", "g", 
-   "]"}]}]], "Input",ExpressionUUID->"14c079b8-644c-4485-9294-a5986596813c"],
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"bm", "=", 
+   RowBox[{"IGBipartiteIncidenceMatrix", "[", "g", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"MatrixPlot", "[", "bm", 
+  "]"}]}], "Input",ExpressionUUID->"14c079b8-644c-4485-9294-a5986596813c"],
 
 Cell["Reconstruct a graph from an incidence matrix.", \
 "Text",ExpressionUUID->"e4ee9ae1-22a1-48da-b487-6a8cc8210fd0"],
 
 Cell[BoxData[
- RowBox[{"IGBipartiteIncidenceGraph", "[", "bm", 
+ RowBox[{"IGBipartiteIncidenceGraph", "[", 
+  RowBox[{"bm", ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}], ",", 
+   RowBox[{"GraphLayout", "\[Rule]", "\"\<BipartiteEmbedding\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"d7d2c6b0-9837-42dd-9601-a2037d5a7475"],
 
 Cell["\<\
@@ -3122,7 +3130,23 @@ Cell[BoxData[
       RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
      RowBox[{"{", 
       RowBox[{"6", ",", "7", ",", "8"}], "}"}]}], "}"}]}], 
-  "]"}]], "Input",ExpressionUUID->"21108a56-c86b-4a39-b6a4-74fe9d0ad106"]
+  "]"}]], "Input",ExpressionUUID->"21108a56-c86b-4a39-b6a4-74fe9d0ad106"],
+
+Cell["\<\
+Reconstruct the bipartite graph while specifying vertex names.\
+\>", "Text",ExpressionUUID->"26eadf19-5fec-45c7-8605-fd3e0a7bd553"],
+
+Cell[BoxData[
+ RowBox[{"IGBipartiteIncidenceGraph", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"a", ",", "b", ",", "c"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"d", ",", "e", ",", "f"}], "}"}]}], "}"}], ",", "%", ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"fb0d1c7b-35c7-4dd9-b4a4-c21983991b64"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -4022,9 +4046,9 @@ Cell[BoxData[
    ")"}]}]], "Input",ExpressionUUID->"8c425de4-93b2-4c4c-b3e2-166976a318fa"],
 
 Cell["\<\
-Visualize the groups of vertices members of which may be transformed into \
-each other by some graph automorphism.\
-\>", "Text",ExpressionUUID->"e83d34de-bf5e-4275-bca0-6c5ae8d2f00a"],
+Visualize the vertex equivalence classes induced by a \
+graph\[CloseCurlyQuote]s automorphism group.\
+\>", "Text",ExpressionUUID->"35a9ad83-4575-4654-be72-1095ac245c21"],
 
 Cell[BoxData[
  RowBox[{"With", "[", 
@@ -4044,6 +4068,40 @@ Cell[BoxData[
      RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}]}], 
   "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"28236d5f-b5e0-4115-8519-775449e0d325"],
+
+Cell["\<\
+Visualize the edge equivalence classes of a polyhedron, induced by its graph\
+\[CloseCurlyQuote]s automorphism group.\
+\>", "Text",ExpressionUUID->"1c6cd318-482f-4fc7-823a-9a38069ea8fb"],
+
+Cell[BoxData[
+ RowBox[{"mesh", "=", 
+  RowBox[{"PolyhedronData", "[", 
+   RowBox[{"\"\<TruncatedOctahedron\>\"", ",", "\"\<Region\>\""}], 
+   "]"}]}]], "Input",ExpressionUUID->"7ccf1cfa-b503-4424-912b-47f31d6171d7"],
+
+Cell[BoxData[
+ RowBox[{"With", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"g", "=", 
+     RowBox[{"IGMeshGraph", "[", 
+      RowBox[{"mesh", ",", 
+       RowBox[{"VertexStyle", "\[Rule]", "Black"}]}], "]"}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"HighlightGraph", "[", 
+    RowBox[{"g", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"EdgeList", "[", "g", "]"}], "[", 
+        RowBox[{"[", "#", "]"}], "]"}], "&"}], "/@", 
+      RowBox[{"GroupOrbits", "@", 
+       RowBox[{"PermutationGroup", "@", 
+        RowBox[{"IGBlissAutomorphismGroup", "@", 
+         RowBox[{"LineGraph", "[", "g", "]"}]}]}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"3e6c7cb2-2610-4017-b238-e8cfb9d64465"],
 
 Cell["\<\
 Bliss works by computing a canonical labelling of vertices. Then isomorphism \
@@ -24038,14 +24096,12 @@ Cell[BoxData[
 
 Cell[TextData[{
  "When the ",
- Cell[BoxData["\"\<Modularity\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
-  "4e95b1f6-a32f-4dc6-973a-7d31d20fa631"],
+ Cell[BoxData[
+ "\"\<Modularity\>\""],ExpressionUUID->"4e95b1f6-a32f-4dc6-973a-7d31d20fa631"],
  " property is available, ",
  Cell[BoxData[
   RowBox[{"Max", "[", 
-   RowBox[{"cl", "[", "\"\<Modularity\>\"", "]"}], "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+   RowBox[{"cl", "[", "\"\<Modularity\>\"", "]"}], "]"}]],ExpressionUUID->
   "cfe40ab6-a485-4d53-9801-5dc37f43df1a"],
  " gives the modularity of the current partitioning."
 }], "Text",ExpressionUUID->"3f3ee0ff-51fd-444b-b9a0-d8a6e2e1a984"],
@@ -24149,13 +24205,12 @@ Cell["Available option values:", \
 "Text",ExpressionUUID->"4178550c-d8a0-4db2-b4dc-861f3631e085"],
 
 Cell[TextData[{
- Cell[BoxData["\"\<ClusterCount\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "\"\<ClusterCount\>\""],ExpressionUUID->
   "8040066d-c28f-4da6-afb3-6338b62c1676"],
  ", the number of communities to return. Default: ",
- Cell[BoxData["Automatic"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "9ad9bf8e-2f09-495e-8da1-29994dd460d9"],
+ Cell[BoxData[
+ "Automatic"],ExpressionUUID->"9ad9bf8e-2f09-495e-8da1-29994dd460d9"],
  "."
 }], "Item",ExpressionUUID->"b4376456-17b1-4004-acd1-c7a46b1c48b3"],
 
@@ -24180,8 +24235,7 @@ Cell[BoxData[
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"IGCommunitiesFluid", "[", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"IGCommunitiesFluid", "[", "]"}]],ExpressionUUID->
   "c96a24c6-55a5-4096-bdbf-d9d84549ea9a"],
  " implements the fluid communities algorithm."
 }], "Text",ExpressionUUID->"87d2126d-3a35-4b11-b6d8-c488118b79bd"],
@@ -24295,14 +24349,13 @@ Cell["Available option values:", \
 "Text",ExpressionUUID->"77e1ca42-9f1f-40bb-89dc-347698c23151"],
 
 Cell[TextData[{
- Cell[BoxData["\"\<ClusterCount\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "\"\<ClusterCount\>\""],ExpressionUUID->
   "25ddd142-8e19-4f7b-ab66-2e6643fe45ec"],
  ", the number of communities to return. May return fewer communities than \
 requested. Default: ",
- Cell[BoxData["Automatic"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "f09d9bdb-902d-472a-9fe3-f66fadd3e13f"],
+ Cell[BoxData[
+ "Automatic"],ExpressionUUID->"f09d9bdb-902d-472a-9fe3-f66fadd3e13f"],
  "."
 }], "Item",ExpressionUUID->"2b65218d-1359-4b6b-89c6-95c7b91030fa"],
 
@@ -24475,13 +24528,12 @@ Cell["Available option values:", \
 "Text",ExpressionUUID->"61973d41-364d-4247-b8dc-fcb0fe0abc33"],
 
 Cell[TextData[{
- Cell[BoxData["\"\<ClusterCount\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "\"\<ClusterCount\>\""],ExpressionUUID->
   "4a22a609-8995-49b1-91d7-b8b6b847eb45"],
  ", the number of communities to return. Default: ",
- Cell[BoxData["Automatic"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "4261f2f2-764d-44d0-b446-c24b6695ca51"],
+ Cell[BoxData[
+ "Automatic"],ExpressionUUID->"4261f2f2-764d-44d0-b446-c24b6695ca51"],
  "."
 }], "Item",ExpressionUUID->"fb817a5a-d497-474c-8f05-7a060bba2899"],
 
@@ -24952,7 +25004,390 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"?", 
   "IGRandomEdgeIndexWalk"}]], \
-"Input",ExpressionUUID->"d31255a3-f65d-4d13-aa77-7529e27fb7fd"]
+"Input",ExpressionUUID->"d31255a3-f65d-4d13-aa77-7529e27fb7fd"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGRandomEdgeWalk"],ExpressionUUID->"94ba92be-25e4-4540-b8c8-7671071e50e6"],
+ " takes a random walk on a graph and returns the list of traversed edges."
+}], "Text",ExpressionUUID->"cf55b1e4-c2f5-485a-a3ce-d8045a69ba28"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGDeBruijnGraph", "[", 
+    RowBox[{"3", ",", "3"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"IGRandomEdgeWalk", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"RandomChoice", "@", 
+    RowBox[{"VertexList", "[", "g", "]"}]}], ",", "20"}], 
+  "]"}]}], "Input",ExpressionUUID->"dc186e4d-684f-4300-84a7-f40de0ac0906"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGRandomEdgeIndexWalk"],ExpressionUUID->
+  "4e618bb5-fd31-4754-a923-50b060e5b2ad"],
+ " returns the list of indices of the traversed edges instead. This makes it \
+useful for working with multigraphs, as it allows distinguishing between \
+parallel edges."
+}], "Text",ExpressionUUID->"f0bf8b59-db06-4c5f-9b2f-cdbf80c77c16"],
+
+Cell["\<\
+As an example application, let us consider the following set of affine \
+transformations ...\
+\>", "Text",ExpressionUUID->"c3bd6bfe-16ac-4052-ba07-a7f9dac1f989"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"scale12", "=", 
+   RowBox[{"ScalingTransform", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"1", "/", "2"}], ",", 
+      RowBox[{"1", "/", "2"}]}], "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"a11", "=", 
+   RowBox[{
+    RowBox[{"TranslationTransform", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"1", "/", "4"}], ",", 
+       RowBox[{
+        SqrtBox["3"], "/", "4"}]}], "}"}], "]"}], "@*", "scale12"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"a21", "=", 
+   RowBox[{
+    RowBox[{"RotationTransform", "[", 
+     RowBox[{"Pi", "/", "3"}], "]"}], "@*", "scale12"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"b21", "=", 
+   RowBox[{
+    RowBox[{"TranslationTransform", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"3", "/", "4"}], ",", 
+       RowBox[{
+        SqrtBox["3"], "/", "4"}]}], "}"}], "]"}], "@*", 
+    RowBox[{"RotationTransform", "[", 
+     RowBox[{
+      RowBox[{"-", "Pi"}], "/", "3"}], "]"}], "@*", "scale12"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"a12", "=", 
+   RowBox[{
+    RowBox[{"TranslationTransform", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"1", "/", "2"}], ",", "0"}], "}"}], "]"}], "@*", 
+    RowBox[{"ScalingTransform", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"1", "/", "2"}], ",", 
+       RowBox[{
+        RowBox[{"-", "1"}], "/", "2"}]}], "}"}], "]"}]}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"a22", "=", "scale12"}], 
+  ";"}]}], "Input",ExpressionUUID->"c352de74-f85f-43f4-aa11-c08f3d6a6fab"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"trafos", "=", 
+   RowBox[{"{", 
+    RowBox[{"a11", ",", "a21", ",", "b21", ",", "a12", ",", "a22"}], "}"}]}], 
+  ";"}]], "Input",ExpressionUUID->"fdc47f92-459f-419b-b72c-e30029afebff"],
+
+Cell["... and visualize them.", \
+"Text",ExpressionUUID->"0c75bf21-2866-4023-8276-cc1903a2e5f6"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"tri", "=", 
+   RowBox[{"Triangle", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"1", "/", "2"}], ",", 
+        RowBox[{
+         SqrtBox["3"], "/", "2"}]}], "}"}]}], "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Graphics", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"tri", ",", "Red", ",", 
+       RowBox[{"GeometricTransformation", "[", 
+        RowBox[{"tri", ",", "#"}], "]"}]}], "}"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "]"}], "&"}], "/@", 
+  "trafos"}]}], \
+"Input",ExpressionUUID->"08499770-7252-4c1d-9b71-58955ee55336"],
+
+Cell["\<\
+These transformations describe the mutual self-similarity structure of two \
+fractal curves, according to the following directed graph. Each edge of the \
+graph corresponds to a transformation.\
+\>", "Text",ExpressionUUID->"b22b35ed-2d38-4e8e-8de2-7fdb9c1bcd09"],
+
+Cell[BoxData[
+ RowBox[{"graph", "=", 
+  RowBox[{"Graph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"1", "\[Rule]", "1"}], ",", 
+      RowBox[{"2", "\[Rule]", "1"}], ",", 
+      RowBox[{"2", "\[Rule]", "1"}], ",", 
+      RowBox[{"1", "\[Rule]", "2"}], ",", 
+      RowBox[{"2", "\[Rule]", "2"}]}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"VertexLabels", "\[Rule]", 
+     RowBox[{"Placed", "[", 
+      RowBox[{"\"\<Name\>\"", ",", "Center"}], "]"}]}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"VertexShape", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"1", "\[Rule]", 
+        GraphicsBox[
+         TagBox[RasterBox[CompressedData["
+1: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
+           "], {{0, 
+           314}, {360, 0}}, {0, 255},
+           ColorFunction->RGBColor],
+          BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
+          
+          Selectable->False],
+         DefaultBaseStyle->"ImageGraphics",
+         ImageSizeRaw->{360, 314},
+         PlotRange->{{0, 360}, {0, 314}}]}], ",", 
+       RowBox[{"2", "\[Rule]", 
+        GraphicsBox[
+         TagBox[RasterBox[CompressedData["
+1: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
+7RXAA9QNAKUoGgAAAAAAAAAAAACAYf4G0E7JMg==
+           "], {{0, 164}, {360, 
+           0}}, {0, 255},
+           ColorFunction->RGBColor],
+          BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
+          
+          Selectable->False],
+         DefaultBaseStyle->"ImageGraphics",
+         ImageSizeRaw->{360, 164},
+         PlotRange->{{0, 360}, {0, 164}}]}]}], "}"}]}], ",", 
+    RowBox[{"PerformanceGoal", "\[Rule]", "\"\<Quality\>\""}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"VertexSize", "\[Rule]", ".33"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "400"}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input",ExpressionUUID->"e3a9e101-4bf9-4424-9ba7-fb5e726ac6d8"],
+
+Cell["\<\
+Let us take a random walk on this graph, and iteratively apply \
+transformations to a point according to the traversed edges.\
+\>", "Text",ExpressionUUID->"0109693d-16d5-4a39-b59e-4b14d23830c8"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"walk", "=", 
+   RowBox[{"IGRandomEdgeIndexWalk", "[", 
+    RowBox[{"graph", ",", "1", ",", "20000"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pts", "=", 
+   RowBox[{"Rest", "@", 
+    RowBox[{"FoldList", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"#2", "[", "#1", "]"}], "&"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"0.", ",", "0."}], "}"}], ",", 
+      RowBox[{
+      "trafos", "\[LeftDoubleBracket]", "walk", "\[RightDoubleBracket]"}]}], 
+     "]"}]}]}], 
+  ";"}]}], "Input",ExpressionUUID->"bb0031f6-6894-4730-a3aa-6424dc8001f3"],
+
+Cell["\<\
+The resulting list of points will approximate the union of the two fractal \
+curves.\
+\>", "Text",ExpressionUUID->"656d6ab6-d05a-43bc-894a-62a15d26ea23"],
+
+Cell[BoxData[
+ RowBox[{"Image", "@", 
+  RowBox[{"Graphics", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"AbsolutePointSize", "[", "1", "]"}], ",", 
+     RowBox[{"Point", "[", "pts", "]"}]}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"24ad112e-931e-4812-be8f-cf7869c83506"],
+
+Cell["\<\
+The two curves can be separated by filtering points according to which graph \
+vertex they correspond to (i.e. which of the 5 edges was last traversed when \
+obtaining the point).\
+\>", "Text",ExpressionUUID->"b8b2f72f-b1e0-4e83-a39e-70484cf83d75"],
+
+Cell[BoxData[
+ RowBox[{"Image", "@", 
+  RowBox[{"Graphics", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"AbsolutePointSize", "[", "1", "]"}], ",", 
+     RowBox[{"Point", "@", 
+      RowBox[{"Pick", "[", 
+       RowBox[{"pts", ",", "walk", ",", 
+        RowBox[{"1", "|", "2", "|", "3"}]}], "]"}]}]}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"d7a955f7-9a68-4da5-9011-5effc65605c5"],
+
+Cell[BoxData[
+ RowBox[{"Image", "@", 
+  RowBox[{"Graphics", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"AbsolutePointSize", "[", "1", "]"}], ",", 
+     RowBox[{"Point", "@", 
+      RowBox[{"Pick", "[", 
+       RowBox[{"pts", ",", "walk", ",", 
+        RowBox[{"4", "|", "5"}]}], "]"}]}]}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"94902cbf-b010-42df-bfc8-25b83fde685f"],
+
+Cell[TextData[{
+ "The technique described here is taken from \[OpenCurlyDoubleQuote]",
+ ButtonBox["Generating self-affine tiles and their boundaries",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.mathematica-journal.com/2009/01/generating-self-affine-\
+tiles-and-their-boundaries/"], None},
+  ButtonNote->
+   "http://www.mathematica-journal.com/2009/01/generating-self-affine-tiles-\
+and-their-boundaries/"],
+ "\[CloseCurlyDoubleQuote] by Mark McClure."
+}], "Text",ExpressionUUID->"768f3661-fa65-486a-9f55-bbd9e6193547"]
 }, Closed]]
 }, Closed]],
 
@@ -24970,6 +25405,9 @@ Cell[BoxData[
  RowBox[{"?", 
   "IGMeshGraph"}]], \
 "Input",ExpressionUUID->"c4054c88-3a6c-4963-b636-9af6268fa0f2"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"b73d7daf-c257-4968-b038-06322735c6d3"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -25030,7 +25468,7 @@ Cell[BoxData[
   3.720531678733333*^9}},ExpressionUUID->"10b523c7-8208-4560-b634-\
 9fe7c31ffe81"],
 
-Cell["Find the corners:", \
+Cell["Find the corners.", \
 "Text",ExpressionUUID->"c7abf921-e541-4ec4-a186-a7ba034ace24"],
 
 Cell[BoxData[
@@ -25055,7 +25493,7 @@ Cell[BoxData[
   3.7205315417038794`*^9}},ExpressionUUID->"c5cca954-82a2-49c3-9b49-\
 eb95831486f7"],
 
-Cell["Highlight the shortest path:", \
+Cell["Highlight the shortest path.", \
 "Text",ExpressionUUID->"4a186f7a-8cdd-4129-a479-fa83f99de4e4"],
 
 Cell[BoxData[
@@ -26943,7 +27381,7 @@ Cell[BoxData[
 }, Open  ]]
 },
 WindowSize->{746, 763},
-WindowMargins->{{Automatic, 106}, {Automatic, 30}},
+WindowMargins->{{Automatic, 34}, {Automatic, 25}},
 WindowTitle->"IGraph/M Documentation",
 PrintingStartingPageNumber->1,
 PageHeaders->{{
@@ -26984,8 +27422,8 @@ PrivateNotebookOptions->{"FileOutlineCache"->False},
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSize->250},
-FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 12, \
-2017)",
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -27002,7 +27440,7 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Item"], DefaultInlineFormatType -> StandardForm]}, Visible -> 
   False, FrontEndVersion -> 
-  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 12, 2017)", 
+  "11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September 10, 2017)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
