@@ -2126,6 +2126,22 @@ MT[
 ]
 
 MT[
+  sameGraphQ[
+    IGMeshGraph[DiscretizeRegion[Point[{0,0}]]],
+    Graph[{1},{}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGMeshCellAdjacencyGraph[DiscretizeRegion[Point[{0,0}]], 0],
+    Graph[{{0,1}},{}]
+  ],
+  True
+]
+
+MT[
   With[{r = DiscretizeRegion[Cuboid[], MaxCellMeasure -> 1]},
     Table[EdgeList@IGMeshCellAdjacencyGraph[r, d1, d2], {d1, 0, 3}, {d2, 0, 3}]
   ],
@@ -2350,6 +2366,21 @@ With[{g = RandomGraph[{1000,3000}]},
     True
   ]
 ]
+
+MT[
+  IGVertexColoring@IGEmptyGraph[1],
+  {1}
+]
+
+MT[
+  IGVertexColoring@IGEmptyGraph[],
+  {}
+]
+
+MT[
+  IGEdgeColoring@IGEmptyGraph[#],
+  {}
+]& /@ {0, 1, 2, 3}
 
 
 MTSection["Utilities package"]
