@@ -1,7 +1,7 @@
 
 IGraph/M is written and maintained by Szabolcs Horvát <szhorvat@gmail.com>.
 
-Many functions in IGraph/M are based on the igraph library (http://igraph.org/) created by Gábor Csárdi and Tamás Nepusz. To cite igraph in publications, see http://igraph.org/c/doc/igraph-introduction.html and use:
+Most functions in IGraph/M are based on the igraph library (http://igraph.org/) created by Gábor Csárdi and Tamás Nepusz. To cite igraph in publications, see http://igraph.org/c/doc/igraph-introduction.html and use:
 
  - Gábor Csárdi, Tamás Nepusz: The igraph software package for complex network research. InterJournal Complex Systems, 1695, 2006.
 
