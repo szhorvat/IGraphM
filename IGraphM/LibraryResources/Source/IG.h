@@ -87,6 +87,25 @@ class IG {
                     ));
     }
 
+    // changes ig1 to have the directedness of ig2
+    void matchDirectedness(IG &ig1, const IG &ig2) {
+        if (igraph_is_directed(&ig2.graph))
+            igCheck(igraph_to_directed(&ig1.graph, IGRAPH_TO_DIRECTED_ARBITRARY));
+        else
+            igCheck(igraph_to_undirected(&ig1.graph, IGRAPH_TO_UNDIRECTED_EACH, NULL));
+    }
+
+    // this function is called in isomorphism functions, to ensure that if one
+    // graph has no edges, it will be converted to the directedness of the other graph.
+    void emptyMatchDirectedness(IG &ig) {
+        if (igraph_ecount(&graph) == 0) {
+            matchDirectedness(*this, ig);
+        }
+        else if (igraph_ecount(&ig.graph) == 0) {
+            matchDirectedness(ig, *this);
+        }
+    }
+
 public:
     IG() : weighted{false} { empty(); }
 
@@ -556,14 +575,16 @@ public:
 
     // Isomorphism (general)
 
-    bool isomorphic(const IG &ig) const {
+    bool isomorphic(IG &ig) {
         igraph_bool_t res;
+        emptyMatchDirectedness(ig);
         igCheck(igraph_isomorphic(&graph, &ig.graph, &res));
         return res;
     }
 
-    bool subisomorphic(const IG &ig) const {
+    bool subisomorphic(IG &ig) {
         igraph_bool_t res;
+        emptyMatchDirectedness(ig);
         igCheck(igraph_subisomorphic(&graph, &ig.graph, &res));
         return res;
     }
@@ -584,22 +605,24 @@ public:
         return vec.makeMTensor();
     }
 
-    bool blissIsomorphic(const IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
+    bool blissIsomorphic(IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
         igraph_bool_t res;
         igIntVector colvec1, colvec2;
         colvec1.copyFromMTensor(col1);
         colvec2.copyFromMTensor(col2);
+        emptyMatchDirectedness(ig);
         igCheck(igraph_isomorphic_bliss(
                     &graph, &ig.graph, col1.length() == 0 ? NULL : &colvec1.vec, col2.length() == 0 ? NULL : &colvec2.vec,
                     &res, NULL, NULL, blissIntToSplitting(splitting), NULL, NULL));
         return res;
     }
 
-    mma::RealTensorRef blissFindIsomorphism(const IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
+    mma::RealTensorRef blissFindIsomorphism(IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
         igraph_bool_t res;
         igIntVector colvec1, colvec2;
         colvec1.copyFromMTensor(col1);
         colvec2.copyFromMTensor(col2);
+        emptyMatchDirectedness(ig);
         igVector map;
         igCheck(igraph_isomorphic_bliss(
                     &graph, &ig.graph, col1.length() == 0 ? NULL : &colvec1.vec, col2.length() == 0 ? NULL : &colvec2.vec,
@@ -610,7 +633,7 @@ public:
             return mma::makeVector<double>(0);
     }
 
-    void blissAutomorphismCount(MLINK link) {
+    void blissAutomorphismCount(MLINK link) const {
         igraph_bliss_info_t info;
         mlStream ml{link, "blissAutomorphismsCount"};
         int splitting;
@@ -625,7 +648,7 @@ public:
     }
 
     // returns the generators of the group
-    void blissAutomorphismGroup(MLINK link) {
+    void blissAutomorphismGroup(MLINK link) const {
         mlStream ml{link, "blissAutomorphismGroup"};
         int splitting;
         igIntVector colors;
@@ -641,13 +664,15 @@ public:
     // Isomorphism (VF2)
 
     bool vf2Isomorphic(
-            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
-                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+            IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                    mma::IntTensorRef ecol1, mma::IntTensorRef ecol2)
     {
         igIntVector vc1; vc1.copyFromMTensor(vcol1);
         igIntVector vc2; vc2.copyFromMTensor(vcol2);
         igIntVector ec1; ec1.copyFromMTensor(ecol1);
         igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        emptyMatchDirectedness(ig);
 
         igraph_bool_t res;
         igCheck(igraph_isomorphic_vf2(
@@ -658,7 +683,7 @@ public:
         return res;
     }
 
-    void vf2FindIsomorphisms(MLINK link) const {
+    void vf2FindIsomorphisms(MLINK link) {
         mlStream ml{link, "vf2Isomorphism"};
 
         mint id; // expression ID
@@ -670,6 +695,9 @@ public:
         } vf2data;
 
         ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
+
+        IG &ig = mma::getInstance<IG>(id);
+        emptyMatchDirectedness(ig);
 
         struct {
             static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t * /* map21 */, void *arg) {
@@ -681,7 +709,7 @@ public:
         } isohandler;
 
         igCheck(igraph_isomorphic_function_vf2(
-                    &graph, &(mma::getInstance<IG>(id).graph),
+                    &graph, &ig.graph,
                     vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
                     ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
                     NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
@@ -691,13 +719,15 @@ public:
     }
 
     bool vf2Subisomorphic(
-            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
-                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+            IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                    mma::IntTensorRef ecol1, mma::IntTensorRef ecol2)
     {
         igIntVector vc1; vc1.copyFromMTensor(vcol1);
         igIntVector vc2; vc2.copyFromMTensor(vcol2);
         igIntVector ec1; ec1.copyFromMTensor(ecol1);
         igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        emptyMatchDirectedness(ig);
 
         igraph_bool_t res;
         igCheck(igraph_subisomorphic_vf2(
@@ -708,7 +738,7 @@ public:
         return res;
     }
 
-    void vf2FindSubisomorphisms(MLINK link) const {
+    void vf2FindSubisomorphisms(MLINK link) {
         mlStream ml{link, "vf2Isomorphism"};
 
         mint id; // expression ID
@@ -721,6 +751,9 @@ public:
 
         ml >> mlCheckArgs(6) >> id >> vf2data.remaining >> vc1 >> vc2 >> ec1 >> ec2;
 
+        IG &ig = mma::getInstance<IG>(id);
+        emptyMatchDirectedness(ig);
+
         struct {
             static igraph_bool_t handle(const igraph_vector_t * /* map12 */,  const igraph_vector_t *map21, void *arg) {
                 VF2data &data = *static_cast<VF2data *>(arg);
@@ -731,7 +764,7 @@ public:
         } isohandler;
 
         igCheck(igraph_subisomorphic_function_vf2(
-                    &graph, &(mma::getInstance<IG>(id).graph),
+                    &graph, &ig.graph,
                     vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
                     ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
                     NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
@@ -741,16 +774,17 @@ public:
     }
 
     mint vf2IsomorphismCount(
-            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
-                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+            IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                    mma::IntTensorRef ecol1, mma::IntTensorRef ecol2)
     {
         igIntVector vc1; vc1.copyFromMTensor(vcol1);
         igIntVector vc2; vc2.copyFromMTensor(vcol2);
         igIntVector ec1; ec1.copyFromMTensor(ecol1);
         igIntVector ec2; ec2.copyFromMTensor(ecol2);
 
-        igraph_integer_t res;
+        emptyMatchDirectedness(ig);
 
+        igraph_integer_t res;
         igCheck(igraph_count_isomorphisms_vf2(
                     &graph, &ig.graph,
                     vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
@@ -760,13 +794,15 @@ public:
     }
 
     mint vf2SubisomorphismCount(
-            const IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
-                          mma::IntTensorRef ecol1, mma::IntTensorRef ecol2) const
+            IG &ig, mma::IntTensorRef vcol1, mma::IntTensorRef vcol2,
+                    mma::IntTensorRef ecol1, mma::IntTensorRef ecol2)
     {
         igIntVector vc1; vc1.copyFromMTensor(vcol1);
         igIntVector vc2; vc2.copyFromMTensor(vcol2);
         igIntVector ec1; ec1.copyFromMTensor(ecol1);
         igIntVector ec2; ec2.copyFromMTensor(ecol2);
+
+        emptyMatchDirectedness(ig);
 
         igraph_integer_t res;
         igCheck(igraph_count_subisomorphisms_vf2(
@@ -779,13 +815,14 @@ public:
 
     // Isomorphism (LAD)
 
-    bool ladSubisomorphic(const IG &ig, bool induced) const {
+    bool ladSubisomorphic(IG &ig, bool induced) {
         igraph_bool_t res;
+        emptyMatchDirectedness(ig);
         igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &res, NULL, NULL, induced, 0));
         return res;
     }
 
-    void ladSubisomorphicColored(MLINK link) const {
+    void ladSubisomorphicColored(MLINK link) {
         mlStream ml{link, "ladSubisomorphicColored"};
         mint id;
         igraph_bool_t induced;
@@ -793,8 +830,11 @@ public:
         ml >> mlCheckArgs(3)
            >> id >> induced >> domain;
 
+        IG &ig = mma::getInstance<IG>(id);
+        emptyMatchDirectedness(ig);
+
         igraph_bool_t res;
-        igCheck(igraph_subisomorphic_lad(&(mma::getInstance<IG>(id).graph), &graph, &domain.list, &res, NULL, NULL, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, &domain.list, &res, NULL, NULL, induced, 0));
 
         ml.newPacket();
         if (res)
@@ -803,14 +843,15 @@ public:
             ml << mlSymbol("False");
     }
 
-    mma::RealTensorRef ladGetSubisomorphism(const IG &ig, bool induced) const {
+    mma::RealTensorRef ladGetSubisomorphism(IG &ig, bool induced) {
         igraph_bool_t iso;
         igVector map;
+        emptyMatchDirectedness(ig);
         igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, &map.vec, NULL, induced, 0));
         return map.makeMTensor();
     }
 
-    void ladGetSubisomorphismColored(MLINK link) const {
+    void ladGetSubisomorphismColored(MLINK link) {
         mlStream ml{link, "ladGetSubisomorphismColored"};
         mint id;
         igraph_bool_t induced;
@@ -818,32 +859,39 @@ public:
         ml >> mlCheckArgs(3)
            >> id >> induced >> domain;
 
+        IG &ig = mma::getInstance<IG>(id);
+        emptyMatchDirectedness(ig);
+
         igraph_bool_t iso;
         igVector map;
-        igCheck(igraph_subisomorphic_lad(&(mma::getInstance<IG>(id).graph), &graph, &domain.list, &iso, &map.vec, NULL, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, &domain.list, &iso, &map.vec, NULL, induced, 0));
 
         ml.newPacket();
         ml << map;
     }
 
-    void ladFindSubisomorphisms(MLINK link) const  {
+    void ladFindSubisomorphisms(MLINK link) {
         mlStream ml{link, "ladFindSubisomorphism"};
         mint id;
         igraph_bool_t induced;
         igList domain;
         ml >> mlCheckArgs(3) >> id >> induced >> domain;
 
+        IG &ig = mma::getInstance<IG>(id);
+        emptyMatchDirectedness(ig);
+
         igList list;
         igraph_bool_t iso;
-        igCheck(igraph_subisomorphic_lad(&(mma::getInstance<IG>(id).graph), &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
 
         ml.newPacket();
         ml << list;
     }
 
-    mint ladCountSubisomorphisms(const IG &ig, bool induced) {
+    mint ladCountSubisomorphisms(IG &ig, bool induced) {
         igraph_bool_t iso;
         igList list;
+        emptyMatchDirectedness(ig);
         igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, NULL, &list.list, induced, 0));
         return list.length();
     }
@@ -855,9 +903,12 @@ public:
         igList domain;
         ml >> mlCheckArgs(3) >> id >> induced >> domain;
 
+        IG &ig = mma::getInstance<IG>(id);
+        emptyMatchDirectedness(ig);
+
         igList list;
         igraph_bool_t iso;
-        igCheck(igraph_subisomorphic_lad(&(mma::getInstance<IG>(id).graph), &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
 
         ml.newPacket();
         ml << list.length();
