@@ -445,8 +445,7 @@ Cell[TextData[{
     RowBox[{
      SubscriptBox["k", "1"], ",", 
      SubscriptBox["k", "2"], ",", "\[Ellipsis]"}], "]"}], "n"]],
-  FormatType->"StandardForm",ExpressionUUID->
-  "fd798cf5-8c80-4c92-a1dc-e67e131166eb"],
+  ExpressionUUID->"fd798cf5-8c80-4c92-a1dc-e67e131166eb"],
  "."
 }], "Text",ExpressionUUID->"7f614131-ba8f-4e11-9fe4-29c04a22e0b9"],
 
@@ -787,9 +786,8 @@ Cell["Random graph generators", \
 Cell[TextData[{
  "These graph creation functions use igraph\[CloseCurlyQuote]s random graph \
 generator, which can be seeded using ",
- Cell[BoxData["IGSeedRandom"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "1a30f1a0-ae60-47b6-ad44-8a67eb3e5b59"],
+ Cell[BoxData[
+ "IGSeedRandom"],ExpressionUUID->"1a30f1a0-ae60-47b6-ad44-8a67eb3e5b59"],
  "."
 }], "Text",ExpressionUUID->"2fcf1a18-d21b-4d78-a44e-51124f73875d"],
 
@@ -3185,12 +3183,12 @@ Cell[BoxData[
 
 Cell[TextData[{
  "Compute an incidence matrix. The default partitioning used by ",
- Cell[BoxData["IGBipartiteIncidenceMatrix"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGBipartiteIncidenceMatrix"],ExpressionUUID->
   "3a74ddf5-9e96-4153-b4c6-9de74d3f13d2"],
  " is the one returned by ",
- Cell[BoxData["IGBipartitePartitions"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGBipartitePartitions"],ExpressionUUID->
   "67ea32de-b689-4fc2-96a7-318e762fa9d4"],
  "."
 }], "Text",ExpressionUUID->"19a6b76c-c297-42fb-a1bf-f3f0bd938e7a"],
@@ -3620,8 +3618,8 @@ Cell[TextData[{
  "IGLADSubisomorphismCount"],ExpressionUUID->
   "2f8fbd7d-31cd-4da4-8274-df4b6653adfe"],
  " to count larger induced subgraphs and ",
- Cell[BoxData["IGLADFindSubisomorphisms"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGLADFindSubisomorphisms"],ExpressionUUID->
   "b40ba473-f177-40d4-a0f6-9d75e1c03154"],
  " to find where a certain motif occurs in a graph."
 }], "Text",ExpressionUUID->"a5bd6538-94e9-4217-8764-7cefa5ba0b7e"],
@@ -4210,7 +4208,8 @@ Cell[BoxData[
       RowBox[{"PermutationGroup", "@", 
        RowBox[{"IGBlissAutomorphismGroup", "[", "g", "]"}]}]}], ",", 
      "\[IndentingNewLine]", 
-     RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}]}], 
+     RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
+     RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
   "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"28236d5f-b5e0-4115-8519-775449e0d325"],
 
@@ -4783,8 +4782,8 @@ Cell[BoxData[{
     RowBox[{"g", ",", 
      RowBox[{"Subgraph", "[", 
       RowBox[{"g", ",", "#"}], "]"}], ",", 
-     RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<Thick\>\""}], ",", 
-     RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "]"}], "&"}], "/@", 
+     RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<Thick\>\""}]}], "]"}], 
+   "&"}], "/@", 
   RowBox[{"Union", "[", 
    RowBox[{
     RowBox[{"Sort", "@*", "Values"}], "/@", 
@@ -25419,7 +25418,7 @@ PrintingOptions->{"FacingPages"->True,
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 ShowCellTags->True,
 TrackCellChangeTimes->False,
-GraphicsBoxOptions->{ImageSize->250},
+GraphicsBoxOptions->{ImageSizeRaw->250},
 FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 12, \
 2017)",
 StyleDefinitions->Notebook[{
