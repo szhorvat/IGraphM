@@ -3602,24 +3602,39 @@ IGBipartiteIncidenceMatrix[graph_?igGraphQ, parts : {vertices1_, vertices2_}] :=
     ]
 
 
+IGBipartiteIncidenceGraph::inv  = "`1` is not a valid bipartite incidence matrix.";
+IGBipartiteIncidenceGraph::bdsz = "The vertex name lists `1` have an incompatible size with the provided incidence matrix.";
+
 SyntaxInformation[IGBipartiteIncidenceGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 Options[IGBipartiteIncidenceGraph] = { DirectedEdges -> False };
 
-IGBipartiteIncidenceGraph[bm_, opt : OptionsPattern[{IGBipartiteIncidenceGraph, Graph}]] :=
-    With[{sbm = SparseArray[bm]},
-      AdjacencyGraph[
-        ArrayFlatten[{{0, sbm},{If[TrueQ@OptionValue[DirectedEdges], SparseArray[{}, Reverse@Dimensions[sbm]], Transpose[sbm]], 0}}],
-        opt
-      ]
-    ]
-
-IGBipartiteIncidenceGraph[{vertices1_List, vertices2_List}, bm_, opt : OptionsPattern[Graph]] :=
-    With[{sbm = SparseArray[bm]},
+IGBipartiteIncidenceGraph[names : {vertices1_List, vertices2_List}, bm_?MatrixQ, opt : OptionsPattern[Graph]] :=
+    Module[{sbm = SparseArray[bm], good = True},
+      If[Dimensions[sbm] =!= Length /@ names,
+        Message[IGBipartiteIncidenceGraph::bdsz, names];
+        good = False;
+      ];
+      If[Not@MatrixQ[sbm, Internal`NonNegativeIntegerQ],
+        Message[IGBipartiteIncidenceGraph::inv, bm];
+        good = False
+      ];
       AdjacencyGraph[
         Join[vertices1, vertices2],
         ArrayFlatten[{{0, sbm},{If[TrueQ@OptionValue[DirectedEdges], SparseArray[{}, Reverse@Dimensions[sbm]], Transpose[sbm]], 0}}],
         opt
-      ]
+      ] /; good
+    ]
+
+IGBipartiteIncidenceGraph[bm_?MatrixQ, opt : OptionsPattern[{IGBipartiteIncidenceGraph, Graph}]] :=
+    Module[{sbm = SparseArray[bm], good = True},
+      If[Not@MatrixQ[sbm, Internal`NonNegativeIntegerQ],
+        Message[IGBipartiteIncidenceGraph::inv, bm];
+        good = False
+      ];
+      AdjacencyGraph[
+        ArrayFlatten[{{0, sbm},{If[TrueQ@OptionValue[DirectedEdges], SparseArray[{}, Reverse@Dimensions[sbm]], Transpose[sbm]], 0}}],
+        opt
+      ] /; good
     ]
 
 
