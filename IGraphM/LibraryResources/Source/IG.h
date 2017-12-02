@@ -1860,7 +1860,7 @@ public:
         igraph_arpack_options_t options;
         igraph_arpack_options_init(&options);
 
-        igVector membership, eigenvalues;
+        igVector membership, finalMembership, eigenvalues;
         igMatrix merges;
         igList eigenvectors;
         igraph_real_t modularity;
@@ -1874,6 +1874,7 @@ public:
                         NULL, // history
                         NULL, NULL // callback
                         ));
+            finalMembership = membership;
         } else {
             igCheck(igraph_community_leading_eigenvector(
                         &graph, passWeights(),
@@ -1883,14 +1884,14 @@ public:
                         NULL, // history
                         NULL, NULL // callback
                         ));
-
+            finalMembership = membership;
             igraph_integer_t cc = 1 + static_cast<igraph_integer_t>( *std::max_element(membership.begin(), membership.end()) );
             igCheck(igraph_le_community_to_membership(&merges.mat, cc - n_communities, &membership.vec, NULL));
             igraph_modularity(&graph, &membership.vec, &modularity, passWeights());
         }
 
         ml.newPacket();
-        ml << mlHead("List", 5) << membership << merges << eigenvalues << eigenvectors << modularity;
+        ml << mlHead("List", 6) << membership << finalMembership << merges << eigenvalues << eigenvectors << modularity;
     }
 
     void communityFluid(MLINK link) {

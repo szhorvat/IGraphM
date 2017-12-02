@@ -38,10 +38,6 @@ inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
 class igVector {
     bool moved;
 
-    // avoid accidental expensive implicit copy
-    igVector(const igVector &) = delete;
-    igVector & operator = (const igVector &) = delete;
-
 public:
     igraph_vector_t vec;
 
@@ -49,6 +45,14 @@ public:
     igVector(igVector &&source) : moved(false) { vec = source.vec; source.moved = true; }
     igVector(const igraph_vector_t *source) : moved(false) { igraph_vector_copy(&vec, source); }
     explicit igVector(long len) : moved(false) { igraph_vector_init(&vec, len); }
+
+    igVector(const igVector &igv) : igVector() { igraph_vector_copy(&vec, &igv.vec); }
+
+    igVector & operator = (const igVector &igv) {
+        igraph_vector_copy(&vec, &igv.vec);
+        return *this;
+    }
+
     ~igVector() { if (!moved) igraph_vector_destroy(&vec); }
 
     long length() const { return vec.end - vec.stor_begin; }

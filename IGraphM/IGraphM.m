@@ -3092,6 +3092,7 @@ hierarchicalQ[asc_] := KeyExistsQ[asc, "Merges"]
 
 IGClusterData::hier   = "The provided clustering is not hierarchical.";
 IGClusterData::noprop = "There is no property `` for IGClusterData objects.";
+IGClusterData::dnconn = "The dendrogram is not connected. Unconnected dendrograms are not currently supported. Use the \"Merges\" data directly."; (* TODO handle this case *)
 
 IGClusterData[asc_?AssociationQ]["Properties"] :=
     Sort@Join[
@@ -3106,13 +3107,23 @@ IGClusterData[asc_?AssociationQ]["Properties"] :=
     ]
 
 mergesToHierarchy[asc_] :=
-    Module[{cl, merge, cnt, n, s},
-      n = Length@asc@"Elements";
-      Switch[asc@"Algorithm",
-        "EdgeBetweenness", s = 1 + Length@asc@"RemovedEdges" - asc@"Bridges",
-        _, s = Range[n]
+    Module[{cl, elems, merge, cnt, n, s},
+      elems = Switch[asc@"Algorithm",
+        "LeadingEigenvector", asc@"FinalCommunities",
+        _,                    asc@"Elements"
       ];
-      MapThread[Set[cl[#2], #1]&, {asc@"Elements", Range[n]}];
+      n = Length[elems];
+      If[Sort@Flatten@asc@"Merges" =!= Range[n + Length@asc@"Merges" - 1],
+        Message[IGClusterData::dnconn];
+        Return[$Failed]
+      ];
+      s = Switch[asc@"Algorithm",
+        "EdgeBetweenness", 1 + Length@asc@"RemovedEdges" - asc@"Bridges",
+        _,                 Range[n]
+      ];
+      MapThread[Set[cl[#2], #1]&,
+        {elems, Range[n]}
+      ];
       cnt[Cluster[_, _, _, n1_, n2_]] := n1 + n2;
       cnt[_] := 1;
       merge[{j_, k_}, {i_}] := cl[i + n] = Cluster[cl[j], cl[k], s[[i]], cnt@cl[j], cnt@cl[k]];
@@ -3126,14 +3137,22 @@ IGClusterData[asc_?AssociationQ]["HierarchicalClusters"] :=
     ]
 
 mergesToTree[asc_] :=
-    Module[{mc, root, ec, merges = asc["Merges"], leafIndices, g, s},
+    Module[{mc, root, elems, ec, merges = asc["Merges"], leafIndices, g, s},
+      elems = Switch[asc@"Algorithm",
+        "LeadingEigenvector", asc@"FinalCommunities",
+        _,                    asc@"Elements"
+      ];
       mc = Length[merges];
-      ec = Length[asc["Elements"]];
+      ec = Length[elems];
+      If[Sort@Flatten[merges] =!= Range[ec + mc - 1],
+        Message[IGClusterData::dnconn];
+        Return[$Failed]
+      ];
       root = ec + mc;
       leafIndices = Intersection[Range[ec], Flatten[merges]];
-      Switch[asc@"Algorithm",
-        "EdgeBetweenness", s = 1 + Length@asc@"RemovedEdges" - asc@"Bridges",
-        _, s = Range[mc]
+      s = Switch[asc@"Algorithm",
+        "EdgeBetweenness", 1 + Length@asc@"RemovedEdges" - asc@"Bridges",
+        _,                 Range[mc]
       ];
       TreeGraph[
         Append[Flatten[merges], root],
@@ -3143,9 +3162,9 @@ mergesToTree[asc_] :=
         EdgeShapeFunction -> "Line",
         EdgeStyle -> Gray,
         VertexShapeFunction -> ({}&), (* Using VertexShapeFunction -> None does not work in M10.0-10.3 due to a bug. *)
-        VertexLabels -> Thread[ leafIndices -> (Placed[Short[#], Below]&) /@ asc["Elements"][[ leafIndices ]] ],
+        VertexLabels -> Thread[ leafIndices -> (Placed[Short[#], Below]&) /@ elems[[ leafIndices ]] ],
         VertexWeight -> Join[Thread[ec + Range[mc] -> s], Thread[leafIndices -> 0]],
-        Properties -> {"GraphProperties" -> {"LeafLabels" -> AssociationThread[leafIndices, asc["Elements"][[ leafIndices ]] ]}}
+        Properties -> {"GraphProperties" -> {"LeafLabels" -> AssociationThread[leafIndices, elems[[ leafIndices ]] ]}}
       ]
     ]
 
@@ -3187,6 +3206,9 @@ Format[c : IGClusterData[asc_?clusterAscQ], OutputForm] :=
 igClusterData[graph_][asc_] := IGClusterData@Join[<|"Elements" -> VertexList[graph]|>, asc]
 
 communitiesFromMembership[graph_, membership_] := Values@GroupBy[Transpose[{VertexList[graph], Round[membership]}], Last -> First]
+
+(* guarantees community ordering, used in LeadingEigenvector *)
+communitiesFromMembershipLE[graph_, membership_] := Values@KeySort@GroupBy[Transpose[{VertexList[graph], Round[membership]}], Last -> First]
 
 communitiesToMembership[elems_, communities_] :=
     Module[{copy = communities},
@@ -3447,7 +3469,7 @@ Options[IGCommunitiesLeadingEigenvector] = { "Steps" -> Automatic, "ClusterCount
 SyntaxInformation[IGCommunitiesLeadingEigenvector] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, merges, eval, evec, clusterCount},
+    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, finalMembership, merges, eval, evec, clusterCount},
       clusterCount = OptionValue["ClusterCount"];
       If[clusterCount === Automatic,
         clusterCount = 0
@@ -3457,12 +3479,13 @@ IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
           clusterCount = 0;
         ]
       ];
-      {membership, merges, eval, evec, modularity} = check@ig@"communityLeadingEigenvector"[
+      {membership, finalMembership, merges, eval, evec, modularity} = check@ig@"communityLeadingEigenvector"[
         Replace[OptionValue["Steps"], Automatic :> VertexCount[graph]],
         clusterCount
       ];
       igClusterData[graph]@<|
-        "Communities" -> communitiesFromMembership[graph, membership],
+        "Communities" -> communitiesFromMembershipLE[graph, membership],
+        "FinalCommunities" -> communitiesFromMembershipLE[graph, finalMembership],
         "Merges" -> igIndexVec[merges], (* TODO handle partial dendrogram in IGClusterData methods *)
         "Modularity" -> {modularity},
         "Eigenvalues" -> eval,
