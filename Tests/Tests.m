@@ -649,7 +649,19 @@ isomorphismTests[if_] :=
         True
       ],
       MT[
+        if[edgeless, edgeless],
+        True
+      ],
+      MT[
         if[empty, edgeless],
+        False
+      ],
+      MT[
+        if[empty, ugs],
+        False
+      ],
+      MT[
+        if[empty, dgs],
         False
       ],
       MT[
@@ -682,6 +694,14 @@ subisomorphismTests[if_] :=
       ],
       MT[
         if[empty, ugs],
+        True
+      ],
+      MT[
+        if[empty, dgs],
+        True
+      ],
+      MT[
+        if[edgeless, dgs],
         True
       ],
       MT[
