@@ -25,7 +25,7 @@ IGraph/M is *not a replacement* for Mathematica's graph manipulation functionali
 
 #### Why create IGraph/M?
 
-igraph is one of the most complete open source graph manipulation libraries available.  Many of its functions are of use to *Mathematica* users, either because equivalents don't already exist in *Mathematica*, or because they can be used to verify *Mathematica*'s own results.
+igraph is one of the most complete open source graph manipulation libraries available.  Many of its functions are of use to *Mathematica* users, either because equivalents don't already exist in *Mathematica*, or because they can be used to verify *Mathematica*'s own results.  IGraph/M also includes several utility functions that are not based on the igraph.
 
 #### Functionality highlights
 
@@ -55,10 +55,10 @@ The documentation contains many examples and can be accessed using the `IGDocume
 
 IGraph/M can be installed like any other Mathematica application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.93.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.94.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
         Needs["PacletManager`"]
-        PacletInstall["~/Downloads/IGraphM-0.3.93.paclet"]
+        PacletInstall["~/Downloads/IGraphM-0.3.94.paclet"]
 
 IGraph/M requires Mathematica 10.0 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
@@ -116,7 +116,7 @@ You can contact me by email.  Evaluate the following in Mathematica to get my em
 
 ## Bugs and troubleshooting
 
-IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until most problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues). **In the bug report include the output of ``IGraphM`Developer`GetInfo[]``.**
+IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until most problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues) or write [in the chatroom](https://gitter.im/IGraphM/Lobby). **In the bug report include the output of ``IGraphM`Developer`GetInfo[]``.**
 
 ### Troubleshooting
 
@@ -124,7 +124,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
     This message will be shown in the following situations:
 
-    - IGraph/M is not installed. Please follow the installation instructions above.
+    - IGraph/M is not installed. Please follow the installation instructions above carefully.
 
     - IGraph/M is not compatible with your system. Please review the requirements in the Installation section above.  Additional symptoms will be that `PacletFind["IGraphM"]` returns `{}` but `PacletFind["IGraphM", "MathematicaVersion" -> All, "SystemID" -> All]` returns a non-empty list.
 
@@ -171,12 +171,13 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
  - New deterministic graph generators: `IGKautzGraph`, `IGKaryTree`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`.
  - New random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`.
- - Community detection: several functions support the `"ClusterCount"` option now, added `IGCommunitiesFluid"`
- - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGVertexColoring`, `IGEdgeColoring`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`
- - Updates: 
+ - Community detection: several functions support the `"ClusterCount"` option now, added `IGCommunitiesFluid"`.
+ - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGVertexColoring`, `IGEdgeColoring`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`.
+ - Updates:
     * `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges.
     * `IGBipartiteQ` supports checking that a given partitioning is valid for a bipartite graph.
     * `IGBipartitePartitions` now provides control over the ordering of partitions using its second argument.
+    * Isomorphism functions now ignore the directnedness of empty graphs
  - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
  - New utility functions:
     * Weighted graphs: `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
@@ -234,3 +235,4 @@ igraph (and consequently the IGraph/M binary packages) can be distributed under 
 
  [1]: https://github.com/szhorvat/LTemplate/
  [2]: http://szhorvat.net/pelican/using-igraph-from-mathematica.html
+ [chat]: https://gitter.im/IGraphM/Lobby
