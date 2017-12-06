@@ -1046,6 +1046,34 @@ public:
         return res.makeMTensor();
     }
 
+    mma::RealTensorRef shortestPathCounts2(mma::IntTensorRef vs) const {
+        if (vs.length() == 0)
+            return shortestPathCounts();
+
+        std::vector<double> counts;
+        igMatrix mat;
+        igraph_integer_t vc = igraph_vcount(&graph);
+
+        for (auto vertex : vs) {
+            igCheck(igraph_shortest_paths(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(vertex)), igraph_vss_all(), IGRAPH_OUT));
+
+            for (igraph_integer_t i=0; i < vc; ++i) {
+                size_t k = size_t(VECTOR(mat.mat.data)[i]);
+                if (k >= counts.size())
+                    counts.resize(k, 0.0);
+                if (k > 0)
+                    counts[k-1] += 1;
+            }
+            for (auto i : vs) {
+                size_t k = size_t(VECTOR(mat.mat.data)[i]);
+                if (k > 0)
+                    counts[k-1] -= 0.5;
+            }
+        }
+
+        return mma::makeVector<double>(counts.size(), counts.data());
+    }
+
     mma::IntTensorRef shortestPathWeightedHistogram(double binsize, mma::RealTensorRef from, mma::RealTensorRef to, mint method) const {
         if (weighted && igraph_vector_min(&weights.vec) < 0)
             throw mma::LibraryError("shortestPathWeightedHistogram: Negative edge weights are not supported.");

@@ -237,7 +237,9 @@ IGDistanceMatrix::usage =
     "IGDistanceMatrix[graph] computes the shortest path length between each vertex pair in graph.\n" <>
     "IGDistanceMatrix[graph, fromVertices] computes the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
     "IGDistanceMatrix[graph, fromVertices, toVertices] computes the shortest path lengths between the given vertices in graph.";
-IGDistanceCounts::usage = "IGDistanceCounts[graph] computes a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k.";
+IGDistanceCounts::usage =
+    "IGDistanceCounts[graph] computes a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k. In undirected graphs, each path is counted only along one traversal direction.\n" <>
+    "IGDistanceCounts[graph, fromVertices] computes a histogram of unweighted shortest path lengths from the given vertices to all others.";
 IGNeighborhoodSize::usage =
     "IGNeighborhoodSize[graph, vertex] returns the number of direct neighbours of vertex.\n" <>
     "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}] returns the number of direct neighbours of each vertex.\n" <>
@@ -625,6 +627,7 @@ template = LTemplate["IGraphM",
 
         LFun["shortestPaths", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathCounts", {}, {Real, 1}],
+        LFun["shortestPathCounts2", {{Integer, 1, "Constant"}}, {Real, 1}],
         LFun["neighborhoodSize", {{Real, 1, "Constant"}, Integer, Integer}, {Real, 1}],
         LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
         LFun["averagePathLength", {}, Real],
@@ -2368,11 +2371,18 @@ igFindDiameterDijkstra[graph_, bycomp_] :=
     ]
 
 
-SyntaxInformation[IGDistanceCounts] = {"ArgumentsPattern" -> {_}};
+SyntaxInformation[IGDistanceCounts] = {"ArgumentsPattern" -> {_, _.}};
 IGDistanceCounts[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       Round@check@ig@"shortestPathCounts"[]
     ]
+IGDistanceCounts[graph_?igGraphQ, {}] := {}
+IGDistanceCounts[graph_?igGraphQ, vs : (_List | All)] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Round@check@ig@"shortestPathCounts2"[vss[graph][vs]]
+    ]
+
+
 igNeighborhoodSize[graph_, vs_, {min_, max_}] :=
     Block[{ig = igMakeFast[graph]},
       Round@check@ig@"neighborhoodSize"[vss[graph][vs], min, max]
