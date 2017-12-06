@@ -89,7 +89,7 @@ class IG {
 
     // changes ig1 to have the directedness of ig2
     void matchDirectedness(IG &ig1, const IG &ig2) {
-        if (igraph_is_directed(&ig2.graph))
+        if (ig2.directedQ())
             igCheck(igraph_to_directed(&ig1.graph, IGRAPH_TO_DIRECTED_ARBITRARY));
         else
             igCheck(igraph_to_undirected(&ig1.graph, IGRAPH_TO_UNDIRECTED_EACH, NULL));
@@ -1089,10 +1089,10 @@ public:
             mma::check_abort();
             switch (method) {
             case 0:
-                igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT);
+                igCheck(igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
                 break;
             case 1:
-                igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT);
+                igCheck(igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
                 break;
             default:
                 throw mma::LibraryError("shortestPathWeightedHistogram: Unknown method.");
