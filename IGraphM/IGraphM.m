@@ -238,6 +238,12 @@ IGDistanceMatrix::usage =
     "IGDistanceMatrix[graph, fromVertices] computes the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
     "IGDistanceMatrix[graph, fromVertices, toVertices] computes the shortest path lengths between the given vertices in graph.";
 IGDistanceCounts::usage = "IGDistanceCounts[graph] computes a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k.";
+IGNeighborhoodSize::usage =
+    "IGNeighborhoodSize[graph, vertex] returns the number of direct neighbours of vertex.\n" <>
+    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}] returns the number of direct neighbours of each vertex.\n" <>
+    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, max] returns the number of vertices reachable in at most max hops.\n" <>
+    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, {n}] returns the number of vertices reachable in precisely n hops.\n" <>
+    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, {min, max}] returns the number of vertices reachable in between min and max hops (inclusive).";
 IGDistanceHistogram::usage =
     "IGDistanceHistogram[graph, binsize] computes a histogram of weighted all-pair shortest path lengths in graph with the given bin size. In case of undirected graphs, path lengths are double counted.\n" <>
     "IGDistanceHistogram[graph, binsize, from] computes a histogram of weighted shortest path lengths in graph for the given starting vertices and bin size.\n" <>
@@ -619,6 +625,7 @@ template = LTemplate["IGraphM",
 
         LFun["shortestPaths", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathCounts", {}, {Real, 1}],
+        LFun["neighborhoodSize", {{Real, 1, "Constant"}, Integer, Integer}, {Real, 1}],
         LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
         LFun["averagePathLength", {}, Real],
         LFun["girth", {}, Real],
@@ -2366,6 +2373,27 @@ IGDistanceCounts[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       Round@check@ig@"shortestPathCounts"[]
     ]
+igNeighborhoodSize[graph_, vs_, {min_, max_}] :=
+    Block[{ig = igMakeFast[graph]},
+      Round@check@ig@"neighborhoodSize"[vss[graph][vs], min, max]
+    ]
+
+canonOrd[n_] := {0, n}
+canonOrd[{n1_, n2_}] := {n1, n2}
+canonOrd[{n_}] := {n, n}
+
+ordQ[_?Internal`NonNegativeMachineIntegerQ |
+    {_?Internal`NonNegativeMachineIntegerQ} |
+    {_?Internal`NonNegativeMachineIntegerQ, _?Internal`NonNegativeMachineIntegerQ}
+  ] := True
+ordQ[_] := False
+
+SyntaxInformation[IGNeighborhoodSize] = {"ArgumentsPattern" -> {_, _, _.}};
+IGNeighborhoodSize[graph_?igGraphQ, {}, ord : _?ordQ : {1}] := {}
+IGNeighborhoodSize[graph_?igGraphQ, vs : (_List | All), ord : _?ordQ : {1}] :=
+    catch@igNeighborhoodSize[graph, vs, canonOrd[ord]]
+IGNeighborhoodSize[graph_?igGraphQ, v_, ord : _?ordQ : {1}] :=
+    catch@First@igNeighborhoodSize[graph, {v}, canonOrd[ord]]
 
 
 Options[IGDistanceHistogram] = { Method -> "Dijkstra" };

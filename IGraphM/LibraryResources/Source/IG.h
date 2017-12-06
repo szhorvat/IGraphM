@@ -1032,6 +1032,13 @@ public:
         return res.makeMTensor();
     }
 
+    mma::RealTensorRef neighborhoodSize(mma::RealTensorRef vs, mint mindist, mint maxdist) {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_neighborhood_size(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), maxdist, IGRAPH_OUT, mindist));
+        return res.makeMTensor();
+    }
+
     mma::RealTensorRef shortestPathCounts() const {
         igVector res;
         double unconnected;
