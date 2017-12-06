@@ -2250,7 +2250,7 @@ SyntaxInformation[IGDistanceMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[
 
 amendUsage[IGDistanceMatrix, "Available Method options: <*Keys[igDistanceMatrixMethods]*>."];
 
-IGDistanceMatrix[graph_?igGraphQ, from : (_?ListQ | All) : All, to : (_?ListQ | All) : All, opt : OptionsPattern[]] :=
+IGDistanceMatrix[graph_?igGraphQ, from : (_List | All) : All, to : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Module[{method},
       method = OptionValue[Method];
       If[from === {}, Return[{}]];
@@ -2410,7 +2410,7 @@ Options[IGDistanceHistogram] = { Method -> "Dijkstra" };
 SyntaxInformation[IGDistanceHistogram] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}};
 igDistanceHistogramMethods = <| "Dijkstra" -> 0, "BellmanFord" -> 1 |>;
 amendUsage[IGDistanceHistogram, "Available Method options: <*Keys[igDistanceHistogramMethods]*>."];
-IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_?ListQ | All) : All, to : (_?ListQ | All) : All, opt : OptionsPattern[]] :=
+IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_List | All) : All, to : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], fromidx, toidx},
       If[from === {} || to === {},
         Return[{}]
@@ -2890,7 +2890,7 @@ IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Grap
         ];
         types = ig@"bipartitePartitions"[]
         ,
-        If[Not[ MatchQ[parts, {_?ListQ, _?ListQ}] && SubsetQ[VertexList[graph], Join@@parts] && Intersection@@parts === {} ],
+        If[Not[ MatchQ[parts, {_List, _List}] && SubsetQ[VertexList[graph], Join@@parts] && Intersection@@parts === {} ],
           Message[IGLayoutBipartite::bdprt, "BipartitePartitions" -> parts];
           Return[$Failed]
         ];
@@ -2966,7 +2966,7 @@ IGWeightedClusteringCoefficient[graph_?igGraphQ] :=
 similarityFunction1[name_, post_ : Identity][graph_, All] :=
     catch@Block[{ig = igMakeFast[graph]}, post@check@ig@name[{}] ]
 similarityFunction1[name_, post_ : Identity][graph_, {}] := {}
-similarityFunction1[name_, post_ : Identity][graph_, vs_?ListQ] :=
+similarityFunction1[name_, post_ : Identity][graph_, vs_List] :=
     catch@Block[{ig = igMakeFast[graph]},
       post@check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]] ]
     ]
@@ -2985,18 +2985,18 @@ IGInverseLogWeightedSimilarity[graph_?igGraphQ, vs_ : All] := similarityFunction
 similarityFunction2[name_][graph_, All, loops_] :=
     catch@Block[{ig = igMakeFast[graph]}, check@ig@name[{}, loops] ]
 similarityFunction2[name_][graph_, {}, loops_] := {}
-similarityFunction2[name_][graph_, vs_?ListQ, loops_] :=
+similarityFunction2[name_][graph_, vs_List, loops_] :=
     catch@Block[{ig = igMakeFast[graph]},
       check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]], loops ]
     ]
 
 Options[IGJaccardSimilarity] = { SelfLoops -> False };
 SyntaxInformation[IGJaccardSimilarity] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
-IGJaccardSimilarity[graph_?igGraphQ, vs : (_?ListQ | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityJaccard"][graph, vs, OptionValue[SelfLoops]]
+IGJaccardSimilarity[graph_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityJaccard"][graph, vs, OptionValue[SelfLoops]]
 
 Options[IGDiceSimilarity] = { SelfLoops -> False };
 SyntaxInformation[IGDiceSimilarity] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
-IGDiceSimilarity[graph_?igGraphQ, vs : (_?ListQ | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityDice"][graph, vs, OptionValue[SelfLoops]]
+IGDiceSimilarity[graph_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] := similarityFunction2["similarityDice"][graph, vs, OptionValue[SelfLoops]]
 
 
 (* Chordal graphs *)
@@ -3036,13 +3036,13 @@ IGMinimalSeparators[graph_?igGraphQ] :=
     ]
 
 SyntaxInformation[IGVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};
-IGVertexSeparatorQ[graph_?igGraphQ, vs_?ListQ] :=
+IGVertexSeparatorQ[graph_?igGraphQ, vs_List] :=
     catch@Block[{ig = igMakeFast[graph]},
       check@ig@"separatorQ"[vss[graph][vs]]
     ]
 
 SyntaxInformation[IGMinimalVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};
-IGMinimalVertexSeparatorQ[graph_?igGraphQ, vs_?ListQ] :=
+IGMinimalVertexSeparatorQ[graph_?igGraphQ, vs_List] :=
     catch@Block[{ig = igMakeFast[graph]},
       check@ig@"minSeparatorQ"[vss[graph][vs]]
     ]
@@ -3563,7 +3563,7 @@ IGGomoryHuTree[graph_?GraphQ] :=
 
 Options[IGUnfoldTree] = { DirectedEdges -> True };
 SyntaxInformation[IGUnfoldTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-IGUnfoldTree[graph_?GraphQ, roots_?ListQ, opt : OptionsPattern[]] :=
+IGUnfoldTree[graph_?GraphQ, roots_List, opt : OptionsPattern[]] :=
     catch@Block[{new = Make["IG"], ig = igMakeFast[graph], mapping, t},
       mapping = check@new@"unfoldTree"[ManagedLibraryExpressionID[ig], vss[graph][roots], OptionValue[DirectedEdges]];
       t = igToGraph[new];
