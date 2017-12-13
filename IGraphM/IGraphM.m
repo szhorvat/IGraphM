@@ -1725,10 +1725,12 @@ colorCheckEdges[g_, c_] := With[{cm = Complement[Keys[c], EdgeList[g]]}, If[cm =
 parseEdgeColors[_][None] := {}
 parseEdgeColors[g_][col_?intVecQ] := (If[EdgeCount[g] != Length[col], Message[IGraphM::ecolcnt]; throw[$Failed]]; col)
 parseEdgeColors[g_][col_?AssociationQ] :=
-    Internal`InheritedBlock[{UndirectedEdge},
-      SetAttributes[UndirectedEdge, Orderless];
-      colorCheckEdges[g,col];
-      Lookup[KeyMap[Identity, col] (* allow Orderless to do its job *), EdgeList[g], 0]
+    Block[{TwoWayRule = UndirectedEdge},
+      Internal`InheritedBlock[{UndirectedEdge},
+        SetAttributes[UndirectedEdge, Orderless];
+        colorCheckEdges[g, col];
+        Lookup[KeyMap[Identity, col] (* allow Orderless to do its job *), EdgeList[g], 0]
+      ]
     ]
 parseEdgeColors[_][_] := (Message[IGraphM::ecol]; {})
 
