@@ -20,7 +20,7 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 ]
 
 
-BeginPackage["IGraphM`"];
+BeginPackage["IGraphM`", {"IGraphM`Utilities`"}];
 
 Needs["HierarchicalClustering`"]; (* do not place in BeginPackage -- we do not want this context exported *)
 
