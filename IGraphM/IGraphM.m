@@ -1703,8 +1703,10 @@ IGIsoclass[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"isoclass"
 
 (* Vertex and edge colouring helper functions *)
 
-IGraphM::vcol = "The \"VertexColors\" option must be a list of integers, an association assigning integers to vertices, or None.";
-IGraphM::ecol = "The \"EdgeColors\" option must be a list of integers, an association assigning integers to edges, or None.";
+IGraphM::vcol = "The \"VertexColors\" option must be a list of integers, an association assigning integers to vertices, a vertex property name, or None.";
+IGraphM::vcolm = "The vertex property `1` does not contain any values. Assuming all vertices to have the same color.";
+IGraphM::ecol = "The \"EdgeColors\" option must be a list of integers, an association assigning integers to edges, an edge property name, or None.";
+IGraphM::ecolm = "The edge property `1` does not contain any values. Assuming all edges to have the same color.";
 IGraphM::bdecol = "Edge colors: the following edges are not in the graph: ``.";
 IGraphM::bdvcol = "Vertex colors: the following vertices are not in the graph: ``.";
 IGraphM::vcolcnt = "When vertex colours are specified as a list, the list length must be the same as the vertex count of the graph.";
@@ -1718,6 +1720,13 @@ colorCheckVertices[g_, c_] := With[{cm = Complement[Keys[c], VertexList[g]]}, If
 parseVertexColors[_][None] := {}
 parseVertexColors[g_][col_?intVecQ] := (If[VertexCount[g] != Length[col], Message[IGraphM::vcolcnt]; throw[$Failed]]; col)
 parseVertexColors[g_][col_?AssociationQ] := (colorCheckVertices[g, col]; Lookup[col, VertexList[g], 0])
+parseVertexColors[g_][prop : (_Symbol | _String)] :=
+    With[{values = IGVertexProp[prop][g]},
+      If[MatchQ[values, {__Missing}],
+        Message[IGraphM::vcolm, prop]
+      ];
+      Replace[values, _Missing -> 0, {1}]
+    ]
 parseVertexColors[_][_] := (Message[IGraphM::vcol]; {})
 
 colorCheckEdges[g_, c_] := With[{cm = Complement[Keys[c], EdgeList[g]]}, If[cm =!= {}, Message[IGraphM::bdecol, cm]]];
@@ -1731,6 +1740,13 @@ parseEdgeColors[g_][col_?AssociationQ] :=
         colorCheckEdges[g, col];
         Lookup[KeyMap[Identity, col] (* allow Orderless to do its job *), EdgeList[g], 0]
       ]
+    ]
+parseEdgeColors[g_][prop : (_Symbol | _String)] :=
+    With[{values = IGEdgeProp[prop][g]},
+      If[MatchQ[values, {__Missing}],
+        Message[IGraphM::vcolm, prop]
+      ];
+      Replace[values, _Missing -> 0, {1}]
     ]
 parseEdgeColors[_][_] := (Message[IGraphM::ecol]; {})
 
