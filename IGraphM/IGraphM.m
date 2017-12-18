@@ -1465,6 +1465,7 @@ IGEstablishmentGame[
 (* Modification *)
 
 (* Warning: this function doesn't preserve the edge ordering or any graph properties *)
+(* TODO This function is no longer used. Remove when proven unnecessary. *)
 vertexRename[names_][graph_] :=
     If[VertexCount[graph] == 0,
       graph,
@@ -1475,7 +1476,7 @@ SyntaxInformation[IGConnectNeighborhood] = {"ArgumentsPattern" -> {_, _., Option
 IGConnectNeighborhood[graph_?igGraphQ, k : _?Internal`NonNegativeMachineIntegerQ : 2, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMakeFast[graph]},
       check@ig@"connectNeighborhood"[k];
-      Graph[vertexRename[VertexList[graph]]@igToGraph[ig], opt]
+      applyGraphOpt[opt][igToGraphWithNames[ig, VertexList[graph]]]
     ]
 
 (* Testing *)
@@ -1640,16 +1641,16 @@ IGConstraintScore[graph_?igGraphQ] :=
 (* TODO: functions in this section should warn that edge weights will be lost *)
 
 Options[IGRewire] = { SelfLoops -> False };
-SyntaxInformation[IGRewire] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGRewire[g_?igGraphQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[]] :=
+SyntaxInformation[IGRewire] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewire, Graph]};
+IGRewire[g_?igGraphQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGRewire, Graph}]] :=
     catch@Block[{ig = igMakeFast[g]},
       check@ig@"rewire"[n, OptionValue[SelfLoops]];
-      vertexRename[VertexList[g]]@igToGraph[ig]
+      applyGraphOpt[opt]@igToGraphWithNames[ig, VertexList[g]]
     ]
 
 Options[IGRewireEdges] = { SelfLoops -> False, "MultipleEdges" -> False };
-SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : All|"All"|"In"|"Out" : All, opt : OptionsPattern[]] :=
+SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewire, Graph]};
+IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : All|"All"|"In"|"Out" : All, opt : OptionsPattern[{IGRewireEdges, Graph}]] :=
     catch@Block[{ig = igMakeFast[g]},
       Switch[mode,
         All|"All",
@@ -1661,7 +1662,7 @@ IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : All|"All"|"In"
         "Out",
         check@ig@"rewireDirectedEdges"[p, OptionValue[SelfLoops], True]
       ];
-      vertexRename[VertexList[g]]@igToGraph[ig]
+      applyGraphOpt[opt]@igToGraphWithNames[ig, VertexList[g]]
     ]
 
 (* Isomorphism *)
@@ -3576,7 +3577,6 @@ IGCommunitiesFluid[graph_?igGraphQ, clusterCount_] :=
 
 (* Maximum flow *)
 
-(* TODO: Speed up VertexReplace *)
 (* Note: edge ordering is critical *)
 SyntaxInformation[IGGomoryHuTree] = {"ArgumentsPattern" -> {_}};
 IGGomoryHuTree[graph_?GraphQ] :=
@@ -3585,7 +3585,7 @@ IGGomoryHuTree[graph_?GraphQ] :=
       If[Not@VectorQ[capacity], capacity = {}];
       flow = check@new@"gomoryHuTree"[ManagedLibraryExpressionID[ig], capacity];
       <|
-        "Tree" -> VertexReplace[igToGraph[new], Thread[Range@VertexCount[graph] -> VertexList[graph]]],
+        "Tree" -> igToGraphWithNames[new, VertexList[graph]],
         "Flow" -> flow
       |>
     ]
@@ -3727,8 +3727,8 @@ IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[{IGVert
       ];
       self = Not@TrueQ@OptionValue[SelfLoops];
       multi = Not@TrueQ@OptionValue["MultipleEdges"];
-      g = igToGraph[ig];
-      applyGraphOpt[opt]@vertexRename[ fullSets[[All,1]] ]@Which[
+      g = igToGraphWithNames[ig, fullSets[[All,1]] ];
+      applyGraphOpt[opt]@Which[
         self && multi, SimpleGraph[g],
         self, removeSelfLoops[g],
         multi, removeMultiEdges[g],
