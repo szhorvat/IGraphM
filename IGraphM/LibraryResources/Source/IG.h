@@ -1055,6 +1055,8 @@ public:
         igraph_integer_t vc = igraph_vcount(&graph);
 
         for (auto vertex : vs) {
+            mma::check_abort();
+
             igCheck(igraph_shortest_paths(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(vertex)), igraph_vss_all(), IGRAPH_OUT));
 
             for (igraph_integer_t i=0; i < vc; ++i) {
@@ -1087,6 +1089,7 @@ public:
 
         for (mint i=0; i < from.length(); ++i) {
             mma::check_abort();
+
             switch (method) {
             case 0:
                 igCheck(igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
