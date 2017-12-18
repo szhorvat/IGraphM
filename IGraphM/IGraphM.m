@@ -3678,9 +3678,9 @@ IGBipartiteIncidenceMatrix[graph_?igGraphQ] :=
 
 IGBipartiteIncidenceMatrix[graph_?igGraphQ, Automatic] := IGBipartiteIncidenceMatrix[graph]
 
-IGBipartiteIncidenceMatrix[graph_?igGraphQ, parts : {vertices1_, vertices2_}] :=
+IGBipartiteIncidenceMatrix[graph_?igGraphQ, parts : {vertices1_List, vertices2_List}] :=
     catch@Module[{asc},
-      If[Not@Check[IGBipartiteQ[graph, parts], False],
+      If[Not@Check[TrueQ@IGBipartiteQ[graph, parts], False],
         Message[IGBipartiteIncidenceMatrix::bdpart, parts];
         throw[$Failed]
       ];
@@ -3696,10 +3696,10 @@ IGBipartiteIncidenceMatrix[graph_?igGraphQ, parts : {vertices1_, vertices2_}] :=
 IGBipartiteIncidenceGraph::inv  = "`1` is not a valid bipartite incidence matrix.";
 IGBipartiteIncidenceGraph::bdsz = "The vertex name lists `1` have an incompatible size with the provided incidence matrix.";
 
-SyntaxInformation[IGBipartiteIncidenceGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 Options[IGBipartiteIncidenceGraph] = { DirectedEdges -> False };
+SyntaxInformation[IGBipartiteIncidenceGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGBipartiteIncidenceGraph, Graph]};
 
-IGBipartiteIncidenceGraph[names : {vertices1_List, vertices2_List}, bm_?MatrixQ, opt : OptionsPattern[Graph]] :=
+IGBipartiteIncidenceGraph[names : {vertices1_List, vertices2_List}, bm_?MatrixQ, opt : OptionsPattern[{IGBipartiteIncidenceGraph, Graph}]] :=
     Module[{sbm = SparseArray[bm], good = True},
       If[Dimensions[sbm] =!= Length /@ names,
         Message[IGBipartiteIncidenceGraph::bdsz, names];
