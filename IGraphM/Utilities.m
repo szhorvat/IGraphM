@@ -148,6 +148,7 @@ IGUnweighted[g_?GraphQ] := g
 
 (* Weighted adjacency matrix handling *)
 
+(*
 (* When am is a SparseArray, we need to canonicalize it and ensure that it has no explicit value that is the same as the implicit one. *)
 arrayRules[am_SparseArray, u_] := ArrayRules[SparseArray[am], u]
 arrayRules[am_, u_] := ArrayRules[am, u]
@@ -163,6 +164,21 @@ IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except
       vertices,
       SparseArray[Most@arrayRules[wam, unconnected], Dimensions[wam], Infinity],
       opt
+    ]
+*)
+
+SyntaxInformation[IGWeightedAdjacencyGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGWeightedAdjacencyGraph[wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[Graph]] :=
+    With[{sa = SparseArray[wam, Automatic, unconnected]},
+      Graph[Range@Length[sa], sa["NonzeroPositions"], EdgeWeight -> sa["NonzeroValues"]]
+    ]
+IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[Graph]] :=
+    With[{sa = SparseArray[wam, Automatic, unconnected]},
+      If[Length[vertices] != Length[sa],
+        Message[IGWeightedAdjacencyGraph::ndims, vertices, wam];
+        Return[$Failed]
+      ];
+      Graph[vertices, sa["NonzeroPositions"], EdgeWeight -> sa["NonzeroValues"]]
     ]
 
 
