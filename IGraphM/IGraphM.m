@@ -418,6 +418,10 @@ IGBipartitePartitions::usage =
      "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.\n" <>
      "IGBipartitePartitions[graph, vertex] ensures that the first partition which is returned contains vertex.";
 
+IGBipartiteProjections::usage =
+    "IGBipartiteProjections[graph] returns both bipartite projections of graph. Multiplicities are returned as edge weights. Edge directions are ignored.\n" <>
+    "IGBipartiteProjections[graph, {vertices1, vertices2}] returns both bipartite projections according to the specified partitioning.";
+
 IGBipartiteIncidenceMatrix::usage =
     "IGBipartiteIncidenceMatrix[graph] returns the incidence matrix of a bipartite graph.\n" <>
     "IGBipartiteIncidenceMatrix[graph, {vertices1, vertices2}] uses the provided vertex partitioning.";
@@ -798,6 +802,7 @@ template = LTemplate["IGraphM",
         (* Bipartite graphs *)
 
         LFun["bipartitePartitions", {}, {Integer, 1}],
+        LFun["bipartiteProjection", {{Integer, 1}, LExpressionID["IG"], LExpressionID["IG"]}, {Integer, 1}],
 
         (* Vertex contraction *)
         LFun["contractVertices", {{Real, 1, "Constant"}}, "Void"],
@@ -3627,6 +3632,23 @@ IGBipartitePartitions[graph_?igGraphQ, vertex_] :=
       Check[ind = VertexIndex[graph, vertex], throw[$Failed]];
       {Pick[VertexList[graph], parts, parts[[ind]] ], Pick[VertexList[graph], parts, 1 - parts[[ind]] ]}
     ]
+
+
+IGBipartiteProjections::bdpart = "`1` is not a valid partitioning of the vertices `2`.";
+IGBipartiteProjections[graph_?igGraphQ, parts : {vertices1_List, vertices2_List}] :=
+    catch@Module[{ig = igMakeFast[graph], ig1 = Make["IG"], ig2 = Make["IG"], weights},
+      If[Not[Sort[Join@@parts] === Sort@VertexList[graph]],
+        Message[IGBipartiteProjections::bdpart, parts, VertexList[graph]];
+        throw[$Failed]
+      ];
+      weights = check@ig@"bipartiteProjection"[communitiesToMembership[VertexList[graph], parts], ManagedLibraryExpressionID[ig1], ManagedLibraryExpressionID[ig2]];
+      With[{g1 = igToGraphWithNames[ig1, vertices1], g2 = igToGraphWithNames[ig2, vertices2]},
+        {Graph[g1, EdgeWeight -> Take[weights,  EdgeCount[g1]]],
+         Graph[g2, EdgeWeight -> Take[weights, -EdgeCount[g2]]]}
+      ]
+    ]
+
+IGBipartiteProjections[graph_?igGraphQ] := IGBipartiteProjections[graph, IGBipartitePartitions[graph]]
 
 (* Bipartite incidence matrices *)
 

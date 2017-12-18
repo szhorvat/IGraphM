@@ -2017,6 +2017,21 @@ public:
         return map.makeMTensor();
     }
 
+    mma::IntTensorRef bipartiteProjection(mma::IntTensorRef typevec, IG &p1, IG &p2) const {
+        igBoolVector types(typevec.length());
+        std::copy(typevec.begin(), typevec.end(), types.begin());
+
+        igVector mult1, mult2;
+
+        igCheck(igraph_bipartite_projection(&graph, &types.vec, &p1.graph, &p2.graph, &mult1.vec, &mult2.vec, -1));
+
+        auto res = mma::makeVector<mint>(mult1.length() + mult2.length());
+        std::copy(mult1.begin(), mult1.end(), res.begin());
+        std::copy(mult2.begin(), mult2.end(), res.begin() + mult1.length());
+
+        return res;
+    }
+
     // Contract vertices
 
     // note this is a constructor!
