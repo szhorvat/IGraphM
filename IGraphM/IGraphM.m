@@ -1069,6 +1069,19 @@ igToGraph[ig_] :=
       DirectedEdges -> ig@"directedQ"[]
     ]
 
+(* Create Mathematica Graph from IG object and assign vertex names. *)
+(* This uses an undocumented syntax of Graph where the first argument is the vertex list,
+   and the second argument is an edge list given as pairs of vertex indices. E.g.,
+   Graph[{a,b,c}, {{1,2}, {2,3}}]
+   TODO add test for this syntax
+ *)
+igToGraphWithNames[ig_, verts_] :=
+    Graph[
+      verts,
+      igIndexVec[ig@"edgeList"[]],
+      DirectedEdges -> ig@"directedQ"[]
+    ]
+
 (* Convert vertex indices to vertex names. *)
 igVertexNames[graph_][indices_] := Part[VertexList[graph], indices]
 
