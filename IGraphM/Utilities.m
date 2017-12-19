@@ -169,16 +169,20 @@ IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except
 
 SyntaxInformation[IGWeightedAdjacencyGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGWeightedAdjacencyGraph[wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[Graph]] :=
-    With[{sa = SparseArray[wam, Automatic, unconnected]},
-      Graph[Range@Length[sa], sa["NonzeroPositions"], EdgeWeight -> sa["NonzeroValues"]]
-    ]
+    IGWeightedAdjacencyGraph[Range@Length[wam], wam, unconnected, opt]
 IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[Graph]] :=
-    With[{sa = SparseArray[wam, Automatic, unconnected]},
+    Module[{sa = SparseArray[wam, Automatic, unconnected], directedEdges = OptionValue[DirectedEdges]},
       If[Length[vertices] != Length[sa],
         Message[IGWeightedAdjacencyGraph::ndims, vertices, wam];
         Return[$Failed]
       ];
-      Graph[vertices, sa["NonzeroPositions"], EdgeWeight -> sa["NonzeroValues"]]
+      If[directedEdges === Automatic,
+        directedEdges = Not@SymmetricMatrixQ[sa]
+      ];
+      If[Not[directedEdges],
+        sa = UpperTriangularize[sa]
+      ];
+      Graph[vertices, sa["NonzeroPositions"], EdgeWeight -> sa["NonzeroValues"], DirectedEdges -> directedEdges, opt]
     ]
 
 
