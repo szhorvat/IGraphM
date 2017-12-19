@@ -13,6 +13,25 @@ sameGraphQ[g1_, g2_] :=
     ]
 
 (*******************************************************************************)
+MTSection["Sanity checks for Mathematica builtins"]
+
+(* Does IsomorphicGraphQ work? *)
+MT[
+  IsomorphicGraphQ[Graph[{1<->2}], Graph[{"a"<->"b"}]],
+  True
+]
+
+(* Does specifying edge list though vertex indices work? *)
+MT[
+  sameGraphQ[
+    Graph[{"c","b","a"}, {"a"->"b", "b"->"c"}],
+    Graph[{"c","b","a"}, {{3,2}, {2,1}}, DirectedEdges -> True]
+  ],
+  True
+]
+
+
+(*******************************************************************************)
 MTSection["Basic"]
 
 t = First@AbsoluteTiming[
@@ -591,6 +610,62 @@ MT[
   ],
   True
 ]
+
+MT[
+  IsomorphicGraphQ[
+    IGConnectNeighborhood[CycleGraph[10], 2],
+    IGMakeLattice[{10}, "Periodic" -> True, "Radius" -> 2]
+  ],
+  True
+]
+
+MT[
+  EdgeList@IGConnectNeighborhood[empty, 2],
+  {}
+]
+
+MT[
+  IsomorphicGraphQ[
+    IGConnectNeighborhood[ugs, 1],
+    ugs
+  ],
+  True,
+  {IGraphM::warning}
+]
+
+MT[
+  sameGraphQ[
+    IGConnectNeighborhood[
+      Graph[{1 -> 2, 2 -> 1, 2 -> 3, 3 -> 2}],
+      2
+    ],
+    Graph[{1 -> 2, 1 -> 3, 2 -> 1, 2 -> 3, 3 -> 1, 3 -> 2}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGConnectNeighborhood[
+      Graph[{1 -> 2, 2 -> 3}],
+      2
+    ],
+    Graph[{1 -> 2, 1 -> 3, 2 -> 3}]
+  ],
+  True
+]
+
+MT[
+  sameGraphQ[
+    IGConnectNeighborhood[
+      Graph[{1 -> 2, 3 -> 2}],
+      2
+    ],
+    Graph[{1 -> 2, 3 -> 2}]
+  ],
+  True
+]
+
 
 (*******************************************************************************)
 MTSection["Acyclic graphs"]
@@ -1606,6 +1681,12 @@ MT[
 ]
 
 MT[
+  IGDistanceCounts[#, All] == IGDistanceCounts[#, VertexList[#]],
+  True
+]& /@ {empty, edgeless, ugs, dgs, umulti, dmulti}
+
+
+MT[
   IGDistanceHistogram[empty, 1],
   {}
 ]
@@ -1978,53 +2059,6 @@ MT[
   And @@ MapThread[IGIsomorphicQ, {IGData[{"AllDirectedGraphs", 3}], Values@IGData["MANTriadLabels"]}],
   True
 ]
-
-(* IGConnectNeighborhood *)
-
-MT[
-  IsomorphicGraphQ[
-    IGConnectNeighborhood[CycleGraph[10], 2],
-    IGMakeLattice[{10}, "Periodic" -> True, "Radius" -> 2]
-  ],
-  True
-]
-
-MT[
-  EdgeList@IGConnectNeighborhood[empty, 2],
-  {}
-]
-
-MT[
-  IsomorphicGraphQ[
-    IGConnectNeighborhood[ugs, 1],
-    ugs
-  ],
-  True,
-  {IGraphM::warning}
-]
-
-MT[
-  EdgeList@IGConnectNeighborhood[
-    Graph[{1 -> 2, 2 -> 1, 2 -> 3, 3 -> 2}],
-    2],
-  {1 \[DirectedEdge] 2, 1 \[DirectedEdge] 3, 2 \[DirectedEdge] 1,
-    2 \[DirectedEdge] 3, 3 \[DirectedEdge] 1, 3 \[DirectedEdge] 2}
-]
-
-MT[
-  EdgeList@IGConnectNeighborhood[
-    Graph[{1 -> 2, 2 -> 3}],
-    2],
-  {1 \[DirectedEdge] 2, 1 \[DirectedEdge] 3, 2 \[DirectedEdge] 3}
-]
-
-MT[
-  EdgeList@IGConnectNeighborhood[
-    Graph[{1 -> 2, 3 -> 2}],
-    2],
-  {1 \[DirectedEdge] 2, 3 \[DirectedEdge] 2}
-]
-
 
 (* IGArticulationPoints *)
 
@@ -2672,4 +2706,41 @@ MT[
 MT[
   IGEdgeProp[EdgeWeight][IGEmptyGraph[1]],
   {}
+]
+
+
+(* IGWeighedAdjacencyGraph *)
+
+MT[
+  sameGraphQ[
+    IGWeightedAdjacencyGraph[{{0,1},{2,3}}],
+    Graph[{1->2, 2->1, 2->2}]
+  ],
+  True
+]
+
+MT[
+  IGEdgeProp[EdgeWeight]@IGWeightedAdjacencyGraph[{{0,1},{2,3}}],
+  {1,2,3}
+]
+
+MT[
+  sameGraphQ[
+    IGWeightedAdjacencyGraph[{{0,1},{1,3}}],
+    Graph[{1<->2, 2<->2}]
+  ],
+  True
+]
+
+MT[
+  IGEdgeProp[EdgeWeight]@IGWeightedAdjacencyGraph[{{0,1},{1,3}}],
+  {1,3}
+]
+
+MT[
+  sameGraphQ[
+    IGWeightedAdjacencyGraph[{"a","b"}, {{0,1},{2,3}}],
+    Graph[{"a"->"b", "b"->"a", "b"->"b"}]
+  ],
+  True
 ]
