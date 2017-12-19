@@ -776,7 +776,7 @@ Cell[BoxData[
       RowBox[{"7", ",", "8", ",", "11"}], "}"}]}], "}"}]}], 
   "]"}]], "Input",ExpressionUUID->"fc72513a-202e-4f23-8217-468994c62c22"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -1562,7 +1562,7 @@ Cell[BoxData[
    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"d020e58c-271b-4629-b0c6-e0b638b75a02"]
 }, Closed]]
-}, Closed]]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2619,18 +2619,33 @@ Cell[BoxData[
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"IGDistanceCounts", "[", "]"}]],ExpressionUUID->
-  "fa1440cb-7065-42ec-bc35-69be53f54856"],
+  RowBox[{"IGDistanceCounts", "[", "graph", "]"}]],ExpressionUUID->
+  "b62f489b-0057-4d1d-8345-dd6627de17b4"],
  " counts all-pair ",
  StyleBox["unweighted",
   FontSlant->"Italic"],
- " shortest path lengths in the graph. For weighted path lengths, or to \
-restrict the computation to certain start and end vertex sets, use ",
+ " shortest path lengths in the graph.",
+ "\n",
+ Cell[BoxData[
+  RowBox[{"IGDistanceCounts", "[", 
+   RowBox[{"graph", ",", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      SubscriptBox["v", "1"], ",", 
+      SubscriptBox["v", "2"], ",", "\[Ellipsis]"}], "}"}]}], "]"}]],
+  ExpressionUUID->"a2342ca7-c0da-42eb-8ff9-3f32ae27e4d7"],
+ " counts unweighted shortest path lengths for paths starting at the given \
+vertices."
+}], "Text",ExpressionUUID->"41c5ccbd-380a-413a-999c-83f87b6d6594"],
+
+Cell[TextData[{
+ "For weighted path lengths, or to restrict the computation to both certain \
+start and end vertex sets, use ",
  Cell[BoxData[
   RowBox[{"IGDistanceHistogram", "[", "]"}]],ExpressionUUID->
-  "b3f65afb-59d9-4e8e-80ae-33460c76f418"],
+  "73910394-edb1-4e17-a2af-f5485f4da6e3"],
  "."
-}], "Text",ExpressionUUID->"41c5ccbd-380a-413a-999c-83f87b6d6594"],
+}], "Text",ExpressionUUID->"37cd4097-2acd-413b-8be5-8d31cd4cb60d"],
 
 Cell[TextData[{
  "Compute how the shortest path length distribution changes as we rewire a \
@@ -2666,6 +2681,17 @@ Cell[BoxData[
       RowBox[{"0", ",", "5", ",", "10", ",", "20", ",", "50", ",", "100"}], 
       "}"}]}], "}"}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"28d267c0-cc2f-4741-b7ef-23c2372556bd"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGNeighborhoodSize", \
+"Subsubsection",ExpressionUUID->"dcbccaed-5065-4614-ab80-0b93ea3a958e"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGNeighborhoodSize"}]], \
+"Input",ExpressionUUID->"2c10b222-eb81-48ee-9756-309b93102fbd"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2713,7 +2739,7 @@ Cell[TextData[{
   "f78d2073-6335-4992-8f3f-ee40d282f28f"],
  " (or ",
  Cell[BoxData[
- "GraphDistanceMatrix"],ExpressionUUID->
+  RowBox[{"GraphDistanceMatrix", "[", "]"}]],ExpressionUUID->
   "2774db91-8839-4ad6-8a88-c700129d7421"],
  ") does not fit in memory."
 }], "Text",ExpressionUUID->"8a3c36fc-2234-4d6d-b389-4c66916df2be"]
@@ -3106,23 +3132,18 @@ Cell["Bipartite graphs", \
 
 Cell[BoxData[
  RowBox[{"?", 
+  "IGBipartite*"}]], \
+"Input",ExpressionUUID->"78833861-7c13-432a-a604-530eae472e74"],
+
+Cell[CellGroupData[{
+
+Cell["IGBipartiteQ", \
+"Subsubsection",ExpressionUUID->"4f9f00f3-c844-429a-bc91-ba5e9c540793"],
+
+Cell[BoxData[
+ RowBox[{"?", 
   "IGBipartiteQ"}]], \
-"Input",ExpressionUUID->"42679e96-44ed-42e4-bb38-bccf105febad"],
-
-Cell[BoxData[
- RowBox[{"?", 
-  "IGBipartitePartitions"}]], \
-"Input",ExpressionUUID->"e9901006-7a7a-4deb-9712-0ff042bbf944"],
-
-Cell[BoxData[
- RowBox[{"?", 
-  "IGBipartiteIncidenceMatrix"}]], \
-"Input",ExpressionUUID->"6720a33b-8801-4efa-a337-cfed55170bfb"],
-
-Cell[BoxData[
- RowBox[{"?", 
-  "IGBipartiteIncidenceGraph"}]], \
-"Input",ExpressionUUID->"bde9f461-5428-4bdd-b559-0cb9751a4f9a"],
+"Input",ExpressionUUID->"8a64afd4-5154-48b7-acc3-d9e8427d9741"],
 
 Cell["Generate a graph and verify that it is bipartite.", \
 "Text",ExpressionUUID->"b30577ce-5f4e-4cf6-bc58-8e5eb7380063"],
@@ -3151,10 +3172,120 @@ Cell[BoxData[
       RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
      RowBox[{"{", 
       RowBox[{"6", ",", "7", ",", "8"}], "}"}]}], "}"}]}], 
-  "]"}]], "Input",ExpressionUUID->"b596f52f-ce34-48f6-89d6-1fadc5c84d8f"],
+  "]"}]], "Input",ExpressionUUID->"b596f52f-ce34-48f6-89d6-1fadc5c84d8f"]
+}, Closed]],
 
-Cell["Find a bipartite partitioning of the graph.", \
+Cell[CellGroupData[{
+
+Cell["IGBipartitePartitions", \
+"Subsubsection",ExpressionUUID->"083840f6-8adb-4b68-bcef-b238bf1b6d6b"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGBipartitePartitions"}]], \
+"Input",ExpressionUUID->"1a821be9-ab60-4c58-8dac-93669d6dcfed"],
+
+Cell["Find a bipartite partitioning of a graph.", \
 "Text",ExpressionUUID->"b073ccab-797a-4b31-96d5-e56c488e9cf2"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 6, 7, 8}, {
+        Null, {{2, 5}, {3, 5}, {4, 5}, {2, 6}, {3, 6}, {1, 7}, {4, 7}, {1, 
+         8}}}, {GraphLayout -> {
+          "Dimension" -> 2, "VertexLayout" -> "BipartiteEmbedding"}, 
+         VertexLabels -> {
+          6 -> Placed["Name", After], 3 -> Placed["Name", Before], 5 -> 
+           Placed["Name", After], 8 -> Placed["Name", After], 7 -> 
+           Placed["Name", After], 4 -> Placed["Name", Before], 2 -> 
+           Placed["Name", Before], 1 -> Placed["Name", Before]}}]]}, 
+      TagBox[GraphicsGroupBox[{
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], 
+           ArrowBox[{{0., -0.38401699437494763`}, {1.0240453183331937`, 
+            0.1280056647916492}}, 0.01416776390182925]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0., -0.38401699437494763`}, {1.0240453183331937`, 
+            0.38401699437494763`}}, 0.01416776390182925]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0., -0.1280056647916492}, {
+            1.0240453183331937`, -0.38401699437494763`}}, 
+            0.01416776390182925]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0., -0.1280056647916492}, {
+            1.0240453183331937`, -0.1280056647916492}}, 0.01416776390182925]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0., 0.1280056647916492}, {
+            1.0240453183331937`, -0.38401699437494763`}}, 
+            0.01416776390182925]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0., 0.1280056647916492}, {
+            1.0240453183331937`, -0.1280056647916492}}, 0.01416776390182925]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0., 0.38401699437494763`}, {
+            1.0240453183331937`, -0.38401699437494763`}}, 
+            0.01416776390182925]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0., 0.38401699437494763`}, {1.0240453183331937`, 
+            0.1280056647916492}}, 0.01416776390182925]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+          0.7]}], {DiskBox[{0., -0.38401699437494763}, 0.01416776390182925], 
+           InsetBox["1", 
+            Offset[{-2, 0}, {-0.01416776390182925, -0.38401699437494763}], 
+            ImageScaled[{1, 0.5}],
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0., -0.1280056647916492}, 0.01416776390182925], 
+           InsetBox["2", 
+            Offset[{-2, 0}, {-0.01416776390182925, -0.1280056647916492}], 
+            ImageScaled[{1, 0.5}],
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0., 0.1280056647916492}, 0.01416776390182925], 
+           InsetBox["3", 
+            Offset[{-2, 0}, {-0.01416776390182925, 0.1280056647916492}], 
+            ImageScaled[{1, 0.5}],
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0., 0.38401699437494763}, 0.01416776390182925], 
+           InsetBox["4", 
+            Offset[{-2, 0}, {-0.01416776390182925, 0.38401699437494763}], 
+            ImageScaled[{1, 0.5}],
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{1.0240453183331937, -0.38401699437494763}, 
+            0.01416776390182925], 
+           InsetBox["5", 
+            Offset[{2, 0}, {1.0382130822350228, -0.38401699437494763}], 
+            ImageScaled[{0, 0.5}],
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{1.0240453183331937, -0.1280056647916492}, 
+            0.01416776390182925], 
+           InsetBox["6", 
+            Offset[{2, 0}, {1.0382130822350228, -0.1280056647916492}], 
+            ImageScaled[{0, 0.5}],
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{1.0240453183331937, 0.1280056647916492}, 
+            0.01416776390182925], 
+           InsetBox["7", 
+            Offset[{2, 0}, {1.0382130822350228, 0.1280056647916492}], 
+            ImageScaled[{0, 0.5}],
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{1.0240453183331937, 0.38401699437494763}, 
+            0.01416776390182925], 
+           InsetBox["8", 
+            Offset[{2, 0}, {1.0382130822350228, 0.38401699437494763}], 
+            ImageScaled[{0, 0.5}],
+            BaseStyle->"Graphics"]}}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{89.078125, Automatic}]}], 
+  ";"}]], "Input",ExpressionUUID->"5b10e55b-2001-48b4-a814-e76511c5b7ca"],
 
 Cell[BoxData[
  RowBox[{"IGBipartitePartitions", "[", "g", 
@@ -3162,12 +3293,12 @@ Cell[BoxData[
 
 Cell["\<\
 Ensure that the partitions are returned in such an order that the first one \
-contains vertex 10.\
+contains vertex 5.\
 \>", "Text",ExpressionUUID->"9dbd4e53-403e-490e-8ed8-bda8d3001475"],
 
 Cell[BoxData[
  RowBox[{"IGBipartitePartitions", "[", 
-  RowBox[{"g", ",", "10"}], 
+  RowBox[{"g", ",", "5"}], 
   "]"}]], "Input",ExpressionUUID->"b6ea903c-7722-40ca-ac47-9628e3e9b700"],
 
 Cell[TextData[{
@@ -3179,7 +3310,73 @@ Cell[TextData[{
 Cell[BoxData[
  RowBox[{"IGBipartitePartitions", "[", 
   RowBox[{"CompleteGraph", "[", "4", "]"}], 
-  "]"}]], "Input",ExpressionUUID->"bc83ba68-454a-4daa-bafa-2f0f2c4e523a"],
+  "]"}]], "Input",ExpressionUUID->"bc83ba68-454a-4daa-bafa-2f0f2c4e523a"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGBipartiteProjections", \
+"Subsubsection",ExpressionUUID->"01e0318f-80b4-46d7-bf34-ca6a9e5a33e3"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGBipartiteProjections"}]], \
+"Input",ExpressionUUID->"5c53eb91-8beb-4ec6-952b-9d992751cfa1"],
+
+Cell["\<\
+The following bipartite graph described the relationship between diseases and \
+genes.\
+\>", "Text",ExpressionUUID->"c68641b4-34bc-431d-805b-afd93dd5c373"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"ExampleData", "[", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<NetworkGraph\>\"", ",", "\"\<BipartiteDiseasomeNetwork\>\""}], "}"}],
+    "]"}]}]], "Input",ExpressionUUID->"220b5f62-e0ca-4f45-979e-7149782b9985"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"parts", "=", 
+   RowBox[{"Values", "@", 
+    RowBox[{"GroupBy", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Thread", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}], 
+        "\[Rule]", 
+        RowBox[{"VertexList", "[", "g", "]"}]}], "]"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"First", "\[Rule]", "Last"}]}], "\[IndentingNewLine]", 
+     "]"}]}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.722626184490192*^9, 
+  3.7226262808705*^9}},ExpressionUUID->"8b8ecc01-230d-4b5a-bed7-63b35ed2451a"],
+
+Cell["Construct a disease-disease and gene-gene network from it.", \
+"Text",ExpressionUUID->"8f9e806b-7fdc-43ae-945b-3a047b0902a3"],
+
+Cell[BoxData[
+ RowBox[{"IGBipartiteProjections", "[", 
+  RowBox[{"g", ",", "parts"}], 
+  "]"}]], "Input",ExpressionUUID->"5c2710d0-da0c-4573-a841-fce065e86191"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGBipartiteIncidenceMatrix and IGBipartiteIncidenceGraph", \
+"Subsubsection",ExpressionUUID->"1f2ccd35-d8f0-42aa-b55d-c66254836476"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGBipartiteIncidenceGraph"}]], \
+"Input",ExpressionUUID->"bcf23fbe-c395-4e90-a172-d7e7794b7440"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGBipartiteIncidenceMatrix"}]], \
+"Input",ExpressionUUID->"7ec81a43-762e-465a-8309-92f5ab14e53c"],
 
 Cell[TextData[{
  "Compute an incidence matrix. The default partitioning used by ",
@@ -3192,6 +3389,13 @@ Cell[TextData[{
   "67ea32de-b689-4fc2-96a7-318e762fa9d4"],
  "."
 }], "Text",ExpressionUUID->"19a6b76c-c297-42fb-a1bf-f3f0bd938e7a"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGBipartiteGameGNM", "[", 
+   RowBox[{"5", ",", "5", ",", "10", ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"e0e214f0-07e1-4e4e-92c0-d3447f961957"],
 
 Cell[BoxData[{
  RowBox[{
@@ -3245,6 +3449,7 @@ Cell[BoxData[
       RowBox[{"d", ",", "e", ",", "f"}], "}"}]}], "}"}], ",", "%", ",", 
    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"fb0d1c7b-35c7-4dd9-b4a4-c21983991b64"]
+}, Closed]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3866,11 +4071,6 @@ compatible with the built-in ",
   "97c96f69-2434-4c3b-a4b0-1044ad39c384"],
  "."
 }], "Text",ExpressionUUID->"31a4c015-6d72-4139-a1e9-d5039be6119d"],
-
-Cell["\<\
-All three algorithms support vertex coloured graphs. Please refer to the VF2 \
-section below for the syntax.\
-\>", "Text",ExpressionUUID->"8d2f7ece-aafa-4c36-9e55-d54975664655"],
 
 Cell[TextData[{
  "Additionally, ",
@@ -4793,6 +4993,145 @@ Cell[BoxData[{
        RowBox[{"{", 
         RowBox[{"2", ",", "2"}], "}"}], "]"}], ",", "g"}], "]"}]}], 
    "]"}]}]}], "Input",ExpressionUUID->"a9720685-1deb-457d-ba30-88cd3e825c3e"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Coloured graphs", \
+"Subsection",ExpressionUUID->"f045b34b-b47c-4ce1-81ea-e185ec5f49bd"],
+
+Cell[TextData[{
+ "All three included isomorphism algorithms support vertex coloured graphs, \
+and VF2 supports edge coloured graphs as well. A coloured graph is specified \
+as ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"g", ",", " ", 
+    RowBox[{"\"\<VertexColors\>\"", "\[Rule]", "\[Ellipsis]"}], ",", 
+    RowBox[{"\"\<EdgeColors\>\"", "\[Rule]", "\[Ellipsis]"}]}], "}"}]],
+  ExpressionUUID->"487d76bd-268b-4deb-8373-89b469aaa82c"],
+ ", where both vertex and edge colour specifications are optional. Colours \
+are represented by integers and may be specified in one of the following ways:"
+}], "Text",ExpressionUUID->"8d2f7ece-aafa-4c36-9e55-d54975664655"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "A list of integers, specifying the colour of each vertex (or edge).\
+\[LineSeparator]",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"Graph", "[", 
+     RowBox[{"{", 
+      RowBox[{"a", "\[UndirectedEdge]", "b"}], "}"}], "]"}], ",", 
+    RowBox[{"\"\<VertexColors\>\"", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "2"}], "}"}]}]}], "}"}]],ExpressionUUID->
+  "e8bdb7ae-84a9-4ded-8b77-0bc16e330e76"]
+}], "Item",ExpressionUUID->"89b9a3f0-9f95-4254-87c5-f9bfbb7254e3"],
+
+Cell[TextData[{
+ "An association assigning an integer to each vertex (or edge). Vertices not \
+present in the association are assumed to have colour ",
+ Cell[BoxData["0"],ExpressionUUID->"18d521a0-f7b4-4798-a6b6-6ec3648a4af8"],
+ ".\[LineSeparator]",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"Graph", "[", 
+     RowBox[{"{", 
+      RowBox[{"a", "\[UndirectedEdge]", "b"}], "}"}], "]"}], ",", 
+    RowBox[{"\"\<VertexColors\>\"", "\[Rule]", 
+     RowBox[{"\[LeftAssociation]", 
+      RowBox[{
+       RowBox[{"a", "\[Rule]", "1"}], ",", 
+       RowBox[{"b", "\[Rule]", "2"}]}], "\[RightAssociation]"}]}]}], "}"}]],
+  ExpressionUUID->"3736ddb6-082d-4693-968c-8822809cac95"],
+ "."
+}], "Item",ExpressionUUID->"da4377a7-fecc-4754-9413-83e5fac99862"],
+
+Cell[TextData[{
+ "The name of a graph property. Vertices (or edges) without an assigned \
+property are assumed to have colour ",
+ Cell[BoxData["0"],ExpressionUUID->"099280b7-fb7d-4d47-b031-0c8eede50383"],
+ ".\[LineSeparator]",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"Graph", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Property", "[", 
+         RowBox[{"a", ",", 
+          RowBox[{"\"\<color\>\"", "\[Rule]", "1"}]}], "]"}], ",", 
+        RowBox[{"Property", "[", 
+         RowBox[{"b", ",", 
+          RowBox[{"\"\<color\>\"", "\[Rule]", "2"}]}], "]"}]}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"a", "\[UndirectedEdge]", "b"}], "}"}]}], "]"}], ",", 
+    RowBox[{"\"\<VertexColors\>\"", "\[Rule]", "\"\<color\>\""}]}], "}"}]],
+  ExpressionUUID->"337ff0e3-5f22-48f3-b3d0-12fdf695fa9e"]
+}], "Item",ExpressionUUID->"5d49306c-b381-4367-b6eb-168ef0a10c2e"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<VertexColors\>\"", "\[Rule]", "None"}]],ExpressionUUID->
+  "6f7d6488-7364-436f-93ed-1e7da5037694"],
+ " indicates no colouring."
+}], "Item",ExpressionUUID->"392e1681-4d96-45f7-b3e7-dbee51ccd029"]
+}, Open  ]],
+
+Cell[TextData[{
+ StyleBox["Example. ",
+  FontWeight->"Bold"],
+ "Define a graph along with the colours of its vertices."
+}], "Text",ExpressionUUID->"83022294-78e8-45e0-b8e9-df3a2e22acef"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"CycleGraph", "[", "4", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"vcols", "=", 
+   RowBox[{"\[LeftAssociation]", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"1", "\[Rule]", "1"}], ",", 
+     RowBox[{"2", "\[Rule]", "1"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"3", "\[Rule]", "2"}], ",", 
+     RowBox[{"4", "\[Rule]", "2"}]}], "\[IndentingNewLine]", 
+    "\[RightAssociation]"}]}], 
+  ";"}]}], "Input",ExpressionUUID->"5d0f53c5-234b-4f47-8166-f86ab246c6da"],
+
+Cell["Visualize it.", \
+"Text",ExpressionUUID->"84c1b297-7c48-4b39-94ad-af426cc7bbce"],
+
+Cell[BoxData[
+ RowBox[{"Graph", "[", 
+  RowBox[{"g", ",", "\[IndentingNewLine]", 
+   RowBox[{"VertexStyle", "\[Rule]", 
+    RowBox[{"Normal", "[", 
+     RowBox[{
+      RowBox[{"ColorData", "[", "24", "]"}], "/@", "vcols"}], "]"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"VertexSize", "\[Rule]", "Medium"}], ",", 
+   RowBox[{"VertexLabels", "\[Rule]", 
+    RowBox[{"Placed", "[", 
+     RowBox[{"\"\<Name\>\"", ",", "Center"}], "]"}]}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"7217ab43-2f4d-4333-86a3-3f9f104bbd38"],
+
+Cell["\<\
+Compute its automorphism group, taking vertex colours into account.\
+\>", "Text",ExpressionUUID->"bbe3852e-ebfb-4a45-a5bb-50018ed40dcc"],
+
+Cell[BoxData[
+ RowBox[{"IGBlissAutomorphismGroup", "[", 
+  RowBox[{"{", 
+   RowBox[{"g", ",", 
+    RowBox[{"\"\<VertexColors\>\"", "\[Rule]", "vcols"}]}], "}"}], 
+  "]"}]], "Input",ExpressionUUID->"d64cd80d-fa49-4e11-99ac-0026cd505b66"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -24780,7 +25119,7 @@ Cell[BoxData[
            RowBox[{"{", "\"\<Feather\>\"", "}"}]}], "]"}]}]}], "&"}], 
       ")"}]}]}], "\[IndentingNewLine]", 
    "]"}]}]], "Input",ExpressionUUID->"b6b42fee-ba69-4faa-bf6d-09334b79f003"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -24835,7 +25174,6 @@ Cell[BoxData[
           Frame->True,
           FrameStyle->RGBColor[0., 0.49933333333333335`, 0.6666666666666667],
           FrameTicks->None,
-          
           ImageSize->
            Dynamic[{
             Automatic, 
@@ -24928,7 +25266,7 @@ Cell[BoxData[
   "\[IndentingNewLine]", "]"}]], "Input",
  CellChangeTimes->{{3.7031575299674397`*^9, 
   3.70315766246682*^9}},ExpressionUUID->"1c5590fa-7907-4d84-9cc0-127e12d2904c"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -25013,15 +25351,15 @@ Cell[BoxData[
      RowBox[{"\"\<Dimension\>\"", "\[Rule]", "2"}], "}"}]}]}], 
   "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"0d1c2b92-0527-4224-8eb3-b1197a2a9d8c"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
 Cell["Copy one property into another", \
 "Subsubsection",ExpressionUUID->"6f1193a0-a603-48e7-b38b-92d3d2e5437f"],
 
-Cell["Copy the values of one property into another.", \
-"Text",ExpressionUUID->"aa49859f-d64f-4e41-88fd-7c6f7e3b1cf1"],
+Cell["Let us import this network:", \
+"Text",ExpressionUUID->"85672436-6a0f-4fa9-8e85-2d6ddfd95701"],
 
 Cell[BoxData[
  RowBox[{"g", "=", 
@@ -25061,6 +25399,9 @@ Cell[BoxData[
  RowBox[{"IGEdgePropertyList", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"8a076542-bbb3-4229-ae3e-55095fc61121"],
 
+Cell["Copy the values of one property into another:", \
+"Text",ExpressionUUID->"aa49859f-d64f-4e41-88fd-7c6f7e3b1cf1"],
+
 Cell[BoxData[
  RowBox[{
   RowBox[{"g", "=", 
@@ -25072,10 +25413,13 @@ Cell[BoxData[
     "]"}]}], ";"}]], \
 "Input",ExpressionUUID->"2ebd253f-d2db-4b2f-bff9-9275221380cc"],
 
+Cell["Now we have a weighted graph.", \
+"Text",ExpressionUUID->"37e7bf9b-9bd4-4db9-b11d-8f51da3baa78"],
+
 Cell[BoxData[
  RowBox[{"IGEdgeWeightedQ", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"52b8522d-1e91-45c8-a165-94b1d7caddaf"]
-}, Open  ]]
+}, Closed]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -25377,10 +25721,12 @@ Cell[BoxData[
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{746, 763},
-WindowMargins->{{Automatic, 34}, {Automatic, 25}},
+WindowSize->{1015, 754},
+WindowMargins->{{Automatic, 87}, {Automatic, 1}},
 WindowTitle->"IGraph/M Documentation",
+PrintingCopies->1,
 PrintingStartingPageNumber->1,
+PrintingPageRange->{1, Automatic},
 PageHeaders->{{
    Cell[
     TextData[{
@@ -25435,8 +25781,13 @@ StyleDefinitions->Notebook[{
    Cell[
     StyleData["Text"], DefaultInlineFormatType -> StandardForm], 
    Cell[
-    StyleData["Item"], DefaultInlineFormatType -> StandardForm]}, Visible -> 
-  False, FrontEndVersion -> 
+    CellGroupData[{
+      Cell[
+       StyleData["Item"], DefaultInlineFormatType -> StandardForm], 
+      Cell[
+       StyleData["Hyperlink", "Printout"], FontColor -> 
+       RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
+  FrontEndVersion -> 
   "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 12, 2017)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
