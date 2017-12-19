@@ -1054,6 +1054,8 @@ public:
         igMatrix mat;
         igraph_integer_t vc = igraph_vcount(&graph);
 
+        bool directed = directedQ();
+
         for (auto vertex : vs) {
             mma::check_abort();
 
@@ -1066,10 +1068,12 @@ public:
                 if (k > 0)
                     counts[k-1] += 1;
             }
-            for (auto i : vs) {
-                size_t k = size_t(VECTOR(mat.mat.data)[i]);
-                if (k > 0)
-                    counts[k-1] -= 0.5;
+            if (! directed) {
+                for (auto i : vs) {
+                    size_t k = size_t(VECTOR(mat.mat.data)[i]);
+                    if (k > 0)
+                        counts[k-1] -= 0.5;
+                }
             }
         }
 
