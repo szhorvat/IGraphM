@@ -68,6 +68,13 @@ $IGExportFormats::usage = "$IGExportFormats is a list of export formats supporte
 
 IGShorthand::usage = "IGShorthand[\"...\"] builds a graph from a shorthand notation such as \"a->b<-c\" or \"a-b,c-d\".";
 
+IGPartitionsToMembership::usage =
+    "IGPartitionsToMembership[elements, partitions] computes a membership vector for the given partitioning of elements.\n" <>
+    "IGPartitionsToMembership[elements] is an operator that can be applied to partitions.";
+IGMembershipToPartitions::usage =
+    "IGMembershipToPartitions[elements, membership] computes a partitioning of elements based on the given membership vector." <>
+    "IGMembershipToPartitions[elements] is an operator that can be applied to membership vectors.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -631,6 +638,31 @@ IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
       ]
     ]
 
+
+(* Membership vectors *)
+
+IGPartitionsToMembership::invpart = "Invalid element or part specification.";
+SyntaxInformation[IGPartitionsToMembership] = {"ArgumentsPattern" -> {_, _.}};
+IGPartitionsToMembership[elements_List, parts : {___List}] :=
+    Module[{copy = parts},
+      If[Sort[elements] =!= Union @@ parts,
+        Message[IGPartitionsToMembership::invpart];
+        Return[$Failed]
+      ];
+      copy[[All, All]] = Range@Length[parts];
+      Lookup[AssociationThread[Flatten[parts, 1], Flatten[copy, 1]], elements]
+    ]
+IGPartitionsToMembership[elements_][parts_] := IGPartitionsToMembership[elements, parts]
+
+SyntaxInformation[IGMembershipToPartitions] = {"ArgumentsPattern" -> {_, _.}};
+IGMembershipToPartitions[elements_List, membership_List] :=
+    If[Length[elements] == Length[membership],
+      Values@GroupBy[Transpose[{elements, membership}], Last -> First]
+      ,
+      Message[IGMembershipToPartitions::ndims, elements, membership];
+      $Failed
+    ]
+IGMembershipToPartitions[elements_][membership_] := IGMembershipToPartitions[elements, membership]
 
 (***** Finalize *****)
 
