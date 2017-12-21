@@ -1013,8 +1013,9 @@ igEdgeList[graph_?DirectedGraphQ] :=
       sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
     ]
 
-
+(* Retrieving edge or vertex weights this way is much faster than using PropertyValue *)
 igEdgeWeights = GraphComputation`WeightValues;
+igVertexWeights = GraphComputation`WeightVector;
 
 
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
@@ -1026,9 +1027,11 @@ igIndexVec[arr_] := 1 + Round[arr]
 (* TODO: PropertyValue is very slow. Find a faster way.  Test on ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}] *)
 (* Note: MemberQ[PropertyList[graph], EdgeWeight] does not return correct result for vertex-weighted graphs. *)
 (* Warning: PropertyValue[g, EdgeWeight] fails on the null graph. This is why we test with WeightedGraphQ first. *)
-(* igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &; *)
+(* igEdgeWeightedQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &; *)
 
-igWeightedGraphQ = IGEdgeWeightedQ; (* Use implementation from IGraphM`Utilities` *)
+(* Use implementations from IGraphM`Utilities` *)
+igEdgeWeightedQ = IGEdgeWeightedQ;
+igVertexWeightedQ = IGVertexWeightedQ;
 
 IGraphM::invw = "Invalid edge weight vector. Edge weights will be ignored.";
 
@@ -1036,7 +1039,7 @@ IGraphM::invw = "Invalid edge weight vector. Edge weights will be ignored.";
 igMake[g_] :=
     With[{ig = Make["IG"]},
       ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
-      If[igWeightedGraphQ[g],
+      If[igEdgeWeightedQ[g],
         Check[
           ig@"setWeights"[igEdgeWeights[g]],
           Message[IGraphM::invw]
@@ -1070,7 +1073,7 @@ igMakeFastWeighted[g_?EmptyGraphQ] :=
     ]
 igMakeFastWeighted[g_] :=
     With[{ig = Make["IG"]},
-      If[igWeightedGraphQ[g],
+      If[igEdgeWeightedQ[g],
         If[DirectedGraphQ[g], (* empty graphs handled as undirected above *)
           With[{wam = WeightedAdjacencyMatrix[g]},
             ig@"fromEdgeList"[wam["NonzeroPositions"] - 1, VertexCount[g], True];
@@ -1135,7 +1138,6 @@ vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, throw[$Failed]]
 vs[graph_][v_] := Check[VertexIndex[graph, v] - 1, throw[$Failed]]
 
 
-vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexWeight] =!= Automatic
 (* Workaround for Subgraph[Graph[{},{}], {}] not evaluating in M11.1 and earlier. *)
 If[$VersionNumber >= 11.2,
   igSubgraph = Subgraph
@@ -2331,7 +2333,7 @@ IGDistanceMatrix[graph_?igGraphQ, from : (_List | All) : All, to : (_List | All)
       ];
       If[method === Automatic,
         method = Which[
-          Not@igWeightedGraphQ[graph], "Unweighted",
+          Not@igEdgeWeightedQ[graph], "Unweighted",
           TrueQ[Min@igEdgeWeights[graph] >= 0], "Dijkstra",
           True, "Johnson"
         ]
@@ -2382,7 +2384,7 @@ IGDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
       ];
       If[method === Automatic,
         method = Which[
-          igWeightedGraphQ[graph], "Dijkstra",
+          igEdgeWeightedQ[graph], "Dijkstra",
           True, "Unweighted"
         ]
       ];
@@ -2423,7 +2425,7 @@ IGFindDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
       ];
       If[method === Automatic,
         method = Which[
-          igWeightedGraphQ[graph], "Dijkstra",
+          igEdgeWeightedQ[graph], "Dijkstra",
           True, "Unweighted"
         ]
       ];
@@ -2594,34 +2596,34 @@ IGCliqueNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"cliqu
 
 SyntaxInformation[IGWeightedCliques] = {"ArgumentsPattern" -> {_, {_, _}}};
 IGWeightedCliques[graph_?igGraphQ, {min_?Internal`NonNegativeMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    If[vertexWeightedQ[graph], igCliquesWeighted, igCliques][graph, {min, infToZero[max]}]
+    If[igVertexWeightedQ[graph], igCliquesWeighted, igCliques][graph, {min, infToZero[max]}]
 igCliquesWeighted[graph_, {min_, max_}] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igUnpackVertexSet[graph]@check@ig@"cliquesWeighted"[min, max, PropertyValue[graph, VertexWeight], False]
+      igUnpackVertexSet[graph]@check@ig@"cliquesWeighted"[min, max, igVertexWeights[graph], False]
     ]
 
 SyntaxInformation[IGMaximalWeightedCliques] = {"ArgumentsPattern" -> {_, {_, _}}};
 IGMaximalWeightedCliques[graph_?igGraphQ, {min_?Internal`NonNegativeMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
-    If[vertexWeightedQ[graph], igMaximalCliquesWeighted, igMaximalCliques][graph, {min, infToZero[max]}]
+    If[igVertexWeightedQ[graph], igMaximalCliquesWeighted, igMaximalCliques][graph, {min, infToZero[max]}]
 igMaximalCliquesWeighted[graph_, {min_, max_}] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igUnpackVertexSet[graph]@check@ig@"cliquesWeighted"[min, max, PropertyValue[graph, VertexWeight], True (* maximal *)]
+      igUnpackVertexSet[graph]@check@ig@"cliquesWeighted"[min, max, igVertexWeights[graph], True (* maximal *)]
     ]
 
 SyntaxInformation[IGLargestWeightedCliques] = {"ArgumentsPattern" -> {_}};
 IGLargestWeightedCliques[graph_?igGraphQ] :=
-    If[vertexWeightedQ[graph], igLargestCliquesWeighted, IGLargestCliques][graph]
+    If[igVertexWeightedQ[graph], igLargestCliquesWeighted, IGLargestCliques][graph]
 igLargestCliquesWeighted[graph_] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igUnpackVertexSet[graph]@check@ig@"largestCliquesWeighted"[PropertyValue[graph, VertexWeight]]
+      igUnpackVertexSet[graph]@check@ig@"largestCliquesWeighted"[igVertexWeights[graph]]
     ]
 
 SyntaxInformation[IGWeightedCliqueNumber] = {"ArgumentsPattern" -> {_}};
 IGWeightedCliqueNumber[graph_?igGraphQ] :=
-    If[vertexWeightedQ[graph], igMaximumCliqueWeight, IGCliqueNumber][graph]
+    If[igVertexWeightedQ[graph], igMaximumCliqueWeight, IGCliqueNumber][graph]
 igMaximumCliqueWeight[graph_] :=
     Block[{ig = igMakeFast[graph]},
-      sck@ig@"cliqueNumberWeighted"[PropertyValue[graph, VertexWeight]]
+      sck@ig@"cliqueNumberWeighted"[igVertexWeights[graph]]
     ]
 
 
@@ -3513,7 +3515,7 @@ IGCommunitiesLabelPropagation[graph_?igGraphQ, opt : OptionsPattern[]] :=
 SyntaxInformation[IGCommunitiesInfoMAP] = {"ArgumentsPattern" -> {_, _.}};
 IGCommunitiesInfoMAP[graph_?igGraphQ, trials_ : 10] :=
     catch@Module[{ig = igMakeFastWeighted[graph], membership, codeLength, vertexWeights},
-      vertexWeights = If[vertexWeightedQ[graph], PropertyValue[graph, VertexWeight], {}];
+      vertexWeights = If[igVertexWeightedQ[graph], igVertexWeights[graph], {}];
       {membership, codeLength} = check@ig@"communityInfoMAP"[trials, vertexWeights];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
@@ -3551,7 +3553,7 @@ IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
       method = OptionValue[Method];
       If[method === Automatic,
         method = If[
-          igWeightedGraphQ[graph] && TrueQ@NonPositive@Min@igEdgeWeights[graph],
+          igEdgeWeightedQ[graph] && TrueQ@NonPositive@Min@igEdgeWeights[graph],
           "Negative",
           "Original"
         ]
@@ -3864,7 +3866,7 @@ IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
         Graph[
           VertexList[graph],
           EdgeList[graph][[indices]],
-          If[igWeightedGraphQ[graph], EdgeWeight -> igEdgeWeights[graph][[indices]], Unevaluated@Sequence[]],
+          If[igEdgeWeightedQ[graph], EdgeWeight -> igEdgeWeights[graph][[indices]], Unevaluated@Sequence[]],
           opt
         ]
       ]
