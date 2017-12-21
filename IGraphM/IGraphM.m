@@ -1136,6 +1136,14 @@ vs[graph_][v_] := Check[VertexIndex[graph, v] - 1, throw[$Failed]]
 
 
 vertexWeightedQ[graph_] := WeightedGraphQ[graph] && PropertyValue[graph, VertexWeight] =!= Automatic
+(* Workaround for Subgraph[Graph[{},{}], {}] not evaluating in M11.1 and earlier. *)
+If[$VersionNumber >= 11.2,
+  igSubgraph = Subgraph
+  ,
+  igSubgraph[_, {}] := Graph[{},{}];
+  igSubgraph[args___] := Subgraph[args]
+];
+
 
 (***** Public functions *****)
 
@@ -1532,7 +1540,7 @@ IGBipartiteQ[g_?igGraphQ, {vertices1_List, vertices2_List}] :=
       If[Not[SubsetQ[vertexList, vertices1] && SubsetQ[vertexList, vertices2] && Intersection[vertices1, vertices2] === {}],
         Message[IGBipartiteQ::bdprt, {vertices1, vertices2}]
       ];
-      EmptyGraphQ@Subgraph[g, vertices1] && EmptyGraphQ@Subgraph[g, vertices2]
+      EmptyGraphQ@igSubgraph[g, vertices1] && EmptyGraphQ@igSubgraph[g, vertices2]
     ]
 
 (* Centrality *)
@@ -2944,7 +2952,7 @@ IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Grap
       If[parts === Automatic,
         isolated = Pick[VertexList[graph], VertexDegree[graph], 0];
         connected = Complement[VertexList[graph], isolated];
-        sg = Subgraph[graph, connected];
+        sg = igSubgraph[graph, connected];
         ig = igMakeFast[sg];
         If[Not@ig@"bipartiteQ"[],
           Message[IGLayoutBipartite::notbp];
@@ -2958,7 +2966,7 @@ IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Grap
         ];
         connected = Join @@ parts;
         isolated = Complement[VertexList[graph], connected];
-        sg = Subgraph[graph, connected];
+        sg = igSubgraph[graph, connected];
         ig = igMakeFast[sg];
         types = communitiesToMembership[VertexList[sg], parts];
       ];
