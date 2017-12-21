@@ -1023,8 +1023,19 @@ igIndexVec[arr_] := 1 + Round[arr]
 
 (* TODO: Find out how to implement this in a more robust way.
    We only want edge-weighted graphs, not vertex weighted ones. *)
+(* TODO: PropertyValue is very slow. Find a faster way.  Test on ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}] *)
+(* Note: MemberQ[PropertyList[graph], EdgeWeight] does not return correct result for vertex-weighted graphs. *)
 (* Warning: PropertyValue[g, EdgeWeight] fails on the null graph. This is why we test with WeightedGraphQ first. *)
-igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &;
+(* igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &; *)
+
+igWeightedGraphQ =
+    WeightedGraphQ[#] &&
+        With[{weights = GraphComputation`WeightValues[#]},
+          If[First[weights] === 1 && SameQ @@ weights,
+            PropertyValue[#, EdgeWeight] =!= Automatic,
+            True
+          ]
+        ]&
 
 IGraphM::invw = "Invalid edge weight vector. Edge weights will be ignored.";
 
