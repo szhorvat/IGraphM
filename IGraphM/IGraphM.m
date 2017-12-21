@@ -1014,6 +1014,9 @@ igEdgeList[graph_?DirectedGraphQ] :=
     ]
 
 
+igEdgeWeights = GraphComputation`WeightValues;
+
+
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
 igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
 igIndexVec[arr_] := 1 + Round[arr]
@@ -1031,7 +1034,7 @@ igMake[g_] :=
       ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
       If[igWeightedGraphQ[g],
         Check[
-          ig@"setWeights"[PropertyValue[g, EdgeWeight]],
+          ig@"setWeights"[igEdgeWeights[g]],
           Message[IGraphM::invw]
         ]
       ];
@@ -2317,7 +2320,7 @@ IGDistanceMatrix[graph_?igGraphQ, from : (_List | All) : All, to : (_List | All)
       If[method === Automatic,
         method = Which[
           Not@igWeightedGraphQ[graph], "Unweighted",
-          TrueQ[Min@PropertyValue[graph, EdgeWeight] >= 0], "Dijkstra",
+          TrueQ[Min@igEdgeWeights[graph] >= 0], "Dijkstra",
           True, "Johnson"
         ]
       ];
@@ -3536,7 +3539,7 @@ IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
       method = OptionValue[Method];
       If[method === Automatic,
         method = If[
-          igWeightedGraphQ[graph] && TrueQ@NonPositive@Min@PropertyValue[graph, EdgeWeight],
+          igWeightedGraphQ[graph] && TrueQ@NonPositive@Min@igEdgeWeights[graph],
           "Negative",
           "Original"
         ]
@@ -3849,7 +3852,7 @@ IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
         Graph[
           VertexList[graph],
           EdgeList[graph][[indices]],
-          If[igWeightedGraphQ[graph], EdgeWeight -> PropertyValue[graph, EdgeWeight][[indices]], Unevaluated@Sequence[]],
+          If[igWeightedGraphQ[graph], EdgeWeight -> igEdgeWeights[graph][[indices]], Unevaluated@Sequence[]],
           opt
         ]
       ]
