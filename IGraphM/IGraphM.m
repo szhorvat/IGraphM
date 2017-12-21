@@ -985,6 +985,7 @@ zimport[filename_] :=
    is robust against changes as both branches of the If are valid ways to retrieve
    the edge list for any graph. They only differ in performance.
 *)
+(*
 igEdgeList[graph_] :=
     Developer`ToPackedArray@If[GraphComputation`GraphRepresentation[graph] === "Simple",
       Flatten[EdgeList@IndexGraph[graph, 0], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
@@ -994,7 +995,24 @@ igEdgeList[graph_] :=
         Flatten[EdgeList[graph], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
       ]
     ]
+*)
 (* igEdgeList[graph_] := List @@@ EdgeList@IndexGraph[graph, 0]; *)
+(* Thanks to Carl Woll for the following implementation idea: http://community.wolfram.com/groups/-/m/t/1250373 *)
+igEdgeList[graph_?EmptyGraphQ] := {}
+igEdgeList[graph_?MultigraphQ] :=
+    Developer`ToPackedArray@Lookup[
+      AssociationThread[VertexList[graph], Range@VertexCount[graph] - 1],
+      Flatten[EdgeList[graph], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
+    ]
+igEdgeList[graph_?UndirectedGraphQ] :=
+    With[{sa = UpperTriangularize@WeightedAdjacencyMatrix[graph, EdgeWeight -> Range@EdgeCount[graph]]},
+      sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
+    ]
+igEdgeList[graph_?DirectedGraphQ] :=
+    With[{sa = WeightedAdjacencyMatrix[graph, EdgeWeight -> Range@EdgeCount[graph]]},
+      sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
+    ]
+
 
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
 igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
