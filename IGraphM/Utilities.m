@@ -196,10 +196,24 @@ IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except
 (* Test for edge and vertex weightedness separately *)
 
 SyntaxInformation[IGVertexWeightedQ] = {"ArgumentsPattern" -> {_}};
-IGVertexWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, VertexWeight] =!= Automatic
+IGVertexWeightedQ[g_] :=
+    WeightedGraphQ[g] &&
+    With[{weights = GraphComputation`WeightVector[g]},
+      If[First[weights] === 1 && SameQ @@ weights,
+        PropertyValue[g, VertexWeight] =!= Automatic,
+        True
+      ]
+    ]
 
 SyntaxInformation[IGEdgeWeightedQ] = {"ArgumentsPattern" -> {_}};
-IGEdgeWeightedQ[g_] := WeightedGraphQ[g] && PropertyValue[g, EdgeWeight] =!= Automatic
+IGEdgeWeightedQ[g_] :=
+    WeightedGraphQ[g] &&
+    With[{weights = GraphComputation`WeightValues[g]},
+      If[First[weights] === 1 && SameQ @@ weights,
+        PropertyValue[g, EdgeWeight] =!= Automatic,
+        True
+      ]
+    ]
 
 
 (* Vertex strengths, i.e. sums of the weights of incident edges *)
