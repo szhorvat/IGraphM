@@ -195,11 +195,16 @@ IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except
 
 (* Test for edge and vertex weightedness separately *)
 
+If[$VersionNumber >= 10.1,
+  minMax = MinMax,
+  minMax = {Min[#], Max[#]}&
+];
+
 SyntaxInformation[IGVertexWeightedQ] = {"ArgumentsPattern" -> {_}};
 IGVertexWeightedQ[g_] :=
     WeightedGraphQ[g] &&
-    With[{weights = GraphComputation`WeightVector[g]},
-      If[First[weights] === 1 && SameQ @@ weights,
+    With[{weights = Developer`ToPackedArray@GraphComputation`WeightVector[g]},
+      If[First[weights] === 1 && minMax[weights] === {1, 1},
         PropertyValue[g, VertexWeight] =!= Automatic,
         True
       ]
@@ -208,8 +213,8 @@ IGVertexWeightedQ[g_] :=
 SyntaxInformation[IGEdgeWeightedQ] = {"ArgumentsPattern" -> {_}};
 IGEdgeWeightedQ[g_] :=
     WeightedGraphQ[g] &&
-    With[{weights = GraphComputation`WeightValues[g]},
-      If[First[weights] === 1 && SameQ @@ weights,
+    With[{weights = Developer`ToPackedArray@GraphComputation`WeightValues[g]},
+      If[First[weights] === 1 && minMax[weights] === {1, 1},
         PropertyValue[g, EdgeWeight] =!= Automatic,
         True
       ]

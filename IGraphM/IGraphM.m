@@ -1028,14 +1028,7 @@ igIndexVec[arr_] := 1 + Round[arr]
 (* Warning: PropertyValue[g, EdgeWeight] fails on the null graph. This is why we test with WeightedGraphQ first. *)
 (* igWeightedGraphQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &; *)
 
-igWeightedGraphQ =
-    WeightedGraphQ[#] &&
-        With[{weights = GraphComputation`WeightValues[#]},
-          If[First[weights] === 1 && SameQ @@ weights,
-            PropertyValue[#, EdgeWeight] =!= Automatic,
-            True
-          ]
-        ]&
+igWeightedGraphQ = IGEdgeWeightedQ; (* Use implementation from IGraphM`Utilities` *)
 
 IGraphM::invw = "Invalid edge weight vector. Edge weights will be ignored.";
 
