@@ -1030,11 +1030,7 @@ igVertexWeights = GraphComputation`WeightVector;
 igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
 igIndexVec[arr_] := 1 + Round[arr]
 
-(* TODO: Find out how to implement this in a more robust way.
-   We only want edge-weighted graphs, not vertex weighted ones. *)
-(* TODO: PropertyValue is very slow. Find a faster way.  Test on ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}] *)
-(* Note: MemberQ[PropertyList[graph], EdgeWeight] does not return correct result for vertex-weighted graphs. *)
-(* Warning: PropertyValue[g, EdgeWeight] fails on the null graph. This is why we test with WeightedGraphQ first. *)
+(* igEdgeWeightedQ: We only want edge-weighted graphs, not vertex weighted ones. *)
 (* igEdgeWeightedQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &; *)
 
 (* Use implementations from IGraphM`Utilities` *)

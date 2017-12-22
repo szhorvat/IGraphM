@@ -195,7 +195,21 @@ IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except
 
 (* Test for edge and vertex weightedness separately *)
 
-If[$VersionNumber >= 10.1,
+(*
+ * The original implementation was
+ *     WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &;
+ * for testing edge-weightedness.
+ * PropertyValue[g, EdgeWeight] fails on the null graph. This is why we had to test with WeightedGraphQ first.
+ *
+ * This solution was slow because PropertyValue takes a very long time.
+ * (Benchmarked on ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}].)
+ *
+ * The alternative implementation
+ *     MemberQ[PropertyList[graph], EdgeWeight]
+ * does not return correct result for vertex-weighted but non-edge-weighted graphs
+ *)
+
+If[$VersionNumber >= 10.1, (* MinMax was added in M10.1 *)
   minMax = MinMax,
   minMax = {Min[#], Max[#]}&
 ];
