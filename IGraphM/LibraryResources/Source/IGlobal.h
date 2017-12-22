@@ -62,7 +62,7 @@ public:
     }
 
     mma::IntTensorRef incidenceToEdgeList(mma::SparseMatrixRef<mint> im, bool directed) {
-        auto edgeList = mma::makeVector<mint>(2*im.cols());
+        auto edgeList = mma::makeMatrix<mint>(im.cols(), 2);
         if (directed) {
             for (auto it = im.begin(); it != im.end(); ++it) {
                 switch (*it) {

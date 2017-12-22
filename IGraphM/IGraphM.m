@@ -453,6 +453,8 @@ IGMeshCellAdjacencyGraph::usage =
     "IGMeshCellAdjacencyGraph[mesh, d] returns the connectivity structure of d-dimensional cells in mesh as a graph.\n" <>
     "IGMeshCellAdjacencyGraph[mesh, d1, d2] returns the connectivity structure of d1 and d2 dimensional cells in mesh as a bipartite graph.";
 
+IGIndexEdgeList::usage = "IGIndexEdgeList[graph] returns the edge list of graph in terms of vertex indices, as a packed array.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -490,7 +492,7 @@ template = LTemplate["IGraphM",
 
         LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *)}, True|False],
 
-        LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 1}]
+        LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 2}]
       }
     ],
     LClass["IG",
@@ -4032,6 +4034,12 @@ IGMeshCellAdjacencyMatrix[mesh_?meshQ, d1_?Internal`NonNegativeIntegerQ, d2_?Int
 IGMeshCellAdjacencyMatrix[mesh_?meshQ, d_?Internal`NonNegativeIntegerQ] :=
     IGMeshCellAdjacencyMatrix[mesh, d, d]
 
+
+(* IGIndexEdgeList *)
+
+IGIndexEdgeList[graph_?EmptyGraphQ] := {}
+IGIndexEdgeList[graph_?igGraphQ] :=
+    catch[1 + check@igraphGlobal@"incidenceToEdgeList"[IncidenceMatrix[graph], DirectedGraphQ[graph]]]
 
 (***** Finalize *****)
 
