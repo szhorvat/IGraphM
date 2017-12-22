@@ -24024,6 +24024,88 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGIndexEdgeList", \
+"Subsection",ExpressionUUID->"74233a0a-8bfb-4183-8a16-3946144059fd"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGIndexEdgeList"}]], \
+"Input",ExpressionUUID->"578bd576-f7ca-4393-aeaa-366a58fd67b8"],
+
+Cell[BoxData[
+ RowBox[{"IGIndexEdgeList", "[", 
+  RowBox[{"Graph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"a", ",", "b", ",", "c"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"b", "\[UndirectedEdge]", "c"}], ",", 
+      RowBox[{"c", "\[UndirectedEdge]", "a"}]}], "}"}]}], "]"}], 
+  "]"}]], "Input",ExpressionUUID->"4aa01269-eb3c-48aa-91c3-2c1c1491d634"],
+
+Cell[BoxData[
+ RowBox[{"Developer`PackedArrayQ", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"469b8999-ea4e-48c0-9a08-ef42419264d6"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGIndexEdgeList", "[", "g", "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "671d289c-2d1f-453f-985f-62d0017263d6"],
+ " is faster than ",
+ Cell[BoxData[
+  RowBox[{"EdgeList", "[", "g", "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "eed2f4c3-0bc4-4c08-91cf-142d24085a40"],
+ " and usually much faster than ",
+ Cell[BoxData[
+  RowBox[{"EdgeList", "@", 
+   RowBox[{"IndexGraph", "[", "g", "]"}]}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "f2d89303-d5b2-485f-8b46-826efe08cd19"],
+ "."
+}], "Text",ExpressionUUID->"ea664a77-5393-40a4-8abc-32aabe7f1aba"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<NetworkGraph\>\"", ",", "\"\<CondensedMatterCollaborations\>\""}], 
+     "}"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"caccdc10-1ff7-457a-b3f3-a5ca368a5a2a"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"First", "@", 
+    RowBox[{"RepeatedTiming", "@", 
+     RowBox[{"EdgeList", "[", "g", "]"}]}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"First", "@", 
+    RowBox[{"RepeatedTiming", "@", 
+     RowBox[{"EdgeList", "@", 
+      RowBox[{"IndexGraph", "[", "g", "]"}]}]}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"First", "@", 
+    RowBox[{"RepeatedTiming", "@", 
+     RowBox[{"IGIndexEdgeList", "[", "g", "]"}]}]}]}], 
+  "}"}]], "Input",ExpressionUUID->"fa59a728-1523-4d4f-a602-7c9dfa8ec966"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"List", "@@@", 
+   RowBox[{"Sort", "/@", 
+    RowBox[{"EdgeList", "@", 
+     RowBox[{"IndexGraph", "[", "g", "]"}]}]}]}], "===", 
+  RowBox[{"Sort", "/@", 
+   RowBox[{
+   "IGIndexEdgeList", "[", "g", 
+    "]"}]}]}]], "Input",ExpressionUUID->"47b05365-ebe1-415b-bd9e-91101deb069b"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["IGData", \
 "Subsection",ExpressionUUID->"ddb8d726-b1b8-4d70-bc02-1f05eaaf9b8b"],
 
@@ -24713,8 +24795,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EurovisionVotes\>\""}], "}"}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
 
 Cell[BoxData[
  RowBox[{"IGVertexStrength", "[", "g", 
@@ -25118,7 +25200,44 @@ Cell[BoxData[
           RowBox[{"#", ",", 
            RowBox[{"{", "\"\<Feather\>\"", "}"}]}], "]"}]}]}], "&"}], 
       ")"}]}]}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input",ExpressionUUID->"b6b42fee-ba69-4faa-bf6d-09334b79f003"]
+   "]"}]}]], "Input",ExpressionUUID->"b6b42fee-ba69-4faa-bf6d-09334b79f003"],
+
+Cell["\<\
+Colour the vertices of an annotated bipartite disease-gene graph based on \
+whether they represent diseases or genes.\
+\>", "Text",ExpressionUUID->"d534e65e-27f6-4127-a6f5-98d31944ea3b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<NetworkGraph\>\"", ",", "\"\<BipartiteDiseasomeNetwork\>\""}], 
+     "}"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"459fca6e-f865-47e9-be0c-31a77ec2efef"],
+
+Cell["There are two types of vertices:", \
+"Text",ExpressionUUID->"474745e6-0b3a-4a54-97ed-b88d449e3108"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}], "//", 
+  "Union"}]], "Input",ExpressionUUID->"a46afbae-394f-4cae-ae37-6da866d1e085"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexMap", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"\[LeftAssociation]", 
+    RowBox[{
+     RowBox[{"\"\<Disease\>\"", "\[Rule]", "Red"}], ",", 
+     RowBox[{"\"\<Entrez\>\"", "\[Rule]", "Blue"}]}], "\[RightAssociation]"}],
+    ",", "\[IndentingNewLine]", 
+   RowBox[{"VertexStyle", "\[Rule]", 
+    RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}]}], ",", 
+   "\[IndentingNewLine]", "g"}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"a3f08766-2767-4076-ada4-5d6fbdd826ca"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -25174,6 +25293,7 @@ Cell[BoxData[
           Frame->True,
           FrameStyle->RGBColor[0., 0.49933333333333335`, 0.6666666666666667],
           FrameTicks->None,
+          
           ImageSize->
            Dynamic[{
             Automatic, 
@@ -25716,13 +25836,145 @@ Cell[BoxData[
  RowBox[{"EmptyGraphQ", "[", 
   RowBox[{"IGEmptyGraph", "[", "5", "]"}], 
   "]"}]], "Input",ExpressionUUID->"eb9c3916-3071-4fb8-ad87-4ecd2b548355"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGPartitionsToMembership and IGMembershipToPartitions", \
+"Subsubsection",ExpressionUUID->"649a4448-61ed-4ae2-94fb-5a6f28edd522"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGPartitionsToMembership"}]], \
+"Input",ExpressionUUID->"7912a99c-771f-4af3-976c-4792c4525376"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMembershipToPartitions"}]], \
+"Input",ExpressionUUID->"7d793496-5cee-4a60-8544-1afd2ee334cf"],
+
+Cell["\<\
+A partitioning of a set of elements can be represented in multiple ways. One \
+way is to list the members of each partition. Another is to annotate each \
+element with the index of the partition it belongs to, i.e. construct a \
+\[OpenCurlyDoubleQuote]membership vector\[CloseCurlyDoubleQuote]. These \
+functions convert between these representations.\
+\>", "Text",ExpressionUUID->"dedcf9a9-bda8-430c-88cc-a6ccc506cdd9"],
+
+Cell["\<\
+IGraph/M generally uses disjoint subsets to represents partitions. Membership \
+vectors are useful when storing the membership information as vertex \
+attributes, or when exchanging data with other interfaces of igraph.\
+\>", "Text",ExpressionUUID->"53d731f4-5122-416b-b0e8-000448d735ce"],
+
+Cell[BoxData[
+ RowBox[{"IGPartitionsToMembership", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b", ",", "c", ",", "d"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"a", ",", "c"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"d", ",", "b"}], "}"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"96dd9c4d-290e-44ba-bfbb-39f17c1dd682"],
+
+Cell[BoxData[
+ RowBox[{"IGMembershipToPartitions", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"a", ",", "b", ",", "c", ",", "d"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "1", ",", "2"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"f26a3159-8518-47f4-a69d-e3619dbb6aba"],
+
+Cell["\<\
+The following graph has the type of nodes encoded as a vertex attribute.\
+\>", "Text",ExpressionUUID->"d28a7819-00aa-4cf1-82bd-4a79af07ae6f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<NetworkGraph\>\"", ",", "\"\<BipartiteDiseasomeNetwork\>\""}], 
+     "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}], "//", 
+  "Short"}]}], "Input",ExpressionUUID->"66bf5721-af64-416a-ba70-451d5f754679"],
+
+Cell["\<\
+Let us extract the attribute values as a vector and construct the two vertex \
+partitions.\
+\>", "Text",ExpressionUUID->"65b4814b-9438-4fc3-8bd1-de39aee7b7e4"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"parts", "=", 
+   RowBox[{"IGMembershipToPartitions", "[", 
+    RowBox[{
+     RowBox[{"VertexList", "[", "g", "]"}], ",", 
+     RowBox[{
+      RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+
+Cell["\<\
+Verify that the graph is bipartite according to this partitioning.\
+\>", "Text",ExpressionUUID->"06bf1dd8-bcf3-4aca-8b22-ea5714160335"],
+
+Cell[BoxData[
+ RowBox[{"IGBipartiteQ", "[", 
+  RowBox[{"g", ",", "parts"}], 
+  "]"}]], "Input",ExpressionUUID->"19b71e64-2d85-4909-9c7d-0dc29b7aaabb"],
+
+Cell["\<\
+Annotate the vertices of a bipartite graph with their computed membership \
+value.\
+\>", "Text",ExpressionUUID->"ff3e8522-c69c-4648-b52c-9ef09d32722e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGBipartiteGameGNM", "[", 
+    RowBox[{"5", ",", "6", ",", "14", ",", 
+     RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"a31786f1-7d78-417f-8ee9-caddcebcf99d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGVertexMap", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"#", "&"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"\"\<membership\>\"", "\[Rule]", 
+      RowBox[{
+       RowBox[{"IGPartitionsToMembership", "[", 
+        RowBox[{"VertexList", "[", "g", "]"}], "]"}], "@*", 
+       "IGBipartitePartitions"}]}], ",", "\[IndentingNewLine]", "g"}], 
+    "\[IndentingNewLine]", "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"67b0ddcf-edcc-4a22-9023-cec69ce0b172"],
+
+Cell["Colour the vertices accordingly.", \
+"Text",ExpressionUUID->"c75e7c87-575d-4297-b2b2-05b9085779c8"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexMap", "[", 
+  RowBox[{
+   RowBox[{"ColorData", "[", "100", "]"}], ",", 
+   RowBox[{"VertexStyle", "\[Rule]", 
+    RowBox[{"IGVertexProp", "[", "\"\<membership\>\"", "]"}]}], ",", "g"}], 
+  "]"}]], "Input",ExpressionUUID->"bb3888bc-83eb-4829-b381-b372c4c81ddd"]
 }, Closed]]
 }, Closed]]
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{1015, 754},
-WindowMargins->{{Automatic, 87}, {Automatic, 1}},
+WindowSize->{755, 746},
+WindowMargins->{{Automatic, 207}, {Automatic, 39}},
 WindowTitle->"IGraph/M Documentation",
 PrintingCopies->1,
 PrintingStartingPageNumber->1,
@@ -25765,7 +26017,7 @@ PrivateNotebookOptions->{"FileOutlineCache"->False},
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 12, \
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 18, \
 2017)",
 StyleDefinitions->Notebook[{
    Cell[
@@ -25788,7 +26040,7 @@ StyleDefinitions->Notebook[{
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
   FrontEndVersion -> 
-  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 12, 2017)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (December 18, 2017)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
