@@ -488,14 +488,18 @@ template = LTemplate["IGraphM",
 
         (* Graph related functions that do not use the graph data structure *)
 
-        LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *)}, True|False]
+        LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *)}, True|False],
+
+        LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 1}]
       }
     ],
     LClass["IG",
       {
         (* Create *)
 
-        LFun["fromEdgeList", {{Real, _, "Constant"} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"],
+        (* LFun["fromEdgeList", {{Real, _, "Constant"} (* edges *), Integer (* vertex count *), True|False (* directed *)}, "Void"], *)
+        LFun["fromIncidenceMatrix", {{LType[SparseArray, Integer], "Constant"}, True|False (* directed *)}, "Void"],
+        LFun["makeEdgeless", {Integer (* vertex count *)}, "Void"],
         (* LFun["fromEdgeListML", LinkObject], *)
         LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
         LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
@@ -997,6 +1001,9 @@ igEdgeList[graph_] :=
     ]
 *)
 (* igEdgeList[graph_] := List @@@ EdgeList@IndexGraph[graph, 0]; *)
+
+(* Not currently in use; was originally used in igMake and related functions.
+ * See igraphGlobal@"incidenceToEdgeList" for a faster solution if need arises in the future. *)
 (* Thanks to Carl Woll for the following implementation idea: http://community.wolfram.com/groups/-/m/t/1250373 *)
 igEdgeList[graph_?EmptyGraphQ] := {}
 igEdgeList[graph_?MultigraphQ] :=
@@ -1012,6 +1019,7 @@ igEdgeList[graph_?DirectedGraphQ] :=
     With[{sa = WeightedAdjacencyMatrix[graph, EdgeWeight -> Range@EdgeCount[graph]]},
       sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
     ]
+
 
 (* Retrieving edge or vertex weights this way is much faster than using PropertyValue *)
 igEdgeWeights = GraphComputation`WeightValues;
@@ -1036,6 +1044,7 @@ igVertexWeightedQ = IGVertexWeightedQ;
 IGraphM::invw = "Invalid edge weight vector. Edge weights will be ignored.";
 
 (* Create IG object from Mathematica Graph. Must be used when edge ordering matters. *)
+(*
 igMake[g_] :=
     With[{ig = Make["IG"]},
       ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
@@ -1047,7 +1056,35 @@ igMake[g_] :=
       ];
       ig
     ]
+*)
 
+igMake[g_] :=
+    With[{ig = Make["IG"]},
+      If[EmptyGraphQ[g],
+        ig@"makeEdgeless"[VertexCount[g]]
+        ,
+        ig@"fromIncidenceMatrix"[IncidenceMatrix[g], DirectedGraphQ[g] (* empty graphs are treated as undirected in the branch above *)];
+        If[igEdgeWeightedQ[g],
+          Check[
+            ig@"setWeights"[igEdgeWeights[g]],
+            Message[IGraphM::invw]
+          ]
+        ]
+      ];
+      ig
+    ]
+
+igMakeUnweighted[g_] :=
+    With[{ig = Make["IG"]},
+      If[EmptyGraphQ[g],
+        ig@"makeEdgeless"[VertexCount[g]]
+        ,
+        ig@"fromIncidenceMatrix"[IncidenceMatrix[g], DirectedGraphQ[g] (* empty graphs are treated as undirected in the branch above *)];
+      ];
+      ig
+    ]
+
+(*
 (* Fast version. Use only for unweighted graphs and when edge ordering doesn't matter. *)
 igMakeFast[g_?MultigraphQ] := igMake[g]
 igMakeFast[g_?EmptyGraphQ] :=
@@ -1063,7 +1100,10 @@ igMakeFast[g_] :=
       ];
       ig
     ]
+*)
+igMakeFast = igMakeUnweighted; (* IncidenceMatrix-based igMake is faster than the above igMakeFast implementation *)
 
+(*
 (* Fast version. Use for graphs that may be weighted when edge ordering doesn't matter. *)
 igMakeFastWeighted[g_?MultigraphQ] := igMake[g]
 igMakeFastWeighted[g_?EmptyGraphQ] :=
@@ -1093,6 +1133,9 @@ igMakeFastWeighted[g_] :=
       ];
       ig
     ]
+*)
+igMakeFastWeighted = igMake; (* IncidenceMatrix-based igMake is faster than the above igMakeFast implementation *)
+
 
 (* Create Mathematica Graph from IG object. *)
 igToGraph[ig_] :=

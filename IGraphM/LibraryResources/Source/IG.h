@@ -124,6 +124,58 @@ public:
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
     }
 
+    void fromIncidenceMatrix(mma::SparseMatrixRef<mint> im, bool directed) {
+        igVector edgeList(2*im.cols());
+        if (directed) {
+            for (auto it = im.begin(); it != im.end(); ++it) {
+                switch (*it) {
+                case -1:
+                    edgeList[2*it.col()] = it.row();
+                    break;
+                case  1:
+                    edgeList[2*it.col() + 1] = it.row();
+                    break;
+                case  2:
+                case -2:
+                    edgeList[2*it.col()] = it.row();
+                    edgeList[2*it.col() + 1] = it.row();
+                    break;
+                default:
+                    throw mma::LibraryError("fromIncidenceMatrix: Invalid incidence matrix.");
+                }
+            }
+        } else {
+            for (auto &el : edgeList)
+                el = -1;
+            for (auto it = im.begin(); it != im.end(); ++it) {
+                switch (*it) {
+                case  1:
+                    if (edgeList[2*it.col()] == -1)
+                        edgeList[2*it.col()] = it.row();
+                    else
+                        edgeList[2*it.col() + 1] = it.row();
+                    break;
+                case  2:
+                    edgeList[2*it.col()] = it.row();
+                    edgeList[2*it.col() + 1] = it.row();
+                    break;
+                default:
+                    throw mma::LibraryError("fromIncidenceMatrix: Invalid incidence matrix.");
+                }
+            }
+        }
+
+        destroy();
+        igConstructorCheck(igraph_create(&graph, &edgeList.vec, im.rows() /* vertex count */, directed));
+    }
+
+    /* Creates an undirected graph with n vertices and no edges. */
+    void makeEdgeless(mint n) {
+        destroy();
+        igVector edgeList;
+        igConstructorCheck(igraph_create(&graph, &edgeList.vec, n /* vertex count */, false /* undirected */));
+    }
+
     void fromEdgeListML(MLINK link) {
         mlStream ml{link, "fromEdgeListML"};
         igMatrix mat;

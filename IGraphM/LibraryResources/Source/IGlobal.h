@@ -60,6 +60,49 @@ public:
                 return true;
         return false;
     }
+
+    mma::IntTensorRef incidenceToEdgeList(mma::SparseMatrixRef<mint> im, bool directed) {
+        auto edgeList = mma::makeVector<mint>(2*im.cols());
+        if (directed) {
+            for (auto it = im.begin(); it != im.end(); ++it) {
+                switch (*it) {
+                case -1:
+                    edgeList[2*it.col()] = it.row();
+                    break;
+                case  1:
+                    edgeList[2*it.col() + 1] = it.row();
+                    break;
+                case  2:
+                case -2:
+                    edgeList[2*it.col()] = it.row();
+                    edgeList[2*it.col() + 1] = it.row();
+                    break;
+                default:
+                    throw mma::LibraryError("Invalid incidence matrix.");
+                }
+            }
+        } else {
+            for (auto &el : edgeList)
+                el = -1;
+            for (auto it = im.begin(); it != im.end(); ++it) {
+                switch (*it) {
+                case  1:
+                    if (edgeList[2*it.col()] == -1)
+                        edgeList[2*it.col()] = it.row();
+                    else
+                        edgeList[2*it.col() + 1] = it.row();
+                    break;
+                case  2:
+                    edgeList[2*it.col()] = it.row();
+                    edgeList[2*it.col() + 1] = it.row();
+                    break;
+                default:
+                    throw mma::LibraryError("Invalid incidence matrix.");
+                }
+            }
+        }
+        return edgeList;
+    }
 };
 
 #endif // IGLOBAL_H

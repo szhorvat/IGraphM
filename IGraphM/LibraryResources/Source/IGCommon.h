@@ -63,6 +63,9 @@ public:
     const igraph_real_t *begin() const { return vec.stor_begin; }
     const igraph_real_t *end() const { return vec.end; }
 
+    igraph_real_t & operator [] (size_t i) { return begin()[i]; }
+    const igraph_real_t & operator [] (size_t i) const { return begin()[i]; }
+
     void clear() { igraph_vector_clear(&vec); }
     void resize(long newsize) { igraph_vector_resize(&vec, newsize); }
 
