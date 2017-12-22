@@ -1,6 +1,8 @@
 (* ::Package:: *)
 (* MicroTest test file *)
 
+(***** Utility functions *****)
+
 tolEq[a_, b_, tol_ : 1*^-8 ] := Max@Abs[a-b] < tol
 
 takeUpper[mat_?SquareMatrixQ] := Extract[mat, Subsets[Range@Length[mat], {2}]]
@@ -11,6 +13,57 @@ sameGraphQ[g1_, g2_] :=
       SetAttributes[UndirectedEdge, Orderless];
       Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
     ]
+
+(***** Test graphs *****)
+
+SeedRandom[137]
+ugs = RandomGraph[{10,20}];
+dgs = RandomGraph[{10,30}, DirectedEdges->True];
+
+ugi = GraphComputation`ToGraphRepresentation[RandomGraph[{12,25}], "Incidence"];
+dgi = GraphComputation`ToGraphRepresentation[RandomGraph[{12,25}, DirectedEdges -> True], "Incidence"];
+
+umulti = Graph[UndirectedEdge @@@ RandomInteger[10, {50, 2}]];
+dmulti = Graph[DirectedEdge @@@ RandomInteger[10, {50, 2}]];
+
+usweights = RandomReal[1, EdgeCount[ugs]];
+wugs = Graph[ugs, EdgeWeight->usweights];
+
+uiweights = RandomReal[1, EdgeCount[ugi]];
+wugi = Graph[ugi, EdgeWeight->uiweights];
+
+dsweights = RandomReal[1, EdgeCount[dgs]];
+wdgs = Graph[dgs, EdgeWeight->dsweights];
+
+diweights = RandomReal[1, EdgeCount[dgi]];
+wdgi = Graph[dgi, EdgeWeight->diweights];
+
+bidi = DirectedGraph[RandomGraph[{10, 20}]];
+
+empty = Graph[{},{}];
+edgeless = Graph[{1,2,3},{}];
+
+ulist = Table[ GraphComputation`ToGraphRepresentation[RandomGraph[{n, 2n}], If[EvenQ[n], "Incidence", "Simple"]], {n, 5, 100, 5}];
+dlist = Table[ GraphComputation`ToGraphRepresentation[RandomGraph[{n, 2n}, DirectedEdges -> True], If[EvenQ[n], "Incidence", "Simple"]], {n, 5, 100, 5}];
+
+dolphin = ExampleData[{"NetworkGraph", "DolphinSocialNetwork"}];
+web = ExampleData[{"NetworkGraph", "ExpandedComputationalGeometry"}];
+collab = ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}];
+football = ExampleData[{"NetworkGraph", "AmericanCollegeFootball"}];
+lesmiserables = ExampleData[{"NetworkGraph", "LesMiserables"}];
+
+bipartite = Graph[
+  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+  {3 <-> 6, 5 <-> 6, 4 <-> 7, 1 <-> 8, 2 <-> 8, 4 <-> 8, 1 <-> 9,
+    2 <-> 9, 4 <-> 9, 5 <-> 10, 1 <-> 11, 4 <-> 11, 5 <-> 11, 2 <-> 12,
+    5 <-> 12}
+];
+
+dbipartite = Graph[
+  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+  {3 -> 6, 4 -> 7, 1 -> 9, 5 -> 10, 2 -> 12, 3 -> 12, 4 -> 12, 9 -> 1,
+    10 -> 1, 11 -> 1, 12 -> 2, 9 -> 3, 10 -> 3, 8 -> 5, 10 -> 5}
+];
 
 (*******************************************************************************)
 MTSection["Sanity checks for Mathematica builtins"]
@@ -28,6 +81,110 @@ MT[
     Graph[{"c","b","a"}, {{3,2}, {2,1}}, DirectedEdges -> True]
   ],
   True
+]
+
+(* Verify GraphComputation`WeightValues *)
+
+(* Check multigraphs *)
+MT[
+  GraphComputation`WeightValues@Graph[{1<->2, 1<->2}, EdgeWeight -> {3,4}],
+  {3,4}
+]
+
+MT[
+  GraphComputation`WeightValues[collab],
+  PropertyValue[collab, EdgeWeight]
+]
+
+(* IGEdgeWeightedQ relies on the fact that this function returns a list of 1s for unweighted graphs *)
+MT[
+  GraphComputation`WeightValues[Graph[{1<->2, 2<->3}]],
+  {1,1}
+]
+
+(* Verify that it returns 1s even when attempting to set a different default value *)
+MT[
+  GraphComputation`WeightValues[Graph[{1<->2, 2<->3}, Properties -> {"DefaultEdgeProperties" -> {EdgeWeight -> 3}}]],
+  {1,1}
+]
+
+(* Similar checks for GraphComputation`WeightVector, which returns the vertex weight vector *)
+
+MT[
+  GraphComputation`WeightVector@Graph[{2, 1}, {1<->2, 1<->2}, EdgeWeight -> {3,4}, VertexWeight -> {5,6}],
+  {5,6}
+]
+
+MT[
+  GraphComputation`WeightVector[Graph[{1<->2, 2<->3}]],
+  {1,1,1}
+]
+
+MT[
+  GraphComputation`WeightVector[Graph[{1<->2, 2<->3}, Properties -> {"DefaultVertexProperties" -> {VertexWeight -> 3}}]],
+  {1,1,1}
+]
+
+(* Tests for IncidenceMatrix *)
+
+MT[
+  Normal@IncidenceMatrix[Graph[{a, b}, {b -> a}]],
+  {{1}, {-1}}
+]
+
+MT[
+  Normal@IncidenceMatrix[Graph[{a, b}, {b <-> a}]],
+  {{1}, {1}}
+]
+
+MT[
+  Normal@IncidenceMatrix[Graph[{a, b}, {b <-> b}]],
+  {{0}, {2}}
+]
+
+(* According to the documentation, the below should return {{0}, {-2}}, not {{0}, {2}}.
+ * This test is to alert of any change in behaviour.
+ * This is relevant for IG::fromIncidenceMatrix() in IG.h, however this function is already
+ * written in a way that it should be immune to such a change.
+ *)
+MT[
+  Normal@IncidenceMatrix[Graph[{a, b}, {b -> b}]],
+  {{0}, {2}}
+]
+
+MT[
+  Normal@IncidenceMatrix@Graph[Range[10], {1 <-> 8, 8 <-> 10, 6 <-> 10, 2 <-> 2, 7 <-> 1,
+    8 <-> 9, 3 <-> 8, 2 <-> 7, 1 <-> 2, 3 <-> 3, 1 <-> 6, 6 <-> 5,
+    3 <-> 2, 10 <-> 9, 10 <-> 9}],
+  {{1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
+    {0, 0, 0, 2, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0},
+    {0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 1, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+    {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+    {0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+    {1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+    {0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1}}
+]
+
+MT[
+  Normal@IncidenceMatrix@Graph[Range[10], {6 \[DirectedEdge] 9, 3 \[DirectedEdge] 7,
+    3 \[DirectedEdge] 1, 7 \[DirectedEdge] 7, 3 \[DirectedEdge] 1,
+    9 \[DirectedEdge] 2, 3 \[DirectedEdge] 4, 2 \[DirectedEdge] 9,
+    10 \[DirectedEdge] 5, 10 \[DirectedEdge] 4, 6 \[DirectedEdge] 6,
+    5 \[DirectedEdge] 5, 1 \[DirectedEdge] 5, 5 \[DirectedEdge] 9,
+    10 \[DirectedEdge] 9}],
+  {{0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0},
+    {0, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0, 0, 0, 0},
+    {0, -1, -1, 0, -1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 1, -1, 0},
+    {-1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0},
+    {0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0, 0, 1, 1},
+    {0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1}}
 ]
 
 
@@ -79,55 +236,6 @@ MT[
   Null
 ]
 
-SeedRandom[137]
-ugs = RandomGraph[{10,20}];
-dgs = RandomGraph[{10,30}, DirectedEdges->True];
-
-ugi = GraphComputation`ToGraphRepresentation[RandomGraph[{12,25}], "Incidence"];
-dgi = GraphComputation`ToGraphRepresentation[RandomGraph[{12,25}, DirectedEdges -> True], "Incidence"];
-
-umulti = Graph[UndirectedEdge @@@ RandomInteger[10, {50, 2}]];
-dmulti = Graph[DirectedEdge @@@ RandomInteger[10, {50, 2}]];
-
-usweights = RandomReal[1, EdgeCount[ugs]];
-wugs = Graph[ugs, EdgeWeight->usweights];
-
-uiweights = RandomReal[1, EdgeCount[ugi]];
-wugi = Graph[ugi, EdgeWeight->uiweights];
-
-dsweights = RandomReal[1, EdgeCount[dgs]];
-wdgs = Graph[dgs, EdgeWeight->dsweights];
-
-diweights = RandomReal[1, EdgeCount[dgi]];
-wdgi = Graph[dgi, EdgeWeight->diweights];
-
-bidi = DirectedGraph[RandomGraph[{10, 20}]];
-
-empty = Graph[{},{}];
-edgeless = Graph[{1,2,3},{}];
-
-ulist = Table[ GraphComputation`ToGraphRepresentation[RandomGraph[{n, 2n}], If[EvenQ[n], "Incidence", "Simple"]], {n, 5, 100, 5}];
-dlist = Table[ GraphComputation`ToGraphRepresentation[RandomGraph[{n, 2n}, DirectedEdges -> True], If[EvenQ[n], "Incidence", "Simple"]], {n, 5, 100, 5}];
-
-dolphin = ExampleData[{"NetworkGraph", "DolphinSocialNetwork"}];
-web = ExampleData[{"NetworkGraph", "ExpandedComputationalGeometry"}];
-collab = ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}];
-football = ExampleData[{"NetworkGraph", "AmericanCollegeFootball"}];
-lesmiserables = ExampleData[{"NetworkGraph", "LesMiserables"}];
-
-bipartite = Graph[
-  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
-  {3 <-> 6, 5 <-> 6, 4 <-> 7, 1 <-> 8, 2 <-> 8, 4 <-> 8, 1 <-> 9,
-    2 <-> 9, 4 <-> 9, 5 <-> 10, 1 <-> 11, 4 <-> 11, 5 <-> 11, 2 <-> 12,
-    5 <-> 12}
-  ];
-
-dbipartite = Graph[
-  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
-  {3 -> 6, 4 -> 7, 1 -> 9, 5 -> 10, 2 -> 12, 3 -> 12, 4 -> 12, 9 -> 1,
-    10 -> 1, 11 -> 1, 12 -> 2, 9 -> 3, 10 -> 3, 8 -> 5, 10 -> 5}
-];
-
 (*******************************************************************************)
 MTSection["Undirected"]
 
@@ -158,6 +266,7 @@ MT[
   {}
 ]
 
+
 (*******************************************************************************)
 MTSection["Directed"]
 
@@ -187,6 +296,7 @@ MT[
   IGraphM`LTemplate`LExpressionList["IG"],
   {}
 ]
+
 
 (*******************************************************************************)
 MTSection["Weighted undirected"]
@@ -228,6 +338,7 @@ MT[
   IGraphM`LTemplate`LExpressionList["IG"],
   {}
 ]
+
 
 (*******************************************************************************)
 MTSection["Weighted directed"]
@@ -272,7 +383,6 @@ MT[
 
 
 (*******************************************************************************)
-
 MTSection["Cycling grahps through igraph"]
 
 compare[ig_, graph_] :=
@@ -282,18 +392,27 @@ compare[ig_, graph_] :=
       Sort /@ IGraphM`Private`igIndexVec[ig@"edgeList"[]] == Sort /@ (List @@@ EdgeList@IndexGraph[graph])
     ]
 
-cycleTestList = {ugs, dgs, ugi, dgi, umulti, dmulti, empty, edgeless, dolphin, web, football, collab, KaryTree[100], KaryTree[101, DirectedEdges -> True]};
+cycleTestList = {
+  ugs, dgs, ugi, dgi, umulti, dmulti,
+  empty, edgeless,
+  dolphin, web, football, collab,
+  KaryTree[100], KaryTree[101, DirectedEdges -> True]
+};
 
 MT[
   compare[IGraphM`Private`igMake[#], #],
   True
 ]& /@ cycleTestList
 
-(*
 MT[
-  compare[IGraphM`Private`igMakeFast[#], #],
+  compare[IGraphM`Private`igMake[#], #],
   True
-]& /@ cycleTestList*)
+]& /@ Join[IGData[{"AllDirectedGraphs", 3}], IGData[{"AllDirectedGraphs", 4}]]
+
+MT[
+  compare[IGraphM`Private`igMake[#], #],
+  True
+]& /@ Join[IGData[{"AllUndirectedGraphs", 3}], IGData[{"AllUndirectedGraphs", 4}]]
 
 Print["Cycle timing: ", First@Timing[IGraphM`Private`igMake /@ cycleTestList;] ]
 
@@ -581,8 +700,8 @@ MT[
   True
 ]
 
-(*******************************************************************************)
 
+(*******************************************************************************)
 MTSection["Modification"]
 
 (* IGConnectNeighborhood *)
@@ -662,6 +781,59 @@ MT[
       2
     ],
     Graph[{1 -> 2, 3 -> 2}]
+  ],
+  True
+]
+
+
+(*******************************************************************************)
+MTSection["Rewiring"]
+
+(* IGRewire *)
+
+MT[
+  VertexDegree@IGRewire[#, 100] == VertexDegree[#],
+  True
+] & /@ {ugs, ugi}
+
+MT[
+  With[{r = IGRewire[#, 100]},
+    VertexInDegree[r] == VertexInDegree[#] &&
+        VertexOutDegree[r] == VertexOutDegree[#]
+  ],
+  True
+]& /@ {dgs, dgi}
+
+MT[
+  IsomorphicGraphQ[IGRewire[#, 0], #],
+  True
+]& /@ {ugs, dgs, ugi, dgi}
+
+
+(* IGRewireEdges *)
+
+MT[
+  EdgeCount@IGRewireEdges[#, 0.1] == EdgeCount[#],
+  True
+]& /@ {ugs, dgs, ugi, dgi}
+
+MT[
+  IsomorphicGraphQ[IGRewireEdges[#, 0], #],
+  True
+]& /@ {ugs, dgs, ugi, dgi}
+
+MT[
+  IGIsomorphicQ[
+    IGRewireEdges[empty, 0],
+    empty
+  ],
+  True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGRewireEdges[edgeless, 0],
+    edgeless
   ],
   True
 ]
@@ -1011,7 +1183,6 @@ MT[
   {IGraphM::error}
 ]& /@ {IGLADFindSubisomorphisms, IGLADGetSubisomorphism, IGLADSubisomorphicQ}
 
-
 (*******************************************************************************)
 MTSection["Centralities"]
 
@@ -1096,8 +1267,6 @@ MT[
   Mean@LocalClusteringCoefficient[umulti] == IGAverageLocalClusteringCoefficient[umulti],
   True
 ]
-
-
 
 
 (*******************************************************************************)
@@ -1305,7 +1474,6 @@ MT[
 ]
 
 
-
 (*******************************************************************************)
 MTSection["Motifs and subgraph counts"]
 
@@ -1475,6 +1643,7 @@ MT[
   IGDyadCensus[web],
   <|"Mutual" -> 13, "Asymmetric" -> 3927, "Null" -> 746985|>
 ]
+
 
 (*******************************************************************************)
 MTSection["Connectivity"]
@@ -1950,18 +2119,31 @@ MT[
   {{1,2,3,4}, {}}
 ]
 
-MT[
-  IGBipartiteQ[bipartite],
-  True
-]
+{
+  MT[IGBipartiteQ[#], True],
+  MT[IGBipartiteQ[#, IGBipartitePartitions[#]], True]
+} & /@ Hold[
+  bipartite, dbipartite,
+  IGEmptyGraph[0], IGEmptyGraph[5],
+  IGBipartiteGameGNM[10, 12, 33], IGBipartiteGameGNM[8, 17, 33, DirectedEdges -> True],
+  IGBipartiteGameGNP[9, 6, 0.3], IGBipartiteGameGNP[21, 5, 0.6, DirectedEdges -> True]
+] // ReleaseHold
 
 MT[
   IGBipartitePartitions[dbipartite],
   {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10, 11, 12}}
 ]
 
+bipartiteProjectionAM[g_, parts_] :=
+    With[{im = IGBipartiteIncidenceMatrix[g, parts]},
+      IGraphM`Private`zeroDiagonal /@ Unitize[{im.Transpose[im], Transpose[im].im}]
+    ]
+
 MT[
-  IGBipartiteQ[dbipartite],
+  Equal[
+    AdjacencyMatrix /@ IGBipartiteProjections[bipartite, IGBipartitePartitions[bipartite]],
+    bipartiteProjectionAM[bipartite, IGBipartitePartitions[bipartite]]
+  ],
   True
 ]
 
@@ -1993,176 +2175,6 @@ MT[
 
 
 (*******************************************************************************)
-MTSection["Rewiring"]
-
-(* IGRewire *)
-
-MT[
-  VertexDegree@IGRewire[#, 100] == VertexDegree[#],
-  True
-] & /@ {ugs, ugi}
-
-MT[
-  With[{r = IGRewire[#, 100]},
-    VertexInDegree[r] == VertexInDegree[#] &&
-        VertexOutDegree[r] == VertexOutDegree[#]
-  ],
-  True
-]& /@ {dgs, dgi}
-
-MT[
-  IsomorphicGraphQ[IGRewire[#, 0], #],
-  True
-]& /@ {ugs, dgs, ugi, dgi}
-
-
-(* IGRewireEdges *)
-
-MT[
-  EdgeCount@IGRewireEdges[#, 0.1] == EdgeCount[#],
-  True
-]& /@ {ugs, dgs, ugi, dgi}
-
-MT[
-  IsomorphicGraphQ[IGRewireEdges[#, 0], #],
-  True
-]& /@ {ugs, dgs, ugi, dgi}
-
-MT[
-  IGIsomorphicQ[
-    IGRewireEdges[empty, 0],
-    empty
-  ],
-  True
-]
-
-MT[
-  IGIsomorphicQ[
-    IGRewireEdges[edgeless, 0],
-    edgeless
-  ],
-  True
-]
-
-
-(*******************************************************************************)
-MTSection["Test remaining functions"]
-
-(* IGData *)
-
-MT[
-  IGData /@ IGData[];,
-  Null
-]
-
-MT[
-  And @@ MapThread[IGIsomorphicQ, {IGData[{"AllDirectedGraphs", 3}], Values@IGData["MANTriadLabels"]}],
-  True
-]
-
-(* IGArticulationPoints *)
-
-connCompCount[g_] := Length@ConnectedComponents[g]
-
-MT[
-  AllTrue[
-    connCompCount@VertexDelete[ugs, #] & /@ IGArticulationPoints[ugs],
-    # > connCompCount[ugs] &
-  ],
-  True
-]
-
-MT[
-  AllTrue[
-    connCompCount@VertexDelete[dgs, #] & /@ IGArticulationPoints[dgs],
-    # > connCompCount[dgs] &
-  ],
-  True
-]
-
-MT[
-  AllTrue[
-    connCompCount@VertexDelete[ugs, #] & /@ IGArticulationPoints[ugs],
-    # > connCompCount[ugi] &
-  ],
-  True
-]
-
-MT[
-  AllTrue[
-    connCompCount@VertexDelete[dgs, #] & /@ IGArticulationPoints[dgs],
-    # > connCompCount[dgi] &
-  ],
-  True
-]
-
-
-(* IGMinimumSeparators *)
-
-MT[
-  IGMinimumSeparators[#] =!= {} & /@ ulist,
-  ConnectedGraphQ /@ ulist
-]
-
-(* IGAdjacentTriangleCount *)
-
-MT[
-  IGAdjacentTriangleCount[#],
-  With[{am = AdjacencyMatrix[#]}, Normal@Diagonal[am.am.am]/2]
-]& /@ ulist
-
-MT[
-  IGAdjacentTriangleCount[empty],
-  {}
-]
-
-MT[
-  IGAdjacentTriangleCount[Graph[{1,2,3},{}]],
-  {0,0,0}
-]
-
-(* IGGraphicalQ *)
-
-MT[
-  IGGraphicalQ@VertexDegree[#],
-  True
-]& /@ ulist
-
-MT[
-  IGGraphicalQ[VertexInDegree[#], VertexOutDegree[#]],
-  True
-]& /@ dlist
-
-MT[
-  IGGraphicalQ[VertexOutDegree[#], VertexInDegree[#]],
-  True
-]& /@ dlist
-
-MT[
-  IGGraphicalQ[{1,2,1}],
-  True
-]
-
-MT[
-  IGGraphicalQ[{1,2,2}],
-  False
-]
-
-MT[
-  IGGraphicalQ[{1,0},{1,0}],
-  False
-]
-
-MT[
-  IGGraphicalQ[{1,0},{0,1}],
-  True
-]
-
-MT[
-  IGGraphicalQ[{}],
-  True
-]
-
 MTSection["Mesh graphs"]
 
 (* Mesh operations *)
@@ -2408,6 +2420,7 @@ MT[
 ]
 
 
+(*******************************************************************************)
 MTSection["Graph colouring"]
 
 (* Vertex colouring *)
@@ -2437,7 +2450,127 @@ MT[
 ]& /@ {0, 1, 2, 3}
 
 
-MTSection["Utilities package"]
+(*******************************************************************************)
+MTSection["Test remaining functions"]
+
+(* IGData *)
+
+MT[
+  IGData /@ IGData[];,
+  Null
+]
+
+MT[
+  And @@ MapThread[IGIsomorphicQ, {IGData[{"AllDirectedGraphs", 3}], Values@IGData["MANTriadLabels"]}],
+  True
+]
+
+(* IGArticulationPoints *)
+
+connCompCount[g_] := Length@ConnectedComponents[g]
+
+MT[
+  AllTrue[
+    connCompCount@VertexDelete[ugs, #] & /@ IGArticulationPoints[ugs],
+    # > connCompCount[ugs] &
+  ],
+  True
+]
+
+MT[
+  AllTrue[
+    connCompCount@VertexDelete[dgs, #] & /@ IGArticulationPoints[dgs],
+    # > connCompCount[dgs] &
+  ],
+  True
+]
+
+MT[
+  AllTrue[
+    connCompCount@VertexDelete[ugs, #] & /@ IGArticulationPoints[ugs],
+    # > connCompCount[ugi] &
+  ],
+  True
+]
+
+MT[
+  AllTrue[
+    connCompCount@VertexDelete[dgs, #] & /@ IGArticulationPoints[dgs],
+    # > connCompCount[dgi] &
+  ],
+  True
+]
+
+
+(* IGMinimumSeparators *)
+
+MT[
+  IGMinimumSeparators[#] =!= {} & /@ ulist,
+  ConnectedGraphQ /@ ulist
+]
+
+(* IGAdjacentTriangleCount *)
+
+MT[
+  IGAdjacentTriangleCount[#],
+  With[{am = AdjacencyMatrix[#]}, Normal@Diagonal[am.am.am]/2]
+]& /@ ulist
+
+MT[
+  IGAdjacentTriangleCount[empty],
+  {}
+]
+
+MT[
+  IGAdjacentTriangleCount[Graph[{1,2,3},{}]],
+  {0,0,0}
+]
+
+(* IGGraphicalQ *)
+
+MT[
+  IGGraphicalQ@VertexDegree[#],
+  True
+]& /@ ulist
+
+MT[
+  IGGraphicalQ[VertexInDegree[#], VertexOutDegree[#]],
+  True
+]& /@ dlist
+
+MT[
+  IGGraphicalQ[VertexOutDegree[#], VertexInDegree[#]],
+  True
+]& /@ dlist
+
+MT[
+  IGGraphicalQ[{1,2,1}],
+  True
+]
+
+MT[
+  IGGraphicalQ[{1,2,2}],
+  False
+]
+
+MT[
+  IGGraphicalQ[{1,0},{1,0}],
+  False
+]
+
+MT[
+  IGGraphicalQ[{1,0},{0,1}],
+  True
+]
+
+MT[
+  IGGraphicalQ[{}],
+  True
+]
+
+
+(*******************************************************************************)
+MTSection["Utilities - General"]
 
 (* IGUndirectedGraph *)
 
@@ -2658,56 +2791,28 @@ vwg = Graph[{1,2,3},{1<->2},VertexWeight->{1,2,3}];
 MT[
   IGEdgeWeightedQ[#],
   False
-]& /@ {
+]& /@ Hold[
   empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
   vwg
-}
+] // ReleaseHold
 
 MT[
   IGVertexWeightedQ[#],
   False
-]& /@ {
+]& /@ Hold[
   empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
   wugi, wugs, wdgi, wdgs
-}
+] // ReleaseHold
 
 MT[
   IGEdgeWeightedQ[#],
   True
-]& /@ {wugi, wugs, wdgi, wdgs}
+]& /@ Hold[wugi, wugs, wdgi, wdgs] // ReleaseHold
 
 MT[
   IGVertexWeightedQ[vwg],
   True
 ]
-
-(* Property map operators *)
-
-MT[
-  IGEdgeProp[EdgeWeight][Graph[{1<->2}, EdgeWeight -> {12}]],
-  {12}
-]
-
-MT[
-  IGEdgeProp["Foo"][ Graph[{Property[1<->2, "Foo" -> 37]}] ],
-  {37}
-]
-
-MT[
-  IGEdgeProp["Foo"][ Graph[{1<->2}] ],
-  {Missing["Nonexistent"]}
-]
-
-MT[
-  IGEdgeProp[EdgeWeight][IGEmptyGraph[0]],
-  {}
-]
-
-MT[
-  IGEdgeProp[EdgeWeight][IGEmptyGraph[1]],
-  {}
-]
-
 
 (* IGWeighedAdjacencyGraph *)
 
@@ -2743,4 +2848,76 @@ MT[
     Graph[{"a"->"b", "b"->"a", "b"->"b"}]
   ],
   True
+]
+
+
+(*******************************************************************************)
+MTSection["Utilities - Property operations"]
+
+(* Property map operators *)
+
+MT[
+  IGEdgeProp[EdgeWeight][Graph[{1<->2}, EdgeWeight -> {12}]],
+  {12}
+]
+
+MT[
+  IGEdgeProp[EdgeCapacity][Graph[{1<->2}, EdgeCapacity -> {12}]],
+  {12}
+]
+
+(* Multigraphs *)
+MT[
+  IGEdgeProp[EdgeWeight][Graph[{1<->2, 1<->2}, EdgeWeight -> {12,5}]],
+  {12,5}
+]
+
+MT[
+  IGEdgeProp[EdgeCapacity][Graph[{1<->2, 1<->2}, EdgeCapacity -> {12,5}]],
+  {12,5}
+]
+
+(* Custom property *)
+MT[
+  IGEdgeProp["Foo"][ Graph[{Property[1<->2, "Foo" -> 37]}] ],
+  {37}
+]
+
+MT[
+  IGEdgeProp["Foo"][ Graph[{1<->2}] ],
+  {Missing["Nonexistent"]}
+]
+
+{
+  MT[
+    IGEdgeProp[#][IGEmptyGraph[0]],
+    {}
+  ],
+  MT[
+    IGEdgeProp[#][IGEmptyGraph[1]],
+    {}
+  ]
+}& /@ {EdgeWeight, EdgeCapacity, "foo"}
+
+(* Vertex properties *)
+
+MT[
+  IGVertexProp[#][IGEmptyGraph[0]],
+  {}
+]& /@ {EdgeWeight, EdgeCapacity, "foo"}
+
+MT[
+  IGVertexProp[VertexWeight][Graph[{1<->2}, VertexWeight -> {3,4}]],
+  {3,4}
+]
+
+MT[
+  IGVertexProp[VertexCapacity][Graph[{1<->2}, VertexCapacity -> {3,4}]],
+  {3,4}
+]
+
+(* Custom property *)
+MT[
+  IGVertexProp["Foo"][ Graph[{Property[1, "Foo" -> 37]}, {1<->2}] ],
+  {37, Missing["Nonexistent"]}
 ]
