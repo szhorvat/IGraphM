@@ -282,14 +282,20 @@ missing = Missing["Nonexistent"]; (* this will be used for non-existent property
 
 SyntaxInformation[IGVertexProp] = {"ArgumentsPattern" -> {_}};
 IGVertexProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
-IGVertexProp[prop_][g_?GraphQ] := Replace[PropertyValue[{g,#}, prop]& /@ VertexList[g], $Failed -> missing, {1}]
-IGVertexProp[prop : VertexWeight|VertexCapacity (* not VertexCoordinates! *)][g_?GraphQ] :=
+IGEdgeProp[VertexWeight][g_?GraphQ] :=
+    If[IGVertexWeightedQ[g],
+      GraphComputation`WeightVector[g],
+      ConstantArray[missing, VertexCount[g]]
+    ]
+IGVertexProp[prop : (* VertexWeight| *)VertexCapacity (* not VertexCoordinates! *)][g_?GraphQ] :=
     With[{values = PropertyValue[g, prop]}, (* fails on null graph, but that is caught by the first pattern *)
       If[values === Automatic,
         ConstantArray[missing, VertexCount[g]],
         values
       ]
     ]
+IGVertexProp[prop_][g_?GraphQ] := Replace[PropertyValue[{g,#}, prop]& /@ VertexList[g], $Failed -> missing, {1}]
+
 
 specialEdgePropsPattern = EdgeWeight|EdgeCost|EdgeCapacity;
 
@@ -297,6 +303,11 @@ IGEdgeProp::nmg = "Multigraphs are only supported with the following properties:
 
 SyntaxInformation[IGEdgeProp] = {"ArgumentsPattern" -> {_}};
 IGEdgeProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
+IGEdgeProp[EdgeWeight][g_?GraphQ] :=
+    If[IGEdgeWeightedQ[g],
+      GraphComputation`WeightValues[g],
+      ConstantArray[missing, EdgeCount[g]]
+    ]
 IGEdgeProp[prop : specialEdgePropsPattern][g_?GraphQ] :=
     With[{values = PropertyValue[g, prop]}, (* fails on null graph, but that is caught by the first pattern *)
       If[values === Automatic,
