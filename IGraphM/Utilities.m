@@ -445,7 +445,7 @@ IGExport::infer    = "Cannot infer format of file \"``\".";
 IGExport::mixed    = "Exporting mixed graphs to `` is not supported.";
 IGExport::propname = "Only string or symbol property names are allowed when exporting to ``.";
 
-igExportStringTag (* create symbol, used to signal use of ExportString instead of Export *)
+igExportStringTag::usage = "igExportStringTag is a symbol used to signal use of ExportString instead of Export in IGExport.";
 
 IGExportString[g_?GraphQ, format_]  := IGExport[igExportStringTag, g, format]
 addCompletion[IGExportString, {0, $IGExportFormats}]
@@ -467,7 +467,9 @@ addCompletion[IGExport, {3, 0, $IGExportFormats}]
 
 (* Converting to an exportable format, with properties *)
 
-properties (* wrapper head to associate properties with a vertex or edge *)
+properties::usage =
+    "properties[vertex, association] is a wrapped used to associate properties with a vertex when exporting GraphML." <>
+    "properties[{v1, v2}, association] is used to associate properties with an edge when exporting GraphML.";
 
 $ignoredEdgeProperties = {EdgeShapeFunction, EdgeStyle, EdgeLabelStyle};
 $ignoredVertexProperties = {VertexShapeFunction, VertexShape, VertexStyle, VertexLabelStyle, VertexCoordinates, VertexSize};
@@ -621,6 +623,8 @@ ExportGraphML[file_, g_?GraphQ] :=
     - We cannot use removeSelfLoops[] and removeMultiEdges[] due to the need to support mixed graphs in this function.
     - The symbol sep should not be localized in IGShorthand because it is used in shSplitGroup[].
  *)
+
+sep::usage = "sep[s] represents a separator while parsing shorthand notations in IGShorthand.";
 
 SetAttributes[shToExpr, Listable];
 shToExpr[s_String] :=

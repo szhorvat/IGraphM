@@ -1,5 +1,5 @@
 
-(* Icon for IGClusterData summary boxes *)
+$igClusterDataIcon::usage = "$igClusterDataIcon is the icon for IGClusterData summary boxes.";
 $igClusterDataIcon =
     With[
       {
