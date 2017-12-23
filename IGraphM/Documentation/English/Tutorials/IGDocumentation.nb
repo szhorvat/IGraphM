@@ -5017,25 +5017,44 @@ are represented by integers and may be specified in one of the following ways:"
 Cell[CellGroupData[{
 
 Cell[TextData[{
- "A list of integers, specifying the colour of each vertex (or edge).\
-\[LineSeparator]",
+ "A list of integers, given in the same order as ",
+ Cell[BoxData[
+  RowBox[{"VertexList", "[", "g", "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "5ba7c10c-692f-42f2-9a7e-654014883d15"],
+ " (or ",
+ Cell[BoxData[
+  RowBox[{"EdgeList", "[", "g", "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "38b9af16-6773-4fd8-8f0f-065f9c64f96e"],
+ " if specifying edge colours)."
+}], "Item",ExpressionUUID->"89b9a3f0-9f95-4254-87c5-f9bfbb7254e3"],
+
+Cell[TextData[{
  Cell[BoxData[
   RowBox[{"{", 
    RowBox[{
     RowBox[{"Graph", "[", 
-     RowBox[{"{", 
-      RowBox[{"a", "\[UndirectedEdge]", "b"}], "}"}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"a", ",", "b"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"a", "\[UndirectedEdge]", "b"}], "}"}]}], "]"}], ",", 
     RowBox[{"\"\<VertexColors\>\"", "\[Rule]", 
      RowBox[{"{", 
       RowBox[{"1", ",", "2"}], "}"}]}]}], "}"}]],ExpressionUUID->
-  "e8bdb7ae-84a9-4ded-8b77-0bc16e330e76"]
-}], "Item",ExpressionUUID->"89b9a3f0-9f95-4254-87c5-f9bfbb7254e3"],
+  "885815b2-984a-49f7-81cd-2d8ddae7a8cb"],
+ "."
+}], "ItemParagraph",ExpressionUUID->"6e969ba4-2017-4e20-9a81-6d239ddbdefe"],
 
 Cell[TextData[{
- "An association assigning an integer to each vertex (or edge). Vertices not \
-present in the association are assumed to have colour ",
+ "An association assigning integers to vertices (or edges). Vertices (or \
+edges) not present in the association are assumed to have colour ",
  Cell[BoxData["0"],ExpressionUUID->"18d521a0-f7b4-4798-a6b6-6ec3648a4af8"],
- ".\[LineSeparator]",
+ "."
+}], "Item",ExpressionUUID->"da4377a7-fecc-4754-9413-83e5fac99862"],
+
+Cell[TextData[{
  Cell[BoxData[
   RowBox[{"{", 
    RowBox[{
@@ -5047,33 +5066,35 @@ present in the association are assumed to have colour ",
       RowBox[{
        RowBox[{"a", "\[Rule]", "1"}], ",", 
        RowBox[{"b", "\[Rule]", "2"}]}], "\[RightAssociation]"}]}]}], "}"}]],
-  ExpressionUUID->"3736ddb6-082d-4693-968c-8822809cac95"],
+  ExpressionUUID->"1723233b-aa4a-4287-bacc-e45d43e0a7d4"],
  "."
-}], "Item",ExpressionUUID->"da4377a7-fecc-4754-9413-83e5fac99862"],
+}], "ItemParagraph",ExpressionUUID->"53758c03-b1c3-42a1-b4c5-cb181ea7fc78"],
 
 Cell[TextData[{
- "The name of a graph property. Vertices (or edges) without an assigned \
-property are assumed to have colour ",
+ "The name of a a vertex (or edge) property. Vertices (or edges) without an \
+assigned property value are assumed to have colour ",
  Cell[BoxData["0"],ExpressionUUID->"099280b7-fb7d-4d47-b031-0c8eede50383"],
- ".\[LineSeparator]",
- Cell[BoxData[
-  RowBox[{"{", 
-   RowBox[{
-    RowBox[{"Graph", "[", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{
-        RowBox[{"Property", "[", 
-         RowBox[{"a", ",", 
-          RowBox[{"\"\<color\>\"", "\[Rule]", "1"}]}], "]"}], ",", 
-        RowBox[{"Property", "[", 
-         RowBox[{"b", ",", 
-          RowBox[{"\"\<color\>\"", "\[Rule]", "2"}]}], "]"}]}], "}"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"a", "\[UndirectedEdge]", "b"}], "}"}]}], "]"}], ",", 
-    RowBox[{"\"\<VertexColors\>\"", "\[Rule]", "\"\<color\>\""}]}], "}"}]],
-  ExpressionUUID->"337ff0e3-5f22-48f3-b3d0-12fdf695fa9e"]
+ ". "
 }], "Item",ExpressionUUID->"5d49306c-b381-4367-b6eb-168ef0a10c2e"],
+
+Cell[TextData[Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"Graph", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"Property", "[", 
+        RowBox[{"a", ",", 
+         RowBox[{"\"\<color\>\"", "\[Rule]", "1"}]}], "]"}], ",", 
+       RowBox[{"Property", "[", 
+        RowBox[{"b", ",", 
+         RowBox[{"\"\<color\>\"", "\[Rule]", "2"}]}], "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"a", "\[UndirectedEdge]", "b"}], "}"}]}], "]"}], ",", 
+   RowBox[{"\"\<VertexColors\>\"", "\[Rule]", "\"\<color\>\""}]}], 
+  "}"}]],ExpressionUUID->"25424014-2071-4399-a02f-55f067c6f62b"]], \
+"ItemParagraph",ExpressionUUID->"08227a3e-0a35-45a4-a1d6-529aab0d85ff"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -5548,7 +5569,7 @@ Cell[BoxData[
 Cell[BoxData["cohesion"], \
 "Input",ExpressionUUID->"ac22a0a8-35e6-4d40-9d21-ad28eae8cb0d"],
 
-Cell["Science camp network", \
+Cell["Science camp network:", \
 "Text",ExpressionUUID->"16bdfe71-763f-4315-be54-cd124ee2408a"],
 
 Cell[BoxData[
@@ -24050,19 +24071,16 @@ Cell[BoxData[
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"IGIndexEdgeList", "[", "g", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"IGIndexEdgeList", "[", "g", "]"}]],ExpressionUUID->
   "671d289c-2d1f-453f-985f-62d0017263d6"],
  " is faster than ",
  Cell[BoxData[
-  RowBox[{"EdgeList", "[", "g", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"EdgeList", "[", "g", "]"}]],ExpressionUUID->
   "eed2f4c3-0bc4-4c08-91cf-142d24085a40"],
  " and usually much faster than ",
  Cell[BoxData[
   RowBox[{"EdgeList", "@", 
-   RowBox[{"IndexGraph", "[", "g", "]"}]}]],
-  FormatType->"StandardForm",ExpressionUUID->
+   RowBox[{"IndexGraph", "[", "g", "]"}]}]],ExpressionUUID->
   "f2d89303-d5b2-485f-8b46-826efe08cd19"],
  "."
 }], "Text",ExpressionUUID->"ea664a77-5393-40a4-8abc-32aabe7f1aba"],
@@ -24795,8 +24813,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EurovisionVotes\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
 
 Cell[BoxData[
  RowBox[{"IGVertexStrength", "[", "g", 
@@ -25973,8 +25991,8 @@ Cell[BoxData[
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{755, 746},
-WindowMargins->{{Automatic, 207}, {Automatic, 39}},
+WindowSize->{1175, 758},
+WindowMargins->{{Automatic, 100}, {Automatic, 39}},
 WindowTitle->"IGraph/M Documentation",
 PrintingCopies->1,
 PrintingStartingPageNumber->1,
