@@ -13,6 +13,30 @@ Requirements: _Mathematica_ 10.0 or later, 64-bit Windows/macOS/Linux, or Raspbe
 
 Do _not_ use the `master` branch of the GitHub repository. It contains only the source code of the package, and cannot be used without building it first.
 
+**Here's a quick auto-install (or upgrade) script:**
+
+```mathematica
+updateIGraphM[] :=
+  Module[{json, download, target, msg},
+    Check[
+      json = Import["https://api.github.com/repos/szhorvat/IGraphM/releases", "JSON"];
+      download = Lookup[First@Lookup[First[json], "assets"], "browser_download_url"];
+      msg = "Downloading IGraph/M " <> Lookup[First[json], "tag_name"] <> " ...";
+      target = FileNameJoin[{CreateDirectory[], "IGraphM.paclet"}];
+      If[$Notebooks,
+        PrintTemporary@Labeled[ProgressIndicator[Appearance -> "Necklace"], msg, Right],
+        Print[msg]
+      ];
+      URLSave[download, target]
+      ,
+      Return[$Failed]
+    ];
+    If[FileExistsQ[target], PacletManager`PacletInstall[target], $Failed]
+  ]
+```
+
+To automatically download and install the latest version of IGraph/M, evaluate the above definition, then run `updateIGraphM[]`.
+
 ## Introduction
 
 #### What is IGraph/M?
