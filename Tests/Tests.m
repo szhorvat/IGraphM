@@ -1849,11 +1849,31 @@ MT[
   {}
 ]
 
+distanceCounts[graph_, verts_] :=
+    Module[{idx, asc},
+      idx = Lookup[
+        AssociationThread[VertexList[graph], Range@VertexCount[graph]],
+        verts
+      ];
+      asc = KeyDrop[{0, Infinity}]@Merge[
+        {If[DirectedGraphQ[graph], 1, 1 / 2] Counts@Flatten[GraphDistanceMatrix[graph][[idx, idx]]],
+          Counts@Flatten[GraphDistanceMatrix[graph][[idx, Complement[Range@VertexCount[graph], idx]]]]},
+        Total
+      ];
+      Lookup[asc, Range@Max@Keys[asc], 0]
+    ]
+
 MT[
   IGDistanceCounts[#, All] == IGDistanceCounts[#, VertexList[#]],
   True
 ]& /@ {empty, edgeless, ugs, dgs, umulti, dmulti}
 
+With[{v = RandomSample[VertexList[#], Quotient[VertexCount[#],3]]},
+  MT[
+    IGDistanceCounts[#, v],
+    distanceCounts[#, v]
+  ]
+]& /@ {ugs, dgs, umulti, dmulti}
 
 MT[
   IGDistanceHistogram[empty, 1],
