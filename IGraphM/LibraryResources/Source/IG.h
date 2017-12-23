@@ -1114,17 +1114,19 @@ public:
             igCheck(igraph_shortest_paths(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(vertex)), igraph_vss_all(), IGRAPH_OUT));
 
             for (igraph_integer_t i=0; i < vc; ++i) {
-                size_t k = size_t(VECTOR(mat.mat.data)[i]);
-                if (k >= counts.size())
-                    counts.resize(k, 0.0);
-                if (k > 0)
+                igraph_real_t l = VECTOR(mat.mat.data)[i];
+                if (l != 0 && l != IGRAPH_INFINITY) {
+                    size_t k = size_t(l);
+                    if (k > counts.size())
+                        counts.resize(k, 0.0);
                     counts[k-1] += 1;
+                }
             }
             if (! directed) {
                 for (auto i : vs) {
-                    size_t k = size_t(VECTOR(mat.mat.data)[i]);
-                    if (k > 0)
-                        counts[k-1] -= 0.5;
+                    igraph_real_t l = VECTOR(mat.mat.data)[i];
+                    if (l != 0 && l != IGRAPH_INFINITY)
+                        counts[size_t(l)-1] -= 0.5;
                 }
             }
         }
