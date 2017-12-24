@@ -593,13 +593,24 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"69ec8660-b0ff-477f-bf93-6e34ccf93644"],
 
 Cell[BoxData[
- RowBox[{"Graph3D", "[", 
-  RowBox[{
-   RowBox[{"IGMakeLattice", "[", 
+ RowBox[{"Graph3D", "@", 
+  RowBox[{"IGMakeLattice", "[", 
+   RowBox[{
     RowBox[{"{", 
-     RowBox[{"5", ",", "4", ",", "3"}], "}"}], "]"}], ",", 
-   RowBox[{"GraphStyle", "\[Rule]", "\"\<Prototype\>\""}]}], 
-  "]"}]], "Input",ExpressionUUID->"01710643-9ee5-430e-964c-b27dbb77ad1f"]
+     RowBox[{"5", ",", "4", ",", "3"}], "}"}], ",", 
+    RowBox[{"GraphStyle", "\[Rule]", "\"\<Prototype\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"01710643-9ee5-430e-964c-b27dbb77ad1f"],
+
+Cell[BoxData[
+ RowBox[{"Graph3D", "@", 
+  RowBox[{"IGMakeLattice", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "5"}], "}"}], ",", 
+    RowBox[{"DirectedEdges", "\[Rule]", "True"}], ",", 
+    RowBox[{"\"\<Periodic\>\"", "\[Rule]", "True"}], ",", 
+    RowBox[{"PlotTheme", "\[Rule]", "\"\<NeonColor\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"9f128bcd-f83f-4305-af54-41832589164c"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -995,9 +1006,9 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],ExpressionUUID->
   "49c4d5a3-affe-4f5c-99d8-35f9d5c5c417"],
- " creates a directed graph."
+ " creates an undirected graph."
 }], "Item",ExpressionUUID->"b70dd1d9-30fe-43e4-8b34-ada755e3d8e0"],
 
 Cell[TextData[{
@@ -1006,7 +1017,24 @@ Cell[TextData[{
   ExpressionUUID->"4ef8a113-b41f-4d01-913a-35ef3aa96344"],
  " computes the attachment probability based on the the total degree of \
 existing vertices (i.e. in- and out-degree), not their in-degree."
-}], "Item",ExpressionUUID->"b26fa31a-30f1-4b43-9d94-5fc52d940fa1"]
+}], "Item",ExpressionUUID->"b26fa31a-30f1-4b43-9d94-5fc52d940fa1"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<StartingGraph\>\"", "\[Rule]", "g"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "aee91a8c-f5c4-4bf6-afe0-d495b389eaec"],
+ " will use graph ",
+ Cell[BoxData["g"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "e14bce75-df64-4e6c-b77f-c08fbd51cabc"],
+ " as the starting point for building the preferential attachment graph. The \
+vertex names of ",
+ Cell[BoxData["g"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "926c378a-562d-4fb5-ba27-c9f15f259040"],
+ " are ignored and the result always uses positive integers as vertex names."
+}], "Item",ExpressionUUID->"6d115659-e01d-4c9e-a843-790fd77b53f5"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -1063,6 +1091,16 @@ Cell[BoxData[
   RowBox[{"100", ",", "1"}], 
   "]"}]], "Input",ExpressionUUID->"3b2245d0-bdbd-4b79-98bc-5c09555fdc9f"],
 
+Cell[TextData[{
+ "Use attachment probability proportional to ",
+ Cell[BoxData[
+  RowBox[{
+   SuperscriptBox["degree", "1.5"], "+", "1"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "88f631cd-406f-4afa-b033-f8e5748f921d"],
+ "."
+}], "Text",ExpressionUUID->"126130f5-93a7-4b2a-ba1e-4417e1a07a59"],
+
 Cell[BoxData[
  RowBox[{"IGBarabasiAlbertGame", "[", 
   RowBox[{"100", ",", "2", ",", 
@@ -1070,11 +1108,23 @@ Cell[BoxData[
     RowBox[{"1.5", ",", "1"}], "}"}]}], 
   "]"}]], "Input",ExpressionUUID->"b3a638d9-fa60-4830-87cf-2ba63ee641cd"],
 
+Cell[TextData[{
+ "The ",
+ Cell[BoxData["\"\<Bag\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "201e2398-7322-4933-bec2-7be2d3cd4c32"],
+ " method may generate parallel edges:"
+}], "Text",ExpressionUUID->"c98a7d5c-6e8b-4263-88e9-f640613ce99c"],
+
 Cell[BoxData[
  RowBox[{"IGBarabasiAlbertGame", "[", 
   RowBox[{"100", ",", "2", ",", 
    RowBox[{"Method", "\[Rule]", "\"\<Bag\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"11fe9a2a-c76b-43fc-bdaa-2d7432443e10"],
+
+Cell[BoxData[
+ RowBox[{"MultigraphQ", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"f899dddd-0135-4671-a227-dec1b9261bb7"],
 
 Cell[TextData[{
  "Create a graph with the given out-degree sequence. The ",
@@ -1101,7 +1151,19 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"VertexOutDegree", "[", "%", 
-  "]"}]], "Input",ExpressionUUID->"657cc855-c546-4dd1-b032-0cfc8a2a706d"]
+  "]"}]], "Input",ExpressionUUID->"657cc855-c546-4dd1-b032-0cfc8a2a706d"],
+
+Cell["\<\
+Create a preferential attachment graph using a 4-node complete graph as \
+starting point.\
+\>", "Text",ExpressionUUID->"d41f1500-c331-42d4-8677-31709e6e2236"],
+
+Cell[BoxData[
+ RowBox[{"IGBarabasiAlbertGame", "[", 
+  RowBox[{"10", ",", "1", ",", 
+   RowBox[{"\"\<StartingGraph\>\"", "\[Rule]", 
+    RowBox[{"CompleteGraph", "[", "4", "]"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"6903b163-0c91-483e-bb6a-4e4cd6efa7c5"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2816,7 +2878,6 @@ Cell[BoxData[
            ShowContents->False], 
           InsetBox["1", {1.944934484934091, 0.4869131293713701},
            BaseStyle->"Graphics"]}, {
-          
           StyleBox[
            DiskBox[{1.0809082023413574, 0.035904784667003864}, 
             0.1803414155696349],
@@ -3234,9 +3295,8 @@ Cell[BoxData[
             0.1280056647916492}}, 0.01416776390182925]}}, 
          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
           0.7]}], {DiskBox[{0., -0.38401699437494763}, 0.01416776390182925], 
-           InsetBox["1", 
-            Offset[{-2, 0}, {-0.01416776390182925, -0.38401699437494763}], 
-            ImageScaled[{1, 0.5}],
+           InsetBox["1", Offset[{-2, 0}, 
+            {-0.01416776390182925, -0.38401699437494763}], ImageScaled[{1, 0.5}],
             BaseStyle->"Graphics"]}, {
            DiskBox[{0., -0.1280056647916492}, 0.01416776390182925], 
            InsetBox["2", 
@@ -5019,13 +5079,11 @@ Cell[CellGroupData[{
 Cell[TextData[{
  "A list of integers, given in the same order as ",
  Cell[BoxData[
-  RowBox[{"VertexList", "[", "g", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"VertexList", "[", "g", "]"}]],ExpressionUUID->
   "5ba7c10c-692f-42f2-9a7e-654014883d15"],
  " (or ",
  Cell[BoxData[
-  RowBox[{"EdgeList", "[", "g", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"EdgeList", "[", "g", "]"}]],ExpressionUUID->
   "38b9af16-6773-4fd8-8f0f-065f9c64f96e"],
  " if specifying edge colours)."
 }], "Item",ExpressionUUID->"89b9a3f0-9f95-4254-87c5-f9bfbb7254e3"],
@@ -23391,7 +23449,7 @@ parallel edges."
 
 Cell["\<\
 As an example application, let us consider the following set of affine \
-transformations ...\
+transformations:\
 \>", "Text",ExpressionUUID->"c3bd6bfe-16ac-4052-ba07-a7f9dac1f989"],
 
 Cell[BoxData[{
@@ -23454,8 +23512,10 @@ Cell[BoxData[
     RowBox[{"a11", ",", "a21", ",", "b21", ",", "a12", ",", "a22"}], "}"}]}], 
   ";"}]], "Input",ExpressionUUID->"fdc47f92-459f-419b-b72c-e30029afebff"],
 
-Cell["... and visualize them.", \
-"Text",ExpressionUUID->"0c75bf21-2866-4023-8276-cc1903a2e5f6"],
+Cell["\<\
+Let us visualize them by showing an an initial (black) triangle and its (red) \
+transformation.\
+\>", "Text",ExpressionUUID->"0c75bf21-2866-4023-8276-cc1903a2e5f6"],
 
 Cell[BoxData[{
  RowBox[{
@@ -23660,21 +23720,27 @@ NAB4EsWBugEgJl03xscDQAW5tGCxAeCWVyIoGgBuuYWCogEgh/eZc+oGgBz8
          PlotRange->{{0, 360}, {0, 164}}]}]}], "}"}]}], ",", 
     RowBox[{"PerformanceGoal", "\[Rule]", "\"\<Quality\>\""}], ",", 
     "\[IndentingNewLine]", 
-    RowBox[{"VertexSize", "\[Rule]", ".33"}], ",", 
+    RowBox[{"VertexSize", "\[Rule]", 
+     FractionBox["1", "3"]}], ",", 
     RowBox[{"ImageSize", "\[Rule]", "400"}]}], "\[IndentingNewLine]", 
    "]"}]}]], "Input",ExpressionUUID->"e3a9e101-4bf9-4424-9ba7-fb5e726ac6d8"],
 
-Cell["\<\
-Let us take a random walk on this graph, and iteratively apply \
-transformations to a point according to the traversed edges.\
-\>", "Text",ExpressionUUID->"0109693d-16d5-4a39-b59e-4b14d23830c8"],
+Cell[TextData[{
+ "Let us compute a random walk on this graph, and iteratively apply \
+transformations to the point ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"0", ",", "0"}], "}"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "3904fd5e-df7e-4b6a-baf0-862c1ac42079"],
+ " according to the traversed edges."
+}], "Text",ExpressionUUID->"0109693d-16d5-4a39-b59e-4b14d23830c8"],
 
 Cell[BoxData[{
  RowBox[{
   RowBox[{"walk", "=", 
    RowBox[{"IGRandomEdgeIndexWalk", "[", 
-    RowBox[{"graph", ",", "1", ",", "20000"}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
+    RowBox[{"graph", ",", "1", ",", "20000"}], "]"}]}], ";"}], "\n", 
  RowBox[{
   RowBox[{"pts", "=", 
    RowBox[{"Rest", "@", 
@@ -23703,11 +23769,28 @@ Cell[BoxData[
      RowBox[{"Point", "[", "pts", "]"}]}], "}"}], 
    "]"}]}]], "Input",ExpressionUUID->"24ad112e-931e-4812-be8f-cf7869c83506"],
 
-Cell["\<\
-The two curves can be separated by filtering points according to which graph \
-vertex they correspond to (i.e. which of the 5 edges was last traversed when \
-obtaining the point).\
-\>", "Text",ExpressionUUID->"b8b2f72f-b1e0-4e83-a39e-70484cf83d75"],
+Cell[TextData[{
+ "The two curves can be separated by filtering points according to which \
+graph vertex the corresponding directed edge targets. For example, if the \
+point was generated by a transformation corresponding to ",
+ Cell[BoxData[
+  RowBox[{"1", "\[DirectedEdge]", "2"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "3025dd7c-862e-45b9-9e7b-d7c5f1c51869"],
+ ", it will belong to curve ",
+ Cell[BoxData["2"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "569d8274-cbff-4dee-aa60-50536df21484"],
+ "."
+}], "Text",ExpressionUUID->"b8b2f72f-b1e0-4e83-a39e-70484cf83d75"],
+
+Cell[BoxData[
+ RowBox[{"targets", "=", 
+  RowBox[{"Last", "/@", 
+   RowBox[{
+   "EdgeList", "[", "graph", 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"55c0be18-9047-43de-b292-d8f4da34e6f1"],
 
 Cell[BoxData[
  RowBox[{"Image", "@", 
@@ -23717,8 +23800,10 @@ Cell[BoxData[
      RowBox[{"AbsolutePointSize", "[", "1", "]"}], ",", 
      RowBox[{"Point", "@", 
       RowBox[{"Pick", "[", 
-       RowBox[{"pts", ",", "walk", ",", 
-        RowBox[{"1", "|", "2", "|", "3"}]}], "]"}]}]}], "}"}], 
+       RowBox[{"pts", ",", 
+        RowBox[{
+        "targets", "\[LeftDoubleBracket]", "walk", "\[RightDoubleBracket]"}], 
+        ",", "1"}], "]"}]}]}], "}"}], 
    "]"}]}]], "Input",ExpressionUUID->"d7a955f7-9a68-4da5-9011-5effc65605c5"],
 
 Cell[BoxData[
@@ -23729,8 +23814,10 @@ Cell[BoxData[
      RowBox[{"AbsolutePointSize", "[", "1", "]"}], ",", 
      RowBox[{"Point", "@", 
       RowBox[{"Pick", "[", 
-       RowBox[{"pts", ",", "walk", ",", 
-        RowBox[{"4", "|", "5"}]}], "]"}]}]}], "}"}], 
+       RowBox[{"pts", ",", 
+        RowBox[{
+        "targets", "\[LeftDoubleBracket]", "walk", "\[RightDoubleBracket]"}], 
+        ",", "2"}], "]"}]}]}], "}"}], 
    "]"}]}]], "Input",ExpressionUUID->"94902cbf-b010-42df-bfc8-25b83fde685f"],
 
 Cell[TextData[{
