@@ -538,6 +538,7 @@ template = LTemplate["IGraphM",
         LFun["geometricGame", {Integer (* n *), Real (* radius *), True|False (* periodic *)}, {Real, 2} (* coordinates *)],
 
         LFun["barabasiAlbertGame", {Integer (* n *), Real (* power *), Real (* A *), Integer (* m *), {Real, 1, "Constant"} (* mvec *), True|False (* directed *), True|False (* totalDegree *), Integer (* method *)}, "Void"],
+        LFun["barabasiAlbertGameWithStartingGraph", {Integer (* n *), Real (* power *), Real (* A *), Integer (* m *), {Real, 1, "Constant"} (* mvec *), True|False (* directed *), True|False (* totalDegree *), Integer (* method *), LExpressionID["IG"]}, "Void"],
 
         LFun["wattsStrogatzGame", {Integer (* dim *), Integer (* size *), Integer (* radius *), Real (* p *), True|False (* loops *), True|False (* multiple *)}, "Void"],
 
@@ -1384,34 +1385,55 @@ IGGeometricGame[n_?Internal`NonNegativeMachineIntegerQ, radius_?nonnegativeNumer
       applyGraphOpt[VertexCoordinates -> coord, opt]@igToGraph[ig]
     ]
 
-Options[IGBarabasiAlbertGame] = { DirectedEdges -> True, "TotalDegreeAttraction" -> False, Method -> "PSumTree" };
+
+Options[IGBarabasiAlbertGame] = {
+  DirectedEdges -> True, "TotalDegreeAttraction" -> False,
+  Method -> "PSumTree",
+  "StartingGraph" -> None
+};
 SyntaxInformation[IGBarabasiAlbertGame] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGBarabasiAlbertGame, Graph]};
 igBarabasiAlbertGameMethods = <|"Bag" -> 0, "PSumTree" -> 1, "PSumTreeMultiple" -> 2|>;
 amendUsage[IGBarabasiAlbertGame, "Available Method options: <*Keys[igBarabasiAlbertGameMethods]*>."];
 
+IGBarabasiAlbertGame::bdstart = "An invalid value was given for the \"StartingGraph\" option.";
+
 IGBarabasiAlbertGame[
   n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
   opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
-    igBarabasiAlbertGame[n, m, {1,1}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], opt]
+    igBarabasiAlbertGame[n, m, {1,1}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], OptionValue["StartingGraph"], opt]
 
 IGBarabasiAlbertGame[
   n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
   power_?nonnegativeNumericQ,
   opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
-    igBarabasiAlbertGame[n, m, {power,1}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], opt]
+    igBarabasiAlbertGame[n, m, {power,1}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], OptionValue["StartingGraph"], opt]
 
 IGBarabasiAlbertGame[
   n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
   {power_?nonnegativeNumericQ, a_?nonnegativeNumericQ},
   opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
-    igBarabasiAlbertGame[n, m, {power, a}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], opt]
+    igBarabasiAlbertGame[n, m, {power, a}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], OptionValue["StartingGraph"], opt]
 
-igBarabasiAlbertGame[n_, m_, {power_, a_}, directed_, totalDegree_, method_, opt___] :=
-    catch@Block[{ig = Make["IG"]},
-      check@ig@"barabasiAlbertGame"[
-        n, power, a,
-        If[ListQ[m], 0, m], If[ListQ[m], Prepend[m,0], {}],
-        directed, totalDegree, Lookup[igBarabasiAlbertGameMethods, method, -1]
+igBarabasiAlbertGame[n_, m_, {power_, a_}, directed_, totalDegree_, method_, initial_, opt___] :=
+    catch@Block[{ig = Make["IG"], start},
+      If[initial === None,
+        check@ig@"barabasiAlbertGame"[
+          n, power, a,
+          If[ListQ[m], 0, m], If[ListQ[m], Prepend[m,0], {}],
+          directed, totalDegree, Lookup[igBarabasiAlbertGameMethods, method, -1]
+        ]
+        ,
+        If[Not@igGraphQ[initial],
+          Message[IGBarabasiAlbertGame::bdstart];
+          throw[$Failed]
+        ];
+        start = igMakeFast[initial];
+        check@ig@"barabasiAlbertGameWithStartingGraph"[
+          n, power, a,
+          If[ListQ[m], 0, m], If[ListQ[m], m, {}],
+          directed, totalDegree, Lookup[igBarabasiAlbertGameMethods, method, -1],
+          ManagedLibraryExpressionID[start]
+        ]
       ];
       applyGraphOpt[opt]@igToGraph[ig]
     ]

@@ -376,6 +376,26 @@ public:
         igConstructorCheck(igraph_barabasi_game(&graph, n, power, m, &mvec, totalDegree, A, directed, algo, NULL));
     }
 
+    void barabasiAlbertGameWithStartingGraph(mint n, double power, double A, mint m, mma::RealTensorRef mtens, bool directed, bool totalDegree, mint method, IG &start) {
+        destroy();
+        igraph_vector_t mvec = igVectorView(mtens);
+        igraph_barabasi_algorithm_t algo;
+        switch (method) {
+        case 0: algo = IGRAPH_BARABASI_BAG; break;
+        case 1: algo = IGRAPH_BARABASI_PSUMTREE; break;
+        case 2: algo = IGRAPH_BARABASI_PSUMTREE_MULTIPLE; break;
+        default:
+            empty();
+            throw mma::LibraryError("Unknown method for Barabasi-Albert game.");
+        }
+        // inherit directnedness from starting graph if it is not empty
+        if (start.edgeCount() > 0)
+            directed = start.directedQ();
+        else if (directed)
+            igraph_to_directed(&start.graph, IGRAPH_TO_DIRECTED_ARBITRARY);
+        igConstructorCheck(igraph_barabasi_game(&graph, n, power, m, &mvec, totalDegree, A, directed, algo, &start.graph));
+    }
+
     void wattsStrogatzGame(mint dim, mint size, mint radius, double p, bool loops, bool multiple) {
         destroy();
         igConstructorCheck(igraph_watts_strogatz_game(&graph, dim, size, radius, p, loops, multiple));
