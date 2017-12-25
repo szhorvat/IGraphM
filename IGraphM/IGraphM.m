@@ -3351,6 +3351,7 @@ IGClusterData[asc_?AssociationQ]["ElementCount"] := Length[asc["Elements"]]
 
 IGClusterData[asc_?AssociationQ][key_String] := Lookup[asc, key, Message[IGClusterData::noprop, key]; $Failed]
 
+IGClusterData[asc_?AssociationQ][keys_List] := IGClusterData[asc] /@ keys
 
 (* Switch to using built-in summary boxes. Since the construction syntax hasn't changed between 10.0-11.2,
    it seems to be relatively safe to use this undocumented functionality *)
