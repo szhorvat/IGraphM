@@ -4,7 +4,7 @@
 (* :Author: szhorvat *)
 (* :Date: 2016-06-12 *)
 
-(* :Copyright: (c) 2017 Szabolcs Horvát *)
+(* :Copyright: (c) 2018 Szabolcs Horvát *)
 
 
 (* The following definitions are used in multiple, independently loadable packages. *)

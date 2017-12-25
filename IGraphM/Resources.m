@@ -1,3 +1,10 @@
+(* Mathematica Package  *)
+(* Created by Mathematica Plugin for IntelliJ IDEA, see http://wlplugin.halirutan.de/ *)
+
+(* :Author: szhorvat *)
+(* :Date: 2017-12-25 *)
+(* :Copyright: (c) 2018 Szabolcs Horvát *)
+
 
 $igClusterDataIcon::usage = "$igClusterDataIcon is the icon for IGClusterData summary boxes.";
 $igClusterDataIcon =

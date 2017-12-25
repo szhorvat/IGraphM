@@ -256,9 +256,11 @@ A number of other small bugs were also fixed.
 
 ## License
 
-The IGraph/M source code is released under the MIT license, see [LICENSE.txt](IGraphM/LICENSE.txt).
+The IGraph/M source code is released under the MIT license.
 
 igraph (and consequently the IGraph/M binary packages) can be distributed under the terms of the [GPLv2](http://opensource.org/licenses/GPL-2.0).
+
+See [LICENSE.md](IGraphM/LICENSE.md) for details.
 
  [1]: https://github.com/szhorvat/LTemplate/
  [2]: http://szhorvat.net/pelican/using-igraph-from-mathematica.html
