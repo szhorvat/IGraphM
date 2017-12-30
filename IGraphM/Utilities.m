@@ -77,6 +77,8 @@ IGMembershipToPartitions::usage =
 
 IGSourceVertexList::usage = "IGSourceVertexList[graph] returns the list of vertices with no incoming connections.";
 IGSinkVertexList::usage = "IGSinkVertexList[graph] returns the list of vertices with no outgoing connections.";
+
+IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vertices of graph according to the given vertex vector. Graph properties are preserved.";
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -722,6 +724,32 @@ IGSourceVertexList[g_?GraphQ] := Pick[VertexList[g], VertexInDegree[g], 0]
 
 SyntaxInformation[IGSinkVertexList] = {"ArgumentsPattern" -> {_}};
 IGSinkVertexList[g_?GraphQ] := Pick[VertexList[g], VertexOutDegree[g], 0]
+
+
+(* Reorder vertices *)
+
+findPermutation::usage = "findPermutation[l1, l2] finds the permutation that transforms list l1 into list l2.";
+findPermutation[l1_, l2_] := Ordering[l1][[Ordering@Ordering[l2]]]
+
+IGReorderVertices::bdvert = "The provided vertex list differs from the vertex list of the graph.";
+
+SyntaxInformation[IGReorderVertices] = {"ArgumentsPattern" -> {_, _}};
+IGReorderVertices[verts_List, graph_?GraphQ] :=
+    Module[{perm, vl = VertexList[graph]},
+      If[Sort[verts] =!= Sort[vl],
+        Message[IGReorderVertices::bdvert];
+        Return[$Failed]
+      ];
+      perm = findPermutation[vl, verts];
+      Graph[
+        verts,
+        EdgeList[graph],
+        Replace[
+          Options[graph],
+          Verbatim[Rule][sym : VertexWeight|VertexCapacity|VertexCoordinates, val_List] :> Rule[sym, val[[perm]]]
+        ]
+      ]
+    ]
 
 (***** Finalize *****)
 
