@@ -79,6 +79,9 @@ IGSourceVertexList::usage = "IGSourceVertexList[graph] returns the list of verti
 IGSinkVertexList::usage = "IGSinkVertexList[graph] returns the list of vertices with no outgoing connections.";
 
 IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vertices of graph according to the given vertex vector. Graph properties are preserved.";
+
+IGDirectedTree::usage = "IGDirectedTree[tree, root] directs the edges of an undirected tree so that they point away from the root. The vertex order is not preserved: vertices will be ordered topologically.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -749,6 +752,24 @@ IGReorderVertices[verts_List, graph_?GraphQ] :=
           Verbatim[Rule][sym : VertexWeight|VertexCapacity|VertexCoordinates, val_List] :> Rule[sym, val[[perm]]]
         ]
       ]
+    ]
+
+
+(* Direct edges of a tree *)
+
+SyntaxInformation[IGDirectedTree] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+expr : IGDirectedTree[tree_?GraphQ, root_, opt : OptionsPattern[Graph]] :=
+    Module[{verts},
+      If[Not[UndirectedGraphQ[tree] && TreeGraphQ[tree]],
+        Message[IGDirectedTree::inv, HoldForm@OutputForm[expr], OutputForm[tree], "undirected tree"];
+        Return[$Failed]
+      ];
+      If[Not@VertexQ[tree, root],
+        Message[IGDirectedTree::inv, HoldForm@OutputForm[expr], root, "vertex"];
+        Return[$Failed]
+      ];
+      verts = First@Last@Reap@BreadthFirstScan[tree, root, "PrevisitVertex" -> Sow];
+      DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", opt]
     ]
 
 (***** Finalize *****)
