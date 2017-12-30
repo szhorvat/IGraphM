@@ -75,6 +75,8 @@ IGMembershipToPartitions::usage =
     "IGMembershipToPartitions[elements, membership] computes a partitioning of elements based on the given membership vector." <>
     "IGMembershipToPartitions[elements] is an operator that can be applied to membership vectors.";
 
+IGSourceVertexList::usage = "IGSourceVertexList[graph] returns the list of vertices with no incoming connections.";
+IGSinkVertexList::usage = "IGSinkVertexList[graph] returns the list of vertices with no outgoing connections.";
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -711,6 +713,15 @@ IGMembershipToPartitions[elements_List, membership_List] :=
       $Failed
     ]
 IGMembershipToPartitions[elements_][membership_] := IGMembershipToPartitions[elements, membership]
+
+
+(* Source and sink vertices *)
+
+SyntaxInformation[IGSourceVertexList] = {"ArgumentsPattern" -> {_}};
+IGSourceVertexList[g_?GraphQ] := Pick[VertexList[g], VertexInDegree[g], 0]
+
+SyntaxInformation[IGSinkVertexList] = {"ArgumentsPattern" -> {_}};
+IGSinkVertexList[g_?GraphQ] := Pick[VertexList[g], VertexOutDegree[g], 0]
 
 (***** Finalize *****)
 
