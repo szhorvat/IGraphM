@@ -1359,7 +1359,7 @@ Options[IGStochasticBlockModelGame] = { SelfLoops -> False, DirectedEdges -> Fal
 SyntaxInformation[IGStochasticBlockModelGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGStochasticBlockModelGame, Graph]};
 IGStochasticBlockModelGame[ratesMatrix_?SquareMatrixQ, blockSizes_?nonNegIntVecQ, opt : OptionsPattern[{IGStochasticBlockModelGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
-      check@ig@"stochasticBlockModel"[ratesMatrix, blockSizes, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
+      check@ig@"stochasticBlockModel"[Normal[ratesMatrix], Normal[blockSizes], OptionValue[DirectedEdges], OptionValue[SelfLoops]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
@@ -1482,7 +1482,7 @@ IGStaticFitnessGame[
   m_?Internal`NonNegativeMachineIntegerQ,
   inFitness_?nonNegIntVecQ, outFitness : _?nonNegIntVecQ : {}, opt : OptionsPattern[{IGStaticFitnessGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
-      check@ig@"staticFitnessGame"[m, inFitness, outFitness, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
+      check@ig@"staticFitnessGame"[m, Normal[inFitness], Normal[outFitness], OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
@@ -1542,7 +1542,7 @@ IGCallawayTraitsGame[
           Message[IGCallawayTraitsGame::prefmsym];
           Return[$Failed]
         ];
-        check@ig@"callawayTraitsGame"[n, Length[typeWeights], k, typeWeights, prefMatrix, OptionValue[DirectedEdges]];
+        check@ig@"callawayTraitsGame"[n, Length[typeWeights], k, Normal[typeWeights], Normal[prefMatrix], OptionValue[DirectedEdges]];
         applyGraphOpt[opt]@igToGraph[ig]
       ]
 
@@ -1571,7 +1571,7 @@ IGEstablishmentGame[
         Message[IGEstablishmentGame::prefmsym];
         Return[$Failed]
       ];
-      check@ig@"establishmentGame"[n, Length[typeWeights], k, typeWeights, prefMatrix, OptionValue[DirectedEdges]];
+      check@ig@"establishmentGame"[n, Length[typeWeights], k, Normal[typeWeights], prefMatrix, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
@@ -1726,7 +1726,7 @@ IGPersonalizedPageRank[graph_?GraphQ, reset_?VectorQ, damping : _?positiveNumeri
         throw[$Failed]
       ];
       check@ig@"personalizedPageRank"[
-        Lookup[igPageRankMethodsAsc, method, -1], reset, damping, OptionValue[DirectedEdges], powerOpt["MaxIterations"], powerOpt["Epsilon"]
+        Lookup[igPageRankMethodsAsc, method, -1], Normal[reset], damping, OptionValue[DirectedEdges], powerOpt["MaxIterations"], powerOpt["Epsilon"]
       ]
     ]
 
