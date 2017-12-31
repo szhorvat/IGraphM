@@ -73,13 +73,21 @@ IGConnectNeighborhood::usage =
     "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighbourhood.\n" <>
     "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighbourhood. Weights and other graph properties are discarded.";
 
-IGBetweenness::usage = "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.";
+IGBetweenness::usage =
+    "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.\n" <>
+    "IGBetweenness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of betweenness centralities for the specified vertices.";
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph.";
-IGCloseness::usage = "IGCloseness[graph] gives a list of closeness centralities for the vertices of graph.";
+IGCloseness::usage =
+    "IGCloseness[graph] gives a list of closeness centralities for the vertices of graph.\n" <>
+    "IGCloseness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of closeness centralities for the specified vertices.";
 
-IGBetweennessEstimate::usage = "IGBetweennessEstimate[graph, cutoff] estimates vertex betweenness by considering only paths of at most length cutoff.";
+IGBetweennessEstimate::usage =
+    "IGBetweennessEstimate[graph, cutoff] estimates vertex betweenness by considering only paths of at most length cutoff.\n" <>
+    "IGBetweennessEstimate[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] estimates the betweenness of the specified vertices.";
 IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff] estimates edge betweenness by considering only paths of at most length cutoff.";
-IGClosenessEstimate::usage = "IGClosenessEstimate[graph, cutoff] estimates closeness centrality by considering only paths of at most length cutoff.";
+IGClosenessEstimate::usage =
+    "IGClosenessEstimate[graph, cutoff] estimates closeness centrality by considering only paths of at most length cutoff.\n" <>
+    "IGClosenessEstimate[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] estimates the closeness centrality of the specified vertices.";
 
 IGPageRank::usage =
     "IGPageRank[graph] gives a list of PageRank centralities for the vertices of the graph.\n" <>
@@ -573,13 +581,13 @@ template = LTemplate["IGraphM",
 
         (* Centrality *)
 
-        LFun["betweenness", {True|False (* nobigint *)}, {Real, 1}],
+        LFun["betweenness", {True|False (* nobigint *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
         LFun["edgeBetweenness", {}, {Real, 1}],
-        LFun["closeness", {True|False (* normalized *)}, {Real, 1}],
+        LFun["closeness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
-        LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *)}, {Real, 1}],
+        LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
         LFun["edgeBetweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
-        LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
+        LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
         LFun["pageRank", {Integer (* method *), Real (* damping *), True|False (* directed *), Integer (* powerNiter *), Real (* powerEpsilon *)}, {Real, 1}],
         LFun["personalizedPageRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *), Integer (* powerNiter *), Real (* powerEpsilon *)}, {Real, 1}],
@@ -963,6 +971,9 @@ intVecQ =
 positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&;
 nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&;
 positiveVecQ = VectorQ[#, Positive]&;
+
+positiveOrInfQ[Infinity] = True;
+positiveOrInfQ[x_ /; NumericQ[x] && Positive[x]] = True;
 
 (* Replace Infinity by 0 *)
 infToZero[arg_] := Replace[arg, Infinity -> 0]
@@ -1621,12 +1632,14 @@ IGBetweenness::bdmtd =
 
 amendUsage[IGBetweenness, "Available Method options: <*Keys[igBetweennessMethods]*>."];
 
-SyntaxInformation[IGBetweenness] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+SyntaxInformation[IGBetweenness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 
-IGBetweenness[g_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFastWeighted[g]},
-      sck@ig@"betweenness"[
-        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweenness::bdmtd, OptionValue[Method]]; False]
+IGBetweenness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
+IGBetweenness[g_?igGraphQ, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      check@ig@"betweenness"[
+        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweenness::bdmtd, OptionValue[Method]]; False],
+        vss[g][vs]
       ]
     ]
 
@@ -1637,34 +1650,40 @@ IGEdgeBetweenness[g_?igGraphQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweenness"[]]
 
 Options[IGCloseness] = { "Normalized" -> False };
-SyntaxInformation[IGCloseness] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-IGCloseness[g_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFastWeighted[g]}, sck@ig@"closeness"[OptionValue["Normalized"]]]
+SyntaxInformation[IGCloseness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+IGCloseness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
+IGCloseness[g_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      check@ig@"closeness"[OptionValue["Normalized"], vss[g][vs]]
+    ]
 
 (* Centrality estimates *)
 
 Options[IGBetweennessEstimate] = { Method -> "Precise" };
 IGBetweennessEstimate::bdmtd = IGBetweenness::bdmtd;
 amendUsage[IGBetweennessEstimate, "Available Method options: <*Keys[igBetweennessMethods]*>."];
-SyntaxInformation[IGBetweennessEstimate] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFastWeighted[g]},
-      sck@ig@"betweennessEstimate"[
+SyntaxInformation[IGBetweennessEstimate] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
+IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, {}, opt : OptionsPattern[]] := {}
+IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      check@ig@"betweennessEstimate"[
         infToZero[cutoff],
-        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweennessEstimate::bdmtd, OptionValue[Method]]; False]
+        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweennessEstimate::bdmtd, OptionValue[Method]]; False],
+        vss[g][vs]
       ]
     ]
 
 (* Note: edge ordering is critical *)
 SyntaxInformation[IGEdgeBetweennessEstimate] = {"ArgumentsPattern" -> {_, _}};
-IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ] :=
+IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
 
 Options[IGClosenessEstimate] = { "Normalized" -> False };
-SyntaxInformation[IGClosenessEstimate] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveNumericQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFastWeighted[g]},
-      sck@ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"]]
+SyntaxInformation[IGClosenessEstimate] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
+IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, {}, opt : OptionsPattern[]] := {}
+IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      check@ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"], vss[g][vs]]
     ]
 
 

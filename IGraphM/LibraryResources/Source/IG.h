@@ -487,10 +487,11 @@ public:
 
     // Centrality measures
 
-    mma::RealTensorRef betweenness(bool nobigint) const {
-        igVector vec;
-        igCheck(igraph_betweenness(&graph, &vec.vec, igraph_vss_all(), true, passWeights(), nobigint));
-        return vec.makeMTensor();
+    mma::RealTensorRef betweenness(bool nobigint, mma::RealTensorRef vs) const {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_betweenness(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, passWeights(), nobigint));
+        return res.makeMTensor();
     }
 
     mma::RealTensorRef edgeBetweenness() const {
@@ -499,10 +500,11 @@ public:
         return vec.makeMTensor();
     }
 
-    mma::RealTensorRef closeness(bool normalized) const {
-        igVector vec;
-        igCheck(igraph_closeness(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, passWeights(), normalized));
-        return vec.makeMTensor();
+    mma::RealTensorRef closeness(bool normalized, mma::RealTensorRef vs) const {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_closeness(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, passWeights(), normalized));
+        return res.makeMTensor();
     }
 
     mma::RealTensorRef pageRank(mint method, double damping, bool directed, mint powerNiter, double powerEpsilon) const {
@@ -610,10 +612,11 @@ public:
 
     // Centrality measures (estimates)
 
-    mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint) const {
-        igVector vec;
-        igCheck(igraph_betweenness_estimate(&graph, &vec.vec, igraph_vss_all(), true, cutoff, passWeights(), nobigint));
-        return vec.makeMTensor();
+    mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint, mma::RealTensorRef vs) const {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_betweenness_estimate(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, cutoff, passWeights(), nobigint));
+        return res.makeMTensor();
     }
 
     mma::RealTensorRef edgeBetweennessEstimate(double cutoff) const {
@@ -622,10 +625,11 @@ public:
         return vec.makeMTensor();
     }
 
-    mma::RealTensorRef closenessEstimate(double cutoff, bool normalized) const {
-        igVector vec;
-        igCheck(igraph_closeness_estimate(&graph, &vec.vec, igraph_vss_all(), IGRAPH_OUT, cutoff, passWeights(), normalized));
-        return vec.makeMTensor();
+    mma::RealTensorRef closenessEstimate(double cutoff, bool normalized, mma::RealTensorRef vs) const {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_closeness_estimate(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, cutoff, passWeights(), normalized));
+        return res.makeMTensor();
     }
 
 
