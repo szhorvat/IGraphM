@@ -1021,18 +1021,13 @@ existing vertices (i.e. in- and out-degree), not their in-degree."
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<StartingGraph\>\"", "\[Rule]", "g"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"\"\<StartingGraph\>\"", "\[Rule]", "g"}]],ExpressionUUID->
   "aee91a8c-f5c4-4bf6-afe0-d495b389eaec"],
  " will use graph ",
- Cell[BoxData["g"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "e14bce75-df64-4e6c-b77f-c08fbd51cabc"],
+ Cell[BoxData["g"],ExpressionUUID->"e14bce75-df64-4e6c-b77f-c08fbd51cabc"],
  " as the starting point for building the preferential attachment graph. The \
 vertex names of ",
- Cell[BoxData["g"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "926c378a-562d-4fb5-ba27-c9f15f259040"],
+ Cell[BoxData["g"],ExpressionUUID->"926c378a-562d-4fb5-ba27-c9f15f259040"],
  " are ignored and the result always uses positive integers as vertex names."
 }], "Item",ExpressionUUID->"6d115659-e01d-4c9e-a843-790fd77b53f5"]
 }, Open  ]],
@@ -1095,8 +1090,7 @@ Cell[TextData[{
  "Use attachment probability proportional to ",
  Cell[BoxData[
   RowBox[{
-   SuperscriptBox["degree", "1.5"], "+", "1"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+   SuperscriptBox["degree", "1.5"], "+", "1"}]],ExpressionUUID->
   "88f631cd-406f-4afa-b033-f8e5748f921d"],
  "."
 }], "Text",ExpressionUUID->"126130f5-93a7-4b2a-ba1e-4417e1a07a59"],
@@ -1110,9 +1104,8 @@ Cell[BoxData[
 
 Cell[TextData[{
  "The ",
- Cell[BoxData["\"\<Bag\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
-  "201e2398-7322-4933-bec2-7be2d3cd4c32"],
+ Cell[BoxData[
+ "\"\<Bag\>\""],ExpressionUUID->"201e2398-7322-4933-bec2-7be2d3cd4c32"],
  " method may generate parallel edges:"
 }], "Text",ExpressionUUID->"c98a7d5c-6e8b-4263-88e9-f640613ce99c"],
 
@@ -2878,6 +2871,7 @@ Cell[BoxData[
            ShowContents->False], 
           InsetBox["1", {1.944934484934091, 0.4869131293713701},
            BaseStyle->"Graphics"]}, {
+          
           StyleBox[
            DiskBox[{1.0809082023413574, 0.035904784667003864}, 
             0.1803414155696349],
@@ -3295,8 +3289,9 @@ Cell[BoxData[
             0.1280056647916492}}, 0.01416776390182925]}}, 
          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
           0.7]}], {DiskBox[{0., -0.38401699437494763}, 0.01416776390182925], 
-           InsetBox["1", Offset[{-2, 0}, 
-            {-0.01416776390182925, -0.38401699437494763}], ImageScaled[{1, 0.5}],
+           InsetBox["1", 
+            Offset[{-2, 0}, {-0.01416776390182925, -0.38401699437494763}], 
+            ImageScaled[{1, 0.5}],
             BaseStyle->"Graphics"]}, {
            DiskBox[{0., -0.1280056647916492}, 0.01416776390182925], 
            InsetBox["2", 
@@ -4176,8 +4171,21 @@ Cell[TextData[{
     URL["http://igraph.org/c/doc/igraph-Isomorphism.html#idm470920858320"], 
     None},
   ButtonNote->
-   "http://igraph.org/c/doc/igraph-Isomorphism.html#idm470920858320"]
+   "http://igraph.org/c/doc/igraph-Isomorphism.html#idm470920858320"],
+ " for details. This algorithm is described in the following paper:"
 }], "Text",ExpressionUUID->"7190498f-663a-488a-8849-09bc2cae5369"],
+
+Cell[TextData[{
+ "T. Junttila, P. Kaski, Engineering an Efficient Canonical Labeling Tool for \
+Large and Sparse Graphs, 2007 Proceedings of the Ninth Workshop on Algorithm \
+Engineering and Experiments, ",
+ ButtonBox["doi:10.1137/1.9781611972870.13",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://doi.org/10.1137/1.9781611972870.13"], None},
+  ButtonNote->"https://doi.org/10.1137/1.9781611972870.13"],
+ "."
+}], "Item",ExpressionUUID->"1152e247-b245-4fe7-b807-027cf517975f"],
 
 Cell[TextData[{
  "Bliss generally outperforms ",
@@ -4187,9 +4195,10 @@ Cell[TextData[{
 counting automorphisms) as of ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " 11.0. However, this advantage will only be apparent for large and \
+ " 11.2. However, this advantage will only be apparent for large and \
 difficult graphs. For small ones the overhead of having to copy the graph and \
-convert it to igraph format is much larger than the actual computation time."
+convert it to igraph\[CloseCurlyQuote]s internal format is much larger than \
+the actual computation time."
 }], "Text",ExpressionUUID->"eaff43b3-96f4-4ea3-9a68-79c633333478"],
 
 Cell[BoxData[
@@ -4198,7 +4207,7 @@ Cell[BoxData[
 "Input",ExpressionUUID->"0cd71477-a8a5-4ce4-954f-dde03487b472"],
 
 Cell[TextData[{
- "Bliss functions take a ",
+ "All Bliss functions take a ",
  Cell[BoxData[
  "\"\<SplittingHeuristics\>\""],ExpressionUUID->
   "18d33a5e-4bad-431a-8f1a-b17924856cae"],
@@ -4328,7 +4337,7 @@ a08da370e34106cd7db479eca7c7375cc"],
 
 Cell[CellGroupData[{
 
-Cell["Examples", \
+Cell["Basic examples", \
 "Subsubsection",ExpressionUUID->"d5c95749-df16-4f56-afe2-103a8f398d77"],
 
 Cell["Let us take the cuboctahedral graph from GraphData \[Ellipsis]", \
@@ -4377,10 +4386,10 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"498779bd-0341-4949-ad32-f9524ba44753"],
 
 Cell[TextData[{
- "IGraph/M has no direct way to generate all 48 ones ",
+ "Bliss cannot generate all 48 of these mapping ",
  StyleBox["directly",
   FontSlant->"Italic"],
- " with Bliss functions.  We can either use VF2 for this:"
+ ".  We can either use VF2 for this \[Ellipsis]"
 }], "Text",ExpressionUUID->"5301391e-b76d-475c-8cdf-224477c5c52d"],
 
 Cell[BoxData[
@@ -4390,11 +4399,11 @@ Cell[BoxData[
   "Length"}]], "Input",ExpressionUUID->"351e74d7-e1de-4d12-b086-118f84e8585c"],
 
 Cell[TextData[{
- "Or we can use the automorphism group computed by Bliss.  The ",
+ "\[Ellipsis] or we can use the automorphism group computed by Bliss.  The ",
  Cell[BoxData[
   RowBox[{"IGBlissAutomorphismGroup", "[", "]"}]],ExpressionUUID->
   "79b3ee6a-337f-4bf1-a907-252d706cd5ee"],
- " will return a generating set of permutations."
+ " function will return a generating set of permutations."
 }], "Text",ExpressionUUID->"0714d669-a049-4252-b0ba-bdf46cd49b21"],
 
 Cell[BoxData[
@@ -4417,7 +4426,7 @@ Cell[BoxData[
 "Input",ExpressionUUID->"3aa087c4-8a50-4fa4-838f-e37714c18918"],
 
 Cell["\<\
-And ask for all 48 vertex permutations that create isomorphic graphs:\
+Ask for all 48 vertex permutations that create isomorphic graphs:\
 \>", "Text",ExpressionUUID->"9a932a4e-a127-4fb3-b26d-dc023eba3383"],
 
 Cell[BoxData[
@@ -4449,65 +4458,6 @@ Cell[BoxData[
    ")"}]}]], "Input",ExpressionUUID->"8c425de4-93b2-4c4c-b3e2-166976a318fa"],
 
 Cell["\<\
-Visualize the vertex equivalence classes induced by a \
-graph\[CloseCurlyQuote]s automorphism group.\
-\>", "Text",ExpressionUUID->"35a9ad83-4575-4654-be72-1095ac245c21"],
-
-Cell[BoxData[
- RowBox[{"With", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{"g", "=", 
-     RowBox[{"GraphData", "[", 
-      RowBox[{"{", 
-       RowBox[{"\"\<Mycielski\>\"", ",", " ", "4"}], "}"}], "]"}]}], "}"}], 
-   ",", 
-   RowBox[{"HighlightGraph", "[", 
-    RowBox[{"g", ",", 
-     RowBox[{"GroupOrbits", "@", 
-      RowBox[{"PermutationGroup", "@", 
-       RowBox[{"IGBlissAutomorphismGroup", "[", "g", "]"}]}]}], ",", 
-     "\[IndentingNewLine]", 
-     RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
-     RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-  "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"28236d5f-b5e0-4115-8519-775449e0d325"],
-
-Cell["\<\
-Visualize the edge equivalence classes of a polyhedron, induced by its graph\
-\[CloseCurlyQuote]s automorphism group.\
-\>", "Text",ExpressionUUID->"1c6cd318-482f-4fc7-823a-9a38069ea8fb"],
-
-Cell[BoxData[
- RowBox[{"mesh", "=", 
-  RowBox[{"PolyhedronData", "[", 
-   RowBox[{"\"\<TruncatedOctahedron\>\"", ",", "\"\<Region\>\""}], 
-   "]"}]}]], "Input",ExpressionUUID->"7ccf1cfa-b503-4424-912b-47f31d6171d7"],
-
-Cell[BoxData[
- RowBox[{"With", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{"g", "=", 
-     RowBox[{"IGMeshGraph", "[", 
-      RowBox[{"mesh", ",", 
-       RowBox[{"VertexStyle", "\[Rule]", "Black"}]}], "]"}]}], "}"}], ",", 
-   "\[IndentingNewLine]", 
-   RowBox[{"HighlightGraph", "[", 
-    RowBox[{"g", ",", "\[IndentingNewLine]", 
-     RowBox[{
-      RowBox[{
-       RowBox[{
-        RowBox[{"EdgeList", "[", "g", "]"}], "[", 
-        RowBox[{"[", "#", "]"}], "]"}], "&"}], "/@", 
-      RowBox[{"GroupOrbits", "@", 
-       RowBox[{"PermutationGroup", "@", 
-        RowBox[{"IGBlissAutomorphismGroup", "@", 
-         RowBox[{"LineGraph", "[", "g", "]"}]}]}]}]}]}], 
-    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"3e6c7cb2-2610-4017-b238-e8cfb9d64465"],
-
-Cell["\<\
 Bliss works by computing a canonical labelling of vertices. Then isomorphism \
 can be tested for by comparing the canonically relabelled graphs.\
 \>", "Text",ExpressionUUID->"02f27dfc-97b2-4ed1-98ad-b992a9a9c9dd"],
@@ -4518,6 +4468,18 @@ Cell[BoxData[
   RowBox[{
   "IGBlissCanonicalGraph", "[", "g2", 
    "]"}]}]], "Input",ExpressionUUID->"a83d88a6-9a84-4a04-ae1b-91ce10522cd7"],
+
+Cell[TextData[{
+ Cell[BoxData["IGBlissCanonicalGraph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8a28eecc-6278-4f5a-8637-64fb8df82d7d"],
+ " returns graphs in a consistent format so that two graphs are isomorphic if \
+and only if their canonical graphs will compare equal with ",
+ Cell[BoxData["==="],
+  FormatType->"StandardForm",ExpressionUUID->
+  "0148c060-be8f-4b24-9474-4bdf3f9e03a7"],
+ ". Note that in Mathematica, graphs may not compare equal "
+}], "Text",ExpressionUUID->"a95c8b64-4699-469a-9b56-34956aa04080"],
 
 Cell["The corresponding permutation and labelling are", \
 "Text",ExpressionUUID->"f6cac807-1603-4000-a0cd-edc331d0d100"],
@@ -4570,7 +4532,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"1", ",", "2", ",", "\[Ellipsis]"}]],ExpressionUUID->
   "afa80189-7420-40cb-8aee-6e7b65fccbc6"],
- " It can also be used to filter duplicates from a list of graphs."
+ " It can also be used to filter duplicates from a list of graphs "
 }], "Text",ExpressionUUID->"bfe4f085-a373-4ef5-8a6f-4222ff6171d7"],
 
 Cell["\<\
@@ -4639,8 +4601,200 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"DeleteDuplicatesBy", "[", 
    RowBox[{"graphs", ",", "IGBlissCanonicalGraph"}], "]"}], "//", 
-  "Length"}]], \
-"Input",ExpressionUUID->"d2e0319b-b3e8-4d4c-a652-4ba233191579"]
+  "Length"}]], "Input",ExpressionUUID->"d2e0319b-b3e8-4d4c-a652-4ba233191579"],
+
+Cell[TextData[{
+ "When ",
+ Cell[BoxData["IGBlissCanonicalGraph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "f4b2a3a4-01ca-4edc-97e0-8b94bbe9a518"],
+ " is given a vertex coloured graph, it will encode the colours into a vertex \
+property named ",
+ Cell[BoxData["\"\<Color\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "685a5cb9-29b8-4611-83c5-defbfce11ec0"],
+ ". This allows distinguishing between graphs whose canonical graphs are \
+identical in structure, but differ in colouring."
+}], "Text",ExpressionUUID->"1c86912e-c0e1-4101-8c1a-ad78c392d4d7"],
+
+Cell["Take for example the following coloured graphs:", \
+"Text",ExpressionUUID->"4503d641-06ca-449d-bb5b-f3bb590c7ab6"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"Graph", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"1", "\[TwoWayRule]", "2"}], ",", 
+       RowBox[{"2", "\[TwoWayRule]", "3"}]}], "}"}], ",", 
+     RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
+     RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"colg1", "=", 
+   RowBox[{"Graph", "[", 
+    RowBox[{"g", ",", 
+     RowBox[{"Properties", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"1", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"\"\<color\>\"", "\[Rule]", "1"}], "}"}]}], ",", 
+        RowBox[{"2", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"\"\<color\>\"", "\[Rule]", "3"}], "}"}]}], ",", 
+        RowBox[{"3", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"\"\<color\>\"", "\[Rule]", "2"}], "}"}]}]}], "}"}]}]}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"colg2", "=", 
+   RowBox[{"Graph", "[", 
+    RowBox[{"g", ",", 
+     RowBox[{"Properties", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"1", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"\"\<color\>\"", "\[Rule]", "1"}], "}"}]}], ",", 
+        RowBox[{"2", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"\"\<color\>\"", "\[Rule]", "3"}], "}"}]}], ",", 
+        RowBox[{"3", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"\"\<color\>\"", "\[Rule]", "1"}], "}"}]}]}], "}"}]}]}], 
+    "]"}]}], ";"}]}], \
+"Input",ExpressionUUID->"95ef81d8-f634-446a-a134-f252cd49d705"],
+
+Cell["Visualize them for clarity:", \
+"Text",ExpressionUUID->"c3d52d5b-6cd3-4828-ab18-485ce2b8089c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGVertexMap", "[", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "97", "]"}], ",", 
+    RowBox[{"VertexStyle", "\[Rule]", 
+     RowBox[{"IGVertexProp", "[", "\"\<color\>\"", "]"}]}]}], "]"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"colg1", ",", "colg2"}], 
+   "}"}]}]], "Input",ExpressionUUID->"01c5f210-16f3-4a2d-b49d-79ceeae0c74e"],
+
+Cell["\<\
+The vertex and edge lists of their canonical graphs are identical:\
+\>", "Text",ExpressionUUID->"9ba9ebcb-11f8-455a-8df6-5f3ffd0355bc"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"cang1", "=", 
+   RowBox[{"IGBlissCanonicalGraph", "[", 
+    RowBox[{"{", 
+     RowBox[{"colg1", ",", 
+      RowBox[{"\"\<VertexColors\>\"", "\[Rule]", "\"\<color\>\""}]}], "}"}], 
+    "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"cang2", "=", 
+   RowBox[{"IGBlissCanonicalGraph", "[", 
+    RowBox[{"{", 
+     RowBox[{"colg2", ",", 
+      RowBox[{"\"\<VertexColors\>\"", "\[Rule]", "\"\<color\>\""}]}], "}"}], 
+    "]"}]}], ";"}]}], \
+"Input",ExpressionUUID->"019786a5-fe32-414a-b760-62b467cd2856"],
+
+Cell[BoxData[{
+ RowBox[{"VertexList", "/@", 
+  RowBox[{"{", 
+   RowBox[{"cang1", ",", "cang2"}], "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{"EdgeList", "/@", 
+  RowBox[{"{", 
+   RowBox[{"cang1", ",", "cang2"}], 
+   "}"}]}]}], "Input",ExpressionUUID->"b0798d38-0b6d-48e8-99a3-582dc48aee8f"],
+
+Cell["\<\
+But they differ in colouring, and therefore do not compare equal:\
+\>", "Text",ExpressionUUID->"d9197c0f-6876-4b4d-80d6-0014f3e5c0aa"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexPropertyList", "[", "cang1", 
+  "]"}]], "Input",ExpressionUUID->"ca4ff6c5-5f3a-4bc1-a39d-0387e555ae81"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGVertexProp", "[", "\"\<Color\>\"", "]"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"cang1", ",", "cang2"}], 
+   "}"}]}]], "Input",ExpressionUUID->"0417928f-1076-4b59-98dc-05a0325ca129"],
+
+Cell[BoxData[
+ RowBox[{"cang1", "===", 
+  "cang2"}]], "Input",ExpressionUUID->"9c34baf7-c468-4017-9ea6-8195fd9d7227"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Further examples", \
+"Subsubsection",ExpressionUUID->"48797576-aea0-45f7-9854-2413c295b9e0"],
+
+Cell["\<\
+Let us visualize the vertex equivalence classes induced by a graph\
+\[CloseCurlyQuote]s automorphism group.\
+\>", "Text",ExpressionUUID->"d470fe00-85ef-4480-97b8-65efab62afbc"],
+
+Cell[BoxData[
+ RowBox[{"With", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"g", "=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Mycielski\>\"", ",", " ", "4"}], "}"}], "]"}]}], "}"}], 
+   ",", 
+   RowBox[{"HighlightGraph", "[", 
+    RowBox[{"g", ",", 
+     RowBox[{"GroupOrbits", "@", 
+      RowBox[{"PermutationGroup", "@", 
+       RowBox[{"IGBlissAutomorphismGroup", "[", "g", "]"}]}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
+     RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"28236d5f-b5e0-4115-8519-775449e0d325"],
+
+Cell["\<\
+Visualize the edge equivalence classes of a polyhedron, induced by its graph\
+\[CloseCurlyQuote]s automorphism group.\
+\>", "Text",ExpressionUUID->"1c6cd318-482f-4fc7-823a-9a38069ea8fb"],
+
+Cell[BoxData[
+ RowBox[{"mesh", "=", 
+  RowBox[{"PolyhedronData", "[", 
+   RowBox[{"\"\<TruncatedOctahedron\>\"", ",", "\"\<Region\>\""}], 
+   "]"}]}]], "Input",ExpressionUUID->"7ccf1cfa-b503-4424-912b-47f31d6171d7"],
+
+Cell[BoxData[
+ RowBox[{"With", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"g", "=", 
+     RowBox[{"IGMeshGraph", "[", 
+      RowBox[{"mesh", ",", 
+       RowBox[{"VertexStyle", "\[Rule]", "Black"}]}], "]"}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"HighlightGraph", "[", 
+    RowBox[{"g", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"EdgeList", "[", "g", "]"}], "[", 
+        RowBox[{"[", "#", "]"}], "]"}], "&"}], "/@", 
+      RowBox[{"GroupOrbits", "@", 
+       RowBox[{"PermutationGroup", "@", 
+        RowBox[{"IGBlissAutomorphismGroup", "@", 
+         RowBox[{"LineGraph", "[", "g", "]"}]}]}]}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"3e6c7cb2-2610-4017-b238-e8cfb9d64465"]
 }, Closed]]
 }, Closed]],
 
@@ -22984,8 +23138,10 @@ Cell[TextData[{
 
 Cell[BoxData[{
  RowBox[{"cl1", "=", 
-  RowBox[{
-  "IGCommunitiesEdgeBetweenness", "[", "g", "]"}]}], "\[IndentingNewLine]", 
+  RowBox[{"IGCommunitiesEdgeBetweenness", "[", 
+   RowBox[{"g", ",", 
+    RowBox[{"\"\<ClusterCount\>\"", "\[Rule]", "7"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
  RowBox[{"cl2", "=", 
   RowBox[{
   "IGCommunitiesWalktrap", "[", "g", 
@@ -23111,9 +23267,25 @@ present:\
 Cell[TextData[{
  Cell[BoxData[
  "\"\<Modularity\>\""],ExpressionUUID->"5a85befd-ca11-4c83-a15a-e4523c5a576f"],
- " is a list of modularities for each step of the algorithm. What constitutes \
-a step depends on the particular algorithm."
+ " is a list of modularities for each step of the algorithm, or a \
+single-element list containing the modularity corresponding to the returned \
+clustering. What constitutes a step depends on the particular algorithm."
 }], "Item",ExpressionUUID->"43596b6a-7668-43e8-a994-66e4783ead9a"],
+
+Cell[TextData[{
+ "The ",
+ Cell[BoxData[
+ "\"\<RemoveEdges\>\""],ExpressionUUID->
+  "3f2a6454-a29d-4835-b44b-d32fe23dc4e4"],
+ " property is specific to the ",
+ Cell[BoxData[
+ "\"\<EdgeBetweenness\>\""],ExpressionUUID->
+  "5e986507-d4b7-4fa3-8786-e033fc1c3554"],
+ " method, and isn\[CloseCurlyQuote]t present for ",
+ Cell[BoxData[
+ "\"\<Walktrap\>\""],ExpressionUUID->"fa2f79f1-c84a-4da4-8aee-96a8e27f4560"],
+ "."
+}], "Text",ExpressionUUID->"74754b83-d27a-46c1-a485-96caf392e7ef"],
 
 Cell[BoxData[
  RowBox[{"cl1", "[", "\"\<Properties\>\"", 
@@ -23127,10 +23299,30 @@ Cell[BoxData[
  RowBox[{"cl2", "[", "\"\<Properties\>\"", 
   "]"}]], "Input",ExpressionUUID->"228f6e99-04cd-4e57-b372-41fc17ca678b"],
 
+Cell["Multiple properties may be retrieved at the same time.", \
+"Text",ExpressionUUID->"a2e0c640-8d78-46f3-9360-c4a02b8b15e7"],
+
+Cell[BoxData[
+ RowBox[{"cl2", "[", 
+  RowBox[{"{", 
+   RowBox[{"\"\<Algorithm\>\"", ",", "\"\<ElementCount\>\""}], "}"}], 
+  "]"}]], "Input",ExpressionUUID->"f17d2267-22bc-41a8-8554-e5ca7767bb08"],
+
+Cell["Compare the two clusterings:", \
+"Text",ExpressionUUID->"a418a482-8158-4d8a-a727-0ddedb948d8e"],
+
 Cell[BoxData[
  RowBox[{"IGCompareCommunities", "[", 
   RowBox[{"cl1", ",", "cl2"}], 
   "]"}]], "Input",ExpressionUUID->"39560326-e099-46c1-8f50-ca4975be87d5"],
+
+Cell[TextData[{
+ "Visualize the a hierarchical clustering using the ",
+ ButtonBox["Hierarchical Clustering Package",
+  BaseStyle->"Link",
+  ButtonData->"paclet:HierarchicalClustering/tutorial/HierarchicalClustering"],
+ "."
+}], "Text",ExpressionUUID->"b3d3ebb5-4d86-442a-a76c-899f38152aa1"],
 
 Cell[BoxData[
  RowBox[{"<<", 
@@ -23188,7 +23380,7 @@ Cell[BoxData[
 Cell[TextData[{
  "This tree can be supplied as input to ",
  Cell[BoxData[
- "Dendrogram"],ExpressionUUID->"caaa114d-56c2-45e1-bfe4-5605e127713c"],
+ "Dendrogram"],ExpressionUUID->"f7df696d-37b6-4984-b98e-8b7410fd5c12"],
  "."
 }], "Text",ExpressionUUID->"17b9ab46-f70f-438d-ac60-b58c55af914d"],
 
@@ -23730,8 +23922,7 @@ Cell[TextData[{
 transformations to the point ",
  Cell[BoxData[
   RowBox[{"{", 
-   RowBox[{"0", ",", "0"}], "}"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+   RowBox[{"0", ",", "0"}], "}"}]],ExpressionUUID->
   "3904fd5e-df7e-4b6a-baf0-862c1ac42079"],
  " according to the traversed edges."
 }], "Text",ExpressionUUID->"0109693d-16d5-4a39-b59e-4b14d23830c8"],
@@ -23774,13 +23965,10 @@ Cell[TextData[{
 graph vertex the corresponding directed edge targets. For example, if the \
 point was generated by a transformation corresponding to ",
  Cell[BoxData[
-  RowBox[{"1", "\[DirectedEdge]", "2"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"1", "\[DirectedEdge]", "2"}]],ExpressionUUID->
   "3025dd7c-862e-45b9-9e7b-d7c5f1c51869"],
  ", it will belong to curve ",
- Cell[BoxData["2"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "569d8274-cbff-4dee-aa60-50536df21484"],
+ Cell[BoxData["2"],ExpressionUUID->"569d8274-cbff-4dee-aa60-50536df21484"],
  "."
 }], "Text",ExpressionUUID->"b8b2f72f-b1e0-4e83-a39e-70484cf83d75"],
 
@@ -24588,6 +24776,43 @@ QK66L8jqPqFV9w32g/1gP9gP9oP9YD/Yj/+cWMiL
    3.7006418302218513`*^9}, {3.700641882163836*^9, 3.700641896848023*^9}, 
    3.700643848369686*^9},ExpressionUUID->"a157bd10-2fc1-4657-b049-\
 f225e5e63f16"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGDirectedTree", \
+"Subsubsection",ExpressionUUID->"0086b28e-776e-4267-98ae-05a17bbdd2a8"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGDirectedTree"}]], \
+"Input",ExpressionUUID->"26225257-4799-468a-8370-d306780a1fc8"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"KaryTree", "[", 
+   RowBox[{"10", ",", "3", ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"450436aa-8012-45bd-8467-b733ce6f0626"],
+
+Cell[BoxData[
+ RowBox[{"IGDirectedTree", "[", 
+  RowBox[{"g", ",", "1"}], 
+  "]"}]], "Input",ExpressionUUID->"770af0f3-af2b-4e51-93f7-2c41df88b501"],
+
+Cell[BoxData[
+ RowBox[{"IGDirectedTree", "[", 
+  RowBox[{"g", ",", "5", ",", 
+   RowBox[{"GraphLayout", "\[Rule]", "\"\<LayeredDigraphEmbedding\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"5e62b8aa-9ad0-411c-8a82-5c2c4c1719cc"],
+
+Cell["\<\
+Once the tree is made directed, it is easy to find its leaf nodes:\
+\>", "Text",ExpressionUUID->"99a56dcd-48fa-49e6-bb8f-07e4e3107ff0"],
+
+Cell[BoxData[
+ RowBox[{"IGSinkVertexList", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"44f690be-d8f7-46a2-a5d0-9f6b7edacd7d"]
 }, Closed]]
 }, Closed]],
 
@@ -26072,14 +26297,238 @@ Cell[BoxData[
    RowBox[{"ColorData", "[", "100", "]"}], ",", 
    RowBox[{"VertexStyle", "\[Rule]", 
     RowBox[{"IGVertexProp", "[", "\"\<membership\>\"", "]"}]}], ",", "g"}], 
-  "]"}]], "Input",ExpressionUUID->"bb3888bc-83eb-4829-b381-b372c4c81ddd"]
+  "]"}]], "Input",ExpressionUUID->"bb3888bc-83eb-4829-b381-b372c4c81ddd"],
+
+Cell[TextData[{
+ "Visualize a vertex colouring using ",
+ Cell[BoxData[
+ "HighlightGraph"],ExpressionUUID->"edb9c38d-9afe-4aaa-b1bd-2440d80542a7"],
+ "."
+}], "Text",ExpressionUUID->"44b18eaf-c1e6-4cdc-98df-97cb6f820dec"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGMakeLattice", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "2", ",", "2", ",", "2"}], "}"}], ",", 
+    RowBox[{"\"\<Periodic\>\"", "\[Rule]", "True"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"551f673f-9b21-42cf-9ff3-6f760d85c6f7"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", "\[IndentingNewLine]", 
+  RowBox[{"g", ",", 
+   RowBox[{"IGMembershipToPartitions", "[", 
+    RowBox[{
+     RowBox[{"VertexList", "[", "g", "]"}], ",", 
+     RowBox[{"IGVertexColoring", "[", "g", "]"}]}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"VertexSize", "\[Rule]", "Medium"}], ",", 
+   RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<DehighlightGray\>\""}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"dbf7f7f6-a03c-4047-ba10-15e7dd5acd14"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGSourceVertexList and IGSinkVertexList", \
+"Subsubsection",ExpressionUUID->"39d33025-2184-46eb-82c7-81254efa8857"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGSourceVertexList"}]], \
+"Input",ExpressionUUID->"6f58180f-4a72-48eb-8440-9a2273e2a082"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGSinkVertexList"}]], \
+"Input",ExpressionUUID->"77e9b491-5a3f-406b-8a77-9b66415802e9"],
+
+Cell["\<\
+Find and highlight the source and sink vertices of a random acyclic graph.\
+\>", "Text",ExpressionUUID->"78fda96b-bd2f-4ca6-9ab3-a043ac2403b3"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"DirectedGraph", "[", 
+   RowBox[{
+    RowBox[{"RandomGraph", "[", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "20"}], "}"}], "]"}], ",", "\"\<Acyclic\>\"", ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}], ",", 
+    RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
+    RowBox[{"EdgeStyle", "\[Rule]", "Gray"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"941c0cba-a7d2-4286-baa8-9fce1208905c"],
+
+Cell[BoxData[
+ RowBox[{"IGSourceVertexList", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"21af4b0b-d26f-4096-88f9-302e2b493db7"],
+
+Cell[BoxData[
+ RowBox[{"IGSinkVertexList", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"4d40b6ec-006f-4ed0-a451-d8a845f83441"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"IGSourceVertexList", "[", "g", "]"}], ",", 
+     RowBox[{"IGSinkVertexList", "[", "g", "]"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"07d8e309-2543-4811-a654-d262920f02e0"],
+
+Cell["\<\
+Directed graphs have neither source nor sink vertices because undirected \
+edges are counted as bidirectional.\
+\>", "Text",ExpressionUUID->"52690088-a481-4ab1-ab3f-2c7c3f2f75d3"],
+
+Cell[BoxData[
+ RowBox[{"IGSourceVertexList", "[", 
+  GraphicsBox[
+   NamespaceBox["NetworkGraphics",
+    DynamicModuleBox[{Typeset`graph = HoldComplete[
+      Graph[{1, 2, 3}, {Null, 
+        SparseArray[
+        Automatic, {3, 3}, 0, {
+         1, {{0, 2, 4, 6}, {{2}, {3}, {1}, {3}, {1}, {2}}}, Pattern}]}, {
+       GraphLayout -> "CircularEmbedding", VertexSize -> {Medium}}]]}, 
+     TagBox[
+      GraphicsGroupBox[
+       GraphicsComplexBox[{{-0.8660254037844384, -0.4999999999999994}, {
+        0.8660254037844389, -0.5000000000000012}, {1.8369701987210297`*^-16, 
+        1.}}, {
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], ArrowBox[{1, 2}, 0.17320508075688767`]}, 
+          {Arrowheads[0.], ArrowBox[{1, 3}, 0.17320508075688767`]}, 
+          {Arrowheads[0.], ArrowBox[{2, 3}, 0.17320508075688767`]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+          DiskBox[1, 0.17320508075688767], DiskBox[2, 0.17320508075688767], 
+          DiskBox[3, 0.17320508075688767]}}]],
+      MouseAppearanceTag["NetworkGraphics"]],
+     AllowKernelInitialization->False]],
+   DefaultBaseStyle->{
+    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+   FormatType->TraditionalForm,
+   FrameTicks->None], 
+  "]"}]], "Input",ExpressionUUID->"135111e5-1192-4442-a3f3-ce74dd61efec"],
+
+Cell["\<\
+These are merely convenience functions that can be implemented \
+straightforwardly as \
+\>", "Text",ExpressionUUID->"f925bcd8-5e3b-4a12-9de0-bdbb3abba793"],
+
+Cell[BoxData[
+ RowBox[{"Pick", "[", 
+  RowBox[{
+   RowBox[{"VertexList", "[", "g", "]"}], ",", 
+   RowBox[{"VertexOutDegree", "[", "g", "]"}], ",", "0"}], 
+  "]"}]], "Input",ExpressionUUID->"2ccca34b-afd1-452e-9066-3d21883a2a24"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGReorderVertices", \
+"Subsubsection",ExpressionUUID->"0cac94f2-1fe6-4bc6-971a-fe3fbc2b055a"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGReorderVertices"}]], \
+"Input",ExpressionUUID->"a59560f5-b6a7-42b9-97fd-0e4778a6a15c"],
+
+Cell["\<\
+Let us use a styled graph for illustration, to demonstrate that graph \
+properties are preserved.\
+\>", "Text",ExpressionUUID->"a45d0975-7fd8-49ca-8b3b-d3e1910012b6"],
+
+Cell[BoxData[
+ RowBox[{"g1", "=", 
+  RowBox[{"RandomGraph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"5", ",", "5"}], "}"}], ",", 
+    RowBox[{"VertexStyle", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"1", "\[Rule]", "Red"}], ",", 
+       RowBox[{"3", "\[Rule]", "Green"}]}], "}"}]}], ",", 
+    RowBox[{"VertexSize", "\[Rule]", "Medium"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"b48714ba-e8e7-42ae-b176-38a989a1d22e"],
+
+Cell[BoxData[
+ RowBox[{"g2", "=", 
+  RowBox[{"IGReorderVertices", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"5", ",", "4", ",", "3", ",", "2", ",", "1"}], "}"}], ",", 
+    "g1"}], "]"}]}]], \
+"Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
+
+Cell[BoxData[
+ RowBox[{"VertexList", "/@", 
+  RowBox[{"{", 
+   RowBox[{"g1", ",", "g2"}], 
+   "}"}]}]], "Input",ExpressionUUID->"7fdb3aa0-8991-4d9c-9550-4bb4dd526dce"],
+
+Cell[BoxData[
+ RowBox[{"IGIsomorphicQ", "[", 
+  RowBox[{"g1", ",", "g2"}], 
+  "]"}]], "Input",ExpressionUUID->"d9f035a4-757a-4bba-90fb-0083ceca934f"],
+
+Cell[TextData[{
+ "The result of certain operations, such as ",
+ Cell[BoxData[
+  RowBox[{"DirectedGraph", "[", 
+   RowBox[{"\[Ellipsis]", ",", "\"\<Acyclic\>\""}], "]"}]],ExpressionUUID->
+  "32503cd6-5ed3-41d6-9b25-68297a849c60"],
+ " or ",
+ Cell[BoxData[
+ "AdjacencyMatrix"],ExpressionUUID->"123de3d4-e695-47cd-9508-5f30754740f8"],
+ ", depends on the vertex ordering."
+}], "Text",ExpressionUUID->"0ea7cc36-0056-4f4b-bf94-cc0b8e134b69"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"DirectedGraph", "[", 
+    RowBox[{"#", ",", "\"\<Acyclic\>\""}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"g1", ",", "g2"}], 
+   "}"}]}]], "Input",ExpressionUUID->"8e7653ce-4cce-486a-a8a4-f93f61fc498d"],
+
+Cell["\<\
+Order the vertices of a directed acyclic graph so that its adjacency matrix \
+is upper triangular.\
+\>", "Text",ExpressionUUID->"f83000e4-d4fc-4397-bee4-4e626eb916c5"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"10", ",", "30"}], "}"}], ",", 
+     RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"EdgeDelete", "[", 
+    RowBox[{"g", ",", 
+     RowBox[{"IGFeedbackArcSet", "[", "g", "]"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{"ArrayPlot", "/@", 
+  RowBox[{"AdjacencyMatrix", "/@", 
+   RowBox[{"{", 
+    RowBox[{"g", ",", 
+     RowBox[{"IGReorderVertices", "[", 
+      RowBox[{
+       RowBox[{"TopologicalSort", "[", "g", "]"}], ",", "g"}], "]"}]}], 
+    "}"}]}]}]}], \
+"Input",ExpressionUUID->"11bf6410-bc93-4775-ae28-533d11f29d6c"]
 }, Closed]]
 }, Closed]]
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{1175, 758},
-WindowMargins->{{Automatic, 100}, {Automatic, 39}},
+WindowSize->{842, 736},
+WindowMargins->{{Automatic, 89}, {Automatic, 45}},
 WindowTitle->"IGraph/M Documentation",
 PrintingCopies->1,
 PrintingStartingPageNumber->1,
