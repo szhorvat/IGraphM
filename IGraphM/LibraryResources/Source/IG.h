@@ -613,6 +613,7 @@ public:
     // Centrality measures (estimates)
 
     mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint, mma::RealTensorRef vs) const {
+        if (cutoff == 0) cutoff = -1; /* temporary measure; see bug #56 */
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_betweenness_estimate(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, cutoff, passWeights(), nobigint));
@@ -620,12 +621,14 @@ public:
     }
 
     mma::RealTensorRef edgeBetweennessEstimate(double cutoff) const {
+        if (cutoff == 0) cutoff = -1; /* temporary measure; see bug #56 */
         igVector vec;
         igCheck(igraph_edge_betweenness_estimate(&graph, &vec.vec, true, cutoff, passWeights()));
         return vec.makeMTensor();
     }
 
     mma::RealTensorRef closenessEstimate(double cutoff, bool normalized, mma::RealTensorRef vs) const {
+        if (cutoff == 0) cutoff = -1; /* temporary measure; see bug #56 */
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_closeness_estimate(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, cutoff, passWeights(), normalized));
