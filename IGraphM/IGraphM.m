@@ -132,7 +132,7 @@ IGBlissCanonicalPermutation::usage =
     "IGBlissCanonicalPermutation[{graph, colorSpec}] returns the canonical vertex permutation of a vertex coloured graph.";
 IGBlissCanonicalGraph::usage =
     "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labeling.\n" <>
-    "IGBlissCanonicalGraph[{graph, colorSpec}] returns a canonical graph of a vertex coloured graph, based on the canonical integer labeling.";
+    "IGBlissCanonicalGraph[{graph, colorSpec}] returns a canonical graph of a vertex coloured graph, based on the canonical integer labeling. Vertex colors will be stored in the \"Color\" vertex property.";
 IGBlissIsomorphicQ::usage =
     "IGBlissIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic using the Bliss algorithm.\n" <>
     "IGBlissIsomorphicQ[{graph1, colorSpec}, {graph2, colorSpec}] tests if two vertex coloured graphs are isomorphic using the Bliss algorithm.";
@@ -1841,8 +1841,10 @@ IGIsoclass[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"isoclass"
 
 IGraphM::vcol = "The \"VertexColors\" option must be a list of integers, an association assigning integers to vertices, a vertex property name, or None.";
 IGraphM::vcolm = "The vertex property `1` does not contain any values. Assuming all vertices to have the same color.";
+IGraphM::vcolp = "The vertex property `1` contains values that cannot be interpreted as colors. Vertex colors must be integers.";
 IGraphM::ecol = "The \"EdgeColors\" option must be a list of integers, an association assigning integers to edges, an edge property name, or None.";
 IGraphM::ecolm = "The edge property `1` does not contain any values. Assuming all edges to have the same color.";
+IGraphM::ecolp = "The edge property `1` contains values that cannot be interpreted as colors. Edge colors must be integers.";
 IGraphM::bdecol = "Edge colors: the following edges are not in the graph: ``.";
 IGraphM::bdvcol = "Vertex colors: the following vertices are not in the graph: ``.";
 IGraphM::vcolcnt = "When vertex colours are specified as a list, the list length must be the same as the vertex count of the graph.";
@@ -1857,13 +1859,18 @@ parseVertexColors[_][None] := {}
 parseVertexColors[g_][col_?intVecQ] := (If[VertexCount[g] != Length[col], Message[IGraphM::vcolcnt]; throw[$Failed]]; col)
 parseVertexColors[g_][col_?AssociationQ] := (colorCheckVertices[g, col]; Lookup[col, VertexList[g], 0])
 parseVertexColors[g_][prop : (_Symbol | _String)] :=
-    With[{values = IGVertexProp[prop][g]},
+    Module[{values = IGVertexProp[prop][g], result},
       If[MatchQ[values, {__Missing}],
         Message[IGraphM::vcolm, prop]
       ];
-      Replace[values, _Missing -> 0, {1}]
+      result = Replace[values, _Missing -> 0, {1}];
+      If[Not@intVecQ[result],
+        Message[IGraphM::vcolp, prop];
+        throw[$Failed]
+      ];
+      result
     ]
-parseVertexColors[_][_] := (Message[IGraphM::vcol]; {})
+parseVertexColors[_][_] := (Message[IGraphM::vcol]; throw[$Failed])
 
 colorCheckEdges[g_, c_] := With[{cm = Complement[Keys[c], EdgeList[g]]}, If[cm =!= {}, Message[IGraphM::bdecol, cm]]];
 
@@ -1878,13 +1885,18 @@ parseEdgeColors[g_][col_?AssociationQ] :=
       ]
     ]
 parseEdgeColors[g_][prop : (_Symbol | _String)] :=
-    With[{values = IGEdgeProp[prop][g]},
+    Module[{values = IGEdgeProp[prop][g], result},
       If[MatchQ[values, {__Missing}],
-        Message[IGraphM::vcolm, prop]
+        Message[IGraphM::ecolm, prop]
       ];
-      Replace[values, _Missing -> 0, {1}]
+      result = Replace[values, _Missing -> 0, {1}];
+      If[Not@intVecQ[result],
+        Message[IGraphM::ecolp, prop];
+        throw[$Failed]
+      ];
+      result
     ]
-parseEdgeColors[_][_] := (Message[IGraphM::ecol]; {})
+parseEdgeColors[_][_] := (Message[IGraphM::ecol]; throw[$Failed])
 
 (** Bliss **)
 
@@ -1944,9 +1956,25 @@ IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Opt
 
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
 SyntaxInformation[IGBlissCanonicalGraph] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
-IGBlissCanonicalGraph[spec: (graph_?igGraphQ) | {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-      catch@With[{perm = check@IGBlissCanonicalPermutation[spec], am = AdjacencyMatrix[graph]},
-        AdjacencyGraph[ am[[perm, perm]] ]
+IGBlissCanonicalGraph[graph_?IGNullGraphQ, opt : OptionsPattern[]] := Graph[{},{}] (* the empty graph has no adjacency matrix *)
+IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@With[{perm = check@IGBlissCanonicalPermutation[graph, opt], am = AdjacencyMatrix[graph]},
+      AdjacencyGraph[ am[[perm, perm]], DirectedEdges -> DirectedGraphQ[graph] ]
+    ]
+IGBlissCanonicalGraph[spec : {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+      catch@Module[{perm, am, vcol},
+        vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
+        If[vcol === {}, (* vertex colours set to None or the graph has no vertices *)
+          IGBlissCanonicalGraph[graph]
+          ,
+          perm = check@IGBlissCanonicalPermutation[spec, opt];
+          am = AdjacencyMatrix[graph];
+          AdjacencyGraph[
+            am[[perm, perm]],
+            DirectedEdges -> DirectedGraphQ[graph],
+            Properties -> Thread[ Range@VertexCount[graph] -> List /@ Thread[ "Color" -> vcol[[perm]] ] ]
+          ]
+        ]
       ]
 
 
