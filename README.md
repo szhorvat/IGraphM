@@ -204,12 +204,14 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
     * Isomorphism functions now ignore the directedness of empty graphs.
     * `IGDistanceCounts` now optionally takes a list of starting vertices.
     * Isomorphism functions can now take vertex or edge colours from graph attributes.
+    * `IGBetweenness(Estimate)` and `IGCloseness(Estimate)` now optionally take a set of vertices to do the calculation on.
+    * `IGBlissCanonicalGraph` will now include include vertex colours into its output when appropriate, encoded as the `"Color"` vertex property.
  - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
  - New utility functions:
     * Weighted graphs: `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
     * Easier property handling and graph styling:  `IGVertexProp`, `IGEdgeProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
     * Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
-    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`.
+    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGReorderVertices`, `IGDirectedTree`.
  - Improved compatibility with Mathematica 11.2, handling of `TwoWayRule` as an edge specification.
  - Bug fixes, performance improvements, and polish.
 
