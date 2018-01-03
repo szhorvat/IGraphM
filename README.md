@@ -79,10 +79,10 @@ The documentation contains many examples and can be accessed using the `IGDocume
 
 IGraph/M can be installed like any other Mathematica application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.95.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.96.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
         Needs["PacletManager`"]
-        PacletInstall["~/Downloads/IGraphM-0.3.95.paclet"]
+        PacletInstall["~/Downloads/IGraphM-0.3.96.paclet"]
 
 IGraph/M requires Mathematica 10.0 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
