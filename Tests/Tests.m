@@ -188,6 +188,38 @@ MT[
 ]
 
 
+(* The following tests are to verify that vertex properties are stored in a canonical form, regardless of in which order
+   they were originally specified. This is important so that the return values of IGBlissCanonicalGraph are SameQ-comparable. *)
+MT[
+  AdjacencyGraph[{{0,1,0},{1,0,1},{0,1,0}}, Properties -> {1 -> {"foo" -> 1}, 2 -> {"foo" -> 2}, 3 -> {"foo" -> 3}}],
+  AdjacencyGraph[{{0,1,0},{1,0,1},{0,1,0}}, Properties -> {3 -> {"foo" -> 3}, 1 -> {"foo" -> 1}, 2 -> {"foo" -> 2}}]
+]
+
+Module[{g},
+  MT[
+    g = AdjacencyGraph[{{0,1,0},{1,0,1},{0,1,0}}];
+    PropertyValue[{g,1}, "foo"] = 1;
+    PropertyValue[{g,2}, "foo"] = 2;
+    PropertyValue[{g,3}, "foo"] = 3;
+    g
+    ,
+    AdjacencyGraph[{{0,1,0},{1,0,1},{0,1,0}}, Properties -> {3 -> {"foo" -> 3}, 1 -> {"foo" -> 1}, 2 -> {"foo" -> 2}}]
+  ]
+]
+
+Module[{g},
+  MT[
+    g = AdjacencyGraph[{{0,1,0},{1,0,1},{0,1,0}}];
+    PropertyValue[{g,3}, "foo"] = 3;
+    PropertyValue[{g,2}, "foo"] = 2;
+    PropertyValue[{g,1}, "foo"] = 1;
+    g
+    ,
+    AdjacencyGraph[{{0,1,0},{1,0,1},{0,1,0}}, Properties -> {3 -> {"foo" -> 3}, 1 -> {"foo" -> 1}, 2 -> {"foo" -> 2}}]
+  ]
+]
+
+
 (*******************************************************************************)
 MTSection["Basic"]
 
@@ -1085,6 +1117,36 @@ MT[
   False
 ]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGVF2IsomorphicQ, IGSubisomorphicQ, IGVF2SubisomorphicQ}
 
+
+(* empty graph *)
+MT[
+  IGBlissCanonicalGraph[Graph[{},{}]],
+  Graph[{},{}]
+]
+
+(* Ensure that directed graphs which are the same as their reversed graph are handled properly. *)
+MT[
+  With[{g = IGBlissCanonicalGraph[Graph[{1 -> 2, 2 -> 1}]]},
+    {VertexList[g], EdgeList[g]}
+  ],
+  {{1, 2}, {1 \[DirectedEdge] 2, 2 \[DirectedEdge] 1}}
+]
+
+MT[
+  With[{g = IGBlissCanonicalGraph[Graph[{2 -> 1, 1 -> 2}]]},
+    {VertexList[g], EdgeList[g]}
+  ],
+  {{1, 2}, {1 \[DirectedEdge] 2, 2 \[DirectedEdge] 1}}
+]
+
+MT[
+  With[{g = IGBlissCanonicalGraph[Graph[{b <-> a}]]},
+    {VertexList[g], EdgeList[g]}
+  ],
+  {{1, 2}, {1 \[UndirectedEdge] 2}}
+]
+
+
 (*******************************************************************************)
 MTSection["Isomorphism: coloured graphs"]
 
@@ -1141,6 +1203,36 @@ MT[
   IGBlissCanonicalPermutation[gvcol2],
   {2, 1}
 ]
+
+MT[
+  With[{g = IGBlissCanonicalGraph[{Graph[{b <-> a}], "VertexColors" -> <|b -> 3, a -> 1|>}]},
+    {VertexList[g], EdgeList[g], IGVertexProp["Color"][g]}
+  ],
+  {{1, 2}, {1 \[UndirectedEdge] 2}, {1, 3}}
+]
+
+MT[
+  With[{g = IGBlissCanonicalGraph[{Graph[{b <-> a}], "VertexColors" -> <|b -> 1, a -> 3|>}]},
+    {VertexList[g], EdgeList[g], IGVertexProp["Color"][g]}
+  ],
+  {{1, 2}, {1 \[UndirectedEdge] 2}, {1, 3}}
+]
+
+MT[
+  IGBlissCanonicalGraph[{Graph[{},{}], "VertexColors" -> {}}],
+  Graph[{},{}]
+]
+
+MT[
+  IGBlissCanonicalGraph[{Graph[{Property[1, "col" -> 5], Property[2, "col" -> 1]}, {}], "VertexColors" -> "col"}] // IGVertexProp["Color"],
+  {1,5}
+]
+
+MT[
+  IGBlissCanonicalGraph[{Graph[{Property[1, "col" -> 5], Property[2, "col" -> 1]}, {}], "VertexColors" -> None}] // IGVertexProp["Color"],
+  {Missing["Nonexistent"], Missing["Nonexistent"]}
+]
+
 
 
 (*******************************************************************************)
@@ -1233,6 +1325,22 @@ MT[
   IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "Arnoldi"] == IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "PRPACK"],
   True
 ]
+
+MT[
+  IGBetweenness[#],
+  IGBetweennessEstimate[#, Infinity]
+]& /@ {ugs, dgs}
+
+MT[
+  IGCloseness[#],
+  IGClosenessEstimate[#, Infinity]
+]& /@ {ugs, dgs}
+
+MT[
+  IGEdgeBetweenness[#],
+  IGEdgeBetweennessEstimate[#, Infinity]
+]& /@ {ugs, dgs}
+
 
 
 (*******************************************************************************)
