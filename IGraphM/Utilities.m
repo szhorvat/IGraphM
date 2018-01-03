@@ -287,6 +287,8 @@ IGVertexOutStrength[g_?igGraphQ, v_] :=
 
 missing = Missing["Nonexistent"]; (* this will be used for non-existent property values *)
 
+vertexWrapper::usage = "vertexWrapper is an internal symbolic wrapper used by IGVertexProp to work around retrieving properties from graphs with vertices that are lists.";
+
 SyntaxInformation[IGVertexProp] = {"ArgumentsPattern" -> {_}};
 IGVertexProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
 IGEdgeProp[VertexWeight][g_?GraphQ] :=
@@ -301,7 +303,11 @@ IGVertexProp[prop : (* VertexWeight| *)VertexCapacity (* not VertexCoordinates! 
         values
       ]
     ]
-IGVertexProp[prop_][g_?GraphQ] := Replace[PropertyValue[{g,#}, prop]& /@ VertexList[g], $Failed -> missing, {1}]
+IGVertexProp[prop_][g_?GraphQ] :=
+    (* work around PropertyValue failing when some graph vertices are lists *)
+    With[{g2 = If[MemberQ[VertexList[g], _List], VertexReplace[g, v_ :> vertexWrapper[v]], g]},
+      Replace[PropertyValue[{g2,#}, prop]& /@ VertexList[g2], $Failed -> missing, {1}]
+    ]
 
 
 specialEdgePropsPattern = EdgeWeight|EdgeCost|EdgeCapacity;
