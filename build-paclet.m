@@ -158,7 +158,7 @@ With[{$buildDir = $buildDir},
     MCode[
       PacletManager`PacletDirectoryAdd[$buildDir];
       SetOptions[First[$Output], FormatType -> StandardForm];
-      Internal`$MessageMenu = False;
+      Internal`$MessageMenu = False; (* get 10.0-compatible message formatting from 11.0 *)
       RewriteNotebook[
         NBFEProcess[NotebookEvaluate[#, InsertResults -> True]&]
       ]["IGDocumentation.nb"]
