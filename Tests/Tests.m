@@ -2942,6 +2942,26 @@ MT[
   True
 ]
 
+MT[
+  IGEdgeWeightedQ@IGEmptyGraph[],
+  False
+]
+
+MT[
+  IGVertexWeightedQ@IGEmptyGraph[],
+  False
+]
+
+MT[
+  IGVertexWeightedQ@IGEmptyGraph[],
+  False
+]
+
+MT[
+  IGEdgeWeightedQ@IGEmptyGraph[3, VertexWeight -> {1, 2, 3}],
+  False
+]
+
 (* IGWeighedAdjacencyGraph *)
 
 MT[
