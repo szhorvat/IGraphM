@@ -232,6 +232,7 @@ IGVertexWeightedQ[g_] :=
     ]
 
 SyntaxInformation[IGEdgeWeightedQ] = {"ArgumentsPattern" -> {_}};
+IGEdgeWeightedQ[g_?EmptyGraphQ] := False (* avoid error from First if graph has no edges but is vertex weighted *)
 IGEdgeWeightedQ[g_] :=
     WeightedGraphQ[g] &&
     With[{weights = Developer`ToPackedArray@GraphComputation`WeightValues[g]},
@@ -291,7 +292,7 @@ vertexWrapper::usage = "vertexWrapper is an internal symbolic wrapper used by IG
 
 SyntaxInformation[IGVertexProp] = {"ArgumentsPattern" -> {_}};
 IGVertexProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
-IGEdgeProp[VertexWeight][g_?GraphQ] :=
+IGVertexProp[VertexWeight][g_?GraphQ] :=
     If[IGVertexWeightedQ[g],
       GraphComputation`WeightVector[g],
       ConstantArray[missing, VertexCount[g]]
