@@ -450,6 +450,11 @@ IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it 
 
 IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge directions are ignored. Edge weights are taken into account and are preserved in the tree.";
 
+IGCoreness::usage =
+    "IGCoreness[graph] returns the coreness of each vertex. Coreness is the highest order of a k-core containing the vertex.\n" <>
+    "IGCoreness[graph, \"In\"] considers only in-degrees in a directed graph.\n" <>
+    "IGCoreness[graph, \"Out\"] considers only out-degrees in a directed graph.";
+
 IGVertexColoring::usage = "IGVertexColoring[graph] returns a vertex colouring of graph.";
 IGEdgeColoring::usage = "IGEdgeColoring[graph] returns an edge colouring of graph.";
 
@@ -828,6 +833,9 @@ template = LTemplate["IGraphM",
 
         (* Spanning tree *)
         LFun["spanningTree", {}, {Real, 1}],
+
+        (* Coreness *)
+        LFun["coreness", {Integer (* mode *)}, {Real, 1}],
 
         LFun["vertexColoring", {}, {Integer, 1}]
       }
@@ -3988,6 +3996,15 @@ IGVertexColoring[graph_?igGraphQ] :=
 
 IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph[graph]
 
+
+(* Coreness *)
+
+corenessModes = <|"In" -> -1, "Out" -> 1, All -> 0|>;
+SyntaxInformation[IGCoreness] = {"ArgumentsPattern" -> {_, _.}};
+expr : IGCoreness[graph_?igGraphQ, mode_ : All] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Round@check@ig@"coreness"[Lookup[corenessModes, mode, Message[IGCoreness::inv, HoldForm@OutputForm[expr], mode, "parameter"]; throw[$Failed]]]
+    ]
 
 (***** Converting meshes to graphs *****)
 

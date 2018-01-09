@@ -2157,6 +2157,25 @@ public:
         igCheck(igraph_vertex_coloring_greedy(&graph, &igcolor.vec, IGRAPH_COLORING_GREEDY_COLORED_NEIGHBORS));
         return igcolor.makeMTensor();
     }
+
+    // Coreness
+
+    mma::RealTensorRef coreness(mint mode) const {
+        igVector cores;
+        igraph_neimode_t m;
+        switch (mode) {
+        case 1:
+            m = IGRAPH_OUT; break;
+        case -1:
+            m = IGRAPH_IN; break;
+        case 0:
+            m = IGRAPH_ALL; break;
+        default:
+            throw mma::LibraryError("coreness: Invalid mode parameter.");
+        }
+        igCheck(igraph_coreness(&graph, &cores.vec, m));
+        return cores.makeMTensor();
+    }
 };
 
 #endif // IG_H
