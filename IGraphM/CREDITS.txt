@@ -9,3 +9,6 @@ The following people have contributed to IGraph/M:
 
  - Henrik Schumacher contributed functions for constructing mesh-cell adjacency graphs
 
+IGraph/M was created with the help of the Mathematica plugin for IntelliJ IDEA by Patrick Scheibe, http://wlplugin.halirutan.de/
+Without the help of this IDE, it would have been difficult to manage to complexity of this package.
+
