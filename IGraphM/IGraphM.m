@@ -420,7 +420,7 @@ IGCommunitiesFluid::usage = "IGCommunitiesFluid[graph, clusterCount] finds commu
 
 IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 
-IGUnfoldTree::usage = "IGUnfoldTree[graph]";
+IGUnfoldTree::usage = "IGUnfoldTree[graph, {root1, root2, \[Ellipsis]}] performs a breadth-first search on graph starting from the given roots, and converts it to a tree or forest by replicating vertices that were found more than once. The original vertex that generated a tree node is stored in the \"OriginalVertex\" property.";
 
 IGBipartitePartitions::usage =
      "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.\n" <>
@@ -3744,15 +3744,12 @@ IGGomoryHuTree[graph_?GraphQ] :=
 (* Unfold tree *)
 
 Options[IGUnfoldTree] = { DirectedEdges -> True };
-SyntaxInformation[IGUnfoldTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-IGUnfoldTree[graph_?GraphQ, roots_List, opt : OptionsPattern[]] :=
-    catch@Block[{new = Make["IG"], ig = igMakeFast[graph], mapping, t},
+SyntaxInformation[IGUnfoldTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGUnfoldTree, Graph]};
+IGUnfoldTree[graph_?GraphQ, roots_List, opt : OptionsPattern[{IGUnfoldTree, Graph}]] :=
+    catch@Block[{new = Make["IG"], ig = igMakeFast[graph], mapping, tree},
       mapping = check@new@"unfoldTree"[ManagedLibraryExpressionID[ig], vss[graph][roots], OptionValue[DirectedEdges]];
-      t = igToGraph[new];
-      <|
-        "Tree" -> t,
-        "Mapping" -> AssociationThread[VertexList[t], igVertexNames[graph]@igIndexVec[mapping]]
-      |>
+      tree = igToGraph[new];
+      applyGraphOpt[opt]@Graph[tree, Properties -> Thread[VertexList[tree] -> List /@ Thread["OriginalVertex" -> igVertexNames[graph]@igIndexVec[mapping]]]]
     ]
 
 (* Bipartite partitions *)
