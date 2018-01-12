@@ -1662,7 +1662,8 @@ SyntaxInformation[IGCloseness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]
 IGCloseness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
 IGCloseness[g_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
-      check@ig@"closeness"[OptionValue["Normalized"], vss[g][vs]]
+      If[VertexCount[g] == 1, Developer`FromPackedArray, Identity] @ (* prevent {Indeterminate} packed array, which may misbehave, for single-vertex graph *)
+        check@ig@"closeness"[OptionValue["Normalized"], vss[g][vs]]
     ]
 
 (* Centrality estimates *)
@@ -1691,7 +1692,8 @@ SyntaxInformation[IGClosenessEstimate] = {"ArgumentsPattern" -> {_, _, _., Optio
 IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, {}, opt : OptionsPattern[]] := {}
 IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
-      check@ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"], vss[g][vs]]
+      If[VertexCount[g] == 1, Developer`FromPackedArray, Identity] @ (* prevent {Indeterminate} packed array, which may misbehave, for single-vertex graph *)
+        check@ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"], vss[g][vs]]
     ]
 
 
