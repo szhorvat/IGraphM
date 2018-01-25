@@ -82,6 +82,9 @@ IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vert
 
 IGDirectedTree::usage = "IGDirectedTree[tree, root] directs the edges of an undirected tree so that they point away from the root. The vertex order is not preserved: vertices will be ordered topologically.";
 
+IGZeroDiagonal::usage = "IGZeroDiagonal[matrix] replaces the diagonal of matrix with zeros.";
+
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -778,6 +781,13 @@ expr : IGDirectedTree[tree_?GraphQ, root_, opt : OptionsPattern[Graph]] :=
       verts = First@Last@Reap@BreadthFirstScan[tree, root, "PrevisitVertex" -> Sow];
       DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", opt]
     ]
+
+(***** Matrix functions ****)
+
+SyntaxInformation[IGZeroDiagonal] = {"ArgumentsPattern" -> {_}};
+IGZeroDiagonal[mat_?MatrixQ] :=
+    UpperTriangularize[mat, 1] + LowerTriangularize[mat, -1]
+
 
 (***** Finalize *****)
 
