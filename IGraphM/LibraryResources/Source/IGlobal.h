@@ -43,6 +43,36 @@ public:
 
     // Graph related functions that do not use the graph data structure
 
+    // Fast implementation based on Z. Kiraly: Recognizing graphic degree sequences and generating all realizations.
+    bool erdosGallai(mma::IntTensorRef deg) {
+        mint n, w, b, s, c;
+            n = deg.length();
+
+            mint sum = 0;
+            for (const auto &el : deg)
+                sum += el;
+            if (sum % 2 == 1)
+                return false;
+
+            std::sort(deg.begin(), deg.end(), std::greater<mint>());
+
+            w = n; b = 0; s = 0; c = 0;
+            for (mint k=1; k <= n; ++k) {
+                b += deg[k-1];
+                c += w-1;
+                while (w > k && deg[w-1] <= k) {
+                    s += deg[w-1];
+                    c -= k;
+                    w--;
+                }
+                if (b > c+s)
+                    return false;
+                else if (w == k)
+                    return true;
+            }
+            massert(false);
+    }
+
     bool graphicalQ(mma::RealTensorRef outdeg, mma::RealTensorRef indeg) {
         igraph_vector_t ig_outdeg = igVectorView(outdeg);
         igraph_vector_t ig_indeg  = igVectorView(indeg);

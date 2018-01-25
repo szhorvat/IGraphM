@@ -503,6 +503,7 @@ template = LTemplate["IGraphM",
 
         (* Graph related functions that do not use the graph data structure *)
 
+        LFun["erdosGallai", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
         LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *)}, True|False],
 
         LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 2}]
@@ -1613,7 +1614,7 @@ SyntaxInformation[IGWeaklyConnectedQ] = {"ArgumentsPattern" -> {_}};
 IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[False]]
 
 SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
-IGGraphicalQ[degrees_?nonNegIntVecQ] := IGGraphicalQ[{}, degrees]
+IGGraphicalQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"erdosGallai"[degrees] (* use fast custom implementation instead of igraph *)
 IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"graphicalQ"[outdeg, indeg]
 
 SyntaxInformation[IGBipartiteQ] = {"ArgumentsPattern" -> {_, _.}};
