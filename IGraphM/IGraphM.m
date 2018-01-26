@@ -3425,6 +3425,7 @@ IGClusterData /: MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (Standard
         BoxForm`SummaryItem[{"Communities: ", Length@asc@"Communities"}]
       },
       {
+        BoxForm`SummaryItem[{"Community sizes: ", Short[Length /@ asc@"Communities", 0.35]}],
         BoxForm`SummaryItem[{"Modularity: ", If[KeyExistsQ[asc, "Modularity"], Max@asc@"Modularity", "unknown"]}],
         BoxForm`SummaryItem[{"Hierarchical: ", hierarchicalQ[asc]}],
         BoxForm`SummaryItem[{"Algorithm: ", asc@"Algorithm"}]
