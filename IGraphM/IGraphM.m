@@ -219,9 +219,9 @@ IGBipartiteGameGNP::usage = "IGBipartiteGameGNP[n1, n2, p] generates a bipartite
 IGGeometricGame::usage = "IGGeometricGame[n, radius] generates an n-vertex geometric random graph on the unit square.";
 
 IGBarabasiAlbertGame::usage =
-    "IGBarabasiAlbertGame[n, k] generates an n-vertex Barabási–Albert random graph by adding a new vertex with k out-edges in each step.\n" <>
+    "IGBarabasiAlbertGame[n, k] generates an n-vertex Barabási–Albert random graph by adding a new vertex with k (out-)edges in each step.\n" <>
     "IGBarabasiAlbertGame[n, {k2, k3, \[Ellipsis]}] generates an n-vertex Barabási–Albert random graph by adding a new vertex with k2, k3, \[Ellipsis] out-edges in each step.\n" <>
-    "IGBarabasiAlbertGame[n, k, {\[Beta], a}] generates a Barabási–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + a where d is the vertex (in-)degree.";
+    "IGBarabasiAlbertGame[n, k, {\[Beta], A}] generates a Barabási–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + A where d is the vertex (in-)degree.";
 
 IGWattsStrogatzGame::usage =
     "IGWattsStrogatzGame[n, p] generates an n-vertex Watts–Strogatz random graph using rewiring probability\n" <>

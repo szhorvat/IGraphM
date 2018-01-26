@@ -1196,7 +1196,7 @@ public:
 
         const bool toall = to.length() == 0;
         igraph_vector_t tov = igVectorView(to);
-        const mint tolen = toall ? igraph_vcount(&graph) : to.length();
+        const mint tolen = toall ? vertexCount() : to.length();
 
         for (mint i=0; i < from.length(); ++i) {
             mma::check_abort();

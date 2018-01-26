@@ -41,7 +41,7 @@ applyGraphOpt3D::usage = "applyGraphOpt3D[options][graph] applies the given opti
 applyGraphOpt3D[opt___][graph_] := Graph3D[graph, Sequence@@FilterRules[{opt}, Options[Graph3D]]]
 
 
-zeroDiagonal::usage = "zeroDiagonal[mat] replaces the diagonal of a square matrix with zeros.";
+zeroDiagonal::usage = "zeroDiagonal[mat] replaces the diagonal of a matrix with zeros.";
 zeroDiagonal[mat_] := UpperTriangularize[mat, 1] + LowerTriangularize[mat, -1]
 
 
