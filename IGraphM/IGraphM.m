@@ -1659,13 +1659,13 @@ SyntaxInformation[IGEdgeBetweenness] = {"ArgumentsPattern" -> {_}};
 IGEdgeBetweenness[g_?igGraphQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweenness"[]]
 
-Options[IGCloseness] = { "Normalized" -> False };
+Options[IGCloseness] = { Normalized -> False };
 SyntaxInformation[IGCloseness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGCloseness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
 IGCloseness[g_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
       If[VertexCount[g] == 1, Developer`FromPackedArray, Identity] @ (* prevent {Indeterminate} packed array, which may misbehave, for single-vertex graph *)
-        check@ig@"closeness"[OptionValue["Normalized"], vss[g][vs]]
+        check@ig@"closeness"[OptionValue[Normalized], vss[g][vs]]
     ]
 
 (* Centrality estimates *)
@@ -1690,13 +1690,13 @@ SyntaxInformation[IGEdgeBetweennessEstimate] = {"ArgumentsPattern" -> {_, _}};
 IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ] :=
     Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
 
-Options[IGClosenessEstimate] = { "Normalized" -> False };
+Options[IGClosenessEstimate] = { Normalized -> False };
 SyntaxInformation[IGClosenessEstimate] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, {}, opt : OptionsPattern[]] := {}
 IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
       If[VertexCount[g] == 1, Developer`FromPackedArray, Identity] @ (* prevent {Indeterminate} packed array, which may misbehave, for single-vertex graph *)
-        check@ig@"closenessEstimate"[infToZero[cutoff], OptionValue["Normalized"], vss[g][vs]]
+        check@ig@"closenessEstimate"[infToZero[cutoff], OptionValue[Normalized], vss[g][vs]]
     ]
 
 
