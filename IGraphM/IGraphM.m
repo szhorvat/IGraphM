@@ -1632,7 +1632,7 @@ IGBipartiteQ[g_?igGraphQ, {vertices1_List, vertices2_List}] :=
 
 igBetweennessMethods = <| "Precise" -> False, "Fast" -> True |>;
 
-Options[IGBetweenness] = { Method -> "Precise" };
+Options[IGBetweenness] = { Method -> "Precise", Normalized -> False };
 
 IGBetweenness::bdmtd =
     "Value of option Method -> `` is not one of " <>
@@ -1649,7 +1649,10 @@ IGBetweenness[g_?igGraphQ, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
       check@ig@"betweenness"[
         Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweenness::bdmtd, OptionValue[Method]]; False],
         vss[g][vs]
-      ]
+      ] / If[TrueQ@OptionValue[Normalized],
+            If[DirectedGraphQ[g], (VertexCount[g]-1)*(VertexCount[g]-2), (VertexCount[g]-1)*(VertexCount[g]-2)/2],
+            1
+          ]
     ]
 
 
