@@ -487,11 +487,24 @@ public:
 
     // Centrality measures
 
-    mma::RealTensorRef betweenness(bool nobigint, mma::RealTensorRef vs) const {
+    mma::RealTensorRef betweenness(bool nobigint, bool normalized, mma::RealTensorRef vs) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_betweenness(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, passWeights(), nobigint));
-        return res.makeMTensor();
+        auto t = res.makeMTensor();
+        if (normalized) {
+            double vcount = vertexCount();
+            double norm;
+
+            if (vcount > 2)
+                norm = (vcount-1)*(vcount-2);
+            else
+                norm = 1.0;
+
+            for (auto &el : t)
+                el /= norm;
+        }
+        return t;
     }
 
     mma::RealTensorRef edgeBetweenness() const {
@@ -612,12 +625,25 @@ public:
 
     // Centrality measures (estimates)
 
-    mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint, mma::RealTensorRef vs) const {
+    mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint, bool normalized, mma::RealTensorRef vs) const {
         if (cutoff == 0) cutoff = -1; /* temporary measure; see bug #56 */
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_betweenness_estimate(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, cutoff, passWeights(), nobigint));
-        return res.makeMTensor();
+        auto t = res.makeMTensor();
+        if (normalized) {
+            double vcount = vertexCount();
+            double norm;
+
+            if (vcount > 2)
+                norm = (vcount-1)*(vcount-2);
+            else
+                norm = 1.0;
+
+            for (auto &el : t)
+                el /= norm;
+        }
+        return t;
     }
 
     mma::RealTensorRef edgeBetweennessEstimate(double cutoff) const {

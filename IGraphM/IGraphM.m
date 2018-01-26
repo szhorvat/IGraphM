@@ -587,11 +587,11 @@ template = LTemplate["IGraphM",
 
         (* Centrality *)
 
-        LFun["betweenness", {True|False (* nobigint *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["betweenness", {True|False (* nobigint *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
         LFun["edgeBetweenness", {}, {Real, 1}],
         LFun["closeness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
-        LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
         LFun["edgeBetweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
         LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
@@ -1648,11 +1648,9 @@ IGBetweenness[g_?igGraphQ, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
       check@ig@"betweenness"[
         Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweenness::bdmtd, OptionValue[Method]]; False],
+        OptionValue[Normalized],
         vss[g][vs]
-      ] / If[TrueQ@OptionValue[Normalized],
-            If[DirectedGraphQ[g], (VertexCount[g]-1)*(VertexCount[g]-2), (VertexCount[g]-1)*(VertexCount[g]-2)/2],
-            1
-          ]
+      ]
     ]
 
 
@@ -1672,7 +1670,7 @@ IGCloseness[g_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
 
 (* Centrality estimates *)
 
-Options[IGBetweennessEstimate] = { Method -> "Precise" };
+Options[IGBetweennessEstimate] = { Method -> "Precise", Normalized -> False };
 IGBetweennessEstimate::bdmtd = IGBetweenness::bdmtd;
 amendUsage[IGBetweennessEstimate, "Available Method options: <*Keys[igBetweennessMethods]*>."];
 SyntaxInformation[IGBetweennessEstimate] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
@@ -1682,6 +1680,7 @@ IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : 
       check@ig@"betweennessEstimate"[
         infToZero[cutoff],
         Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweennessEstimate::bdmtd, OptionValue[Method]]; False],
+        OptionValue[Normalized],
         vss[g][vs]
       ]
     ]
