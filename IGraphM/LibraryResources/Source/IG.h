@@ -494,15 +494,15 @@ public:
         auto t = res.makeMTensor();
         if (normalized) {
             double vcount = vertexCount();
-            double norm;
-
-            if (vcount > 2)
-                norm = (vcount-1)*(vcount-2);
-            else
-                norm = 1.0;
+            double norm = 1.0;
+            if (vcount > 2) {
+                if (! directedQ())
+                    norm = 2.0;
+                norm = norm / ((vcount-1)*(vcount-2));
+            }
 
             for (auto &el : t)
-                el /= norm;
+                el *= norm;
         }
         return t;
     }
@@ -633,15 +633,15 @@ public:
         auto t = res.makeMTensor();
         if (normalized) {
             double vcount = vertexCount();
-            double norm;
-
-            if (vcount > 2)
-                norm = (vcount-1)*(vcount-2);
-            else
-                norm = 1.0;
+            double norm = 1.0;
+            if (vcount > 2) {
+                if (! directedQ())
+                    norm = 2.0;
+                norm = norm / ((vcount-1)*(vcount-2));
+            }
 
             for (auto &el : t)
-                el /= norm;
+                el *= norm;
         }
         return t;
     }
