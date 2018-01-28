@@ -14,10 +14,10 @@ If[Not@ValueQ[General::invopt],
   General::invopt = "Invalid value `1` for parameter `2`. Using default value `3`.";
 ]
 
-IGraphM::mixed = "Mixed graphs are not supported by IGraph/M.";
+IGraphM`IGraphM::mixed = "Mixed graphs are not supported by IGraph/M. Use DirectedGraph to convert undirected edges to two reciprocal directed ones.";
 
 igGraphQ::usage = "igGraphQ[g] checks if g is an igraph-compatible graph.";
-igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &;
+igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM`IGraphM::mixed]; False, True] &;
 
 igDirectedQ::usage = "igDirectedQ[g] checks if g is a directed graph. Empty graphs are considered undirected.";
 igDirectedQ[graph_] := DirectedGraphQ[graph] && Not@EmptyGraphQ[graph]
