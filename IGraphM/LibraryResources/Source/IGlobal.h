@@ -45,32 +45,35 @@ public:
 
     // Fast implementation based on Z. Kiraly: Recognizing graphic degree sequences and generating all realizations.
     bool erdosGallai(mma::IntTensorRef deg) {
+        if (deg.length() == 0)
+            return true;
+
         mint n, w, b, s, c;
-            n = deg.length();
+        n = deg.length();
 
-            mint sum = 0;
-            for (const auto &el : deg)
-                sum += el;
-            if (sum % 2 == 1)
-                return false;
+        mint sum = 0;
+        for (const auto &el : deg)
+            sum += el;
+        if (sum % 2 == 1)
+            return false;
 
-            std::sort(deg.begin(), deg.end(), std::greater<mint>());
+        std::sort(deg.begin(), deg.end(), std::greater<mint>());
 
-            w = n; b = 0; s = 0; c = 0;
-            for (mint k=1; k <= n; ++k) {
-                b += deg[k-1];
-                c += w-1;
-                while (w > k && deg[w-1] <= k) {
-                    s += deg[w-1];
-                    c -= k;
-                    w--;
-                }
-                if (b > c+s)
-                    return false;
-                else if (w == k)
-                    return true;
+        w = n; b = 0; s = 0; c = 0;
+        for (mint k=1; k <= n; ++k) {
+            b += deg[k-1];
+            c += w-1;
+            while (w > k && deg[w-1] <= k) {
+                s += deg[w-1];
+                c -= k;
+                w--;
             }
-            massert(false);
+            if (b > c+s)
+                return false;
+            else if (w == k)
+                return true;
+        }
+        massert(false);
     }
 
     bool graphicalQ(mma::RealTensorRef outdeg, mma::RealTensorRef indeg) {
