@@ -1265,6 +1265,48 @@ public:
         return res;
     }
 
+    double averagePathLengthWeighted(mint method) const {
+        /* method values:
+         * 0 - unweighted
+         * 1 - Dijkstra
+         * 2 - Bellman-Ford
+         * 3 - Johnson
+         */
+        if (method == 0 || ! weightedQ())
+            return averagePathLength();
+        if (method < 0 || method > 3)
+            throw mma::LibraryError("averagePathLengthWeighted: Unknown method.");
+
+        igMatrix mat;
+        int n = vertexCount();
+
+        long cnt = 0;
+        double sum = 0.0;
+        for (int i=0; i < n; ++i) {
+            mma::check_abort();
+
+            switch (method) {
+            case 1:
+                igCheck(igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights(), IGRAPH_OUT));
+                break;
+            case 2:
+                igCheck(igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights(), IGRAPH_OUT));
+                break;
+            case 3:
+                igCheck(igraph_shortest_paths_johnson(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights()));
+                break;
+            }
+
+            for (int j=0; j < mat.ncol(); ++j)
+                if (i != j && VECTOR(mat.mat.data)[j] != IGRAPH_INFINITY) {
+                    cnt += 1;
+                    sum += VECTOR(mat.mat.data)[j];
+                }
+        }
+
+        return sum/cnt;
+    }
+
     mint girth() const {
         igraph_integer_t res;
         igCheck(igraph_girth(&graph, &res, NULL));

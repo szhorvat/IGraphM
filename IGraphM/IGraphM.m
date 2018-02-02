@@ -655,7 +655,8 @@ template = LTemplate["IGraphM",
         LFun["shortestPathCounts2", {{Integer, 1, "Constant"}}, {Real, 1}],
         LFun["neighborhoodSize", {{Real, 1, "Constant"}, Integer, Integer}, {Real, 1}],
         LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
-        LFun["averagePathLength", {}, Real],
+        LFun["averagePathLength", {}, Real], (* TODO; not currently in use; averagePathLengthWeighted() will call averagePathLength() in C code when needed *)
+        LFun["averagePathLengthWeighted", {Integer}, Real],
         LFun["girth", {}, Real],
         LFun["radius", {}, Real],
         LFun["eccentricity", {{Real, 1, "Constant"}}, {Real, 1}],
@@ -2619,10 +2620,29 @@ IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_List | 
       check@ig@"shortestPathWeightedHistogram"[binsize, fromidx, toidx, Lookup[igDistanceHistogramMethods, OptionValue[Method], -1] ]
     ]
 
-SyntaxInformation[IGAveragePathLength] = {"ArgumentsPattern" -> {_}};
-IGAveragePathLength[graph_?igGraphQ] :=
-    Block[{ig = igMakeFast[graph]},
-      sck@ig@"averagePathLength"[]
+
+igAveragePathLengthMethods = <|
+  "Unweighted" -> 0,
+  "Dijkstra" -> 1,
+  "BellmanFord" -> 2,
+  "Johnson" -> 3
+|>;
+
+IGAveragePathLength::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igAveragePathLengthMethods], InputForm] <> ".";
+
+Options[IGAveragePathLength] = { Method -> Automatic };
+SyntaxInformation[IGAveragePathLength] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+amendUsage[IGAveragePathLength, "Available Method options: <*Keys[igAveragePathLengthMethods]*>."]
+IGAveragePathLength[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[graph], method = OptionValue[Method]},
+      If[method === Automatic,
+        method = Which[
+          Not@igEdgeWeightedQ[graph], "Unweighted",
+          TrueQ[Min@igEdgeWeights[graph] >= 0], "Dijkstra",
+          True, "Johnson"
+        ]
+      ];
+      check@ig@"averagePathLengthWeighted"[ Lookup[igAveragePathLengthMethods, method, Message[IGAveragePathLength::bdmtd, method]; throw[$Failed]] ]
     ]
 
 SyntaxInformation[IGGirth] = {"ArgumentsPattern" -> {_}};
