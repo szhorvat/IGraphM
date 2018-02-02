@@ -4177,6 +4177,8 @@ IGIndexEdgeList[graph_?igGraphQ] :=
 
 Options[IGWeightedSimpleGraph] = { SelfLoops -> True };
 SyntaxInformation[IGWeightedSimpleGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGWeightedSimpleGraph, Graph]};
+IGWeightedSimpleGraph[g_?EmptyGraphQ, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[{IGWeightedSimpleGraph, Graph}]] :=
+    applyGraphOpt[opt][g]
 IGWeightedSimpleGraph[g_?igGraphQ, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[{IGWeightedSimpleGraph, Graph}]] :=
     With[{sao = SystemOptions["SparseArrayOptions"]},
       Internal`WithLocalSettings[
@@ -4197,7 +4199,7 @@ IGWeightedSimpleGraph[g_?igGraphQ, comb : Except[_?OptionQ] : Total, opt : Optio
 
 IGWeightedUndirectedGraph::mg = "The input is a multigraph. Weights of parallel edges will be combined with the same combiner function as used for reciprocal edges.";
 SyntaxInformation[IGWeightedUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGWeightedUndirectedGraph[g_?UndirectedGraphQ, None, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[Graph]] :=
+IGWeightedUndirectedGraph[g_?UndirectedGraphQ, None, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[Graph]] := (* also catches empty case *)
     applyGraphOpt[opt][g]
 IGWeightedUndirectedGraph[g_?igGraphQ, None, opt : OptionsPattern[Graph]] :=
     If[igEdgeWeightedQ[g],
@@ -4248,7 +4250,7 @@ IGWeightedVertexDelete[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
 IGWeightedVertexDelete[g_?igGraphQ, vertex_, opt : OptionsPattern[Graph]] := IGWeightedVertexDelete[g, {vertex}, opt]
 
 
-(* TODO support edges *)
+(* TODO support edges in subgraph spec *)
 SyntaxInformation[IGWeightedSubgraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGWeightedSubgraph[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
     catch@Module[{vinds, elist, emarker},
