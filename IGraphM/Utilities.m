@@ -360,7 +360,7 @@ igSetEdgeProperty[g_, prop_, values_] := $Failed
 IGVertexMap::eprop    = "Warning: `` is an edge property. It should not be used as a vertex property name.";
 IGVertexMap::propname = "Warning: Property name `` is not a symbol or string.";
 IGVertexMap::list     = "`` did not return a list of appropriate length when applied to the graph.";
-IGVertexMap::list2    = "The following functions did not return lists of approprate length when applied to the graph: ``.";
+IGVertexMap::list2    = "The following functions did not return lists of appropriate length when applied to the graph: ``.";
 
 checkVertexProp[prop:
   EdgeWeight|EdgeCapacity|EdgeCost|
