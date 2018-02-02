@@ -45,12 +45,16 @@ zeroDiagonal::usage = "zeroDiagonal[mat] replaces the diagonal of a matrix with 
 zeroDiagonal[mat_] := UpperTriangularize[mat, 1] + LowerTriangularize[mat, -1]
 
 
+adjacencyGraph::usage = "adjacencyGraph[vertices, sparseAM, directed]";
+adjacencyGraph[vs_, sa_, True] := Graph[vs, {sa, Null}]
+adjacencyGraph[vs_, sa_, False] := Graph[vs, {Null, sa}]
+
 removeSelfLoops::usage = "removeSelfLoops[graph] removes any self loops from graph.";
-removeSelfLoops[g_?LoopFreeGraphQ] := g
-removeSelfLoops[g_?igGraphQ] := AdjacencyGraph[VertexList[g], zeroDiagonal@AdjacencyMatrix[g], DirectedEdges -> DirectedGraphQ[g]]
+removeSelfLoops[g_?LoopFreeGraphQ] := g (* catches empty case *)
+removeSelfLoops[g_] := adjacencyGraph[VertexList[g], zeroDiagonal@AdjacencyMatrix[g], DirectedGraphQ[g]]
 
 removeMultiEdges::usage = "removeMultiEdges[graph] removes any multi-edges from graph.";
-removeMultiEdges[g_ /; igGraphQ[g] && MultigraphQ[g]] := AdjacencyGraph[VertexList[g], Unitize@AdjacencyMatrix[g], DirectedEdges -> DirectedGraphQ[g]]
+removeMultiEdges[g_?MultigraphQ] := adjacencyGraph[VertexList[g], Unitize@AdjacencyMatrix[g], DirectedGraphQ[g]]
 removeMultiEdges[g_] := g
 
 
