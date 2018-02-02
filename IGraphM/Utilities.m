@@ -82,6 +82,10 @@ IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vert
 
 IGDirectedTree::usage = "IGDirectedTree[tree, root] directs the edges of an undirected tree so that they point away from the root. The vertex order is not preserved: vertices will be ordered topologically.";
 
+IGTake::usage =
+    "IGTake[graph, subgraph] keeps only those vertices and edges of graph which are also present in subgraph, while retaining all graph properties.\n" <>
+    "IGTake[graph, edges] uses an edge list as the subgraph specification.";
+
 IGZeroDiagonal::usage = "IGZeroDiagonal[matrix] replaces the diagonal of matrix with zeros.";
 
 
@@ -781,6 +785,101 @@ expr : IGDirectedTree[tree_?GraphQ, root_, opt : OptionsPattern[Graph]] :=
       verts = First@Last@Reap@BreadthFirstScan[tree, root, "PrevisitVertex" -> Sow];
       DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", opt]
     ]
+
+
+(* Transfer properties to a smaller graph *)
+
+ruleQ[_Rule | _RuleDelayed] = True;
+ruleQ[_] = False;
+
+(* Keep those elements in l1 which are also in l2. l1 may have repeating elements. *)
+keepCases[l1_, l2_] := Pick[l1, Lookup[AssociationThread[l2, ConstantArray[1, Length[l2]]], l1, 0], 1]
+
+allPropNames = {
+  Properties,
+  VertexWeight, VertexCapacity, VertexCoordinates,
+  VertexSize, VertexShape, VertexShapeFunction, VertexStyle, VertexLabels, VertexLabelStyle,
+  EdgeWeight, EdgeCapacity, EdgeCost,
+  EdgeStyle, EdgeShapeFunction, EdgeLabels, EdgeLabelStyle
+};
+
+IGTake::nsg = "Some of the edges or vertices of the second graph are not present in the first.";
+
+Options[IGTake] = Options[Graph];
+
+SyntaxInformation[IGTake] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+
+IGTake[g_?GraphQ, edges_List, opt : OptionsPattern[]] :=
+    Module[{sg},
+      sg = Quiet@Graph[edges, opt];
+      IGTake[g, sg, opt] /; GraphQ[sg]
+    ]
+
+IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
+    Internal`InheritedBlock[{UndirectedEdge}, (* ensure that a <-> b compares equal to b <-> a *)
+      SetAttributes[UndirectedEdge, Orderless];
+      Module[{options, prop, vindex, eindex, sgEdgeList, handleList, handleRule},
+        sgEdgeList = DeleteDuplicates@EdgeList[sg];
+
+        (* Check that sg is contained within g (ignores edge multiplicites). *)
+        If[Not[SubsetQ[VertexList[g], VertexList[sg]] && SubsetQ[EdgeList[g], sgEdgeList]],
+          Message[IGTake::nsg];
+          Return[$Failed]
+        ];
+
+        (* These options contain the graph properties, but some options are for different purposes *)
+        options = Association@Options[g];
+
+        (* Used to find vertex/edge indices *)
+        vindex = AssociationThread[VertexList[g], Range@VertexCount[g]];
+        eindex = PositionIndex@EdgeList[g]; (* edge multiplicites must be handled *)
+
+        (* Handle custom properties *)
+        prop = If[KeyExistsQ[options, Properties],
+          Properties ->
+              Normal@KeyTake[
+                options[Properties],
+                Join[VertexList[sg], sgEdgeList, {"DefaultEdgeProperties", "DefaultVertexProperties", "GraphProperties"}]
+              ]
+          ,
+          Unevaluated@Sequence[]
+        ];
+
+        (* Handle List-type properties.  We preserve those with indices idx. *)
+        handleList[idx_][propName_] :=
+            If[KeyExistsQ[options, propName],
+              propName -> options[propName][[idx]]
+              ,
+              Unevaluated@Sequence[]
+            ];
+
+        (* Handle Rule-type properties.  elems can be a list of vertices or edges. *)
+        handleRule[elems_][propName_] :=
+            If[KeyExistsQ[options, propName],
+              Module[{rules = options[propName], default = {}},
+                If[Not@ruleQ@First[rules],
+                  default = {First[rules]};
+                  rules = Rest[rules];
+                ];
+                propName -> Join[default, Normal@KeyTake[rules, elems]]
+              ]
+              ,
+              Unevaluated@Sequence[]
+            ];
+
+        Graph[
+          Graph[VertexList[sg], keepCases[EdgeList[g], sgEdgeList],
+            prop,
+            handleList[Lookup[vindex, VertexList[sg]]] /@ {VertexWeight, VertexCapacity, VertexCoordinates},
+            handleList[Flatten@Lookup[eindex, sgEdgeList]] /@ {EdgeWeight, EdgeCapacity, EdgeCost},
+            handleRule[VertexList[sg]] /@ {VertexSize, VertexShape, VertexShapeFunction, VertexStyle, VertexLabels, VertexLabelStyle},
+            handleRule[sgEdgeList] /@ {EdgeStyle, EdgeShapeFunction, EdgeLabels, EdgeLabelStyle},
+            Normal@KeyDrop[options, allPropNames]
+          ],
+          opt] (* apply user options *)
+      ]
+    ]
+
 
 (***** Matrix functions ****)
 
