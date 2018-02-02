@@ -10,6 +10,8 @@
 #include "IGCommon.h"
 
 #include <random>
+#include <set>
+#include <map>
 #include <cmath>
 
 
@@ -135,6 +137,65 @@ public:
             }
         }
         return edgeList;
+    }
+
+    // Sorts pairs of integers; used for canonicalizing an undirected edge list, or for directed->unirected conversion
+    mma::IntTensorRef edgeListSortPairs(mma::IntMatrixRef pairs) {
+        if (pairs.cols() != 2)
+            throw mma::LibraryError("sortPairs: n-by-2 matrix expected.");
+        for (int i=0; i < pairs.rows(); ++i)
+            if (pairs(i,0) > pairs(i,1))
+                std::swap(pairs(i,0), pairs(i,1));
+        return pairs;
+    }   
+
+    mma::IntMatrixRef removeSelfLoops(mma::IntMatrixRef pairs) {
+        if (pairs.cols() != 2)
+            throw mma::LibraryError("removeSelfLoops: n-by-2 matrix expected.");
+
+        std::vector<mint> result;
+        for (int i=0; i < pairs.rows(); ++i)
+            if (pairs(i,0) != pairs(0,1)) {
+                result.push_back(pairs(i,0));
+                result.push_back(pairs(i,1));
+            }
+        return mma::makeMatrix<mint>(result.size() / 2, 2, result.data());
+    }
+
+    mma::IntTensorRef edgeListMarkVertices1(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
+        std::set<mint> verts(vertices.begin(), vertices.end());
+        auto markers = mma::makeVector<mint>(pairs.rows());
+
+        for (int i=0; i < pairs.rows(); ++i)
+            markers[i] = static_cast<mint>(verts.find(pairs(i,0)) != verts.end() || verts.find(pairs(i,1)) != verts.end());
+        return markers;
+    }
+
+    mma::IntTensorRef edgeListMarkVertices2(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
+        std::set<mint> verts(vertices.begin(), vertices.end());
+        auto markers = mma::makeVector<mint>(pairs.rows());
+
+        for (int i=0; i < pairs.rows(); ++i)
+            markers[i] = static_cast<mint>(verts.find(pairs(i,0)) != verts.end() && verts.find(pairs(i,1)) != verts.end());
+        return markers;
+    }
+
+    mma::IntMatrixRef edgeListDecVertices(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
+        std::sort(vertices.begin(), vertices.end());
+        for (auto &el : pairs) {
+            auto i = std::upper_bound(vertices.begin(), vertices.end(), el);
+            el -= (i - vertices.begin());
+        }
+        return pairs;
+    }
+
+    mma::IntMatrixRef edgeListReindex(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
+        std::map<mint, mint> posIndex;
+        for (mint i=0; i < vertices.size(); ++i)
+            posIndex.insert({vertices[i], i});
+        for (auto &el : pairs)
+            el = posIndex[el];
+        return pairs;
     }
 };
 

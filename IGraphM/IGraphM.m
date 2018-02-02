@@ -468,6 +468,21 @@ IGMeshCellAdjacencyGraph::usage =
 
 IGIndexEdgeList::usage = "IGIndexEdgeList[graph] returns the edge list of graph in terms of vertex indices, as a packed array.";
 
+IGWeightedSimpleGraph::usage =
+    "IGWeightedSimpleGraph[graph] combines parallel edges by adding their weights. If graph is not weighted, the resulting weights will be the edge multiplicities of graph.\n" <>
+    "IGWeightedSimpleGraph[graph, comb] applies the function comb to the weights of parallel edges to compute a new weight. The default combiner is Plus.";
+
+IGWeightedUndirectedGraph::usage =
+    "IGWeightedUndirectedGraph[graph] converts an edge-weighted directed graph to an undirected one. The weights of reciprocal edges added up.\n"<>
+    "IGWeightedUndirectedGraph[graph, comb] applies the function comb to the weights of reciprocal edges to compute the weight of the corresponding undirected edge.\n" <>
+    "IGWeightedUndirectedGraph[graph, None] converts each directed edge to an undirected one without combining their weights. The result may be a multigraph.";
+
+IGWeightedVertexDelete::usage =
+    "IGWeightedVertexDelete[graph, vertex] deletes the given vertex while preserving edge weights.\n" <>
+    "IGWeightedVertexDelete[graph, {v1, v2, \[Ellipsis]}] deletes the given set of vertices while preserving edge weights.";
+
+IGWeightedSubgraph::usage = "IGWeightedSubgraph[graph, {v1, v2, \[Ellipsis]}] returns the subgraph induced by the given vertices while preserving edge weights.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -506,7 +521,13 @@ template = LTemplate["IGraphM",
         LFun["erdosGallai", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
         LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *)}, True|False],
 
-        LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 2}]
+        LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 2}],
+
+        LFun["edgeListSortPairs", {{Integer, 2} (* not "Constant" because it gets modified and returned! *) }, {Integer, 2}],
+        LFun["edgeListMarkVertices1", {{Integer, 2, "Constant"}, {Integer, 1, "Constant"}}, {Integer, 1}],
+        LFun["edgeListMarkVertices2", {{Integer, 2, "Constant"}, {Integer, 1, "Constant"}}, {Integer, 1}],
+        LFun["edgeListDecVertices", {{Integer, 2} (* not Constant *), {Integer, 1} (* not Constant *)}, {Integer, 2}],
+        LFun["edgeListReindex", {{Integer, 2} (* not Constant *), {Integer, 1, "Constant"}}, {Integer, 2}]
       }
     ],
     LClass["IG",
@@ -4150,6 +4171,102 @@ IGMeshCellAdjacencyMatrix[mesh_?meshQ, d_?Internal`NonNegativeIntegerQ] :=
 IGIndexEdgeList[graph_?EmptyGraphQ] := {}
 IGIndexEdgeList[graph_?igGraphQ] :=
     catch[1 + check@igraphGlobal@"incidenceToEdgeList"[IncidenceMatrix[graph], DirectedGraphQ[graph]]]
+
+
+(***** Weighted graphs *****)
+
+Options[IGWeightedSimpleGraph] = { SelfLoops -> True };
+SyntaxInformation[IGWeightedSimpleGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGWeightedSimpleGraph, Graph]};
+IGWeightedSimpleGraph[g_?igGraphQ, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[{IGWeightedSimpleGraph, Graph}]] :=
+    With[{sao = SystemOptions["SparseArrayOptions"]},
+      Internal`WithLocalSettings[
+        SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> comb],
+        IGWeightedAdjacencyGraph[
+          VertexList[g],
+          If[TrueQ@OptionValue[SelfLoops],
+            Identity,
+            zeroDiagonal
+          ]@SparseArray[IGIndexEdgeList[g] -> igEdgeWeights[g], VertexCount[g] {1,1}],
+          DirectedEdges -> DirectedGraphQ[g],
+          FilterRules[{opt}, Options[Graph]]
+        ],
+        SetSystemOptions[sao]
+      ]
+    ]
+
+
+IGWeightedUndirectedGraph::mg = "The input is a multigraph. Weights of parallel edges will be combined with the same combiner function as used for reciprocal edges.";
+SyntaxInformation[IGWeightedUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGWeightedUndirectedGraph[g_?UndirectedGraphQ, None, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[Graph]] :=
+    applyGraphOpt[opt][g]
+IGWeightedUndirectedGraph[g_?igGraphQ, None, opt : OptionsPattern[Graph]] :=
+    If[igEdgeWeightedQ[g],
+      (* weighted case *)
+      Graph[VertexList[g], IGIndexEdgeList[g], DirectedEdges -> False, EdgeWeight -> igEdgeWeights[g]],
+      (* unweighted case *)
+      UndirectedGraph[g, opt]
+    ]
+IGWeightedUndirectedGraph[g_?igGraphQ, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[Graph]] :=
+    If[igEdgeWeightedQ[g],
+      (* weighted case *)
+      If[MultigraphQ[g], Message[IGWeightedUndirectedGraph::mg]];
+      With[{sao = SystemOptions["SparseArrayOptions"]},
+        Internal`WithLocalSettings[
+          SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> comb],
+          IGWeightedAdjacencyGraph[
+            VertexList[g],
+            SparseArray[(igraphGlobal@"edgeListSortPairs"@IGIndexEdgeList[g]) -> igEdgeWeights[g], VertexCount[g] {1, 1}],
+            DirectedEdges -> False,
+            opt
+          ],
+          SetSystemOptions[sao]
+        ]
+      ]
+      ,
+      (* unweighted case *)
+      UndirectedGraph[g, opt]
+    ]
+
+
+SyntaxInformation[IGWeightedVertexDelete] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGWeightedVertexDelete[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
+    catch@Module[{elist, emarker, vinds},
+      Check[
+        vinds = VertexIndex[g, #]& /@ vs,
+        throw[$Failed]
+      ];
+      elist = IGIndexEdgeList[g];
+      emarker = igraphGlobal@"edgeListMarkVertices1"[elist, vinds];
+      Graph[
+        Delete[VertexList[g], List /@ vinds],
+        igraphGlobal@"edgeListDecVertices"[Pick[elist, emarker, 0], vinds],
+        If[igEdgeWeightedQ[g], EdgeWeight -> Pick[igEdgeWeights[g], emarker, 0], {}],
+        DirectedEdges -> DirectedGraphQ[g],
+        opt
+      ]
+    ]
+IGWeightedVertexDelete[g_?igGraphQ, vertex_, opt : OptionsPattern[Graph]] := IGWeightedVertexDelete[g, {vertex}, opt]
+
+
+(* TODO support edges *)
+SyntaxInformation[IGWeightedSubgraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGWeightedSubgraph[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
+    catch@Module[{vinds, elist, emarker},
+      Check[
+        vinds = VertexIndex[g, #]& /@ vs,
+        throw[$Failed]
+      ];
+      elist = IGIndexEdgeList[g];
+      emarker = igraphGlobal@"edgeListMarkVertices2"[elist, vinds];
+      Graph[
+        VertexList[g][[vinds]],
+        igraphGlobal@"edgeListReindex"[Pick[elist, emarker, 1], vinds],
+        If[igEdgeWeightedQ[g], EdgeWeight -> Pick[igEdgeWeights[g], emarker, 1], {}],
+        DirectedEdges -> DirectedGraphQ[g],
+        opt
+      ]
+    ]
+
 
 (***** Finalize *****)
 
