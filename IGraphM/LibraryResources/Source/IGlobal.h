@@ -192,7 +192,7 @@ public:
     mma::IntMatrixRef edgeListReindex(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
         std::map<mint, mint> posIndex;
         for (mint i=0; i < vertices.size(); ++i)
-            posIndex.insert({vertices[i], i});
+            posIndex.insert({vertices[i], i+1});
         for (auto &el : pairs)
             el = posIndex[el];
         return pairs;
