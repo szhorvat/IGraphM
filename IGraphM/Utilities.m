@@ -88,6 +88,10 @@ IGTake::usage =
 
 IGZeroDiagonal::usage = "IGZeroDiagonal[matrix] replaces the diagonal of matrix with zeros.";
 
+IGAdjacencyMatrixPlot::usage =
+    "IGAdjacencyMatrixPlot[graph] plots the adjacency matrix of graph.\n" <>
+    "IGAdjacencyMatrixPlot[graph, {v1, v2, \[Ellipsis]}] plots the adjacency matrix of the subgraph induced by the given vertices, using the specified vertex ordering.";
+
 
 Begin["`Private`"];
 
@@ -799,9 +803,6 @@ expr : IGDirectedTree[tree_?GraphQ, root_, opt : OptionsPattern[Graph]] :=
 
 (* Transfer properties to a smaller graph *)
 
-ruleQ[_Rule | _RuleDelayed] = True;
-ruleQ[_] = False;
-
 (* Keep those elements in l1 which are also in l2. l1 may have repeating elements. *)
 keepCases[l1_, l2_] := Pick[l1, Lookup[AssociationThread[l2, ConstantArray[1, Length[l2]]], l1, 0], 1]
 
@@ -896,6 +897,79 @@ IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
 SyntaxInformation[IGZeroDiagonal] = {"ArgumentsPattern" -> {_}};
 IGZeroDiagonal[mat_?MatrixQ] :=
     UpperTriangularize[mat, 1] + LowerTriangularize[mat, -1]
+
+
+
+$unconnected::usage = "$unconnected is used to denote unconnected entries in the implementation of IGAdjacencyMatrixPlot.";
+
+IGAdjacencyMatrixPlot::noprop = "The property `1` does not have a value for some or all edges in the graph.";
+IGAdjacencyMatrixPlot::bdname = "The value of the VertexLabels option must be Automatic, \"Name\", \"Index\" or a list of rules.";
+
+Options[IGAdjacencyMatrixPlot] = Options[MatrixPlot] ~Join~ {
+  EdgeWeight -> Automatic, "UnconnectedColor" -> Automatic, VertexLabels -> Automatic, "RotateNames" -> True
+};
+SetOptions[IGAdjacencyMatrixPlot, Mesh -> Automatic];
+
+SyntaxInformation[IGAdjacencyMatrixPlot] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+
+IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+    Module[{$sizeLimit = 50, bigGraphQ, am, vind, rticks, cticks, colRules, rotFun,
+            prop = OptionValue[EdgeWeight], mesh = OptionValue[Mesh], vertexLabels = OptionValue[VertexLabels], ticks = OptionValue[FrameTicks]},
+      am = WeightedAdjacencyMatrix[graph, EdgeWeight -> prop];
+      If[Not@MatrixQ[am],
+        If[MemberQ[IGEdgeProp[prop][graph], _Missing],
+          Message[IGAdjacencyMatrixPlot::noprop, prop]
+        ];
+        Return[$Failed]
+      ];
+      If[vs === All,
+        vind = All,
+        Check[vind = VertexIndex[graph, #]& /@ vs, Return[$Failed]];
+      ];
+      am = am[[vind, vind]];
+      bigGraphQ = Length[am] > $sizeLimit;
+      mesh = Replace[mesh, Automatic :> If[bigGraphQ, False, All]];
+      vertexLabels = Replace[vertexLabels, Automatic :> If[bigGraphQ, "Index", "Name"]];
+      rotFun = If[TrueQ@OptionValue["RotateNames"], Rotate[#, Pi/2]&, Identity];
+      Switch[vertexLabels,
+        "Index",
+        {rticks, cticks} = {Automatic, Automatic};
+        ,
+        "Name",
+        rticks = Transpose@{Range@Length[am], VertexList[graph][[vind]]};
+        cticks = MapAt[rotFun, rticks, {All, 2}];
+        ,
+        {___?ruleQ},
+        rticks = Transpose@{Range@Length[am], Replace[VertexList[graph], vertexLabels, {1}][[vind]]};
+        cticks = MapAt[rotFun, rticks, {All, 2}];
+        ,
+        _,
+        Message[IGAdjacencyMatrixPlot::bdname];
+        {rticks, cticks} = {Automatic, Automatic};
+      ];
+      ticks = Replace[ticks, All|Automatic|True -> {{Automatic, Automatic}, {Automatic, Automatic}}];
+      ticks = Replace[{All|Automatic|True -> {Automatic, Automatic}, None|False -> {None, None}}] /@ ticks;
+      If[Length[ticks] == 2,
+        ticks = MapAt[Replace[Automatic -> rticks], ticks, {1, All}];
+        ticks = MapAt[Replace[Automatic -> cticks], ticks, {2, All}];
+      ];
+      If[OptionValue["UnconnectedColor"] === Automatic,
+        colRules = OptionValue[ColorRules]
+        ,
+        am = SparseArray[am["NonzeroPositions"] -> am["NonzeroValues"], Dimensions[am], $unconnected];
+        colRules = {$unconnected -> OptionValue["UnconnectedColor"]};
+        If[OptionValue[ColorRules] =!= Automatic,
+          colRules = Flatten[{colRules, OptionValue[ColorRules]}]
+        ]
+      ];
+      MatrixPlot[
+        am,
+        ColorRules -> colRules,
+        FrameTicks -> ticks,
+        FilterRules[{opt}, Options[MatrixPlot]],
+        Mesh -> mesh
+      ]
+    ]
 
 
 (***** Finalize *****)

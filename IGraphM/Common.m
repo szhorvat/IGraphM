@@ -76,6 +76,12 @@ transformGraphOptions[fun_][g_?GraphQ] :=
       ]
     )
 
+
+ruleQ::usage = "ruleQ[expr] gives True if expr is a rule, False otherwise.";
+ruleQ[_Rule | _RuleDelayed] = True;
+ruleQ[_] = False;
+
+
 (*
 	Numeric codes are for certain special types of completions. Zero means 'don't complete':
 
