@@ -728,12 +728,12 @@ IGPartitionsToMembership::invpart = "Invalid element or part specification.";
 SyntaxInformation[IGPartitionsToMembership] = {"ArgumentsPattern" -> {_, _.}};
 IGPartitionsToMembership[elements_List, parts : {___List}] :=
     Module[{copy = parts},
-      If[Sort[elements] =!= Union @@ parts,
+      If[Not[SubsetQ[elements, Union @@ parts] && DisjointQ @@ parts],
         Message[IGPartitionsToMembership::invpart];
         Return[$Failed]
       ];
       copy[[All, All]] = Range@Length[parts];
-      Lookup[AssociationThread[Flatten[parts, 1], Flatten[copy, 1]], elements]
+      Lookup[AssociationThread[Flatten[parts, 1], Flatten[copy, 1]], elements, 0]
     ]
 IGPartitionsToMembership[elements_][parts_] := IGPartitionsToMembership[elements, parts]
 
