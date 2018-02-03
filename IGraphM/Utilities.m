@@ -354,14 +354,16 @@ IGEdgeProp[prop_][g_?GraphQ] :=
 igSetVertexProperty[g_, prop_, values_] /; Length[values] == VertexCount[g] :=
     SetProperty[g, Properties -> Thread[VertexList[g] -> List /@ Thread[prop -> values]]]
 igSetVertexProperty[g_, prop : VertexWeight|VertexCapacity|VertexCoordinates, values_] /; Length[values] == VertexCount[g] :=
-    Graph[VertexList[g], EdgeList[g], prop -> values, FilterRules[Options[g], Except[prop]]]
+    transformGraphOptions[ Append[FilterRules[#, Except[prop]], prop -> values]& ][g]
+    (* Graph[VertexList[g], EdgeList[g], prop -> values, FilterRules[Options[g], Except[prop]]] *)
 igSetVertexProperty[g_, prop_, values_] := $Failed
 
 
 igSetEdgeProperty[g_, prop_, values_] /; Length[values] == EdgeCount[g] :=
     SetProperty[g, Properties -> Thread[EdgeList[g] -> List /@ Thread[prop -> values]]]
 igSetEdgeProperty[g_, prop : specialEdgePropsPattern, values_] /; Length[values] == EdgeCount[g] :=
-    Graph[VertexList[g], EdgeList[g], prop -> values, FilterRules[Options[g], Except[prop]]]
+    transformGraphOptions[ Append[FilterRules[#, Except[prop]], prop -> values]& ][g]
+    (* Graph[VertexList[g], EdgeList[g], prop -> values, FilterRules[Options[g], Except[prop]]] *)
 igSetEdgeProperty[g_, prop_, values_] := $Failed
 
 
