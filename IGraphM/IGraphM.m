@@ -3893,6 +3893,7 @@ IGBipartiteIncidenceMatrix[graph_?igGraphQ, parts : {vertices1_List, vertices2_L
 
 IGBipartiteIncidenceGraph::inv  = "`1` is not a valid bipartite incidence matrix.";
 IGBipartiteIncidenceGraph::bdsz = "The vertex name lists `1` have an incompatible size with the provided incidence matrix.";
+IGBipartiteIncidenceGraph::bdvl = "The vertex name lists should be disjoint. The following names are present in common: `1`.";
 
 Options[IGBipartiteIncidenceGraph] = { DirectedEdges -> False };
 SyntaxInformation[IGBipartiteIncidenceGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGBipartiteIncidenceGraph, Graph]};
@@ -3901,6 +3902,10 @@ IGBipartiteIncidenceGraph[names : {vertices1_List, vertices2_List}, bm_?MatrixQ,
     Module[{sbm = SparseArray[bm], good = True},
       If[Dimensions[sbm] =!= Length /@ names,
         Message[IGBipartiteIncidenceGraph::bdsz, names];
+        good = False;
+      ];
+      If[Not@DisjointQ[vertices1, vertices2],
+        Message[IGBipartiteIncidenceGraph::bdvl, Intersection @@ names];
         good = False;
       ];
       If[Not@MatrixQ[sbm, Internal`NonNegativeIntegerQ],
