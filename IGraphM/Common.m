@@ -58,6 +58,24 @@ removeMultiEdges[g_?MultigraphQ] := adjacencyGraph[VertexList[g], Unitize@Adjace
 removeMultiEdges[g_] := g
 
 
+$graphLink::usage = "$graphLink is a loopback link used to convert atomic graphs to a compound form.";
+transformGraphOptions::usage = "transformGraphOptions[fun][graph] applies fun to the list of options stored in graph.";
+transformGraphOptions[fun_][g_?GraphQ] :=
+    (
+      If[Not@MemberQ[Links[], $graphLink],
+        $graphLink = LinkCreate[LinkMode -> Loopback];
+      ];
+      With[
+        {
+          expr = AbortProtect[
+            LinkWrite[$graphLink, g];
+            LinkRead[$graphLink, Hold]
+          ]
+        },
+        Replace[expr, Hold@Graph[v_, e_, opt : _ : {}, rest___] :> Graph[v, e, fun[opt], rest]]
+      ]
+    )
+
 (*
 	Numeric codes are for certain special types of completions. Zero means 'don't complete':
 

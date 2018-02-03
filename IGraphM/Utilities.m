@@ -163,8 +163,16 @@ IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 SyntaxInformation[IGUnweighted] = {"ArgumentsPattern" -> {_}};
-IGUnweighted[g_?IGEdgeWeightedQ] := Graph[VertexList[g], EdgeList[g], FilterRules[Options[g], Except[EdgeWeight]]]
+IGUnweighted[g_?IGEdgeWeightedQ] := transformGraphOptions[ FilterRules[#, Except[EdgeWeight]]& ][g]
 IGUnweighted[g_?GraphQ] := g
+(* A more direct implementation is
+
+     IGUnweighted[g_?IGEdgeWeightedQ] := Graph[ VertexList[g], EdgeList[g], FilterRules[Options[g], Except[EdgeWeight]] ]
+
+   This implementation is slightly faster if the graph has a large number of properties, such as
+   ExampleData[{"NetworkGraph", "CondensedMatterCollaborations"}]. However, it is noticeable slower for weighted graphs with
+   packed weight vectors and no other properties.
+*)
 
 
 (* Weighted adjacency matrix handling *)
