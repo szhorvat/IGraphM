@@ -1806,7 +1806,7 @@ IGRewire[g_?igGraphQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPatte
     ]
 
 Options[IGRewireEdges] = { SelfLoops -> False, "MultipleEdges" -> False };
-SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewire, Graph]};
+SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewireEdges, Graph]};
 IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : All|"All"|"In"|"Out" : All, opt : OptionsPattern[{IGRewireEdges, Graph}]] :=
     catch@Block[{ig = igMakeFast[g]},
       Switch[mode,
