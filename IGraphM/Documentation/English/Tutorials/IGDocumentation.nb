@@ -155,9 +155,8 @@ Cell["The package can be loaded using", \
 
 Cell[BoxData[
  RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]], "Input",
- InitializationCell->True,
- CellLabel->
-  "In[661]:=",ExpressionUUID->"7beaf991-20ef-47fc-864d-1e8cd5490feb"],
+ InitializationCell->
+  True,ExpressionUUID->"7beaf991-20ef-47fc-864d-1e8cd5490feb"],
 
 Cell[TextData[{
  "The list of included functions is below. Notice that their names always \
@@ -2372,22 +2371,19 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<DolphinSocialNetwork\>\""}], 
-     "}"}], "]"}]}], ";"}]], "Input",
- CellLabel->
-  "In[662]:=",ExpressionUUID->"114a6147-8a0f-4273-8c7f-70abd733cbf2"],
+     "}"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"114a6147-8a0f-4273-8c7f-70abd733cbf2"],
 
 Cell[BoxData[
  RowBox[{"Take", "[", 
   RowBox[{
-   RowBox[{"VertexList", "[", "g", "]"}], ",", "5"}], "]"}]], "Input",
- CellLabel->
-  "In[664]:=",ExpressionUUID->"f98fa894-ff68-4cdf-b000-7a5d69f68aef"],
+   RowBox[{"VertexList", "[", "g", "]"}], ",", "5"}], 
+  "]"}]], "Input",ExpressionUUID->"f98fa894-ff68-4cdf-b000-7a5d69f68aef"],
 
 Cell[BoxData[
  RowBox[{"IGBetweenness", "[", 
-  RowBox[{"g", ",", "%"}], "]"}]], "Input",
- CellLabel->
-  "In[665]:=",ExpressionUUID->"3d601f0c-905b-4672-be0e-14df311089ac"],
+  RowBox[{"g", ",", "%"}], 
+  "]"}]], "Input",ExpressionUUID->"3d601f0c-905b-4672-be0e-14df311089ac"],
 
 Cell[TextData[StyleBox["Possible issues:",
  FontWeight->
@@ -4193,7 +4189,6 @@ Cell[BoxData[
             ShowContents->False], 
            InsetBox["5", {0.7736623620480478, 1.5791956151476407},
             BaseStyle->"Graphics"]}, {
-           
            StyleBox[
             DiskBox[{1.8829073080344623, 1.6753663185872556}, 
              0.125485749580099],
@@ -4943,10 +4938,12 @@ Cell[CellGroupData[{
 Cell["Example", \
 "Subsubsection",ExpressionUUID->"70d3bc8d-c1aa-447b-9438-75fa06b512f6"],
 
-Cell["\<\
-Let us find the size-4 motifs that stand out in the E. coli metabolic network \
-by comparing the motif counts to that of a rewired graph:\
-\>", "Text",ExpressionUUID->"64f715f7-be7c-42d3-87c7-14af2fee52ee"],
+Cell[TextData[{
+ "Let us find the size-4 motifs that stand out in the ",
+ StyleBox["E. coli",
+  FontSlant->"Italic"],
+ " metabolic network by comparing the motif counts to that of a rewired graph:"
+}], "Text",ExpressionUUID->"64f715f7-be7c-42d3-87c7-14af2fee52ee"],
 
 Cell[BoxData[
  RowBox[{
@@ -23937,7 +23934,27 @@ and biological networks, ",
  StyleBox["PNAS",
   FontSlant->"Italic"],
  " 99, 7821-7826 (2002)."
-}], "Text",ExpressionUUID->"70f434ff-8326-4c12-a743-209385f07ab9"]
+}], "Text",ExpressionUUID->"70f434ff-8326-4c12-a743-209385f07ab9"],
+
+Cell["Special properties returned with the result:", \
+"Text",ExpressionUUID->"92dafc9f-f40d-42b3-8083-efdb94b27b77"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+ "\"\<RemovedEdges\>\""],ExpressionUUID->
+  "b32ad46e-247f-45df-b219-5130430a9824"],
+ " is the list of edges removed in each step of the algorithm."
+}], "Item",ExpressionUUID->"1ca141be-85a1-4e8a-a399-bf58d78347e1"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "\"\<Bridges\>\""],ExpressionUUID->"c22d30f8-ed24-4592-8b07-eebdfa5df699"],
+ " records the steps which resulted in splitting the graph into more \
+components. "
+}], "Item",ExpressionUUID->"305f9929-091f-433e-99ba-771550028218"]
+}, Open  ]]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -24323,6 +24340,17 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"46a38d2e-69d9-4a52-9239-953bd1f61bfa"],
 
 Cell["\<\
+Plot the adjacency matrix, reordered to show the community structure.\
+\>", "Text",ExpressionUUID->"9afc9e9a-1a61-4096-8840-ca4755a7b802"],
+
+Cell[BoxData[
+ RowBox[{"IGAdjacencyMatrixPlot", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"Flatten", "@", 
+    RowBox[{"cl1", "[", "\"\<Communities\>\"", "]"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"63a432ef-6660-4a4f-b64f-ed26f67ddfb2"],
+
+Cell["\<\
 The available properties depend on which algorithm was used for community \
 detection. The following are always present:\
 \>", "Text",ExpressionUUID->"bfd8d7f6-d909-4564-9a3a-9b045d555c7f"],
@@ -24423,7 +24451,7 @@ clustering. What constitutes a step depends on the particular algorithm."
 Cell[TextData[{
  "The ",
  Cell[BoxData[
- "\"\<RemoveEdges\>\""],ExpressionUUID->
+ "\"\<RemovedEdges\>\""],ExpressionUUID->
   "3f2a6454-a29d-4835-b44b-d32fe23dc4e4"],
  " property is specific to the ",
  Cell[BoxData[
@@ -24440,7 +24468,9 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"0b277d43-93de-4da6-a6c3-2444ae80f6e5"],
 
 Cell[BoxData[
- RowBox[{"cl1", "[", "\"\<RemovedEdges\>\"", 
+ RowBox[{"Take", "[", 
+  RowBox[{
+   RowBox[{"cl1", "[", "\"\<RemovedEdges\>\"", "]"}], ",", "10"}], 
   "]"}]], "Input",ExpressionUUID->"676b6364-5f3c-4c1e-b775-cb245ab529e7"],
 
 Cell[BoxData[
@@ -25935,9 +25965,9 @@ Cell["IGIndexEdgeList", \
 "Subsection",ExpressionUUID->"74233a0a-8bfb-4183-8a16-3946144059fd"],
 
 Cell[BoxData[
- RowBox[{"?", "IGIndexEdgeList"}]], "Input",
- CellLabel->
-  "In[667]:=",ExpressionUUID->"578bd576-f7ca-4393-aeaa-366a58fd67b8"],
+ RowBox[{"?", 
+  "IGIndexEdgeList"}]], \
+"Input",ExpressionUUID->"578bd576-f7ca-4393-aeaa-366a58fd67b8"],
 
 Cell[BoxData[
  RowBox[{"IGIndexEdgeList", "[", 
@@ -25949,14 +25979,11 @@ Cell[BoxData[
      RowBox[{
       RowBox[{"b", "\[UndirectedEdge]", "c"}], ",", 
       RowBox[{"c", "\[UndirectedEdge]", "a"}]}], "}"}]}], "]"}], 
-  "]"}]], "Input",
- CellLabel->
-  "In[668]:=",ExpressionUUID->"4aa01269-eb3c-48aa-91c3-2c1c1491d634"],
+  "]"}]], "Input",ExpressionUUID->"4aa01269-eb3c-48aa-91c3-2c1c1491d634"],
 
 Cell[BoxData[
- RowBox[{"Developer`PackedArrayQ", "[", "%", "]"}]], "Input",
- CellLabel->
-  "In[669]:=",ExpressionUUID->"469b8999-ea4e-48c0-9a08-ef42419264d6"],
+ RowBox[{"Developer`PackedArrayQ", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"469b8999-ea4e-48c0-9a08-ef42419264d6"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -26025,8 +26052,8 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"2", ",", "3"}], "}"}], ",", 
      RowBox[{"{", 
-      RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], "]"}]], "Input",
- CellLabel->"In[670]:=",ExpressionUUID->"d8b7bbca-af9d-4f3d-83d7-39020fea7fd5"]
+      RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"d8b7bbca-af9d-4f3d-83d7-39020fea7fd5"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -27930,9 +27957,9 @@ Cell["IGPartitionsToMembership and IGMembershipToPartitions", \
 "Subsubsection",ExpressionUUID->"649a4448-61ed-4ae2-94fb-5a6f28edd522"],
 
 Cell[BoxData[
- RowBox[{"?", "IGPartitionsToMembership"}]], "Input",
- CellLabel->
-  "In[674]:=",ExpressionUUID->"7912a99c-771f-4af3-976c-4792c4525376"],
+ RowBox[{"?", 
+  "IGPartitionsToMembership"}]], \
+"Input",ExpressionUUID->"7912a99c-771f-4af3-976c-4792c4525376"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -27963,9 +27990,8 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"a", ",", "c"}], "}"}], ",", 
      RowBox[{"{", 
-      RowBox[{"d", ",", "b"}], "}"}]}], "}"}]}], "]"}]], "Input",
- CellLabel->
-  "In[672]:=",ExpressionUUID->"96dd9c4d-290e-44ba-bfbb-39f17c1dd682"],
+      RowBox[{"d", ",", "b"}], "}"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"96dd9c4d-290e-44ba-bfbb-39f17c1dd682"],
 
 Cell[BoxData[
  RowBox[{"IGMembershipToPartitions", "[", 
@@ -27973,16 +27999,13 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"a", ",", "b", ",", "c", ",", "d"}], "}"}], ",", 
    RowBox[{"{", 
-    RowBox[{"1", ",", "2", ",", "1", ",", "2"}], "}"}]}], "]"}]], "Input",
- CellLabel->
-  "In[673]:=",ExpressionUUID->"f26a3159-8518-47f4-a69d-e3619dbb6aba"],
+    RowBox[{"1", ",", "2", ",", "1", ",", "2"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"f26a3159-8518-47f4-a69d-e3619dbb6aba"],
 
 Cell[TextData[{
  "If the given partitions do not cover the element set, the missing elements \
 will be marked with ",
- Cell[BoxData["0"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "912bfa3d-7664-4f17-aadc-a9a5f3ce2376"],
+ Cell[BoxData["0"],ExpressionUUID->"912bfa3d-7664-4f17-aadc-a9a5f3ce2376"],
  " in the membership vector."
 }], "Text",ExpressionUUID->"e2e28e93-aa8a-4cca-9b00-ddbb50b60d7f"],
 
@@ -27995,9 +28018,8 @@ Cell[BoxData[
     RowBox[{
      RowBox[{"{", "a", "}"}], ",", 
      RowBox[{"{", 
-      RowBox[{"b", ",", "d"}], "}"}]}], "}"}]}], "]"}]], "Input",
- CellLabel->
-  "In[675]:=",ExpressionUUID->"f996f612-f5c3-4724-a137-d7c0779b14fc"],
+      RowBox[{"b", ",", "d"}], "}"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"f996f612-f5c3-4724-a137-d7c0779b14fc"],
 
 Cell["\<\
 The following graph has the type of nodes encoded as a vertex attribute.\
@@ -28348,7 +28370,35 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"RandomSample", "@", 
      RowBox[{"VertexList", "[", "g", "]"}]}], ",", "g"}], 
-   "]"}]}]], "Input",ExpressionUUID->"4dadb8cc-7cf3-4947-8249-a363549029e8"]
+   "]"}]}]], "Input",ExpressionUUID->"4dadb8cc-7cf3-4947-8249-a363549029e8"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+  "CycleGraph", "[", "10", 
+   "]"}]}]], "Input",ExpressionUUID->"d7c0f0f2-d676-4f6c-a0a8-459bfc6fc936"],
+
+Cell[TextData[{
+ "Reorder the vertices of a bipartite graph to make the bipartite structure \
+explicit in its adjacency matrix. Note that if the goal is simply visualizing \
+the adjacency matrix, ",
+ Cell[BoxData[
+ "IGAdjacencyMatrixPlot"],ExpressionUUID->
+  "89b8776d-e96c-4048-a7b0-bb296d61c5b4"],
+ " can be used instead."
+}], "Text",ExpressionUUID->"59406b91-18f2-4848-b77d-f65dc54734f8"],
+
+Cell[BoxData[
+ RowBox[{"ArrayPlot", "/@", 
+  RowBox[{"AdjacencyMatrix", "/@", 
+   RowBox[{"{", 
+    RowBox[{"g", ",", 
+     RowBox[{"IGReorderVertices", "[", 
+      RowBox[{
+       RowBox[{"Flatten", "@", 
+        RowBox[{"IGBipartitePartitions", "[", "g", "]"}]}], ",", "g"}], 
+      "]"}]}], "}"}]}]}]], \
+"Input",ExpressionUUID->"ab06e8f7-fdd8-4d9e-b0dc-7bdb9ece7992"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -28524,7 +28574,7 @@ rules to set different names for each vertex."
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<RotateNames\>\"", "\[Rule]", "False"}]],ExpressionUUID->
+  RowBox[{"\"\<RotateColumnLabels\>\"", "\[Rule]", "False"}]],ExpressionUUID->
   "314371c0-c278-4fd5-9d21-5432248b41d5"],
  " will not rotate columns labels."
 }], "Item",ExpressionUUID->"a7a640ae-1352-4d05-82ca-c21fddd5bd8f"],
@@ -28700,7 +28750,8 @@ Cell[BoxData[
    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}], ",", 
    RowBox[{"Mesh", "\[Rule]", "All"}], ",", 
    RowBox[{"ImageSize", "\[Rule]", "440"}], ",", 
-   RowBox[{"FrameTicksStyle", "\[Rule]", "Tiny"}]}], 
+   RowBox[{"FrameTicksStyle", "\[Rule]", "Tiny"}], ",", 
+   RowBox[{"MeshStyle", "\[Rule]", "Thin"}]}], 
   "]"}]], "Input",ExpressionUUID->"d03c8c6b-7695-49a3-9514-a6385b7de4eb"],
 
 Cell["\<\
@@ -28739,7 +28790,7 @@ Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
   RowBox[{
    RowBox[{"IGShorthand", "[", "\"\<A-B-C-D,A-C\>\"", "]"}], ",", 
-   RowBox[{"\"\<RotateNames\>\"", "\[Rule]", "False"}]}], 
+   RowBox[{"\"\<RotateColumnLabels\>\"", "\[Rule]", "False"}]}], 
   "]"}]], "Input",ExpressionUUID->"118d3633-4447-4abd-a61a-f44fc2d95ccf"],
 
 Cell["Use custom labels for vertices.", \
@@ -28772,7 +28823,7 @@ Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
   RowBox[{"g", ",", 
    RowBox[{"VertexLabels", "\[Rule]", "names"}], ",", 
-   RowBox[{"\"\<RotateNames\>\"", "\[Rule]", "False"}], ",", 
+   RowBox[{"\"\<RotateColumnLabels\>\"", "\[Rule]", "False"}], ",", 
    RowBox[{"ImageSize", "\[Rule]", "Medium"}], ",", 
    RowBox[{"ColorRules", "\[Rule]", 
     RowBox[{"{", 
@@ -28785,8 +28836,8 @@ Cell[BoxData[
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{656, 742},
-WindowMargins->{{Automatic, 245}, {Automatic, 26}},
+WindowSize->{774, 748},
+WindowMargins->{{Automatic, 127}, {Automatic, 26}},
 WindowTitle->"IGraph/M Documentation",
 PrintingCopies->1,
 PrintingStartingPageNumber->1,
@@ -28829,8 +28880,8 @@ PrivateNotebookOptions->{"FileOutlineCache"->False},
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 23, \
-2018)",
+FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
+10, 2017)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -28852,7 +28903,7 @@ StyleDefinitions->Notebook[{
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
   FrontEndVersion -> 
-  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (January 23, 2018)", 
+  "11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September 10, 2017)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
