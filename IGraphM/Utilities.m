@@ -831,7 +831,7 @@ IGTake[g_?GraphQ, edges_List, opt : OptionsPattern[]] :=
 IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
     Internal`InheritedBlock[{UndirectedEdge}, (* ensure that a <-> b compares equal to b <-> a *)
       SetAttributes[UndirectedEdge, Orderless];
-      Module[{options, prop, vindex, eindex, sgEdgeList, handleList, handleRule},
+      Module[{options, prop, vindex, eindex, sgEdgeList, vlist, elist, handleList, handleRule},
         sgEdgeList = DeleteDuplicates@EdgeList[sg];
 
         (* Check that sg is contained within g (ignores edge multiplicites). *)
@@ -847,12 +847,15 @@ IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
         vindex = AssociationThread[VertexList[g], Range@VertexCount[g]];
         eindex = PositionIndex@EdgeList[g]; (* edge multiplicites must be handled *)
 
+        vlist = VertexList[sg];
+        elist = keepCases[EdgeList[g], sgEdgeList];
+
         (* Handle custom properties *)
         prop = If[KeyExistsQ[options, Properties],
           Properties ->
               Normal@KeyTake[
                 options[Properties],
-                Join[VertexList[sg], sgEdgeList, {"DefaultEdgeProperties", "DefaultVertexProperties", "GraphProperties"}]
+                Join[VertexList[sg], elist, {"DefaultEdgeProperties", "DefaultVertexProperties", "GraphProperties"}]
               ]
           ,
           Unevaluated@Sequence[]
@@ -881,12 +884,12 @@ IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
             ];
 
         Graph[
-          Graph[VertexList[sg], keepCases[EdgeList[g], sgEdgeList],
+          Graph[vlist, elist,
             prop,
             handleList[Lookup[vindex, VertexList[sg]]] /@ {VertexWeight, VertexCapacity, VertexCoordinates},
-            handleList[Flatten@Lookup[eindex, sgEdgeList]] /@ {EdgeWeight, EdgeCapacity, EdgeCost},
-            handleRule[VertexList[sg]] /@ {VertexSize, VertexShape, VertexShapeFunction, VertexStyle, VertexLabels, VertexLabelStyle},
-            handleRule[sgEdgeList] /@ {EdgeStyle, EdgeShapeFunction, EdgeLabels, EdgeLabelStyle},
+            handleList[Flatten@Lookup[eindex, elist]] /@ {EdgeWeight, EdgeCapacity, EdgeCost},
+            handleRule[vlist] /@ {VertexSize, VertexShape, VertexShapeFunction, VertexStyle, VertexLabels, VertexLabelStyle},
+            handleRule[elist] /@ {EdgeStyle, EdgeShapeFunction, EdgeLabels, EdgeLabelStyle},
             Normal@KeyDrop[options, allPropNames]
           ],
           opt] (* apply user options *)
