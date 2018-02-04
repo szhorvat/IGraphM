@@ -906,7 +906,7 @@ IGAdjacencyMatrixPlot::noprop = "The property `1` does not have a value for some
 IGAdjacencyMatrixPlot::bdname = "The value of the VertexLabels option must be Automatic, \"Name\", \"Index\" or a list of rules.";
 
 Options[IGAdjacencyMatrixPlot] = Options[MatrixPlot] ~Join~ {
-  EdgeWeight -> Automatic, "UnconnectedColor" -> Automatic, VertexLabels -> Automatic, "RotateNames" -> True
+  EdgeWeight -> Automatic, "UnconnectedColor" -> Automatic, VertexLabels -> Automatic, "RotateColumnLabels" -> True
 };
 SetOptions[IGAdjacencyMatrixPlot, Mesh -> Automatic];
 
@@ -915,6 +915,7 @@ SyntaxInformation[IGAdjacencyMatrixPlot] = {"ArgumentsPattern" -> {_, OptionsPat
 IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     Module[{$sizeLimit = 50, bigGraphQ, am, vind, rticks, cticks, colRules, rotFun,
             prop = OptionValue[EdgeWeight], mesh = OptionValue[Mesh], vertexLabels = OptionValue[VertexLabels], ticks = OptionValue[FrameTicks]},
+
       am = WeightedAdjacencyMatrix[graph, EdgeWeight -> prop];
       If[Not@MatrixQ[am],
         If[MemberQ[IGEdgeProp[prop][graph], _Missing],
@@ -927,10 +928,12 @@ IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPatt
         Check[vind = VertexIndex[graph, #]& /@ vs, Return[$Failed]];
       ];
       am = am[[vind, vind]];
+
       bigGraphQ = Length[am] > $sizeLimit;
+
       mesh = Replace[mesh, Automatic :> If[bigGraphQ, False, All]];
+      rotFun = If[TrueQ@OptionValue["RotateColumnLabels"], Rotate[#, Pi/2]&, Identity];
       vertexLabels = Replace[vertexLabels, Automatic :> If[bigGraphQ, "Index", "Name"]];
-      rotFun = If[TrueQ@OptionValue["RotateNames"], Rotate[#, Pi/2]&, Identity];
       Switch[vertexLabels,
         "Index",
         {rticks, cticks} = {Automatic, Automatic};
@@ -947,26 +950,39 @@ IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPatt
         Message[IGAdjacencyMatrixPlot::bdname];
         {rticks, cticks} = {Automatic, Automatic};
       ];
-      ticks = Replace[ticks, All|Automatic|True -> {{Automatic, Automatic}, {Automatic, Automatic}}];
-      ticks = Replace[{All|Automatic|True -> {Automatic, Automatic}, None|False -> {None, None}}] /@ ticks;
-      If[Length[ticks] == 2,
-        ticks = MapAt[Replace[Automatic -> rticks], ticks, {1, All}];
-        ticks = MapAt[Replace[Automatic -> cticks], ticks, {2, All}];
+
+      (* bring ticks to canonical form *)
+      Switch[Dimensions[ticks, 2],
+        {2, 2},
+        Null;
+        ,
+        {2, _|PatternSequence[]},
+        ticks = {#,#}& /@ ticks;
+        ,
+        _, (* catches single symbol, like Automatic, or single list *)
+        ticks = {{#,#}, {#,#}}& @ ticks;
       ];
+      ticks = Replace[ticks, {All|Automatic|True -> Automatic, None|False -> None}, {2}];
+
+      ticks = MapAt[Replace[Automatic -> rticks], ticks, {1, All}];
+      ticks = MapAt[Replace[Automatic -> cticks], ticks, {2, All}];
+
+      (* construct ColorRules *)
       If[OptionValue["UnconnectedColor"] === Automatic,
         colRules = OptionValue[ColorRules]
         ,
         am = SparseArray[am["NonzeroPositions"] -> am["NonzeroValues"], Dimensions[am], $unconnected];
         colRules = {$unconnected -> OptionValue["UnconnectedColor"]};
-        If[OptionValue[ColorRules] =!= Automatic,
+        If[Not@MatchQ[OptionValue[ColorRules], Automatic|None],
           colRules = Flatten[{colRules, OptionValue[ColorRules]}]
         ]
       ];
+
       MatrixPlot[
         am,
         ColorRules -> colRules,
         FrameTicks -> ticks,
-        FilterRules[{opt}, Options[MatrixPlot]],
+        Sequence @@ FilterRules[{opt}, FilterRules[Options[MatrixPlot], Except[ColorRules|FrameTicks]]],
         Mesh -> mesh
       ]
     ]
