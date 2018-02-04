@@ -12,6 +12,7 @@
 #include <random>
 #include <set>
 #include <map>
+#include <functional>
 #include <cmath>
 
 
