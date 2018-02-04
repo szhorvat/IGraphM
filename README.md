@@ -5,6 +5,8 @@
 
 **For the impatient:**
 
+Use the auto-install script below, or:
+
  - Download the `.paclet` file from [the releases page](https://github.com/szhorvat/IGraphM/releases).
  - Install it using the `PacletInstall` function, as explained [here](http://mathematica.stackexchange.com/q/141887/12).
  - Evaluate ``<<IGraphM` `` to load the package.
