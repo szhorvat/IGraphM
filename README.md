@@ -79,10 +79,10 @@ The documentation contains many examples and can be accessed using the `IGDocume
 
 IGraph/M can be installed like any other Mathematica application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.96.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.97.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
         Needs["PacletManager`"]
-        PacletInstall["~/Downloads/IGraphM-0.3.96.paclet"]
+        PacletInstall["~/Downloads/IGraphM-0.3.97.paclet"]
 
 IGraph/M requires Mathematica 10.0 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
@@ -162,7 +162,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
   * **"No build settings found. Please check `BuildSettings.m`"**
 
-    This error may be shown when trying to load IGraph/M on an incompatible platform.  Currently, the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux x86_64 with gcc 4.8 or later, Raspberry Pi with Raspbian Jessie.
+    This error may be shown when trying to load IGraph/M on an incompatible platform.  Currently, the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux x86_64 with gcc 5 or later, Raspberry Pi with Raspbian Stretch.
 
     It may be possible to run IGraph/M on other platforms, however, it will be necessary to compile it from source.
 
@@ -195,8 +195,9 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
  - New deterministic graph generators: `IGKautzGraph`, `IGKaryTree`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`.
  - New random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`.
- - Community detection: several functions support the `"ClusterCount"` option now; added `IGCommunitiesFluid`.
- - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGVertexColoring`, `IGEdgeColoring`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`, `IGNeighborhoodSize`, `IGBipartiteProjections`, `IGIndexEdgeList`.
+ - New weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`.
+ - Community detection: several functions support the `"ClusterCount"` option now; added `IGCommunitiesFluid`. 
+ - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGVertexColoring`, `IGEdgeColoring`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`, `IGNeighborhoodSize`, `IGBipartiteProjections`, `IGUnfoldTree`, `IGCoreness`, `IGIndexEdgeList`.
  - Updates:
     * `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges (instead of both).
     * `IGBipartiteQ` now supports checking that a given partitioning is valid for a bipartite graph.
@@ -205,13 +206,14 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
     * `IGDistanceCounts` now optionally takes a list of starting vertices.
     * Isomorphism functions can now take vertex or edge colours from graph attributes.
     * `IGBetweenness(Estimate)` and `IGCloseness(Estimate)` now optionally take a set of vertices to do the calculation on.
+    * `IGBetweenness(Estimate)` now have the `Normalized` option.
     * `IGBlissCanonicalGraph` will now include include vertex colours into its output when appropriate, encoded as the `"Color"` vertex property.
  - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
  - New utility functions:
     * Weighted graphs: `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
     * Easier property handling and graph styling:  `IGVertexProp`, `IGEdgeProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
     * Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
-    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGReorderVertices`, `IGDirectedTree`.
+    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGReorderVertices`, `IGDirectedTree`, `IGTake`, `IGZeroDiagonal`, `IGAdjacencyMatrixPlot`.
  - Improved compatibility with Mathematica 11.2, handling of `TwoWayRule` as an edge specification.
  - Bug fixes, performance improvements, and polish.
 
