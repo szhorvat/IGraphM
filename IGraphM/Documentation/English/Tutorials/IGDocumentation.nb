@@ -26781,6 +26781,64 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGWeightedAdjacencyMatrix", \
+"Subsubsection",ExpressionUUID->"4db3458b-eb6c-4e98-80bf-f5e8bebcb1bc"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGWeightedAdjacencyMatrix"}]], \
+"Input",ExpressionUUID->"1538b6e7-ad07-4930-b81c-45c7a83b4be8"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGWeightedAdjacencyMatrix"],ExpressionUUID->
+  "f87c7c60-6c90-4fef-964f-aabbb9a71f00"],
+ " is equivalent to the built-in ",
+ Cell[BoxData[
+ "WeightedAdjacencyMatrix"],ExpressionUUID->
+  "fef4c2d4-1aa5-41db-8ba7-885279001fc7"],
+ " with the difference that it allows specifying the value to use for \
+representing absent connections."
+}], "Text",ExpressionUUID->"3a66aa20-0b7d-45d5-ada9-10c39e678338"],
+
+Cell[TextData[{
+ "By default, absent connections are represented with ",
+ Cell[BoxData["0"],ExpressionUUID->"558893a2-8e56-4333-8b72-5b42539336dd"],
+ ". This does not allow for distinguishing between absent connections and \
+connections with weight ",
+ Cell[BoxData["0"],ExpressionUUID->"10ff09ec-6eb5-4cd2-b76f-bbbe9db4a050"],
+ "."
+}], "Text",ExpressionUUID->"1ee95909-a89e-44e2-925a-79b309658909"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"Graph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"1", "\[TwoWayRule]", "2"}], ",", 
+      RowBox[{"2", "\[TwoWayRule]", "3"}]}], "}"}], ",", 
+    RowBox[{"EdgeWeight", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"2", ",", "0"}], "}"}]}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"ee5cb471-56ff-4763-9510-52d79a23aaf9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGWeightedAdjacencyMatrix", "[", "g", "]"}], "//", 
+  "MatrixForm"}]], \
+"Input",ExpressionUUID->"16b7cf47-d12d-4470-a50a-081812b6e9d8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGWeightedAdjacencyMatrix", "[", 
+   RowBox[{"g", ",", "Infinity"}], "]"}], "//", 
+  "MatrixForm"}]], \
+"Input",ExpressionUUID->"ae2abc6f-cb71-4713-bef6-31e8f75d14d5"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["IGEdgeWeightedQ", \
 "Subsubsection",ExpressionUUID->"afd5085c-7b85-46d8-8c90-d6b3d38991e4"],
 
