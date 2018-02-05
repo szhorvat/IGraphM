@@ -289,7 +289,7 @@ IGVertexInStrength[g_?igGraphQ] := Total@WeightedAdjacencyMatrix[g]
 IGVertexInStrength[g_?igGraphQ, v_] :=
     With[{index = VertexIndex[g, v]},
       With[{am = WeightedAdjacencyMatrix[g]},
-        Total[am[[index]]]
+        Total[am[[;;, index]]]
       ] /; IntegerQ[index]
     ]
 
@@ -299,7 +299,7 @@ IGVertexOutStrength[g_?igGraphQ] := Total[WeightedAdjacencyMatrix[g], {2}]
 IGVertexOutStrength[g_?igGraphQ, v_] :=
     With[{index = VertexIndex[g, v]},
       With[{am = WeightedAdjacencyMatrix[g]},
-        Total[am[[;;, index]]]
+        Total[am[[index]]]
       ] /; IntegerQ[index]
     ]
 
