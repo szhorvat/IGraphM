@@ -4239,7 +4239,7 @@ SyntaxInformation[IGWeightedVertexDelete] = {"ArgumentsPattern" -> {_, _, Option
 IGWeightedVertexDelete[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
     catch@Module[{elist, emarker, vinds},
       Check[
-        vinds = VertexIndex[g, #]& /@ vs,
+        vinds = VertexIndex[g, #]& /@ DeleteDuplicates[vs],
         throw[$Failed]
       ];
       elist = IGIndexEdgeList[g];
@@ -4260,7 +4260,7 @@ SyntaxInformation[IGWeightedSubgraph] = {"ArgumentsPattern" -> {_, _, OptionsPat
 IGWeightedSubgraph[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
     catch@Module[{vinds, elist, emarker},
       Check[
-        vinds = VertexIndex[g, #]& /@ vs,
+        vinds = VertexIndex[g, #]& /@ DeleteDuplicates[vs],
         throw[$Failed]
       ];
       elist = IGIndexEdgeList[g];
