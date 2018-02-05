@@ -23,10 +23,14 @@ IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by
 IGUnweighted::usage = "IGUnweighted[graph] returns an unweighted version of an edge-weighted graph, while preserving other graph properties.";
 
 IGWeightedAdjacencyGraph::usage =
-    "IGWeightedAdjacencyGraph[matrix] creates a graph from a weighted adjacency matrix, taking the 0 weight to mean unconnected.\n" <>
+    "IGWeightedAdjacencyGraph[matrix] creates a graph from a weighted adjacency matrix, taking 0 to mean unconnected.\n" <>
     "IGWeightedAdjacencyGraph[vertices, matrix] uses vertices as the vertex names.\n" <>
-    "IGWeightedAdjacencyGraph[matrix, z] creates a graph from a weighted adjacency matrix, taking the weight z to mean unconnected.\n" <>
+    "IGWeightedAdjacencyGraph[matrix, z] creates a graph from a weighted adjacency matrix, taking the value z to mean unconnected.\n" <>
     "IGWeightedAdjacencyGraph[vertices, matrix, z] uses vertices as the vertex names.";
+
+IGWeightedAdjacencyMatrix::usage =
+    "IGWeightedAdjacencyMatrix[graph] gives the adjacency matrix of the edge weights of graph.\n" <>
+    "IGWeightedAdjacencyMatrix[graph, z] gives the adjacency matrix of the edge weights of graph, using the value z to represent absent connections.";
 
 IGVertexWeightedQ::usage = "IGVertexWeightedQ[graph] tests if graph is a vertex weighted graph.";
 IGEdgeWeightedQ::usage = "IGEdgeWeightedQ[graph] tests if graph is an edge weighted graph.";
@@ -216,6 +220,14 @@ IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except
         sa = UpperTriangularize[sa]
       ];
       Graph[vertices, sa["NonzeroPositions"], EdgeWeight -> sa["NonzeroValues"], DirectedEdges -> directedEdges, opt]
+    ]
+
+
+SyntaxInformation[IGWeightedAdjacencyMatrix] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+Options[IGWeightedAdjacencyMatrix] = Options[WeightedAdjacencyMatrix];
+IGWeightedAdjacencyMatrix[graph_?GraphQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[]] :=
+    With[{sa = WeightedAdjacencyMatrix[graph, opt]},
+      SparseArray[sa["NonzeroPositions"] -> sa["NonzeroValues"], Dimensions[sa], unconnected]
     ]
 
 
