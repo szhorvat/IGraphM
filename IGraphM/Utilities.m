@@ -270,7 +270,7 @@ IGVertexStrength[g_?igGraphQ] :=
     With[{am = WeightedAdjacencyMatrix[g]}, (* WeightedAdjacencyMatrix adds up weights in multigraphs. *)
       If[DirectedGraphQ[g],
         Total[am] + Total[am, {2}],
-        Total[am]
+        Total[am] + Diagonal[am]
       ]
     ]
 IGVertexStrength[g_?igGraphQ, v_] :=
@@ -278,28 +278,46 @@ IGVertexStrength[g_?igGraphQ, v_] :=
       With[{am = WeightedAdjacencyMatrix[g]},
         If[DirectedGraphQ[g],
           Total[am[[index]]] + Total[am[[;;, index]]],
-          Total[am[[index]]]
+          Total[am[[index]]] + am[[index, index]]
         ]
       ] /; IntegerQ[index]
     ]
 
 SyntaxInformation[IGVertexInStrength] = {"ArgumentsPattern" -> {_, _.}};
 IGVertexInStrength[g_?IGNullGraphQ] := {}
-IGVertexInStrength[g_?igGraphQ] := Total@WeightedAdjacencyMatrix[g]
+IGVertexInStrength[g_?igGraphQ] :=
+    With[{am = WeightedAdjacencyMatrix[g]},
+      If[DirectedGraphQ[g],
+        Total[am],
+        Total[am] + Diagonal[am]
+      ]
+    ]
 IGVertexInStrength[g_?igGraphQ, v_] :=
-    With[{index = VertexIndex[g, v]},
+    With[{index= VertexIndex[g, v]},
       With[{am = WeightedAdjacencyMatrix[g]},
-        Total[am[[;;, index]]]
+        If[DirectedGraphQ[g],
+          Total[am[[;;, index]]],
+          Total[am[[index]]] + am[[index, index]]
+        ]
       ] /; IntegerQ[index]
     ]
 
 SyntaxInformation[IGVertexOutStrength] = {"ArgumentsPattern" -> {_, _.}};
 IGVertexOutStrength[g_?IGNullGraphQ] := {}
-IGVertexOutStrength[g_?igGraphQ] := Total[WeightedAdjacencyMatrix[g], {2}]
+IGVertexOutStrength[g_?igGraphQ] :=
+    With[{am = WeightedAdjacencyMatrix[g]},
+      If[DirectedGraphQ[g],
+        Total[am, {2}],
+        Total[am] + Diagonal[am]
+      ]
+    ]
 IGVertexOutStrength[g_?igGraphQ, v_] :=
-    With[{index = VertexIndex[g, v]},
+    With[{index= VertexIndex[g, v]},
       With[{am = WeightedAdjacencyMatrix[g]},
-        Total[am[[index]]]
+        If[DirectedGraphQ[g],
+          Total[am[[index]]],
+          Total[am[[index]]] + am[[index, index]]
+        ]
       ] /; IntegerQ[index]
     ]
 
