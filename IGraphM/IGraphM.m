@@ -4180,6 +4180,14 @@ IGIndexEdgeList[graph_?igGraphQ] :=
 
 (***** Weighted graphs *****)
 
+igWeightedAdjacencyGraph[vertices_, sa_SparseArray, True, opt___] :=
+    Graph[vertices, sa["NonzeroPositions"], DirectedEdges -> True, EdgeWeight -> sa["NonzeroValues"], opt]
+
+igWeightedAdjacencyGraph[vertices_, sa_SparseArray, False, opt___] :=
+    With[{sa2 = UpperTriangularize[sa]},
+      Graph[vertices, sa2["NonzeroPositions"], DirectedEdges -> False, EdgeWeight -> sa2["NonzeroValues"], opt]
+    ]
+
 Options[IGWeightedSimpleGraph] = { SelfLoops -> True };
 SyntaxInformation[IGWeightedSimpleGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGWeightedSimpleGraph, Graph]};
 IGWeightedSimpleGraph[g_?EmptyGraphQ, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[{IGWeightedSimpleGraph, Graph}]] :=
@@ -4188,13 +4196,13 @@ IGWeightedSimpleGraph[g_?igGraphQ, comb : Except[_?OptionQ] : Total, opt : Optio
     With[{sao = SystemOptions["SparseArrayOptions"]},
       Internal`WithLocalSettings[
         SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> comb],
-        IGWeightedAdjacencyGraph[
+        igWeightedAdjacencyGraph[
           VertexList[g],
           If[TrueQ@OptionValue[SelfLoops],
             Identity,
             zeroDiagonal
           ]@SparseArray[IGIndexEdgeList[g] -> igEdgeWeights[g], VertexCount[g] {1,1}],
-          DirectedEdges -> DirectedGraphQ[g],
+          DirectedGraphQ[g],
           FilterRules[{opt}, Options[Graph]]
         ],
         SetSystemOptions[sao]
@@ -4220,10 +4228,10 @@ IGWeightedUndirectedGraph[g_?igGraphQ, comb : Except[_?OptionQ] : Total, opt : O
       With[{sao = SystemOptions["SparseArrayOptions"]},
         Internal`WithLocalSettings[
           SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> comb],
-          IGWeightedAdjacencyGraph[
+          igWeightedAdjacencyGraph[
             VertexList[g],
             SparseArray[(igraphGlobal@"edgeListSortPairs"@IGIndexEdgeList[g]) -> igEdgeWeights[g], VertexCount[g] {1, 1}],
-            DirectedEdges -> False,
+            False,
             opt
           ],
           SetSystemOptions[sao]
