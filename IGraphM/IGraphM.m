@@ -1797,10 +1797,12 @@ IGConstraintScore[graph_?igGraphQ] :=
 
 (* TODO: functions in this section should warn that edge weights will be lost *)
 
+IGRewire::multi = "The input is a multigraph. Multi-edges are never created during the rewiring process.";
 Options[IGRewire] = { SelfLoops -> False };
 SyntaxInformation[IGRewire] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewire, Graph]};
 IGRewire[g_?igGraphQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGRewire, Graph}]] :=
     catch@Block[{ig = igMakeFast[g]},
+      If[MultigraphQ[g], Message[IGRewire::multi]];
       check@ig@"rewire"[n, OptionValue[SelfLoops]];
       applyGraphOpt[opt]@igToGraphWithNames[ig, VertexList[g]]
     ]
@@ -3046,7 +3048,7 @@ IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldT
         Composition[
           RotationTransform[Pi + OptionValue["Rotation"]],
           ScalingTransform[{OptionValue["LeafDistance"], OptionValue["LayerHeight"]}]
-        ] /@ check@ig@"layoutReingoldTilford"[roots, OptionValue[DirectedEdges]]
+        ] @ check@ig@"layoutReingoldTilford"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 
@@ -3059,7 +3061,7 @@ IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutR
     catch@Block[{ig = igMakeFast[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic -> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
-        RotationTransform@OptionValue["Rotation"] /@ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
+        RotationTransform@OptionValue["Rotation"] @ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 
