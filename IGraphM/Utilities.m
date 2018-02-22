@@ -796,8 +796,8 @@ findPermutation[l1_, l2_] := Ordering[l1][[Ordering@Ordering[l2]]]
 
 IGReorderVertices::bdvert = "The provided vertex list differs from the vertex list of the graph.";
 
-SyntaxInformation[IGReorderVertices] = {"ArgumentsPattern" -> {_, _}};
-IGReorderVertices[verts_List, graph_?GraphQ] :=
+SyntaxInformation[IGReorderVertices] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGReorderVertices[verts_List, graph_?GraphQ, opt : OptionsPattern[]] :=
     Module[{perm, vl = VertexList[graph]},
       If[Sort[verts] =!= Sort[vl],
         Message[IGReorderVertices::bdvert];
@@ -807,6 +807,7 @@ IGReorderVertices[verts_List, graph_?GraphQ] :=
       Graph[
         verts,
         EdgeList[graph],
+        opt,
         Replace[
           Options[graph],
           Verbatim[Rule][sym : VertexWeight|VertexCapacity|VertexCoordinates, val_List] :> Rule[sym, val[[perm]]]
