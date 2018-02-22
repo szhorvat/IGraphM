@@ -483,6 +483,8 @@ IGWeightedVertexDelete::usage =
 
 IGWeightedSubgraph::usage = "IGWeightedSubgraph[graph, {v1, v2, \[Ellipsis]}] returns the subgraph induced by the given vertices while preserving edge weights.";
 
+IGVoronoiCells::usage = "IGVoronoiCells[graph, {v1, v2, \[Ellipsis]}] find the sets of vertices closest to each given vertex.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -4288,6 +4290,29 @@ IGWeightedSubgraph[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
         If[igEdgeWeightedQ[g], EdgeWeight -> Pick[igEdgeWeights[g], emarker, 1], {}],
         DirectedEdges -> DirectedGraphQ[g],
         opt
+      ]
+    ]
+
+
+(* Voronoi *)
+
+IGVoronoiCells::ivert = "The given centers `1` are not vertices of the graph.";
+Options[IGVoronoiCells] = { "Tiebreaker" -> Automatic };
+SyntaxInformation[IGVoronoiCells] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+IGVoronoiCells[g_?igGraphQ, centers_List, opt : OptionsPattern[]] :=
+    Module[{clist = DeleteDuplicates[centers], vlist = VertexList[g], tiebreaker = OptionValue["Tiebreaker"], idx, dmat},
+      If[Not@SubsetQ[vlist, clist],
+        Message[IGVoronoiCells::ivert, Complement[clist, vlist]];
+        Return[$Failed]
+      ];
+      dmat = Transpose@IGDistanceMatrix[g, centers];
+      idx = If[MatchQ[tiebreaker, Automatic|First],
+        Ordering[#, 1]& /@ dmat,
+        With[{min = Min[#]}, tiebreaker@Position[#, min]]& /@ dmat
+      ];
+      GroupBy[
+        Transpose[{Extract[vlist, idx], vlist}],
+        First -> Last
       ]
     ]
 
