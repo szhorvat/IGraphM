@@ -2864,10 +2864,17 @@ IGLayoutRandom[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
       applyGraphOpt[opt]@setVertexCoords[graph, check@ig@"layoutRandom"[]]
     ]
 
-SyntaxInformation[IGLayoutCircle] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGLayoutCircle[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
+Options[IGLayoutCircle] = { "Rotation" -> 0, Reverse -> False };
+SyntaxInformation[IGLayoutCircle] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutCircle, Graph]};
+IGLayoutCircle[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutCircle, Graph}]] :=
     catch@Block[{ig = igMakeFast[graph]},
-      applyGraphOpt[opt]@setVertexCoords[graph, check@ig@"layoutCircle"[]]
+      applyGraphOpt[opt]@setVertexCoords[
+        graph,
+        Composition[
+          RotationTransform[OptionValue["Rotation"]],
+          If[TrueQ@OptionValue[Reverse], ScalingTransform[{1, -1}], Identity]
+        ] @ check@ig@"layoutCircle"[]
+      ]
     ]
 
 SyntaxInformation[IGLayoutSphere] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph3D]};
