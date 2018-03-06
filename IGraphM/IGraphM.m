@@ -485,6 +485,8 @@ IGWeightedSubgraph::usage = "IGWeightedSubgraph[graph, {v1, v2, \[Ellipsis]}] re
 
 IGVoronoiCells::usage = "IGVoronoiCells[graph, {v1, v2, \[Ellipsis]}] find the sets of vertices closest to each given vertex.";
 
+IGEdgeVertexProp::usage = "IGEdgeVertexProp[prop] is an operator that extracts the vertex property prop for the vertex pair corresponding to each edge.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -4316,6 +4318,17 @@ IGVoronoiCells[g_?igGraphQ, centers_List, opt : OptionsPattern[]] :=
       ]
     ]
 
+
+(* Mapping extension *)
+
+IGEdgeVertexProp[prop_][g_?GraphQ] :=
+    Partition[
+      Part[
+        IGVertexProp[prop][g],
+        Flatten@IGIndexEdgeList[g]
+      ],
+      2
+    ]
 
 (***** Finalize *****)
 
