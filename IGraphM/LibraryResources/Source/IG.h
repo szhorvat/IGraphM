@@ -204,6 +204,22 @@ public:
         ml << mlSymbol("Null");
     }
 
+    void realizeDegreeSequence(mma::RealTensorRef outdegs, mma::RealTensorRef indegs, mint method) {
+        destroy();
+        igraph_vector_t out = igVectorView(outdegs);
+        igraph_vector_t in = igVectorView(indegs);
+        igraph_realize_degseq_t ig_method;
+
+        switch (method) {
+        case 0: ig_method = IGRAPH_REALIZE_DEGSEQ_SMALLEST; break;
+        case 1: ig_method = IGRAPH_REALIZE_DEGSEQ_LARGEST; break;
+        case 2: ig_method = IGRAPH_REALIZE_DEGSEQ_INDEX; break;
+        default: throw mma::LibraryError("realizeDegreeSequence: unknown method option");
+        }
+
+        igConstructorCheck(igraph_realize_degree_sequence(&graph, &out, &in, ig_method));
+    }
+
     void fromLCF(mint n, mma::RealTensorRef v, mint repeats) {
         destroy();
         igraph_vector_t shifts = igVectorView(v);

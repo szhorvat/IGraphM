@@ -487,6 +487,10 @@ IGVoronoiCells::usage = "IGVoronoiCells[graph, {v1, v2, \[Ellipsis]}] find the s
 
 IGEdgeVertexProp::usage = "IGEdgeVertexProp[prop] is an operator that extracts the vertex property prop for the vertex pair corresponding to each edge.";
 
+IGRealizeDegreeSequence::usage =
+    "IGRealizeDegreeSequence[degseq] returns an undirected graph having the given degree sequence.\n" <>
+    "IGRealizeDegreeSequence[outdegseq, indegseq] returns a directed graph having the given out- and in-degree sequences.\n";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -542,6 +546,7 @@ template = LTemplate["IGraphM",
         LFun["fromIncidenceMatrix", {{LType[SparseArray, Integer], "Constant"}, True|False (* directed *)}, "Void"],
         LFun["makeEdgeless", {Integer (* vertex count *)}, "Void"],
         (* LFun["fromEdgeListML", LinkObject], *)
+        LFun["realizeDegreeSequence", {{Real, 1, "Constant"}, {Real, 1, "Constant"}, Integer}, "Void"],
         LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
         LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
         LFun["kautz", {Integer, Integer}, "Void"],
@@ -1287,6 +1292,22 @@ IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?
         check@ig@"fromLCF"[numVertices, shifts, repeats];
         applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
       ]
+    ]
+
+
+Options[IGRealizeDegreeSequence] = { Method -> "SmallestFirst" };
+igRealizeDegreeSequenceMethods = <|"SmallestFirst" -> 0, "LargestFirst" -> 1, "Index" -> 2|>;
+amendUsage[IGRealizeDegreeSequence, "Available Method options: <*Keys[igRealizeDegreeSequenceMethods]*>."];
+SyntaxInformation[IGRealizeDegreeSequence] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGRealizeDegreeSequence, Graph]};
+IGRealizeDegreeSequence[degrees_?intVecQ, opt : OptionsPattern[{IGRealizeDegreeSequence, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"realizeDegreeSequence"[degrees, {}, Lookup[igRealizeDegreeSequenceMethods, OptionValue[Method], -1]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+IGRealizeDegreeSequence[outdeg_?intVecQ, indeg_?intVecQ, opt : OptionsPattern[{IGRealizeDegreeSequence, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"realizeDegreeSequence"[outdeg, indeg, Lookup[igRealizeDegreeSequenceMethods, OptionValue[Method], -1]];
+      applyGraphOpt[opt]@igToGraph[ig]
     ]
 
 
