@@ -102,6 +102,14 @@ IGHubScore::usage = "IGHubScore[graph] returns Kleinberg's hub score for each ve
 IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority score for each vertex.";
 IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint score for each vertex.";
 
+IGDegreeCentralization::usage =
+    "IGDegreeCentralization[graph] computes the graph level centralization based on degree centralities.\n" <>
+    "IGDegreeCentralization[graph, mode] uses the given mode, \"In\", \"Out\", or \"All\" to compute degrees in directed graphs.";
+IGBetweennessCentralization::usage = "IGBetweennessCentralization[graph] computes the graph level centralization based on betweenness.";
+IGClosenessCentralization::usage = "IGClosenessCentralization[graph] computes the graph level centralization based on closeness.";
+IGEigenvectorCentralization::usage = "IGEigenvectorCentralization[graph] computes the graph level centralization based on eigenvector centralities.";
+
+
 IGRewire::usage = "IGRewire[graph, n] attempts to rewire the edges of graph n times while preserving its degree sequence. Weights and other graph properties are discarded.";
 IGRewireEdges::usage =
     "IGRewireEdges[graph, p] rewires each edge of the graph with probability p. Weights and other graph properties are discarded.\n" <>
@@ -631,6 +639,14 @@ template = LTemplate["IGraphM",
         LFun["hubScore", {True|False (* normalized *)}, {Real, 1}],
         LFun["authorityScore", {True|False (* normalized *)}, {Real, 1}],
         LFun["constraintScore", {}, {Real, 1}],
+
+        (* Centralization *)
+
+        LFun["degreeCentralization", {Integer, True|False, True|False}, Real],
+        LFun["betweennessCentralization", {True|False, True|False}, Real],
+        LFun["closenessCentralization", {True|False}, Real],
+        LFun["eigenvectorCentralization", {True|False, True|False}, Real],
+        LFun["centralization", {{Real, 1, "Constant"}, Real, True|False}, Real],
 
         (* Randomize *)
 
@@ -1817,6 +1833,43 @@ IGConstraintScore[graph_?igGraphQ] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"constraintScore"[]
     ]
+
+(* Centralization *)
+
+
+igDegreeCentralizationMethods = <|"Out" -> 1, "In" -> 2, "All" -> 3 |>;
+Options[IGDegreeCentralization] = { Normalized -> True, SelfLoops -> True };
+SyntaxInformation[IGDegreeCentralization] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+IGDegreeCentralization[graph_?igGraphQ, mode : _String : "All", opt : OptionsPattern[]] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"degreeCentralization"[Lookup[igDegreeCentralizationMethods, mode, 0], OptionValue[SelfLoops], OptionValue[Normalized]]
+    ]
+
+IGBetweennessCentralization::bdmtd = IGBetweenness::bdmtd;
+Options[IGBetweennessCentralization] = { Normalized -> True, Method -> "Precise" };
+SyntaxInformation[IGBetweennessCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGBetweennessCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"betweennessCentralization"[
+        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweennessCentralization::bdmtd, OptionValue[Method]]; False],
+        OptionValue[Normalized]
+      ]
+    ]
+
+Options[IGClosenessCentralization] = { Normalized -> True };
+SyntaxInformation[IGClosenessCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGClosenessCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"closenessCentralization"[OptionValue[Normalized]]
+    ]
+
+Options[IGEigenvectorCentralization] = { Normalized -> True, Scaled -> True };
+SyntaxInformation[IGEigenvectorCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGEigenvectorCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"eigenvectorCentralization"[OptionValue[Scaled], OptionValue[Normalized]]
+    ]
+
 
 (* Randomization and rewiring *)
 

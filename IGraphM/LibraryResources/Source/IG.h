@@ -677,6 +677,54 @@ public:
     }
 
 
+    // Centralization
+
+    double degreeCentralization(mint mode, bool loops, bool normalized) const {
+        igraph_real_t result;
+        igraph_neimode_t imode;
+        switch (mode) {
+        case 1:
+            imode = IGRAPH_OUT;
+            break;
+        case 2:
+            imode = IGRAPH_IN;
+            break;
+        case 3:
+            imode = IGRAPH_ALL;
+            break;
+        default:
+            throw mma::LibraryError("degreeCentralization: invalid method");
+        }
+        igCheck(igraph_centralization_degree(&graph, nullptr, imode, loops, &result, nullptr, normalized));
+        return result;
+    }
+
+    double betweennessCentralization(bool nobigint, bool normalized) const {
+        igraph_real_t result;
+        igCheck(igraph_centralization_betweenness(&graph, nullptr, true, nobigint, &result, nullptr, normalized));
+        return result;
+    }
+
+    double closenessCentralization(bool normalized) const {
+        igraph_real_t result;
+        igCheck(igraph_centralization_closeness(&graph, nullptr, IGRAPH_OUT, &result, nullptr, normalized));
+        return result;
+    }
+
+    double eigenvectorCentralization(bool scale, bool normalized) const {
+        igraph_real_t result;
+        igraph_arpack_options_t options;
+        igraph_arpack_options_init(&options);
+        igCheck(igraph_centralization_eigenvector_centrality(&graph, nullptr, nullptr, true, scale, &options, &result, nullptr, normalized));
+        return result;
+    }
+
+    double centralization(mma::RealTensorRef vec, double tmax, bool normalized) const {
+        igraph_vector_t scores = igVectorView(vec);
+        return igraph_centralization(&scores, tmax, normalized);
+    }
+
+
     // Randomize
 
     void rewire(mint n, bool loops) {
