@@ -246,6 +246,13 @@ public:
         igConstructorCheck(igraph_tree(&graph, n, k, directed ? IGRAPH_TREE_OUT : IGRAPH_TREE_UNDIRECTED));
     }
 
+    void fromPrufer(mma::IntTensorRef prufer) {
+        destroy();
+        igIntVector vec;
+        vec.copyFromMTensor(prufer);
+        igConstructorCheck(igraph_from_prufer(&graph, &vec.vec));
+    }
+
     void completeGraph(mint n, bool directed, bool loops) {
         destroy();
         igConstructorCheck(igraph_full(&graph, n, directed, loops));
@@ -300,6 +307,11 @@ public:
     }
 
     // Create (games)
+
+    void treeGame(mint n) {
+        destroy();
+        igConstructorCheck(igraph_tree_game(&graph, n));
+    }
 
     void degreeSequenceGame(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, mint method) {
         igraph_vector_t ig_indeg = igVectorView(indeg);

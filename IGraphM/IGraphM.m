@@ -60,6 +60,7 @@ IGKautzGraph::usage = "IGKautzGraph[m, n] returns a Kautz graph on m+1 character
 IGKaryTree::usage =
     "IGKaryTree[n] returns a binary tree with n vertices.\n" <>
     "IGKaryTree[n, k] returns a k-ary tree with n vertices.";
+IGFromPrufer::usage = "IGFromPrufer[sequence] constructs a tree from a Prüfer sequence.";
 IGCompleteGraph::usage = "IGCompleteGraph[n] returns a complete graph on n vertices.";
 IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.";
 IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m characters and string length n.";
@@ -245,6 +246,8 @@ IGStaticPowerLawGame::usage =
     "IGStaticPowerLawGame[n, m, expOut, expIn] generates a random directed graph with n vertices and m edges, having power-law in- and out-degree distributions with the given exponents.";
 
 IGGrowingGame::usage = "IGGrowingGame[n, k] generates a growing random graph with n vertices, adding a new vertex and k new edges in each step.";
+
+IGTreeGame::usage = "IGTreeGame[n] generates a random tree on n vertices. Sampling is uniform over the set of labelled trees.";
 
 IGCallawayTraitsGame::usage = "IGCallawayTraitsGame[n, k, typeWeights, preferenceMatrix]";
 IGEstablishmentGame::usage = "IGEstablishmentGame[n, k, typeWeights, preferenceMatrix]";
@@ -559,6 +562,7 @@ template = LTemplate["IGraphM",
         LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
         LFun["kautz", {Integer, Integer}, "Void"],
         LFun["tree", {Integer, Integer, True|False (* directed *)}, "Void"],
+        LFun["fromPrufer", {{Integer, 1, "Constant"}}, "Void"],
         LFun["completeGraph", {Integer, True|False (* directed *), True|False (* loops *)}, "Void"],
         LFun["completeCitationGraph", {Integer, True|False (* directed *)}, "Void"],
         LFun["deBruijn", {Integer, Integer}, "Void"],
@@ -579,6 +583,7 @@ template = LTemplate["IGraphM",
 
         (* Games *)
 
+        LFun["treeGame", {Integer}, "Void"],
         LFun["degreeSequenceGame", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), Integer (* method *)}, "Void"],
         LFun["kRegularGame", {Integer, Integer, True|False (* directed *), True|False (* multiple *)}, "Void"],
         LFun["stochasticBlockModel", {{Real, 2, "Constant"}, {Integer, 1, "Constant"}, True|False (* directed *), True|False (* loops *)}, "Void"],
@@ -1357,6 +1362,13 @@ IGKaryTree[m_?Internal`NonNegativeMachineIntegerQ, n : _?Internal`PositiveMachin
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
+SyntaxInformation[IGFromPrufer] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGFromPrufer, Graph]};
+IGFromPrufer[vec_?intVecQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"fromPrufer"[vec - 1];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
 Options[IGCompleteGraph] = {
   DirectedEdges -> False, SelfLoops -> False,
   GraphLayout -> "CircularEmbedding"
@@ -1580,6 +1592,15 @@ SyntaxInformation[IGGrowingGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[
 IGGrowingGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGGrowingGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"growingGame"[n, m, OptionValue[DirectedEdges], OptionValue["Citation"]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+
+
+SyntaxInformation[IGTreeGame] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGTreeGame, Graph]};
+IGTreeGame[n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"treeGame"[n];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
