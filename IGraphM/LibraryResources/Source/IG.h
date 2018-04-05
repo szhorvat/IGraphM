@@ -172,8 +172,7 @@ public:
     /* Creates an undirected graph with n vertices and no edges. */
     void makeEdgeless(mint n) {
         destroy();
-        igVector edgeList;
-        igConstructorCheck(igraph_create(&graph, &edgeList.vec, n /* vertex count */, false /* undirected */));
+        igConstructorCheck(igraph_empty(&graph, n /* vertex count */, false /* undirected */));
     }
 
     void fromEdgeListML(MLINK link) {
