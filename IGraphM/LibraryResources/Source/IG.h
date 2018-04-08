@@ -308,9 +308,20 @@ public:
 
     // Create (games)
 
-    void treeGame(mint n) {
+    void treeGame(mint n, bool directed, mint method) {
         destroy();
-        igConstructorCheck(igraph_tree_game(&graph, n));
+        igraph_random_tree_t imethod;
+        switch (method) {
+        case 0:
+            imethod = IGRAPH_RANDOM_TREE_PRUFER;
+            break;
+        case 1:
+            imethod = IGRAPH_RANDOM_TREE_LERW;
+            break;
+        default:
+            throw mma::LibraryError("treeGame: unknown method option");
+        }
+        igConstructorCheck(igraph_tree_game(&graph, n, directed, imethod));
     }
 
     void degreeSequenceGame(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, mint method) {

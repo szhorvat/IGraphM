@@ -583,7 +583,7 @@ template = LTemplate["IGraphM",
 
         (* Games *)
 
-        LFun["treeGame", {Integer}, "Void"],
+        LFun["treeGame", {Integer (* n *), True|False (* directed *), Integer (* method *)}, "Void"],
         LFun["degreeSequenceGame", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), Integer (* method *)}, "Void"],
         LFun["kRegularGame", {Integer, Integer, True|False (* directed *), True|False (* multiple *)}, "Void"],
         LFun["stochasticBlockModel", {{Real, 2, "Constant"}, {Integer, 1, "Constant"}, True|False (* directed *), True|False (* loops *)}, "Void"],
@@ -1596,11 +1596,13 @@ IGGrowingGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMac
     ]
 
 
-
+Options[IGTreeGame] = { Method -> "LoopErasedRandomWalk", DirectedEdges -> False };
+igTreeGameMethods = <|"PruferCode" -> 0, "LoopErasedRandomWalk" -> 1|>;
+amendUsage[IGTreeGame, "Available Method options: <*Keys[igTreeGameMethods]*>."];
 SyntaxInformation[IGTreeGame] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGTreeGame, Graph]};
-IGTreeGame[n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[Graph]] :=
+IGTreeGame[n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[{IGTreeGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
-      check@ig@"treeGame"[n];
+      check@ig@"treeGame"[n, OptionValue[DirectedEdges], Lookup[igTreeGameMethods, OptionValue[Method], -1]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
