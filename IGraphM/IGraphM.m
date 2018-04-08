@@ -233,7 +233,7 @@ IGBarabasiAlbertGame::usage =
     "IGBarabasiAlbertGame[n, k, {\[Beta], A}] generates a Barabási–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + A where d is the vertex (in-)degree.";
 
 IGWattsStrogatzGame::usage =
-    "IGWattsStrogatzGame[n, p] generates an n-vertex Watts–Strogatz random graph using rewiring probability\n" <>
+    "IGWattsStrogatzGame[n, p] generates an n-vertex Watts–Strogatz random graph using rewiring probability p.\n" <>
     "IGWattsStrogatzGame[n, p, k] rewires a lattice where each node is connected to its k-neighbourhood.\n" <>
     "IGWattsStrogatzGame[n, p, {dim, k}] rewires a dim dimensional lattice of n^dim vertices, where each node is connected to its k-neighbourhood.";
 
