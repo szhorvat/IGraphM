@@ -463,6 +463,10 @@ IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it 
 
 IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge directions are ignored. Edge weights are taken into account and are preserved in the tree.";
 
+IGSpanningTreeCount::usage =
+    "IGSpanningTreeCount[graph] returns the number of spanning trees of graph.\n" <>
+    "IGSpanningTreeCount[graph, vertex] returns the number of spanning trees rooted in vertex for a directed graph.";
+
 IGCoreness::usage =
     "IGCoreness[graph] returns the coreness of each vertex. Coreness is the highest order of a k-core containing the vertex.\n" <>
     "IGCoreness[graph, \"In\"] considers only in-degrees in a directed graph.\n" <>
@@ -4157,6 +4161,20 @@ IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
           opt
         ]
       ]
+    ]
+
+
+SyntaxInformation[IGSpanningTreeCount] = {"ArgumentsPattern" -> {_, _.}};
+IGSpanningTreeCount[graph_?UndirectedGraphQ] := Det@Rest@Transpose@Rest@KirchhoffMatrix[graph]
+IGSpanningTreeCount[graph_?GraphQ, v_] :=
+    catch@Module[{i, km},
+      Check[i = VertexIndex[graph, v], throw[$Failed]];
+      km = IGKirchhoffMatrix[graph, "In"];
+      Det@Delete[Transpose@Delete[km, i], i]
+    ]
+IGSpanningTreeCount[graph_?DirectedGraphQ] :=
+    With[{km = IGKirchhoffMatrix[graph, "In"]},
+      Total@Table[Det@Delete[Transpose@Delete[km, i], i], {i, VertexCount[graph]}]
     ]
 
 

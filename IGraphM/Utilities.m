@@ -96,6 +96,10 @@ IGAdjacencyMatrixPlot::usage =
     "IGAdjacencyMatrixPlot[graph] plots the adjacency matrix of graph.\n" <>
     "IGAdjacencyMatrixPlot[graph, {v1, v2, \[Ellipsis]}] plots the adjacency matrix of the subgraph induced by the given vertices, using the specified vertex ordering.";
 
+IGKirchhoffMatrix::usage =
+    "IGKirchhoffMatrix[graph] returns the Kirchoff matrix, also known as Laplacian matrix of graph.\n" <>
+    "IGKirchhoffMatrix[graph, \"In\"] will place the in-degrees on the diagonal instead of the out-degrees.";
+
 
 Begin["`Private`"];
 
@@ -115,6 +119,20 @@ If[$VersionNumber >= 10.1,
 
 IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
 IGNullGraphQ[_] = False;
+
+
+(* The built-in KirchhoffMatrix gives incorrect results for directed graphs. It uses the total degree
+   on the diagonal. It should use the out-degree instead. *)
+SyntaxInformation[IGKirchoffMatrix] = {"ArgumentsPattern" -> {_, _.}};
+IGKirchhoffMatrix[graph_?GraphQ] := IGKirchhoffMatrix[graph, "Out"]
+IGKirchhoffMatrix[graph_?GraphQ, "Out"] :=
+    With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
+      DiagonalMatrix@SparseArray@Total[am, {2}] - am
+    ]
+IGKirchhoffMatrix[graph_?GraphQ, "In"] :=
+    With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
+      DiagonalMatrix@SparseArray@Total[am] - am
+    ]
 
 
 SyntaxInformation[IGUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
