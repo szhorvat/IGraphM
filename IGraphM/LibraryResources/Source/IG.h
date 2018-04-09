@@ -1876,6 +1876,12 @@ public:
         return packListIntoIntTensor(list);
     }
 
+    mma::RealTensorRef bridges() const {
+        igVector res;
+        igCheck(igraph_bridges(&graph, &res.vec));
+        return res.makeMTensor();
+    }
+
     // Connectivity
 
     mint vertexConnectivity() const {

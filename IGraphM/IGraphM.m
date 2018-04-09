@@ -379,9 +379,11 @@ IGVertexSeparatorQ::usage = "IGVertexSeparatorQ[graph, {vertex1, vertex2, \[Elli
 
 IGMinimalVertexSeparatorQ::usage = "IGMinimalVertexSeparatorQ[graph, {vertex1, vertex2, \[Ellipsis]}] tests if the given vertex set is a minimal separator. Edge directions are ignored.";
 
-IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulation points of graph. A vertex is an articulation point if its removal increases the number of connected components in the graph.";
+IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulation points of graph. A vertex is an articulation point if its removal increases the number of (weakly) connected components in the graph.";
 
 IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Size-one components are not returned.";
+
+IGBridges::usage = "IGBridges[graph] finds the bridges of graph. A bridge is an edge whose removal increases the number of (weakly) connected components in the graph.";
 
 IGGraphlets::usage =
     "IGGraphlets[graph]\n" <>
@@ -842,6 +844,7 @@ template = LTemplate["IGraphM",
 
         LFun["articulationPoints", {}, {Real, 1}],
         LFun["biconnectedComponents", {}, {Integer, 1}],
+        LFun["bridges", {}, {Real, 1}],
 
         (* Graphlets *)
 
@@ -3405,6 +3408,12 @@ SyntaxInformation[IGBiconnectedComponents] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedComponents[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"biconnectedComponents"[]
+    ]
+
+SyntaxInformation[IGBridges] = {"ArgumentsPattern" -> {_}};
+IGBridges[graph_?igGraphQ] :=
+    catch@Block[{ig = igMake[graph]},
+      EdgeList[graph][[ igIndexVec@check@ig@"bridges"[] ]]
     ]
 
 (* Connectivity *)
