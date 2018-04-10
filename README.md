@@ -200,7 +200,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
  - New weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`.
  - Community detection: several functions support the `"ClusterCount"` option now; added `IGCommunitiesFluid`.
  - Centralization: `IGDegreeCentralization`, `IGBetweennessCentralization`, `IGClosenessCentralization`, `IGEigenvectorCentralization`.
- - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGSpanningTreeCount`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGVertexColoring`, `IGEdgeColoring`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`, `IGNeighborhoodSize`, `IGBipartiteProjections`, `IGUnfoldTree`, `IGCoreness`, `IGIndexEdgeList`, `IGVoronoiCells`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGBridges`.
+ - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGSpanningTreeCount`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGVertexColoring`, `IGEdgeColoring`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`, `IGNeighborhoodSize`, `IGBipartiteProjections`, `IGUnfoldTree`, `IGCoreness`, `IGIndexEdgeList`, `IGVoronoiCells`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGBridges`, `IGTreeQ`, `IGTreelikeComponents`
  - Updates:
     * `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges (instead of both).
     * `IGBipartiteQ` now supports checking that a given partitioning is valid for a bipartite graph.
@@ -216,7 +216,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
     * Weighted graphs: `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
     * Easier property handling and graph styling:  `IGVertexProp`, `IGEdgeProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
     * Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
-    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGReorderVertices`, `IGDirectedTree`, `IGTake`, `IGZeroDiagonal`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`.
+    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGReorderVertices`, `IGDirectedTree`, `IGTake`, `IGZeroDiagonal`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGGiantComponent`.
  - Improved compatibility with Mathematica 11.2, handling of `TwoWayRule` as an edge specification.
  - Bug fixes, performance improvements, and polish.
 
