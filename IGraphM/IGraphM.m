@@ -513,6 +513,8 @@ IGRealizeDegreeSequence::usage =
     "IGRealizeDegreeSequence[degseq] returns an undirected graph having the given degree sequence.\n" <>
     "IGRealizeDegreeSequence[outdegseq, indegseq] returns a directed graph having the given out- and in-degree sequences.\n";
 
+IGTreelikeComponents::usage = "IGTreelikeComponents[graph] returns the vertices that make up tree-like components.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -903,7 +905,11 @@ template = LTemplate["IGraphM",
         (* Coreness *)
         LFun["coreness", {Integer (* mode *)}, {Real, 1}],
 
-        LFun["vertexColoring", {}, {Integer, 1}]
+        LFun["vertexColoring", {}, {Integer, 1}],
+
+        (* Other functions *)
+
+        LFun["treelikeComponents", {}, {Integer, 1}]
       }
     ]
   }
@@ -4462,6 +4468,14 @@ IGEdgeVertexProp[prop_][g_?GraphQ] :=
         Flatten@IGIndexEdgeList[g]
       ],
       2
+    ]
+
+(* Other functions *)
+
+SyntaxInformation[IGTreelikeComponents] = {"ArgumentsPattern" -> {_}};
+IGTreelikeComponents[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      igVertexNames[graph]@igIndexVec@check@ig@"treelikeComponents"[]
     ]
 
 (***** Finalize *****)

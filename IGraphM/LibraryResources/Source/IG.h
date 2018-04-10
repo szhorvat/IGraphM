@@ -2353,6 +2353,55 @@ public:
         igCheck(igraph_coreness(&graph, &cores.vec, m));
         return cores.makeMTensor();
     }
+
+    // Other
+
+    mma::IntTensorRef treelikeComponents() const {
+        std::vector<mint> comps;
+
+        igraph_adjlist_t al;
+        // Uhis is the only igraph function used in treelikeComponents() that can fail.
+        // This a simple igCheck() will do, no need to worry about freeing other igraph-specific data structures.
+        igCheck(igraph_adjlist_init(&graph, &al, IGRAPH_ALL));
+
+        mint vcount = vertexCount();
+        std::vector<mint> degrees;
+        degrees.reserve(vcount);
+        for (mint i=0; i < vcount; ++i) {
+            mint deg = igraph_vector_int_size(igraph_adjlist_get(&al, i));
+            degrees.push_back(deg);
+            if (deg == 0)
+                comps.push_back(i);
+        }
+
+        // finddegree-1 nodes, and update the degree vector as if they were deleted
+        // repeat until nothing changes
+        bool changed;
+        do {
+            changed = false;
+            for (mint i=0; i < vcount; ++i) {
+                if (degrees[i] == 1) {
+                    changed = true;
+                    degrees[i]--;
+                    comps.push_back(i);
+                    igraph_vector_int_t *neighbors = igraph_adjlist_get(&al, i);
+                    mint ncount = igraph_vector_int_size(neighbors);
+                    for (long j=0; j < ncount; ++j) {
+                        igraph_integer_t v = VECTOR(*neighbors)[j];
+                        if (degrees[v] > 0) {
+                            degrees[v]--;
+                            if (degrees[v] == 0)
+                                comps.push_back(v);
+                        }
+                    }
+                }
+            }
+        } while (changed);
+
+        igraph_adjlist_destroy(&al);
+
+        return mma::makeVector<mint>(comps.size(), comps.data());
+    }
 };
 
 #endif // IG_H
