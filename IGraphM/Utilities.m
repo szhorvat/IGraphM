@@ -84,7 +84,10 @@ IGSinkVertexList::usage = "IGSinkVertexList[graph] returns the list of vertices 
 
 IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vertices of graph according to the given vertex vector. Graph properties are preserved.";
 
-IGDirectedTree::usage = "IGDirectedTree[tree, root] directs the edges of an undirected tree so that they point away from the root. The vertex order is not preserved: vertices will be ordered topologically.";
+IGDirectedTree::usage = "IGDirectedTree[] is obsolete. Use IGOrientTree[] instead."; (* TODO: remove *)
+IGOrientTree::usage =
+    "IGOrientTree[tree, root] orients the edges of an undirected tree so that they point away from the root. The vertex order is not preserved: vertices will be ordered topologically.\n" <>
+    "IGOrientTree[tree, root, \"In\"] orients the edges so that they point towards the root.";
 
 IGTake::usage =
     "IGTake[graph, subgraph] keeps only those vertices and edges of graph which are also present in subgraph, while retaining all graph properties.\n" <>
@@ -842,18 +845,25 @@ IGReorderVertices[verts_List, graph_?GraphQ, opt : OptionsPattern[]] :=
 
 (* Direct edges of a tree *)
 
-SyntaxInformation[IGDirectedTree] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-expr : IGDirectedTree[tree_?GraphQ, root_, opt : OptionsPattern[Graph]] :=
+IGDirectedTree[tree_, root_, rest___] := IGOrientTree[tree, root, rest] (* old, obsolte naming *)
+
+SyntaxInformation[IGOrientTree] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+expr : IGOrientTree[tree_?GraphQ, root_, mode : _String : "Out", opt : OptionsPattern[Graph]] :=
     Module[{verts},
       If[Not[UndirectedGraphQ[tree] && TreeGraphQ[tree]],
-        Message[IGDirectedTree::inv, HoldForm@OutputForm[expr], OutputForm[tree], "undirected tree"];
+        Message[IGOrientTree::inv, HoldForm@OutputForm[expr], OutputForm[tree], "undirected tree"];
         Return[$Failed]
       ];
       If[Not@VertexQ[tree, root],
-        Message[IGDirectedTree::inv, HoldForm@OutputForm[expr], root, "vertex"];
+        Message[IGOrientTree::inv, HoldForm@OutputForm[expr], root, "vertex"];
         Return[$Failed]
       ];
       verts = First@Last@Reap@BreadthFirstScan[tree, root, "PrevisitVertex" -> Sow];
+      Switch[mode,
+        "Out", Null,
+        "In", verts = Reverse[verts],
+        _, Message[IGOrientTree::inv, HoldForm@OutputForm[expr], mode, "mode"]; Return[$Failed]
+      ];
       DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", opt]
     ]
 
