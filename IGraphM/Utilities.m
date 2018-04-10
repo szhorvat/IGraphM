@@ -100,6 +100,7 @@ IGKirchhoffMatrix::usage =
     "IGKirchhoffMatrix[graph] returns the Kirchoff matrix, also known as Laplacian matrix of graph.\n" <>
     "IGKirchhoffMatrix[graph, \"In\"] will place the in-degrees on the diagonal instead of the out-degrees.";
 
+IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly connected component of graph.";
 
 Begin["`Private`"];
 
@@ -134,6 +135,11 @@ IGKirchhoffMatrix[graph_?GraphQ, "In"] :=
       DiagonalMatrix@SparseArray@Total[am] - am
     ]
 
+
+SyntaxInformation[IGGiantComponent] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGGiantComponent[g_?IGNullGraphQ, opt : OptionsPattern[Graph]] := Graph[g, opt]
+IGGiantComponent[g_?GraphQ, opt : OptionsPattern[Graph]] :=
+    Subgraph[g, First@WeaklyConnectedComponents[g], opt]
 
 SyntaxInformation[IGUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 
