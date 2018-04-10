@@ -120,6 +120,11 @@ IGRewireEdges::usage =
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] tests if graph is directed and acyclic.";
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
 IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly connected.";
+IGTreeQ::usage =
+    "IGTreeQ[graph] tests if graph is a tree or out-tree.\n" <>
+    "IGTreeQ[graph, \"Out\"] tests if graph is an out-tree (arborescence).\n" <>
+    "IGTreeQ[graph, \"In\"] tests if graph is an in-tree (anti-arborescence).\n" <>
+    "IGTreeQ[graph, \"All\"] ignores edge directions during the test.";
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if degrees is the degree sequence of any simple undirected graph.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any simple directed graph.";
@@ -632,6 +637,7 @@ template = LTemplate["IGraphM",
         LFun["dagQ", {}, True|False],
         LFun["simpleQ", {}, True|False],
         LFun["connectedQ", {True|False (* strongly connected *)}, True|False],
+        LFun["treeQ", {Integer (* mode *)}, True|False],
         LFun["bipartiteQ", {}, True|False],
 
         (* Centrality *)
@@ -1705,6 +1711,10 @@ IGConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[Tru
 
 SyntaxInformation[IGWeaklyConnectedQ] = {"ArgumentsPattern" -> {_}};
 IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[False]]
+
+SyntaxInformation[IGTreeQ] = {"ArgumentsPattern" -> {_, _.}};
+IGTreeQ[graph_?igGraphQ, mode_ : "Out"] :=
+    Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[Lookup[<|"Out" -> 1, "In" -> 2, "All" -> 3, All -> 3|>, mode, -1]]]
 
 SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
 IGGraphicalQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"erdosGallai"[degrees] (* use fast custom implementation instead of igraph *)

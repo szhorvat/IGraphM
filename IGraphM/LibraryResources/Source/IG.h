@@ -517,6 +517,23 @@ public:
         return res;
     }
 
+    bool treeQ(mint mode) const {
+        igraph_bool_t res;
+        igraph_neimode_t imode;
+        switch (mode) {
+        case 1:
+            imode = IGRAPH_OUT; break;
+        case 2:
+            imode = IGRAPH_IN; break;
+        case 3:
+            imode = IGRAPH_ALL; break;
+        default:
+            mma::LibraryError("treeQ: invalid mode");
+        }
+        igCheck(igraph_is_tree(&graph, &res, NULL, imode));
+        return res;
+    }
+
     bool bipartiteQ() const {
         igraph_bool_t res;
         igCheck(igraph_is_bipartite(&graph, &res, NULL));
