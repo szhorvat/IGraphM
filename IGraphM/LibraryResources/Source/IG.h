@@ -1914,6 +1914,12 @@ public:
         return res.makeMTensor();
     }
 
+    mma::RealTensorRef connectedComponentSizes(bool mode) const {
+        igVector csize;
+        igCheck(igraph_clusters(&graph, nullptr, &csize.vec, nullptr, mode ? IGRAPH_STRONG : IGRAPH_WEAK));
+        return csize.makeMTensor();
+    }
+
     // Connectivity
 
     mint vertexConnectivity() const {

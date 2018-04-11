@@ -392,6 +392,9 @@ IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the max
 
 IGBridges::usage = "IGBridges[graph] finds the bridges of graph. A bridge is an edge whose removal increases the number of (weakly) connected components in the graph.";
 
+IGConnectedComponentSizes::usage = "IGConnectedComponentSizes[graph] returns the sizes of graph's connected components in decreasing order.";
+IGWeaklyConnectedComponentSizes::usage = "IGWeaklyConnectedComponentSizes[graph] returns the sizes of graph's weakly connected components in decreasing order.";
+
 IGGraphlets::usage =
     "IGGraphlets[graph]\n" <>
     "IGGraphlets[graph, nIterations]";
@@ -858,11 +861,12 @@ template = LTemplate["IGraphM",
         LFun["edgeConnectivityST", {Integer, Integer}, Integer],
         LFun["cohesiveBlocks", LinkObject],
 
-        (* Articulation points *)
+        (* Connected components *)
 
         LFun["articulationPoints", {}, {Real, 1}],
         LFun["biconnectedComponents", {}, {Integer, 1}],
         LFun["bridges", {}, {Real, 1}],
+        LFun["connectedComponentSizes", {True|False (* strongly connected? *)}, {Real, 1}],
 
         (* Graphlets *)
 
@@ -3469,6 +3473,18 @@ SyntaxInformation[IGBridges] = {"ArgumentsPattern" -> {_}};
 IGBridges[graph_?igGraphQ] :=
     catch@Block[{ig = igMake[graph]},
       EdgeList[graph][[ igIndexVec@check@ig@"bridges"[] ]]
+    ]
+
+SyntaxInformation[IGConnectedComponentSizes] = {"ArgumentsPattern" -> {_}};
+IGConnectedComponentSizes[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Reverse@Sort@Round@check@ig@"connectedComponentSizes"[True]
+    ]
+
+SyntaxInformation[IGWeaklyConnectedComponentSizes] = {"ArgumentsPattern" -> {_}};
+IGWeaklyConnectedComponentSizes[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Reverse@Sort@Round@check@ig@"connectedComponentSizes"[False]
     ]
 
 (* Connectivity *)
