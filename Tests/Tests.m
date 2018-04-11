@@ -51,6 +51,7 @@ web = ExampleData[{"NetworkGraph", "ExpandedComputationalGeometry"}];
 collab = ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}];
 football = ExampleData[{"NetworkGraph", "AmericanCollegeFootball"}];
 lesmiserables = ExampleData[{"NetworkGraph", "LesMiserables"}];
+terrorist  = ExampleData[{"NetworkGraph", "EastAfricaEmbassyAttacks"}];
 
 bipartite = Graph[
   {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
@@ -217,6 +218,22 @@ Module[{g},
     ,
     AdjacencyGraph[{{0,1,0},{1,0,1},{0,1,0}}, Properties -> {3 -> {"foo" -> 3}, 1 -> {"foo" -> 1}, 2 -> {"foo" -> 2}}]
   ]
+]
+
+
+(* Verify that WeightedAdjacencyMatrix adds up the weights of parallel edges *)
+MT[
+  Normal@WeightedAdjacencyMatrix@Graph[{1 -> 2, 1 -> 2, 2 -> 3}, EdgeWeight -> {4, 5, 6}],
+  {{0, 9, 0}, {0, 0, 6}, {0, 0, 0}}
+]
+
+
+(* Verify that even 0 weights are explicitly stored in a weighted adjacency matrix *)
+MT[
+  With[{sa = WeightedAdjacencyMatrix[Graph[{1 -> 2, 2 -> 1}, EdgeWeight -> {2, 0}]]},
+    {sa["NonzeroPositions"], sa["NonzeroValues"], sa["Background"]}
+  ],
+  {{{1, 2}, {2, 1}}, {2, 0}, 0}
 ]
 
 
@@ -2996,6 +3013,70 @@ MT[
     Graph[{"a"->"b", "b"->"a", "b"->"b"}]
   ],
   True
+]
+
+(* Vertex strength *)
+
+MT[
+  IGVertexStrength[#],
+  VertexDegree[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+MT[
+  IGVertexInStrength[#],
+  VertexInDegree[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+MT[
+  IGVertexOutStrength[#],
+  VertexOutDegree[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+MT[
+  IGVertexStrength[#],
+  Function[v, IGVertexStrength[#, v]] /@ VertexList[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+MT[
+  IGVertexInStrength[#],
+  Function[v, IGVertexInStrength[#, v]] /@ VertexList[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+MT[
+  IGVertexOutStrength[#],
+  Function[v, IGVertexOutStrength[#, v]] /@ VertexList[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+MT[
+  IGVertexStrength[wugi],
+  Function[v,
+    Total[
+      PropertyValue[{wugi, #}, EdgeWeight]& /@ Cases[EdgeList[wugi], (v ~ UndirectedEdge ~ _) | (_ ~ UndirectedEdge ~ v)]
+    ]
+  ] /@ VertexList[wugi]
+]
+
+MT[
+  IGVertexOutStrength[wdgi],
+  Function[v,
+    Total[
+      PropertyValue[{wdgi, #}, EdgeWeight]& /@ Cases[EdgeList[wdgi], (v ~ DirectedEdge ~ _)]
+    ]
+  ] /@ VertexList[wdgi]
+]
+
+MT[
+  IGVertexInStrength[wdgi],
+  Function[v,
+    Total[
+      PropertyValue[{wdgi, #}, EdgeWeight]& /@ Cases[EdgeList[wdgi], (_ ~ DirectedEdge ~ v)]
+    ]
+  ] /@ VertexList[wdgi]
+]
+
+MT[
+  IGVertexStrength[Graph[{1<->2, 1<->2, 2<->3}, EdgeWeight -> {4,5,6}]],
+  {9, 15, 6}
 ]
 
 
