@@ -473,6 +473,10 @@ IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it 
 
 IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge directions are ignored. Edge weights are taken into account and are preserved in the tree.";
 
+IGRandomSpanningTree::usage =
+    "IGRandomSpanningTree[graph] returns a random spanning tree of graph. All spanning trees are generated with equal probability.\n" <>
+    "IGRandomSpanningTree[graph, n] returns a list of n random spanning trees of graph.";
+
 IGSpanningTreeCount::usage =
     "IGSpanningTreeCount[graph] returns the number of spanning trees of graph.\n" <>
     "IGSpanningTreeCount[graph, vertex] returns the number of spanning trees rooted in vertex for a directed graph.";
@@ -911,6 +915,7 @@ template = LTemplate["IGraphM",
 
         (* Spanning tree *)
         LFun["spanningTree", {}, {Real, 1}],
+        LFun["randomSpanningTree", {}, {Real, 1}],
 
         (* Coreness *)
         LFun["coreness", {Integer (* mode *)}, {Real, 1}],
@@ -4230,6 +4235,30 @@ IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
       ]
     ]
 
+SyntaxInformation[IGRandomSpanningTree] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGRandomSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      With[{indices = igIndexVec@check@ig@"randomSpanningTree"[]},
+        Graph[
+          VertexList[graph],
+          EdgeList[graph][[indices]],
+          opt
+        ]
+      ]
+    ]
+IGRandomSpanningTree[graph_?igGraphQ, n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      Table[
+        With[{indices = igIndexVec@check@ig@"randomSpanningTree"[]},
+          Graph[
+            VertexList[graph],
+            EdgeList[graph][[indices]],
+            opt
+          ]
+        ],
+        {n}
+      ]
+    ]
 
 SyntaxInformation[IGSpanningTreeCount] = {"ArgumentsPattern" -> {_, _.}};
 IGSpanningTreeCount[graph_?UndirectedGraphQ] := Det@Rest@Transpose@Rest@IGKirchhoffMatrix[graph]

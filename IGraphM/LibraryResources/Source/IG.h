@@ -2348,6 +2348,12 @@ public:
         return vector.makeMTensor();
     }
 
+    mma::RealTensorRef randomSpanningTree() const {
+        igVector vector;
+        igCheck(igraph_random_spanning_tree(&graph, &vector.vec, -1));
+        return vector.makeMTensor();
+    }
+
     // Vertex colouring
 
     mma::IntTensorRef vertexColoring() const {
