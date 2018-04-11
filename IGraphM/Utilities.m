@@ -74,9 +74,11 @@ IGShorthand::usage = "IGShorthand[\"...\"] builds a graph from a shorthand notat
 
 IGPartitionsToMembership::usage =
     "IGPartitionsToMembership[elements, partitions] computes a membership vector for the given partitioning of elements.\n" <>
+    "IGPartitionsToMembership[graph, partitions] computes a membership vector for the given partitioning of graph's vertices.\n" <>
     "IGPartitionsToMembership[elements] is an operator that can be applied to partitions.";
 IGMembershipToPartitions::usage =
-    "IGMembershipToPartitions[elements, membership] computes a partitioning of elements based on the given membership vector." <>
+    "IGMembershipToPartitions[elements, membership] computes a partitioning of elements based on the given membership vector.\n" <>
+    "IGMembershipToPartitions[graph, membership] computes a partitioning graph's vertices based on the given membership vector.\n" <>
     "IGMembershipToPartitions[elements] is an operator that can be applied to membership vectors.";
 
 IGSourceVertexList::usage = "IGSourceVertexList[graph] returns the list of vertices with no incoming connections.";
@@ -783,6 +785,7 @@ IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
 
 IGPartitionsToMembership::invpart = "Invalid element or part specification.";
 SyntaxInformation[IGPartitionsToMembership] = {"ArgumentsPattern" -> {_, _.}};
+IGPartitionsToMembership[graph_?GraphQ, parts : {___List}] := IGPartitionsToMembership[VertexList[graph], parts]
 IGPartitionsToMembership[elements_List, parts : {___List}] :=
     Module[{copy = parts},
       With[{union = Union @@ parts},
@@ -797,6 +800,7 @@ IGPartitionsToMembership[elements_List, parts : {___List}] :=
 IGPartitionsToMembership[elements_][parts_] := IGPartitionsToMembership[elements, parts]
 
 SyntaxInformation[IGMembershipToPartitions] = {"ArgumentsPattern" -> {_, _.}};
+IGMembershipToPartitions[graph_?GraphQ, membership_List] := IGMembershipToPartitions[VertexList[graph], membership]
 IGMembershipToPartitions[elements_List, membership_List] :=
     If[Length[elements] == Length[membership],
       Values@GroupBy[Transpose[{elements, membership}], Last -> First]
