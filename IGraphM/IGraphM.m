@@ -200,6 +200,8 @@ IGLADSubisomorphismCount::usage =
     "IGLADSubisomorphismCount[subgraph, graph] counts subisomorphisms from subgraph to graph.\n" <>
     "IGLADSubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] counts subisomorphisms from a vertex coloured subgraph to graph.";
 
+IGSelfComplementaryQ::usage = "IGSelfComplementaryQ[graph] tests if graph is self-complementary.";
+
 IGTopologicalOrdering::usage =
     "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order. " <>
     "Note that the values returned are vertex indices, not vertex names.";
@@ -696,6 +698,10 @@ template = LTemplate["IGraphM",
         LFun["ladFindSubisomorphisms", LinkObject],
         LFun["ladCountSubisomorphisms", {LExpressionID["IG"], True|False (* induced *)}, Integer],
         LFun["ladCountSubisomorphismsColored", LinkObject],
+
+        (* Functions related to isomorphism *)
+
+        LFun["selfComplementaryQ", {}, True|False],
 
         (* Topological sorting and directed acyclic graphs *)
 
@@ -2482,6 +2488,35 @@ IGLADSubisomorphismCount[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph
         domain = Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub;
       ];
       check@ig1@"ladCountSubisomorphismsColored"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"], domain]
+    ]
+
+
+(* Other functions related to isomorphism *)
+
+IGSelfComplementaryQ::nmg = "`1` is not a simple graph.";
+SyntaxInformation[IGSelfComplementaryQ] = {"ArgumentsPattern" -> {_}};
+IGSelfComplementaryQ[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      If[Not@SimpleGraphQ[graph],
+        Message[IGSelfComplementaryQ::nmg, OutputForm[graph]];
+        throw[$Failed]
+      ];
+      If[UndirectedGraphQ[graph],
+        If[
+          Sort@VertexDegree[graph] == Sort[VertexCount[graph] - 1 - VertexDegree[graph]]
+          ,
+          check@ig@"selfComplementaryQ"[],
+          False
+        ]
+        , (* directed case *)
+        If[
+          Sort@VertexInDegree[graph] == Sort[VertexCount[graph] - 1 - VertexInDegree[graph]] &&
+          Sort@VertexOutDegree[graph] == Sort[VertexCount[graph] - 1 - VertexOutDegree[graph]]
+          ,
+          check@ig@"selfComplementaryQ"[],
+          False
+        ]
+      ]
     ]
 
 

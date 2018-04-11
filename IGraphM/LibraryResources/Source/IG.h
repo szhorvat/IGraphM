@@ -1122,6 +1122,21 @@ public:
         ml << list.length();
     }
 
+    // Isomorphism-related operations
+
+    // the input is expected to be a simple graph
+    bool selfComplementaryQ() const {
+        igraph_t compl_graph;
+        igCheck(igraph_complementer(&compl_graph, &graph, /* loops = */ false));
+
+        igraph_bool_t iso;
+        igraph_isomorphic(&graph, &compl_graph, &iso);
+
+        igraph_destroy(&compl_graph);
+
+        return iso;
+    }
+
     // Topological sorting, directed acylic graphs
 
     // see also dagQ() under Testing
