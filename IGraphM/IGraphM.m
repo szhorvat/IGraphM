@@ -4232,7 +4232,7 @@ IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 SyntaxInformation[IGSpanningTreeCount] = {"ArgumentsPattern" -> {_, _.}};
-IGSpanningTreeCount[graph_?UndirectedGraphQ] := Det@Rest@Transpose@Rest@KirchhoffMatrix[graph]
+IGSpanningTreeCount[graph_?UndirectedGraphQ] := Det@Rest@Transpose@Rest@IGKirchhoffMatrix[graph]
 IGSpanningTreeCount[graph_?GraphQ, v_] :=
     catch@Module[{i, km},
       Check[i = VertexIndex[graph, v], throw[$Failed]];
