@@ -4220,7 +4220,7 @@ IGSymmetricQ[_] = False;
 SyntaxInformation[IGSpanningTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
-      With[{indices = 1 + Round@check@ig@"spanningTree"[]},
+      With[{indices = igIndexVec@check@ig@"spanningTree"[]},
         Graph[
           VertexList[graph],
           EdgeList[graph][[indices]],
