@@ -562,10 +562,23 @@ public:
         return t;
     }
 
-    mma::RealTensorRef edgeBetweenness() const {
-        igVector vec;
-        igCheck(igraph_edge_betweenness(&graph, &vec.vec, true, passWeights()));
-        return vec.makeMTensor();
+    mma::RealTensorRef edgeBetweenness(bool normalized) const {
+        igVector res;
+        igCheck(igraph_edge_betweenness(&graph, &res.vec, true, passWeights()));
+        auto t = res.makeMTensor();
+        if (normalized) {
+            double vcount = vertexCount();
+            double norm = 1.0;
+            if (vcount > 2) {
+                if (! directedQ())
+                    norm = 2.0;
+                norm = norm / (vcount*(vcount-1));
+            }
+
+            for (auto &el : t)
+                el *= norm;
+        }
+        return t;
     }
 
     mma::RealTensorRef closeness(bool normalized, mma::RealTensorRef vs) const {
@@ -701,11 +714,24 @@ public:
         return t;
     }
 
-    mma::RealTensorRef edgeBetweennessEstimate(double cutoff) const {
+    mma::RealTensorRef edgeBetweennessEstimate(double cutoff, bool normalized) const {
         if (cutoff == 0) cutoff = -1; /* temporary measure; see bug #56 */
-        igVector vec;
-        igCheck(igraph_edge_betweenness_estimate(&graph, &vec.vec, true, cutoff, passWeights()));
-        return vec.makeMTensor();
+        igVector res;
+        igCheck(igraph_edge_betweenness_estimate(&graph, &res.vec, true, cutoff, passWeights()));
+        auto t = res.makeMTensor();
+        if (normalized) {
+            double vcount = vertexCount();
+            double norm = 1.0;
+            if (vcount > 2) {
+                if (! directedQ())
+                    norm = 2.0;
+                norm = norm / (vcount*(vcount-1));
+            }
+
+            for (auto &el : t)
+                el *= norm;
+        }
+        return t;
     }
 
     mma::RealTensorRef closenessEstimate(double cutoff, bool normalized, mma::RealTensorRef vs) const {

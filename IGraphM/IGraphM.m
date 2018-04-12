@@ -654,11 +654,11 @@ template = LTemplate["IGraphM",
         (* Centrality *)
 
         LFun["betweenness", {True|False (* nobigint *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
-        LFun["edgeBetweenness", {}, {Real, 1}],
+        LFun["edgeBetweenness", {True|False (* normalized *)}, {Real, 1}],
         LFun["closeness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
         LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
-        LFun["edgeBetweennessEstimate", {Real (* cutoff *)}, {Real, 1}],
+        LFun["edgeBetweennessEstimate", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
         LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
         LFun["pageRank", {Integer (* method *), Real (* damping *), True|False (* directed *), Integer (* powerNiter *), Real (* powerEpsilon *)}, {Real, 1}],
@@ -1779,9 +1779,10 @@ IGBetweenness[g_?igGraphQ, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
 
 
 (* Note: edge ordering is critical *)
+Options[IGEdgeBetweenness] = { Normalized -> False };
 SyntaxInformation[IGEdgeBetweenness] = {"ArgumentsPattern" -> {_}};
-IGEdgeBetweenness[g_?igGraphQ] :=
-    Block[{ig = igMake[g]}, sck@ig@"edgeBetweenness"[]]
+IGEdgeBetweenness[g_?igGraphQ, OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, sck@ig@"edgeBetweenness"[OptionValue[Normalized]]]
 
 Options[IGCloseness] = { Normalized -> False };
 SyntaxInformation[IGCloseness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
@@ -1810,9 +1811,10 @@ IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : 
     ]
 
 (* Note: edge ordering is critical *)
+Options[IGEdgeBetweennessEstimate] = { Normalized -> False };
 SyntaxInformation[IGEdgeBetweennessEstimate] = {"ArgumentsPattern" -> {_, _}};
-IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ] :=
-    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff]]
+IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff, OptionValue[Normalized]]]
 
 Options[IGClosenessEstimate] = { Normalized -> False };
 SyntaxInformation[IGClosenessEstimate] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
