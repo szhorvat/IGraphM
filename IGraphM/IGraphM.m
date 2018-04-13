@@ -505,6 +505,8 @@ IGMeshCellAdjacencyGraph::usage =
 
 IGIndexEdgeList::usage = "IGIndexEdgeList[graph] returns the edge list of graph in terms of vertex indices, as a packed array.";
 
+IGDisjointUnion::usage = "IGDisjointUnion[{g1, g2, \[Ellipsis]}] computes a disjoint union of the graphs. The vertices of the result will be labelled with consecutive integers and all properties will be discarded.";
+
 IGWeightedSimpleGraph::usage =
     "IGWeightedSimpleGraph[graph] combines parallel edges by adding their weights. If graph is not weighted, the resulting weights will be the edge multiplicities of graph.\n" <>
     "IGWeightedSimpleGraph[graph, comb] applies the function comb to the weights of parallel edges to compute a new weight. The default combiner is Plus.";
@@ -4434,6 +4436,35 @@ IGMeshCellAdjacencyMatrix[mesh_?meshQ, d_?Internal`NonNegativeIntegerQ] :=
 IGIndexEdgeList[graph_?EmptyGraphQ] := {}
 IGIndexEdgeList[graph_?igGraphQ] :=
     catch[1 + check@igraphGlobal@"incidenceToEdgeList"[IncidenceMatrix[graph], DirectedGraphQ[graph]]]
+
+
+(***** Graph combination *****)
+
+IGDisjointUnion::mixed = "IGDisjointUnion does not support mixed graphs.";
+SyntaxInformation[IGDisjointUnion] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGDisjointUnion, Graph]};
+IGDisjointUnion[{} | <||>, opt : OptionsPattern[]] := Graph[{}, {}, opt]
+IGDisjointUnion[glist : {__?UndirectedGraphQ}, opt : OptionsPattern[]] :=
+    igDisjointUnion[Range@Length[glist], glist, False, {opt}]
+IGDisjointUnion[glist : {__?DirectedGraphQ}, opt : OptionsPattern[]] :=
+    igDisjointUnion[Range@Length[glist], glist, True, {opt}]
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && MatchQ[Values[gasc], {__?UndirectedGraphQ}], opt : OptionsPattern[]] :=
+    igDisjointUnion[Keys[gasc], Values[gasc], False, {opt}]
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && MatchQ[Values[gasc], {__?DirectedGraphQ}], opt : OptionsPattern[]] :=
+    igDisjointUnion[Keys[gasc], Values[gasc], True, {opt}]
+IGDisjointUnion[glist : {__?GraphQ}, opt : OptionsPattern[]] :=
+    (Message[IGDisjointUnion::mixed]; $Failed)
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && MatchQ[Values[gasc], {__?GraphQ}], opt : OptionsPattern[]] :=
+    (Message[IGDisjointUnion::mixed]; $Failed)
+
+igDisjointUnion[gnames_, glist_, directed_, {opt___}] :=
+    With[{vc = VertexCount /@ glist},
+      Graph[
+        Join @@ MapThread[Tuples@*List, {List /@ gnames, VertexList /@ glist}],
+        Join @@ ((IGIndexEdgeList /@ glist) + FoldList[Plus, 0, Most[vc]]),
+        DirectedEdges -> directed,
+        opt
+      ]
+    ]
 
 
 (***** Weighted graphs *****)
