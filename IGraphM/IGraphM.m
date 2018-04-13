@@ -60,6 +60,12 @@ IGKautzGraph::usage = "IGKautzGraph[m, n] returns a Kautz graph on m+1 character
 IGKaryTree::usage =
     "IGKaryTree[n] returns a binary tree with n vertices.\n" <>
     "IGKaryTree[n, k] returns a k-ary tree with n vertices.";
+
+IGSymmetricTree::usage = "IGSymmetricTree[{k1, k2, \[Ellipsis]}] returns a tree where vertices in the (i+1)st layer have k_i children.";
+IGBetheLattice::usage =
+    "IGBetheLattice[n] returns the first n layers of a Bethe lattice with coordination number 3.\n" <>
+    "IGBetheLattice[n, k] returns the first n layers of a Bethe lattice with coordination number k.";
+
 IGFromPrufer::usage = "IGFromPrufer[sequence] constructs a tree from a Prüfer sequence.";
 IGCompleteGraph::usage = "IGCompleteGraph[n] returns a complete graph on n vertices.";
 IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.";
@@ -568,7 +574,9 @@ template = LTemplate["IGraphM",
         LFun["edgeListMarkVertices1", {{Integer, 2, "Constant"}, {Integer, 1, "Constant"}}, {Integer, 1}],
         LFun["edgeListMarkVertices2", {{Integer, 2, "Constant"}, {Integer, 1, "Constant"}}, {Integer, 1}],
         LFun["edgeListDecVertices", {{Integer, 2} (* not Constant *), {Integer, 1} (* not Constant *)}, {Integer, 2}],
-        LFun["edgeListReindex", {{Integer, 2} (* not Constant *), {Integer, 1, "Constant"}}, {Integer, 2}]
+        LFun["edgeListReindex", {{Integer, 2} (* not Constant *), {Integer, 1, "Constant"}}, {Integer, 2}],
+
+        LFun["symmetricTree", {{Integer, 1, "Constant"}}, {Integer, 2}]
       }
     ],
     LClass["IG",
@@ -1058,6 +1066,7 @@ sck[val_] := val
 (* For argument checking: *)
 
 nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&;
+posIntVecQ = VectorQ[#, Internal`PositiveMachineIntegerQ]&;
 intVecQ =
     If[$VersionNumber < 11.0,
       VectorQ[#, IntegerQ]&, (* In M10.4 and earlier VectorQ[{}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
@@ -1395,6 +1404,20 @@ IGKaryTree[m_?Internal`NonNegativeMachineIntegerQ, n : _?Internal`PositiveMachin
       check@ig@"tree"[m, n, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
+
+SyntaxInformation[IGSymmetricTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionsNames" -> optNames[IGSymmetricTree, Graph]};
+IGSymmetricTree[splits_?posIntVecQ, opt : OptionsPattern[]] :=
+    With[{edges = igraphGlobal@"symmetricTree"[splits]},
+      Graph[
+        Range[Length[edges] + 1], edges + 1,
+        opt,
+        GraphLayout -> {"RadialEmbedding"}
+      ]
+    ]
+
+SyntaxInformation[IGBetheLattice] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGBetheLattice, Graph]};
+IGBetheLattice[n_?Internal`PositiveMachineIntegerQ, k : (i_Integer /; i > 1) : 3, opt : OptionsPattern[]] :=
+    IGSymmetricTree[ReplacePart[ConstantArray[k-1, n-1], 1 -> k], opt]
 
 SyntaxInformation[IGFromPrufer] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGFromPrufer, Graph]};
 IGFromPrufer[vec_?intVecQ, opt : OptionsPattern[Graph]] :=

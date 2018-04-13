@@ -198,6 +198,35 @@ public:
             el = posIndex[el];
         return pairs;
     }
+
+    mma::IntTensorRef symmetricTree(mma::IntTensorRef splits) {
+        mint vcount = 1;
+        mint c = 1;
+        for (const auto &s : splits) {
+            c *= s;
+            vcount += c;
+        }
+        auto edges = mma::makeMatrix<mint>(vcount-1, 2);
+
+        mint j1=0, j2=1;
+        mint p=1;
+        mint ec=0;
+        for (const auto &s : splits) {
+            for (mint i=0; i < p; ++i) {
+                for (mint j=0; j < s; ++j) {
+                    edges(ec, 0) = j1;
+                    edges(ec, 1) = j2;
+                    ec++;
+                    j2++;
+                }
+                j1++;
+                mma::check_abort();
+            }
+            p *= s;
+        }
+
+        return edges;
+    }
 };
 
 #endif // IGLOBAL_H
