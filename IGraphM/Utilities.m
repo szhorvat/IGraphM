@@ -127,20 +127,6 @@ IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
 IGNullGraphQ[_] = False;
 
 
-(* The built-in KirchhoffMatrix gives incorrect results for directed graphs. It uses the total degree
-   on the diagonal. It should use the out-degree instead. *)
-SyntaxInformation[IGKirchoffMatrix] = {"ArgumentsPattern" -> {_, _.}};
-IGKirchhoffMatrix[graph_?GraphQ] := IGKirchhoffMatrix[graph, "Out"]
-IGKirchhoffMatrix[graph_?GraphQ, "Out"] :=
-    With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
-      DiagonalMatrix@SparseArray@Total[am, {2}] - am
-    ]
-IGKirchhoffMatrix[graph_?GraphQ, "In"] :=
-    With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
-      DiagonalMatrix@SparseArray@Total[am] - am
-    ]
-
-
 SyntaxInformation[IGGiantComponent] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGGiantComponent[g_?IGNullGraphQ, opt : OptionsPattern[Graph]] := Graph[g, opt]
 IGGiantComponent[g_?GraphQ, opt : OptionsPattern[Graph]] :=
@@ -965,13 +951,27 @@ IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
       ]
     ]
 
-
 (***** Matrix functions ****)
 
 SyntaxInformation[IGZeroDiagonal] = {"ArgumentsPattern" -> {_}};
 IGZeroDiagonal[mat_?MatrixQ] :=
     UpperTriangularize[mat, 1] + LowerTriangularize[mat, -1]
 
+
+(* The built-in KirchhoffMatrix gives incorrect results for directed graphs. It uses the total degree
+   on the diagonal. It should use the out-degree instead.
+   KirchoffMatrix also ignores multi-edges. IGKirchhoffMatrix takes them into account.
+ *)
+SyntaxInformation[IGKirchoffMatrix] = {"ArgumentsPattern" -> {_, _.}};
+IGKirchhoffMatrix[graph_?GraphQ] := IGKirchhoffMatrix[graph, "Out"]
+IGKirchhoffMatrix[graph_?GraphQ, "Out"] :=
+    With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
+      DiagonalMatrix@SparseArray@Total[am, {2}] - am
+    ]
+IGKirchhoffMatrix[graph_?GraphQ, "In"] :=
+    With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
+      DiagonalMatrix@SparseArray@Total[am] - am
+    ]
 
 
 $unconnected::usage = "$unconnected is used to denote unconnected entries in the implementation of IGAdjacencyMatrixPlot.";
