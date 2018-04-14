@@ -1766,7 +1766,8 @@ IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connected
 
 SyntaxInformation[IGTreeQ] = {"ArgumentsPattern" -> {_, _.}};
 IGTreeQ[graph_?igGraphQ, mode_ : "Out"] :=
-    Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[Lookup[<|"Out" -> 1, "In" -> 2, "All" -> 3, All -> 3|>, mode, -1]]]
+    Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[Lookup[<|"Out" -> 1, "In" -> 2, "All" -> 3|>, mode, -1]]]
+addCompletion[IGTreeQ, {0, {"In", "Out", "All"}}]
 
 SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
 IGGraphicalQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"erdosGallai"[degrees] (* use fast custom implementation instead of igraph *)
@@ -1938,6 +1939,7 @@ IGDegreeCentralization[graph_?igGraphQ, mode : _String : "All", opt : OptionsPat
     Block[{ig = igMakeFast[graph]},
       sck@ig@"degreeCentralization"[Lookup[igDegreeCentralizationMethods, mode, 0], OptionValue[SelfLoops], OptionValue[Normalized]]
     ]
+addCompletion[IGDegreeCentralization, {0, {"In", "Out", "All"}}]
 
 IGBetweennessCentralization::bdmtd = IGBetweenness::bdmtd;
 Options[IGBetweennessCentralization] = { Normalized -> True, Method -> "Precise" };
@@ -1995,6 +1997,7 @@ IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : All|"All"|"In"
       ];
       applyGraphOpt[opt]@igToGraphWithNames[ig, VertexList[g]]
     ]
+addCompletion[IGRewireEdges, {0, 0, {"In", "Out", "All"}}]
 
 (* Isomorphism *)
 
@@ -3564,18 +3567,21 @@ IGCohesiveBlocks[graph_?igGraphQ] :=
 
 (* Graphlets *)
 
+SyntaxInformation[IGGraphlets] = {"ArgumentsPattern" -> {_, _.}};
 IGGraphlets[graph_?igGraphQ, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
     catch@Block[{ig = igMake[graph], basis, mu},
       {basis, mu} = check@ig@"graphlets"[niter];
       {igVertexNames[graph] /@ igIndexVec[basis], mu}
     ]
 
+SyntaxInformation[IGGraphletBasis] = {"ArgumentsPattern" -> {_}};
 IGGraphletBasis[graph_?igGraphQ] :=
     catch@Block[{ig = igMake[graph], basis, thresholds},
       {basis, thresholds} = check@ig@"graphletBasis"[];
       {igVertexNames[graph] /@ igIndexVec[basis], thresholds}
     ]
 
+SyntaxInformation[IGGraphletProject] = {"ArgumentsPattern" -> {_, _, _.}};
 IGGraphletProject[graph_?igGraphQ, cliques : {__List}, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
     catch@Block[{ig = igMake[graph], clq},
       check@ig@"graphletProject"[Map[vss[graph], cliques, {2}], niter]
@@ -3999,6 +4005,7 @@ IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 
+SyntaxInformation[IGCommunitiesFluid] = {"ArgumentsPattern" -> {_, _}};
 IGCommunitiesFluid[graph_?igGraphQ, clusterCount_] :=
     catch@Module[{ig = igMakeFast[graph], membership, modularity},
       {membership, modularity} = check@ig@"communityFluid"[clusterCount];
@@ -4061,6 +4068,7 @@ IGBipartitePartitions[graph_?igGraphQ, vertex_] :=
 
 
 IGBipartiteProjections::bdpart = "`1` is not a valid partitioning of the vertices `2`.";
+SyntaxInformation[IGBipartiteProjections] = {"ArgumentsPattern" -> {_, _.}};
 IGBipartiteProjections[graph_?igGraphQ, parts : {vertices1_List, vertices2_List}] :=
     catch@Module[{ig = igMakeFast[graph], ig1 = Make["IG"], ig2 = Make["IG"], weights},
       If[Not[Sort[Join@@parts] === Sort@VertexList[graph]],
@@ -4194,6 +4202,7 @@ IGVertexContract[graph_?igGraphQ, arg_, opt : OptionsPattern[]] := Null /; Messa
 
 (* Random walk *)
 
+SyntaxInformation[IGRandomWalk] = {"ArgumentsPattern" -> {_, _, _}};
 IGRandomWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       Part[
@@ -4202,11 +4211,13 @@ IGRandomWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ
       ]
     ]
 
+SyntaxInformation[IGRandomEdgeIndexWalk] = {"ArgumentsPattern" -> {_, _, _}};
 IGRandomEdgeIndexWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ] :=
     catch@Block[{ig = igMake[graph]},
       igIndexVec@check@ig@"randomEdgeWalk"[vs[graph][start], steps]
     ]
 
+SyntaxInformation[IGRandomEdgeWalk] = {"ArgumentsPattern" -> {_, _, _}};
 IGRandomEdgeWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ] :=
     catch@Block[{ig = igMake[graph]},
       Part[
@@ -4243,6 +4254,7 @@ IGEdgeTransitiveQ[graph_?igGraphQ] :=
 IGEdgeTransitiveQ[_] = False;
 
 IGSymmetricQ::nmg = IGVertexTransitiveQ::nmg;
+SyntaxInformation[IGSymmetricQ] = {"ArgumentsPattern" -> {_}};
 IGSymmetricQ[graph_?igGraphQ] :=
     If[MultigraphQ[graph],
       Message[IGSymmetricQ::nmg];
@@ -4307,11 +4319,13 @@ IGSpanningTreeCount[graph_?DirectedGraphQ] :=
     ]
 
 
+SyntaxInformation[IGVertexColoring] = {"ArgumentsPattern" -> {_}};
 IGVertexColoring[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       1 + check@ig@"vertexColoring"[]
     ]
 
+SyntaxInformation[IGEdgeColoring] = {"ArgumentsPattern" -> {_, _}};
 IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph[graph]
 
 SyntaxInformation[IGKVertexColoring] = {"ArgumentsPattern" -> {_, _}};
@@ -4353,12 +4367,13 @@ IGMinimumEdgeColoring[graph_?igGraphQ] := IGMinimumVertexColoring@LineGraph[grap
 
 (* Coreness *)
 
-corenessModes = <|"In" -> -1, "Out" -> 1, All -> 0|>;
+corenessModes = <|"In" -> -1, "Out" -> 1, "All" -> 0|>;
 SyntaxInformation[IGCoreness] = {"ArgumentsPattern" -> {_, _.}};
-expr : IGCoreness[graph_?igGraphQ, mode_ : All] :=
+expr : IGCoreness[graph_?igGraphQ, mode_ : "All"] :=
     catch@Block[{ig = igMakeFast[graph]},
       Round@check@ig@"coreness"[Lookup[corenessModes, mode, Message[IGCoreness::inv, HoldForm@OutputForm[expr], mode, "parameter"]; throw[$Failed]]]
     ]
+addCompletion[IGCoreness, {0, {"In", "Out", "All"}}]
 
 (***** Converting meshes to graphs *****)
 
@@ -4475,6 +4490,7 @@ IGMeshCellAdjacencyMatrix[mesh_?meshQ, d_?Internal`NonNegativeIntegerQ] :=
 
 (* IGIndexEdgeList *)
 
+SyntaxInformation[IGIndexEdgeList] = {"ArgumentsPattern" -> {_}};
 IGIndexEdgeList[graph_?EmptyGraphQ] := {}
 IGIndexEdgeList[graph_?igGraphQ] :=
     catch[1 + check@igraphGlobal@"incidenceToEdgeList"[IncidenceMatrix[graph], DirectedGraphQ[graph]]]
@@ -4639,6 +4655,7 @@ IGVoronoiCells[g_?igGraphQ, centers_List, opt : OptionsPattern[]] :=
 
 (* Mapping extension *)
 
+SyntaxInformation[IGEdgeVertexProp] = {"ArgumentsPattern" -> {_}};
 IGEdgeVertexProp[prop_][g_?GraphQ] :=
     Partition[
       Part[

@@ -123,6 +123,7 @@ If[$VersionNumber >= 10.1,
 
 (* Main definitions *)
 
+SyntaxInformation[IGNullGraphQ] = {"ArgumentsPattern" -> {_}};
 IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
 IGNullGraphQ[_] = False;
 
@@ -538,21 +539,21 @@ IGExport::propname = "Only string or symbol property names are allowed when expo
 
 igExportStringTag::usage = "igExportStringTag is a symbol used to signal use of ExportString instead of Export in IGExport.";
 
+SyntaxInformation[IGExportString] = {"ArgumentsPattern" -> {_, _}};
 IGExportString[g_?GraphQ, format_]  := IGExport[igExportStringTag, g, format]
 addCompletion[IGExportString, {0, $IGExportFormats}]
 
+SyntaxInformation[IGExport] = {"ArgumentsPattern" -> {_, _, _.}};
 IGExport[file_, g_?GraphQ, format_] :=
     Switch[ToLowerCase[format], (* ToLowerCase doesn't error for non-Strings *)
       "graphml", ExportGraphML[file, g],
       _, Message[IGExport::format, format]; $Failed
     ]
-
 IGExport[file_, g_?GraphQ] :=
     Switch[ToLowerCase@FileExtension[file],
       "graphml", IGExport[file, g, "GraphML"],
       _, Message[IGExport::infer, FileNameTake[file]]; $Failed
     ]
-
 addCompletion[IGExport, {3, 0, $IGExportFormats}]
 
 
@@ -856,6 +857,7 @@ expr : IGOrientTree[tree_?GraphQ, root_, mode : _String : "Out", opt : OptionsPa
       ];
       DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", opt]
     ]
+addCompletion[IGOrientTree, {0, 0, {"In", "Out"}}]
 
 
 (* Transfer properties to a smaller graph *)
@@ -962,7 +964,7 @@ IGZeroDiagonal[mat_?MatrixQ] :=
    on the diagonal. It should use the out-degree instead.
    KirchoffMatrix also ignores multi-edges. IGKirchhoffMatrix takes them into account.
  *)
-SyntaxInformation[IGKirchoffMatrix] = {"ArgumentsPattern" -> {_, _.}};
+SyntaxInformation[IGKirchhoffMatrix] = {"ArgumentsPattern" -> {_, _.}};
 IGKirchhoffMatrix[graph_?GraphQ] := IGKirchhoffMatrix[graph, "Out"]
 IGKirchhoffMatrix[graph_?GraphQ, "Out"] :=
     With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
@@ -972,6 +974,7 @@ IGKirchhoffMatrix[graph_?GraphQ, "In"] :=
     With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
       DiagonalMatrix@SparseArray@Total[am] - am
     ]
+addCompletion[IGKirchhoffMatrix, {0, {"In", "Out"}}]
 
 
 $unconnected::usage = "$unconnected is used to denote unconnected entries in the implementation of IGAdjacencyMatrixPlot.";
