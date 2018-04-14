@@ -4505,13 +4505,13 @@ IGDisjointUnion[glist : {__?UndirectedGraphQ}, opt : OptionsPattern[]] :=
     igDisjointUnion[Range@Length[glist], glist, False, {opt}]
 IGDisjointUnion[glist : {__?DirectedGraphQ}, opt : OptionsPattern[]] :=
     igDisjointUnion[Range@Length[glist], glist, True, {opt}]
-IGDisjointUnion[gasc_ /; AssociationQ[gasc] && MatchQ[Values[gasc], {__?UndirectedGraphQ}], opt : OptionsPattern[]] :=
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && AllTrue[gasc, UndirectedGraphQ], opt : OptionsPattern[]] :=
     igDisjointUnion[Keys[gasc], Values[gasc], False, {opt}]
-IGDisjointUnion[gasc_ /; AssociationQ[gasc] && MatchQ[Values[gasc], {__?DirectedGraphQ}], opt : OptionsPattern[]] :=
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && AllTrue[gasc, DirectedGraphQ], opt : OptionsPattern[]] :=
     igDisjointUnion[Keys[gasc], Values[gasc], True, {opt}]
 IGDisjointUnion[glist : {__?GraphQ}, opt : OptionsPattern[]] :=
     (Message[IGDisjointUnion::mixed]; $Failed)
-IGDisjointUnion[gasc_ /; AssociationQ[gasc] && MatchQ[Values[gasc], {__?GraphQ}], opt : OptionsPattern[]] :=
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && AllTrue[gasc, GraphQ], opt : OptionsPattern[]] :=
     (Message[IGDisjointUnion::mixed]; $Failed)
 
 igDisjointUnion[gnames_, glist_, directed_, {opt___}] :=
