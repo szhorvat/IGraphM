@@ -495,6 +495,12 @@ IGCoreness::usage =
 IGVertexColoring::usage = "IGVertexColoring[graph] returns a vertex colouring of graph.";
 IGEdgeColoring::usage = "IGEdgeColoring[graph] returns an edge colouring of graph.";
 
+IGKVertexColoring::usage = "IGKVertexColoring[graph, k] attempts to find a k-colouring of graph's vertices. If none exist, {} is returned.";
+IGKEdgeColoring::usage = "IGKEdgeColoring[graph, k] attempts of find a k-colouring of graph's edges. If none exist, {} is returned.";
+
+IGMinimumVertexColoring::usage = "IGMinimumVertexColoring[graph] finds a minimum vertex colouring of graph.";
+IGMinimumEdgeColoring::usage = "IGMinimumEdgeColoring[graph] finds a minimum edge colouring of graph.";
+
 IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a graph.";
 IGMeshCellAdjacencyMatrix::usage =
     "IGMeshCellAdjacencyMatrix[mesh, d] returns the adjacency matrix of d-dimensional cells in mesh.\n" <>
@@ -4307,6 +4313,42 @@ IGVertexColoring[graph_?igGraphQ] :=
     ]
 
 IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph[graph]
+
+SyntaxInformation[IGKVertexColoring] = {"ArgumentsPattern" -> {_, _}};
+IGKVertexColoring[graph_?IGNullGraphQ, k_Integer?Positive] := {{}}
+IGKVertexColoring[graph_?igGraphQ, k_Integer?Positive] :=
+    Module[{a, n, res},
+      n = k VertexCount[graph];
+      res = SatisfiabilityInstances[
+        And @@ Flatten[{
+          Or @@@ Partition[a /@ Range[n], k],
+          MapThread[
+            Or, {Not /@ a /@ (Range[k] + k #1),
+            Not /@ a /@ (Range[k] + k #2)}] & @@@ (IGIndexEdgeList[graph] - 1)
+        }],
+        a /@ Range[n]
+      ];
+      If[res === {},
+        {},
+        Transpose[FirstPosition[#, True] & /@ Partition[First[res], k]]
+      ]
+    ]
+
+SyntaxInformation[IGKEdgeColoring] = {"ArgumentsPattern" -> {_, _.}};
+IGKEdgeColoring[graph_?igGraphQ, k_Integer?Positive] := IGKVertexColoring[LineGraph[graph], k]
+
+SyntaxInformation[IGMinimumVertexColoring] = {"ArgumentsPattern" -> {_}};
+IGMinimumVertexColoring[graph_?EmptyGraphQ] := ConstantArray[1, VertexCount[graph]]
+IGMinimumVertexColoring[graph_?igGraphQ] :=
+    Module[{k=2, res},
+      While[(res = IGKVertexColoring[graph, k]) === {},
+        k++
+      ];
+      First[res]
+    ]
+
+SyntaxInformation[IGMinimumEdgeColoring] = {"ArgumentsPattern" -> {_}};
+IGMinimumEdgeColoring[graph_?igGraphQ] := IGMinimumVertexColoring@LineGraph[graph]
 
 
 (* Coreness *)
