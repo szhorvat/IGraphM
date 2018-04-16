@@ -4353,7 +4353,15 @@ SyntaxInformation[IGEdgeColoring] = {"ArgumentsPattern" -> {_, _}};
 IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph[graph]
 
 SyntaxInformation[IGKVertexColoring] = {"ArgumentsPattern" -> {_, _}};
-IGKVertexColoring[graph_?IGNullGraphQ, k_Integer?Positive] := {{}}
+IGKVertexColoring[graph_?EmptyGraphQ, k_Integer?Positive] := {ConstantArray[1, VertexCount[graph]]}
+IGKVertexColoring[graph_?igGraphQ, 2] :=
+    Block[{ig = igMakeFast[graph], parts},
+      parts = ig@"bipartitePartitions"[];
+      If[MatchQ[parts, _LibraryFunctionError],
+        {},
+        {parts + 1}
+      ]
+    ]
 IGKVertexColoring[graph_?igGraphQ, k_Integer?Positive] :=
     Module[{a, n, res},
       n = k VertexCount[graph];
