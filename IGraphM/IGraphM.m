@@ -4708,6 +4708,10 @@ IGTreelikeComponents[graph_?igGraphQ] :=
 
 Options[IGJointDegreeMatrix] = { Normalized -> False };
 SyntaxInformation[IGJointDegreeMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+(* Justification for returning {{}} for empty graph:
+ * {{}} is MatrixQ, and it is more general not to fail for this case.
+ * However, it is not SquareMatrixQ, and transposing yields {}. *)
+IGJointDegreeMatrix[graph_?EmptyGraphQ, opt : OptionsPattern[]] := {{}}
 IGJointDegreeMatrix[graph_?igGraphQ, opt : OptionsPattern[]] :=
     With[{sao = SystemOptions["SparseArrayOptions"]},
       Internal`WithLocalSettings[
