@@ -1487,7 +1487,7 @@ IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]
 (* Create (games) *)
 
 Options[IGDegreeSequenceGame] = { Method -> "SimpleNoMultiple" };
-igDegreeSequenceGameMethods = <| "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>;
+igDegreeSequenceGameMethods = <| "SimpleNoMultipleUniform" -> 3, "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>;
 amendUsage[IGDegreeSequenceGame, "Available Method options: <*Keys[igDegreeSequenceGameMethods]*>."];
 SyntaxInformation[IGDegreeSequenceGame] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGDegreeSequenceGame, Graph]};
 
@@ -1870,7 +1870,7 @@ IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : 
 Options[IGEdgeBetweennessEstimate] = { Normalized -> False };
 SyntaxInformation[IGEdgeBetweennessEstimate] = {"ArgumentsPattern" -> {_, _}};
 IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, OptionsPattern[]] :=
-    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"@infToZero[cutoff, OptionValue[Normalized]]]
+    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"[infToZero[cutoff], OptionValue[Normalized]]]
 
 Options[IGClosenessEstimate] = { Normalized -> False };
 SyntaxInformation[IGClosenessEstimate] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
