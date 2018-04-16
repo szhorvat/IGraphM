@@ -2631,8 +2631,8 @@ IGTriadCensus[graph_?igGraphQ] :=
       ]
     ]
 
-SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 Options[IGMotifs] = { DirectedEdges -> Automatic };
+SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
       Switch[OptionValue[DirectedEdges],
@@ -2643,8 +2643,8 @@ IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[
       ]
     ]
 
-SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 Options[IGMotifsTotalCount] = { DirectedEdges -> Automatic };
+SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFast[graph]},
       Switch[OptionValue[DirectedEdges],
@@ -2654,8 +2654,8 @@ IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : Optio
       sck@ig@"motifsNo"[size, ConstantArray[0, size]]
     ]
 
-SyntaxInformation[IGMotifsEstimateTotalCount] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 Options[IGMotifsEstimateTotalCount] = { DirectedEdges -> Automatic };
+SyntaxInformation[IGMotifsEstimateTotalCount] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 IGMotifsEstimateTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFast[graph]},
       Switch[OptionValue[DirectedEdges],
