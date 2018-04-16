@@ -380,6 +380,16 @@ public:
                                n1, n2, p, 0, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
     }
 
+    void erdosRenyiGNM(mint n, mint m, bool directed, bool loops) {
+        destroy();
+        igConstructorCheck(igraph_erdos_renyi_game_gnm(&graph, n, m, directed, loops));
+    }
+
+    void erdosRenyiGNP(mint n, double p, bool directed, bool loops) {
+        destroy();
+        igConstructorCheck(igraph_erdos_renyi_game_gnp(&graph, n, p, directed, loops));
+    }
+
     mma::RealTensorRef geometricGame(mint n, double radius, bool periodic) {        
         destroy();
         igVector x, y;

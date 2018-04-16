@@ -238,6 +238,9 @@ IGForestFireGame::usage =
 IGBipartiteGameGNM::usage = "IGBipartiteGameGNM[n1, n2, m] generates a bipartite random graph with n1 and n2 vertices in the two partitions and m edges.";
 IGBipartiteGameGNP::usage = "IGBipartiteGameGNP[n1, n2, p] generates a bipartite Bernoulli random graph with n1 and n2 vertices in the two partitions and connection probability p.";
 
+IGErdosRenyiGameGNM::usage = "IGErdosRenyiGameGNM[n, m] generates a random graph with n vertices and m edges.";
+IGErdosRenyiGameGNP::usage = "IGErdosRenyiGameGNP[n, p] generates a random graph on n vertices, in which each edge is present with probability p.";
+
 IGGeometricGame::usage = "IGGeometricGame[n, radius] generates an n-vertex geometric random graph on the unit square by connecting points closer than radius.";
 
 IGBarabasiAlbertGame::usage =
@@ -629,6 +632,9 @@ template = LTemplate["IGraphM",
 
         LFun["bipartiteGameGNM", {Integer (* n1 *), Integer (* n2 *), Integer (* m *), True|False (* directed *), True|False (* bidirectional *)}, "Void"],
         LFun["bipartiteGameGNP", {Integer (* n1 *), Integer (* n2 *), Real (* p *), True|False (* directed *), True|False (* bidirectional *)}, "Void"],
+
+        LFun["erdosRenyiGNM", {Integer (* n *), Integer (* m *), True|False (* directed *), True|False (* loops *)}, "Void"],
+        LFun["erdosRenyiGNP", {Integer (* n *), Real (* p *), True|False (* directed *), True|False (* loops *)}, "Void"],
 
         LFun["geometricGame", {Integer (* n *), Real (* radius *), True|False (* periodic *)}, {Real, 2} (* coordinates *)],
 
@@ -1535,6 +1541,22 @@ IGBipartiteGameGNP[n1_?Internal`NonNegativeMachineIntegerQ, n2_?Internal`NonNega
     catch@Block[{ig = Make["IG"]},
       check@ig@"bipartiteGameGNP"[n1, n2, p, OptionValue[DirectedEdges], OptionValue["Bidirectional"]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
+    ]
+
+Options[IGErdosRenyiGameGNM] = { DirectedEdges -> False, SelfLoops -> False };
+SyntaxInformation[IGErdosRenyiGameGNM] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGErdosRenyiGameGNM, Graph]};
+IGErdosRenyiGameGNM[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGErdosRenyiGameGNM, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"erdosRenyiGNM"[n, m, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+Options[IGErdosRenyiGameGNP] = { DirectedEdges -> False, SelfLoops -> False };
+SyntaxInformation[IGErdosRenyiGameGNP] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGErdosRenyiGameGNP, Graph]};
+IGErdosRenyiGameGNP[n_?Internal`NonNegativeMachineIntegerQ, p_?NonNegative, opt : OptionsPattern[{IGErdosRenyiGameGNP, Graph}]] :=
+    catch@Block[{ig = Make["IG"]},
+      check@ig@"erdosRenyiGNP"[n, p, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
+      applyGraphOpt[opt]@igToGraph[ig]
     ]
 
 Options[IGGeometricGame] = {"Periodic" -> False};
