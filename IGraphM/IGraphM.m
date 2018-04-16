@@ -541,6 +541,8 @@ IGRealizeDegreeSequence::usage =
 
 IGTreelikeComponents::usage = "IGTreelikeComponents[graph] returns the vertices that make up tree-like components.";
 
+IGJointDegreeMatrix::usage = "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of degree-i vertices connecting to degree-j vertices.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -4694,6 +4696,32 @@ IGTreelikeComponents[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igVertexNames[graph]@igIndexVec@check@ig@"treelikeComponents"[]
     ]
+
+
+Options[IGJointDegreeMatrix] = { Normalized -> False };
+SyntaxInformation[IGJointDegreeMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGJointDegreeMatrix[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    With[{sao = SystemOptions["SparseArrayOptions"]},
+      Internal`WithLocalSettings[
+        SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> Total]
+        ,
+        Module[{a, b, pairs, res},
+          {a, b} = Transpose@IGIndexEdgeList[graph];
+          If[UndirectedGraphQ[graph],
+            {a, b} = {Join[a, b], Join[b, a]};
+          ];
+          pairs = Transpose@{VertexOutDegree[graph][[a]], VertexInDegree[graph][[b]]};
+          res = SparseArray[pairs -> ConstantArray[1, Length[pairs]]];
+          If[TrueQ@OptionValue[Normalized],
+            res / Total[res, 2],
+            res
+          ]
+        ]
+        ,
+        SetSystemOptions[sao]
+      ]
+    ]
+
 
 (***** Finalize *****)
 
