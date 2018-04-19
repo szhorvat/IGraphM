@@ -196,14 +196,14 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 ##### v0.4.0dev (work in progress)
 
  - New deterministic graph generators: `IGKautzGraph`, `IGKaryTree`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGSymmetricTree`, `IGBetheLattice`.
- - New random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`, `IGTreeGame`.
+ - New random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`, `IGTreeGame`, `IGErdosRenyiGameGNM`, `IGErdosRenyiGameGNP`.
  - New weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`.
  - New graph colouring functions: `IGVertexColoring`, `IGEdgeColoring`, `IGKVertexColoring`, `IGKEdgeColoring`, `IGMinimumVertexColoring`, `IGMinimumEdgeColoring`.
  - New functions for mesh/graph conversion: `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`.
  - New functions for centralization: `IGDegreeCentralization`, `IGBetweennessCentralization`, `IGClosenessCentralization`, `IGEigenvectorCentralization`.
  - Community detection: several functions support the `"ClusterCount"` option now; added `IGCommunitiesFluid`.
  - Added `IGIndexEdgeList` for retrieving the edge list of a graph in terms of vertex indices. This function is very fast and returns a packed array. It facilitates the efficient implementation of graph processing functions in pure Mathematica code.
- - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGSelfComplementaryQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGNeighborhoodSize`, `IGBipartiteProjections`, `IGUnfoldTree`, `IGCoreness`, `IGVoronoiCells`, `IGTreeQ`, `IGTreelikeComponents`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`.
+ - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGSelfComplementaryQ`, `IGMinimalSeparators`, `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGNeighborhoodSize`, `IGBipartiteProjections`, `IGUnfoldTree`, `IGCoreness`, `IGVoronoiCells`, `IGTreeQ`, `IGTreelikeComponents`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGJointDegreeMatrix`.
  - Updates:
     * `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges (instead of both).
     * `IGBipartiteQ` now supports checking that a given partitioning is valid for a bipartite graph.
