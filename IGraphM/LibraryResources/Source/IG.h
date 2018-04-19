@@ -213,7 +213,7 @@ public:
         case 0: ig_method = IGRAPH_REALIZE_DEGSEQ_SMALLEST; break;
         case 1: ig_method = IGRAPH_REALIZE_DEGSEQ_LARGEST; break;
         case 2: ig_method = IGRAPH_REALIZE_DEGSEQ_INDEX; break;
-        default: throw mma::LibraryError("realizeDegreeSequence: unknown method option");
+        default: throw mma::LibraryError("Unknown degree sequence realization method.");
         }
 
         igConstructorCheck(igraph_realize_degree_sequence(&graph, &out, &in, ig_method));
@@ -243,8 +243,8 @@ public:
 
     void tree(mint n, mint k, bool directed) {
         destroy();
-        igConstructorCheck(igraph_tree(&graph, n, k, directed ? IGRAPH_TREE_OUT : IGRAPH_TREE_UNDIRECTED));
-    }
+        igConstructorCheck(igraph_tree(&graph, n, k, directed ? IGRAPH_TREE_OUT : IGRAPH_TREE_UNDIRECTED));    
+    }   
 
     void fromPrufer(mma::IntTensorRef prufer) {
         destroy();
@@ -310,18 +310,18 @@ public:
 
     void treeGame(mint n, bool directed, mint method) {
         destroy();
-        igraph_random_tree_t imethod;
+        igraph_random_tree_t ig_method;
         switch (method) {
         case 0:
-            imethod = IGRAPH_RANDOM_TREE_PRUFER;
+            ig_method = IGRAPH_RANDOM_TREE_PRUFER;
             break;
         case 1:
-            imethod = IGRAPH_RANDOM_TREE_LERW;
+            ig_method = IGRAPH_RANDOM_TREE_LERW;
             break;
         default:
-            throw mma::LibraryError("treeGame: unknown method option");
+            throw mma::LibraryError("Unknown random tree generation method.");
         }
-        igConstructorCheck(igraph_tree_game(&graph, n, directed, imethod));
+        igConstructorCheck(igraph_tree_game(&graph, n, directed, ig_method));
     }
 
     void degreeSequenceGame(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, mint method) {
@@ -770,7 +770,7 @@ public:
             imode = IGRAPH_ALL;
             break;
         default:
-            throw mma::LibraryError("degreeCentralization: invalid method");
+            throw mma::LibraryError("Invalid mode for degree centralization.");
         }
         igCheck(igraph_centralization_degree(&graph, nullptr, imode, loops, &result, nullptr, normalized));
         return result;
@@ -842,7 +842,7 @@ public:
 
     // Isomorphism (bliss)
 
-    mma::RealTensorRef blissCanonicalPermutation(mint splitting, mma::IntTensorRef col) {
+    mma::RealTensorRef blissCanonicalPermutation(mint splitting, mma::IntTensorRef col) const {
         igVector vec;
         igIntVector colvec;
         colvec.copyFromMTensor(col);
@@ -1292,7 +1292,7 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef neighborhoodSize(mma::RealTensorRef vs, mint mindist, mint maxdist) {
+    mma::RealTensorRef neighborhoodSize(mma::RealTensorRef vs, mint mindist, mint maxdist) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_neighborhood_size(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), maxdist, IGRAPH_OUT, mindist));
@@ -1772,7 +1772,7 @@ public:
         case 3: templ = IGRAPH_LAYOUT_DRL_COARSEST; break;
         case 4: templ = IGRAPH_LAYOUT_DRL_REFINE; break;
         case 5: templ = IGRAPH_LAYOUT_DRL_FINAL; break;
-        default: throw mma::LibraryError("Invalid settings template for DrL layout.");
+        default: throw mma::LibraryError("Invalid settings template for 3D DrL layout.");
         }
 
         igraph_layout_drl_options_t options;
@@ -2303,7 +2303,7 @@ public:
         ml << mlHead("List", 6) << membership << finalMembership << merges << eigenvalues << eigenvectors << modularity;
     }
 
-    void communityFluid(MLINK link) {
+    void communityFluid(MLINK link) const {
         mlStream ml{link, "communityFluid"};
         igraph_integer_t nc;
         ml >> mlCheckArgs(1) >> nc;
@@ -2424,8 +2424,8 @@ public:
         std::vector<mint> comps;
 
         igraph_adjlist_t al;
-        // Uhis is the only igraph function used in treelikeComponents() that can fail.
-        // This a simple igCheck() will do, no need to worry about freeing other igraph-specific data structures.
+        // This is the only igraph function used in treelikeComponents() that can fail.
+        // Thus a simple igCheck() will do, no need to worry about freeing other igraph-specific data structures.
         igCheck(igraph_adjlist_init(&graph, &al, IGRAPH_ALL));
 
         mint vcount = vertexCount();
