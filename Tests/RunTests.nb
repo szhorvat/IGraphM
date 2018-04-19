@@ -11,44 +11,43 @@ Cell[TextData[{
 Cell["Restart the kernel before evaluating this notebook.", \
 "Text",ExpressionUUID->"ab995c80-1261-4e9b-a0aa-7e0daf7cbc81"],
 
-Cell[BoxData["Quit"], \
-"Input",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
+Cell[BoxData["Quit"], "Input",
+ CellLabel->"In[7]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
 
 Cell[BoxData[{
  RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]", 
- RowBox[{"<<", 
-  "MicroTest`"}]}], \
-"Input",ExpressionUUID->"beaced15-7689-473c-bbb0-3134308362ce"],
+ RowBox[{"<<", "MicroTest`"}]}], "Input",
+ CellLabel->"In[1]:=",ExpressionUUID->"beaced15-7689-473c-bbb0-3134308362ce"],
 
 Cell[BoxData[
  RowBox[{
   RowBox[{"SetDirectory", "@", 
-   RowBox[{"NotebookDirectory", "[", "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]], "Input",
+ CellLabel->"In[3]:=",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
 
 Cell[BoxData[
  RowBox[{"PacletDirectoryAdd", "@", 
-  RowBox[{
-  "AbsoluteFileName", "[", "\"\<..\>\"", 
-   "]"}]}]], "Input",ExpressionUUID->"94f5c87e-9e49-4612-9a4d-1269df8f9fe6"],
+  RowBox[{"AbsoluteFileName", "[", "\"\<..\>\"", "]"}]}]], "Input",
+ CellLabel->"In[4]:=",ExpressionUUID->"94f5c87e-9e49-4612-9a4d-1269df8f9fe6"],
 
 Cell[BoxData[
- RowBox[{"FindFile", "[", "\"\<IGraphM`\>\"", 
-  "]"}]], "Input",ExpressionUUID->"386b65bd-e1f9-4266-9bf6-2eeaeac0c57d"],
+ RowBox[{"FindFile", "[", "\"\<IGraphM`\>\"", "]"}]], "Input",
+ CellLabel->"In[5]:=",ExpressionUUID->"386b65bd-e1f9-4266-9bf6-2eeaeac0c57d"],
 
 Cell[BoxData[
  RowBox[{"AbsoluteTiming", "@", 
   RowBox[{"MTRun", "[", "\[IndentingNewLine]", 
    RowBox[{"Get", "[", "\"\<Tests.m\>\"", "]"}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input",ExpressionUUID->"69acd0fe-74d5-4037-829c-7bfa013beb69"],
+   "]"}]}]], "Input",
+ CellLabel->"In[6]:=",ExpressionUUID->"69acd0fe-74d5-4037-829c-7bfa013beb69"],
 
 Cell[BoxData[
- RowBox[{"IGVersion", "[", 
-  "]"}]], "Input",ExpressionUUID->"98f62a49-3a36-4627-8677-abf025cc67f6"],
+ RowBox[{"IGVersion", "[", "]"}]], "Input",
+ CellLabel->"In[7]:=",ExpressionUUID->"98f62a49-3a36-4627-8677-abf025cc67f6"],
 
 Cell[BoxData[
- RowBox[{"IGraphM`Developer`GetInfo", "[", 
-  "]"}]], "Input",ExpressionUUID->"fd205d26-5c77-4015-bd7d-573598871284"],
+ RowBox[{"IGraphM`Developer`GetInfo", "[", "]"}]], "Input",
+ CellLabel->"In[8]:=",ExpressionUUID->"fd205d26-5c77-4015-bd7d-573598871284"],
 
 Cell[BoxData[
  RowBox[{"Select", "[", 
@@ -62,8 +61,8 @@ Cell[BoxData[
    RowBox[{
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
-    "&"}]}], "]"}]], \
-"Input",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
+    "&"}]}], "]"}]], "Input",
+ CellLabel->"In[14]:=",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
 
 Cell[BoxData[
  RowBox[{"Select", "[", 
@@ -75,8 +74,41 @@ Cell[BoxData[
    RowBox[{
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
-    "&"}]}], "]"}]], \
-"Input",ExpressionUUID->"d7a025cd-0556-4c57-8562-f08bf8bcb27f"],
+    "&"}]}], "]"}]], "Input",
+ CellLabel->"In[15]:=",ExpressionUUID->"d7a025cd-0556-4c57-8562-f08bf8bcb27f"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", 
+  RowBox[{
+   RowBox[{"Complement", "[", 
+    RowBox[{
+     RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<IGClusterData\>\"", ",", "\"\<IGMinSeparators\>\"", ",", 
+       "\"\<IGraphM\>\""}], "}"}]}], "]"}], ",", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ToExpression", "[", 
+      RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
+     RowBox[{"{", "}"}]}], "&"}]}], "]"}]], "Input",
+ CellLabel->"In[16]:=",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", 
+  RowBox[{
+   RowBox[{"Complement", "[", 
+    RowBox[{
+     RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<IGDirectedTree\>\"", ",", "\"\<$IGExportFormats\>\""}], 
+      "}"}]}], "]"}], ",", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ToExpression", "[", 
+      RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
+     RowBox[{"{", "}"}]}], "&"}]}], "]"}]], "Input",
+ CellLabel->"In[18]:=",ExpressionUUID->"53a900c7-5c10-417e-98db-92c41560c027"],
 
 Cell[BoxData[
  RowBox[{"Scan", "[", "\[IndentingNewLine]", 
@@ -97,8 +129,9 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], "~", "Join", "~", 
     RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}]}]}], 
-  "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellLabel->
+  "In[11]:=",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
 WindowSize->{1025, 768},
 WindowMargins->{{82, Automatic}, {Automatic, 19}},
@@ -108,8 +141,8 @@ SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
   "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
   "builtin"}},
-FrontEndVersion->"11.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (September \
-10, 2017)",
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->"Default.nb"
 ]
 
