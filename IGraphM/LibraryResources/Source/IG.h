@@ -332,6 +332,7 @@ public:
         case 0: ig_method = IGRAPH_DEGSEQ_SIMPLE; break;
         case 1: ig_method = IGRAPH_DEGSEQ_SIMPLE_NO_MULTIPLE; break;
         case 2: ig_method = IGRAPH_DEGSEQ_VL; break;
+        case 3: ig_method = IGRAPH_DEGSEQ_SIMPLE_NO_MULTIPLE_UNIFORM; break;
         default: throw mma::LibraryError("degreeSequenceGame: unknown method option.");
         }
 

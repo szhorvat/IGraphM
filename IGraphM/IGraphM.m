@@ -1486,9 +1486,13 @@ IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]
 
 (* Create (games) *)
 
-Options[IGDegreeSequenceGame] = { Method -> "SimpleNoMultiple" };
-igDegreeSequenceGameMethods = <| "SimpleNoMultipleUniform" -> 3, "VigerLatapy" -> 2, "SimpleNoMultiple" -> 1, "Simple" -> 0 |>;
+Options[IGDegreeSequenceGame] = { Method -> "FastSimple" };
+igDegreeSequenceGameMethods = <|"ConfigurationModel" -> 0, "ConfigurationModelSimple"->3, "FastSimple"->1, "VigerLatapy"->2|>;
 amendUsage[IGDegreeSequenceGame, "Available Method options: <*Keys[igDegreeSequenceGameMethods]*>."];
+igDegreeSequenceGameMethods = Join[
+  igDegreeSequenceGameMethods,
+  <|"Simple" -> 0, "SimpleNoMultiple" -> 1, "VigerLatapy" -> 2, "SimpleNoMultipleUniform" -> 3|> (* the old naming *)
+];
 SyntaxInformation[IGDegreeSequenceGame] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGDegreeSequenceGame, Graph]};
 
 IGDegreeSequenceGame[degrees_?nonNegIntVecQ, opt : OptionsPattern[{IGDegreeSequenceGame, Graph}]] :=
