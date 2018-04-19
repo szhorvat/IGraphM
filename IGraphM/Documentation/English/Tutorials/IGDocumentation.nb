@@ -417,7 +417,7 @@ Cell[BoxData[
   "VertexCount"}]], \
 "Input",ExpressionUUID->"e1f79805-76f4-40c5-851d-064ffb616248"],
 
-Cell["Create an empty graph on 4 vertices.", \
+Cell["Create an empty graph on 15 vertices.", \
 "Text",ExpressionUUID->"7412707a-5fe8-4407-867e-18f5bc947858"],
 
 Cell[BoxData[
@@ -581,9 +581,8 @@ that include this database. For all other purposes, use ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  "\[CloseCurlyQuote]s built-in ",
- Cell[BoxData["GraphData"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "d7156eab-186b-48e9-8c6a-40ff0e974b10"],
+ Cell[BoxData[
+ "GraphData"],ExpressionUUID->"d7156eab-186b-48e9-8c6a-40ff0e974b10"],
  " function."
 }], "Text",ExpressionUUID->"eefffee1-92de-4c47-9393-f702753f767f"],
 
@@ -1018,8 +1017,8 @@ controlled by the ",
 
 Cell[TextData[{
  "To randomly sample multiple realizations of a degree sequence, use ",
- Cell[BoxData["IGDegreeSequenceGame"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGDegreeSequenceGame"],ExpressionUUID->
   "e0ede99b-a02a-499a-a8e0-c1436a84df47"],
  "."
 }], "Text",ExpressionUUID->"8bf52b0b-dbdc-4fd2-8f40-c0fc84a75c2a"],
@@ -1149,7 +1148,8 @@ generator, which can be seeded using ",
 
 Cell[BoxData[
  RowBox[{"?", 
-  "*Game"}]], "Input",ExpressionUUID->"3a8f3f3a-7f1d-403f-8980-f78ccd984e79"],
+  "IG*Game*"}]], \
+"Input",ExpressionUUID->"3a8f3f3a-7f1d-403f-8980-f78ccd984e79"],
 
 Cell[CellGroupData[{
 
@@ -1539,14 +1539,14 @@ Cell[BoxData[
 "Input",ExpressionUUID->"725163d3-882f-4b0f-90cd-758548815609"],
 
 Cell[TextData[{
- Cell[BoxData["IGDegreeSequenceGame"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGDegreeSequenceGame"],ExpressionUUID->
   "5338f2b8-6741-4279-b828-e4209c5ca4ec"],
  " implements various random sampling methods for graphs with a given degree \
 sequence. To quickly construct a single realization of a degree sequence, use \
 ",
- Cell[BoxData["IGRealizeDegreeSequence"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGRealizeDegreeSequence"],ExpressionUUID->
   "d7bbbfd1-1d2c-48e9-856b-ac7b1920ff6a"],
  "."
 }], "Text",ExpressionUUID->"cf515cf6-27af-49e9-98ee-bc0fde531d14"],
@@ -3193,7 +3193,6 @@ Cell[BoxData[
             StripOnInput->False,
             ShowContents->False], InsetBox["4", {0., 0.8028039324489454},
             BaseStyle->"Graphics"]}, {
-           
            StyleBox[
             DiskBox[{0.0008060506593086103, 0.0003240480495921849}, 
              0.16049605784358253],
@@ -4178,8 +4177,7 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"e364e0cc-0ded-465a-8925-894c71969f9b"],
 
 Cell[BoxData[
- RowBox[{"IGDirectedAcyclicGraphQ", "[", "ag", 
-  "]"}]], "Input",ExpressionUUID->"e17be125-5a5b-48ff-b111-6d85636ecbc3"],
+ RowBox[{"IGDirectedAcyclicGraphQ", "[", "ag", "]"}]], "Input",ExpressionUUID->"7ad253fd-36ee-4c47-8bcb-866f61cd8ee6"],
 
 Cell[TextData[{
  "Vertices of a directed acyclic graph can be sorted topologically. ",
@@ -6848,8 +6846,9 @@ Cell[BoxData[
       Graph[{1, 2, 3}, {
         SparseArray[
         Automatic, {3, 3}, 0, {1, {{0, 1, 2, 3}, {{2}, {3}, {1}}}, Pattern}], 
-        Null}, {GraphLayout -> "CircularEmbedding", 
-        VertexShapeFunction -> {"Name"}, VertexSize -> {Medium}}]]}, 
+        Null}, {
+       GraphLayout -> "CircularEmbedding", VertexShapeFunction -> {"Name"}, 
+        VertexSize -> {Medium}}]]}, 
      TagBox[
       GraphicsGroupBox[
        GraphicsComplexBox[{{-0.8660254037844384, -0.4999999999999994}, {
@@ -27255,7 +27254,7 @@ Plot the adjacency matrix, reordered to show the community structure.\
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
   RowBox[{"g", ",", 
-   RowBox[{"Flatten", "@", 
+   RowBox[{"Catenate", "@", 
     RowBox[{"cl1", "[", "\"\<Communities\>\"", "]"}]}]}], 
   "]"}]], "Input",ExpressionUUID->"63a432ef-6660-4a4f-b64f-ed26f67ddfb2"],
 
@@ -29769,8 +29768,8 @@ Cell[TextData[{
  "IGRealizeDegreeSequence"],ExpressionUUID->
   "5a1c66e9-26a2-4f56-9e68-5abf69440e76"],
  " function. To sample random realizations, use ",
- Cell[BoxData["IGDegreeSequenceGame"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGDegreeSequenceGame"],ExpressionUUID->
   "5a66bc35-424f-45ce-8904-3bef9fbaedad"],
  "."
 }], "Text",ExpressionUUID->"6be7700c-faee-4168-b78f-a7b23b170cbb"],
@@ -33485,7 +33484,7 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
   RowBox[{"g", ",", 
-   RowBox[{"Flatten", "@", 
+   RowBox[{"Catenate", "@", 
     RowBox[{"cl", "[", "\"\<Communities\>\"", "]"}]}], ",", 
    RowBox[{"Mesh", "\[Rule]", 
     RowBox[{"(", 
