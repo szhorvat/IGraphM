@@ -27683,23 +27683,63 @@ satisfiability problem and using ",
  "."
 }], "Text",ExpressionUUID->"4a203761-3927-4bc1-89f6-3ad45dc830df"],
 
+Cell[TextData[{
+ "The available ",
+ Cell[BoxData["Method"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "c77a9e37-8039-4c28-b62e-2c717cce8b8a"],
+ " option values are:"
+}], "Text",ExpressionUUID->"3db4685b-5b18-4c98-a51a-2f4f3783dec4"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData["\"\<Simple\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "9e42e0d5-d093-4a57-9b05-00d7954243a4"],
+ " does not use special heuristics. This method is the fastest for easy \
+problems."
+}], "Item",ExpressionUUID->"1b19c8ae-a937-4da3-8b76-a571605f166a"],
+
+Cell[TextData[{
+ Cell[BoxData["\"\<MaxDegreeClique\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "94bc8e4b-ecdb-4d32-97a5-59cef79cae56"],
+ " attempts to find a clique containing a maximum degree vertex, and starts \
+by colouring this clique. This method tends to perform better on hard \
+problems."
+}], "Item",ExpressionUUID->"29940da3-9698-4196-b634-4f09d438c738"]
+}, Open  ]],
+
+Cell[TextData[{
+ "The default method is ",
+ Cell[BoxData["\"\<MaxDegreeClique\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "97c98f99-0b27-499e-a6c7-81a59921850f"],
+ "."
+}], "Text",ExpressionUUID->"2a164176-307f-4e60-8e40-be2908764814"],
+
 Cell["\<\
-The Petersen graph is not 2-colourable, so no solution is returned.\
+The Moser spindle is not 3-colourable, so no solution is returned.\
 \>", "Text",ExpressionUUID->"fb912a8d-3fe7-481c-bd30-5fad64361e8f"],
 
 Cell[BoxData[
+ RowBox[{
+  RowBox[{"moser", "=", 
+   RowBox[{"GraphData", "[", "\"\<MoserSpindle\>\"", "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"033f0cf7-a43d-46c3-ab09-4862cc324430"],
+
+Cell[BoxData[
  RowBox[{"IGKVertexColoring", "[", 
-  RowBox[{
-   RowBox[{"PetersenGraph", "[", "]"}], ",", "2"}], 
+  RowBox[{"moser", ",", "3"}], 
   "]"}]], "Input",ExpressionUUID->"a44316ec-64a8-4b0c-945d-609c596a13b7"],
 
-Cell["Find a 3-colouring of the Petersen graph ...", \
+Cell["Find a 4-colouring of the Moser spindle ...", \
 "Text",ExpressionUUID->"09e34151-b047-4ab5-a296-285897b6bfeb"],
 
 Cell[BoxData[
  RowBox[{"IGKVertexColoring", "[", 
-  RowBox[{
-   RowBox[{"PetersenGraph", "[", "]"}], ",", "3"}], 
+  RowBox[{"moser", ",", "4"}], 
   "]"}]], "Input",ExpressionUUID->"861c3e84-47f6-40aa-a5b1-d181aae0f0f2"],
 
 Cell["... and visualize it.", \
@@ -27707,8 +27747,8 @@ Cell["... and visualize it.", \
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"PetersenGraph", "[", 
-   RowBox[{
+  RowBox[{"Graph", "[", 
+   RowBox[{"moser", ",", 
     RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}], ",", 
     RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}], "//", 
   RowBox[{"IGVertexMap", "[", 
@@ -27719,10 +27759,10 @@ Cell[BoxData[
       RowBox[{
        RowBox[{"First", "@", 
         RowBox[{"IGKVertexColoring", "[", 
-         RowBox[{"#", ",", "3"}], "]"}]}], "&"}], ")"}]}]}], 
+         RowBox[{"#", ",", "4"}], "]"}]}], "&"}], ")"}]}]}], 
    "]"}]}]], "Input",ExpressionUUID->"b947f388-2013-48d9-857d-ab10e79f6782"],
 
-Cell["Find a 4-edge colouring of the same graph.", \
+Cell["Find a 4-edge-colouring of the Petersen graph.", \
 "Text",ExpressionUUID->"ca990302-e6ff-4ed4-ae60-eed755d6ec58"],
 
 Cell[BoxData[
@@ -27731,7 +27771,8 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"GraphStyle", "\[Rule]", "\"\<ThickEdge\>\""}], ",", 
     RowBox[{"EdgeStyle", "\[Rule]", 
-     RowBox[{"Opacity", "[", "0.7", "]"}]}]}], "]"}], "//", 
+     RowBox[{"Opacity", "[", 
+      RowBox[{"2", "/", "3"}], "]"}]}]}], "]"}], "//", 
   RowBox[{"IGEdgeMap", "[", 
    RowBox[{
     RowBox[{"ColorData", "[", "112", "]"}], ",", 
@@ -27775,6 +27816,29 @@ successively larger ",
   "ebd5faee-f048-443b-bd17-cbb8a896dfb3"],
  "-colourings until it is successful."
 }], "Text",ExpressionUUID->"5d8622e5-930b-431a-ba70-ce29164134bb"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGMinimumVertexColoring"],ExpressionUUID->
+  "0b110512-a8d4-4b0c-ba1e-118fbc9af325"],
+ " and ",
+ Cell[BoxData[
+ "IGMinimumEdgeColoring"],ExpressionUUID->
+  "c5a17155-e059-47eb-848c-9509a2ace71b"],
+ " can use the same ",
+ Cell[BoxData["Method"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "bb0880e7-d7e4-472d-b7df-64edd612ad09"],
+ " option values as ",
+ Cell[BoxData["IGKVertexColoring"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "4ff21781-f030-4de8-86cf-555fbc842495"],
+ " and ",
+ Cell[BoxData["IGKEdgeColoring"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "74432600-8927-4c48-ab1c-393023a89b43"],
+ "."
+}], "Text",ExpressionUUID->"995d7d82-3443-42a8-b12a-a290ea025178"],
 
 Cell[BoxData[
  RowBox[{
@@ -27967,7 +28031,28 @@ Cell[BoxData[{
  CellChangeTimes->{{3.7331268479782887`*^9, 3.733126871359865*^9}, {
   3.733127632150155*^9, 3.733127638411281*^9}, {3.733128037126593*^9, 
   3.733128052830562*^9}},ExpressionUUID->"8c1c4a9a-85f8-4e07-a52c-\
-18741ceb2105"]
+18741ceb2105"],
+
+Cell["Find a minimum edge colouring of a graph.", \
+"Text",ExpressionUUID->"01fb412e-4838-4120-b2ff-ce5e17f5ff26"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Graph", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"GraphData", "[", "\"\<SixteenCellGraph\>\"", "]"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"GraphStyle", "\[Rule]", "\"\<ThickEdge\>\""}], ",", 
+    RowBox[{"EdgeStyle", "\[Rule]", 
+     RowBox[{"Opacity", "[", 
+      RowBox[{"1", "/", "2"}], "]"}]}]}], "\[IndentingNewLine]", "]"}], "//", 
+  "\[IndentingNewLine]", 
+  RowBox[{"IGEdgeMap", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "104", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"EdgeStyle", "->", "IGMinimumEdgeColoring"}]}], 
+   "\[IndentingNewLine]", 
+   "]"}]}]], "Input",ExpressionUUID->"37ffd1df-bc2a-44cc-985a-dff7a5595b6b"]
 }, Closed]]
 }, Closed]],
 
@@ -32301,8 +32386,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
