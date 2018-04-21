@@ -4417,7 +4417,13 @@ igKColoringHeuristic[_][graph_] := {}
 
 Options[IGKEdgeColoring] = { "ForcedColoring" -> "MaxDegreeClique" };
 SyntaxInformation[IGKEdgeColoring] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGKEdgeColoring[graph_?igGraphQ, k_Integer?Positive, opt : OptionsPattern[]] := IGKVertexColoring[LineGraph[graph], k, opt]
+IGKEdgeColoring[graph_?igGraphQ, k_Integer?Positive, opt : OptionsPattern[]] :=
+    catch@Module[{fc = OptionValue["ForcedColoring"]},
+      If[ListQ[fc],
+        fc = Check[EdgeIndex[graph, #]& /@ fc, throw[$Failed]]
+      ];
+      IGKVertexColoring[LineGraph[graph], k, "ForcedColoring" -> fc]
+    ]
 
 Options[IGMinimumVertexColoring] = { "ForcedColoring" -> "MaxDegreeClique" }
 SyntaxInformation[IGMinimumVertexColoring] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -4434,7 +4440,13 @@ IGMinimumVertexColoring[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 Options[IGMinimumEdgeColoring] = { "ForcedColoring" -> "MaxDegreeClique" };
 SyntaxInformation[IGMinimumEdgeColoring] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-IGMinimumEdgeColoring[graph_?igGraphQ, opt : OptionsPattern[]] := IGMinimumVertexColoring[LineGraph[graph], opt]
+IGMinimumEdgeColoring[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Module[{fc = OptionValue["ForcedColoring"]},
+      If[ListQ[fc],
+        fc = Check[EdgeIndex[graph, #]& /@ fc, throw[$Failed]]
+      ];
+      IGMinimumVertexColoring[LineGraph[graph], "ForcedColoring" -> fc]
+    ]
 
 
 (* Coreness *)
