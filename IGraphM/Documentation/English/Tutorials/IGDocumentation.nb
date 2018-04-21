@@ -4177,7 +4177,8 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"e364e0cc-0ded-465a-8925-894c71969f9b"],
 
 Cell[BoxData[
- RowBox[{"IGDirectedAcyclicGraphQ", "[", "ag", "]"}]], "Input",ExpressionUUID->"7ad253fd-36ee-4c47-8bcb-866f61cd8ee6"],
+ RowBox[{"IGDirectedAcyclicGraphQ", "[", "ag", "]"}]], "Input",
+ ExpressionUUID->"7ad253fd-36ee-4c47-8bcb-866f61cd8ee6"],
 
 Cell[TextData[{
  "Vertices of a directed acyclic graph can be sorted topologically. ",
@@ -27683,38 +27684,57 @@ satisfiability problem and using ",
  "."
 }], "Text",ExpressionUUID->"4a203761-3927-4bc1-89f6-3ad45dc830df"],
 
-Cell[TextData[{
- "The available ",
- Cell[BoxData["Method"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "c77a9e37-8039-4c28-b62e-2c717cce8b8a"],
- " option values are:"
-}], "Text",ExpressionUUID->"3db4685b-5b18-4c98-a51a-2f4f3783dec4"],
+Cell["The available option values are:", \
+"Text",ExpressionUUID->"3db4685b-5b18-4c98-a51a-2f4f3783dec4"],
 
 Cell[CellGroupData[{
 
 Cell[TextData[{
- Cell[BoxData["\"\<Simple\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", 
+   RowBox[{"{", 
+    RowBox[{
+     SubscriptBox["v", "1"], ",", 
+     SubscriptBox["v", "2"], ",", "\[Ellipsis]"}], "}"}]}]],ExpressionUUID->
   "9e42e0d5-d093-4a57-9b05-00d7954243a4"],
- " does not use special heuristics. This method is the fastest for easy \
-problems."
+ " forces the given vertices to distinct and increasing colours. Normally, \
+the vertices of a clique are given (which require as many colours as the size \
+of the clique). The purpose of this option is to reduce the number of \
+redundant solutions of the equivalent SAT problem, and thus improve \
+performance."
 }], "Item",ExpressionUUID->"1b19c8ae-a937-4da3-8b76-a571605f166a"],
 
 Cell[TextData[{
- Cell[BoxData["\"\<MaxDegreeClique\>\""],
+ Cell[BoxData[
+  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "\"\<MaxDegreeClique\>\""}]],
+  ExpressionUUID->"94bc8e4b-ecdb-4d32-97a5-59cef79cae56"],
+ " attempts to find a clique containing a maximum degree vertex. On hard \
+problems it may perform orders of magnitude better than ",
+ Cell[BoxData[
+  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],
   FormatType->"StandardForm",ExpressionUUID->
-  "94bc8e4b-ecdb-4d32-97a5-59cef79cae56"],
- " attempts to find a clique containing a maximum degree vertex, and starts \
-by colouring this clique. This method tends to perform better on hard \
+  "288006e4-a45a-43b8-8ed4-3a325ab9bb96"],
+ "."
+}], "Item",ExpressionUUID->"29940da3-9698-4196-b634-4f09d438c738"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "a75b9bf7-1cee-4f49-a943-32dde018ab9a"],
+ " does not force any colours. It is usually the fastest choice for easy \
 problems."
-}], "Item",ExpressionUUID->"29940da3-9698-4196-b634-4f09d438c738"]
+}], "Item",ExpressionUUID->"7edd7506-64d9-491e-aea8-63f44994f4dd"]
 }, Open  ]],
 
 Cell[TextData[{
- "The default method is ",
- Cell[BoxData["\"\<MaxDegreeClique\>\""],
+ "The default setting for ",
+ Cell[BoxData["\"\<ForcedColoring\>\""],
   FormatType->"StandardForm",ExpressionUUID->
+  "926db2cc-b55d-44d3-9dec-390292851c1d"],
+ " is ",
+ Cell[BoxData[
+ "\"\<MaxDegreeClique\>\""],ExpressionUUID->
   "97c98f99-0b27-499e-a6c7-81a59921850f"],
  "."
 }], "Text",ExpressionUUID->"2a164176-307f-4e60-8e40-be2908764814"],
@@ -27782,7 +27802,63 @@ Cell[BoxData[
        RowBox[{"First", "@", 
         RowBox[{"IGKEdgeColoring", "[", 
          RowBox[{"#", ",", "4"}], "]"}]}], "&"}], ")"}]}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"64e3e6bd-da7a-4887-a5a4-8454b1ed747c"]
+   "]"}]}]], "Input",ExpressionUUID->"64e3e6bd-da7a-4887-a5a4-8454b1ed747c"],
+
+Cell[TextData[{
+ "The following examples illustrate the use of the ",
+ Cell[BoxData["\"\<ForcedColoring\>\""],
+  FormatType->"StandardForm",ExpressionUUID->
+  "6ebf4a36-d745-4f32-afcc-0fac0c0386f6"],
+ " option. The 6th order Mycielski graph has chromatic number 6. A \
+6-colouring is easily found even with ",
+ Cell[BoxData[
+  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "3b7ca3e6-a315-4ea1-9ddf-032a87b9ac2d"],
+ "."
+}], "Text",ExpressionUUID->"df85944b-8f8b-4422-8432-34b02de3f830"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"GraphData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<Mycielski\>\"", ",", " ", "6"}], "}"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"a98c0100-f1dd-46e0-be2e-6969e8c8426b"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGKVertexColoring", "[", 
+   RowBox[{"g", ",", "6", ",", 
+    RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]}], "]"}], "//", 
+  "Timing"}]], "Input",ExpressionUUID->"1489d9ed-eb46-464f-bc39-b5fec878c674"],
+
+Cell["\<\
+However, showing that the graph is not 5-colourable takes considerably longer.\
+\>", "Text",ExpressionUUID->"dc20e7a7-c4f6-455f-bdd8-22a37d872a51"],
+
+Cell[BoxData[
+ RowBox[{"TimeConstrained", "[", 
+  RowBox[{
+   RowBox[{"IGKVertexColoring", "[", 
+    RowBox[{"g", ",", "5", ",", 
+     RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]}], "]"}], ",", 
+   "5"}], "]"}]], \
+"Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
+
+Cell["\<\
+Forcing colours in the appropriate way reduces the computation time \
+significantly.\
+\>", "Text",ExpressionUUID->"cbc5e584-cdd5-4ff8-937f-4920880111fc"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGKVertexColoring", "[", 
+   RowBox[{"g", ",", "5", ",", 
+    RowBox[{
+    "\"\<ForcedColoring\>\"", "\[Rule]", "\"\<MaxDegreeClique\>\""}]}], "]"}],
+   "//", "Timing"}]], \
+"Input",ExpressionUUID->"23afc819-cb31-4672-bd3d-6fea44ffb137"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -27826,17 +27902,16 @@ Cell[TextData[{
  "IGMinimumEdgeColoring"],ExpressionUUID->
   "c5a17155-e059-47eb-848c-9509a2ace71b"],
  " can use the same ",
- Cell[BoxData["Method"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "\"\<ForcedColoring\>\""],ExpressionUUID->
   "bb0880e7-d7e4-472d-b7df-64edd612ad09"],
  " option values as ",
- Cell[BoxData["IGKVertexColoring"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGKVertexColoring"],ExpressionUUID->
   "4ff21781-f030-4de8-86cf-555fbc842495"],
  " and ",
- Cell[BoxData["IGKEdgeColoring"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "74432600-8927-4c48-ab1c-393023a89b43"],
+ Cell[BoxData[
+ "IGKEdgeColoring"],ExpressionUUID->"74432600-8927-4c48-ab1c-393023a89b43"],
  "."
 }], "Text",ExpressionUUID->"995d7d82-3443-42a8-b12a-a290ea025178"],
 
@@ -32386,8 +32461,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
@@ -32704,8 +32779,8 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"{", 
      RowBox[{"5", ",", "4", ",", "3", ",", "2", ",", "1"}], "}"}], ",", 
-    "g1"}], "]"}]}]], \
-"Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
+    "g1"}], 
+   "]"}]}]], "Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
 
 Cell[BoxData[
  RowBox[{"VertexList", "/@", 
@@ -33617,8 +33692,8 @@ Cell[BoxData[
          RowBox[{"ImageSize", "\[Rule]", "20"}]}], "]"}], "&"}], "/@", 
       RowBox[{
        RowBox[{"IGVertexProp", "[", "VertexShape", "]"}], "[", "g", "]"}]}], 
-     ")"}]}], "]"}]}]], \
-"Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
+     ")"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
 
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
