@@ -979,16 +979,169 @@ Cell[BoxData[
   "IGChordalRing"}]], \
 "Input",ExpressionUUID->"ecf3838d-d8d4-4d1b-ac82-d1cd910c2db2"],
 
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGChordalRing", "[", 
+   RowBox[{"n", ",", "w"}], "]"}]],ExpressionUUID->
+  "76175171-3fb6-45fc-8a0e-043c660cbb1b"],
+ " constructs an extended chordal ring based on the offset specification \
+vector or matrix ",
+ Cell[BoxData[
+  FormBox["w", TraditionalForm]],ExpressionUUID->
+  "7f8ab1d8-968d-4a2c-9649-3439380bc5a1"],
+ " as follows:"
+}], "Text",ExpressionUUID->"cdd9ba40-8a5e-4478-9fba-a5b8b5c2124f"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "It creates a cycle graph (i.e. ring) on ",
+ Cell[BoxData[
+  FormBox["n", TraditionalForm]],ExpressionUUID->
+  "99598c93-e5eb-4d7b-9c3b-e1b638e4fdcb"],
+ " vertices."
+}], "ItemNumbered",ExpressionUUID->"bcee0e39-c2b3-4830-bd87-133d55d5bb71"],
+
+Cell[TextData[{
+ "For each vertex ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "ae0ad2c5-70eb-4cd9-9607-3ff2425e4de6"],
+ " on the ring, it adds a chord to a vertex ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"w", "\[LeftDoubleBracket]", 
+    TemplateBox[{"i","p"},
+     "Mod"], "\[RightDoubleBracket]"}], TraditionalForm]],ExpressionUUID->
+  "098d7ae5-c231-428c-a8e5-eed9ccff619e"],
+ " steps ahead counterclockwise on the ring."
+}], "ItemNumbered",ExpressionUUID->"94501367-6272-4005-9450-08ef8af8d1c6"],
+
+Cell[TextData[{
+ "If ",
+ Cell[BoxData[
+  FormBox["w", TraditionalForm]],ExpressionUUID->
+  "224dd5e0-557b-47f0-98fc-b60c4a5d60ce"],
+ " is a matrix, the procedure is carried out for each row."
+}], "ItemNumbered",ExpressionUUID->"5844820e-c6b1-490b-9bc5-2e296f20f522"]
+}, Open  ]],
+
+Cell[TextData[{
+ "The number of vertices ",
+ Cell[BoxData[
+  FormBox["n", TraditionalForm]],ExpressionUUID->
+  "66041db4-43c4-4456-b55d-60bf6c302000"],
+ " must be an integer multiple of the number of columns in the matrix ",
+ Cell[BoxData[
+  FormBox["w", TraditionalForm]],ExpressionUUID->
+  "38a0aa67-2b27-4792-a17c-f3bd9be938cc"],
+ "."
+}], "Text",ExpressionUUID->"65d894df-d3e0-44ec-954f-8cebfbd365d4"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"22b9f30f-0349-4f80-b1e7-e835c874dd87"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  "f832b68a-5246-466b-8b6d-513bbf61ceff"],
+ " creates a graph with directed edges."
+}], "Item",ExpressionUUID->"e1fe5067-80d1-49c9-b6dd-3c57a8daa68c"],
+
+Cell["Create an extended chordal graph.", \
+"Text",ExpressionUUID->"3f67a2a3-5f41-4484-90da-00c4b56494f3"],
+
+Cell[BoxData[
+ RowBox[{"IGChordalRing", "[", 
+  RowBox[{"15", ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "4", ",", "8"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"fc72513a-202e-4f23-8217-468994c62c22"],
+
+Cell["Negative offsets are allowed.", \
+"Text",ExpressionUUID->"e268ca8a-ac31-44be-bba9-11f41c9d6f8c"],
+
 Cell[BoxData[
  RowBox[{"IGChordalRing", "[", 
   RowBox[{"15", ",", 
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"3", ",", "12", ",", "4"}], "}"}], ",", 
+      RowBox[{"3", ",", "4", ",", "8"}], "}"}], ",", 
      RowBox[{"{", 
-      RowBox[{"7", ",", "8", ",", "11"}], "}"}]}], "}"}]}], 
-  "]"}]], "Input",ExpressionUUID->"fc72513a-202e-4f23-8217-468994c62c22"]
+      RowBox[{
+       RowBox[{"-", "3"}], ",", 
+       RowBox[{"-", "4"}], ",", 
+       RowBox[{"-", "8"}]}], "}"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"33ffaab3-0266-4166-a7f1-e5ca67101951"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGChordalGraph"],ExpressionUUID->"ab6fd1ae-5e04-495e-9723-ba7831df756c"],
+ " may create self-loops or multiple edges. These can be simplified using ",
+ Cell[BoxData[
+ "SimpleGraph"],ExpressionUUID->"c4132e3f-9d89-420e-845c-7669f51eac1e"],
+ "."
+}], "Text",ExpressionUUID->"b08f9106-0866-4852-aa76-a269c3afe4ff"],
+
+Cell[BoxData[
+ RowBox[{"SimpleGraph", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"d7ea1e56-98b9-4667-b89e-4cc973a1b5a9"],
+
+Cell["Create a chordal graph with directed edges.", \
+"Text",ExpressionUUID->"29b43c49-181a-43ba-a577-2252a2f3c869"],
+
+Cell[BoxData[
+ RowBox[{"IGChordalRing", "[", 
+  RowBox[{"8", ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], ",", 
+   RowBox[{"DirectedEdges", "\[Rule]", "True"}], ",", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<DiagramGold\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"626d2339-d7a1-49e8-b506-49ede93822b9"],
+
+Cell[TextData[{
+ "Colour the chords of the ring based on which entry of the ",
+ Cell[BoxData[
+  FormBox["w", TraditionalForm]],ExpressionUUID->
+  "1f0cb86f-791c-4e52-ba64-0db12cc60c35"],
+ " vector they correspond to."
+}], "Text",ExpressionUUID->"33a319a2-994e-439c-86aa-e5b8e1459054"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"w", "=", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3", ",", "4"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"IGChordalRing", "[", 
+   RowBox[{"12", ",", "w", ",", 
+    RowBox[{"GraphStyle", "\[Rule]", "\"\<ThickEdge\>\""}], ",", 
+    RowBox[{"EdgeStyle", "\[Rule]", 
+     RowBox[{"Opacity", "[", 
+      RowBox[{"1", "/", "2"}], "]"}]}]}], "]"}], "//", 
+  RowBox[{"IGEdgeMap", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "97", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"EdgeStyle", "\[Rule]", 
+     RowBox[{"Function", "[", 
+      RowBox[{"g", ",", "\[IndentingNewLine]", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"i", "\[LessEqual]", 
+            RowBox[{"VertexCount", "[", "g", "]"}]}], ",", "0", ",", 
+           RowBox[{"Mod", "[", 
+            RowBox[{"i", ",", 
+             RowBox[{"Length", "[", "w", "]"}], ",", "1"}], "]"}]}], "]"}], 
+         ",", 
+         RowBox[{"{", 
+          RowBox[{"i", ",", 
+           RowBox[{"EdgeCount", "[", "g", "]"}]}], "}"}]}], "]"}]}], 
+      "\[IndentingNewLine]", "]"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]}], "Input",ExpressionUUID->"0111f537-6d08-42c2-beb0-876b2ea8f58f"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1592,8 +1745,11 @@ generated with probability proportional to ",
  Cell[BoxData[
   FormBox["A", TraditionalForm]],ExpressionUUID->
   "70a7a89a-cbff-4d47-926d-6bda6e84dc02"],
- " is the adjacency matrix. Directed ones are generated with probability \
-proportional to ",
+ " is the adjacency matrix, having ",
+ StyleBox["twice",
+  FontSlant->"Italic"],
+ " the number of loops for each vertex on the diagonal. Directed ones are \
+generated with probability proportional to ",
  Cell[BoxData[
   FormBox[
    SuperscriptBox[
@@ -3193,6 +3349,7 @@ Cell[BoxData[
             StripOnInput->False,
             ShowContents->False], InsetBox["4", {0., 0.8028039324489454},
             BaseStyle->"Graphics"]}, {
+           
            StyleBox[
             DiskBox[{0.0008060506593086103, 0.0003240480495921849}, 
              0.16049605784358253],
@@ -4177,8 +4334,8 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"e364e0cc-0ded-465a-8925-894c71969f9b"],
 
 Cell[BoxData[
- RowBox[{"IGDirectedAcyclicGraphQ", "[", "ag", "]"}]], "Input",
- ExpressionUUID->"7ad253fd-36ee-4c47-8bcb-866f61cd8ee6"],
+ RowBox[{"IGDirectedAcyclicGraphQ", "[", "ag", 
+  "]"}]], "Input",ExpressionUUID->"7ad253fd-36ee-4c47-8bcb-866f61cd8ee6"],
 
 Cell[TextData[{
  "Vertices of a directed acyclic graph can be sorted topologically. ",
@@ -4217,6 +4374,112 @@ Cell[CellGroupData[{
 Cell["Chordal graphs", \
 "Subsection",ExpressionUUID->"9a99d4cb-d46e-42fa-b022-d58b172824b7"],
 
+Cell[CellGroupData[{
+
+Cell["IGChordalQ", \
+"Subsubsection",ExpressionUUID->"08ade6c0-3d52-43f9-95da-023cee8599fb"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGChordalQ"}]], \
+"Input",ExpressionUUID->"dfef33c8-8c08-4e56-ae36-4bca3f95ded5"],
+
+Cell["\<\
+A graph is chordal if each of its cycles of four or more nodes has a chord, \
+i.e. an edge joining two non-adjacent vertices in the cycle. Equivalently, \
+all chordless cycles in a chordal graph have at most 3 vertices.\
+\>", "Text",ExpressionUUID->"9d84c193-5c4f-48b4-8a80-1fd91cc58fb6"],
+
+Cell[TextData[{
+ "Chordal graphs are also called ",
+ StyleBox["rigid circuit graphs",
+  FontSlant->"Italic"],
+ " or ",
+ StyleBox["triangulated graphs",
+  FontSlant->"Italic"],
+ "."
+}], "Text",ExpressionUUID->"e49e3d0f-97dc-473e-8a22-5da9b5c27df7"],
+
+Cell["\<\
+Grid graphs are not chordal because they have chordless 4 cycles.\
+\>", "Text",ExpressionUUID->"949138fc-3542-42ea-b80a-95f7f8bf2336"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"GridGraph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"2", ",", "3"}], "}"}], ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"92130ca0-a943-4c8c-9a4e-2e1adff964a7"],
+
+Cell[BoxData[
+ RowBox[{"IGChordalQ", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"cd9c0c93-9e38-4166-8eb5-ab67a04607b8"],
+
+Cell["Adding chords to the 4 cycles makes them chordal.", \
+"Text",ExpressionUUID->"fb926fe9-eb04-40fa-a68a-0f9581413dd7"],
+
+Cell[BoxData[
+ RowBox[{"EdgeAdd", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"1", "\[UndirectedEdge]", "4"}], ",", 
+     RowBox[{"4", "\[UndirectedEdge]", "5"}]}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"f9ec2660-9e61-4153-8626-2b785ae64fac"],
+
+Cell[BoxData[
+ RowBox[{"IGChordalQ", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"eed84c0d-cbc2-4777-a163-23d5a6c1a3e5"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGChordalCompletion", \
+"Subsubsection",ExpressionUUID->"b1cb2ef6-2b64-49ba-8ed1-e581e8a7d314"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGChordalCompletion"}]], \
+"Input",ExpressionUUID->"c73e9139-648a-4060-adf2-1ed29feac1d2"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGChordalCompletion"],ExpressionUUID->
+  "302f12b1-9449-4adb-82c2-86f7e7bcdab8"],
+ " computes a set of edges that, when added to a graph, make it chordal. The \
+edge set returned is not usually minimal, i.e. some of the edges may not be \
+necessary to create a chordal graph."
+}], "Text",ExpressionUUID->"d97f2524-e6d4-40ac-b069-aeb2c5106124"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+  "CycleGraph", "[", "5", 
+   "]"}]}]], "Input",ExpressionUUID->"e7f86def-860b-44f6-aa44-3088e16eda9d"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"completion", "=", 
+   RowBox[{"IGChordalCompletion", "[", "g", "]"}]}], ";"}], "\n", 
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{
+   RowBox[{"EdgeAdd", "[", 
+    RowBox[{"g", ",", "completion"}], "]"}], ",", "completion"}], 
+  "]"}]}], "Input",ExpressionUUID->"1b55f973-01f6-4cb4-a206-ccec01a19222"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGMaximumCardinalitySearch", \
+"Subsubsection",ExpressionUUID->"534230a0-b3a1-4b38-95b5-5492a35633ef"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMaximumCardinalitySearch"}]], \
+"Input",ExpressionUUID->"da63b45a-4474-4192-9804-810ff4a7ecd6"],
+
 Cell["\<\
 The maximum cardinality search algorithm visits the vertices of the graph in \
 such an order so that every time the vertex with the most already visited \
@@ -4229,13 +4492,15 @@ Cell[BoxData[
    GraphicsBox[
     NamespaceBox["NetworkGraphics",
      DynamicModuleBox[{Typeset`graph = HoldComplete[
-       Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {
-        Null, SparseArray[
+       Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {Null, 
+         SparseArray[
          Automatic, {10, 10}, 0, {
-          1, {{0, 7, 9, 14, 15, 15, 16, 16, 17, 17, 17}, {{2}, {3}, {4}, {
-            5}, {6}, {9}, {10}, {3}, {6}, {4}, {5}, {7}, {8}, {10}, {8}, {
-            7}, {9}}}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-           1}}]}]]}, 
+          1, {{0, 7, 10, 17, 20, 22, 25, 27, 30, 32, 34}, {{2}, {3}, {4}, {
+            5}, {6}, {9}, {10}, {1}, {3}, {6}, {1}, {2}, {4}, {5}, {7}, {8}, {
+            10}, {1}, {3}, {8}, {1}, {3}, {1}, {2}, {7}, {3}, {6}, {3}, {4}, {
+            9}, {1}, {8}, {1}, {3}}}, Pattern}]}, {
+        GraphLayout -> {"Dimension" -> 2}, GridLinesStyle -> Directive[
+           GrayLevel[0.5, 0.4]], VertexSize -> {Large}}]]}, 
       TagBox[
        GraphicsGroupBox[
         GraphicsComplexBox[{{1.701679475037652, 0.8260879357521795}, {
@@ -4246,36 +4511,36 @@ Cell[BoxData[
          3.004367978190639, 0.926728084419895}, {1.0848780974451706`, 
          1.7273098555045692`}}, {
           {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
-           {Arrowheads[0.], ArrowBox[{1, 2}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{1, 3}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{1, 4}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{1, 5}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{1, 6}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{1, 9}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{1, 10}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{2, 3}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{2, 6}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{3, 4}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{3, 5}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{3, 7}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{3, 8}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{3, 10}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{4, 8}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{6, 7}, 0.030270836788843694`]}, 
-           {Arrowheads[0.], ArrowBox[{8, 9}, 0.030270836788843694`]}}, 
+           {Arrowheads[0.], ArrowBox[{1, 2}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{1, 3}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{1, 4}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{1, 5}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{1, 6}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{1, 9}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{1, 10}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{2, 3}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{2, 6}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{3, 4}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{3, 5}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{3, 7}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{3, 8}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{3, 10}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{4, 8}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{6, 7}, 0.07990840454381602]}, 
+           {Arrowheads[0.], ArrowBox[{8, 9}, 0.07990840454381602]}}, 
           {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
-           DiskBox[1, 0.030270836788843694], DiskBox[2, 0.030270836788843694],
-            DiskBox[3, 0.030270836788843694], 
-           DiskBox[4, 0.030270836788843694], DiskBox[5, 0.030270836788843694],
-            DiskBox[6, 0.030270836788843694], 
-           DiskBox[7, 0.030270836788843694], DiskBox[8, 0.030270836788843694],
-            DiskBox[9, 0.030270836788843694], 
-           DiskBox[10, 0.030270836788843694]}}]],
+           DiskBox[1, 0.07990840454381602], DiskBox[2, 0.07990840454381602], 
+           DiskBox[3, 0.07990840454381602], DiskBox[4, 0.07990840454381602], 
+           DiskBox[5, 0.07990840454381602], DiskBox[6, 0.07990840454381602], 
+           DiskBox[7, 0.07990840454381602], DiskBox[8, 0.07990840454381602], 
+           DiskBox[9, 0.07990840454381602], 
+           DiskBox[10, 0.07990840454381602]}}]],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False]],
     DefaultBaseStyle->{
      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
     
+    FormatType->TraditionalForm,
     FrameTicks->None,
     GridLinesStyle->Directive[
       GrayLevel[0.5, 0.4]]]}], 
@@ -4308,6 +4573,7 @@ Cell[BoxData[
    "]"}], "//", "ListAnimate"}]], "Input",
  CellTags->
   "DeleteOutput",ExpressionUUID->"2de71771-339e-467f-96d8-744c5605e6ad"]
+}, Closed]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -6847,9 +7113,8 @@ Cell[BoxData[
       Graph[{1, 2, 3}, {
         SparseArray[
         Automatic, {3, 3}, 0, {1, {{0, 1, 2, 3}, {{2}, {3}, {1}}}, Pattern}], 
-        Null}, {
-       GraphLayout -> "CircularEmbedding", VertexShapeFunction -> {"Name"}, 
-        VertexSize -> {Medium}}]]}, 
+        Null}, {GraphLayout -> "CircularEmbedding", 
+        VertexShapeFunction -> {"Name"}, VertexSize -> {Medium}}]]}, 
      TagBox[
       GraphicsGroupBox[
        GraphicsComplexBox[{{-0.8660254037844384, -0.4999999999999994}, {
@@ -7888,20 +8153,18 @@ Cell[CellGroupData[{
 Cell["Finding triangles", \
 "Subsection",ExpressionUUID->"2efa0eb9-604a-4ee7-8c15-46a90648eead"],
 
+Cell[CellGroupData[{
+
+Cell["IGTriangles", \
+"Subsubsection",ExpressionUUID->"2ebf2ef1-0779-4580-9631-28cd0d6b3ff6"],
+
 Cell[BoxData[
  RowBox[{"?", 
   "IGTriangles"}]], \
 "Input",ExpressionUUID->"eb7af878-3430-45bf-837c-e36eed636e14"],
 
-Cell[BoxData[
- RowBox[{"?", 
-  "IGAdjacentTriangleCount"}]], \
-"Input",ExpressionUUID->"69f5a620-1673-4a29-9503-39db6c7120c6"],
-
-Cell["\<\
-Label a graph\[CloseCurlyQuote]s vertices based on the number of adjacent \
-triangles.\
-\>", "Text",ExpressionUUID->"5409c123-b5fc-4d1c-aa7d-432a620078b6"],
+Cell["Highlight all triangles in a graph.", \
+"Text",ExpressionUUID->"c680a371-df41-4bcf-bec4-566e7126bfda"],
 
 Cell[BoxData[
  RowBox[{
@@ -7911,19 +8174,7 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"8", ",", "16"}], "}"}], ",", 
      RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"808292ba-5b2d-46d5-aa39-364d01855668"],
-
-Cell[BoxData[
- RowBox[{"IGVertexMap", "[", 
-  RowBox[{
-   RowBox[{
-    RowBox[{"Placed", "[", 
-     RowBox[{"#", ",", "Center"}], "]"}], "&"}], ",", 
-   RowBox[{"VertexLabels", "\[Rule]", "IGAdjacentTriangleCount"}], ",", "g"}],
-   "]"}]], "Input",ExpressionUUID->"2a9d54cd-7b6c-4cd8-92f9-599ca36d4866"],
-
-Cell["Highlight all triangles in the graph.", \
-"Text",ExpressionUUID->"c680a371-df41-4bcf-bec4-566e7126bfda"],
+  ";"}]], "Input",ExpressionUUID->"dd97dddb-b6a5-4848-bdea-55440972c033"],
 
 Cell[BoxData[
  RowBox[{
@@ -7938,6 +8189,65 @@ Cell[BoxData[
   RowBox[{
   "IGTriangles", "[", "g", 
    "]"}]}]], "Input",ExpressionUUID->"1e998d1a-5c3b-4070-8f64-21ffef1a462c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGAdjacenctTriangleCount", \
+"Subsubsection",ExpressionUUID->"7945f98f-2b44-4153-8940-5125a345f189"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGAdjacentTriangleCount"}]], \
+"Input",ExpressionUUID->"69f5a620-1673-4a29-9503-39db6c7120c6"],
+
+Cell["\<\
+Label a graph\[CloseCurlyQuote]s vertices based on the number of adjacent \
+triangles.\
+\>", "Text",ExpressionUUID->"5409c123-b5fc-4d1c-aa7d-432a620078b6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"RandomGraph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"8", ",", "16"}], "}"}], ",", 
+    RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}], "//", 
+  RowBox[{"IGVertexMap", "[", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Placed", "[", 
+      RowBox[{"#", ",", "Center"}], "]"}], "&"}], ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "IGAdjacentTriangleCount"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"808292ba-5b2d-46d5-aa39-364d01855668"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGTriangleFreeQ", \
+"Subsubsection",ExpressionUUID->"48c85942-9b04-4377-a583-1a57fcdff22a"],
+
+Cell["\<\
+Triangle-free graphs do not have any fully connected subgraphs of size 3. \
+Equivalently, they do not have any cliques (other than 2-cliques, which are \
+edges).\
+\>", "Text",ExpressionUUID->"7ac1b1f8-eb63-46a7-bcd5-bc28fbac107b"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGTriangleFreeQ"}]], \
+"Input",ExpressionUUID->"f73da08e-136c-47cb-8a9c-05f8e2db3d91"],
+
+Cell["Mycielski graphs are triangle-free.", \
+"Text",ExpressionUUID->"4fcc094f-c446-4924-b1d6-0c2b20293923"],
+
+Cell[BoxData[
+ RowBox[{"IGTriangleFreeQ", "@", 
+  RowBox[{"GraphData", "[", 
+   RowBox[{"{", 
+    RowBox[{"\"\<Mycielski\>\"", ",", " ", "10"}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"8b41b979-9d79-4b99-8b38-0248ff504f69"]
+}, Closed]]
 }, Closed]]
 }, Closed]],
 
@@ -9117,8 +9427,8 @@ Cell[TextData[Cell[BoxData[
       3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
       CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
        SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-      ImageSizeCache->{{0.31984374999999865`, 
-       65.67234375000002}, {-31.732950000000006`, 26.239005994133603`}}],
+      ImageSizeCache->{{0.31984374999999865`, 65.67234375000002}, {-32.73295, 
+       25.239005994133613`}}],
      MouseAppearanceTag["NetworkGraphics"]],
     AllowKernelInitialization->False,
     UnsavedVariables:>{$CellContext`flag}]],
@@ -27699,28 +28009,28 @@ Cell[TextData[{
   "9e42e0d5-d093-4a57-9b05-00d7954243a4"],
  " forces the given vertices to distinct and increasing colours. Normally, \
 the vertices of a clique are given (which require as many colours as the size \
-of the clique). The purpose of this option is to reduce the number of \
+of the clique). The main purpose of this option is to reduce the number of \
 redundant solutions of the equivalent SAT problem, and thus improve \
-performance."
+performance. When using edge colouring functions, a set of edges should be \
+passed."
 }], "Item",ExpressionUUID->"1b19c8ae-a937-4da3-8b76-a571605f166a"],
 
 Cell[TextData[{
  Cell[BoxData[
   RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "\"\<MaxDegreeClique\>\""}]],
   ExpressionUUID->"94bc8e4b-ecdb-4d32-97a5-59cef79cae56"],
- " attempts to find a clique containing a maximum degree vertex. On hard \
-problems it may perform orders of magnitude better than ",
+ " attempts to find a clique containing a maximum degree vertex, and forces \
+colours on the clique members. On hard problems it may perform orders of \
+magnitude better than ",
  Cell[BoxData[
-  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],ExpressionUUID->
   "288006e4-a45a-43b8-8ed4-3a325ab9bb96"],
  "."
 }], "Item",ExpressionUUID->"29940da3-9698-4196-b634-4f09d438c738"],
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],ExpressionUUID->
   "a75b9bf7-1cee-4f49-a943-32dde018ab9a"],
  " does not force any colours. It is usually the fastest choice for easy \
 problems."
@@ -27729,8 +28039,8 @@ problems."
 
 Cell[TextData[{
  "The default setting for ",
- Cell[BoxData["\"\<ForcedColoring\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "\"\<ForcedColoring\>\""],ExpressionUUID->
   "926db2cc-b55d-44d3-9dec-390292851c1d"],
  " is ",
  Cell[BoxData[
@@ -27806,14 +28116,13 @@ Cell[BoxData[
 
 Cell[TextData[{
  "The following examples illustrate the use of the ",
- Cell[BoxData["\"\<ForcedColoring\>\""],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "\"\<ForcedColoring\>\""],ExpressionUUID->
   "6ebf4a36-d745-4f32-afcc-0fac0c0386f6"],
  " option. The 6th order Mycielski graph has chromatic number 6. A \
 6-colouring is easily found even with ",
  Cell[BoxData[
-  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]],ExpressionUUID->
   "3b7ca3e6-a315-4ea1-9ddf-032a87b9ac2d"],
  "."
 }], "Text",ExpressionUUID->"df85944b-8f8b-4422-8432-34b02de3f830"],
@@ -30726,12 +31035,22 @@ Cell[BoxData[
    RowBox[{"VertexSize", "\[Rule]", "1"}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"4f8c56f8-6ee4-4a93-9e48-bbfd86c5eda1"],
 
-Cell[BoxData[
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"g", "=", 
+    RowBox[{"IndexGraph", "[", "%", "]"}]}], ";"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "workaround", " ", "for", " ", "highlighting", " ", "in", " ", 
+     "Mathematica"}], " ", "\[LessEqual]", " ", "11.2"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{"HighlightGraph", "[", 
   RowBox[{
-   RowBox[{"IGLayoutFruchtermanReingold", "[", "%", "]"}], ",", 
-   RowBox[{"ConnectedGraphComponents", "[", "%", "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"7d5f417d-fe52-4b83-ac9e-dd30fca51fad"]
+   RowBox[{"IGLayoutFruchtermanReingold", "[", "g", "]"}], ",", 
+   RowBox[{"ConnectedGraphComponents", "[", "g", "]"}]}], 
+  "]"}]}], "Input",ExpressionUUID->"7d5f417d-fe52-4b83-ac9e-dd30fca51fad"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -31146,8 +31465,8 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"{", 
      RowBox[{
-      RowBox[{"1", "\[TwoWayRule]", "2"}], ",", 
-      RowBox[{"2", "\[TwoWayRule]", "3"}]}], "}"}], ",", 
+      RowBox[{"1", "\[UndirectedEdge]", "2"}], ",", 
+      RowBox[{"2", "\[UndirectedEdge]", "3"}]}], "}"}], ",", 
     RowBox[{"EdgeWeight", "\[Rule]", 
      RowBox[{"{", 
       RowBox[{"2", ",", "0"}], "}"}]}]}], 
@@ -32779,8 +33098,8 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"{", 
      RowBox[{"5", ",", "4", ",", "3", ",", "2", ",", "1"}], "}"}], ",", 
-    "g1"}], 
-   "]"}]}]], "Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
+    "g1"}], "]"}]}]], \
+"Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
 
 Cell[BoxData[
  RowBox[{"VertexList", "/@", 
@@ -33692,8 +34011,8 @@ Cell[BoxData[
          RowBox[{"ImageSize", "\[Rule]", "20"}]}], "]"}], "&"}], "/@", 
       RowBox[{
        RowBox[{"IGVertexProp", "[", "VertexShape", "]"}], "[", "g", "]"}]}], 
-     ")"}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
+     ")"}]}], "]"}]}]], \
+"Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
 
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
