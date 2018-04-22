@@ -1476,11 +1476,14 @@ IGDeBruijnGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeM
 
 Options[IGChordalRing] = { GraphLayout -> "CircularEmbedding", DirectedEdges -> False };
 SyntaxInformation[IGChordalRing] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGChordalRing, Graph]};
-IGChordalRing[n_?Internal`NonNegativeMachineIntegerQ, {}, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
+IGChordalRing::nv = "A chordal ring must have at least 3 vertices.";
+IGChordalRing[n_?Developer`MachineIntegerQ /; n < 3, _, OptionsPattern[]] :=
+    (Message[IGChordalRing::nv]; $Failed)
+IGChordalRing[n_?Developer`MachineIntegerQ, {}, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
     CycleGraph[n, opt]
-IGChordalRing[n_?Internal`NonNegativeMachineIntegerQ, w_?intVecQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
+IGChordalRing[n_?Developer`MachineIntegerQ, w_?intVecQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
     IGChordalRing[n, {w}, opt]
-IGChordalRing[n_?Internal`NonNegativeMachineIntegerQ, w_?intMatQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
+IGChordalRing[n_?Developer`MachineIntegerQ, w_?intMatQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"extendedChordalRing"[n, w, OptionValue[DirectedEdges]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
