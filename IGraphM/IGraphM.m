@@ -224,6 +224,8 @@ IGAdjacentTriangleCount::usage =
     "IGAdjacentTriangleCount[graph, vertex] counts the triangles vertex participates in.\n" <>
     "IGAdjacentTriangleCount[graph, {vertex1, vertex2, \[Ellipsis]}] counts the triangles the specified vertices participate in.";
 
+IGTriangleFreeQ::usage = "IGTriangleFreeQ[graph] checks if graph is triangle-free.";
+
 IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees] generates an undirected random graph with the given degree sequence.\n" <>
     "IGDegreeSequenceGame[indegrees, outdegrees] generates a directed random graph with the given in- and out-degree sequences.";
@@ -2694,6 +2696,12 @@ SyntaxInformation[IGAdjacentTriangleCount] = {"ArgumentsPattern" -> {_, _.}};
 IGAdjacentTriangleCount[graph_?igGraphQ, {}] := {}
 IGAdjacentTriangleCount[graph_?igGraphQ, vs : (_List | All) : All] := catch@igAdjacentTriangleCount[graph, vs]
 IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCount[graph, {v}]
+
+SyntaxInformation[IGTriangleFreeQ] = {"ArgumentsPattern" -> {_}};
+IGTriangleFreeQ[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Total[check@ig@"countAdjacentTriangles"[{}]] == 0
+    ]
 
 (* Shortest paths *)
 
