@@ -70,7 +70,7 @@ IGFromPrufer::usage = "IGFromPrufer[sequence] constructs a tree from a Prüfer s
 IGCompleteGraph::usage = "IGCompleteGraph[n] returns a complete graph on n vertices.";
 IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.";
 IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m characters and string length n.";
-IGChordalRing::usage = "IGChordalRing[m, w] returns an extended chordal ring on n vertices, based on the matrix w.";
+IGChordalRing::usage = "IGChordalRing[n, w] returns an extended chordal ring on n vertices, based on the vector or matrix w.";
 
 IGEmptyGraph::usage =
     "IGEmptyGraph[] returns a graph with no edges or vertices.\n" <>
@@ -609,7 +609,7 @@ template = LTemplate["IGraphM",
         LFun["completeGraph", {Integer, True|False (* directed *), True|False (* loops *)}, "Void"],
         LFun["completeCitationGraph", {Integer, True|False (* directed *)}, "Void"],
         LFun["deBruijn", {Integer, Integer}, "Void"],
-        LFun["extendedChordalRing", {Integer, {Real, 2}}, "Void"],
+        LFun["extendedChordalRing", {Integer, {Real, 2}, True|False (* directed *)}, "Void"],
         LFun["graphAtlas", {Integer}, "Void"],
 
         (* Directedness *)
@@ -1088,6 +1088,11 @@ intVecQ =
       VectorQ[#, IntegerQ]&, (* In M10.4 and earlier VectorQ[{}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
       VectorQ[#, Developer`MachineIntegerQ]&
     ];
+intMatQ =
+    If[$VersionNumber < 11.0,
+      MatrixQ[#, IntegerQ]&, (* In M10.4 and earlier MatrixQ[{{}}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
+      MatrixQ[#, Developer`MachineIntegerQ]&
+    ];
 positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&;
 nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&;
 positiveVecQ = VectorQ[#, Positive]&;
@@ -1467,11 +1472,16 @@ IGDeBruijnGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeM
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
-SyntaxInformation[IGChordalRing] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGChordalRing[m_?Internal`NonNegativeMachineIntegerQ, w_?(MatrixQ[#, NonNegative]&), opt : OptionsPattern[Graph]] :=
+Options[IGChordalRing] = { GraphLayout -> "CircularEmbedding", DirectedEdges -> False };
+SyntaxInformation[IGChordalRing] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGChordalRing, Graph]};
+IGChordalRing[n_?Internal`NonNegativeMachineIntegerQ, {}, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
+    CycleGraph[n, opt]
+IGChordalRing[n_?Internal`NonNegativeMachineIntegerQ, w_?intVecQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
+    IGChordalRing[n, {w}, opt]
+IGChordalRing[n_?Internal`NonNegativeMachineIntegerQ, w_?intMatQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
-      check@ig@"extendedChordalRing"[m, w];
-      applyGraphOpt[opt]@igToGraph[ig]
+      check@ig@"extendedChordalRing"[n, w, OptionValue[DirectedEdges]];
+      applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
 
 SyntaxInformation[IGEmptyGraph] = {"ArgumentsPattern" -> {_., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
