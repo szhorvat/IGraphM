@@ -102,7 +102,7 @@ IGAdjacencyMatrixPlot::usage =
     "IGAdjacencyMatrixPlot[graph, {v1, v2, \[Ellipsis]}] plots the adjacency matrix of the subgraph induced by the given vertices, using the specified vertex ordering.";
 
 IGKirchhoffMatrix::usage =
-    "IGKirchhoffMatrix[graph] returns the Kirchoff matrix, also known as Laplacian matrix of graph.\n" <>
+    "IGKirchhoffMatrix[graph] returns the Kirchhoff matrix, also known as Laplacian matrix of graph.\n" <>
     "IGKirchhoffMatrix[graph, \"In\"] will place the in-degrees on the diagonal instead of the out-degrees.";
 
 IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly connected component of graph.";
