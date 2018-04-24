@@ -2367,8 +2367,29 @@ public:
 
     mma::RealTensorRef randomWalk(mint start, mint steps) const {
         igVector walk;
-        igCheck(igraph_random_walk(&graph, &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
-        return walk.makeMTensor();
+
+        /* Use random_edge_walk for the weighted case until random_wakl gets support for weights.
+         * This is fine, as random_edge_walk returns the same result as random_walk if the weight
+         * vector contains all 1s and the igraph RNG is seeded with the same value.
+         */
+        if (weightedQ()) {
+            if (steps == 0)
+                return mma::makeVector<double>(0);
+
+            igCheck(igraph_random_edge_walk(&graph, passWeights(), &walk.vec, start, IGRAPH_OUT, steps-1, IGRAPH_RANDOM_WALK_STUCK_RETURN));
+
+            auto result = mma::makeVector<double>(walk.length() + 1);
+            long last = start;
+            result[0] = last;
+            for (mint i=1; i < result.size(); ++i) {
+                last = IGRAPH_OTHER(&graph, walk[i-1], last);
+                result[i] = last;
+            }
+            return result;
+        } else {
+            igCheck(igraph_random_walk(&graph, &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
+            return walk.makeMTensor();
+        }
     }
 
     mma::RealTensorRef randomEdgeWalk(mint start, mint steps) const {
