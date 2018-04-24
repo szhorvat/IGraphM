@@ -545,6 +545,8 @@ IGTreelikeComponents::usage = "IGTreelikeComponents[graph] returns the vertices 
 
 IGJointDegreeMatrix::usage = "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of degree-i vertices connecting to degree-j vertices.";
 
+IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Reciprocal\" creates a single undirected edge only between reciprocally connected vertices.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -4262,6 +4264,7 @@ igMakeWithWeightSpec[graph_, edgeWeight_ ] :=
       igMakeUnweighted[graph]
       ,
       _,
+      (* Before setting new weights, remove the old ones with IGUnweighted to work around a but in SetProperty. *)
       With[{newGraph = SetProperty[IGUnweighted[graph], EdgeWeight -> edgeWeight]},
         If[GraphQ[newGraph],
           igMake[newGraph],
@@ -4828,6 +4831,36 @@ IGJointDegreeMatrix[graph_?igGraphQ, opt : OptionsPattern[]] :=
         SetSystemOptions[sao]
       ]
     ]
+
+
+(* IGUndirectedGraph *)
+
+(* Note: IGUndirectedGraph must ensure that:
+    1. vertex names are not changed
+    2. vertex ordering is not changed
+ *)
+
+SyntaxInformation[IGUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+
+IGUndirectedGraph[g_?UndirectedGraphQ, "Simple"|"All"|"Reciprocal", opt : OptionsPattern[Graph]] := Graph[g, opt]
+IGUndirectedGraph[g_?igGraphQ, "Simple", opt : OptionsPattern[Graph]] :=
+    Graph[VertexList[g], DeleteDuplicates[igraphGlobal@"edgeListSortPairs"@IGIndexEdgeList[g]], DirectedEdges -> False, opt]
+IGUndirectedGraph[g_?igGraphQ, "All", opt : OptionsPattern[Graph]] :=
+    Graph[VertexList[g], IGIndexEdgeList[g], DirectedEdges -> False, opt]
+IGUndirectedGraph[g_?igGraphQ, "Reciprocal", opt : OptionsPattern[Graph]] :=
+    With[{am = AdjacencyMatrix[g]}, (* null graph has no adjacency matrix, but this case is caught by _?UndirectedGraphQ above *)
+      AdjacencyGraph[VertexList[g], Unitize[am Transpose[am]], opt]
+    ]
+
+IGUndirectedGraph[g_, "Mutual", opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Reciprocal", opt]
+
+IGUndirectedGraph[g_, "Each", opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "All", opt]
+IGUndirectedGraph[g_, All, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "All", opt]
+
+IGUndirectedGraph[g_, "Collapse", opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simple", opt]
+IGUndirectedGraph[g_, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simple", opt]
+
+addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Reciprocal"}}]
 
 
 (***** Finalize *****)
