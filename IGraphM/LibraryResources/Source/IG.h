@@ -268,12 +268,14 @@ public:
         igConstructorCheck(igraph_de_bruijn(&graph, m, n));
     }
 
-    void extendedChordalRing(mint n, mma::RealMatrixRef mat, bool directed) {
+    void extendedChordalRing(mint n, mma::RealMatrixRef mat, bool directed, bool selfLoops, bool multiEdges) {
         igMatrix w;
 
         destroy();
         w.copyFromMTensor(mat);
         igConstructorCheck(igraph_extended_chordal_ring(&graph, n, &w.mat, directed));
+        if (! (multiEdges && selfLoops))
+            igCheck(igraph_simplify(&graph, !multiEdges, !selfLoops, nullptr));
     }
 
     // Weights

@@ -613,7 +613,7 @@ template = LTemplate["IGraphM",
         LFun["completeGraph", {Integer, True|False (* directed *), True|False (* loops *)}, "Void"],
         LFun["completeCitationGraph", {Integer, True|False (* directed *)}, "Void"],
         LFun["deBruijn", {Integer, Integer}, "Void"],
-        LFun["extendedChordalRing", {Integer, {Real, 2}, True|False (* directed *)}, "Void"],
+        LFun["extendedChordalRing", {Integer, {Real, 2}, True|False (* directed *), True|False (* self loops *), True|False (* multiple edges *)}, "Void"],
         LFun["graphAtlas", {Integer}, "Void"],
 
         (* Directedness *)
@@ -1476,7 +1476,12 @@ IGDeBruijnGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeM
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
-Options[IGChordalRing] = { GraphLayout -> "CircularEmbedding", DirectedEdges -> False };
+Options[IGChordalRing] = {
+  GraphLayout -> "CircularEmbedding",
+  DirectedEdges -> False,
+  SelfLoops -> True,
+  "MultipleEdges" -> True
+};
 SyntaxInformation[IGChordalRing] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGChordalRing, Graph]};
 IGChordalRing::nv = "A chordal ring must have at least 3 vertices.";
 IGChordalRing[n_?Developer`MachineIntegerQ /; n < 3, _, OptionsPattern[]] :=
@@ -1487,7 +1492,7 @@ IGChordalRing[n_?Developer`MachineIntegerQ, w_?intVecQ, opt : OptionsPattern[{IG
     IGChordalRing[n, {w}, opt]
 IGChordalRing[n_?Developer`MachineIntegerQ, w_?intMatQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
-      check@ig@"extendedChordalRing"[n, w, OptionValue[DirectedEdges]];
+      check@ig@"extendedChordalRing"[n, w, OptionValue[DirectedEdges], OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
 
