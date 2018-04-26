@@ -2408,9 +2408,9 @@ public:
         return vector.makeMTensor();
     }
 
-    mma::RealTensorRef randomSpanningTree() const {
+    mma::RealTensorRef randomSpanningTree(mint vid) const {
         igVector vector;
-        igCheck(igraph_random_spanning_tree(&graph, &vector.vec, -1));
+        igCheck(igraph_random_spanning_tree(&graph, &vector.vec, vid));
         return vector.makeMTensor();
     }
 

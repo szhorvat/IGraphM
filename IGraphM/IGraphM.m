@@ -487,7 +487,8 @@ IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree o
 
 IGRandomSpanningTree::usage =
     "IGRandomSpanningTree[graph] returns a random spanning tree of graph. All spanning trees are generated with equal probability.\n" <>
-    "IGRandomSpanningTree[graph, n] returns a list of n random spanning trees of graph.";
+    "IGRandomSpanningTree[{graph, vertex}] returns a random spanning tree of the graph component containing vertex.\n" <>
+    "IGRandomSpanningTree[spec, n] returns a list of n random spanning trees.";
 
 IGSpanningTreeCount::usage =
     "IGSpanningTreeCount[graph] returns the number of spanning trees of graph.\n" <>
@@ -944,7 +945,7 @@ template = LTemplate["IGraphM",
 
         (* Spanning tree *)
         LFun["spanningTree", {}, {Real, 1}],
-        LFun["randomSpanningTree", {}, {Real, 1}],
+        LFun["randomSpanningTree", {Integer (* 0-based vertex id *)}, {Real, 1}],
 
         (* Coreness *)
         LFun["coreness", {Integer (* mode *)}, {Real, 1}],
@@ -4384,30 +4385,36 @@ IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
       ]
     ]
 
+
+(* IGRandomSpanning tree has the n argument so that we can generate multiple spanning trees without
+ * having to generate a new ig object (expensive) each time. *)
+igRandomSpanningTree[graph_, ig_, vid_, {opt___}] :=
+    With[{indices = igIndexVec@check@ig@"randomSpanningTree"[vid]},
+      Graph[
+        If[vid < 0, VertexList[graph], Unevaluated@Sequence[]],
+        EdgeList[graph][[indices]],
+        opt
+      ]
+    ]
+
 SyntaxInformation[IGRandomSpanningTree] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGRandomSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
-      With[{indices = igIndexVec@check@ig@"randomSpanningTree"[]},
-        Graph[
-          VertexList[graph],
-          EdgeList[graph][[indices]],
-          opt
-        ]
-      ]
+      igRandomSpanningTree[graph, ig, -1, {opt}]
+    ]
+IGRandomSpanningTree[{graph_?igGraphQ, v_}, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      igRandomSpanningTree[graph, ig, vs[graph][v], {opt}]
     ]
 IGRandomSpanningTree[graph_?igGraphQ, n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
-      Table[
-        With[{indices = igIndexVec@check@ig@"randomSpanningTree"[]},
-          Graph[
-            VertexList[graph],
-            EdgeList[graph][[indices]],
-            opt
-          ]
-        ],
-        {n}
-      ]
+      Table[igRandomSpanningTree[graph, ig, -1, {opt}], {n}]
     ]
+IGRandomSpanningTree[{graph_?igGraphQ, v_}, n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      Table[igRandomSpanningTree[graph, ig, vs[graph][v], {opt}], {n}]
+    ]
+
 
 SyntaxInformation[IGSpanningTreeCount] = {"ArgumentsPattern" -> {_, _.}};
 IGSpanningTreeCount[graph_?UndirectedGraphQ] := Det@Rest@Transpose@Rest@IGKirchhoffMatrix[graph]
