@@ -52,7 +52,7 @@ IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used
 IGLCF::usage =
     "IGLCF[shifts, repeats] creates a graph from LCF notation.\n" <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
-IGTriangleLattice::usage = "IGTriangleLattice[{m, n}] generates a triangle lattice of size m by n.";
+IGTriangularLattice::usage = "IGTriangularLattice[{m, n}] generates a triangular lattice of size m by n.";
 IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice graph of the given dimensions.";
 IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
@@ -1402,9 +1402,9 @@ IGRealizeDegreeSequence[outdeg_?intVecQ, indeg_?intVecQ, opt : OptionsPattern[{I
     ]
 
 
-Options[IGTriangleLattice] = { DirectedEdges -> False, "Periodic" -> False };
-SyntaxInformation[IGTriangleLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGTriangleLattice, Graph]};
-IGTriangleLattice[{n_, m_}, opt : OptionsPattern[{IGTriangleLattice, Graph}]] :=
+Options[IGTriangularLattice] = { DirectedEdges -> False, "Periodic" -> False };
+SyntaxInformation[IGTriangularLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGTriangularLattice, Graph]};
+IGTriangularLattice[{n_, m_}, opt : OptionsPattern[{IGTriangularLattice, Graph}]] :=
     With[{nm = n (#1 - 1) + #2 &, per = TrueQ@OptionValue["Periodic"]},
       Graph[
         Range[n m],
