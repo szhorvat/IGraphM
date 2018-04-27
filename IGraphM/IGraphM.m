@@ -52,7 +52,9 @@ IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used
 IGLCF::usage =
     "IGLCF[shifts, repeats] creates a graph from LCF notation.\n" <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
-IGTriangularLattice::usage = "IGTriangularLattice[{m, n}] generates a triangular lattice of size m by n.";
+IGTriangularLattice::usage =
+    "IGTriangularLattice[n] generates a triangular lattice graph on a size n equilateral triangle using n(n+1)/2 vertices.\n" <>
+    "IGTriangularLattice[{m, n}] generates a triangular lattice graph on an m by n rectangle.";
 IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice graph of the given dimensions.";
 IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
@@ -1410,9 +1412,10 @@ IGRealizeDegreeSequence[outdeg_?intVecQ, indeg_?intVecQ, opt : OptionsPattern[{I
     ]
 
 
+IGTriangularLattice::pimp = "Periodic triangular lattices are not implemented for the equilateral triangle case.";
 Options[IGTriangularLattice] = { DirectedEdges -> False, "Periodic" -> False };
 SyntaxInformation[IGTriangularLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGTriangularLattice, Graph]};
-IGTriangularLattice[{n_, m_}, opt : OptionsPattern[{IGTriangularLattice, Graph}]] :=
+IGTriangularLattice[{n_?Internal`NonNegativeIntegerQ, m_?Internal`NonNegativeIntegerQ}, opt : OptionsPattern[{IGTriangularLattice, Graph}]] :=
     With[{nm = n (#1 - 1) + #2 &, per = TrueQ@OptionValue["Periodic"]},
       Graph[
         Range[n m],
@@ -1430,6 +1433,22 @@ IGTriangularLattice[{n_, m_}, opt : OptionsPattern[{IGTriangularLattice, Graph}]
           {},
           VertexCoordinates -> Join@@Table[{x + 1/4 (-1)^y, Sqrt[3]/2 y}, {x, 1, m}, {y, 1, n}]
         ]
+      ]
+    ]
+IGTriangularLattice[n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[{IGTriangularLattice, Graph}]] :=
+    If[TrueQ@OptionValue["Periodic"],
+      Message[IGTriangularLattice::pimp]; $Failed,
+      Graph[
+        Range[n (n + 1) / 2],
+        Flatten@Table[
+          With[{a = i (i - 1) / 2 + j},
+            {a -> a + i, a -> a + i + 1, a + i -> a + i + 1}
+          ],
+          {i, n - 1}, {j, i}
+        ],
+        DirectedEdges -> OptionValue[DirectedEdges],
+        FilterRules[{opt}, Options[Graph]],
+        VertexCoordinates -> Catenate@Table[{j - i / 2, (n - i) Sqrt[3] / 2}, {i, n}, {j, i}]
       ]
     ]
 
