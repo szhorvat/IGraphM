@@ -549,6 +549,11 @@ IGJointDegreeMatrix::usage = "IGJointDegreeMatrix[graph] returns the joint degre
 
 IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Reciprocal\" creates a single undirected edge only between reciprocally connected vertices.";
 
+IGLatticeMesh::usage =
+    "IGLatticeMesh[type] creates a mesh of the lattice of the specified type.\n" <>
+    "IGLatticeMesh[type, {m, n}] creates a lattice of n by m unit cells.\n" <>
+    "IGLatticeMesh[] returns a list of available lattice types.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -4898,6 +4903,41 @@ IGUndirectedGraph[g_, "Collapse", opt : OptionsPattern[Graph]] := IGUndirectedGr
 IGUndirectedGraph[g_, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simple", opt]
 
 addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Reciprocal"}}]
+
+
+(* IGLatticeMesh *)
+
+$igLatticeData := $igLatticeData = zimport@FileNameJoin[{$packageDirectory, "IGLatticeData.mz"}];
+$igLatticeUnits := $igLatticeUnits = $igLatticeData["UnitCells"];
+$igLatticeVectors := $igLatticeVectors = $igLatticeData["TranslationVectors"];
+
+IGLatticeMesh::noval = "`1` is not a know lattice type. Evaluate IGLatticeMesh[] to see a list of valid lattice types.";
+SyntaxInformation[IGLatticeMesh] = {"ArgumentsPattern" -> {_., _., OptionsPattern[]}, "OptionNames" -> optNames[MeshRegion]};
+IGLatticeMesh[] := Keys[$igLatticeUnits]
+IGLatticeMesh[name_String, dims : {_?Internal`PositiveIntegerQ, _?Internal`PositiveIntegerQ} : {7, 7}, opt : OptionsPattern[]] :=
+      catch@Module[{m, n, grid, polys, pts, newpts, nf, ratio = 0},
+        If[Not@KeyExistsQ[$igLatticeUnits, name],
+          Message[IGLatticeMesh::noval, name];
+          throw[$Failed]
+        ];
+        {m, n} = dims;
+        grid = Catenate@Table[{i - Floor[ratio j], j}, {i, 0, m-1}, {j, 0, n-1}];
+        polys = Flatten[
+          Function[tr, Replace[$igLatticeUnits[name], pt_ :> pt + tr, {2}]] /@ (grid.$igLatticeVectors[name]),
+          1
+        ];
+        pts = Join @@ polys;
+        newpts = DeleteDuplicatesBy[pts, Round[N[#], 1*^-6] &];
+        newpts = newpts[[ Ordering[newpts.RotationTransform[-Pi/2 + 0.01][$igLatticeVectors[name][[2]]]] ]];
+        nf = Nearest[N[newpts] -> Range@Length[newpts]];
+        MeshRegion[
+          newpts,
+          Polygon@Flatten[Map[nf, N[polys], {2}], {{1}, {2, 3}}],
+          opt
+        ]
+      ]
+addCompletion[IGLatticeMesh, {IGLatticeMesh[]}];
+
 
 
 (***** Finalize *****)
