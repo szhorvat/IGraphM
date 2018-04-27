@@ -494,6 +494,45 @@ public:
         igCheck(igraph_connect_neighborhood(&graph, order, IGRAPH_OUT));
     }
 
+    void mycielski() {
+        igraph_integer_t vcount = vertexCount();
+        igraph_integer_t ecount = edgeCount();
+
+        // special case: for the empty graph, just add a vertex
+        if (vcount == 0) {
+            igCheck(igraph_add_vertices(&graph, 1, nullptr));
+            return;
+        }
+
+        // special case: for the singleton graph, just add a vertex and connect it
+        if (vcount == 1) {
+            igCheck(igraph_add_vertices(&graph, 1, nullptr));
+            igCheck(igraph_add_edge(&graph, 0, 1));
+            return;
+        }
+
+        igCheck(igraph_add_vertices(&graph, vcount+1, nullptr));
+        igraph_integer_t w = 2*vcount;
+
+        igVector edges(2*(vcount + 2*ecount));
+        igraph_integer_t ec = 0;
+        for (igraph_integer_t u=vcount; u < w; ++u) {
+            edges[ec++] = w;
+            edges[ec++] = u;
+        }
+        for (igraph_integer_t i=0; i < ecount; ++i) {
+            igraph_integer_t v1 = IGRAPH_FROM(&graph, i);
+            igraph_integer_t v2 = IGRAPH_TO(&graph, i);
+            igraph_integer_t u1 = v1 + vcount;
+            igraph_integer_t u2 = v2 + vcount;
+            edges[ec++] = u1;
+            edges[ec++] = v2;
+            edges[ec++] = u2;
+            edges[ec++] = v1;
+        }
+        igCheck(igraph_add_edges(&graph, &edges.vec, nullptr));
+    }
+
     // Structure
 
     mma::RealTensorRef edgeList() const {

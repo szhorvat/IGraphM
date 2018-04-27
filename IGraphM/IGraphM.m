@@ -81,6 +81,8 @@ IGConnectNeighborhood::usage =
     "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighbourhood.\n" <>
     "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighbourhood. Weights and other graph properties are discarded.";
 
+IGMycielskian::usage = "IGMycielskian[graph] returns the Mycielskian of graph.";
+
 IGBetweenness::usage =
     "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.\n" <>
     "IGBetweenness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of betweenness centralities for the specified vertices.";
@@ -669,6 +671,7 @@ template = LTemplate["IGraphM",
         (* Modification *)
 
         LFun["connectNeighborhood", {Integer (* order *)}, "Void"],
+        LFun["mycielski", {}, "Void"],
 
         (* Structure *)
 
@@ -1832,6 +1835,13 @@ IGConnectNeighborhood[graph_?igGraphQ, k : _?Internal`NonNegativeMachineIntegerQ
     catch@Block[{ig = igMakeFast[graph]},
       check@ig@"connectNeighborhood"[k];
       applyGraphOpt[opt][igToGraphWithNames[ig, VertexList[graph]]]
+    ]
+
+SyntaxInformation[IGMycielskian] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGMycielskian[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      check@ig@"mycielski"[];
+      applyGraphOpt[opt]@igToGraph[ig]
     ]
 
 (* Testing *)
