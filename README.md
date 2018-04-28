@@ -1,52 +1,36 @@
 [![GitHub (pre-)release](https://img.shields.io/github/release/szhorvat/IGraphM/all.svg)](https://github.com/szhorvat/IGraphM/releases)
 [![Join the chat at https://gitter.im/IGraphM/Lobby](https://badges.gitter.im/IGraphM/Lobby.svg)](https://gitter.im/IGraphM/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# [IGraph/M – igraph for Mathematica](http://szhorvat.net/mathematica/IGraphM)
+# [IGraph/M – igraph for Mathematica][main]
 
-**For the impatient:**
-
-Use the auto-install script below, or:
-
- - Download the `.paclet` file from [the releases page](https://github.com/szhorvat/IGraphM/releases).
- - Install it using the `PacletInstall` function, as explained [here](http://mathematica.stackexchange.com/q/141887/12).
- - Evaluate ``<<IGraphM` `` to load the package.
-
-Requirements: _Mathematica_ 10.0 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
-
-Do _not_ use the `master` branch of the GitHub repository. It contains only the source code of the package, and cannot be used without building it first.
-
-**Here's a quick auto-install (or upgrade) script:**
-
-```mathematica
-updateIGraphM[] :=
-  Module[{json, download, target, msg},
-    Check[
-      json = Import["https://api.github.com/repos/szhorvat/IGraphM/releases", "JSON"];
-      download = Lookup[First@Lookup[First[json], "assets"], "browser_download_url"];
-      msg = "Downloading IGraph/M " <> Lookup[First[json], "tag_name"] <> " ...";
-      target = FileNameJoin[{CreateDirectory[], "IGraphM.paclet"}];
-      If[$Notebooks,
-        PrintTemporary@Labeled[ProgressIndicator[Appearance -> "Necklace"], msg, Right],
-        Print[msg]
-      ];
-      URLSave[download, target]
-      ,
-      Return[$Failed]
-    ];
-    If[FileExistsQ[target], PacletManager`PacletInstall[target], $Failed]
-  ]
-```
-
-To automatically download and install the latest version of IGraph/M, evaluate the above definition, then run `updateIGraphM[]`.
+The IGraph/M package provides a [_Mathematica_](http://www.wolfram.com/mathematica/) interface to the popular [igraph](http://igraph.org/) network analysis and graph theory package, as well as many other functions for working with graphs in _Mathematica_.  Check out the [blog post][main] for an overview.
 
 ## Installation
 
-IGraph/M can be installed like any other Mathematica application distributed as a paclet.
+First, note that the system requirements are _Mathematica_ 10.0 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
+
+The simplest way to install automatically from the internet is to evaluate the following commands in Mathematica:
+
+```mathematica
+Needs["PacletManager`"];
+PacletInstall["IGraphM", "Site" -> "http://raw.githubusercontent.com/paclets/PacletServer/master"]
+```
+
+To update from an older version, use:
+
+```mathematica
+Needs["PacletManager`"];
+PacletUpdate["IGraphM", "Site" -> "http://raw.githubusercontent.com/paclets/PacletServer/master"]
+```
+
+IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
 Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.98.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
-        Needs["PacletManager`"]
-        PacletInstall["~/Downloads/IGraphM-0.3.98.paclet"]
+```mathematica
+Needs["PacletManager`"]
+PacletInstall["~/Downloads/IGraphM-0.3.98.paclet"]
+```
 
 IGraph/M requires Mathematica 10.0.2 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
 
@@ -58,16 +42,16 @@ Check that it works by evaluating `IGVersion[]`, then continue to the documentat
 
 ## Documentation
 
-Use
+To open the documentation notebook, evaluate
 
-    <<IGraphM`
+    Needs["IGraphM`"]
     IGDocumentation[]
 
-to open the documentation notebook, or search for "igraphm" in Mathematica's Documentation Centre.
+or search for "igraphm" in Mathematica's Documentation Center.
 
-The documentation is not yet complete and contributions are very welcome.  If you would like to help out with the documentation, send me an email.
+The documentation is not yet complete and contributions are very welcome.  If you would like to help out with expanding the documentation, send me an email.
 
-For additional details about functions, or for references, check also [the igraph documentation pages](http://igraph.org/c/doc/).
+For additional details about functions, or for paper references for the methods used, also check [the igraph documentation pages](http://igraph.org/c/doc/).
 
 ## Contributions
 
@@ -77,22 +61,12 @@ If you are interested in extending IGraph/M, send me an email to get technical g
 
 Please see [Development.md](Development.md) for additional information.
 
-#### Desired but not yet completed functionality
+If you do not program in C++, there are many other ways you can still help out:
 
- - hierarchical random graphs
- - spectral coarse graining
- - maximum flows, minimum cuts
- - additional structural properties
- - update LAD isomorphism finder
-
-Remember, if you need to use any of these from *Mathematica* today, there is always [IGraphR][2].
-
-#### Other things you can help with
-
- - **compile Windows binaries, compile igraph for Windows**
- - write usage messages
- - write documentation
- - write unit tests
+ - Implement functions in pure Mathematica code
+ - Expand the (currently incomplete) documentation
+ - Write unit tests
+ - Just test the package and try to find problems
 
 You can contact me by email.  Evaluate the following in Mathematica to get my email address:
 
@@ -233,5 +207,5 @@ igraph (and consequently the IGraph/M binary packages) can be distributed under 
 See [LICENSE.md](IGraphM/LICENSE.md) for details.
 
  [1]: https://github.com/szhorvat/LTemplate/
- [2]: http://szhorvat.net/pelican/using-igraph-from-mathematica.html
+ [main]: http://szhorvat.net/mathematica/IGraphM
  [chat]: https://gitter.im/IGraphM/Lobby
