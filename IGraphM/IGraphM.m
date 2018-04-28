@@ -3383,7 +3383,7 @@ IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutR
     catch@Block[{ig = igMakeFast[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic -> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
-        RotationTransform@OptionValue["Rotation"] @ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
+        RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 
