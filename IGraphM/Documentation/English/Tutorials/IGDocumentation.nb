@@ -752,7 +752,8 @@ Cell[TextData[{
      SubscriptBox["d", "1"], ",", 
      SubscriptBox["d", "2"], ",", "\[Ellipsis]"}], "}"}], "]"}]],
   ExpressionUUID->"12b22009-02d4-4ef1-bb79-03c245fc58f5"],
- " creates a lattice graph of the given dimensions. The available options are:"
+ " creates a square lattice graph of the given dimensions. The available \
+options are:"
 }], "Text",ExpressionUUID->"28304c04-15b7-40f0-8dfe-de50204d5a82"],
 
 Cell[CellGroupData[{
@@ -782,6 +783,17 @@ Cell[TextData[{
  " is used."
 }], "Item",ExpressionUUID->"a3d0b490-501d-4c64-ae0b-9c423ccb1aae"]
 }, Open  ]],
+
+Cell[TextData[{
+ "To create other types of lattices, see ",
+ Cell[BoxData[
+ "IGTriangleLattice"],ExpressionUUID->
+  "acd2ff9f-067c-44fd-ae2e-f21e7234c660"],
+ " and ",
+ Cell[BoxData[
+ "IGLatticeMesh"],ExpressionUUID->"3474ba0e-a8aa-4807-9677-802881b220b7"],
+ "."
+}], "Text",ExpressionUUID->"6411b904-5c9e-41a4-a42f-df8819d41a48"],
 
 Cell[BoxData[
  RowBox[{"IGMakeLattice", "[", 
@@ -858,7 +870,7 @@ along each of its edges.\
 Cell[BoxData[
  RowBox[{"IGTriangularLattice", "[", 
   RowBox[{"6", ",", 
-   RowBox[{"GraphStyle", "\[Rule]", "\"\<ClassicDiagram\>\""}]}], 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<SmallNetwork\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"6b7df866-ec70-4642-a88e-8db1a8e50091"],
 
 Cell["\<\
@@ -1073,8 +1085,7 @@ Colour vertices based on their distance from the root (i.e. the \
 Cell[BoxData[
  RowBox[{"IGVertexMap", "[", "\[IndentingNewLine]", 
   RowBox[{
-   RowBox[{"ColorNegate", "@*", 
-    RowBox[{"ColorData", "[", "112", "]"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"ColorData", "[", "68", "]"}], ",", "\[IndentingNewLine]", 
    RowBox[{"VertexStyle", "\[Rule]", 
     RowBox[{"(", 
      RowBox[{
@@ -1087,12 +1098,8 @@ Cell[BoxData[
     RowBox[{"5", ",", 
      RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}], ",", 
      RowBox[{"VertexSize", "\[Rule]", "0.3"}]}], "]"}]}], 
-  "\[IndentingNewLine]", "]"}]], "Input",
- CellChangeTimes->{{3.732684458414682*^9, 3.732684613478162*^9}, {
-  3.7326847717344217`*^9, 3.7326847723931704`*^9}, {3.732684804943281*^9, 
-  3.732684934715249*^9}, {3.732731535238077*^9, 
-  3.7327315797742434`*^9}},ExpressionUUID->"fc084187-5f9d-4e2f-b6d7-\
-523c1ae3c73b"]
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"fc084187-5f9d-4e2f-b6d7-523c1ae3c73b"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1131,7 +1138,7 @@ Cell[BoxData[
   RowBox[{
    RowBox[{"{", 
     RowBox[{"1", ",", "1", ",", "2", ",", "2"}], "}"}], ",", 
-   RowBox[{"VertexLabels", "\[Rule]", "Automatic"}]}], 
+   RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"2a841c78-b5e8-4cf7-8da9-4427bf30c543"]
 }, Closed]],
 
@@ -3444,7 +3451,7 @@ Cell[BoxData[
      DynamicModuleBox[{Typeset`graph = HoldComplete[
        Graph[{1, 2, 3, 4, 5}, {
         Null, {{1, 2}, {2, 3}, {3, 1}, {1, 4}, {4, 5}, {5, 1}}}, {
-        FormatType -> TraditionalForm, GraphLayout -> {"Dimension" -> 2}, 
+        GraphLayout -> {"Dimension" -> 2}, 
          ImageSize -> {155.1796875, Automatic}, VertexLabels -> {
            Placed["Name", Center]}, VertexShapeFunction -> {None}, 
          VertexSize -> {Large}}]]}, 
@@ -3682,7 +3689,13 @@ Cell[BoxData[
 Cell[TextData[{
  Cell[BoxData[
  "IGMycielskian"],ExpressionUUID->"79819e5e-ed63-44e7-b07f-4c96c29a5be7"],
- " applies the Mycielski construction to an undirected graph on ",
+ " applies ",
+ ButtonBox["the Mycielski construction",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://en.wikipedia.org/wiki/Mycielskian"], None},
+  ButtonNote->"https://en.wikipedia.org/wiki/Mycielskian"],
+ " to an undirected graph on ",
  Cell[BoxData[
   FormBox[
    RowBox[{"n", "\[GreaterEqual]", "2"}], TraditionalForm]],ExpressionUUID->
@@ -3726,8 +3739,7 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
-   RowBox[{"Max", "@", 
-    RowBox[{"IGMinimumVertexColoring", "[", "g", "]"}]}], ",", 
+   RowBox[{"IGChromaticNumber", "[", "g", "]"}], ",", 
    RowBox[{"IGTriangleFreeQ", "[", "g", "]"}]}], 
   "}"}]], "Input",ExpressionUUID->"d9e9b4cb-2559-47f2-b68d-6902c23dc284"],
 
@@ -3740,8 +3752,7 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
-   RowBox[{"Max", "@", 
-    RowBox[{"IGMinimumVertexColoring", "[", "mg", "]"}]}], ",", 
+   RowBox[{"IGChromaticNumber", "[", "mg", "]"}], ",", 
    RowBox[{"IGTriangleFreeQ", "[", "mg", "]"}]}], 
   "}"}]], "Input",ExpressionUUID->"2a5245fc-965c-43ec-a89e-a155a4d6f3a2"],
 
@@ -3752,12 +3763,11 @@ Construct triangle-free graphs with successively larger chromatic numbers.\
 Cell[BoxData[
  RowBox[{"NestList", "[", 
   RowBox[{"IGMycielskian", ",", 
-   RowBox[{"IGEmptyGraph", "[", "1", "]"}], ",", "5"}], 
+   RowBox[{"IGEmptyGraph", "[", "]"}], ",", "5"}], 
   "]"}]], "Input",ExpressionUUID->"d5aade86-1a48-4c02-8962-1b01728607ac"],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"Max", "@*", "IGMinimumVertexColoring"}], "/@", 
+ RowBox[{"IGChromaticNumber", "/@", 
   "%"}]], "Input",ExpressionUUID->"fc0853ee-2d48-4d56-8678-5c3491268565"]
 }, Closed]]
 }, Closed]],
@@ -8168,7 +8178,7 @@ Cell[BoxData[
    RowBox[{"RandomGraph", "[", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"10", ",", "20"}], "}"}], ",", 
+      RowBox[{"10", ",", "15"}], "}"}], ",", 
      RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}], "//", 
    "IGJointDegreeMatrix"}], "//", 
   "MatrixPlot"}]], \
@@ -27244,6 +27254,10 @@ Cell[CellGroupData[{
 Cell["Gallery", \
 "Subsection",ExpressionUUID->"1b1014e5-de61-4329-b984-f7481153f915"],
 
+Cell["\<\
+Create a gallery of the various graph layouts available in IGraph/M.\
+\>", "Text",ExpressionUUID->"30340fbd-b78f-46ad-b245-997faf612922"],
+
 Cell[BoxData[{
  RowBox[{
   RowBox[{"g", "=", 
@@ -28652,6 +28666,11 @@ Cell[BoxData[
   "IGMinimumEdgeColoring"}]], \
 "Input",ExpressionUUID->"580bfb55-5e57-4ea4-8a78-c0be8aee9e36"],
 
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGChromaticNumber"}]], \
+"Input",ExpressionUUID->"6d07a85f-9025-4ec6-9074-b5f203a89fa0"],
+
 Cell[TextData[{
  Cell[BoxData[
  "IGMinimumVertexColoring"],ExpressionUUID->
@@ -28706,19 +28725,31 @@ Cell[BoxData[
 Cell["Find the chromatic number of a large graph.", \
 "Text",ExpressionUUID->"cf8c1d69-9f2c-4896-b48b-11431d73abd1"],
 
-Cell[BoxData[{
+Cell[BoxData[
  RowBox[{
   RowBox[{"g", "=", 
    RowBox[{"RandomGraph", "[", 
     RowBox[{"{", 
      RowBox[{"100", ",", "400"}], "}"}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"chromaticNumber", "=", 
-  RowBox[{"Max", "@", 
-   RowBox[{
-   "IGMinimumVertexColoring", "[", "g", 
-    "]"}]}]}]}], \
-"Input",ExpressionUUID->"3bc36dac-c0ff-41f0-ab8e-7c1ebb08aa8c"],
+  ";"}]], "Input",ExpressionUUID->"3bc36dac-c0ff-41f0-ab8e-7c1ebb08aa8c"],
+
+Cell[BoxData[
+ RowBox[{"IGChromaticNumber", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"f8d3486f-3326-45bd-8b93-8167cc1cb256"],
+
+Cell[TextData[{
+ "The implementation of ",
+ Cell[BoxData[
+ "IGChromaticNumber"],ExpressionUUID->
+  "139619fe-b2d9-4d98-9621-9e313dcc1c40"],
+ " is effectively the following:"
+}], "Text",ExpressionUUID->"39a52ed5-68db-4404-82c0-54dc977aa357"],
+
+Cell[BoxData[
+ RowBox[{"Max", "@", 
+  RowBox[{
+  "IGMinimumVertexColoring", "[", "g", 
+   "]"}]}]], "Input",ExpressionUUID->"006d8917-8cf5-4cd0-8e12-3c626b90c80c"],
 
 Cell[TextData[{
  "Implement a multipartite graph layout: vertex colouring is equivalent to \
@@ -30158,9 +30189,14 @@ Cell[TextData[{
  "The data used by ",
  Cell[BoxData[
  "IGMeshGraph"],ExpressionUUID->"61fc9f2a-c67b-4bb4-b3bd-be812d7e3b60"],
- " was sourced from Wolfram|Alpha in April 2018. The following lattice types \
-are available."
+ " was sourced from Wolfram|Alpha and ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ "\[CloseCurlyQuote]s curated data system in April 2018."
 }], "Text",ExpressionUUID->"24afc745-498c-45f9-b61d-6377a280083a"],
+
+Cell["The following lattice types are available:", \
+"Text",ExpressionUUID->"80a7b4be-3e52-4acf-9b10-5818f7ae4968"],
 
 Cell[BoxData[
  RowBox[{"IGLatticeMesh", "[", 
@@ -30172,10 +30208,11 @@ Cell[TextData[{
   RowBox[{"EntityClass", "[", 
    RowBox[{"\"\<PeriodicTiling\>\"", ",", " ", "All"}], "]"}]],
   ExpressionUUID->"8152dba8-b2f4-4a42-afbe-24a0445d4c57"],
- ". Use these entities to obtain additional geometric information."
+ ". Use these entities to obtain additional geometric information about the \
+tilings."
 }], "Text",ExpressionUUID->"bacf0b22-98b1-4bc0-b11e-051fbe2a75da"],
 
-Cell["Generate a 6 by 4 Kagome lattice.", \
+Cell["Generate a Kagome lattice consisting of 6 by 4 unit cells.", \
 "Text",ExpressionUUID->"83aaf104-8b47-4422-9bad-29071ab72e4f"],
 
 Cell[BoxData[
@@ -30185,16 +30222,48 @@ Cell[BoxData[
     RowBox[{"6", ",", "4"}], "}"}]}], 
   "]"}]], "Input",ExpressionUUID->"9faa3c01-393c-4623-a179-d3d2e294b724"],
 
-Cell["Create a hexagonal graph.", \
-"Text",ExpressionUUID->"bcaec057-b7f2-40d5-ba02-c66ac946369a"],
+Cell["\<\
+Create a hexagonal graph of 4 by 3 cells. Notice that the nodes are labelled \
+with consecutive integers along the translation vectors of the lattice.\
+\>", "Text",ExpressionUUID->"bcaec057-b7f2-40d5-ba02-c66ac946369a"],
 
 Cell[BoxData[
- RowBox[{"IGMeshGraph", "@", 
-  RowBox[{"IGLatticeMesh", "[", 
-   RowBox[{"\"\<Hexagonal\>\"", ",", 
-    RowBox[{"{", 
-     RowBox[{"6", ",", "4"}], "}"}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"c15b058e-cdb6-45db-a4b5-312df46614bb"],
+ RowBox[{"IGMeshGraph", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"IGLatticeMesh", "[", 
+    RowBox[{"\"\<Hexagonal\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "3"}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"VertexShapeFunction", "\[Rule]", "\"\<Name\>\""}], ",", 
+   RowBox[{"PerformanceGoal", "\[Rule]", "\"\<Quality\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"c15b058e-cdb6-45db-a4b5-312df46614bb"],
+
+Cell["\<\
+Create a hexagonal mesh from points that fall within a rectangular region.\
+\>", "Text",ExpressionUUID->"637c98d0-c252-4f6c-8946-aeda4e3f4a0c"],
+
+Cell[BoxData[
+ RowBox[{"IGLatticeMesh", "[", 
+  RowBox[{"\"\<Hexagonal\>\"", ",", 
+   RowBox[{"Rectangle", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "5"}], "}"}]}], "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"35fa73ab-5da2-40f9-a041-c5c08f0908a0"],
+
+Cell["\<\
+Create a hexagonal mesh from points that fall within a hexagonal region.\
+\>", "Text",ExpressionUUID->"c1313bf7-d041-4ab6-8702-b1de1029ffa9"],
+
+Cell[BoxData[
+ RowBox[{"IGLatticeMesh", "[", 
+  RowBox[{"\"\<Hexagonal\>\"", ",", 
+   RowBox[{"Polygon", "@", 
+    RowBox[{"CirclePoints", "[", 
+     RowBox[{"3", ",", "6"}], "]"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"f36f7709-760b-405a-ac84-6c59463b46d2"],
 
 Cell["\<\
 Create a face adjacency graph of the Cairo pentagonal tiling, and display it \
@@ -30249,29 +30318,50 @@ Compute a colouring of a periodic tiling so that neighbouring cells have \
 different colours.\
 \>", "Text",ExpressionUUID->"0b929319-416e-404a-b1fa-a98e8bcfb5e8"],
 
-Cell[BoxData[{
+Cell[BoxData[
  RowBox[{
-  RowBox[{"mesh", "=", 
-   RowBox[{"IGLatticeMesh", "[", 
-    RowBox[{"\"\<Rhombille\>\"", ",", 
-     RowBox[{"MeshCellStyle", "\[Rule]", 
+  RowBox[{"colorMesh", "[", "mesh_", "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"SetProperty", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"MeshRegion", "[", 
+       RowBox[{"mesh", ",", 
+        RowBox[{"MeshCellStyle", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"1", "\[Rule]", "White"}], "}"}]}]}], "]"}], ",", 
       RowBox[{"{", 
-       RowBox[{"1", "\[Rule]", "White"}], "}"}]}], ",", 
-     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"SetProperty", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{"mesh", ",", 
-     RowBox[{"{", 
-      RowBox[{"2", ",", "All"}], "}"}]}], "}"}], ",", 
-   RowBox[{"MeshCellStyle", "\[Rule]", 
-    RowBox[{
-     RowBox[{"ColorData", "[", "8", "]"}], "/@", 
-     RowBox[{"IGMinimumVertexColoring", "@", 
-      RowBox[{"IGMeshCellAdjacencyGraph", "[", 
-       RowBox[{"mesh", ",", "2"}], "]"}]}]}]}]}], 
-  "]"}]}], "Input",ExpressionUUID->"4101d4fa-4188-4459-9259-839666e62143"]
+       RowBox[{"2", ",", "All"}], "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+    
+    RowBox[{"MeshCellStyle", "\[Rule]", 
+     RowBox[{
+      RowBox[{"ColorData", "[", "8", "]"}], "/@", 
+      RowBox[{"IGMinimumVertexColoring", "@", 
+       RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+        RowBox[{"mesh", ",", "2"}], "]"}]}]}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]], "Input",ExpressionUUID->"60594bd7-2d87-4c09-b338-20f3f2e4590d"],
+
+Cell[BoxData[
+ RowBox[{"colorMesh", "@", 
+  RowBox[{"IGLatticeMesh", "[", 
+   RowBox[{"\"\<Rhombille\>\"", ",", 
+    RowBox[{"Rectangle", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"0", ",", "0"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"10", ",", "10"}], "}"}]}], "]"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"4101d4fa-4188-4459-9259-839666e62143"],
+
+Cell[BoxData[
+ RowBox[{"colorMesh", "@", 
+  RowBox[{"IGLatticeMesh", "[", 
+   RowBox[{"\"\<PentagonType2\>\"", ",", 
+    RowBox[{"{", 
+     RowBox[{"6", ",", "4"}], "}"}], ",", 
+    RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"21d758d0-4ae0-4012-91b5-28aaf22b6d41"]
 }, Closed]]
 }, Closed]],
 
@@ -30631,6 +30721,9 @@ functions, such as ",
  ", ",
  Cell[BoxData[
  "RelationGraph"],ExpressionUUID->"0d0664e3-798d-4eac-8049-9ca9c95214dc"],
+ ", ",
+ Cell[BoxData[
+ "IGDisjointUnion"],ExpressionUUID->"330ee5ab-47e1-4d1f-802d-6cd91d87bdc7"],
  " or ",
  Cell[BoxData[
  "IGMeshCellAdjacencyGraph"],ExpressionUUID->
@@ -30663,10 +30756,17 @@ Cell[BoxData[
     "]"}]}]}]], \
 "Input",ExpressionUUID->"6f307996-d9e8-47a6-98b2-b9a6f778d08e"],
 
+Cell["\<\
+In this case, the single-vertex convenience syntax will not work.\
+\>", "Text",ExpressionUUID->"1b36b59b-cde5-4e02-bf8b-dd7078b84df1"],
+
 Cell[BoxData[
  RowBox[{"IGWeightedVertexDelete", "[", 
   RowBox[{"g", ",", "v"}], 
   "]"}]], "Input",ExpressionUUID->"b2f63c34-483b-453a-b4cd-f7eeeaf8119e"],
+
+Cell["Wrap the vertex in a list instead.", \
+"Text",ExpressionUUID->"4424339b-3dd9-4bb3-8cf0-1fe15f177d12"],
 
 Cell[BoxData[
  RowBox[{"IGWeightedVertexDelete", "[", 
@@ -30746,8 +30846,10 @@ Cell[CellGroupData[{
 Cell["Random number generator", \
 "Subsubsection",ExpressionUUID->"a57f4900-93c7-401b-80d8-9460c67af5ff"],
 
-Cell["igraph\[CloseCurlyQuote]s random number generator can be seeded using", \
-"Text",ExpressionUUID->"50673cc3-c875-4d13-8a9e-65a77f7faf5d"],
+Cell["\<\
+The igraph library\[CloseCurlyQuote]s random number generator can be seeded \
+using\
+\>", "Text",ExpressionUUID->"50673cc3-c875-4d13-8a9e-65a77f7faf5d"],
 
 Cell[BoxData[
  RowBox[{"IGSeedRandom", "[", "123", 
@@ -31719,6 +31821,14 @@ Cell[BoxData[
  RowBox[{"?", 
   "IGOrientTree"}]], \
 "Input",ExpressionUUID->"26225257-4799-468a-8370-d306780a1fc8"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGOrientTree"],ExpressionUUID->"5f55d5d0-1835-4c79-8d5d-a487bb03488a"],
+ " creates an out-tree (also called an arborescence) out of an undirected \
+tree. Graph properties are preserved, but the vertex ordering of the graph is \
+changed."
+}], "Text",ExpressionUUID->"da316ce3-4f3b-44bd-a61d-2f1d57b568c1"],
 
 Cell[BoxData[
  RowBox[{"g", "=", 
@@ -33437,8 +33547,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
