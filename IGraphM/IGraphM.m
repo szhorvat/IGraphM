@@ -4672,14 +4672,47 @@ checkDimension[dim_, d_, sym_] :=
       throw[$Failed]
     ]
 
-IGMeshCellAdjacencyGraph::bddim = "Requested dimension `1` is greater than the dimension of the mesh, `2`.";
-SyntaxInformation[IGMeshCellAdjacencyGraph] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGMeshCellAdjacencyGraph[mesh_?meshQ, d1_?Internal`NonNegativeIntegerQ, d2_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[Graph]] :=
-    catch@With[{dim = RegionDimension[mesh]},
-      Scan[checkDimension[dim, #, IGMeshCellAdjacencyGraph]&, {d1, d2}];
+IGMeshCellAdjacencyGraph::bddim = "The requested dimension, `1`, is greater than the dimension of the mesh, `2`.";
+
+Options[IGMeshCellAdjacencyGraph] = { VertexCoordinates -> None };
+SyntaxInformation[IGMeshCellAdjacencyGraph] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGMeshCellAdjacencyGraph, Graph]};
+IGMeshCellAdjacencyGraph[mesh_?meshQ, d1_?Internal`NonNegativeIntegerQ, d2_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[{IGMeshCellAdjacencyGraph, Graph}]] :=
+    catch@Module[{coord, dim = RegionDimension[mesh]},
+      With[{dim = dim},
+        Scan[checkDimension[dim, #, IGMeshCellAdjacencyGraph]&, {d1, d2}]
+      ];
+      Switch[OptionValue[VertexCoordinates],
+        None,
+        coord = Automatic
+        ,
+        Automatic,
+        coord =
+            If[dim < 2 || dim > 3,
+              Automatic, (* can't use coordinates from less than 2 or more than 3 dimensions *)
+              Check[
+                If[d1 == d2,
+                  PropertyValue[{mesh, {d1, All}}, MeshCellCentroid],
+                  Join[
+                    PropertyValue[{mesh, {d1, All}}, MeshCellCentroid],
+                    PropertyValue[{mesh, {d2, All}}, MeshCellCentroid]
+                  ]
+                ],
+                Automatic (* if the calculation failed, use automatic coordinates *)
+              ]
+            ]
+        ,
+        _,
+        coord = OptionValue[VertexCoordinates]
+      ];
       If[d1 == d2,
-        AdjacencyGraph[MeshCellIndex[mesh, d1], igMeshCellAdjacencyMatrix[mesh, d1, d2], opt],
-        IGBipartiteIncidenceGraph[{MeshCellIndex[mesh, d1], MeshCellIndex[mesh, d2]}, igMeshCellAdjacencyMatrix[mesh, d1, d2], opt]
+        AdjacencyGraph[
+          MeshCellIndex[mesh, d1], igMeshCellAdjacencyMatrix[mesh, d1, d2],
+          VertexCoordinates -> coord, FilterRules[{opt}, Except[VertexCoordinates]]
+        ],
+        IGBipartiteIncidenceGraph[
+          {MeshCellIndex[mesh, d1], MeshCellIndex[mesh, d2]}, igMeshCellAdjacencyMatrix[mesh, d1, d2],
+          VertexCoordinates -> coord, FilterRules[{opt}, Except[VertexCoordinates]]
+        ]
       ]
     ]
 IGMeshCellAdjacencyGraph[mesh_?meshQ, d_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[Graph]] :=
