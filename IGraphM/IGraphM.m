@@ -558,6 +558,7 @@ IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed g
 IGLatticeMesh::usage =
     "IGLatticeMesh[type] creates a mesh of the lattice of the specified type.\n" <>
     "IGLatticeMesh[type, {m, n}] creates a lattice of n by m unit cells.\n" <>
+    "IGLatticeMesh[type, region] creates a lattice from the points that fall within region.\n" <>
     "IGLatticeMesh[] returns a list of available lattice types.";
 
 Begin["`Private`"];
@@ -4947,6 +4948,9 @@ $igLatticeUnits := $igLatticeUnits = $igLatticeData["UnitCells"];
 $igLatticeVectors := $igLatticeVectors = $igLatticeData["TranslationVectors"];
 
 IGLatticeMesh::noval = "`1` is not a know lattice type. Evaluate IGLatticeMesh[] to see a list of valid lattice types.";
+IGLatticeMesh::regcst = "The second argument must be a constant (parameter free) region.";
+IGLatticeMesh::regdim = "The second argument must be a 2-dimensional region.";
+IGLatticeMesh::regbnd = "The second argument must be a bounded region.";
 SyntaxInformation[IGLatticeMesh] = {"ArgumentsPattern" -> {_., _., OptionsPattern[]}, "OptionNames" -> optNames[MeshRegion]};
 IGLatticeMesh[] := Keys[$igLatticeUnits]
 IGLatticeMesh[name_String, dims : {_?Internal`PositiveIntegerQ, _?Internal`PositiveIntegerQ} : {7, 7}, opt : OptionsPattern[]] :=
@@ -4957,20 +4961,48 @@ IGLatticeMesh[name_String, dims : {_?Internal`PositiveIntegerQ, _?Internal`Posit
         ];
         {m, n} = dims;
         grid = Catenate@Table[{i - Floor[ratio j], j}, {i, 0, m-1}, {j, 0, n-1}];
-        polys = Flatten[
-          Function[tr, Replace[$igLatticeUnits[name], pt_ :> pt + tr, {2}]] /@ (grid.$igLatticeVectors[name]),
-          1
-        ];
-        pts = Join @@ polys;
-        newpts = DeleteDuplicatesBy[pts, Round[N[#], 1*^-6] &];
-        newpts = newpts[[ Ordering[newpts.RotationTransform[-Pi/2 + 0.01][$igLatticeVectors[name][[2]]]] ]];
-        nf = Nearest[N[newpts] -> Range@Length[newpts]];
-        MeshRegion[
-          newpts,
-          Polygon@Flatten[Map[nf, N[polys], {2}], {{1}, {2, 3}}],
-          opt
-        ]
+        igLatticeMesh[$igLatticeUnits[name], $igLatticeVectors[name], grid.$igLatticeVectors[name], {opt}]
       ]
+IGLatticeMesh[name_String, reg_?RegionQ, opt : OptionsPattern[]] :=
+    catch@Module[{boundPoints, xy, grid, trpts},
+      If[Not@KeyExistsQ[$igLatticeUnits, name],
+        Message[IGLatticeMesh::noval, name];
+        throw[$Failed]
+      ];
+      If[Not@ConstantRegionQ[reg],
+        Message[IGLatticeMesh::regcst];
+        throw[$Failed]
+      ];
+      If[RegionEmbeddingDimension[reg] != 2,
+        Message[IGLatticeMesh::regdim];
+        throw[$Failed]
+      ];
+      If[Not@BoundedRegionQ[reg],
+        Message[IGLatticeMesh::regbnd];
+        throw[$Failed]
+      ];
+      boundPoints = Tuples@Check[RegionBounds[reg, "Sufficient"], throw[$Failed]];
+      xy = Transpose[boundPoints.Inverse[$igLatticeVectors[name]]];
+      grid = Tuples[Range @@@ Transpose@{Floor[Min /@ xy], Ceiling[Max /@ xy]}];
+      trpts = Select[grid.$igLatticeVectors[name], RegionMember[reg]];
+      igLatticeMesh[$igLatticeUnits[name], $igLatticeVectors[name], trpts, {opt}]
+    ]
+igLatticeMesh[unit_, vec_, trpts_, {opt___}] :=
+    Module[{polys, pts, newpts, nf},
+      polys = Flatten[
+        Function[tr, Replace[unit, pt_ :> pt + tr, {2}]] /@ trpts,
+        1
+      ];
+      pts = Join @@ polys;
+      newpts = DeleteDuplicatesBy[pts, Round[N[#], 1*^-6] &];
+      newpts = newpts[[ Ordering[ newpts.RotationTransform[-Pi/2 + 0.01][ vec[[2]] ] ] ]];
+      nf = Nearest[N[newpts] -> Range@Length[newpts]];
+      MeshRegion[
+        newpts,
+        Polygon@Flatten[Map[nf, N[polys], {2}], {{1}, {2, 3}}],
+        opt
+      ]
+    ]
 addCompletion[IGLatticeMesh, {IGLatticeMesh[]}];
 
 
