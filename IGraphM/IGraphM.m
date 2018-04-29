@@ -4475,7 +4475,7 @@ IGVertexColoring[graph_?igGraphQ] :=
     ]
 
 SyntaxInformation[IGEdgeColoring] = {"ArgumentsPattern" -> {_, _}};
-IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph[graph]
+IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph@IGUndirectedGraph[graph, "All"]
 
 Options[IGKVertexColoring] = { "ForcedColoring" -> "MaxDegreeClique" };
 SyntaxInformation[IGKVertexColoring] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
@@ -4501,7 +4501,7 @@ igKVertexColoring[graph_, k_, clique_] :=
           Or,
           {Not /@ a /@ (Range[k] + k #1),
            Not /@ a /@ (Range[k] + k #2)}
-        ] & @@@ (IGIndexEdgeList[graph] - 1)
+        ] & @@@ (IGIndexEdgeList@SimpleGraph[graph] - 1)
       }];
       fixedVars = a /@ (k (clique-1) + Range@Length[clique]);
       satExpr = And[satExpr, And @@ fixedVars];
@@ -4543,7 +4543,7 @@ IGKEdgeColoring[graph_?igGraphQ, k_Integer?Positive, opt : OptionsPattern[]] :=
       If[ListQ[fc],
         fc = Check[EdgeIndex[graph, #]& /@ fc, throw[$Failed]]
       ];
-      IGKVertexColoring[LineGraph[graph], k, "ForcedColoring" -> fc]
+      IGKVertexColoring[LineGraph@IGUndirectedGraph[graph, "All"], k, "ForcedColoring" -> fc]
     ]
 
 Options[IGMinimumVertexColoring] = { "ForcedColoring" -> "MaxDegreeClique" }
@@ -4566,7 +4566,7 @@ IGMinimumEdgeColoring[graph_?igGraphQ, opt : OptionsPattern[]] :=
       If[ListQ[fc],
         fc = Check[EdgeIndex[graph, #]& /@ fc, throw[$Failed]]
       ];
-      IGMinimumVertexColoring[LineGraph[graph], "ForcedColoring" -> fc]
+      IGMinimumVertexColoring[LineGraph@IGUndirectedGraph[graph, "All"], "ForcedColoring" -> fc]
     ]
 
 SyntaxInformation[IGChromaticNumber] = {"ArgumentsPattern" -> {_}};
