@@ -28959,9 +28959,8 @@ Cell[TextData[{
  "IGChromaticNumber"],ExpressionUUID->
   "55673bb3-2a97-4fbe-bcc0-e22209c26591"],
  " and ",
- Cell[BoxData["IGChromaticIndex"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "23a17cb8-42b1-475f-9d37-6c00f822fca9"],
+ Cell[BoxData[
+ "IGChromaticIndex"],ExpressionUUID->"23a17cb8-42b1-475f-9d37-6c00f822fca9"],
  " is effectively the following:"
 }], "Text",ExpressionUUID->"39a52ed5-68db-4404-82c0-54dc977aa357"],
 
@@ -30266,8 +30265,9 @@ Cell[BoxData[
    RowBox[{"IGLatticeMesh", "[", "type", "]"}], ",", 
    RowBox[{"{", 
     RowBox[{"type", ",", 
-     RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}]}], 
-  "]"}]], "Input",ExpressionUUID->"895fdab5-a9da-4617-871b-e42df135007b"],
+     RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}]}], "]"}]], "Input",
+ CellTags->
+  "DeleteOutput",ExpressionUUID->"895fdab5-a9da-4617-871b-e42df135007b"],
 
 Cell[TextData[{
  "IGraph/M knows about a subset of the tilings available in ",
@@ -30431,7 +30431,9 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"type", ",", 
      RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"f962b869-6ad5-46d4-9ab7-c32d07753976"]
+  "]"}]], "Input",
+ CellTags->
+  "DeleteOutput",ExpressionUUID->"f962b869-6ad5-46d4-9ab7-c32d07753976"]
 }, Closed]]
 }, Closed]],
 
@@ -32008,8 +32010,8 @@ Cell[BoxData[
   RowBox[{"ExampleData", "[", 
    RowBox[{"{", 
     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EastAfricaEmbassyAttacks\>\""}],
-     "}"}], 
-   "]"}]}]], "Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
+     "}"}], "]"}]}]], \
+"Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
 
 Cell[BoxData[
  RowBox[{"IGTake", "[", 
@@ -32993,7 +32995,6 @@ Cell[BoxData[
           
           AspectRatio->1,
           Frame->True,
-          
           FrameStyle->RGBColor[
            0.6666666666666667, 0.2587966666666667, 0.18560333333333334`],
           FrameTicks->None,
@@ -33617,8 +33618,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
