@@ -513,6 +513,7 @@ IGMinimumVertexColoring::usage = "IGMinimumVertexColoring[graph] finds a minimum
 IGMinimumEdgeColoring::usage = "IGMinimumEdgeColoring[graph] finds a minimum edge colouring of graph.";
 
 IGChromaticNumber::usage = "IGChromaticNumber[graph] returns the chromatic number of graph.";
+IGChromaticIndex::usage = "IGChromaticIndex[graph] returns the chromatic index of graph.";
 
 IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a graph.";
 IGMeshCellAdjacencyMatrix::usage =
@@ -4572,6 +4573,9 @@ SyntaxInformation[IGChromaticNumber] = {"ArgumentsPattern" -> {_}};
 IGChromaticNumber[graph_?igGraphQ] :=
     catch@Max[check@IGMinimumVertexColoring[graph], 0]
 
+SyntaxInformation[IGChromaticIndex] = {"ArgumentsPattern" -> {_}};
+IGChromaticIndex[graph_?igGraphQ] :=
+    catch@Max[check@IGMinimumEdgeColoring[graph], 0]
 
 (* Coreness *)
 
