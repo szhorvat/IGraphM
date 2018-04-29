@@ -28274,18 +28274,21 @@ Cell[CellGroupData[{
 Cell["Graph colouring", \
 "Section",ExpressionUUID->"2b456f4e-dd43-4eeb-8a04-eab1e68fb7c3"],
 
-Cell[TextData[{
- "The graph colouring problem is assigning \[OpenCurlyDoubleQuote]colours\
+Cell["\<\
+The graph colouring problem is assigning \[OpenCurlyDoubleQuote]colours\
 \[CloseCurlyDoubleQuote] or \[OpenCurlyDoubleQuote]labels\
 \[CloseCurlyDoubleQuote] to the vertices of a graph so that no two adjacent \
 vertices will have the same colour. Similarly, edge colouring assigns colours \
-to edges so that adjacent edges never have the same colour. IGraph/M \
-represents colours with the integers ",
+to edges so that adjacent edges never have the same colour.\
+\>", "Text",ExpressionUUID->"ae7781ee-58dc-4866-85f5-3bd888186f31"],
+
+Cell[TextData[{
+ "IGraph/M represents colours with the integers ",
  Cell[BoxData[
   RowBox[{"1", ",", "2", ",", "\[Ellipsis]"}]],ExpressionUUID->
-  "6277873e-d20e-42bb-8ac7-eeecf8d662ba"],
- "."
-}], "Text",ExpressionUUID->"ae7781ee-58dc-4866-85f5-3bd888186f31"],
+  "a64d7420-6758-44c7-8075-8112d115666e"],
+ ". Edge directions and self loops are ignored."
+}], "Text",ExpressionUUID->"b92f7698-1a0c-44d7-b65a-59c39f544e51"],
 
 Cell[CellGroupData[{
 
@@ -28666,11 +28669,6 @@ Cell[BoxData[
   "IGMinimumEdgeColoring"}]], \
 "Input",ExpressionUUID->"580bfb55-5e57-4ea4-8a78-c0be8aee9e36"],
 
-Cell[BoxData[
- RowBox[{"?", 
-  "IGChromaticNumber"}]], \
-"Input",ExpressionUUID->"6d07a85f-9025-4ec6-9074-b5f203a89fa0"],
-
 Cell[TextData[{
  Cell[BoxData[
  "IGMinimumVertexColoring"],ExpressionUUID->
@@ -28722,34 +28720,15 @@ Cell[BoxData[
     RowBox[{"VertexStyle", "\[Rule]", "IGMinimumVertexColoring"}]}], 
    "]"}]}]], "Input",ExpressionUUID->"f11e4a80-7762-490a-8b59-ce2f645d9006"],
 
-Cell["Find the chromatic number of a large graph.", \
+Cell["Find a colouring of a large graph.", \
 "Text",ExpressionUUID->"cf8c1d69-9f2c-4896-b48b-11431d73abd1"],
 
 Cell[BoxData[
- RowBox[{
-  RowBox[{"g", "=", 
-   RowBox[{"RandomGraph", "[", 
-    RowBox[{"{", 
-     RowBox[{"100", ",", "400"}], "}"}], "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"3bc36dac-c0ff-41f0-ab8e-7c1ebb08aa8c"],
-
-Cell[BoxData[
- RowBox[{"IGChromaticNumber", "[", "g", 
-  "]"}]], "Input",ExpressionUUID->"f8d3486f-3326-45bd-8b93-8167cc1cb256"],
-
-Cell[TextData[{
- "The implementation of ",
- Cell[BoxData[
- "IGChromaticNumber"],ExpressionUUID->
-  "139619fe-b2d9-4d98-9621-9e313dcc1c40"],
- " is effectively the following:"
-}], "Text",ExpressionUUID->"39a52ed5-68db-4404-82c0-54dc977aa357"],
-
-Cell[BoxData[
- RowBox[{"Max", "@", 
-  RowBox[{
-  "IGMinimumVertexColoring", "[", "g", 
-   "]"}]}]], "Input",ExpressionUUID->"006d8917-8cf5-4cd0-8e12-3c626b90c80c"],
+ RowBox[{"IGMinimumVertexColoring", "@", 
+  RowBox[{"RandomGraph", "[", 
+   RowBox[{"{", 
+    RowBox[{"100", ",", "400"}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"2050696a-ec5b-48da-af49-0d6ccc879b40"],
 
 Cell[TextData[{
  "Implement a multipartite graph layout: vertex colouring is equivalent to \
@@ -28935,6 +28914,65 @@ Cell[BoxData[
     RowBox[{"EdgeStyle", "->", "IGMinimumEdgeColoring"}]}], 
    "\[IndentingNewLine]", 
    "]"}]}]], "Input",ExpressionUUID->"37ffd1df-bc2a-44cc-985a-dff7a5595b6b"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Chromatic number", \
+"Subsection",ExpressionUUID->"bb9a872d-b69a-4eab-a4ae-c3125344bae5"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGChromaticNumber"}]], \
+"Input",ExpressionUUID->"a0f0566e-9bb4-4740-89e6-265b73e021d4"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGChromaticIndex"}]], \
+"Input",ExpressionUUID->"3d4634ad-f3b4-4196-87b9-2283236b1129"],
+
+Cell["\<\
+The chromatic number of a graph is the smallest number of colours needed to \
+colour its vertices. The chromatic index, or edge chromatic number, is the \
+smallest number of colours needed to colour its edges.\
+\>", "Text",ExpressionUUID->"7de5fce7-da23-4607-872a-9692ad1da200"],
+
+Cell["Find the chromatic number and chromatic index of a graph.", \
+"Text",ExpressionUUID->"961fcd71-d41d-421a-a05d-488e67795f3b"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+  "GraphData", "[", "\"\<IcosahedralGraph\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"80d7efe9-0d86-4592-9b67-94fc805bc4af"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"IGChromaticNumber", "[", "g", "]"}], ",", 
+   RowBox[{"IGChromaticIndex", "[", "g", "]"}]}], 
+  "}"}]], "Input",ExpressionUUID->"f8d3486f-3326-45bd-8b93-8167cc1cb256"],
+
+Cell[TextData[{
+ "The implementation of ",
+ Cell[BoxData[
+ "IGChromaticNumber"],ExpressionUUID->
+  "55673bb3-2a97-4fbe-bcc0-e22209c26591"],
+ " and ",
+ Cell[BoxData["IGChromaticIndex"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "23a17cb8-42b1-475f-9d37-6c00f822fca9"],
+ " is effectively the following:"
+}], "Text",ExpressionUUID->"39a52ed5-68db-4404-82c0-54dc977aa357"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"Max", "@", 
+    RowBox[{"IGMinimumVertexColoring", "[", "g", "]"}]}], ",", 
+   RowBox[{"Max", "@", 
+    RowBox[{"IGMinimumEdgeColoring", "[", "g", "]"}]}]}], 
+  "}"}]], "Input",ExpressionUUID->"006d8917-8cf5-4cd0-8e12-3c626b90c80c"]
 }, Closed]]
 }, Closed]],
 
@@ -30011,6 +30049,26 @@ Cell[BoxData[
   "IGMeshCellAdjacencyMatrix"}]], \
 "Input",ExpressionUUID->"6ee2f81c-e855-48d2-bb52-499a08addcc0"],
 
+Cell[TextData[{
+ "The available options for ",
+ Cell[BoxData[
+ "IGMeshCellAdjacencyGraph"],ExpressionUUID->
+  "f0618685-a64d-4bdb-b369-7a9d9b0c99ec"],
+ " are:"
+}], "Text",ExpressionUUID->"dee6af43-8903-4dea-890f-26cfef6df4bc"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"VertexCoordinates", "\[Rule]", "Automatic"}]],ExpressionUUID->
+  "857adedf-1b3b-42fe-a268-cedc617a411b"],
+ " will use the mesh cell centroids as vertex coordinates if the mesh is 2 or \
+3-dimensional. The default is ",
+ Cell[BoxData[
+  RowBox[{"VertexCoordinates", "\[Rule]", "None"}]],ExpressionUUID->
+  "7334f315-7c91-4239-abef-ee955472d3ce"],
+ ", which does not compute any coordinates."
+}], "Item",ExpressionUUID->"a1e1faab-3f48-4601-a565-b08a77be2a2e"],
+
 Cell["\<\
 Compute the connectivity of mesh vertices (zero-dimensional cells).\
 \>", "Text",ExpressionUUID->"b51d2e78-9aa1-4e57-ba34-4ea2581b3a78"],
@@ -30026,8 +30084,7 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"IGMeshCellAdjacencyGraph", "[", 
   RowBox[{"mesh", ",", "0", ",", 
-   RowBox[{"VertexCoordinates", "\[Rule]", 
-    RowBox[{"MeshCoordinates", "[", "mesh", "]"}]}]}], 
+   RowBox[{"VertexCoordinates", "\[Rule]", "Automatic"}]}], 
   "]"}]], "Input",ExpressionUUID->"279e2ff2-8dfa-4fc5-b116-b0d4e6614290"],
 
 Cell["Compute the connectivity of faces (two-dimensional cells).", \
@@ -30045,8 +30102,8 @@ whether they represent a face or an edge.\
 
 Cell[BoxData[
  RowBox[{"g", "=", 
-  RowBox[{"IGMeshCellAdjacencyGraph", "[", 
-   RowBox[{"mesh", ",", "2", ",", "1", ",", 
+  RowBox[{"IGMeshCellAdjacencyGraph", "[", "\[IndentingNewLine]", 
+   RowBox[{"mesh", ",", "2", ",", "1", ",", "\[IndentingNewLine]", 
     RowBox[{"VertexSize", "\[Rule]", "0.9"}], ",", 
     RowBox[{"VertexStyle", "\[Rule]", 
      RowBox[{"{", 
@@ -30195,15 +30252,25 @@ Cell[TextData[{
  "\[CloseCurlyQuote]s curated data system in April 2018."
 }], "Text",ExpressionUUID->"24afc745-498c-45f9-b61d-6377a280083a"],
 
-Cell["The following lattice types are available:", \
-"Text",ExpressionUUID->"80a7b4be-3e52-4acf-9b10-5818f7ae4968"],
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGLatticeMesh", "[", "]"}]],ExpressionUUID->
+  "8f112bd5-8b78-428a-b05c-f573f70c87f3"],
+ " returns the list of available lattices. Let us explore them using a \
+graphical interface."
+}], "Text",ExpressionUUID->"80a7b4be-3e52-4acf-9b10-5818f7ae4968"],
 
 Cell[BoxData[
- RowBox[{"IGLatticeMesh", "[", 
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"IGLatticeMesh", "[", "type", "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"type", ",", 
+     RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}]}], 
   "]"}]], "Input",ExpressionUUID->"895fdab5-a9da-4617-871b-e42df135007b"],
 
 Cell[TextData[{
- "These are a subset of the tilings available in ",
+ "IGraph/M knows about a subset of the tilings available in ",
  Cell[BoxData[
   RowBox[{"EntityClass", "[", 
    RowBox[{"\"\<PeriodicTiling\>\"", ",", " ", "All"}], "]"}]],
@@ -30272,23 +30339,6 @@ along with its mesh.\
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"faceAdjGraph", "[", 
-   RowBox[{"mesh_", ",", 
-    RowBox[{"opt", ":", 
-     RowBox[{"OptionsPattern", "[", "]"}]}]}], "]"}], ":=", 
-  "\[IndentingNewLine]", 
-  RowBox[{"IGMeshCellAdjacencyGraph", "[", 
-   RowBox[{"mesh", ",", "2", ",", "\[IndentingNewLine]", 
-    RowBox[{"VertexCoordinates", "\[Rule]", 
-     RowBox[{"PropertyValue", "[", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"mesh", ",", "2"}], "}"}], ",", "MeshCellCentroid"}], "]"}]}],
-     ",", "opt"}], 
-   "]"}]}]], "Input",ExpressionUUID->"574b2483-ba1a-40c7-84c9-81bbfc507cf2"],
-
-Cell[BoxData[
- RowBox[{
   RowBox[{"mesh", "=", 
    RowBox[{"IGLatticeMesh", "[", 
     RowBox[{"\"\<CairoPentagonal\>\"", ",", 
@@ -30305,12 +30355,14 @@ Cell[BoxData[
 9c35913df271"],
 
 Cell[BoxData[
- RowBox[{"Show", "[", 
-  RowBox[{"mesh", ",", 
-   RowBox[{"faceAdjGraph", "[", 
-    RowBox[{"mesh", ",", 
+ RowBox[{"Show", "[", "\[IndentingNewLine]", 
+  RowBox[{"mesh", ",", "\[IndentingNewLine]", 
+   RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+    RowBox[{"mesh", ",", "2", ",", "\[IndentingNewLine]", 
+     RowBox[{"VertexCoordinates", "\[Rule]", "Automatic"}], ",", 
      RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}], ",", 
-   RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"970676f8-a6ea-4936-af9c-021be1ed60a0"],
 
 Cell["\<\
@@ -30361,7 +30413,25 @@ Cell[BoxData[
     RowBox[{"{", 
      RowBox[{"6", ",", "4"}], "}"}], ",", 
     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"21d758d0-4ae0-4012-91b5-28aaf22b6d41"]
+   "]"}]}]], "Input",ExpressionUUID->"21d758d0-4ae0-4012-91b5-28aaf22b6d41"],
+
+Cell["\<\
+Explore the face-adjacency graphs of lattices. These correspond to the dual \
+lattice.\
+\>", "Text",ExpressionUUID->"14f345eb-79b5-48f2-abce-18f70d24adb6"],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+    RowBox[{
+     RowBox[{"IGLatticeMesh", "[", "type", "]"}], ",", "2", ",", 
+     RowBox[{"VertexCoordinates", "\[Rule]", "Automatic"}]}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"type", ",", 
+     RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"f962b869-6ad5-46d4-9ab7-c32d07753976"]
 }, Closed]]
 }, Closed]],
 
@@ -31938,8 +32008,8 @@ Cell[BoxData[
   RowBox[{"ExampleData", "[", 
    RowBox[{"{", 
     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EastAfricaEmbassyAttacks\>\""}],
-     "}"}], "]"}]}]], \
-"Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
+     "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
 
 Cell[BoxData[
  RowBox[{"IGTake", "[", 
@@ -33547,8 +33617,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
