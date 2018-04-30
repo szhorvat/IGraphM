@@ -2606,6 +2606,12 @@ MT[
 ]
 
 
+MT[
+  IGChromaticNumber /@ NestList[IGMycielskian, IGEmptyGraph[], 6],
+  Range[0, 6]
+]
+
+
 (*******************************************************************************)
 MTSection["Test remaining functions"]
 
@@ -2723,6 +2729,35 @@ MT[
   IGGraphicalQ[{}],
   True
 ]
+
+
+(* Index edge list *)
+
+MT[
+  IGIndexEdgeList[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGIndexEdgeList[IGEmptyGraph[5]],
+  {}
+]
+
+MT[
+  IGIndexEdgeList[Graph[Range[10], {5<->6}]],
+  {{5,6}}
+]
+
+
+MT[
+  IGIndexEdgeList[#],
+  List @@@ EdgeList@IndexGraph[#]
+]& /@ {dgs, dgi, dmulti, bidi, dbipartite}
+
+MT[
+  Sort /@ IGIndexEdgeList[#],
+  Sort /@ List @@@ EdgeList@IndexGraph[#]
+]& /@ {ugs, ugi, umulti, bipartite, football, dolphin}
 
 
 (*******************************************************************************)
