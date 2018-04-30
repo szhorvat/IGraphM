@@ -55,7 +55,8 @@ IGLCF::usage =
 IGTriangularLattice::usage =
     "IGTriangularLattice[n] generates a triangular lattice graph on a size n equilateral triangle using n(n+1)/2 vertices.\n" <>
     "IGTriangularLattice[{m, n}] generates a triangular lattice graph on an m by n rectangle.";
-IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a lattice graph of the given dimensions.";
+IGSquareLattice::usage = "IGSquareLattice[{d1, d2, \[Ellipsis]}] generates a square grid graph of the given dimensions.";
+IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a square grid graph of the given dimensions. It is a synonym for IGSquareLattice";
 IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
@@ -1472,18 +1473,25 @@ IGTriangularLattice[n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[{IGTri
     ]
 
 
-Options[IGMakeLattice] = {
-  "Radius" -> 1, DirectedEdges -> False, "Mutual" -> False, "Periodic" -> False
-};
-SyntaxInformation[IGMakeLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGMakeLattice, Graph]};
-IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
+igSquareLattice[dims_, directed_, mutual_, radius_, periodic_, {opt___}] :=
     catch@Block[{ig = Make["IG"]},
-      check@ig@"makeLattice"[dims, OptionValue["Radius"], TrueQ@OptionValue[DirectedEdges], TrueQ@OptionValue["Mutual"], TrueQ@OptionValue["Periodic"]];
-      If[Length[dims] === 2 && Not@TrueQ@OptionValue["Periodic"],
+      check@ig@"makeLattice"[dims, radius, directed, mutual, periodic];
+      If[Length[dims] === 2 && Not@TrueQ[periodic],
         applyGraphOpt[opt, GraphLayout -> {"GridEmbedding", "Dimension" -> dims}]@igToGraph[ig],
         applyGraphOpt[opt]@igToGraph[ig]
       ]
-    ]
+    ]    
+
+(* IGMakeLattice is now a synonym for IGSquareLattice, however, it needs to have its separate set of Options *)
+Options[IGMakeLattice] = { "Radius" -> 1, DirectedEdges -> False, "Mutual" -> False, "Periodic" -> False };
+SyntaxInformation[IGMakeLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGMakeLattice, Graph]};
+IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
+    igSquareLattice[dims, OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Radius"], OptionValue["Periodic"], {opt}]
+
+Options[IGSquareLattice] = { "Radius" -> 1, DirectedEdges -> False, "Mutual" -> False, "Periodic" -> False };
+SyntaxInformation[IGSquareLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSquareLattice, Graph]};
+IGSquareLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGSquareLattice, Graph}]] :=
+    igSquareLattice[dims, OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Radius"], OptionValue["Periodic"], {opt}]
 
 SyntaxInformation[IGKautzGraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGKautzGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
