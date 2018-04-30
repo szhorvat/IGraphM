@@ -736,17 +736,17 @@ Cell[BoxData[{
 
 Cell[CellGroupData[{
 
-Cell["IGMakeLattice", \
+Cell["IGSquareLattice", \
 "Subsubsection",ExpressionUUID->"3746659c-8d18-428d-836c-fbaea707b33a"],
 
 Cell[BoxData[
  RowBox[{"?", 
-  "IGMakeLattice"}]], \
+  "IGSquareLattice"}]], \
 "Input",ExpressionUUID->"f74eb108-2134-421a-89d9-9918fa9b5613"],
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"IGMakeLattice", "[", 
+  RowBox[{"IGSquareLattice", "[", 
    RowBox[{"{", 
     RowBox[{
      SubscriptBox["d", "1"], ",", 
@@ -785,6 +785,17 @@ Cell[TextData[{
 }, Open  ]],
 
 Cell[TextData[{
+ "In previous versions, ",
+ Cell[BoxData[
+ "IGSquareLattice"],ExpressionUUID->"42633585-92c7-40e5-a8da-3fb83006c67a"],
+ " was called ",
+ Cell[BoxData[
+ "IGMakeLattice"],ExpressionUUID->"99e35240-2bf3-48c8-b349-b6b3d1a77df7"],
+ ". This name can still be used as a synonym for the sake of backwards \
+compatibility, however, it will be removed in a future version."
+}], "Text",ExpressionUUID->"daba12c1-7599-4bad-a006-46d7d63e66be"],
+
+Cell[TextData[{
  "To create other types of lattices, see ",
  Cell[BoxData[
  "IGTriangleLattice"],ExpressionUUID->
@@ -796,7 +807,7 @@ Cell[TextData[{
 }], "Text",ExpressionUUID->"6411b904-5c9e-41a4-a42f-df8819d41a48"],
 
 Cell[BoxData[
- RowBox[{"IGMakeLattice", "[", 
+ RowBox[{"IGSquareLattice", "[", 
   RowBox[{
    RowBox[{"{", 
     RowBox[{"3", ",", "4"}], "}"}], ",", 
@@ -804,7 +815,7 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"f3b1e70a-6bdb-4bc9-aa8b-6afc8c1bcdc5"],
 
 Cell[BoxData[
- RowBox[{"IGMakeLattice", "[", 
+ RowBox[{"IGSquareLattice", "[", 
   RowBox[{
    RowBox[{"{", 
     RowBox[{"10", ",", "10"}], "}"}], ",", 
@@ -813,7 +824,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"Graph3D", "@", 
-  RowBox[{"IGMakeLattice", "[", 
+  RowBox[{"IGSquareLattice", "[", 
    RowBox[{
     RowBox[{"{", 
      RowBox[{"5", ",", "4", ",", "3"}], "}"}], ",", 
@@ -822,7 +833,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"Graph3D", "@", 
-  RowBox[{"IGMakeLattice", "[", 
+  RowBox[{"IGSquareLattice", "[", 
    RowBox[{
     RowBox[{"{", 
      RowBox[{"2", ",", "5"}], "}"}], ",", 
@@ -841,6 +852,22 @@ Cell[BoxData[
  RowBox[{"?", 
   "IGTriangularLattice"}]], \
 "Input",ExpressionUUID->"94340d39-0f90-4d64-b4d0-cb1f067bb2e9"],
+
+Cell[TextData[{
+ Cell[BoxData["IGTriangularLattice"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "36af1738-0e8f-4eb5-ab1c-42103d44db3e"],
+ " can create a triangular grid graph in the shape of a triangle or a \
+rectangle. To generate other types of lattices, see ",
+ Cell[BoxData["IGSquareLattice"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "1c83ff60-cf7e-4bf1-b422-7dd4be5d14bf"],
+ " and ",
+ Cell[BoxData["IGLatticeMesh"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "2e6bdfda-8956-45dd-ba25-79c4b4cf9984"],
+ "."
+}], "Text",ExpressionUUID->"4ae44865-8aa6-484f-baad-0389d580a145"],
 
 Cell["The available options are:", \
 "Text",ExpressionUUID->"d7415cba-271e-4c15-9671-537aa1ca6ee7"],
@@ -2960,8 +2987,8 @@ Cell[TextData[{
     {RGBColor[0.254906, 0.411802, 0.882397], Thickness[Large], Opacity[1], 
      LineBox[{{-0.707106781186548, 0.7071067811865483}, {0.7071067811865472, 
       0.7071067811865466}}], 
-     LineBox[{{-0.7071067811865471, -0.7071067811865467}, {0.7071067811865479,
-       -0.7071067811865485}}]}, 
+     LineBox[{{-0.7071067811865471, -0.7071067811865467}, {
+      0.7071067811865479, -0.7071067811865485}}]}, 
     {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], EdgeForm[
      None], FaceForm[RGBColor[
      0.254906, 0.411802, 0.882397]], {
@@ -3769,6 +3796,781 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"IGChromaticNumber", "/@", 
   "%"}]], "Input",ExpressionUUID->"fc0853ee-2d48-4d56-8678-5c3491268565"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGSmoothen", \
+"Subsubsection",ExpressionUUID->"74ce0c3b-801e-4ca0-95d5-73fdd3ab254d"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGSmoothen"}]], \
+"Input",ExpressionUUID->"63554e5f-035f-4913-9cb8-2024f8994ee9"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGSmoothen"],ExpressionUUID->"373becea-db5e-459c-8263-35dc076ad86a"],
+ " suppresses all degree-2 vertices, thus obtaining the smallest \
+topologically equivalent (i.e. homeomorphic) graph. See also ",
+ Cell[BoxData[
+ "IGHomeomorphicQ"],ExpressionUUID->"c3e3477a-0d29-437d-abac-c5d6cbcaf293"],
+ "."
+}], "Text",ExpressionUUID->"6b8883cf-7d9f-4bbe-a655-c29e3947cdac"],
+
+Cell[TextData[Cell[BoxData[
+ FormBox[GridBox[{
+    {
+     GraphicsBox[
+      NamespaceBox[{
+        {GrayLevel[0], Thickness[Large], Opacity[0.7], 
+         LineBox[{{
+           DynamicLocation["VertexID$1", Automatic, Center], DynamicLocation[
+            "VertexID$2", Automatic, Center]}, {
+           DynamicLocation["VertexID$2", Automatic, Center], DynamicLocation[
+            "VertexID$3", Automatic, Center]}}]}, 
+        {RGBColor[1, 0.6666666666666666, 
+          NCache[
+           Rational[1, 3], 0.3333333333333333]], EdgeForm[GrayLevel[0]], 
+         TagBox[{
+           TagBox[DiskBox[{0., 3.6739403974420594*^-16}, 0.1],
+            "DynamicName",
+            BoxID -> "VertexID$1"], 
+           InsetBox["1", DynamicLocation["VertexID$1", None, Center],
+            BaseStyle->"Graphics"]},
+          "DynamicName",
+          BoxID -> "VertexLabelID$1"], 
+         TagBox[{
+           TagBox[
+            {RGBColor[1, 
+              Rational[1, 3], 
+              Rational[1, 3]], DiskBox[{1., 2.4492935982947064*^-16}, 0.1]},
+            "DynamicName",
+            BoxID -> "VertexID$2"], 
+           InsetBox["2", DynamicLocation["VertexID$2", None, Center],
+            BaseStyle->"Graphics"]},
+          "DynamicName",
+          BoxID -> "VertexLabelID$2"], 
+         TagBox[{
+           TagBox[DiskBox[{2., 0.}, 0.1],
+            "DynamicName",
+            BoxID -> "VertexID$3"], 
+           InsetBox["3", DynamicLocation["VertexID$3", None, Center],
+            BaseStyle->"Graphics"]},
+          "DynamicName",
+          BoxID -> "VertexLabelID$3"]}}],
+      FormatType->TraditionalForm,
+      FrameTicks->None,
+      ImageSize->200]},
+    {
+     FormBox[
+      GraphicsBox[
+       {AbsoluteThickness[1], Arrowheads[0.06666], 
+        ArrowBox[{{0, 0}, {0, -0.25}}]},
+       ImageSize->180],
+      TraditionalForm]},
+    {
+     GraphicsBox[
+      NamespaceBox[{
+        {GrayLevel[0], Thickness[Large], Opacity[0.7], 
+         LineBox[{
+          DynamicLocation["VertexID$1", Automatic, Center], DynamicLocation[
+           "VertexID$2", Automatic, Center]}]}, 
+        {RGBColor[1, 0.6666666666666666, 
+          NCache[
+           Rational[1, 3], 0.3333333333333333]], EdgeForm[GrayLevel[0]], 
+         TagBox[{
+           TagBox[DiskBox[{0., 3.6739403974420594*^-16}, 0.1],
+            "DynamicName",
+            BoxID -> "VertexID$1"], 
+           InsetBox["1", DynamicLocation["VertexID$1", None, Center],
+            BaseStyle->"Graphics"]},
+          "DynamicName",
+          BoxID -> "VertexLabelID$1"], 
+         TagBox[{
+           TagBox[DiskBox[{2., 0.}, 0.1],
+            "DynamicName",
+            BoxID -> "VertexID$2"], 
+           InsetBox["3", DynamicLocation["VertexID$2", None, Center],
+            BaseStyle->"Graphics"]},
+          "DynamicName",
+          BoxID -> "VertexLabelID$2"]}}],
+      FormatType->TraditionalForm,
+      FrameTicks->None,
+      ImageSize->200]}
+   }], TraditionalForm]],ExpressionUUID->"113940a6-b71a-4165-8c98-\
+cacfad5374e8"]], \
+"Text",ExpressionUUID->"084adcf8-63e9-404f-b46b-821a0685bf31"],
+
+Cell["\<\
+The vertex names are preserved, and the weights of merged edges are summed \
+up. All other graph properties are discarded. Edge directions are also \
+discarded.\
+\>", "Text",ExpressionUUID->"ab559f94-6d3d-4de8-973f-8a0866b4fb58"],
+
+Cell["\<\
+The smallest topological equivalent of a path graph consists of two connected \
+vertices.\
+\>", "Text",ExpressionUUID->"8a499e05-4c27-4ad8-a99d-e57375a4264f"],
+
+Cell[BoxData[
+ RowBox[{"IGSmoothen", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5}, {Null, {{1, 2}, {2, 3}, {3, 4}, {4, 5}}}, {
+        FormatType -> TraditionalForm, GraphLayout -> {"Dimension" -> 2}, 
+         ImageSize -> {243.40234375, Automatic}, PerformanceGoal -> "Quality",
+          VertexShapeFunction -> {"Name"}, VertexSize -> {Medium}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         LineBox[{{
+            DynamicLocation["VertexID$1", Automatic, Center], 
+            DynamicLocation["VertexID$2", Automatic, Center]}, {
+            DynamicLocation["VertexID$2", Automatic, Center], 
+            DynamicLocation["VertexID$3", Automatic, Center]}, {
+            DynamicLocation["VertexID$3", Automatic, Center], 
+            DynamicLocation["VertexID$4", Automatic, Center]}, {
+            DynamicLocation["VertexID$4", Automatic, Center], 
+            DynamicLocation["VertexID$5", Automatic, Center]}}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 7.347880794884119*^-16}, Automatic, {0.2,
+            0.2}, BaseStyle -> "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 6.123233995736766*^-16}, Automatic, {0.2,
+            0.2}, BaseStyle -> "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {2., 4.898587196589413*^-16}, Automatic, {0.2,
+            0.2}, BaseStyle -> "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$3"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["4", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {3., 2.4492935982947064`*^-16}, Automatic, {
+           0.2, 0.2}, BaseStyle -> "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$4"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["5", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {4., 0.}, Automatic, {0.2, 0.2}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$5"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{8.881784197001252*^-16, 242.40234375}, {-9., 
+         2.542968750000046}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{243.40234375, Automatic}], ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "Automatic"}]}], 
+  "]"}]], "Input",ExpressionUUID->"9de65de0-287a-457d-99b5-31fd59e95e79"],
+
+Cell["\<\
+The result may contain self-loops. The smallest topological equivalent of a \
+cycle graph is a single vertex with a self-loop.\
+\>", "Text",ExpressionUUID->"b6464ef9-e058-4842-9b96-2ba79cecebb1"],
+
+Cell[BoxData[
+ RowBox[{"IGSmoothen", "[", 
+  RowBox[{"CycleGraph", "[", "10", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"03ad629c-d3f6-4c5f-8085-74d8c04dfe9f"],
+
+Cell["The result may also contain multi-edges.", \
+"Text",ExpressionUUID->"b9b44509-42d8-475d-be0a-d816a2ea1730"],
+
+Cell[BoxData[
+ RowBox[{"IGSmoothen", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 6, 7, 8}, {
+        Null, {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {2, 6}, {6, 7}, {5, 7}, {5, 
+         8}}}, {PerformanceGoal -> "Quality", VertexLabels -> {None}, 
+         VertexShapeFunction -> {"Name"}}]], Typeset`boxes, 
+      Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         LineBox[{{
+            DynamicLocation["VertexID$1", Automatic, Center], 
+            DynamicLocation["VertexID$2", Automatic, Center]}, {
+            DynamicLocation["VertexID$2", Automatic, Center], 
+            DynamicLocation["VertexID$3", Automatic, Center]}, {
+            DynamicLocation["VertexID$2", Automatic, Center], 
+            DynamicLocation["VertexID$6", Automatic, Center]}, {
+            DynamicLocation["VertexID$3", Automatic, Center], 
+            DynamicLocation["VertexID$4", Automatic, Center]}, {
+            DynamicLocation["VertexID$4", Automatic, Center], 
+            DynamicLocation["VertexID$5", Automatic, Center]}, {
+            DynamicLocation["VertexID$5", Automatic, Center], 
+            DynamicLocation["VertexID$7", Automatic, Center]}, {
+            DynamicLocation["VertexID$5", Automatic, Center], 
+            DynamicLocation["VertexID$8", Automatic, Center]}, {
+            DynamicLocation["VertexID$6", Automatic, Center], 
+            DynamicLocation["VertexID$7", Automatic, Center]}}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 0.6627181511725552}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0.9641829639791448, 0.663003844334007}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1.72475622995653, 1.3264692192443732`}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> "VertexID$3"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["4", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {2.7419269157661503`, 1.326334922097312}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> "VertexID$4"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["5", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {3.502246535118303, 0.663084949065074}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> "VertexID$5"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["6", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1.725390098300637, 0.}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$6"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["7", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {2.7426547650378774`, 
+           0.00018035036484909117`}, BaseStyle -> "Graphics"], "DynamicName", 
+          BoxID -> "VertexID$7"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["8", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {4.465994667745367, 0.6630658107423155}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$8"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{8.881784197001252*^-16, 142.54296875}, {-32., 
+         26.367303670092085`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{143.54296875, Automatic}], ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "Automatic"}]}], 
+  "]"}]], "Input",ExpressionUUID->"fd9b2afa-b30c-4aa7-8573-b32f7e28b90e"],
+
+Cell["\<\
+The result is always a weighted graph. When contracting edges, their weights \
+are added up. If the input graph was not weighted, all of its edge weights \
+are considered to be 1. Thus, the graph distance of any two vertices in the \
+result is always the same as it was in the input graph.\
+\>", "Text",ExpressionUUID->"2b2a30ab-76c9-442f-88bf-47ca74fbc64f"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGGiantComponent", "@", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{"{", 
+     RowBox[{"100", ",", "100"}], "}"}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"46d2394e-9ca2-4d94-bb30-e051725a3800"],
+
+Cell[BoxData[
+ RowBox[{"tm", "=", 
+  RowBox[{
+  "IGSmoothen", "[", "g", 
+   "]"}]}]], "Input",ExpressionUUID->"2b8bec13-03cc-43a4-86dd-c070a2f5f1cf"],
+
+Cell[BoxData[
+ RowBox[{"IGEdgeWeightedQ", "[", "tm", 
+  "]"}]], "Input",ExpressionUUID->"77bc15d7-fe23-4c6c-a86f-fa21c150ab34"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGDistanceMatrix", "[", 
+   RowBox[{"g", ",", 
+    RowBox[{"VertexList", "[", "tm", "]"}], ",", 
+    RowBox[{"VertexList", "[", "tm", "]"}]}], "]"}], "\[Equal]", 
+  RowBox[{
+  "IGDistanceMatrix", "[", "tm", 
+   "]"}]}]], "Input",ExpressionUUID->"deb12b21-6282-4f9a-a125-9811f727dc41"],
+
+Cell["The result does not contain any degree-2 vertices.", \
+"Text",ExpressionUUID->"2b3044f5-2a97-4556-9cde-dadc91957fd6"],
+
+Cell[BoxData[
+ RowBox[{"Union", "@", 
+  RowBox[{
+  "VertexDegree", "[", "tm", 
+   "]"}]}]], "Input",ExpressionUUID->"c15e3206-a935-4f61-8612-a8764d09078e"],
+
+Cell["\<\
+The vertex coordinates, as well as any other graph properties are discarded.\
+\>", "Text",ExpressionUUID->"86bd2673-8161-4913-9194-9be1eb925098"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGMeshGraph", "@", 
+   RowBox[{"IGLatticeMesh", "[", 
+    RowBox[{"\"\<Hexagonal\>\"", ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "3"}], "}"}]}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"22fbe42f-4f7f-490f-84c7-b69e4fcf3f41"],
+
+Cell[BoxData[
+ RowBox[{"IGSmoothen", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"959e64a4-74b2-4229-99af-6738d40c709c"],
+
+Cell["\<\
+Vertex coordinates can be transferred to the new graph as follows:\
+\>", "Text",ExpressionUUID->"95e73305-b7b2-4485-be5f-b9680f9e5ca9"],
+
+Cell[BoxData[
+ RowBox[{"IGSmoothen", "[", 
+  RowBox[{"g", ",", "\[IndentingNewLine]", 
+   RowBox[{"VertexCoordinates", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"v_", "\[RuleDelayed]", 
+      RowBox[{"PropertyValue", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"g", ",", "v"}], "}"}], ",", "VertexCoordinates"}], "]"}]}], 
+     "}"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"0707cfa7-fe53-48be-9193-14abfc41181a"],
+
+Cell["\<\
+Create a tree in which every non-leaf node has a degree of at least 3.\
+\>", "Text",ExpressionUUID->"aad08543-1679-46ef-999a-4bdddef16709"],
+
+Cell[BoxData[
+ RowBox[{"IGSmoothen", "[", 
+  RowBox[{
+   RowBox[{"IGTreeGame", "[", "100", "]"}], ",", 
+   RowBox[{"GraphLayout", "\[Rule]", "\"\<RadialEmbedding\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"ffe232ab-01c9-4266-9aea-95190f338e48"],
+
+Cell["\<\
+Let us compute the effective resistance of a resistor network by repeated \
+smoothing (merger of resistors in series) and simplification (merger of \
+resistors in parallel). Resistances are stored as edge weights. A \
+zero-resistance input and output terminal is added to prevent the premature \
+smoothing of these points.\
+\>", "Text",ExpressionUUID->"f6fdedcf-fcb0-4ca6-92ae-479968491bc5"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"resistorGrid", "=", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9}, {
+        Null, {{1, 9}, {1, 2}, {1, 5}, {2, 3}, {3, 4}, {4, 6}, {4, 7}, {4, 
+         8}, {5, 6}, {5, 7}}}, {
+        EdgeLabels -> {UndirectedEdge[1, 5] -> Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 2}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[3.141592653589793, Pi, (-Pi)/2]]& ], UndirectedEdge[1, 9] -> 
+           Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 0}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[0., Pi, (-Pi)/2]]& ], UndirectedEdge[4, 7] -> Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 2}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[-0.5191461142465229, Pi, (-Pi)/2]]& ], UndirectedEdge[3, 4] -> 
+           Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 5}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[-2.0344439357957027`, Pi, (-Pi)/2]]& ], 
+           UndirectedEdge[5, 6] -> Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 2}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[2.62244653934327, Pi, (-Pi)/2]]& ], UndirectedEdge[4, 8] -> 
+           Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 0}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[3.141592653589793, Pi, (-Pi)/2]]& ], UndirectedEdge[1, 2] -> 
+           Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 3}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[2.0344439357957027`, Pi, (-Pi)/2]]& ], UndirectedEdge[4, 6] -> 
+           Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 4}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[0.5191461142465229, Pi, (-Pi)/2]]& ], UndirectedEdge[5, 7] -> 
+           Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 1}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[-2.62244653934327, Pi, (-Pi)/2]]& ], UndirectedEdge[2, 3] -> 
+           Placed[
+             Framed[
+              Style[
+               Row[{"R", " = ", 4}], FontSize -> 8], Background -> 
+              GrayLevel[1], ContentPadding -> False], Center, Rotate[#, 
+              Mod[3.141592653589793, Pi, (-Pi)/2]]& ]}, 
+         EdgeWeight -> {0, 3, 2, 4, 5, 4, 2, 0, 2, 1}, GraphStyle -> 
+         "BasicBlack", PlotRangePadding -> 0.15, 
+         VertexCoordinates -> {{1.2, 3.}, {1.8, 1.8}, {3.6, 1.8}, {4.2, 3.}, {
+          2.1, 3.}, {3.15, 2.4}, {3.15, 3.6}, {5.1000000000000005`, 3.}, {0.3,
+           3.}}, VertexSize -> {{"Scaled", 0.015}}}]], Typeset`boxes, 
+      Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          GrayLevel[0], 
+          Opacity[0.7]], {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$2", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$1"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "3"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], 
+             BoxRotation -> -1.1071487177940904`], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$1", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$5", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$2"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "2"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], BoxRotation -> 
+             0.], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$2", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$9", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$3"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "0"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], BoxRotation -> 
+             0.], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$3", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$2", Automatic, Center], 
+             DynamicLocation["VertexID$3", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$4"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "4"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], BoxRotation -> 
+             0.], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$4", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$3", Automatic, Center], 
+             DynamicLocation["VertexID$4", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$5"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "5"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], BoxRotation -> 
+             1.1071487177940904`], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$5", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$4", Automatic, Center], 
+             DynamicLocation["VertexID$6", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$6"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "4"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], BoxRotation -> 
+             0.5191461142465229], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$6", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$4", Automatic, Center], 
+             DynamicLocation["VertexID$7", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$7"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "2"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], 
+             BoxRotation -> -0.5191461142465229], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$7", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$4", Automatic, Center], 
+             DynamicLocation["VertexID$8", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$8"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "0"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], BoxRotation -> 
+             0.], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$8", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$5", Automatic, Center], 
+             DynamicLocation["VertexID$6", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$9"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "2"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], 
+             BoxRotation -> -0.519146114246523], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$9", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}, {
+          TagBox[
+           LineBox[{
+             DynamicLocation["VertexID$5", Automatic, Center], 
+             DynamicLocation["VertexID$7", Automatic, Center]}], 
+           "DynamicName", BoxID -> "EdgeLabelID$10"], 
+          InsetBox[
+           FormBox[
+            RotationBox[
+             FrameBox[
+              StyleBox[
+               TemplateBox[{"\"R\"", "\" = \"", "1"}, "RowDefault"], FontSize -> 
+               8, StripOnInput -> False], Background -> GrayLevel[1], 
+              ContentPadding -> False, StripOnInput -> False], BoxRotation -> 
+             0.519146114246523], TraditionalForm], 
+           DynamicLocation["EdgeLabelID$10", Center], 
+           ImageScaled[{0.5, 0.5}], BaseStyle -> "Graphics"]}}, {
+         GrayLevel[0], 
+         TagBox[
+          DiskBox[{1.2, 3.}, 0.038448016853928894`], "DynamicName", BoxID -> 
+          "VertexID$1"], 
+         TagBox[
+          DiskBox[{1.8, 1.8}, 0.038448016853928894`], "DynamicName", BoxID -> 
+          "VertexID$2"], 
+         TagBox[
+          DiskBox[{3.6, 1.8}, 0.038448016853928894`], "DynamicName", BoxID -> 
+          "VertexID$3"], 
+         TagBox[
+          DiskBox[{4.2, 3.}, 0.038448016853928894`], "DynamicName", BoxID -> 
+          "VertexID$4"], 
+         TagBox[
+          DiskBox[{2.1, 3.}, 0.038448016853928894`], "DynamicName", BoxID -> 
+          "VertexID$5"], 
+         TagBox[
+          DiskBox[{3.15, 2.4}, 0.038448016853928894`], "DynamicName", BoxID -> 
+          "VertexID$6"], 
+         TagBox[
+          DiskBox[{3.15, 3.6}, 0.038448016853928894`], "DynamicName", BoxID -> 
+          "VertexID$7"], 
+         TagBox[
+          DiskBox[{5.1000000000000005`, 3.}, 0.038448016853928894`], 
+          "DynamicName", BoxID -> "VertexID$8"], 
+         TagBox[
+          DiskBox[{0.3, 3.}, 0.038448016853928894`], "DynamicName", BoxID -> 
+          "VertexID$9"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{8.515798609067184, 
+         334.19513889093275`}, {-66.4842013909328, 67.54963362661194}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{343.7109375, Automatic},
+    PlotRangePadding->0.15]}], 
+  ";"}]], "Input",ExpressionUUID->"07fdac49-7330-493d-93be-16167d277788"],
+
+Cell["Merge resistors in series ...", \
+"Text",ExpressionUUID->"94c9ed42-bedb-4a2a-9152-9354fbc7e5e0"],
+
+Cell[BoxData[
+ RowBox[{"reducedGrid", "=", 
+  RowBox[{
+  "IGSmoothen", "[", "resistorGrid", 
+   "]"}]}]], "Input",ExpressionUUID->"29f1c4d6-04c0-4d86-80ce-5cf56111f15d"],
+
+Cell["\<\
+... then merge resistors in parallel and check the resulting edge weights.\
+\>", "Text",ExpressionUUID->"8b8ffe73-8dd8-4c2a-883c-bdfd8675d4e6"],
+
+Cell[BoxData[
+ RowBox[{"reducedGrid", "=", 
+  RowBox[{"IGWeightedSimpleGraph", "[", 
+   RowBox[{"reducedGrid", ",", " ", 
+    RowBox[{
+     RowBox[{"1", "/", 
+      RowBox[{"Total", "[", 
+       RowBox[{"1", "/", 
+        RowBox[{"{", "##", "}"}]}], "]"}]}], "&"}], ",", 
+    RowBox[{"EdgeLabels", "\[Rule]", "\"\<EdgeWeight\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"9afe5c7f-f362-4b95-98b9-fadfaf1ae164"],
+
+Cell["Repeat until a single resistor remains.", \
+"Text",ExpressionUUID->"e877d52e-54b8-4d62-a03f-ea23edcceca9"],
+
+Cell[BoxData[
+ RowBox[{"reducedGrid", "=", 
+  RowBox[{
+  "IGSmoothen", "[", "reducedGrid", 
+   "]"}]}]], "Input",ExpressionUUID->"63668af7-cbeb-469b-b597-ccd09462fe2d"],
+
+Cell[BoxData[
+ RowBox[{"reducedGrid", "=", 
+  RowBox[{"IGWeightedSimpleGraph", "[", 
+   RowBox[{"reducedGrid", ",", " ", 
+    RowBox[{
+     RowBox[{"1", "/", 
+      RowBox[{"Total", "[", 
+       RowBox[{"1", "/", 
+        RowBox[{"{", "##", "}"}]}], "]"}]}], "&"}], ",", 
+    RowBox[{"EdgeLabels", "\[Rule]", "\"\<EdgeWeight\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"0b02f393-32ea-40a8-ba98-9fd0136acf62"],
+
+Cell[BoxData[
+ RowBox[{"reducedGrid", "=", 
+  RowBox[{"IGSmoothen", "[", 
+   RowBox[{"reducedGrid", ",", 
+    RowBox[{"EdgeLabels", "\[Rule]", "\"\<EdgeWeight\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"f0e11cf0-051b-4bd6-9250-bf3d9f9fd09a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGEdgeProp", "[", "EdgeWeight", "]"}], "[", "reducedGrid", 
+  "]"}]], "Input",ExpressionUUID->"51dbf519-7fbf-4529-b621-53b5b7d7d59f"]
 }, Closed]]
 }, Closed]],
 
@@ -5359,6 +6161,7 @@ Cell[BoxData[
            ShowContents->False], 
           InsetBox["1", {1.944934484934091, 0.4869131293713701},
            BaseStyle->"Graphics"]}, {
+          
           StyleBox[
            DiskBox[{1.0809082023413574, 0.035904784667003864}, 
             0.1803414155696349],
@@ -10420,6 +11223,147 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["Homeomorphism", \
+"Subsection",ExpressionUUID->"7a752d23-d8a1-49a2-b7d6-f5271ba608ec"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGHomeomorphicQ"}]], \
+"Input",ExpressionUUID->"97a05ba0-f8ca-4534-8d77-71607f5619e4"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGHomeomorphicQ"],ExpressionUUID->"51929af7-429c-4ab0-a331-e2607ec085ae"],
+ " tests if two graphs are homeomorphic, i.e. whether they have the same \
+topological structure. Two graphs ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["G", "1"], TraditionalForm]],ExpressionUUID->
+  "24180247-c496-49f9-81e1-af3c1bd1ddaa"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["G", "2"], TraditionalForm]],ExpressionUUID->
+  "a219aa66-90c2-4938-a9dc-b8635f4b80fc"],
+ " are homeomorphic if there is an isomorphism from a subdivision of ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["G", "1"], TraditionalForm]],ExpressionUUID->
+  "4a7bc177-8c1f-4232-a4f0-000757cdfdbf"],
+ " to a subdivision of ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["G", "2"], TraditionalForm]],ExpressionUUID->
+  "6be953be-bc08-4b5a-9afc-32feffe55a0a"],
+ "."
+}], "Text",ExpressionUUID->"96e52786-29a9-4956-8e86-21b420167f77"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGHomeomorphicQ", "[", 
+   RowBox[{
+    SubscriptBox["g", "1"], ",", 
+    SubscriptBox["g", "2"]}], "]"}]],ExpressionUUID->
+  "d8f787eb-f776-4a91-b470-85cdd5fb45d6"],
+ " is effectively implemented as ",
+ Cell[BoxData[
+  RowBox[{"IGIsomorphicQ", "[", 
+   RowBox[{
+    RowBox[{"IGSmoothen", "[", 
+     SubscriptBox["g", "1"], "]"}], ",", 
+    RowBox[{"IGSmoothen", "[", 
+     SubscriptBox["g", "2"], "]"}]}], "]"}]],ExpressionUUID->
+  "f41616d2-0618-4a5a-9db5-e4f17b017d30"],
+ "."
+}], "Text",ExpressionUUID->"08d1e2b5-7527-4584-b015-f68bdbda7909"],
+
+Cell[BoxData[
+ RowBox[{"IGHomeomorphicQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4}, {Null, {{1, 3}, {2, 4}, {1, 2}, {3, 4}, {2, 3}}}, {
+        VertexSize -> {Medium}, VertexCoordinates -> {{
+            Rational[3, 4], Rational[1, 2] 3^Rational[1, 2]}, {
+            Rational[5, 4], 3^Rational[1, 2]}, {
+            Rational[7, 4], Rational[1, 2] 3^Rational[1, 2]}, {
+            Rational[9, 4], 3^Rational[1, 2]}}}]]}, 
+      TagBox[
+       GraphicsGroupBox[
+        GraphicsComplexBox[{{0.75, 0.8660254037844386}, {1.25, 
+         1.7320508075688772`}, {1.75, 0.8660254037844386}, {2.25, 
+         1.7320508075688772`}}, {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           {Arrowheads[0.], ArrowBox[{1, 2}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{1, 3}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{2, 3}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{2, 4}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{3, 4}, 0.1]}}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.1], DiskBox[2, 0.1], DiskBox[3, 0.1], 
+           DiskBox[4, 0.1]}}]],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 6}, {
+        Null, {{1, 2}, {1, 3}, {2, 4}, {3, 4}, {3, 5}, {4, 6}, {5, 6}}}, {
+        GraphLayout -> {
+          "Dimension" -> 2, 
+           "VertexLayout" -> {"GridEmbedding", "Dimension" -> {2, 3}}}, 
+         VertexSize -> {Medium}}]]}, 
+      TagBox[
+       GraphicsGroupBox[
+        GraphicsComplexBox[{{1., 1.}, {1., 2.}, {2., 1.}, {2., 2.}, {3., 
+         1.}, {3., 2.}}, {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           {Arrowheads[0.], ArrowBox[{1, 2}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{1, 3}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{2, 4}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{3, 4}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{3, 5}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{4, 6}, 0.1]}, 
+           {Arrowheads[0.], ArrowBox[{5, 6}, 0.1]}}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.1], DiskBox[2, 0.1], DiskBox[3, 0.1], DiskBox[4, 0.1],
+            DiskBox[5, 0.1], DiskBox[6, 0.1]}}]],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None]}], 
+  "]"}]], "Input",ExpressionUUID->"8af77bf2-ba1d-4291-ba75-b9cfae84bbd5"],
+
+Cell["Any two cycle graphs are homeomorphic.", \
+"Text",ExpressionUUID->"a86d31b3-e60f-4cd8-937e-72b7525e8147"],
+
+Cell[BoxData[
+ RowBox[{"IGHomeomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"CycleGraph", "[", "5", "]"}], ",", 
+   RowBox[{"CycleGraph", "[", "9", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"341ed8d9-f298-4432-b40f-333b84e1a30a"],
+
+Cell[BoxData[
+ RowBox[{"IGHomeomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"CycleGraph", "[", "5", "]"}], ",", 
+   RowBox[{"PathGraph", "@", 
+    RowBox[{"Range", "[", "5", "]"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"71761f94-4961-43b4-82da-66c15fd97d4a"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["Other functions", \
 "Subsection",ExpressionUUID->"803eb768-6a7c-4416-ae42-dcb05e126a9e"],
 
@@ -10757,13 +11701,13 @@ Cell[BoxData[
 
 Cell["\<\
 To find cliques in directed graphs, convert them to undirected and keep \
-reciprocal (bidirectional) edges only.\
+mutual (bidirectional) edges only.\
 \>", "Text",ExpressionUUID->"6fd59783-9a74-4e8f-b410-618a0743622c"],
 
 Cell[BoxData[
  RowBox[{"IGMaximalCliques", "@", 
   RowBox[{"IGUndirectedGraph", "[", 
-   RowBox[{"g", ",", "\"\<Reciprocal\>\""}], 
+   RowBox[{"g", ",", "\"\<Mutual\>\""}], 
    "]"}]}]], "Input",ExpressionUUID->"621a5b0e-f75f-4ce1-acea-2e2f9c3b3dc1"]
 }, Closed]],
 
@@ -10903,7 +11847,7 @@ Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
    RowBox[{"IGLayoutFruchtermanReingold", "[", 
-    RowBox[{"IGMakeLattice", "[", 
+    RowBox[{"IGSquareLattice", "[", 
      RowBox[{"{", 
       RowBox[{"2", ",", "4"}], "}"}], "]"}], 
     RowBox[{"(*", 
@@ -10913,7 +11857,7 @@ Cell[BoxData[
      "*)"}], "]"}], ",", 
    RowBox[{"IGLayoutFruchtermanReingold", "[", 
     RowBox[{
-     RowBox[{"IGMakeLattice", "[", 
+     RowBox[{"IGSquareLattice", "[", 
       RowBox[{"{", 
        RowBox[{"2", ",", "4"}], "}"}], "]"}], ",", 
      RowBox[{"\"\<Align\>\"", "\[Rule]", "False"}]}], "]"}]}], 
@@ -29095,7 +30039,7 @@ Cell["Random walk on a square grid.", \
 Cell[BoxData[{
  RowBox[{
   RowBox[{"grid", "=", 
-   RowBox[{"IGMakeLattice", "[", 
+   RowBox[{"IGSquareLattice", "[", 
     RowBox[{"{", 
      RowBox[{"50", ",", "50"}], "}"}], "]"}]}], ";"}], "\n", 
  RowBox[{
@@ -29152,7 +30096,7 @@ Cell[BoxData[
 Cell[BoxData[{
  RowBox[{
   RowBox[{"grid", "=", 
-   RowBox[{"IGMakeLattice", "[", 
+   RowBox[{"IGSquareLattice", "[", 
     RowBox[{
      RowBox[{"{", 
       RowBox[{"50", ",", "50"}], "}"}], ",", 
@@ -29291,7 +30235,7 @@ generate mazes.\
 Cell[BoxData[{
  RowBox[{
   RowBox[{"graph", "=", 
-   RowBox[{"IGMakeLattice", "[", 
+   RowBox[{"IGSquareLattice", "[", 
     RowBox[{"{", 
      RowBox[{"15", ",", "15"}], "}"}], "]"}]}], 
   ";"}], "\[IndentingNewLine]", 
@@ -30238,7 +31182,8 @@ Cell[TextData[{
  Cell[BoxData[
  "IGMeshCellAdjacencyGraph"],ExpressionUUID->
   "b8648c15-5a11-4c7d-b0db-02a1e9679123"],
- " can be used to convert these to graphs."
+ " can be used to convert these to graphs. The primary use case is the easy \
+generation of various lattice graphs."
 }], "Text",ExpressionUUID->"29028494-a62d-4f53-9433-001d654dcde2"],
 
 Cell[TextData[{
@@ -30306,6 +31251,16 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"c15b058e-cdb6-45db-a4b5-312df46614bb"],
 
 Cell["\<\
+This specific node labelling allows for the creation of convenient directed \
+lattices.\
+\>", "Text",ExpressionUUID->"95f071b6-eb96-40ac-ae9f-c8b1156cf182"],
+
+Cell[BoxData[
+ RowBox[{"DirectedGraph", "[", 
+  RowBox[{"%", ",", "\"\<Acyclic\>\""}], 
+  "]"}]], "Input",ExpressionUUID->"91c84959-e39b-4424-8191-6442dd3659d5"],
+
+Cell["\<\
 Create a hexagonal mesh from points that fall within a rectangular region.\
 \>", "Text",ExpressionUUID->"637c98d0-c252-4f6c-8946-aeda4e3f4a0c"],
 
@@ -30331,6 +31286,17 @@ Cell[BoxData[
     RowBox[{"CirclePoints", "[", 
      RowBox[{"3", ",", "6"}], "]"}]}]}], 
   "]"}]], "Input",ExpressionUUID->"f36f7709-760b-405a-ac84-6c59463b46d2"],
+
+Cell["\<\
+Create a triangular grid graph in the shape of a hexagon, as the \
+face-adjacency graph of the above mesh.\
+\>", "Text",ExpressionUUID->"24cf816d-a87c-4f78-81ad-d0e31c6d8b28"],
+
+Cell[BoxData[
+ RowBox[{"IGMeshCellAdjacencyGraph", "[", 
+  RowBox[{"%", ",", "2", ",", 
+   RowBox[{"VertexCoordinates", "\[Rule]", "Automatic"}]}], 
+  "]"}]], "Input",ExpressionUUID->"8c1aeee1-b7b9-4226-8977-7a3aa559df08"],
 
 Cell["\<\
 Create a face adjacency graph of the Cairo pentagonal tiling, and display it \
@@ -31262,8 +32228,8 @@ multiple edges between the same vertices."
 
 Cell[TextData[{
  Cell[BoxData[
- "\"\<Reciprocal\>\""],ExpressionUUID->"302db566-6b0a-4326-b73a-d360b866f603"],
- " creates an edge only between reciprocally connected vertices."
+ "\"\<Mutual\>\""],ExpressionUUID->"302db566-6b0a-4326-b73a-d360b866f603"],
+ " creates an edge only between mutually connected vertices."
 }], "Item",ExpressionUUID->"0867c744-bc6c-4aa4-be01-5fe7b81c902a"]
 }, Open  ]],
 
@@ -31342,7 +32308,7 @@ Cell[BoxData[
    RowBox[{"IGUndirectedGraph", "[", 
     RowBox[{"g", ",", "#"}], "]"}], "&"}], "/@", 
   RowBox[{"{", 
-   RowBox[{"\"\<Simple\>\"", ",", "\"\<All\>\"", ",", "\"\<Reciprocal\>\""}], 
+   RowBox[{"\"\<Simple\>\"", ",", "\"\<All\>\"", ",", "\"\<Mutual\>\""}], 
    "}"}]}]], "Input",ExpressionUUID->"0070beb4-0cad-4174-af3d-3def038ceb6e"],
 
 Cell[TextData[{
@@ -31374,12 +32340,8 @@ Cell[BoxData[
          RowBox[{"1", "\[Rule]", "2"}]}], "}"}]}], "]"}], ",", "#"}], "]"}], 
    "&"}], "/@", 
   RowBox[{"{", 
-   RowBox[{"\"\<Simple\>\"", ",", "\"\<All\>\"", ",", "\"\<Reciprocal\>\""}], 
-   "}"}]}]], "Input",
- CellChangeTimes->{{3.7005395974352913`*^9, 3.700539630174531*^9}, {
-  3.700540036799738*^9, 
-  3.700540057007451*^9}},ExpressionUUID->"fc48c97c-37ee-4782-ac99-\
-b232ff88f04e"]
+   RowBox[{"\"\<Simple\>\"", ",", "\"\<All\>\"", ",", "\"\<Mutual\>\""}], 
+   "}"}]}]], "Input",ExpressionUUID->"fc48c97c-37ee-4782-ac99-b232ff88f04e"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32995,6 +33957,7 @@ Cell[BoxData[
           
           AspectRatio->1,
           Frame->True,
+          
           FrameStyle->RGBColor[
            0.6666666666666667, 0.2587966666666667, 0.18560333333333334`],
           FrameTicks->None,
@@ -33197,7 +34160,7 @@ Cell["Now we have a weighted graph.", \
 Cell[BoxData[
  RowBox[{"IGEdgeWeightedQ", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"52b8522d-1e91-45c8-a165-94b1d7caddaf"]
-}, Open  ]]
+}, Closed]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -33677,7 +34640,7 @@ Cell[TextData[{
 
 Cell[BoxData[
  RowBox[{"g", "=", 
-  RowBox[{"IGMakeLattice", "[", 
+  RowBox[{"IGSquareLattice", "[", 
    RowBox[{
     RowBox[{"{", 
      RowBox[{"2", ",", "2", ",", "2", ",", "2"}], "}"}], ",", 
@@ -33871,7 +34834,7 @@ Size of the giant component of a random subgraph of a grid graph.\
 Cell[BoxData[{
  RowBox[{
   RowBox[{"g", "=", 
-   RowBox[{"IGMakeLattice", "[", 
+   RowBox[{"IGSquareLattice", "[", 
     RowBox[{
      RowBox[{"{", 
       RowBox[{"30", ",", "30"}], "}"}], ",", 
@@ -34870,7 +35833,7 @@ Cell[BoxData[
 }, Open  ]]
 },
 WindowSize->{767, 721},
-WindowMargins->{{301, Automatic}, {Automatic, 23}},
+WindowMargins->{{Automatic, 26}, {Automatic, 43}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
