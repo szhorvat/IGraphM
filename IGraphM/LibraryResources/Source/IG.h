@@ -11,6 +11,8 @@
 
 #include <list>
 #include <map>
+#include <set>
+#include <tuple>
 
 class IG;
 
@@ -2527,6 +2529,94 @@ public:
         igraph_adjlist_destroy(&al);
 
         return mma::makeVector<mint>(comps.size(), comps.data());
+    }
+
+
+    // note that this is a constructor!
+    mma::IntTensorRef smoothen(const IG &ig) {
+        struct edge {
+            igraph_integer_t v1, v2;
+            double weight;
+            int key; // the key serves to distinguish parallel eges
+
+            bool operator < (const edge &e) const {
+                return std::tie(v1, v2, weight, key) < std::tie(e.v1, e.v2, e.weight, e.key);
+            }
+        };
+
+        mint vcount = ig.vertexCount();
+        mint ecount = ig.edgeCount();
+
+        std::vector<std::set<edge>> inclist(vcount);
+
+        // build a vertex-edge incidence list
+        for (int i=0; i < ecount; ++i) {
+            edge e = {
+                IGRAPH_FROM(&ig.graph, i),
+                IGRAPH_TO(&ig.graph, i),
+                ig.weightedQ() ? ig.weights[i] : 1.0,
+                i
+            };
+
+            inclist[e.v1].insert(e);
+            inclist[e.v2].insert(e);
+        }
+
+        // This vector records the vertices that are smoothed out, so that
+        // latre they can be deleted in pure Mathematica code.
+        std::vector<mint> deletedVertices;
+
+        int key = ecount;
+        for (igraph_integer_t v=0; v < inclist.size(); ++v) {
+            auto &es = inclist[v];
+            // smooth degree-2 vertices
+            if (es.size() == 2) {
+                edge e1 = *es.begin();
+                es.erase(es.begin());
+
+                edge e2 = *es.begin();
+                es.erase(es.begin());
+
+                igraph_integer_t v1 = e1.v1 != v ? e1.v1 : e1.v2;
+                igraph_integer_t v2 = e2.v1 != v ? e2.v1 : e2.v2;
+
+                edge combined = {v1, v2, e1.weight + e2.weight, key++};
+
+                inclist[v1].erase(e1);
+                inclist[v1].insert(combined);
+
+                inclist[v2].erase(e2);
+                inclist[v2].insert(combined);
+
+                deletedVertices.push_back(v);
+            }
+        }
+
+        std::set<edge> result;
+        for (const auto &s : inclist)
+            result.insert(s.begin(), s.end());
+
+        igVector igedges(2*result.size());
+        {
+            mint i=0;
+            for (const auto &e : result) {
+                igedges[i++] = e.v1;
+                igedges[i++] = e.v2;
+            }
+        }
+
+        destroy();
+        igConstructorCheck(igraph_create(&graph, &igedges.vec, vcount, false));
+
+        weighted = true;
+        weights.resize(result.size());
+        {
+            mint i=0;
+            for (const auto &e : result)
+                weights[i++] = e.weight;
+        }
+
+        return mma::makeVector<mint>(deletedVertices.size(), deletedVertices.data());
     }
 };
 

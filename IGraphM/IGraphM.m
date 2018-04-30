@@ -562,6 +562,10 @@ IGLatticeMesh::usage =
     "IGLatticeMesh[type, region] creates a lattice from the points that fall within region.\n" <>
     "IGLatticeMesh[] returns a list of available lattice types.";
 
+IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtaining the smallest topologically equivalent graph. Edge directions are discarded.";
+
+IGHomeomorphicQ::usage = "IGHomeomorphicQ[graph1, graph2] tests if graph1 and graph2 are homeomorphic. Edge directions are ignored.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -968,7 +972,9 @@ template = LTemplate["IGraphM",
 
         (* Other functions *)
 
-        LFun["treelikeComponents", {}, {Integer, 1}]
+        LFun["treelikeComponents", {}, {Integer, 1}],
+
+        LFun["smoothen", {LExpressionID["IG"]}, {Integer, 1}]
       }
     ]
   }
@@ -1311,6 +1317,15 @@ igToGraphWithNames[ig_, verts_] :=
       verts,
       igIndexVec[ig@"edgeList"[]],
       DirectedEdges -> ig@"directedQ"[]
+    ]
+
+(* Warning: this function does not check if the graph is actually weighted! *)
+igToWeightedGraphWithNames[ig_, verts_] :=
+    Graph[
+      verts,
+      igIndexVec[ig@"edgeList"[]],
+      DirectedEdges -> ig@"directedQ"[],
+      EdgeWeight -> ig@"getWeights"[]
     ]
 
 (* Convert vertex indices to vertex names. *)
@@ -5041,6 +5056,21 @@ igLatticeMesh[unit_, vec_, trpts_, {opt___}] :=
       ]
     ]
 addCompletion[IGLatticeMesh, {IGLatticeMesh[]}];
+
+
+(* IGSmoothen *)
+
+SyntaxInformation[IGSmoothen] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGSmoothen[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
+    catch@Module[{ig = Make["IG"], ig2 = igMake[graph], graph2, deletedIndices},
+      deletedIndices = igIndexVec@check@ig@"smoothen"[ManagedLibraryExpressionID[ig2]];
+      graph2 = igToWeightedGraphWithNames[ig, VertexList[graph]];
+      IGWeightedVertexDelete[graph2, VertexList[graph][[ deletedIndices ]], opt]
+    ]
+
+SyntaxInformation[IGHomeomorphicQ] = {"ArgumentsPattern" -> {_, _}};
+IGHomeomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
+    catch@IGIsomorphicQ[check@IGSmoothen[g1], check@IGSmoothen[g2]]
 
 
 
