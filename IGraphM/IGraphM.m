@@ -4477,17 +4477,24 @@ IGRandomSpanningTree[{graph_?igGraphQ, v_}, n_?Internal`NonNegativeIntegerQ, opt
     ]
 
 
+(* Notes:
+ * The null graph has no spanning trees.
+ * The singleton graph has one spanning tree. *)
 SyntaxInformation[IGSpanningTreeCount] = {"ArgumentsPattern" -> {_, _.}};
+IGSpanningTreeCount[graph_?GraphQ /; VertexCount[graph] < 2] := VertexCount[graph]
 IGSpanningTreeCount[graph_?UndirectedGraphQ] := Det@Rest@Transpose@Rest@IGKirchhoffMatrix[graph]
-IGSpanningTreeCount[graph_?GraphQ, v_] :=
-    catch@Module[{i, km},
-      Check[i = VertexIndex[graph, v], throw[$Failed]];
-      km = IGKirchhoffMatrix[graph, "In"];
-      Det@Delete[Transpose@Delete[km, i], i]
-    ]
 IGSpanningTreeCount[graph_?DirectedGraphQ] :=
     With[{km = IGKirchhoffMatrix[graph, "In"]},
       Total@Table[Det@Delete[Transpose@Delete[km, i], i], {i, VertexCount[graph]}]
+    ]
+IGSpanningTreeCount[graph_?GraphQ, v_] :=
+    catch@Module[{i, km},
+      Check[i = VertexIndex[graph, v], throw[$Failed]];
+      If[VertexCount[graph] == 1,
+        1,
+        km = IGKirchhoffMatrix[graph, "In"];
+        Det@Delete[Transpose@Delete[km, i], i]
+      ]
     ]
 
 
