@@ -943,6 +943,8 @@ IGZeroDiagonal[mat_?MatrixQ] :=
    KirchoffMatrix also ignores multi-edges. IGKirchhoffMatrix takes them into account.
  *)
 SyntaxInformation[IGKirchhoffMatrix] = {"ArgumentsPattern" -> {_, _.}};
+IGKirchhoffMatrix::nkir = "The null graph does not have a Kirchhoff matrix.";
+IGKirchhoffMatrix[graph_?IGNullGraphQ, _] := (Message[IGKirchhoffMatrix::nkir]; $Failed)
 IGKirchhoffMatrix[graph_?GraphQ] := IGKirchhoffMatrix[graph, "Out"]
 IGKirchhoffMatrix[graph_?GraphQ, "Out"] :=
     With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
