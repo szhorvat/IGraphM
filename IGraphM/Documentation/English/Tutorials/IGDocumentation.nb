@@ -424,7 +424,23 @@ Cell["Create an empty graph on 15 vertices.", \
 
 Cell[BoxData[
  RowBox[{"IGEmptyGraph", "[", "15", 
-  "]"}]], "Input",ExpressionUUID->"5ef691c6-634a-4ab8-905e-6304bf69a792"]
+  "]"}]], "Input",ExpressionUUID->"5ef691c6-634a-4ab8-905e-6304bf69a792"],
+
+Cell[TextData[{
+ "The built-in ",
+ Cell[BoxData["EmptyGraphQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "c98d1bd8-bdd1-47bb-b4e1-13c0dbb6bb2c"],
+ " returns ",
+ Cell[BoxData["True"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "b13077d3-736a-4714-ac39-8accc8a0ea62"],
+ " for these graphs."
+}], "Text",ExpressionUUID->"4cb9f311-cf17-4387-b726-d01793755ead"],
+
+Cell[BoxData[
+ RowBox[{"EmptyGraphQ", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"7249d64c-7eee-4cbc-9197-d3904c325b90"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -5946,6 +5962,7 @@ Cell[BoxData[
           ArrowBox[{{0.00007263143566471619, 0.}, {0., 0.9737145167850567}}, 
            0.1803414155696349]}}, 
         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], {
+          
           StyleBox[
            DiskBox[{1.944934484934091, 0.4869131293713701}, 
             0.1803414155696349],
@@ -28690,8 +28707,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
 
 Cell[BoxData[
  RowBox[{
@@ -30108,19 +30125,19 @@ Cell[CellGroupData[{
 Cell["IGRandomWalk", \
 "Subsubsection",ExpressionUUID->"bb27ecba-c592-4b1d-b977-2800e7e81c42"],
 
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"IGRandomWalk", "[", "]"}]],ExpressionUUID->
-  "f738a280-118a-4218-9a1d-1597b4ac90d7"],
- " takes a random walk over a directed or undirected graph. If the graph is \
-weighted, the next edge to traverse is selected with probability proportional \
-to its weight."
-}], "Text",ExpressionUUID->"41dc5d47-b376-49f0-b6bb-b5e0e04fdd0a"],
-
 Cell[BoxData[
  RowBox[{"?", 
   "IGRandomWalk"}]], \
 "Input",ExpressionUUID->"d6bb65bb-9a9d-4b89-8f02-417a9fef8e42"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGRandomWalk", "[", "]"}]],ExpressionUUID->
+  "24029970-284f-4f7d-9966-872a62e8afba"],
+ " takes a random walk over a directed or undirected graph. If the graph is \
+weighted, the next edge to traverse is selected with probability proportional \
+to its weight."
+}], "Text",ExpressionUUID->"41dc5d47-b376-49f0-b6bb-b5e0e04fdd0a"],
 
 Cell["The available options are:", \
 "Text",ExpressionUUID->"c2873e39-d520-4373-a1cc-9a56dd0ed628"],
@@ -30136,6 +30153,27 @@ Cell[TextData[{
 }], "Item",
  InitializationCell->
   True,ExpressionUUID->"1578a00a-26ec-41dc-881d-1d5968134671"],
+
+Cell[TextData[{
+ "If the walker gets stuck, a list shorter than ",
+ Cell[BoxData["steps"],ExpressionUUID->"9f17e18d-5f84-472d-a5fa-398f448b2a0e"],
+ " will be returned. This may happen in a non-connected directed graph, or in \
+a single-vertex graph component."
+}], "Text",ExpressionUUID->"0ba0366f-9eb6-498f-a230-cfc268040c12"],
+
+Cell[BoxData[
+ RowBox[{"IGRandomWalk", "[", 
+  RowBox[{
+   RowBox[{"IGEmptyGraph", "[", "1", "]"}], ",", "1", ",", "10"}], 
+  "]"}]], "Input",ExpressionUUID->"8354af4f-0faf-4ae9-8c26-c4418252dc19"],
+
+Cell[BoxData[
+ RowBox[{"IGRandomWalk", "[", 
+  RowBox[{
+   RowBox[{"Graph", "[", 
+    RowBox[{"{", 
+     RowBox[{"1", "\[Rule]", "2"}], "}"}], "]"}], ",", "1", ",", "10"}], 
+  "]"}]], "Input",ExpressionUUID->"b603c48e-012e-45d0-ad45-caf10fb5d207"],
 
 Cell["\<\
 How much time does a random walker spend on each node of a network?\
@@ -36053,7 +36091,7 @@ Cell[BoxData[
 }, Open  ]]
 },
 WindowSize->{767, 721},
-WindowMargins->{{Automatic, 26}, {Automatic, 43}},
+WindowMargins->{{301, Automatic}, {Automatic, 40}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
