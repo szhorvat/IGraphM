@@ -5018,6 +5018,7 @@ IGLatticeMesh::noval = "`1` is not a know lattice type. Evaluate IGLatticeMesh[]
 IGLatticeMesh::regcst = "The second argument must be a constant (parameter free) region.";
 IGLatticeMesh::regdim = "The second argument must be a 2-dimensional region.";
 IGLatticeMesh::regbnd = "The second argument must be a bounded region.";
+IGLatticeMesh::regemp = "The given region does not contain any lattice points.";
 SyntaxInformation[IGLatticeMesh] = {"ArgumentsPattern" -> {_., _., OptionsPattern[]}, "OptionNames" -> optNames[MeshRegion]};
 IGLatticeMesh[] := Keys[$igLatticeUnits]
 IGLatticeMesh[name_String, dims : {_?Internal`PositiveIntegerQ, _?Internal`PositiveIntegerQ} : {7, 7}, opt : OptionsPattern[]] :=
@@ -5048,10 +5049,18 @@ IGLatticeMesh[name_String, reg_?RegionQ, opt : OptionsPattern[]] :=
         Message[IGLatticeMesh::regbnd];
         throw[$Failed]
       ];
+      If[RegionDimension[reg] == -Infinity, (* empty region *)
+        Message[IGLatticeMesh::regemp];
+        throw[$Failed]
+      ];
       boundPoints = Tuples@Check[RegionBounds[reg, "Sufficient"], throw[$Failed]];
       xy = Transpose[boundPoints.Inverse[$igLatticeVectors[name]]];
       grid = Tuples[Range @@@ Transpose@{Floor[Min /@ xy], Ceiling[Max /@ xy]}];
       trpts = Select[grid.$igLatticeVectors[name], RegionMember[reg]];
+      If[trpts === {},
+        Message[IGLatticeMesh::regemp];
+        throw[$Failed]
+      ];
       igLatticeMesh[$igLatticeUnits[name], $igLatticeVectors[name], trpts, {opt}]
     ]
 igLatticeMesh[unit_, vec_, trpts_, {opt___}] :=
