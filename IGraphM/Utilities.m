@@ -105,6 +105,8 @@ IGKirchhoffMatrix::usage =
 
 IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly connected component of graph.";
 
+IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given graphs have the same vertices and edges. Graph properties or edge and vertex ordering is not taken into account.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -124,6 +126,13 @@ If[$VersionNumber >= 10.1,
 SyntaxInformation[IGNullGraphQ] = {"ArgumentsPattern" -> {_}};
 IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
 IGNullGraphQ[_] = False;
+
+SyntaxInformation[IGSameGraphQ] = {"ArgumentsPattern" -> {_, _}};
+IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
+    Internal`InheritedBlock[{UndirectedEdge},
+      SetAttributes[UndirectedEdge, Orderless];
+      Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
+    ]
 
 
 SyntaxInformation[IGGiantComponent] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
