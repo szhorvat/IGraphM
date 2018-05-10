@@ -1898,16 +1898,20 @@ IGMycielskian[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
 
 SyntaxInformation[IGDirectedAcyclicGraphQ] = {"ArgumentsPattern" -> {_}};
 IGDirectedAcyclicGraphQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"dagQ"[]]
+IGDirectedAcyclicGraphQ[_] := False
 
 SyntaxInformation[IGConnectedQ] = {"ArgumentsPattern" -> {_}};
 IGConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[True]]
+IGConnectedQ[_] := False
 
 SyntaxInformation[IGWeaklyConnectedQ] = {"ArgumentsPattern" -> {_}};
 IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[False]]
+IGWeaklyConnectedQ[_] := False
 
 SyntaxInformation[IGTreeQ] = {"ArgumentsPattern" -> {_, _.}};
 IGTreeQ[graph_?igGraphQ, mode_ : "Out"] :=
     Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[Lookup[<|"Out" -> 1, "In" -> 2, "All" -> 3|>, mode, -1]]]
+IGTreeQ[_] := False (* provide this only for the single argument form *)
 addCompletion[IGTreeQ, {0, {"In", "Out", "All"}}]
 
 SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
@@ -1924,6 +1928,7 @@ IGBipartiteQ[g_?igGraphQ, {vertices1_List, vertices2_List}] :=
       ];
       EmptyGraphQ@igSubgraph[g, vertices1] && EmptyGraphQ@igSubgraph[g, vertices2]
     ]
+IGBipartiteQ[_] := False (* provide this only for the single-argument form *)
 
 (* Centrality *)
 
@@ -2704,6 +2709,7 @@ IGSelfComplementaryQ[graph_?igGraphQ] :=
         ]
       ]
     ]
+IGSelfComplementaryQ[_] := False
 
 
 (* Directed acylic graphs and topological ordering *)
@@ -2803,6 +2809,7 @@ IGTriangleFreeQ[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       Total[check@ig@"countAdjacentTriangles"[{}]] == 0
     ]
+IGTriangleFreeQ[_] := False
 
 (* Shortest paths *)
 
@@ -3600,6 +3607,7 @@ IGDiceSimilarity[graph_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern
 SyntaxInformation[IGChordalQ] = {"ArgumentsPattern" -> {_}};
 IGChordalQ[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[graph]}, ig@"chordalQ"[]]
+IGChordalQ[_] := False
 
 SyntaxInformation[IGMaximumCardinalitySearch] = {"ArgumentsPattern" -> {_}};
 IGMaximumCardinalitySearch[graph_?igGraphQ] :=
