@@ -126,6 +126,12 @@ public:
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
     }
 
+    // this overload is used in the implementation of other functions
+    void fromEdgeList(const igVector &edges, mint n, bool directed) {
+        destroy();
+        igConstructorCheck(igraph_create(&graph, &edges.vec, n, directed));
+    }
+
     void fromIncidenceMatrix(mma::SparseMatrixRef<mint> im, bool directed) {
         igVector edgeList(2*im.cols());
         if (directed) {
@@ -2617,6 +2623,67 @@ public:
         }
 
         return mma::makeVector<mint>(deletedVertices.size(), deletedVertices.data());
+    }
+    // this function is used in the implementation of others
+    // this is a constructor!
+    void complement(const IG &ig) {
+        destroy();
+        igConstructorCheck(igraph_complementer(&graph, &ig.graph, false));
+    }
+
+
+    // check if a graph is perfect
+    // this function assumes the input to be undirected, simple, connected
+    bool perfectQ() { /* TODO: re-add const once ladSubisomoprhic could be made const */
+        // bipartite graphs and chordal graphs are perfect
+        if (bipartiteQ() || chordalQ())
+            return true;
+
+        // possibly more optimizations found here: http://www.or.uni-bonn.de/~hougardy/paper/ClassesOfPerfectGraphs.pdf
+
+        IG comp;
+        comp.complement(*this);
+
+        // weak perfect graph theorem:
+        // a graph is perfect iff its complement is perfect
+        if (comp.bipartiteQ() || comp.chordalQ())
+            return true;
+
+        mint g = girth();
+        if (g > 3 && g % 2 == 1)
+            return false;
+        mint cg = comp.girth();
+        if (cg > 3 && cg % 2 == 1)
+            return false;
+
+        // since bipartiteQ() also catches trees, at this point g and cg are both at least 3.
+        // for trees, their value would have been 0
+
+        // strong perfect graph theorem:
+        // a graph is perfect iff neither it or its complement contains an induced odd cycle of length >= 5
+        mint vcount = vertexCount();
+        mint start = std::min(g, cg);
+        start = start % 2 == 0 ? start+1 : start+2;
+        IG cycle;
+        for (mint s = start; s <= vcount; s += 2) {
+            igVector edges(2*s);
+            for (int i=0; i < s; ++i) {
+                edges[2*i] = i;
+                edges[2*i + 1] = i+1 < s ? i+1 : 0;
+            }
+
+            cycle.fromEdgeList(edges, s, false);
+
+            if (s > g && ladSubisomorphic(cycle, /* induced = */ true))
+                return false;
+
+            if (s > cg && comp.ladSubisomorphic(cycle, /* induced = */ true))
+                return false;
+
+            mma::check_abort();
+        }
+
+        return true;
     }
 };
 

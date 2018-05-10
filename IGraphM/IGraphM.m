@@ -567,6 +567,8 @@ IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtain
 
 IGHomeomorphicQ::usage = "IGHomeomorphicQ[graph1, graph2] tests if graph1 and graph2 are homeomorphic. Edge directions are ignored.";
 
+IGPerfectQ::usage = "IGPerfectQ[graph] tests is graph is perfect. The chromatic number of clique number is the same in every induced subgraph of a perfect graph.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -975,7 +977,9 @@ template = LTemplate["IGraphM",
 
         LFun["treelikeComponents", {}, {Integer, 1}],
 
-        LFun["smoothen", {LExpressionID["IG"]}, {Integer, 1}]
+        LFun["smoothen", {LExpressionID["IG"]}, {Integer, 1}],
+
+        LFun["perfectQ", {}, True|False]
       }
     ]
   }
@@ -5097,6 +5101,23 @@ IGHomeomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
     catch@IGIsomorphicQ[check@IGSmoothen[g1], check@IGSmoothen[g2]]
 
 
+
+(* IGPerfectQ *)
+
+IGPerfectQ::undir = "The input graph must be undirected.";
+SyntaxInformation[IGPerfectQ] = {"ArgumentsPattern" -> {_}};
+IGPerfectQ[graph_?EmptyGraphQ] := True
+IGPerfectQ[graph_?UndirectedGraphQ] :=
+    catch@With[{g = IndexGraph@SimpleGraph[graph]}, (* IndexGraph is to work around the unreliability of Subgraph with arbitrary vertex names *)
+      AllTrue[ConnectedComponents[g], check@igPerfectQ@Subgraph[g, #]&]
+    ]
+IGPerfectQ[graph_?GraphQ] := (Message[IGPerfectQ::undir]; False)
+IGPerfectQ[_] := False
+
+igPerfectQ[graph_] :=
+    Block[{ig = igMakeFast[graph]},
+      check@ig@"perfectQ"[]
+    ]
 
 (***** Finalize *****)
 
