@@ -516,6 +516,8 @@ IGMinimumEdgeColoring::usage = "IGMinimumEdgeColoring[graph] finds a minimum edg
 IGChromaticNumber::usage = "IGChromaticNumber[graph] returns the chromatic number of graph.";
 IGChromaticIndex::usage = "IGChromaticIndex[graph] returns the chromatic index of graph.";
 
+IGVertexColoringQ::usage = "IGVertexColoringQ[graph, coloring] checks whether neighbouring vertices all have differing colours.";
+
 IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a graph.";
 IGMeshCellAdjacencyMatrix::usage =
     "IGMeshCellAdjacencyMatrix[mesh, d] returns the adjacency matrix of d-dimensional cells in mesh.\n" <>
@@ -4619,6 +4621,22 @@ SyntaxInformation[IGChromaticIndex] = {"ArgumentsPattern" -> {_}};
 IGChromaticIndex[graph_?igGraphQ] :=
     catch@Max[check@IGMinimumEdgeColoring[graph], 0]
 
+
+IGVertexColoringQ[graph_?igGraphQ, col_List] /; VertexCount[graph] == Length[col] :=
+  UnsameQ @@ Transpose@Partition[
+    col[[ Flatten@IGIndexEdgeList[graph] ]],
+    2
+  ]
+expr : IGVertexColoringQ[graph_?igGraphQ, col_List] :=
+    (Message[IGVertexColoring::inv, col, HoldForm@OutputForm[expr], "vertex coloring for this graph"];
+     $Failed)
+expr : IGVertexColoringQ[graph_?igGraphQ, asc_?AssociationQ] :=
+    If[Sort@Keys[asc] === Sort@VertexList[graph],
+      IGVertexColoringQ[graph, Lookup[asc, VertexList[graph]]]
+      ,
+      Message[IGVertexColoring::inv, asc, HoldForm@OutputForm[expr], "vertex coloring for this graph"];
+      $Failed
+    ]
 (* Coreness *)
 
 corenessModes = <|"In" -> -1, "Out" -> 1, "All" -> 0|>;
