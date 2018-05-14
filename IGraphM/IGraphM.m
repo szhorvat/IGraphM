@@ -4328,15 +4328,19 @@ IGBipartiteIncidenceGraph[bm_?MatrixQ, opt : OptionsPattern[{IGBipartiteIncidenc
 (* Vertex contraction *)
 
 IGVertexContract::inv = "The vertices `` are not present in the graph.";
-IGVertexContract::vset = "`` must be a list of vertex sets.";
+IGVertexContract::vset = "`` must be a list of disjoint vertex sets.";
 
 Options[IGVertexContract] = { SelfLoops -> False, "MultipleEdges" -> False };
 SyntaxInformation[IGVertexContract] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGVertexContract, Graph]};
 IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[{IGVertexContract, Graph}]] :=
     catch@Module[{ig = igMakeFast[graph], allElements = Join @@ sets, fullSets, g, self, multi},
+      If[Not@DuplicateFreeQ[allElements],
+        Message[IGVertexContract::vset, sets];
+        throw[$Failed]
+      ];
       If[Not@SubsetQ[VertexList[graph], allElements],
         Message[IGVertexContract::inv, Complement[allElements, VertexList[graph]]];
-        Return[$Failed]
+        throw[$Failed]
       ];
       fullSets = Join[sets, List /@ Complement[VertexList[graph], allElements]];
       check@ig@"contractVertices"@communitiesToMembership[
