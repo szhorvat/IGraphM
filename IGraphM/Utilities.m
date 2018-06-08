@@ -108,6 +108,11 @@ IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly co
 
 IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given graphs have the same vertices and edges. Graph properties or edge and vertex ordering is not taken into account.";
 
+IGAdjacencyList::usage =
+    "IGAdjacencyList[graph] returns the adjacency list of graph as an association.\n" <>
+    "IGAdjacencyList[graph, \"In\"] returns the adjacency list of the reverse of a directed graph.\n" <>
+    "IGAdjacencyList[graph, \"All\"] considers both incoming and outgoing edges.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -134,6 +139,41 @@ IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
       SetAttributes[UndirectedEdge, Orderless];
       Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
     ]
+
+
+igAdjacencyListSimple[vl_, am_] :=
+    AssociationThread[
+      vl,
+      vl[[#]]& /@ am["AdjacencyLists"]
+    ]
+
+igAdjacencyListMulti[vl_, am_] :=
+    GroupBy[
+      Join @@ MapThread[ConstantArray, {am["NonzeroPositions"], am["NonzeroValues"]}],
+      First -> Last
+    ] // Map[vl[[#]]&] // KeyMap[vl[[#]]&]
+
+SyntaxInformation[IGAdjacencyList] = {"ArgumentsPattern" -> {_, _.}};
+IGAdjacencyList[graph_?GraphQ] := IGAdjacencyList[graph, "Out"]
+IGAdjacencyList[graph_?EmptyGraphQ, "Out"|"In"|"All"] :=
+    AssociationThread[VertexList[graph], ConstantArray[{}, VertexCount[graph]]]
+(* multigraphs *)
+IGAdjacencyList[graph_?MultigraphQ, "Out"] :=
+    igAdjacencyListMulti[VertexList[graph], AdjacencyMatrix[graph]]
+IGAdjacencyList[graph_?MultigraphQ, "In"] :=
+    igAdjacencyListMulti[VertexList[graph], AdjacencyMatrix[graph]]
+(* a directed graph may act like a multigraph when ignoring edge directions *)
+IGAdjacencyList[graph_?DirectedGraphQ, "All"] :=
+    With[{am = AdjacencyMatrix[graph]},
+      igAdjacencyListMulti[VertexList[graph], am + Transpose[am]]
+    ]
+(* simple graphs *)
+IGAdjacencyList[graph_?GraphQ, "Out"] :=
+    igAdjacencyListSimple[VertexList[graph], AdjacencyMatrix[graph]]
+IGAdjacencyList[graph_?GraphQ, "In"] :=
+    igAdjacencyListSimple[VertexList[graph], Transpose@AdjacencyMatrix[graph]]
+IGAdjacencyList[graph_?GraphQ, "All"] :=
+    IGAdjacencyList[graph, "Out"] (* directed graphs were caught earlier, so this applies only to undirected ones *)
 
 
 SyntaxInformation[IGGiantComponent] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
