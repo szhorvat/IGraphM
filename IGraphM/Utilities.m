@@ -81,6 +81,7 @@ IGMembershipToPartitions::usage =
 
 IGSourceVertexList::usage = "IGSourceVertexList[graph] returns the list of vertices with no incoming connections.";
 IGSinkVertexList::usage = "IGSinkVertexList[graph] returns the list of vertices with no outgoing connections.";
+IGIsolatedVertexList::usage = "IGIsolatedVertexList[graph] returns the list of isolated vertices.";
 
 IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vertices of graph according to the given vertex vector. Graph properties are preserved.";
 
@@ -792,6 +793,9 @@ IGSourceVertexList[g_?GraphQ] := Pick[VertexList[g], VertexInDegree[g], 0]
 
 SyntaxInformation[IGSinkVertexList] = {"ArgumentsPattern" -> {_}};
 IGSinkVertexList[g_?GraphQ] := Pick[VertexList[g], VertexOutDegree[g], 0]
+
+SyntaxInformation[IGIsolatedVertexList] = {"ArgumentsPattern" -> {_}};
+IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree[g], 0]
 
 
 (* Reorder vertices *)
