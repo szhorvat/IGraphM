@@ -1028,7 +1028,8 @@ Recompile[] :=
     ]
 
 
-igraphGlobal (* IGlobal object. There should only be a single object of this type; it's set in LoadIGraphM[] below. *)
+igraphGlobal::usage =
+    "igraphGlobal is the unique IGlobal object. There should only be a single object of this type; it's set in LoadIGraphM[] below.";
 
 LoadIGraphM[] :=
     Module[{deps},
