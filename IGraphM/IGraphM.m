@@ -538,6 +538,10 @@ IGChromaticIndex::usage = "IGChromaticIndex[graph] returns the chromatic index o
 
 IGVertexColoringQ::usage = "IGVertexColoringQ[graph, coloring] checks whether neighbouring vertices all have differing colours.";
 
+IGCliqueCover::usage = "IGCliqueCover[graph] finds a minimum clique cover of graph, i.e. a partitioning of its vertices into a smallest number of cliques.";
+
+IGCliqueCoverNumber::usage = "IGCliqueCoverNumber[graphs] finds the clique vertex cover number of graph.";
+
 IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a graph.";
 IGMeshCellAdjacencyMatrix::usage =
     "IGMeshCellAdjacencyMatrix[mesh, d] returns the adjacency matrix of d-dimensional cells in mesh.\n" <>
@@ -4715,6 +4719,30 @@ expr : IGVertexColoringQ[graph_?igGraphQ, asc_?AssociationQ] :=
       Message[IGVertexColoring::inv, asc, HoldForm@OutputForm[expr], "vertex coloring for this graph"];
       $Failed
     ]
+
+Options[IGCliqueCover] = { Method -> "Minimum" };
+SyntaxInformation[IGCliqueCover] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGCliqueCover[graph_ /; UndirectedGraphQ[graph] && IGTriangleFreeQ[graph]] :=
+    With[{ies = List @@@ FindIndependentEdgeSet[graph]},
+      Join[
+        List /@ Complement[VertexList[graph], Join @@ ies],
+        ies
+      ]
+    ]
+IGCliqueCover[graph_?igGraphQ, OptionsPattern[]] :=
+    catch@Module[{coloringFun},
+      Switch[OptionValue[Method],
+        Automatic | "Minimum", coloringFun = IGMinimumVertexColoring,
+        "Heuristic", coloringFun = IGVertexColoring,
+        _, Message[IGCliqueCover::invopt, OptionValue[Method], Method, "Minimum"]; coloringFun = IGMinimumVertexColoring
+      ];
+      communitiesFromMembership[graph, check@coloringFun@GraphComplement@IGUndirectedGraph[graph, "Mutual"]]
+    ]
+
+SyntaxInformation[IGCliqueCoverNumber] = {"ArgumentsPattern" -> {_}};
+IGCliqueCoverNumber[graph_?igGraphQ] :=
+    IGChromaticNumber@GraphComplement@IGUndirectedGraph[graph, "Mutual"]
+
 (* Coreness *)
 
 corenessModes = <|"In" -> -1, "Out" -> 1, "All" -> 0|>;
