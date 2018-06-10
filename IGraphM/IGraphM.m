@@ -407,6 +407,8 @@ IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulatio
 
 IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Size-one components are not returned.";
 
+IGBiconnectedQ::usage = "IGBiconnectedQ[graph] tests if graph is biconnected.";
+
 IGBridges::usage = "IGBridges[graph] finds the bridges of graph. A bridge is an edge whose removal increases the number of (weakly) connected components in the graph.";
 
 IGConnectedComponentSizes::usage = "IGConnectedComponentSizes[graph] returns the sizes of graph's connected components in decreasing order.";
@@ -922,6 +924,7 @@ template = LTemplate["IGraphM",
 
         LFun["articulationPoints", {}, {Real, 1}],
         LFun["biconnectedComponents", {}, {Integer, 1}],
+        LFun["biconnectedQ", {}, True|False],
         LFun["bridges", {}, {Real, 1}],
         LFun["connectedComponentSizes", {True|False (* strongly connected? *)}, {Real, 1}],
 
@@ -3665,6 +3668,12 @@ SyntaxInformation[IGBiconnectedComponents] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedComponents[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"biconnectedComponents"[]
+    ]
+
+SyntaxInformation[IGBiconnectedQ] = {"ArgumentsPattern" -> {_}};
+IGBiconnectedQ[graph_?igGraphQ] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"biconnectedQ"[]
     ]
 
 SyntaxInformation[IGBridges] = {"ArgumentsPattern" -> {_}};

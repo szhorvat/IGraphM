@@ -1994,6 +1994,18 @@ public:
         return packListIntoIntTensor(list);
     }
 
+    bool biconnectedQ() const {
+        // igraph_biconnected_components does not return isolated vertices, nor does it include them
+        // in the number of components. Thus to check if a graph is biconnected, it is not sufficient
+        // to check if the returned number of biconnected components is 1. We also need to check for
+        // isolated vertices. This is done most simply by checking if the graph is weakly connected.
+        if (! connectedQ(false))
+            return false;
+        igraph_integer_t count;
+        igCheck(igraph_biconnected_components(&graph, &count, nullptr, nullptr, nullptr, nullptr));
+        return count == 1;
+    }
+
     mma::RealTensorRef bridges() const {
         igVector res;
         igCheck(igraph_bridges(&graph, &res.vec));
