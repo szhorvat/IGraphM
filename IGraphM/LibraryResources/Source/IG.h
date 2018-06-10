@@ -2682,6 +2682,71 @@ public:
 
         return mma::makeVector<mint>(deletedVertices.size(), deletedVertices.data());
     }
+
+
+    // warning: this function modifies the graph (converts to a double-connected directed representation).
+    mma::IntTensorRef coordinatesToEmbedding(mma::RealMatrixRef coord) {
+        igCheck(igraph_to_undirected(&graph, IGRAPH_TO_UNDIRECTED_COLLAPSE, nullptr));
+        igCheck(igraph_simplify(&graph, true, true, nullptr));
+        igCheck(igraph_to_directed(&graph, IGRAPH_TO_DIRECTED_MUTUAL));
+
+        long ecount = edgeCount();
+        long vcount = vertexCount();
+
+        if (coord.rows() != 2)
+            throw mma::LibraryError("coordinatesToEmbedding: Two-dimensional coordinates expected.");
+
+        if (coord.cols() != vcount)
+            throw mma::LibraryError("coordinatesToEmbedding: The number of coordinate-pairs should be the same as the vertex count.");
+
+        igraph_inclist_t inclist;
+        igraph_inclist_init(&graph, &inclist, IGRAPH_OUT);
+
+        std::vector<double> angles(ecount);
+
+        for (long i=0; i < ecount; ++i) {
+            igraph_integer_t from = IGRAPH_FROM(&graph, i), to = IGRAPH_TO(&graph, i);
+
+            angles[i] = std::atan2(coord(to,1) - coord(from,1), coord(to,0) - coord(from,0));
+        }
+
+        for (long i=0; i < vcount; ++i) {
+            igraph_vector_int_t *edges = igraph_inclist_get(&inclist, i);
+
+            std::sort(VECTOR(*edges), VECTOR(*edges) + igraph_vector_int_size(edges),
+                      [&] (igraph_integer_t e1, igraph_integer_t e2) { return angles[e1] < angles[e2]; } );
+        }
+
+        std::vector<std::vector<mint>> emb(vcount);
+        for (long i=0; i < vcount; ++i) {
+            igraph_vector_int_t *edges = igraph_inclist_get(&inclist, i);
+
+            long ncount = igraph_vector_int_size(edges);
+            emb[i].reserve(ncount);
+            for (long j=0; j < ncount; ++j)
+                emb[i].push_back(IGRAPH_TO(&graph, VECTOR(*edges)[j]));
+        }
+
+        igraph_inclist_destroy(&inclist);
+
+        mint total_length = 1;
+        for (const auto &el : emb)
+            total_length += el.size() + 1;
+
+        auto result = mma::makeVector<mint>(total_length);
+        result[0] = emb.size();
+        mint k=1;
+        for (const auto &el : emb)
+            result[k++] = el.size();
+        for (const auto &el : emb) {
+            std::copy(el.begin(), el.end(), result.data() + k);
+            k += el.size();
+        }
+
+        return result;
+    }
+
+
     // this function is used in the implementation of others
     // this is a constructor!
     void complement(const IG &ig) {

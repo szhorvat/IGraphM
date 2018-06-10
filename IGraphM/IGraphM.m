@@ -595,6 +595,10 @@ IGHomeomorphicQ::usage = "IGHomeomorphicQ[graph1, graph2] tests if graph1 and gr
 
 IGPerfectQ::usage = "IGPerfectQ[graph] tests is graph is perfect. The chromatic number of clique number is the same in every induced subgraph of a perfect graph.";
 
+IGCoordinatesToEmbedding::usage =
+    "IGCoordinatesToEmbedding[graph] computes a combinatorial embedding based on the vertex coordinates of graph.\n" <>
+    "IGCoordinatesToEmbedding[graph, coord] uses the given coordinates instead of the VertexCoordinates property.";
+
 Begin["`Private`"];
 
 (* Function to abort loading and leave a clean $ContextPath behind *)
@@ -1012,6 +1016,8 @@ template = LTemplate["IGraphM",
         LFun["treelikeComponents", {}, {Integer, 1}],
 
         LFun["smoothen", {LExpressionID["IG"]}, {Integer, 1}],
+
+        LFun["coordinatesToEmbedding", {{Real, 2, "Constant"}}, {Integer, 1}],
 
         LFun["perfectQ", {}, True|False]
       }
@@ -5281,7 +5287,6 @@ IGHomeomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
     catch@IGIsomorphicQ[check@IGSmoothen[g1], check@IGSmoothen[g2]]
 
 
-
 (* IGPerfectQ *)
 
 IGPerfectQ::undir = "The input graph must be undirected.";
@@ -5299,6 +5304,13 @@ igPerfectQ[graph_] :=
       check@ig@"perfectQ"[]
     ]
 
+
+SyntaxInformation[IGCoordinatesToEmbedding] = {"ArgumentsPattern" -> {_, _.}};
+IGCoordinatesToEmbedding[graph_?igGraphQ, coords_] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      AssociationThread[VertexList[graph], igUnpackVertexSet[graph]@check@ig@"coordinatesToEmbedding"[coords]]
+    ]
+IGCoordinatesToEmbedding[graph_?igGraphQ] := IGCoordinatesToEmbedding[graph, GraphEmbedding[graph]]
 (***** Finalize *****)
 
 (* Protect all package symbols *)
