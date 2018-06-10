@@ -414,6 +414,8 @@ IGBridges::usage = "IGBridges[graph] finds the bridges of graph. A bridge is an 
 IGConnectedComponentSizes::usage = "IGConnectedComponentSizes[graph] returns the sizes of graph's connected components in decreasing order.";
 IGWeaklyConnectedComponentSizes::usage = "IGWeaklyConnectedComponentSizes[graph] returns the sizes of graph's weakly connected components in decreasing order.";
 
+(* Removed due to bug in igraph core https://github.com/igraph/igraph/issues/869 *)
+(*
 IGGraphlets::usage =
     "IGGraphlets[graph]\n" <>
     "IGGraphlets[graph, nIterations]";
@@ -421,6 +423,7 @@ IGGraphletBasis::usage = "IGGraphletBasis[graph]";
 IGGraphletProject::usage =
     "IGGraphletProject[graph, cliques]\n" <>
     "IGGraphletProject[graph, cliques, nIterations]";
+*)
 
 IGVertexConnectivity::usage =
     "IGVertexConnectivity[graph] returns the smallest number of vertices whose deletion disconnects graph.\n" <>
