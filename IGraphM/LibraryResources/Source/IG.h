@@ -2693,10 +2693,10 @@ public:
         long ecount = edgeCount();
         long vcount = vertexCount();
 
-        if (coord.rows() != 2)
+        if (coord.cols() != 2)
             throw mma::LibraryError("coordinatesToEmbedding: Two-dimensional coordinates expected.");
 
-        if (coord.cols() != vcount)
+        if (coord.rows() != vcount)
             throw mma::LibraryError("coordinatesToEmbedding: The number of coordinate-pairs should be the same as the vertex count.");
 
         igraph_inclist_t inclist;
