@@ -361,6 +361,9 @@ IGLayoutDrL::usage = "IGLayoutDrL[graph, options] lays out the graph using the D
 IGLayoutDrL3D::usage = "IGLayoutDrL3D[graph, options] lays out the graph in 3D using the DrL layout generator.";
 IGLayoutBipartite::usage = "IGLayoutBipartite[graph, options] lays out a bipartite graph, minimizing the number of edge crossings. Partitions can be specified manually using the \"BipartitePartitions\" option.";
 
+IGLayoutPlanar::usage = "IGLayoutPlanar[graph, options] lays out a planar graph using Schnyder's algorithm.";
+IGLayoutTutte::usage = "IGLayoutTutte[graph, options] lays out a 3-vertex-connected planar graph using the Tutte embedding.";
+
 IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph] returns the global clustering coefficient of graph.";
 IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph] returns the local clustering coefficient of each vertex.";
 IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficient[graph] returns the average local clustering coefficient of graph.";
@@ -594,6 +597,30 @@ IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtain
 IGHomeomorphicQ::usage = "IGHomeomorphicQ[graph1, graph2] tests if graph1 and graph2 are homeomorphic. Edge directions are ignored.";
 
 IGPerfectQ::usage = "IGPerfectQ[graph] tests is graph is perfect. The chromatic number of clique number is the same in every induced subgraph of a perfect graph.";
+
+(* Planar graphs *)
+
+IGPlanarQ::usage =
+    "IGPlanarQ[graph] checks if graph is planar.\n" <>
+    "IGPlanarQ[embedding] checks if a combinatorial embedding is planar.";
+
+IGMaximalPlanarQ::usage = "IGMaximalPlanarQ[graph] checks if graph is maximal planar.";
+
+IGKuratowskiEdges::usage = "IGKuratowskiEdges[graph] finds the edges belonging to a Kuratowski subgraph.";
+
+IGEmbeddingQ::usage = "IGEmbeddingQ[embedding] checks if embedding represents a combinatorial embedding of a simple graph.";
+
+IGPlanarEmbedding::usage = "IGPlanarEmbedding[graph] returns a combinatorial embedding of a planar graph.";
+
+IGFaces::usage =
+    "IGFaces[graph] returns the faces of a planar graph.\n" <>
+    "IGFaces[embedding] returns the faces that correspond to a combinatorial embedding.";
+
+IGDualGraph::usage =
+    "IGDualGraph[graph] returns the dual graph of a planar graph.\n" <>
+    "IGDualGraph[embedding] returns the dual graph corresponding to a specific embedding of a graph. The embedding does not need to be planar.";
+
+IGEmbeddingToCoordinates::usage = "IGEmbeddingToCoordinates[embedding] computes the coordinates of a planar drawing based on the given combinatorial embedding.";
 
 IGCoordinatesToEmbedding::usage =
     "IGCoordinatesToEmbedding[graph] computes a combinatorial embedding based on the vertex coordinates of graph.\n" <>
@@ -1020,6 +1047,26 @@ template = LTemplate["IGraphM",
         LFun["coordinatesToEmbedding", {{Real, 2, "Constant"}}, {Integer, 1}],
 
         LFun["perfectQ", {}, True|False]
+      }
+    ],
+    LClass["Embedding",
+      {
+        LFun["set", LinkObject],
+        LFun["get", LinkObject],
+        LFun["validQ", {}, True|False],
+        LFun["faces", {}, {Integer, 1}],
+        LFun["planarQ", {Integer (* number of connected components *)}, True|False],
+        LFun["dualGraph", {}, {Integer, 1}]
+      }
+    ],
+    LClass["LemonGraph",
+      {
+        LFun["fromEdgeList", {{Integer, 2, "Constant"}, Integer}, "Void"],
+        LFun["planarQ", {}, True|False],
+        LFun["kuratowskiSubgraph", {}, {Integer, 1}],
+        LFun["layoutPlanar", {}, {Integer, 2}],
+        LFun["planarEmbedding", {}, {Integer, 1}],
+        LFun["embeddingToCoordinates", {LExpressionID["Embedding"]}, {Integer, 2}]
       }
     ]
   }
@@ -3505,6 +3552,62 @@ IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL3D,Graph3D}]] :=
     ]
 
 
+SyntaxInformation[IGLayoutPlanar] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutPlanar, Graph]};
+IGLayoutPlanar[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{lg = lgMake@UndirectedGraph@SimpleGraph[graph]},
+      applyGraphOpt[opt]@setVertexCoords[graph, check@lg@"layoutPlanar"[]]
+    ]
+
+
+Options[IGLayoutTutte] = { "OuterFace" -> Automatic };
+SyntaxInformation[IGLayoutTutte] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutTutte, Graph]};
+IGLayoutTutte::n3c = "The graph is not 3-vertex-connected and a Tutte embedding cannot be computed. Vertex coordinates will not be set.";
+IGLayoutTutte::npl = "The graph is not planar and a Tutte embedding cannot be computed. Vertex coordinates will not be set.";
+IGLayoutTutte::bdface = "`1` is not a face of the graph.";
+IGLayoutTutte[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutTutte, Graph}]] :=
+    catch@Module[{mat, faces, facePos, face, nonFace, pts, circPts, restPts, compl},
+      If[Not@KVertexConnectedGraphQ[UndirectedGraph[graph], 3],
+        Message[IGLayoutTutte::n3c];
+        Return[graph]
+      ];
+      mat = zeroDiagonal@WeightedAdjacencyMatrix@Quiet[IGWeightedUndirectedGraph[graph], IGWeightedUndirectedGraph::mg];
+      mat = mat/Total[mat];
+      faces = IGFaces@IndexGraph[graph];
+      If[Not@ListQ[faces],
+        Message[IGLayoutTutte::npl];
+        Return[graph]
+      ];
+      face = OptionValue["OuterFace"];
+      If[face === Automatic,
+        face = faces[[ First@Ordering[Length /@ faces, -1] ]]
+        ,
+        If[Not@ListQ[face],
+          Message[IGLayoutTutte::bdface, OptionValue["OuterFace"]];
+          throw[$Failed]
+        ];
+        face = 1 + vss[graph][face];
+        facePos = Position[Sort /@ faces, Sort[face], {1}];
+        If[facePos === {},
+          Message[IGLayoutTutte::bdface, OptionValue["OuterFace"]];
+          throw[$Failed]
+        ];
+        face = Extract[faces, First[facePos]];
+      ];
+      nonFace = Complement[Range@VertexCount[graph], face];
+      circPts = N@CirclePoints@Length[face];
+      compl = mat[[nonFace, face]].circPts;
+      restPts =
+          LinearSolve[
+            mat[[nonFace, nonFace]] - IdentityMatrix[Length[nonFace], SparseArray],
+            -compl
+          ];
+      pts = ConstantArray[0., {VertexCount[graph], 2}];
+      pts[[face]] = circPts;
+      pts[[nonFace]] = restPts;
+      applyGraphOpt[opt]@setVertexCoords[graph, pts]
+    ]
+
+
 blockLayout[n_, gap_, height_, mult_, offset_] :=
     Module[{nrow = Ceiling[1.01 height/gap]},
       Table[gap QuotientRemainder[i, nrow] mult + offset, {i, 0, n - 1}]
@@ -5305,12 +5408,117 @@ igPerfectQ[graph_] :=
     ]
 
 
+(* IGPlanarQ *)
+
+(* Make a LemonGraph object *)
+lgMake[g_] :=
+    With[{lg = Make["LemonGraph"]},
+      lg@"fromEdgeList"[IGIndexEdgeList[g]-1, VertexCount[g]];
+      lg
+    ]
+
+(* Make an embedding *)
+
+igIndexEmbedding[emb_?AssociationQ] :=
+    With[{trans = AssociationThread[Keys[emb], Range@Length[emb]]},
+      Lookup[trans, #]& /@ Values[emb]
+    ]
+
+IGraphM::invemb = "`1` is not a valid combinatorial embedding.";
+embMake[emb_?AssociationQ] /; VectorQ[Values[emb], ListQ] && SubsetQ[Keys[emb], Catenate[emb]] :=
+    Block[{embedding = Make["Embedding"]},
+      check@embedding@"set"[igIndexEmbedding[emb]-1];
+      If[TrueQ@embedding@"validQ"[],
+        embedding,
+        Message[IGraphM::invemb, emb]; throw[$Failed]
+      ]
+    ]
+embMake[emb_] := (Message[IGraphM::invemb, emb]; throw[$Failed])
+
+igFromEmbedding[emb_] :=
+    Graph[
+      Keys[emb],
+      DeleteDuplicates[Sort /@ Catenate[Function[{v, vlist}, UndirectedEdge[v, #] & /@ vlist] @@@ Normal[emb]]]
+    ]
+
+SyntaxInformation[IGEmbeddingQ] = {"ArgumentsPattern" -> {_}};
+IGEmbeddingQ[emb_?AssociationQ] :=
+    Quiet[Not@MatchQ[catch@embMake[emb], _LibraryFunctionError|$Failed], IGraphM::invemb]
+IGEmbeddingQ[_] := False
+
+
+SyntaxInformation[IGPlanarQ] = {"ArgumentsPattern" -> {_}};
+IGPlanarQ[graph_?EmptyGraphQ] := True
+IGPlanarQ[graph_?igGraphQ] :=
+    catch@Block[{lg = lgMake@UndirectedGraph@SimpleGraph[graph]},
+      check@lg@"planarQ"[]
+    ]
+IGPlanarQ[embedding_?AssociationQ] :=
+    TrueQ@catch@Block[{emb = embMake[embedding]},
+      check@emb@"planarQ"[Length@ConnectedComponents@igFromEmbedding[embedding]]
+    ]
+IGPlanarQ[_] := False
+
+
+SyntaxInformation[IGMaximalPlanarQ] = {"ArgumentsPattern" -> {_}};
+IGMaximalPlanarQ[graph_?igGraphQ] /; IGPlanarQ[graph] :=
+    Switch[VertexCount[graph],
+      0, True, (* null graph *)
+      1, True, (* singleton graph *)
+      2, EdgeCount@SimpleGraph@UndirectedGraph[graph] == 1, (* below formula doesn't apply for K_2, which is maximal planar *)
+      _, 3 VertexCount[graph] - 6 == EdgeCount@SimpleGraph@UndirectedGraph[graph]
+    ]
+IGMaximalPlanarQ[_] := False
+
+(* IGKuratowskiSubgraph *)
+SyntaxInformation[IGKuratowskiEdges] = {"ArgumentsPattern" -> {_}};
+IGKuratowskiEdges[graph_?EmptyGraphQ] := {}
+IGKuratowskiEdges[graph_?igGraphQ] :=
+    catch@Block[{lg = lgMake[graph]},
+      EdgeList[graph][[ igIndexVec@check@lg@"kuratowskiSubgraph"[] ]]
+    ]
+
+
+(* TODO: The current implementation ignores edge multiplicities.
+ * Investigate whether this can be improved. *)
+SyntaxInformation[IGPlanarEmbedding] = {"ArgumentsPattern" -> {_, _.}};
+IGPlanarEmbedding[graph_?igGraphQ] :=
+    catch@Block[{lg = lgMake@SimpleGraph@UndirectedGraph[graph]},
+      AssociationThread[VertexList[graph], igUnpackVertexSet[graph]@check@lg@"planarEmbedding"[]]
+    ]
+
+SyntaxInformation[IGEmbeddingToCoordinates] = {"ArgumentsPattern" -> {_}};
+IGEmbeddingToCoordinates[emb_] :=
+    catch@Block[{lg = lgMake@igFromEmbedding[emb], embedding = embMake[emb]},
+      check@lg@"embeddingToCoordinates"[ManagedLibraryExpressionID[embedding]]
+    ]
+
 SyntaxInformation[IGCoordinatesToEmbedding] = {"ArgumentsPattern" -> {_, _.}};
 IGCoordinatesToEmbedding[graph_?igGraphQ, coords_] :=
     catch@Block[{ig = igMakeFast[graph]},
       AssociationThread[VertexList[graph], igUnpackVertexSet[graph]@check@ig@"coordinatesToEmbedding"[coords]]
     ]
 IGCoordinatesToEmbedding[graph_?igGraphQ] := IGCoordinatesToEmbedding[graph, GraphEmbedding[graph]]
+
+
+SyntaxInformation[IGFaces] = {"ArgumentsPattern" -> {_, _.}};
+IGFaces[embedding_?AssociationQ] :=
+    catch@Block[{emb = embMake[embedding]},
+      igUnpackVertexSet[embedding]@check@emb@"faces"[]
+    ]
+IGFaces[graph_?igGraphQ] := catch@IGFaces@check@IGPlanarEmbedding[graph]
+
+
+SyntaxInformation[IGDualGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGDualGraph[embedding_?AssociationQ, opt : OptionsPattern[]] :=
+    catch@Block[{emb = embMake[embedding]},
+      With[{packed = check@emb@"dualGraph"[]},
+        Graph[Range@First[packed], Partition[1 + Rest[packed], 2], DirectedEdges -> False, opt]
+      ]
+    ]
+IGDualGraph[graph_?igGraphQ, opt : OptionsPattern[]] := catch@IGDualGraph@check@IGPlanarEmbedding[graph, opt]
+
+
 (***** Finalize *****)
 
 (* Protect all package symbols *)
