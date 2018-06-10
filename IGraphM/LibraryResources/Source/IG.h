@@ -1979,6 +1979,52 @@ public:
         return flows.makeMTensor();
     }
 
+    double minCutValue() const {
+        double value;
+        igCheck(igraph_mincut_value(&graph, &value, passWeights()));
+        return value;
+    }
+
+    double minCutValueST(mint s, mint t) const {
+        double value;
+        igCheck(igraph_st_mincut_value(&graph, &value, s, t, passWeights()));
+        return value;
+    }
+
+    mma::RealTensorRef minCut() const {
+        igVector cut;
+        double value;
+        igCheck(igraph_mincut(&graph, &value, nullptr, nullptr, &cut.vec, passWeights()));
+        return cut.makeMTensor();
+    }
+
+    mma::RealTensorRef minCutST(mint s, mint t) const {
+        igVector cut;
+        double value;
+        igCheck(igraph_st_mincut(&graph, &value, &cut.vec, nullptr, nullptr, s, t, passWeights()));
+        return cut.makeMTensor();
+    }
+
+    mma::IntTensorRef allCutsST(mint s, mint t) const {
+        igList list;
+        igList partitions;
+        igCheck(igraph_all_st_cuts(&graph, &list.list, &partitions.list /* igraph doesn't allow a nullptr here */, s, t));
+        return packListIntoIntTensor(list);
+    }
+
+    mma::IntTensorRef allMinCutsST(mint s, mint t) const {
+        igList list;
+        igCheck(igraph_all_st_mincuts(&graph, nullptr, &list.list, nullptr, s, t, passWeights()));
+        return packListIntoIntTensor(list);
+    }
+
+    /*
+    mma::RealTensorRef immediateDominators(mint root) const {
+        igVector dom;
+        igraph_dominator_tree(&graph, root, &dom.vec, nullptr, nullptr, IGRAPH_OUT);
+        return dom.makeMTensor();
+    }*/
+
     // Connected components
 
     mma::RealTensorRef articulationPoints() const {

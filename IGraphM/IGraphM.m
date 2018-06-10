@@ -465,6 +465,21 @@ IGCommunitiesFluid::usage = "IGCommunitiesFluid[graph, clusterCount] finds commu
 
 IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 
+IGMinimumCut::usage =
+    "IGMinimumCut[graph] finds a minimum edge cut in a weighted graph.\n" <>
+    "IGMinimumCut[graph, s, t] finds a minimum s-t edge cut in a weighted graph.";
+
+IGMinimumCutValue::usage =
+    "IGMinimumCutValue[graph] finds the smallest sum of weights corresponding to an edge cut in graph.\n" <>
+    "IGMinimumCutValue[graph, s, t] finds the smallest sum of weights corresponding to an s-t edge cut in graph.";
+
+(* Removed due to bug in graph core https://github.com/igraph/igraph/issues/1102 *)
+(*
+IGFindCuts::usage =
+    "IGFindCuts[graph, s, t] finds all edge cuts in a directed graph that disconnect s and t.\n" <>
+    "IGFindCuts[graph, s, t, \"Minimum\"] restricts the result to minimum cuts.";
+*)
+
 IGUnfoldTree::usage = "IGUnfoldTree[graph, {root1, root2, \[Ellipsis]}] performs a breadth-first search on graph starting from the given roots, and converts it to a tree or forest by replicating vertices that were found more than once. The original vertex that generated a tree node is stored in the \"OriginalVertex\" property.";
 
 IGBipartitePartitions::usage =
@@ -955,6 +970,13 @@ template = LTemplate["IGraphM",
         (* Maximum flow *)
 
         LFun["gomoryHuTree", {LExpressionID["IG"], {Real, 1, "Constant"}}, {Real, 1}],
+
+        LFun["minCutValue", {}, Real],
+        LFun["minCutValueST", {Integer (* s *), Integer (* t *)}, Real],
+        LFun["minCut", {}, {Real, 1}],
+        LFun["minCutST", {Integer (* s *), Integer (* t *)}, {Real, 1}],
+        LFun["allCutsST", {Integer (* s *), Integer (* t *)}, {Integer, 1}],
+        LFun["allMinCutsST", {Integer (* s *), Integer (* t *)}, {Integer, 1}],
 
         (* Unfold tree *)
 
@@ -4203,6 +4225,42 @@ IGGomoryHuTree[graph_?GraphQ] :=
         "Flow" -> flow
       |>
     ]
+
+
+SyntaxInformation[IGMinimumCutValue] = {"ArgumentsPattern" -> {_, _., _.}};
+IGMinimumCutValue[graph_?igGraphQ] :=
+    Block[{ig = igMakeFastWeighted[graph]},
+      sck@ig@"minCutValue"[]
+    ]
+IGMinimumCutValue[graph_?igGraphQ, s_, t_] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      check@ig@"minCutValueST"[vs[graph][s], vs[graph][t]]
+    ]
+
+
+SyntaxInformation[IGMinimumCut] = {"ArgumentsPattern" -> {_, _., _.}};
+IGMinimumCut[graph_?igGraphQ] :=
+    catch@Block[{ig = igMake[graph]},
+      EdgeList[graph][[ igIndexVec@check@ig@"minCut"[] ]]
+    ]
+IGMinimumCut[graph_?igGraphQ, s_, t_] :=
+    catch@Block[{ig = igMake[graph]},
+      EdgeList[graph][[ igIndexVec@check@ig@"minCutST"[vs[graph][s], vs[graph][t]] ]]
+    ]
+
+
+SyntaxInformation[IGFindCuts] = {"ArgumentsPattern" -> {_, _, _, _.}};
+IGFindCuts[graph_?EmptyGraphQ, s_, t_] := {}
+IGFindCuts[graph_?EmptyGraphQ, s_, t_, "Minimum"] := {}
+IGFindCuts[graph_?igGraphQ, s_, t_] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+      igUnpackEdgeSet[graph]@check@ig@"allCutsST"[vs[graph][s], vs[graph][t]]
+    ]
+IGFindCuts[graph_?igGraphQ, s_, t_, "Minimum"] :=
+    catch@Block[{ig = igMake[graph]},
+      igUnpackEdgeSet[graph]@check@ig@"allMinCutsST"[vs[graph][s], vs[graph][t]]
+    ]
+
 
 (* Unfold tree *)
 
