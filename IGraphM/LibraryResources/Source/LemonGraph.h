@@ -13,6 +13,7 @@
 #include <lemon/static_graph.h>
 #include <lemon/planarity.h>
 #include <lemon/connectivity.h>
+#include <lemon/adaptors.h>
 
 #include <vector>
 #include <utility>
