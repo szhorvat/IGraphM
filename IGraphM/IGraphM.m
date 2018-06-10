@@ -570,7 +570,7 @@ IGLatticeMesh::usage =
     "IGLatticeMesh[type, region] creates a lattice from the points that fall within region.\n" <>
     "IGLatticeMesh[] returns a list of available lattice types.";
 
-IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtaining the smallest topologically equivalent graph. Edge directions are discarded.";
+IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtaining the smallest topologically equivalent graph. Edge directions are discarded. The weights of merged edges are added up.";
 
 IGHomeomorphicQ::usage = "IGHomeomorphicQ[graph1, graph2] tests if graph1 and graph2 are homeomorphic. Edge directions are ignored.";
 
