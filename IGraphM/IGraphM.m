@@ -4603,7 +4603,7 @@ IGVertexColoring[graph_?igGraphQ] :=
 SyntaxInformation[IGEdgeColoring] = {"ArgumentsPattern" -> {_, _}};
 IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph@IGUndirectedGraph[graph, "All"]
 
-Options[IGKVertexColoring] = { "ForcedColoring" -> "MaxDegreeClique" };
+Options[IGKVertexColoring] = { "ForcedColoring" -> Automatic };
 SyntaxInformation[IGKVertexColoring] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGKVertexColoring[graph_?EmptyGraphQ, k_Integer?Positive, OptionsPattern[]] := {ConstantArray[1, VertexCount[graph]]}
 IGKVertexColoring[graph_?igGraphQ, 2, OptionsPattern[]] :=
@@ -4617,6 +4617,43 @@ IGKVertexColoring[graph_?igGraphQ, 2, OptionsPattern[]] :=
 IGKVertexColoring[graph_?igGraphQ, k_Integer?Positive, OptionsPattern[]] :=
     catch@igKVertexColoring[graph, k, igKColoringHeuristic[OptionValue["ForcedColoring"]][graph]]
 
+
+igKVertexColoring[graph_, k_, clique_] :=
+    Module[{a, n, edges, res, satExpr, fixedVars},
+      If[Length[clique] > k, Return[{}]];
+      n = k VertexCount[graph];
+      edges = Complement[
+        Sort /@ IGIndexEdgeList@SimpleGraph[graph],
+        Sort /@ Subsets[clique, {2}]
+      ];
+      satExpr = And @@ Flatten[{
+        Or @@@ Delete[Partition[a /@ Range[n], k], List /@ clique],
+        MapThread[
+          Or,
+          {Not /@ a /@ (Range[k] + k #1),
+           Not /@ a /@ (Range[k] + k #2)}
+        ] & @@@ (edges - 1)
+      }];
+      fixedVars = Flatten@MapAt[
+        Not,
+        Map[Not@a[#] &, Range[k (clique - 1) + 1, k clique], {2}],
+        Table[{i, i}, {i, Length[clique]}]
+      ];
+      satExpr = And[And @@ fixedVars, satExpr];
+      res = SatisfiabilityInstances[
+        satExpr,
+        a /@ Range[n]
+      ];
+      If[res === {},
+        {},
+        Transpose[FirstPosition[#, True] & /@ Partition[First[res], k]]
+      ]
+    ]
+(* TODO: The graph is always (1+Max@VertexDegree[graph])-colourable. Look up an algorithm that can manage this case, and use it. *)
+
+(* This is the original implementation of igKVertexColoring.
+ * It only adds simple symmetry breaking constraints. *)
+(*
 igKVertexColoring[graph_, k_, clique_] :=
     Module[{a, n, res, satExpr, fixedVars},
       If[Length[clique] > k, throw[{}]];
@@ -4626,7 +4663,7 @@ igKVertexColoring[graph_, k_, clique_] :=
         MapThread[
           Or,
           {Not /@ a /@ (Range[k] + k #1),
-           Not /@ a /@ (Range[k] + k #2)}
+            Not /@ a /@ (Range[k] + k #2)}
         ] & @@@ (IGIndexEdgeList@SimpleGraph[graph] - 1)
       }];
       fixedVars = a /@ (k (clique-1) + Range@Length[clique]);
@@ -4639,16 +4676,23 @@ igKVertexColoring[graph_, k_, clique_] :=
         {},
         Transpose[FirstPosition[#, True] & /@ Partition[First[res], k]]
       ]
-    ]
-(* TODO: The graph is always (1+Max@VertexDegree[graph])-colourable. Look up an algorithm that can manage this case, and use it. *)
+    ] *)
 
-igKColoringHeuristic[Automatic][graph_] := igKColoringHeuristic["MaxDegreeClique"][graph]
+igKColoringHeuristic[Automatic][graph_] :=
+    Module[{mdcl, lcl},
+      mdcl = igKColoringHeuristic["MaxDegreeClique"][graph];
+      lcl = TimeConstrained[igKColoringHeuristic["LargestClique"][graph], 0.1];
+      If[ListQ[lcl] && Length[lcl] > Length[mdcl],
+        lcl,
+        mdcl
+      ]
+    ]
 (* The "MaxDegreeClique" heuristic finds a clique containing a max degree node,
  * and also containing some other high-degree nodes, if possible.
  * With Mathematica's SAT solver, ordering the clique's vertices by decreasing degree
  * seems to improve performance. *)
 igKColoringHeuristic["MaxDegreeClique"][graph_] :=
-    Module[{g = IndexGraph[graph], vd, v, sg, cl},
+    Module[{g = IndexGraph@UndirectedGraph[graph], vd, v, sg, cl},
       vd = VertexDegree[g];
       v = Extract[VertexList[g], Ordering[vd, -1]];
       sg = Subgraph[g, Prepend[AdjacencyList[g, v], v]];
@@ -4657,6 +4701,10 @@ igKColoringHeuristic["MaxDegreeClique"][graph_] :=
         Reverse@Sort@Part[vd, #] &
       ];
       Reverse@SortBy[cl, vd[[#]]&]
+    ]
+igKColoringHeuristic["LargestClique"][graph_] :=
+    With[{g = IndexGraph@UndirectedGraph[graph]},
+      First@FindClique[g]
     ]
 igKColoringHeuristic[None][graph_] := {}
 igKColoringHeuristic[clique_List][graph_] := Check[VertexIndex[graph, #]& /@ clique, throw[$Failed]]
@@ -4672,7 +4720,7 @@ IGKEdgeColoring[graph_?igGraphQ, k_Integer?Positive, opt : OptionsPattern[]] :=
       IGKVertexColoring[LineGraph@IGUndirectedGraph[graph, "All"], k, "ForcedColoring" -> fc]
     ]
 
-Options[IGMinimumVertexColoring] = { "ForcedColoring" -> "MaxDegreeClique" }
+Options[IGMinimumVertexColoring] = { "ForcedColoring" -> Automatic }
 SyntaxInformation[IGMinimumVertexColoring] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGMinimumVertexColoring[graph_?EmptyGraphQ, OptionsPattern[]] := ConstantArray[1, VertexCount[graph]]
 IGMinimumVertexColoring[graph_?igGraphQ, opt : OptionsPattern[]] :=
