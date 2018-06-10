@@ -3570,7 +3570,11 @@ IGLayoutTutte[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutTutte, Graph}]] :=
         Message[IGLayoutTutte::n3c];
         Return[graph]
       ];
-      mat = zeroDiagonal@WeightedAdjacencyMatrix@Quiet[IGWeightedUndirectedGraph[graph], IGWeightedUndirectedGraph::mg];
+      mat =
+          zeroDiagonal@N@If[IGEdgeWeightedQ[graph] && VectorQ[IGEdgeProp[EdgeWeight][graph], NumericQ],
+            WeightedAdjacencyMatrix@Quiet[IGWeightedUndirectedGraph[graph], IGWeightedUndirectedGraph::mg],
+            AdjacencyMatrix@SimpleGraph[graph]
+          ];
       mat = mat/Total[mat];
       faces = IGFaces@IndexGraph[graph];
       If[Not@ListQ[faces],
