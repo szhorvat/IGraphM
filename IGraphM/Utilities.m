@@ -756,7 +756,12 @@ shToExpr[s_String] :=
 shSplitGroup[s_sep] := s
 shSplitGroup[s_String] := shToExpr@StringTrim@StringSplit[s, ":"]
 
-Options[IGShorthand] = {SelfLoops -> False, "MultipleEdges" -> False, DirectedEdges -> False};
+Options[IGShorthand] = {
+  SelfLoops -> False,
+  "MultipleEdges" -> False,
+  DirectedEdges -> False,
+  VertexLabels -> "Name"
+};
 SyntaxInformation[IGShorthand] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGShorthand, Graph]};
 IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
     Module[{comp, seq, edgeSeq, eh, edges, vertices},
@@ -790,8 +795,8 @@ IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
       Graph[
         vertices,
         edges,
-        Sequence@@FilterRules[{opt}, Options[Graph]],
-        VertexLabels -> "Name"
+        Sequence @@ FilterRules[{opt}, FilterRules[Options[Graph], Except[VertexLabels|DirectedEdges]]],
+        VertexLabels -> OptionValue[VertexLabels]
       ]
     ]
 
