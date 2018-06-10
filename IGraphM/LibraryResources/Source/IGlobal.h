@@ -34,7 +34,7 @@ public:
 
     const char *version() {
         const char *ver;
-        igCheck(igraph_version(&ver, NULL, NULL, NULL));
+        igCheck(igraph_version(&ver, nullptr, nullptr, nullptr));
         return ver;
     }
 
@@ -84,7 +84,7 @@ public:
         igraph_vector_t ig_indeg  = igVectorView(indeg);
         igraph_bool_t res;
         if (indeg.length() == 0)
-            igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, NULL, &res));
+            igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, nullptr, &res));
         else
             igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, &ig_indeg, &res));
         return res;

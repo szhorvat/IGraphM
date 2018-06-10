@@ -192,7 +192,7 @@ public:
         destroy_items();
 
         // ... and avoid calling any items destructors that may have been set
-        igraph_vector_ptr_set_item_destructor(&list, NULL);
+        igraph_vector_ptr_set_item_destructor(&list, nullptr);
         igraph_vector_ptr_free_all(&list);
         igraph_vector_ptr_destroy(&list);
     }
@@ -238,7 +238,7 @@ inline mlStream & operator << (mlStream &ml, const igMatrix &mat) {
     dims[1] = mat.nrow();
     int ok =
             MLPutFunction(ml.link(), "Transpose", 1) &&
-            MLPutReal64Array(ml.link(), mat.begin(), dims, NULL, 2);
+            MLPutReal64Array(ml.link(), mat.begin(), dims, nullptr, 2);
     if (! ok)
         ml.error("cannot return matrix");
     return ml;

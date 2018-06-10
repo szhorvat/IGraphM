@@ -54,7 +54,7 @@ class IG {
 
     // return the weights if weighted, return NULL otherwise
     // use this to pass weights to igraph functions
-    const igraph_vector_t *passWeights() const { return weighted ? &weights.vec : NULL; }
+    const igraph_vector_t *passWeights() const { return weighted ? &weights.vec : nullptr; }
 
     // packs an igList (usually representing vertex sets) into
     // a single IntTensor for fast transfer
@@ -85,7 +85,7 @@ class IG {
         igraph_integer_t vc = igraph_vcount(&graph);
         igCheck(igraph_community_to_membership(
                     &merges.mat, vc, vc - n_communities /* steps */,
-                    &membership.vec, NULL /* csize */
+                    &membership.vec, nullptr /* csize */
                     ));
     }
 
@@ -94,7 +94,7 @@ class IG {
         if (ig2.directedQ())
             igCheck(igraph_to_directed(&ig1.graph, IGRAPH_TO_DIRECTED_ARBITRARY));
         else
-            igCheck(igraph_to_undirected(&ig1.graph, IGRAPH_TO_UNDIRECTED_EACH, NULL));
+            igCheck(igraph_to_undirected(&ig1.graph, IGRAPH_TO_UNDIRECTED_EACH, nullptr));
     }
 
     // this function is called in isomorphism functions, to ensure that if one
@@ -313,7 +313,7 @@ public:
     }
 
     void makeUndirected() {
-        igraph_to_undirected(&graph, IGRAPH_TO_UNDIRECTED_COLLAPSE, NULL);
+        igraph_to_undirected(&graph, IGRAPH_TO_UNDIRECTED_COLLAPSE, nullptr);
     }
 
     // Create (games)
@@ -349,7 +349,7 @@ public:
         destroy();
         int err;
         if (indeg.length() == 0)
-            err = igraph_degree_sequence_game(&graph, &ig_outdeg, NULL, ig_method);
+            err = igraph_degree_sequence_game(&graph, &ig_outdeg, nullptr, ig_method);
         else
             err = igraph_degree_sequence_game(&graph, &ig_outdeg, &ig_indeg, ig_method);
         igConstructorCheck(err);
@@ -380,14 +380,14 @@ public:
     void bipartiteGameGNM(mint n1, mint n2, mint m, bool directed, bool bidirectional) {
         destroy();
         igConstructorCheck(igraph_bipartite_game(
-                               &graph, NULL, IGRAPH_ERDOS_RENYI_GNM,
+                               &graph, nullptr, IGRAPH_ERDOS_RENYI_GNM,
                                n1, n2, 0, m, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
     }
 
     void bipartiteGameGNP(mint n1, mint n2, double p, bool directed, bool bidirectional) {
         destroy();
         igConstructorCheck(igraph_bipartite_game(
-                               &graph, NULL, IGRAPH_ERDOS_RENYI_GNP,
+                               &graph, nullptr, IGRAPH_ERDOS_RENYI_GNP,
                                n1, n2, p, 0, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
     }
 
@@ -432,7 +432,7 @@ public:
             throw mma::LibraryError("Unknown method for Barabasi-Albert game.");
         }
 
-        igConstructorCheck(igraph_barabasi_game(&graph, n, power, m, &mvec, totalDegree, A, directed, algo, NULL));
+        igConstructorCheck(igraph_barabasi_game(&graph, n, power, m, &mvec, totalDegree, A, directed, algo, nullptr));
     }
 
     void barabasiAlbertGameWithStartingGraph(mint n, double power, double A, mint m, mma::RealTensorRef mtens, bool directed, bool totalDegree, mint method, IG &start) {
@@ -466,7 +466,7 @@ public:
         igraph_vector_t fit_out = igVectorView(fit_out_ten);
         igConstructorCheck(igraph_static_fitness_game(
                                &graph, m,
-                               &fit_in, fit_out_ten.length() == 0 ? NULL : &fit_out,
+                               &fit_in, fit_out_ten.length() == 0 ? nullptr : &fit_out,
                                loops, multiple));
     }
 
@@ -588,15 +588,15 @@ public:
         case 3:
             imode = IGRAPH_ALL; break;
         default:
-            mma::LibraryError("treeQ: invalid mode");
+            throw mma::LibraryError("treeQ: invalid mode");
         }
-        igCheck(igraph_is_tree(&graph, &res, NULL, imode));
+        igCheck(igraph_is_tree(&graph, &res, nullptr, imode));
         return res;
     }
 
     bool bipartiteQ() const {
         igraph_bool_t res;
-        igCheck(igraph_is_bipartite(&graph, &res, NULL));
+        igCheck(igraph_is_bipartite(&graph, &res, nullptr));
         return res;
     }
 
@@ -667,7 +667,7 @@ public:
             break;
         case 2:
             algo = IGRAPH_PAGERANK_ALGO_PRPACK;
-            options = NULL;
+            options = nullptr;
             break;
         default: throw mma::LibraryError("Uknown PageRank method.");
         }
@@ -701,7 +701,7 @@ public:
             break;
         case 2:
             algo = IGRAPH_PAGERANK_ALGO_PRPACK;
-            options = NULL;
+            options = nullptr;
             break;
         default: throw mma::LibraryError("Uknown PageRank method.");
         }
@@ -895,7 +895,7 @@ public:
         igVector vec;
         igIntVector colvec;
         colvec.copyFromMTensor(col);
-        igCheck(igraph_canonical_permutation(&graph, col.length() == 0 ? NULL : &colvec.vec, &vec.vec, blissIntToSplitting(splitting), NULL));
+        igCheck(igraph_canonical_permutation(&graph, col.length() == 0 ? nullptr : &colvec.vec, &vec.vec, blissIntToSplitting(splitting), nullptr));
         return vec.makeMTensor();
     }
 
@@ -906,8 +906,8 @@ public:
         colvec2.copyFromMTensor(col2);
         emptyMatchDirectedness(ig);
         igCheck(igraph_isomorphic_bliss(
-                    &graph, &ig.graph, col1.length() == 0 ? NULL : &colvec1.vec, col2.length() == 0 ? NULL : &colvec2.vec,
-                    &res, NULL, NULL, blissIntToSplitting(splitting), NULL, NULL));
+                    &graph, &ig.graph, col1.length() == 0 ? nullptr : &colvec1.vec, col2.length() == 0 ? nullptr : &colvec2.vec,
+                    &res, nullptr, nullptr, blissIntToSplitting(splitting), nullptr, nullptr));
         return res;
     }
 
@@ -919,8 +919,8 @@ public:
         emptyMatchDirectedness(ig);
         igVector map;
         igCheck(igraph_isomorphic_bliss(
-                    &graph, &ig.graph, col1.length() == 0 ? NULL : &colvec1.vec, col2.length() == 0 ? NULL : &colvec2.vec,
-                    &res, &map.vec, NULL, blissIntToSplitting(splitting), NULL, NULL));
+                    &graph, &ig.graph, col1.length() == 0 ? nullptr : &colvec1.vec, col2.length() == 0 ? nullptr : &colvec2.vec,
+                    &res, &map.vec, nullptr, blissIntToSplitting(splitting), nullptr, nullptr));
         if (res)
             return map.makeMTensor();
         else
@@ -934,7 +934,7 @@ public:
         igIntVector colors;
         ml >> mlCheckArgs(2) >> splitting >> colors;
 
-        igCheck(igraph_automorphisms(&graph, colors.length() == 0 ? NULL : &colors.vec, blissIntToSplitting(splitting), &info));
+        igCheck(igraph_automorphisms(&graph, colors.length() == 0 ? nullptr : &colors.vec, blissIntToSplitting(splitting), &info));
 
         ml.newPacket();
         ml << info.group_size;
@@ -949,7 +949,7 @@ public:
         ml >> mlCheckArgs(2) >> splitting >> colors;
 
         igList list;
-        igCheck(igraph_automorphism_group(&graph, colors.length() == 0 ? NULL : &colors.vec, &list.list, blissIntToSplitting(splitting), NULL));
+        igCheck(igraph_automorphism_group(&graph, colors.length() == 0 ? nullptr : &colors.vec, &list.list, blissIntToSplitting(splitting), nullptr));
 
         ml.newPacket();
         ml << list;
@@ -971,9 +971,9 @@ public:
         igraph_bool_t res;
         igCheck(igraph_isomorphic_vf2(
                     &graph, &ig.graph,
-                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
-                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
-                    &res, NULL, NULL, NULL, NULL, NULL));
+                    vcol1.length() == 0 ? nullptr : &vc1.vec, vcol2.length() == 0 ? nullptr : &vc2.vec,
+                    ecol1.length() == 0 ? nullptr : &ec1.vec, ecol2.length() == 0 ? nullptr : &ec2.vec,
+                    &res, nullptr, nullptr, nullptr, nullptr, nullptr));
         return res;
     }
 
@@ -1004,9 +1004,9 @@ public:
 
         igCheck(igraph_isomorphic_function_vf2(
                     &graph, &ig.graph,
-                    vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
-                    ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
-                    NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
+                    vc1.length() == 0 ? nullptr : &vc1.vec, vc2.length() == 0 ? nullptr : &vc2.vec,
+                    ec1.length() == 0 ? nullptr : &ec1.vec, ec2.length() == 0 ? nullptr : &ec2.vec,
+                    nullptr, nullptr, &isohandler.handle, nullptr, nullptr, &vf2data));
 
         ml.newPacket();
         ml << vf2data.list;
@@ -1026,9 +1026,9 @@ public:
         igraph_bool_t res;
         igCheck(igraph_subisomorphic_vf2(
                     &graph, &ig.graph,
-                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
-                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
-                    &res, NULL, NULL, NULL, NULL, NULL));
+                    vcol1.length() == 0 ? nullptr : &vc1.vec, vcol2.length() == 0 ? nullptr : &vc2.vec,
+                    ecol1.length() == 0 ? nullptr : &ec1.vec, ecol2.length() == 0 ? nullptr : &ec2.vec,
+                    &res, nullptr, nullptr, nullptr, nullptr, nullptr));
         return res;
     }
 
@@ -1059,9 +1059,9 @@ public:
 
         igCheck(igraph_subisomorphic_function_vf2(
                     &graph, &ig.graph,
-                    vc1.length() == 0 ? NULL : &vc1.vec, vc2.length() == 0 ? NULL : &vc2.vec,
-                    ec1.length() == 0 ? NULL : &ec1.vec, ec2.length() == 0 ? NULL : &ec2.vec,
-                    NULL, NULL, &isohandler.handle, NULL, NULL, &vf2data));
+                    vc1.length() == 0 ? nullptr : &vc1.vec, vc2.length() == 0 ? nullptr : &vc2.vec,
+                    ec1.length() == 0 ? nullptr : &ec1.vec, ec2.length() == 0 ? nullptr : &ec2.vec,
+                    nullptr, nullptr, &isohandler.handle, nullptr, nullptr, &vf2data));
 
         ml.newPacket();
         ml << vf2data.list;
@@ -1081,9 +1081,9 @@ public:
         igraph_integer_t res;
         igCheck(igraph_count_isomorphisms_vf2(
                     &graph, &ig.graph,
-                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
-                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
-                    &res, NULL, NULL, NULL));
+                    vcol1.length() == 0 ? nullptr : &vc1.vec, vcol2.length() == 0 ? nullptr : &vc2.vec,
+                    ecol1.length() == 0 ? nullptr : &ec1.vec, ecol2.length() == 0 ? nullptr : &ec2.vec,
+                    &res, nullptr, nullptr, nullptr));
         return res;
     }
 
@@ -1101,9 +1101,9 @@ public:
         igraph_integer_t res;
         igCheck(igraph_count_subisomorphisms_vf2(
                     &graph, &ig.graph,
-                    vcol1.length() == 0 ? NULL : &vc1.vec, vcol2.length() == 0 ? NULL : &vc2.vec,
-                    ecol1.length() == 0 ? NULL : &ec1.vec, ecol2.length() == 0 ? NULL : &ec2.vec,
-                    &res, NULL, NULL, NULL));
+                    vcol1.length() == 0 ? nullptr : &vc1.vec, vcol2.length() == 0 ? nullptr : &vc2.vec,
+                    ecol1.length() == 0 ? nullptr : &ec1.vec, ecol2.length() == 0 ? nullptr : &ec2.vec,
+                    &res, nullptr, nullptr, nullptr));
         return res;
     }
 
@@ -1112,7 +1112,7 @@ public:
     bool ladSubisomorphic(IG &ig, bool induced) {
         igraph_bool_t res;
         emptyMatchDirectedness(ig);
-        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &res, NULL, NULL, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, nullptr, &res, nullptr, nullptr, induced, 0));
         return res;
     }
 
@@ -1128,7 +1128,7 @@ public:
         emptyMatchDirectedness(ig);
 
         igraph_bool_t res;
-        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, &domain.list, &res, NULL, NULL, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, &domain.list, &res, nullptr, nullptr, induced, 0));
 
         ml.newPacket();
         if (res)
@@ -1141,7 +1141,7 @@ public:
         igraph_bool_t iso;
         igVector map;
         emptyMatchDirectedness(ig);
-        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, &map.vec, NULL, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, nullptr, &iso, &map.vec, nullptr, induced, 0));
         return map.makeMTensor();
     }
 
@@ -1158,7 +1158,7 @@ public:
 
         igraph_bool_t iso;
         igVector map;
-        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, &domain.list, &iso, &map.vec, NULL, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, &domain.list, &iso, &map.vec, nullptr, induced, 0));
 
         ml.newPacket();
         ml << map;
@@ -1176,7 +1176,7 @@ public:
 
         igList list;
         igraph_bool_t iso;
-        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, domain.length() == 0 ? nullptr : &domain.list, &iso, nullptr, &list.list, induced, 0));
 
         ml.newPacket();
         ml << list;
@@ -1186,7 +1186,7 @@ public:
         igraph_bool_t iso;
         igList list;
         emptyMatchDirectedness(ig);
-        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, NULL, &iso, NULL, &list.list, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, nullptr, &iso, nullptr, &list.list, induced, 0));
         return list.length();
     }
 
@@ -1202,7 +1202,7 @@ public:
 
         igList list;
         igraph_bool_t iso;
-        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, domain.length() == 0 ? NULL : &domain.list, &iso, NULL, &list.list, induced, 0));
+        igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, domain.length() == 0 ? nullptr : &domain.list, &iso, nullptr, &list.list, induced, 0));
 
         ml.newPacket();
         ml << list.length();
@@ -1274,7 +1274,7 @@ public:
     mint motifsEstimate(mint size, mma::RealTensorRef cut_prob, mint sample_size) const {
         igraph_integer_t res;
         igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
-        igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, sample_size, NULL));
+        igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, sample_size, nullptr));
         return res;
     }
 
@@ -1407,10 +1407,10 @@ public:
 
             switch (method) {
             case 0:
-                igCheck(igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
+                igCheck(igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(from[i])), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
                 break;
             case 1:
-                igCheck(igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(from[i]), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
+                igCheck(igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(from[i])), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
                 break;
             default:
                 throw mma::LibraryError("shortestPathWeightedHistogram: Unknown method.");
@@ -1441,25 +1441,25 @@ public:
 
     mint diameter(bool components) const {
         igraph_integer_t diam;
-        igCheck(igraph_diameter(&graph, &diam, NULL, NULL, NULL, true, components));
+        igCheck(igraph_diameter(&graph, &diam, nullptr, nullptr, nullptr, true, components));
         return diam;
     }
 
     mma::RealTensorRef findDiameter(bool components) const {
         igVector path;
-        igCheck(igraph_diameter(&graph, NULL, NULL, NULL, &path.vec, true, components));
+        igCheck(igraph_diameter(&graph, nullptr, nullptr, nullptr, &path.vec, true, components));
         return path.makeMTensor();
     }
 
     double diameterDijkstra(bool components) const {
         double diam;
-        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), &diam, NULL, NULL, NULL, true, components));
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), &diam, nullptr, nullptr, nullptr, true, components));
         return diam;
     }
 
     mma::RealTensorRef findDiameterDijkstra(bool components) const {
         igVector path;
-        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), NULL, NULL, NULL, &path.vec, true, components));
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), nullptr, nullptr, nullptr, &path.vec, true, components));
         return path.makeMTensor();
     }
 
@@ -1513,7 +1513,7 @@ public:
 
     mint girth() const {
         igraph_integer_t res;
-        igCheck(igraph_girth(&graph, &res, NULL));
+        igCheck(igraph_girth(&graph, &res, nullptr));
         return res;
     }
 
@@ -1693,7 +1693,7 @@ public:
         mat.copyFromMTensor(initial);
         igCheck(igraph_layout_kamada_kawai(
                     &graph, &mat.mat, use_seed, maxiter, epsilon, kkconst, passWeights(),
-                    NULL, NULL, NULL, NULL));
+                    nullptr, nullptr, nullptr, nullptr));
         return mat.makeMTensor();
     }
 
@@ -1705,7 +1705,7 @@ public:
         mat.copyFromMTensor(initial);
         igCheck(igraph_layout_kamada_kawai_3d(
                     &graph, &mat.mat, use_seed, maxiter, epsilon, kkconst, passWeights(),
-                    NULL, NULL, NULL, NULL, NULL, NULL));
+                    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
         return mat.makeMTensor();
     }
 
@@ -1725,7 +1725,7 @@ public:
 
         igCheck(igraph_layout_fruchterman_reingold(
                     &graph, &mat.mat, use_seed, niter, start_temp, grid, passWeights(),
-                    NULL, NULL, NULL, NULL));
+                    nullptr, nullptr, nullptr, nullptr));
         return mat.makeMTensor();
     }
 
@@ -1737,7 +1737,7 @@ public:
         mat.copyFromMTensor(initial);
         igCheck(igraph_layout_fruchterman_reingold_3d(
                     &graph, &mat.mat, use_seed, niter, start_temp, passWeights(),
-                    NULL, NULL, NULL, NULL, NULL, NULL));
+                    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
         return mat.makeMTensor();
     }
 
@@ -1770,21 +1770,21 @@ public:
     mma::RealTensorRef layoutMDS(mma::RealMatrixRef dist, mint dim) const {
         igMatrix dmat, mat;
         dmat.copyFromMTensor(dist);
-        igCheck(igraph_layout_mds(&graph, &mat.mat, dist.cols() == 0 ? NULL : &dmat.mat, dim, NULL));
+        igCheck(igraph_layout_mds(&graph, &mat.mat, dist.cols() == 0 ? nullptr : &dmat.mat, dim, nullptr));
         return mat.makeMTensor();
     }
 
     mma::RealTensorRef layoutReingoldTilford(mma::RealTensorRef roots, bool directed) const {
         igMatrix mat;
         igraph_vector_t rootvec = igVectorView(roots);
-        igCheck(igraph_layout_reingold_tilford(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? NULL : &rootvec, NULL));
+        igCheck(igraph_layout_reingold_tilford(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? nullptr : &rootvec, nullptr));
         return mat.makeMTensor();
     }
 
     mma::RealTensorRef layoutReingoldTilfordCircular(mma::RealTensorRef roots, bool directed) const {
         igMatrix mat;
         igraph_vector_t rootvec = igVectorView(roots);
-        igCheck(igraph_layout_reingold_tilford_circular(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? NULL : &rootvec, NULL));
+        igCheck(igraph_layout_reingold_tilford_circular(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? nullptr : &rootvec, nullptr));
         return mat.makeMTensor();
     }
 
@@ -1805,7 +1805,7 @@ public:
         igraph_layout_drl_options_t options;
         igCheck(igraph_layout_drl_options_init(&options, templ));
 
-        igCheck(igraph_layout_drl(&graph, &mat.mat, use_seed, &options, passWeights(), NULL));
+        igCheck(igraph_layout_drl(&graph, &mat.mat, use_seed, &options, passWeights(), nullptr));
 
         return mat.makeMTensor();
     }
@@ -1827,7 +1827,7 @@ public:
         igraph_layout_drl_options_t options;
         igCheck(igraph_layout_drl_options_init(&options, templ));
 
-        igCheck(igraph_layout_drl_3d(&graph, &mat.mat, use_seed, &options, passWeights(), NULL));
+        igCheck(igraph_layout_drl_3d(&graph, &mat.mat, use_seed, &options, passWeights(), nullptr));
 
         return mat.makeMTensor();
     }
@@ -1921,20 +1921,20 @@ public:
 
     mma::RealTensorRef maximumCardinalitySearch() const {
         igVector vec;
-        igCheck(igraph_maximum_cardinality_search(&graph, &vec.vec, NULL));
+        igCheck(igraph_maximum_cardinality_search(&graph, &vec.vec, nullptr));
         return vec.makeMTensor();
     }
 
     bool chordalQ() const {
         igraph_bool_t res;
-        igCheck(igraph_is_chordal(&graph, NULL, NULL, &res, NULL, NULL));
+        igCheck(igraph_is_chordal(&graph, nullptr, nullptr, &res, nullptr, nullptr));
         return res;
     }
 
     mma::RealTensorRef chordalCompletion() const {
         igraph_bool_t chordal;
         igVector fillin;
-        igCheck(igraph_is_chordal(&graph, NULL, NULL, &chordal, &fillin.vec, NULL));
+        igCheck(igraph_is_chordal(&graph, nullptr, nullptr, &chordal, &fillin.vec, nullptr));
         return fillin.makeMTensor();
     }
 
@@ -1975,7 +1975,7 @@ public:
         igraph_vector_t capacity = igVectorView(tcapacity);
         igVector flows;
         destroy();
-        igConstructorCheck(igraph_gomory_hu_tree(&ig.graph, &graph, &flows.vec, tcapacity.length() == 0 ? NULL : &capacity));
+        igConstructorCheck(igraph_gomory_hu_tree(&ig.graph, &graph, &flows.vec, tcapacity.length() == 0 ? nullptr : &capacity));
         return flows.makeMTensor();
     }
 
@@ -1990,7 +1990,7 @@ public:
     mma::IntTensorRef biconnectedComponents() const {
         igList list;
         igraph_integer_t count;
-        igCheck(igraph_biconnected_components(&graph, &count, NULL, NULL, &list.list, NULL));
+        igCheck(igraph_biconnected_components(&graph, &count, nullptr, nullptr, &list.list, nullptr));
         return packListIntoIntTensor(list);
     }
 
@@ -2040,7 +2040,7 @@ public:
         igVector cohesion;
         igVector parents;
 
-        igCheck(igraph_cohesive_blocks(&graph, &blocks.list, &cohesion.vec, &parents.vec, NULL));
+        igCheck(igraph_cohesive_blocks(&graph, &blocks.list, &cohesion.vec, &parents.vec, nullptr));
 
         ml.newPacket();
         ml << mlHead("List", 3) << blocks << cohesion << parents;
@@ -2147,7 +2147,7 @@ public:
         } else { // communities based on cluster count
             igCheck(igraph_community_edge_betweenness(
                         &graph, &result.vec, &betweenness.vec, &merges.mat, &bridges.vec,
-                        NULL /* modularity */, NULL /* membership */,
+                        nullptr /* modularity */, nullptr /* membership */,
                         true /* directed */, passWeights()
                         ));
 
@@ -2175,7 +2175,7 @@ public:
         if (n_communities == 0) {
             igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, &modularity.vec, &membership.vec));
         } else {
-            igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, NULL, NULL));
+            igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, nullptr, nullptr));
             computeMembership(n_communities, merges, membership);
             modularity.resize(1);
             igraph_modularity(&graph, &membership.vec, modularity.begin() /* ptr to first vec elem */, passWeights());
@@ -2225,8 +2225,8 @@ public:
 
         igCheck(igraph_community_label_propagation(
                     &graph, &membership.vec, passWeights(),
-                    initial.length() == 0 ? NULL : &initial.vec,
-                    fixed.length() == 0 ? NULL : &fixed.vec,
+                    initial.length() == 0 ? nullptr : &initial.vec,
+                    fixed.length() == 0 ? nullptr : &fixed.vec,
                     &modularity));
 
         ml.newPacket();
@@ -2244,7 +2244,7 @@ public:
         double codelen;
 
         igCheck(igraph_community_infomap(
-                    &graph, passWeights(), v_weights.length() == 0 ? NULL : &v_weights.vec,
+                    &graph, passWeights(), v_weights.length() == 0 ? nullptr : &v_weights.vec,
                     trials, &membership.vec, &codelen));
 
         ml.newPacket();
@@ -2300,7 +2300,7 @@ public:
 
         igCheck(igraph_community_spinglass(
                     &graph, passWeights(),
-                    &modularity, &temperature, &membership.vec, NULL,
+                    &modularity, &temperature, &membership.vec, nullptr,
                     spins, parupdate, starttemp, stoptemp, coolfact,
                     update_rule_e, gamma, method_e, gamma_minus
                     ));
@@ -2329,22 +2329,22 @@ public:
                         &merges.mat, &membership.vec,
                         steps, &options, &modularity, false,
                         &eigenvalues.vec, &eigenvectors.list, // eigenvalues, eigenvectors
-                        NULL, // history
-                        NULL, NULL // callback
+                        nullptr, // history
+                        nullptr, nullptr // callback
                         ));
             finalMembership = membership;
         } else {
             igCheck(igraph_community_leading_eigenvector(
                         &graph, passWeights(),
                         &merges.mat, &membership.vec /* membership */,
-                        steps, &options, NULL /* modularity */, false,
+                        steps, &options, nullptr /* modularity */, false,
                         &eigenvalues.vec, &eigenvectors.list, // eigenvalues, eigenvectors
-                        NULL, // history
-                        NULL, NULL // callback
+                        nullptr, // history
+                        nullptr, nullptr // callback
                         ));
             finalMembership = membership;
             igraph_integer_t cc = 1 + static_cast<igraph_integer_t>( *std::max_element(membership.begin(), membership.end()) );
-            igCheck(igraph_le_community_to_membership(&merges.mat, cc - n_communities, &membership.vec, NULL));
+            igCheck(igraph_le_community_to_membership(&merges.mat, cc - n_communities, &membership.vec, nullptr));
             igraph_modularity(&graph, &membership.vec, &modularity, passWeights());
         }
 
@@ -2409,7 +2409,7 @@ public:
     // note this is a constructor!
     void contractVertices(mma::RealTensorRef t) {
         igraph_vector_t mapping = igVectorView(t);
-        igCheck(igraph_contract_vertices(&graph, &mapping, NULL));
+        igCheck(igraph_contract_vertices(&graph, &mapping, nullptr));
     }
 
     // Random walks
