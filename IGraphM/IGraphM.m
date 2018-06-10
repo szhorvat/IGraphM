@@ -1349,10 +1349,13 @@ partitionRagged[v_List, l_?VectorQ] := MapThread[Take[v, {#1, #2}] &, Module[{a 
 
 (* Unpacks an index list representing vertex sets from an integer array,
    To be used in conjunction with IG::packListIntoIntTensor() *)
-igUnpackVertexSet[graph_][packed_] :=
+igUnpackVertexSet[graph_?GraphQ][packed_] := igUnpackSetsHelper[VertexList[graph]][packed]
+igUnpackVertexSet[emb_?AssociationQ][packed_] := igUnpackSetsHelper[Keys[emb]][packed]
+igUnpackEdgeSet[graph_?GraphQ][packed_] := igUnpackSetsHelper[EdgeList[graph]][packed]
+igUnpackSetsHelper[verts_][packed_] :=
     With[{len = First[packed]},
       partitionRagged[
-        Part[VertexList[graph], 1 + packed[[len + 2 ;; All]]],
+        Part[verts, 1 + packed[[len + 2 ;; All]]],
         packed[[2 ;; len + 1]]
       ]
     ]
