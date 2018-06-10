@@ -35,7 +35,7 @@ Switch[$OperatingSystem,
     "CompileOptions" -> { "-flto" },
 
     (* Statically link the igraph library *)
-    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a"},
+    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libemon.a"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
