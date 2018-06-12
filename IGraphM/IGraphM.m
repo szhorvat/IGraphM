@@ -5520,7 +5520,7 @@ IGDualGraph[embedding_?AssociationQ, opt : OptionsPattern[]] :=
         Graph[Range@First[packed], Partition[1 + Rest[packed], 2], DirectedEdges -> False, opt]
       ]
     ]
-IGDualGraph[graph_?igGraphQ, opt : OptionsPattern[]] := catch@IGDualGraph@check@IGPlanarEmbedding[graph, opt]
+IGDualGraph[graph_?igGraphQ, opt : OptionsPattern[]] := catch@IGDualGraph[check@IGPlanarEmbedding[graph], opt]
 
 
 (***** Finalize *****)
