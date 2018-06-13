@@ -32146,7 +32146,57 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"IGFaces", "[", "emb2", 
-  "]"}]], "Input",ExpressionUUID->"ae6e6727-08ba-4a5d-ad8f-5649a06e08ea"]
+  "]"}]], "Input",ExpressionUUID->"ae6e6727-08ba-4a5d-ad8f-5649a06e08ea"],
+
+Cell[TextData[{
+ "Determine the genus ",
+ Cell[BoxData[
+  FormBox["g", TraditionalForm]],ExpressionUUID->
+  "3f95092f-923b-4553-aa0e-05fb67b0f5f9"],
+ " of an embedding belonging to a connected graph based on its face count ",
+ Cell[BoxData[
+  FormBox["F", TraditionalForm]],ExpressionUUID->
+  "1ec7e7a2-901a-4638-a09e-84769c2666ad"],
+ ", vertex count ",
+ Cell[BoxData[
+  FormBox["V", TraditionalForm]],ExpressionUUID->
+  "6cfbd159-43ae-48c9-a75f-e6ffff52d237"],
+ ", and edge count ",
+ Cell[BoxData[
+  FormBox["E", TraditionalForm]],ExpressionUUID->
+  "069fec55-6f88-4384-9c3a-6dc9f2826e65"],
+ ", using the formula for the Euler characteristic ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     RowBox[{"2", "g"}], "-", "2"}], "=", 
+    RowBox[{"\[Chi]", "=", 
+     RowBox[{"V", "-", "E", "+", "F"}]}]}], TraditionalForm]],ExpressionUUID->
+  "d714dd98-a7c8-4a22-a899-8cb26feaa726"],
+ "."
+}], "Text",ExpressionUUID->"adde1f6d-88f1-4f41-a0a7-5d76d27a8657"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"genus", "[", 
+   RowBox[{"emb_", "?", "IGEmbeddingQ"}], "]"}], ":=", " ", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"2", "+", 
+     RowBox[{
+      RowBox[{"Total", "[", 
+       RowBox[{"Length", "/@", "emb"}], "]"}], "/", "2"}], "-", 
+     RowBox[{"Length", "[", "emb", "]"}], "-", 
+     RowBox[{"Length", "@", 
+      RowBox[{"IGFaces", "[", "emb", "]"}]}]}], ")"}], "/", 
+   "2"}]}]], "Input",ExpressionUUID->"233df00f-b487-4f3c-bd8a-a4bb9279c91c"],
+
+Cell[BoxData[
+ RowBox[{"genus", "/@", 
+  RowBox[{"{", 
+   RowBox[{"emb1", ",", "emb2"}], 
+   "}"}]}]], "Input",ExpressionUUID->"bc7bf7a3-9950-4b80-9ac0-55f2bcfc0e13"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -33523,9 +33573,8 @@ Cell[BoxData[
      RowBox[{
       RowBox[{
        RowBox[{"Text", "[", 
-        RowBox[{"\"\<\!\(\*
-StyleBox[\"\[LongRightArrow]\",
-FontWeight->\"Bold\",
+        RowBox[{
+        "\"\<\!\(\*StyleBox[\"\[LongRightArrow]\",FontWeight->\"Bold\",\
 FontColor->RGBColor[1, 0, 0]]\)\>\"", ",", "#"}], "]"}], "&"}], "/@", 
       RowBox[{"PropertyValue", "[", 
        RowBox[{
@@ -35105,8 +35154,8 @@ Cell[BoxData[
   RowBox[{"ExampleData", "[", 
    RowBox[{"{", 
     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EastAfricaEmbassyAttacks\>\""}],
-     "}"}], "]"}]}]], \
-"Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
+     "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
 
 Cell[BoxData[
  RowBox[{"IGTake", "[", 
@@ -36755,8 +36804,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
@@ -38162,7 +38211,7 @@ Cell[BoxData[
 }, Open  ]]
 },
 WindowSize->{767, 721},
-WindowMargins->{{Automatic, 176}, {Automatic, 45}},
+WindowMargins->{{318, Automatic}, {Automatic, 42}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
@@ -38207,8 +38256,8 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, \
-2017)",
+FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
+2018)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -38230,7 +38279,7 @@ StyleDefinitions->Notebook[{
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
   FrontEndVersion -> 
-  "11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, 2017)", 
+  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
