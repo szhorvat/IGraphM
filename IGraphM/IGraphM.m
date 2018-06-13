@@ -545,7 +545,7 @@ IGCliqueCover::usage = "IGCliqueCover[graph] finds a minimum clique cover of gra
 
 IGCliqueCoverNumber::usage = "IGCliqueCoverNumber[graphs] finds the clique vertex cover number of graph.";
 
-IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a graph.";
+IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a weighted graph.";
 IGMeshCellAdjacencyMatrix::usage =
     "IGMeshCellAdjacencyMatrix[mesh, d] returns the adjacency matrix of d-dimensional cells in mesh.\n" <>
     "IGMeshCellAdjacencyMatrix[mesh, d1, d2] returns the incidence matrix of d1- and d2-dimensional cells in mesh.";
@@ -4946,8 +4946,11 @@ IGMeshGraph[mesh_?meshQ, opt : OptionsPattern[{IGMeshGraph, Graph}]] :=
         EdgeWeight -> PropertyValue[{mesh, 1}, MeshCellMeasure]
       ];
       Graph[
-        Developer`ToPackedArray@MeshCells[mesh, 0][[All, 1]],
-        Developer`ToPackedArray@MeshCells[mesh, 1][[All, 1]],
+        (* We return an index graph. *)
+        Range@MeshCellCount[mesh, 0],
+        (* The undocumented option "Multicells" -> True causes the result to come in the form
+         * {Line[{{1,2},{2,3}}]} instead of {Line[{1,2}], Line[{2,3}]} *)
+        Join @@ (MeshCells[mesh, 1, "Multicells" -> True][[All, 1]]),
         edgeWeightRule,
         Sequence @@ FilterRules[FilterRules[{opt}, Options[Graph]], Except@Options[IGMeshGraph]],
         VertexCoordinates -> MeshCoordinates[mesh]
