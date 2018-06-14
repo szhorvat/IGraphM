@@ -122,7 +122,7 @@ With[{$appTarget = $appTarget},
     MCode[
       UsingFrontEnd[
         NotebookSave@NotebookOpen[FileNameJoin[{$appTarget, #}]]& /@
-            {"IGraphM.m", "PacletInfo.m", "Common.m", "Utilities.m"}
+            {"IGraphM.m", "PacletInfo.m", "Common.m", "Utilities.m", "Resources.m"}
       ]
     ]
   ]
