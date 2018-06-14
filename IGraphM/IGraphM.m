@@ -606,11 +606,17 @@ IGPlanarQ::usage =
 
 IGMaximalPlanarQ::usage = "IGMaximalPlanarQ[graph] checks if graph is maximal planar.";
 
+IGOuterplanarQ::usage =
+    "IGOuterplanarQ[graph] checks if graph is outerplanar.\n" <>
+    "IGOuterplanarQ[embedding] checks if a combinatorial embedding is outerplanar.";
+
 IGKuratowskiEdges::usage = "IGKuratowskiEdges[graph] finds the edges belonging to a Kuratowski subgraph.";
 
 IGEmbeddingQ::usage = "IGEmbeddingQ[embedding] checks if embedding represents a combinatorial embedding of a simple graph.";
 
-IGPlanarEmbedding::usage = "IGPlanarEmbedding[graph] returns a combinatorial embedding of a planar graph.";
+IGPlanarEmbedding::usage = "IGPlanarEmbedding[graph] returns a planar combinatorial embedding of a graph.";
+
+IGOuterplanarEmbedding::usage = "IGOuterplanarEmbedding[graph] returns an outerplanar combinatorial embedding of a graph.";
 
 IGFaces::usage =
     "IGFaces[graph] returns the faces of a planar graph.\n" <>
@@ -5460,6 +5466,9 @@ IGPlanarQ[graph_?igGraphQ] :=
     catch@Block[{lg = lgMake@UndirectedGraph@SimpleGraph[graph]},
       check@lg@"planarQ"[]
     ]
+(* We do not use IGEmbeddingQ in the function pattern so that we can issue more useful error messages.
+ * An error should be shown only if the user was likely to want to pass an embedding (which is an association),
+ * but it was found not to be valid. *)
 IGPlanarQ[embedding_?AssociationQ] :=
     TrueQ@catch@Block[{emb = embMake[embedding]},
       check@emb@"planarQ"[Length@ConnectedComponents@igFromEmbedding[embedding]]
@@ -5477,7 +5486,47 @@ IGMaximalPlanarQ[graph_?igGraphQ] /; IGPlanarQ[graph] :=
     ]
 IGMaximalPlanarQ[_] := False
 
-(* IGKuratowskiSubgraph *)
+
+outerplanarVertex::usage = "outerplanarVertex is used in the implementation of IGOuterplanarQ";
+
+igOuterplanarAugment[graph_] :=
+    EdgeAdd[
+      VertexAdd[UndirectedGraph[graph], outerplanarVertex],
+      UndirectedEdge[outerplanarVertex, #]& /@ VertexList[graph]
+    ];
+
+(* igConnectedOuterplanarQ expects embedding to be a planar embedding of a connected graph.
+ * A planar embedding of a connected graphs is outerplanar if the largest faces contain all vertices,
+ * or if it has no faces at all. *)
+igConnectedOuterplanarQ[embedding_] :=
+    With[{faces = IGFaces[embedding]},
+      faces === {} || Sort@Keys[embedding] === Union@Extract[faces, Ordering[Length /@ faces, -1]]
+    ]
+
+SyntaxInformation[IGOuterplanarQ] = {"ArgumentsPattern" -> {_}};
+IGOuterplanarQ[graph_?EmptyGraphQ] := True
+IGOuterplanarQ[graph_?igGraphQ] := IGPlanarQ@igOuterplanarAugment[graph]
+IGOuterplanarQ[embedding_?AssociationQ] :=
+    TrueQ@catch@Module[{emb = embMake[embedding], comps},
+      comps = ConnectedComponents@igFromEmbedding[embedding];
+      check@emb@"planarQ"[Length[comps]] &&
+           AllTrue[comps, igConnectedOuterplanarQ@KeyTake[embedding, #]&]
+    ]
+IGOuterplanarQ[_] := False
+
+
+IGOuterplanarEmbedding::nopl = "The graph is not outer-planar.";
+SyntaxInformation[IGOuterplanarEmbedding] = {"ArgumentsPattern" -> {_}};
+IGOuterplanarEmbedding[graph_?igGraphQ] :=
+    Module[{augmentedGraph = igOuterplanarAugment[graph], emb},
+      emb = Quiet@IGPlanarEmbedding[augmentedGraph];
+      If[Not@AssociationQ[emb],
+        Message[IGOuterplanarEmbedding::nopl];
+        Return[$Failed]
+      ];
+      DeleteCases[outerplanarVertex] /@ Delete[emb, Key[outerplanarVertex]]
+    ]
+
 SyntaxInformation[IGKuratowskiEdges] = {"ArgumentsPattern" -> {_}};
 IGKuratowskiEdges[graph_?EmptyGraphQ] := {}
 IGKuratowskiEdges[graph_?igGraphQ] :=
