@@ -31890,6 +31890,216 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGOuterplanarQ", \
+"Subsubsection",ExpressionUUID->"50f6e797-59d7-423d-b04a-68d742024214"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGOuterplanarQ"}]], \
+"Input",ExpressionUUID->"af385042-2bda-46ee-99c1-801bfd3f4f94"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGOuterplanarQ", "[", "graph", "]"}]],ExpressionUUID->
+  "82af032e-8738-4e03-8721-b431ce540915"],
+ " checks if a graph is outerplanar, i.e. if it can be drawn in the plane \
+without edge crossings and with all vertices being on the outer face."
+}], "Text",ExpressionUUID->"383eba58-9f2d-4fc8-901c-3d38f91b018d"],
+
+Cell[TextData[{
+ "Outerplanar graphs are also called circular planar. They can be drawn \
+without edge crossings and all vertices on a circle. See the documentation of \
+",
+ Cell[BoxData[
+ "IGOuterplanarEmbedding"],ExpressionUUID->
+  "84fd0d88-3d27-48a3-80e2-7aa8dbc6ad15"],
+ " for an example."
+}], "Text",ExpressionUUID->"b9983171-00c1-4bd4-965e-44357a571d25"],
+
+Cell[BoxData[
+ RowBox[{"IGOuterplanarQ", "[", 
+  GraphicsBox[
+   NamespaceBox["NetworkGraphics",
+    DynamicModuleBox[{Typeset`graph = HoldComplete[
+      Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, {Null, 
+        SparseArray[
+        Automatic, {12, 12}, 0, {
+         1, {{0, 2, 5, 7, 10, 14, 17, 20, 24, 27, 29, 32, 34}, {{2}, {4}, {
+           1}, {3}, {5}, {2}, {6}, {1}, {5}, {7}, {2}, {4}, {6}, {8}, {3}, {
+           5}, {9}, {4}, {8}, {10}, {5}, {7}, {9}, {11}, {6}, {8}, {12}, {
+           7}, {11}, {8}, {10}, {12}, {9}, {11}}}, Pattern}]}, {
+       GraphLayout -> {"GridEmbedding", "Dimension" -> {3, 4}}, 
+        VertexSize -> {Medium}}]]}, 
+     TagBox[
+      GraphicsGroupBox[
+       GraphicsComplexBox[{{1., 1.}, {1., 2.}, {1., 3.}, {2., 1.}, {2., 2.}, {
+        2., 3.}, {3., 1.}, {3., 2.}, {3., 3.}, {4., 1.}, {4., 2.}, {4., 3.}}, {
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], ArrowBox[{1, 2}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{1, 4}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{2, 3}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{2, 5}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{3, 6}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{4, 5}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{4, 7}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{5, 6}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{5, 8}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{6, 9}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{7, 8}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{7, 10}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{8, 9}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{8, 11}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{9, 12}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{10, 11}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{11, 12}, 0.1]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+          DiskBox[1, 0.1], DiskBox[2, 0.1], DiskBox[3, 0.1], DiskBox[4, 0.1], 
+          DiskBox[5, 0.1], DiskBox[6, 0.1], DiskBox[7, 0.1], DiskBox[8, 0.1], 
+          DiskBox[9, 0.1], DiskBox[10, 0.1], DiskBox[11, 0.1], 
+          DiskBox[12, 0.1]}}]],
+      MouseAppearanceTag["NetworkGraphics"]],
+     AllowKernelInitialization->False]],
+   DefaultBaseStyle->{
+    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+   FormatType->TraditionalForm,
+   FrameTicks->None], 
+  "]"}]], "Input",ExpressionUUID->"34e08c56-3213-4882-ae31-c91e4bc577c3"],
+
+Cell[BoxData[
+ RowBox[{"IGOuterplanarQ", "[", 
+  GraphicsBox[
+   NamespaceBox["NetworkGraphics",
+    DynamicModuleBox[{Typeset`graph = HoldComplete[
+      Graph[{1, 2, 3, 4, 5, 6, 7, 8}, {Null, 
+        SparseArray[
+        Automatic, {8, 8}, 0, {
+         1, {{0, 2, 4, 7, 10, 13, 16, 18, 20}, {{2}, {3}, {1}, {4}, {1}, {
+           4}, {5}, {2}, {3}, {6}, {3}, {6}, {7}, {4}, {5}, {8}, {5}, {8}, {
+           6}, {7}}}, Pattern}]}, {
+       GraphLayout -> {"GridEmbedding", "Dimension" -> {2, 4}}, 
+        VertexSize -> {Medium}}]]}, 
+     TagBox[
+      GraphicsGroupBox[
+       GraphicsComplexBox[{{1., 1.}, {1., 2.}, {2., 1.}, {2., 2.}, {3., 1.}, {
+        3., 2.}, {4., 1.}, {4., 2.}}, {
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], ArrowBox[{1, 2}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{1, 3}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{2, 4}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{3, 4}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{3, 5}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{4, 6}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{5, 6}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{5, 7}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{6, 8}, 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{7, 8}, 0.1]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+          DiskBox[1, 0.1], DiskBox[2, 0.1], DiskBox[3, 0.1], DiskBox[4, 0.1], 
+          DiskBox[5, 0.1], DiskBox[6, 0.1], DiskBox[7, 0.1], 
+          DiskBox[8, 0.1]}}]],
+      MouseAppearanceTag["NetworkGraphics"]],
+     AllowKernelInitialization->False]],
+   DefaultBaseStyle->{
+    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+   FormatType->TraditionalForm,
+   FrameTicks->None], 
+  "]"}]], "Input",ExpressionUUID->"4b09ba43-7377-4246-9e9e-404bdf55e659"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGOuterplanarQ", "[", "embedding", "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "a9c9fb33-3771-415d-822b-8c4a1383b975"],
+ " checks if a combinatorial embedding is outerplanar. Not all planar \
+embeddings of an outerplanar graph are also outerplanar embeddings."
+}], "Text",ExpressionUUID->"4e62837f-2f27-42ff-a1ea-1331be3a638b"],
+
+Cell["Consider the following outerplanar graph \[Ellipsis]", \
+"Text",ExpressionUUID->"53809d58-43a9-49a6-877a-a30116f3afc6"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+  "IGShorthand", "[", "\"\<0-1-2-3-4-2,1-4\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"48381764-bf96-4b01-9371-4d8948dc550d"],
+
+Cell[BoxData[
+ RowBox[{"IGOuterplanarQ", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"d15a7eee-a4cf-4cd7-860c-d16116dead06"],
+
+Cell["\[Ellipsis] and two of its embeddings:", \
+"Text",ExpressionUUID->"ed392086-80ef-4e09-bf58-bccc8278ca70"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"emb1", "=", 
+   RowBox[{"\[LeftAssociation]", 
+    RowBox[{
+     RowBox[{"0", "\[Rule]", 
+      RowBox[{"{", "1", "}"}]}], ",", 
+     RowBox[{"1", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "0", ",", "4"}], "}"}]}], ",", 
+     RowBox[{"2", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "3", ",", "4"}], "}"}]}], ",", 
+     RowBox[{"3", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "4"}], "}"}]}], ",", 
+     RowBox[{"4", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"3", ",", "1", ",", "2"}], "}"}]}]}], 
+    "\[RightAssociation]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"emb2", "=", 
+   RowBox[{"\[LeftAssociation]", 
+    RowBox[{
+     RowBox[{"0", "\[Rule]", 
+      RowBox[{"{", "1", "}"}]}], ",", 
+     RowBox[{"1", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"0", ",", "2", ",", "4"}], "}"}]}], ",", 
+     RowBox[{"2", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "3", ",", "4"}], "}"}]}], ",", 
+     RowBox[{"3", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"2", ",", "4"}], "}"}]}], ",", 
+     RowBox[{"4", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"3", ",", "1", ",", "2"}], "}"}]}]}], 
+    "\[RightAssociation]"}]}], 
+  ";"}]}], "Input",ExpressionUUID->"f93be589-f3e7-400e-95c0-f42a95ae94e4"],
+
+Cell["The are both planar, but only the second one is outerplanar.", \
+"Text",ExpressionUUID->"6d16526f-6fba-495e-ba77-814489191edc"],
+
+Cell[BoxData[
+ RowBox[{"IGPlanarQ", "/@", 
+  RowBox[{"{", 
+   RowBox[{"emb1", ",", "emb2"}], 
+   "}"}]}]], "Input",ExpressionUUID->"d0bd259f-2796-4e64-a4f9-189fff4ad21a"],
+
+Cell[BoxData[
+ RowBox[{"IGOuterplanarQ", "/@", 
+  RowBox[{"{", 
+   RowBox[{"emb1", ",", "emb2"}], 
+   "}"}]}]], "Input",ExpressionUUID->"502aa83f-9430-4d5c-aa67-e496868dfbc6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"Graph", "[", 
+    RowBox[{"g", ",", 
+     RowBox[{"VertexCoordinates", "\[Rule]", 
+      RowBox[{"IGEmbeddingToCoordinates", "[", "#", "]"}]}]}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"emb1", ",", "emb2"}], 
+   "}"}]}]], "Input",ExpressionUUID->"5c744a7a-0beb-4884-9de3-2ce1b1d41aa6"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["IGKuratowskiEdges", \
 "Subsubsection",ExpressionUUID->"3e1af7a9-356b-4d10-9ded-1198069f9bfa"],
 
@@ -32498,6 +32708,49 @@ Cell[BoxData[
    RowBox[{"Thread", "/@", 
     RowBox[{"Normal", "[", "emb", "]"}]}], 
    "]"}]}]], "Input",ExpressionUUID->"f1c4d154-3ad6-432d-8441-bd185b2c89a9"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGOuterplanarEmbedding", \
+"Subsubsection",ExpressionUUID->"8df73305-2c6b-4c96-aa27-f1216790065c"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGOuterplanarEmbedding"}]], \
+"Input",ExpressionUUID->"92c1ec8b-0343-40ec-8786-bf78b6670a31"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGOuterplanarEmbedding"],ExpressionUUID->
+  "796636c8-4501-40e1-9f88-aec4d5503a2c"],
+ " returns an outerplanar combinatorial embedding of a graph, if it exists. \
+If the corresponding graph is connected, then one face of such an embedding \
+contains all vertices of the graph."
+}], "Text",ExpressionUUID->"c2ec5caa-516d-49a7-aad3-73b6768827fe"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGTriangularLattice", "[", 
+   RowBox[{"{", 
+    RowBox[{"5", ",", "2"}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"359e27e8-7426-4ada-aab4-d2e818ebd0d6"],
+
+Cell[BoxData[
+ RowBox[{"emb", "=", 
+  RowBox[{
+  "IGOuterplanarEmbedding", "[", "g", 
+   "]"}]}]], "Input",ExpressionUUID->"4b2c2657-5b11-485c-9cc0-8950c57b8b01"],
+
+Cell[BoxData[
+ RowBox[{"IGLayoutCircle", "@", 
+  RowBox[{"IGReorderVertices", "[", 
+   RowBox[{
+    RowBox[{"First", "@", 
+     RowBox[{
+      RowBox[{"MaximalBy", "[", "Length", "]"}], "@", 
+      RowBox[{"IGFaces", "[", "emb", "]"}]}]}], ",", "g"}], 
+   "]"}]}]], "Input",ExpressionUUID->"6178b3dd-de76-4301-9c89-2b854b48e682"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -35154,8 +35407,8 @@ Cell[BoxData[
   RowBox[{"ExampleData", "[", 
    RowBox[{"{", 
     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EastAfricaEmbassyAttacks\>\""}],
-     "}"}], 
-   "]"}]}]], "Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
+     "}"}], "]"}]}]], \
+"Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
 
 Cell[BoxData[
  RowBox[{"IGTake", "[", 
