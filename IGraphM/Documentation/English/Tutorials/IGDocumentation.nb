@@ -32007,8 +32007,7 @@ Cell[BoxData[
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"IGOuterplanarQ", "[", "embedding", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"IGOuterplanarQ", "[", "embedding", "]"}]],ExpressionUUID->
   "a9c9fb33-3771-415d-822b-8c4a1383b975"],
  " checks if a combinatorial embedding is outerplanar. Not all planar \
 embeddings of an outerplanar graph are also outerplanar embeddings."
@@ -32698,16 +32697,20 @@ Cell[BoxData[
   "IGPlanarEmbedding", "[", "g", 
    "]"}]}]], "Input",ExpressionUUID->"a2140181-8ae5-4aa2-98b6-6f34e5bbc395"],
 
-Cell["\<\
-An embedding can be easily converted back to an undirected graph.\
-\>", "Text",ExpressionUUID->"7968cd43-2fea-47af-8691-b808011a9f33"],
+Cell[TextData[{
+ "The representation of a combinatorial embedding is also a valid adjacency \
+list, thus it can be easily converted back to an undirected graph using ",
+ Cell[BoxData["IGAdjacencyGraph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "bb8eb073-98ef-4a09-b357-28e112b9e954"],
+ "."
+}], "Text",ExpressionUUID->"7968cd43-2fea-47af-8691-b808011a9f33"],
 
 Cell[BoxData[
- RowBox[{"UndirectedGraph", "@", 
-  RowBox[{"Catenate", "[", 
-   RowBox[{"Thread", "/@", 
-    RowBox[{"Normal", "[", "emb", "]"}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"f1c4d154-3ad6-432d-8441-bd185b2c89a9"]
+ RowBox[{"IGAdjacencyGraph", "[", 
+  RowBox[{"emb", ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "Automatic"}]}], 
+  "]"}]], "Input",ExpressionUUID->"f1c4d154-3ad6-432d-8441-bd185b2c89a9"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -37654,6 +37657,98 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGAdjacencyGraph", \
+"Subsubsection",ExpressionUUID->"158ae111-c62e-476c-874b-59521776a88c"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGAdjacencyGraph"}]], \
+"Input",ExpressionUUID->"63a44dd4-cff5-4e69-a6e8-2b1085d31ab5"],
+
+Cell[TextData[{
+ Cell[BoxData["IGAdjacencyGraph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "4949aeb7-979f-4a64-b1bb-7c9587f7c99d"],
+ " can convert an adjacency matrix or an adjacency list representation of a \
+graph into a ",
+ Cell[BoxData["Graph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "a13a65e7-bbaf-44cf-8bde-7179c5d3cbf8"],
+ " expression. When given a matrix, it behaves equivalently to the built-in \
+function ",
+ Cell[BoxData["AdjacencyGraph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "d8f8edc4-0b9b-4617-9d1f-125e4d7066e9"],
+ "."
+}], "Text",ExpressionUUID->"c8d1e89f-11f5-45ef-85ec-252beb1cc65f"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"384fd1d3-676b-4204-a316-5e851762bade"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "9102a4e6-3825-4c3f-a6f1-cd6a54e02edf"],
+ " and ",
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "a00960e0-aba8-4d8b-af03-129444a7f884"],
+ " create a directed or undirected graph, respectively. The default setting \
+is ",
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "d7df1826-1146-44d5-ba7d-518df75ee985"],
+ ", which creates an undirected graph when this is consistent with the given \
+adjacency matrix or adjacency list."
+}], "Item",ExpressionUUID->"42673cb9-8a78-498d-a4ba-625ce6fd00ec"],
+
+Cell[TextData[{
+ "Compute the adjacency list of a graph, then convert it back to a ",
+ Cell[BoxData["Graph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "b5943bf7-0a7c-474e-84f7-7c238fab010c"],
+ " expression."
+}], "Text",ExpressionUUID->"92f5b7e6-8b99-41fe-8591-35f568c0c178"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"RandomGraph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"5", ",", "6"}], "}"}], ",", 
+    RowBox[{"DirectedEdges", "\[Rule]", "True"}], ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"95e31f4c-08b7-4f47-aa7a-7dd0fbe08c78"],
+
+Cell[BoxData[
+ RowBox[{"IGAdjacencyList", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"058222b6-594e-498c-8a4f-a922fbfb6438"],
+
+Cell[BoxData[
+ RowBox[{"IGAdjacencyGraph", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"4d9aa68c-f0cd-4814-9a75-583482c53dc3"],
+
+Cell["\<\
+The representation of combinatorial embeddings used by IGraph/M is also a \
+valid adjacency list.\
+\>", "Text",ExpressionUUID->"96c24028-ddac-4201-8ae2-e832ec578b93"],
+
+Cell[BoxData[
+ RowBox[{"IGPlanarEmbedding", "@", 
+  RowBox[{
+  "CompleteGraph", "[", "4", 
+   "]"}]}]], "Input",ExpressionUUID->"f0545470-852d-47f3-a3ff-219257d1127b"],
+
+Cell[BoxData[
+ RowBox[{"IGAdjacencyGraph", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"8cec51c3-1705-4382-b278-bc47c0d08e5c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["IGZeroDiagonal", \
 "Subsubsection",ExpressionUUID->"d0d3f3c6-6b18-4e99-9920-e21e098defeb"],
 
@@ -38463,8 +38558,8 @@ Cell[BoxData[
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{767, 721},
-WindowMargins->{{318, Automatic}, {Automatic, 42}},
+WindowSize->{956, 716},
+WindowMargins->{{Automatic, 166}, {Automatic, 42}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
