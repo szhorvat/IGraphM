@@ -82,6 +82,13 @@ ruleQ[_Rule | _RuleDelayed] = True;
 ruleQ[_] = False;
 
 
+partitionRagged::usage = "partitionRagged[list, lengths] partitions list into parts of the given lengths.";
+If[$VersionNumber >= 11.2,
+  partitionRagged = TakeList,
+  partitionRagged[v_List, l_?VectorQ] := MapThread[Take[v, {#1, #2}] &, Module[{a = Accumulate[l]}, {a - l + 1, a}]]
+]
+
+
 (*
 	Numeric codes are for certain special types of completions. Zero means 'don't complete':
 

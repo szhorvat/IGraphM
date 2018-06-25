@@ -1431,8 +1431,6 @@ igToWeightedGraphWithNames[ig_, verts_] :=
 igVertexNames[graph_][indices_] := Part[VertexList[graph], indices]
 
 
-partitionRagged[v_List, l_?VectorQ] := MapThread[Take[v, {#1, #2}] &, Module[{a = Accumulate[l]}, {a - l + 1, a}]]
-
 (* Unpacks an index list representing vertex sets from an integer array,
    To be used in conjunction with IG::packListIntoIntTensor() *)
 igUnpackVertexSet[graph_?GraphQ][packed_] := igUnpackSetsHelper[VertexList[graph]][packed]
