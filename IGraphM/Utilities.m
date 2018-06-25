@@ -113,6 +113,11 @@ IGAdjacencyList::usage =
     "IGAdjacencyList[graph, \"In\"] returns the adjacency list of the reverse of a directed graph.\n" <>
     "IGAdjacencyList[graph, \"All\"] considers both incoming and outgoing edges.";
 
+IGAdjacencyGraph::usage =
+    "IGAdjacencyGraph[matrix] creates a graph from the given adjacency matrix.\n" <>
+    "IGAdjacencyGraph[vertices, matrix] creates a graph with the given vertices from an adjacency matrix.\n" <>
+    "IGAdjacencyGraph[adjList] creates a graph from an association representing an adjacency list.";
+
 Begin["`Private`"];
 
 (* Common definitions *)
@@ -174,6 +179,51 @@ IGAdjacencyList[graph_?GraphQ, "In"] :=
     igAdjacencyListSimple[VertexList[graph], Transpose@AdjacencyMatrix[graph]]
 IGAdjacencyList[graph_?GraphQ, "All"] :=
     IGAdjacencyList[graph, "Out"] (* directed graphs were caught earlier, so this applies only to undirected ones *)
+
+
+IGAdjacencyGraph::dir = "The adjacency list does not describe an undirected graph. Ignoring DirectedEdges -> True.";
+SyntaxInformation[IGAdjacencyGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+Options[IGAdjacencyGraph] = { DirectedEdges -> Automatic };
+IGAdjacencyGraph[am_?MatrixQ, opt : OptionsPattern[]] :=
+    With[{graph = AdjacencyGraph[am, opt, OptionValue[DirectedEdges]]},
+      If[GraphQ[graph], graph, $Failed]
+    ]
+IGAdjacencyGraph[vertices_, am_?MatrixQ, opt : OptionsPattern[]] :=
+    With[{graph = AdjacencyGraph[vertices, am, opt, OptionValue[DirectedEdges]]},
+      If[GraphQ[graph], graph, $Failed]
+    ]
+expr : IGAdjacencyGraph[adjList_?AssociationQ, opt : OptionsPattern[{IGAdjacencyGraph, Graph}]] :=
+    If[SubsetQ[Keys[adjList], Catenate[adjList]],
+      Module[{sa, ind, symm},
+        With[{sao = SystemOptions["SparseArrayOptions"]},
+          Internal`WithLocalSettings[
+            SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> Total]
+            ,
+            ind = AssociationThread[Keys[adjList], Range@Length[adjList]];
+            sa =
+                SparseArray[
+                  Transpose[{
+                    Join @@ MapThread[ConstantArray, {Range@Length[adjList], Length /@ Values[adjList]}],
+                    Lookup[ind, Catenate[adjList]]
+                  }] -> 1, Length[adjList] {1, 1}
+                ];
+            symm = Not@TrueQ@OptionValue[DirectedEdges] && SymmetricMatrixQ[sa];
+            If[OptionValue[DirectedEdges] === False && Not[symm],
+              Message[IGAdjacencyGraph::dir]
+            ];
+            If[symm,
+              Graph[Keys[adjList], {Null, sa}, opt],
+              Graph[Keys[adjList], {sa, Null}, opt]
+            ]
+            ,
+            SetSystemOptions[sao]
+          ]
+        ]
+      ]
+      ,
+      Message[IGAdjacencyGraph::inv, HoldForm@OutputForm[expr], adjList, "adjacency list"];
+      $Failed
+    ]
 
 
 SyntaxInformation[IGGiantComponent] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
