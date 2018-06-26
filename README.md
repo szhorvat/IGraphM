@@ -7,29 +7,40 @@ The IGraph/M package provides a [_Mathematica_](http://www.wolfram.com/mathemati
 
 ## Installation
 
-First, note that the system requirements are _Mathematica_ 10.0 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
+First, note that the system requirements are _Mathematica_ 10.0.2 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
 
-The simplest way to install automatically from the internet is to evaluate the following commands in Mathematica:
-
-```mathematica
-Needs["PacletManager`"];
-PacletInstall["IGraphM", "Site" -> "http://raw.githubusercontent.com/paclets/PacletServer/master"]
-```
-
-To update from an older version, use:
+The simplest way to install automatically from the internet is to use the following function:
 
 ```mathematica
-Needs["PacletManager`"];
-PacletUpdate["IGraphM", "Site" -> "http://raw.githubusercontent.com/paclets/PacletServer/master"]
+updateIGraphM[] :=
+  Module[{json, download, target, msg},
+    Check[
+      json = Import["https://api.github.com/repos/szhorvat/IGraphM/releases", "JSON"];
+      download = Lookup[First@Lookup[First[json], "assets"], "browser_download_url"];
+      msg = "Downloading IGraph/M " <> Lookup[First[json], "tag_name"] <> " ...";
+      target = FileNameJoin[{CreateDirectory[], "IGraphM.paclet"}];
+      If[$Notebooks,
+        PrintTemporary@Labeled[ProgressIndicator[Appearance -> "Necklace"], msg, Right],
+        Print[msg]
+      ];
+      URLSave[download, target]
+      ,
+      Return[$Failed]
+    ];
+    If[FileExistsQ[target], PacletManager`PacletInstall[target], $Failed]
+  ]
 ```
+
+To automatically download and install the latest version of IGraph/M, evaluate the above definition, then run `updateIGraphM[]`.
+
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.99.1.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/MaTeX/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.100.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.3.99.1.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.3.100.paclet"]
 ```
 
 IGraph/M requires Mathematica 10.0.2 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
@@ -130,12 +141,14 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
  - New deterministic graph generators: `IGKautzGraph`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGKaryTree`, `IGSymmetricTree`, `IGBetheLattice`, `IGTriangularLattice`.
  - New random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`, `IGTreeGame`, `IGErdosRenyiGameGNM`, `IGErdosRenyiGameGNP`.
  - New weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`.
- - New graph colouring functions: `IGVertexColoring`, `IGEdgeColoring`, `IGKVertexColoring`, `IGKEdgeColoring`, `IGMinimumVertexColoring`, `IGMinimumEdgeColoring`, `IGChromaticNumber`, `IGChromaticIndex`.
+ - New graph colouring functions: `IGVertexColoring`, `IGEdgeColoring`, `IGKVertexColoring`, `IGKEdgeColoring`, `IGMinimumVertexColoring`, `IGMinimumEdgeColoring`, `IGChromaticNumber`, `IGChromaticIndex`, `IGVertexColoringQ`.
+ - New functions for clique cover: `IGCliqueCover`, `IGCliqueCoverNumber`.
  - New functions for mesh/graph conversion: `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`.
  - New functions for lattice generation: `IGLatticeMesh`, `IGTriangularLattice`.
  - New functions for centralization: `IGDegreeCentralization`, `IGBetweennessCentralization`, `IGClosenessCentralization`, `IGEigenvectorCentralization`.
  - Community detection: several functions support the `"ClusterCount"` option now; added `IGCommunitiesFluid`.
  - Added `IGIndexEdgeList` for retrieving the edge list of a graph in terms of vertex indices. This function is very fast and returns a packed array. It facilitates the efficient implementation of graph processing functions in pure Mathematica code, or interfacing with C libraries.
+ - Functions for working with planar graphs: `IGPlanarQ`, `IGMaximalPlanarQ`, `IGKurtowskiEdges`, `IGFaces`, `IGDualGraph`, `IGEmbeddingQ`, `IGPlanarEmbedding`, `IGCoordinatesToEmbedding`, `IGEmbeddingToCoordinates`, `IGLayoutPlanar`, `IGLayoutTutte`.
  - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGTriangleFreeQ`, `IGSelfComplementaryQ`, `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGUnfoldTree`, `IGTreeQ`, `IGTreelikeComponents`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGBipartiteProjections`, `IGNeighborhoodSize`, `IGCoreness`, `IGVoronoiCells`, `IGMinimalSeparators`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGJointDegreeMatrix`, `IGMycielskian`, `IGSmoothen`, `IGHomeomorphicQ`.
  - Updates:
     * `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges (instead of both).
@@ -149,11 +162,12 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
     * `IGBlissCanonicalGraph` will now include include vertex colours into its output when appropriate, encoded as the `"Color"` vertex property.
     * `IGRandomWalk` now supports edge weights and the `EdgeWeights` option. Use `EdgeWeights -> None` to ignore weights, and thus restore the previous behaviour.
  - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
+ - Removed graphlet functions due to [long-time unresolved bug in igraph core](https://github.com/igraph/igraph/issues/869).
  - New utility functions:
     * Weighted graphs: `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
     * Easier property handling and graph styling:  `IGVertexProp`, `IGEdgeProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
     * Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
-    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTake`, `IGZeroDiagonal`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGGiantComponent`, `IGDisjointUnion`.
+    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTake`, `IGZeroDiagonal`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGGiantComponent`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`.
  - Improved compatibility with Mathematica 11.2, handling of `TwoWayRule` as an edge specification.
  - Bug fixes, performance improvements, documentation updates, and polish.
 
