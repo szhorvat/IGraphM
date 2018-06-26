@@ -30632,6 +30632,240 @@ Cell[BoxData[
      RowBox[{"IGChromaticNumber", "[", "#", "]"}]}], "&"}]}], 
   "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"3d0e3be7-8065-45f3-8a9e-d0af574fa2f9"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Utility functions", \
+"Subsection",ExpressionUUID->"94cd5399-89e8-4708-86af-bb6c8ea5fb0b"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGVertexColoringQ"}]], \
+"Input",ExpressionUUID->"902bf7ad-bd22-4054-b195-f8201b817da1"],
+
+Cell[TextData[{
+ Cell[BoxData["IGVertexColoringQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "fad79c91-f2cc-4a76-a76f-a4129baa5602"],
+ " checks whether neighbouring vertices of a graph are assigned different \
+colours."
+}], "Text",ExpressionUUID->"decfdf6b-d6d9-471d-9251-f4a353ab331d"],
+
+Cell[TextData[{
+ "The colours may be given as a list, with the same ordering as ",
+ Cell[BoxData[
+  RowBox[{"VertexList", "[", "graph", "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "769a7259-286c-4664-90db-20b4705ab418"],
+ "."
+}], "Text",ExpressionUUID->"ded559e4-28ee-41d7-a027-4a56a395335e"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexColoringQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, 
+         SparseArray[
+         Automatic, {3, 3}, 0, {
+          1, {{0, 2, 4, 6}, {{2}, {3}, {1}, {3}, {1}, {2}}}, Pattern}]}, {
+        GraphLayout -> "CircularEmbedding", VertexLabels -> {
+           Placed["Name", Center]}, VertexSize -> {Large}}]]}, 
+      TagBox[GraphicsGroupBox[{
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], 
+           ArrowBox[{{-0.8660254037844384, -0.4999999999999994}, {
+            0.8660254037844389, -0.5000000000000012}}, 0.34641016151377535`]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{-0.8660254037844384, -0.4999999999999994}, {
+            1.8369701987210297`*^-16, 1.}}, 0.34641016151377535`]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.8660254037844389, -0.5000000000000012}, {
+            1.8369701987210297`*^-16, 1.}}, 0.34641016151377535`]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+          0.7]}], {
+           DiskBox[{-0.8660254037844384, -0.4999999999999994}, 
+            0.34641016151377535], 
+           InsetBox["1", {-0.8660254037844384, -0.4999999999999994},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0.8660254037844389, -0.5000000000000012}, 
+            0.34641016151377535], 
+           InsetBox["2", {0.8660254037844389, -0.5000000000000012},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{1.8369701987210297*^-16, 1.}, 0.34641016151377535], 
+           InsetBox["3", {1.8369701987210297*^-16, 1.},
+            BaseStyle->"Graphics"]}}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{73.8671875, Automatic}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"ef398216-37d5-4c75-9b8b-afc711376599"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexColoringQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, 
+         SparseArray[
+         Automatic, {3, 3}, 0, {
+          1, {{0, 2, 4, 6}, {{2}, {3}, {1}, {3}, {1}, {2}}}, Pattern}]}, {
+        GraphLayout -> "CircularEmbedding", VertexLabels -> {
+           Placed["Name", Center]}, VertexSize -> {Large}}]]}, 
+      TagBox[GraphicsGroupBox[{
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], 
+           ArrowBox[{{-0.8660254037844384, -0.4999999999999994}, {
+            0.8660254037844389, -0.5000000000000012}}, 0.34641016151377535`]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{-0.8660254037844384, -0.4999999999999994}, {
+            1.8369701987210297`*^-16, 1.}}, 0.34641016151377535`]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.8660254037844389, -0.5000000000000012}, {
+            1.8369701987210297`*^-16, 1.}}, 0.34641016151377535`]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+          0.7]}], {
+           DiskBox[{-0.8660254037844384, -0.4999999999999994}, 
+            0.34641016151377535], 
+           InsetBox["1", {-0.8660254037844384, -0.4999999999999994},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0.8660254037844389, -0.5000000000000012}, 
+            0.34641016151377535], 
+           InsetBox["2", {0.8660254037844389, -0.5000000000000012},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{1.8369701987210297*^-16, 1.}, 0.34641016151377535], 
+           InsetBox["3", {1.8369701987210297*^-16, 1.},
+            BaseStyle->"Graphics"]}}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{73.8671875, Automatic}], ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "2"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"38caac36-2b67-4fdc-8b12-462d11293c66"],
+
+Cell["\<\
+The colours may also be given as an association from vertices to colours.\
+\>", "Text",ExpressionUUID->"38b52390-6e2c-48db-947e-2baa7f3dff46"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexColoringQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, 
+         SparseArray[
+         Automatic, {3, 3}, 0, {
+          1, {{0, 2, 4, 6}, {{2}, {3}, {1}, {3}, {1}, {2}}}, Pattern}]}, {
+        GraphLayout -> "CircularEmbedding", VertexLabels -> {
+           Placed["Name", Center]}, VertexSize -> {Large}}]]}, 
+      TagBox[GraphicsGroupBox[{
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], 
+           ArrowBox[{{-0.8660254037844384, -0.4999999999999994}, {
+            0.8660254037844389, -0.5000000000000012}}, 0.34641016151377535`]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{-0.8660254037844384, -0.4999999999999994}, {
+            1.8369701987210297`*^-16, 1.}}, 0.34641016151377535`]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.8660254037844389, -0.5000000000000012}, {
+            1.8369701987210297`*^-16, 1.}}, 0.34641016151377535`]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+          0.7]}], {
+           DiskBox[{-0.8660254037844384, -0.4999999999999994}, 
+            0.34641016151377535], 
+           InsetBox["1", {-0.8660254037844384, -0.4999999999999994},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0.8660254037844389, -0.5000000000000012}, 
+            0.34641016151377535], 
+           InsetBox["2", {0.8660254037844389, -0.5000000000000012},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{1.8369701987210297*^-16, 1.}, 0.34641016151377535], 
+           InsetBox["3", {1.8369701987210297*^-16, 1.},
+            BaseStyle->"Graphics"]}}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{73.8671875, Automatic}], ",", 
+   RowBox[{"\[LeftAssociation]", 
+    RowBox[{
+     RowBox[{"1", "\[Rule]", "3"}], ",", 
+     RowBox[{"2", "\[Rule]", "2"}], ",", 
+     RowBox[{"3", "\[Rule]", "1"}]}], "\[RightAssociation]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"feb08f57-9057-48bb-9f8e-fb33ef69e5f6"],
+
+Cell["\<\
+Any expression may be used for the colours, not only integers.\
+\>", "Text",ExpressionUUID->"3ae4f5e7-34ea-47e1-afce-dccb0e8a78eb"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexColoringQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, 
+         SparseArray[
+         Automatic, {3, 3}, 0, {
+          1, {{0, 2, 4, 6}, {{2}, {3}, {1}, {3}, {1}, {2}}}, Pattern}]}, {
+        GraphLayout -> "CircularEmbedding", VertexLabels -> {
+           Placed["Name", Center]}, VertexSize -> {Large}}]]}, 
+      TagBox[GraphicsGroupBox[{
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], 
+           ArrowBox[{{-0.8660254037844384, -0.4999999999999994}, {
+            0.8660254037844389, -0.5000000000000012}}, 0.34641016151377535`]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{-0.8660254037844384, -0.4999999999999994}, {
+            1.8369701987210297`*^-16, 1.}}, 0.34641016151377535`]}, 
+          {Arrowheads[0.], 
+           ArrowBox[{{0.8660254037844389, -0.5000000000000012}, {
+            1.8369701987210297`*^-16, 1.}}, 0.34641016151377535`]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+          0.7]}], {
+           DiskBox[{-0.8660254037844384, -0.4999999999999994}, 
+            0.34641016151377535], 
+           InsetBox["1", {-0.8660254037844384, -0.4999999999999994},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0.8660254037844389, -0.5000000000000012}, 
+            0.34641016151377535], 
+           InsetBox["2", {0.8660254037844389, -0.5000000000000012},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{1.8369701987210297*^-16, 1.}, 0.34641016151377535], 
+           InsetBox["3", {1.8369701987210297*^-16, 1.},
+            BaseStyle->"Graphics"]}}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{73.8671875, Automatic}], ",", 
+   RowBox[{"\[LeftAssociation]", 
+    RowBox[{
+     RowBox[{"1", "\[Rule]", "\"\<a\>\""}], ",", 
+     RowBox[{"2", "\[Rule]", "\"\<b\>\""}], ",", 
+     RowBox[{"3", "\[Rule]", "\"\<c\>\""}]}], "\[RightAssociation]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"ae232dc9-43d1-402e-a967-9cec527ac0dd"]
 }, Closed]]
 }, Closed]],
 
@@ -31126,7 +31360,6 @@ Cell[BoxData[{
           AspectRatio->1,
           DefaultBaseStyle->"ColorSwatchGraphics",
           Frame->True,
-          
           FrameStyle->RGBColor[
            0.5333333333333334, 0.4, 0.33333333333333337`, 1.],
           FrameTicks->None,
@@ -32700,9 +32933,8 @@ Cell[BoxData[
 Cell[TextData[{
  "The representation of a combinatorial embedding is also a valid adjacency \
 list, thus it can be easily converted back to an undirected graph using ",
- Cell[BoxData["IGAdjacencyGraph"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "bb8eb073-98ef-4a09-b357-28e112b9e954"],
+ Cell[BoxData[
+ "IGAdjacencyGraph"],ExpressionUUID->"bb8eb073-98ef-4a09-b357-28e112b9e954"],
  "."
 }], "Text",ExpressionUUID->"7968cd43-2fea-47af-8691-b808011a9f33"],
 
@@ -37666,19 +37898,15 @@ Cell[BoxData[
 "Input",ExpressionUUID->"63a44dd4-cff5-4e69-a6e8-2b1085d31ab5"],
 
 Cell[TextData[{
- Cell[BoxData["IGAdjacencyGraph"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "4949aeb7-979f-4a64-b1bb-7c9587f7c99d"],
+ Cell[BoxData[
+ "IGAdjacencyGraph"],ExpressionUUID->"4949aeb7-979f-4a64-b1bb-7c9587f7c99d"],
  " can convert an adjacency matrix or an adjacency list representation of a \
 graph into a ",
- Cell[BoxData["Graph"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "a13a65e7-bbaf-44cf-8bde-7179c5d3cbf8"],
+ Cell[BoxData["Graph"],ExpressionUUID->"a13a65e7-bbaf-44cf-8bde-7179c5d3cbf8"],
  " expression. When given a matrix, it behaves equivalently to the built-in \
 function ",
- Cell[BoxData["AdjacencyGraph"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "d8f8edc4-0b9b-4617-9d1f-125e4d7066e9"],
+ Cell[BoxData[
+ "AdjacencyGraph"],ExpressionUUID->"d8f8edc4-0b9b-4617-9d1f-125e4d7066e9"],
  "."
 }], "Text",ExpressionUUID->"c8d1e89f-11f5-45ef-85ec-252beb1cc65f"],
 
@@ -37687,19 +37915,16 @@ Cell["The available options are:", \
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "9102a4e6-3825-4c3f-a6f1-cd6a54e02edf"],
  " and ",
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],ExpressionUUID->
   "a00960e0-aba8-4d8b-af03-129444a7f884"],
  " create a directed or undirected graph, respectively. The default setting \
 is ",
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],ExpressionUUID->
   "d7df1826-1146-44d5-ba7d-518df75ee985"],
  ", which creates an undirected graph when this is consistent with the given \
 adjacency matrix or adjacency list."
@@ -37707,9 +37932,7 @@ adjacency matrix or adjacency list."
 
 Cell[TextData[{
  "Compute the adjacency list of a graph, then convert it back to a ",
- Cell[BoxData["Graph"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "b5943bf7-0a7c-474e-84f7-7c238fab010c"],
+ Cell[BoxData["Graph"],ExpressionUUID->"b5943bf7-0a7c-474e-84f7-7c238fab010c"],
  " expression."
 }], "Text",ExpressionUUID->"92f5b7e6-8b99-41fe-8591-35f568c0c178"],
 
