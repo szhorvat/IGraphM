@@ -4869,8 +4869,9 @@ IGChromaticIndex[graph_?igGraphQ] :=
     catch@Max[check@IGMinimumEdgeColoring[graph], 0]
 
 
+SyntaxInformation[IGVertexColoringQ] = {"ArgumentsPattern" -> {_, _}};
 IGVertexColoringQ[graph_?igGraphQ, col_List] /; VertexCount[graph] == Length[col] :=
-  UnsameQ @@ Transpose@Partition[
+  And @@ UnsameQ @@@ Partition[
     col[[ Flatten@IGIndexEdgeList[graph] ]],
     2
   ]
