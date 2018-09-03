@@ -2012,6 +2012,7 @@ addCompletion[IGTreeQ, {0, {"In", "Out", "All"}}]
 SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
 IGGraphicalQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"erdosGallai"[degrees] (* use fast custom implementation instead of igraph *)
 IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"graphicalQ"[outdeg, indeg]
+IGGraphicalQ[___] := False
 
 SyntaxInformation[IGBipartiteQ] = {"ArgumentsPattern" -> {_, _.}};
 IGBipartiteQ::bdprt = "`` are not two disjoint subsets of the graph vertices."
