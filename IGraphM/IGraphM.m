@@ -104,7 +104,7 @@ IGClosenessEstimate::usage =
 
 IGPageRank::usage =
     "IGPageRank[graph] gives a list of PageRank centralities for the vertices of the graph.\n" <>
-    "IGPageRank[graph, damping] gives a list of PageRank centralities for the vertices of the graph using damping factor damping.";
+    "IGPageRank[graph, damping] gives a list of PageRank centralities for the vertices of the graph using the given damping factor. The default damping factor is 0.85.";
 
 IGPersonalizedPageRank::usage =
     "IGPersonalizedPageRank[graph, reset] gives a list of personalized PageRank centralities for the vertices of the graph.\n" <>
