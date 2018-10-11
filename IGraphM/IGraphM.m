@@ -555,7 +555,7 @@ IGMeshCellAdjacencyGraph::usage =
 
 IGIndexEdgeList::usage = "IGIndexEdgeList[graph] returns the edge list of graph in terms of vertex indices, as a packed array.";
 
-IGDisjointUnion::usage = "IGDisjointUnion[{g1, g2, \[Ellipsis]}] computes a disjoint union of the graphs. The vertices of the result will be labelled with consecutive integers and all properties will be discarded.";
+IGDisjointUnion::usage = "IGDisjointUnion[{g1, g2, \[Ellipsis]}] computes a disjoint union of the graphs. Each vertex of the result will be a pair consisting of the index of the graph originally containing it and the original name of the vertex.";
 
 IGWeightedSimpleGraph::usage =
     "IGWeightedSimpleGraph[graph] combines parallel edges by adding their weights. If graph is not weighted, the resulting weights will be the edge multiplicities of graph.\n" <>
