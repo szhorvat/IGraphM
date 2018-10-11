@@ -252,8 +252,8 @@ IGReverseGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
 
 Options[IGSimpleGraph] = { SelfLoops -> False, "MultipleEdges" -> False };
 SyntaxInformation[IGSimpleGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSimpleGraph, Graph]};
-IGSimpleGraph[g_?SimpleGraphQ, opt : OptionsPattern[]] := applyGraphOpt[opt][g]
-IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
+IGSimpleGraph[g_?SimpleGraphQ, opt : OptionsPattern[{IGSimpleGraph, Graph}]] := applyGraphOpt[opt][g]
+IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[{IGSimpleGraph, Graph}]] :=
     Module[{self = Not@TrueQ@OptionValue[SelfLoops], multi = Not@TrueQ@OptionValue["MultipleEdges"]},
       applyGraphOpt[opt]@Which[
         self && multi, SimpleGraph[g],
