@@ -545,6 +545,9 @@ IGCliqueCover::usage = "IGCliqueCover[graph] finds a minimum clique cover of gra
 
 IGCliqueCoverNumber::usage = "IGCliqueCoverNumber[graphs] finds the clique vertex cover number of graph.";
 
+IGBetaSkeleton::usage = "IGBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
+IGRelativeNeighborhoodGraph::usage = "IGRelativeNeigborhoodGraph[points] computes the relative neighborhood graph of the given points.";
+
 IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a weighted graph.";
 IGMeshCellAdjacencyMatrix::usage =
     "IGMeshCellAdjacencyMatrix[mesh, d] returns the adjacency matrix of d-dimensional cells in mesh.\n" <>
@@ -4919,6 +4922,83 @@ expr : IGCoreness[graph_?igGraphQ, mode_ : "All"] :=
       Round@check@ig@"coreness"[Lookup[corenessModes, mode, Message[IGCoreness::inv, HoldForm@OutputForm[expr], mode, "parameter"]; throw[$Failed]]]
     ]
 addCompletion[IGCoreness, {0, {"In", "Out", "All"}}]
+
+
+(***** Mesh processing *****)
+
+(* The following beta-skeleton computation is based on the implementation of Henrik Schumacher
+   https://mathematica.stackexchange.com/a/183391/12 *)
+
+IGBetaSkeleton::dim = "Beta skeleton computation is currently only supported `1`.";
+
+(* beta >= 1 *)
+igBetaSkeletonEdges1[pts_, beta_] :=
+    Module[{mesh, edges, edgeLengths, p, q, r, centres1, centres2},
+      If[Not@MatchQ[Dimensions[pts], {_, 2|3}],
+        Message[IGBetaSkeleton::dim, "in 2 and 3 dimensions for \[Beta] >= 1"];
+        throw[$Failed]
+      ];
+
+      mesh = DelaunayMesh[pts];
+      edges = MeshCells[mesh, 1, "Multicells" -> True][[1,1]];
+      edgeLengths = PropertyValue[{mesh, 1}, MeshCellMeasure];
+      {p, q} = pts[[#]]& /@ Transpose[edges];
+
+      r = 0.5 beta;
+
+      centres1 = p + (r-1) (p-q);
+      centres2 = q + (r-1) (q-p);
+
+      {edges , edgeLengths, centres1, centres2, r}
+    ]
+
+(* 0 < beta < 1 *)
+igBetaSkeletonEdges2[pts_, beta_] :=
+    Module[{edges, edgeLengths, p, q, r, centres1, centres2},
+      If[Not@MatchQ[Dimensions[pts], {_, 2}],
+        Message[IGBetaSkeleton::dim, "in 2 dimensions for \[Beta] < 1"];
+        throw[$Failed]
+      ];
+
+      edges = Subsets[Range@Length[pts], {2}];
+      {p, q} = pts[[#]]& /@ Transpose[edges];
+      edgeLengths =  Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
+
+      r = 0.5 / beta;
+
+      With[{mid = 0.5 (p+q), perp = Sqrt[r^2 - 0.25] RotationTransform[Pi/2][p-q]},
+        centres1 = mid + perp;
+        centres2 = mid - perp;
+      ];
+
+      {edges , edgeLengths, centres1, centres2, r}
+    ]
+
+SyntaxInformation[IGBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGBetaSkeleton[pts_?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
+    catch@Module[{nf, edges, edgeLengths, centres1, centres2, r},
+
+      {edges , edgeLengths, centres1, centres2, r} = If[beta >= 1, igBetaSkeletonEdges1, igBetaSkeletonEdges2][pts, beta];
+
+      nf = Nearest[pts -> Automatic];
+
+      edges = Pick[
+        edges,
+        MapThread[
+          Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
+          {centres1, centres2, r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon)}
+        ],
+        2
+      ];
+
+      Graph[Range@Length[pts], edges, opt, VertexCoordinates -> pts]
+    ]
+
+
+SyntaxInformation[IGRelativeNeighborhoodGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGRelativeNeighborhoodGraph[points_?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
+    IGBetaSkeleton[points, 2, opt]
+
 
 (***** Converting meshes to graphs *****)
 
