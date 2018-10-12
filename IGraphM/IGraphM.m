@@ -5015,7 +5015,7 @@ meshQ[_] := False
 IGMeshGraph::noprop = "The edge property `1` is not present in the mesh.";
 
 Options[IGMeshGraph] = { EdgeWeight -> MeshCellMeasure };
-SyntaxInformation[IGMeshGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+SyntaxInformation[IGMeshGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGMeshGraph, Graph]};
 IGMeshGraph[mesh_?meshQ, opt : OptionsPattern[{IGMeshGraph, Graph}]] :=
     Module[{edgeWeightRule, ew = OptionValue[EdgeWeight], pv},
       edgeWeightRule = Switch[ew,
