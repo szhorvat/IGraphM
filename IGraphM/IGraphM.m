@@ -1082,11 +1082,38 @@ template = LTemplate["IGraphM",
 ];
 
 
-(***** Compilation, loading and initialization *****)
+(***** Load build settings, if present *****)
 
+(* $buildSettings is normally defined in the build settings files.
+   When no build settings file is loaded, it must be set to None. *)
 $buildSettings = None;
 If[FileExistsQ[$buildSettingsFile], Get[$buildSettingsFile] ]
 
+
+(***** GetInfo for troubleshooting *****)
+
+(* GetInfo[] must be defined before the LTemplate functions are loaded because package loading is aborted
+   on load failure. We want to be able to get debugging information even in this situation. *)
+GetInfo[] :=
+    Module[{res = "", igver, osver},
+      res = StringJoin[res, "Mathematica version: \n", System`$Version, "; Release number: ", ToString[$ReleaseNumber], "\n\n"];
+      res = StringJoin[res, "Package version: \n", $packageVersion, "\n\n"];
+      res = StringJoin[res, "Package location: \n", ToString@FindFile["IGraphM`"], "\n\n"];
+      res = StringJoin[res, "Library location: \n", ToString@FindLibrary["IGraphM"], "\n\n"];
+      igver = Quiet@IGVersion[];
+      res = StringJoin[res, "IGVersion[]: \n", If[StringQ[igver], igver, "Failed."], "\n\n"];
+      res = StringJoin[res, "Build settings: \n", ToString[$buildSettings], "\n\n"];
+      osver = Quiet@StringTrim@Switch[$OperatingSystem,
+        "MacOSX", Import["!sw_vers", "String"],
+        "Unix", Import["!uname -a", "String"] <> Import["!lsb_release -a 2>/dev/null", "String"],
+        "Windows", Import["!cmd /C ver", "String"]
+      ];
+      res = StringJoin[res, "Operating system: \n", If[StringQ[osver], osver, "Failed."]]; (* no newline after last item *)
+      res
+    ]
+
+
+(***** Compilation, loading and initialization *****)
 
 (* Add $libraryDirectory to $LibraryPath in case package is not installed in Applications. *)
 If[Not@MemberQ[$LibraryPath, $libraryDirectory],
@@ -1150,27 +1177,6 @@ If[LoadIGraphM[] === $Failed,
     Print["Evaluate IGDocumentation[] to get started."]
   ]
 ]
-
-
-(***** GetInfo for troubleshooting *****)
-
-GetInfo[] :=
-    Module[{res = "", igver, osver},
-      res = StringJoin[res, "Mathematica version: \n", System`$Version, "; Release number: ", ToString[$ReleaseNumber], "\n\n"];
-      res = StringJoin[res, "Package version: \n", $packageVersion, "\n\n"];
-      res = StringJoin[res, "Package location: \n", ToString@FindFile["IGraphM`"], "\n\n"];
-      res = StringJoin[res, "Library location: \n", ToString@FindLibrary["IGraphM"], "\n\n"];
-      igver = Quiet@IGVersion[];
-      res = StringJoin[res, "IGVersion[]: \n", If[StringQ[igver], igver, "Failed."], "\n\n"];
-      res = StringJoin[res, "Build settings: \n", ToString[$buildSettings], "\n\n"];
-      osver = Quiet@StringTrim@Switch[$OperatingSystem,
-        "MacOSX", Import["!sw_vers", "String"],
-        "Unix", Import["!uname -a", "String"] <> Import["!lsb_release -a 2>/dev/null", "String"],
-        "Windows", Import["!cmd /C ver", "String"]
-      ];
-      res = StringJoin[res, "Operating system: \n", If[StringQ[osver], osver, "Failed."]]; (* no newline after last item *)
-      res
-    ]
 
 
 (***** General messages *****)
