@@ -545,8 +545,10 @@ IGCliqueCover::usage = "IGCliqueCover[graph] finds a minimum clique cover of gra
 
 IGCliqueCoverNumber::usage = "IGCliqueCoverNumber[graphs] finds the clique vertex cover number of graph.";
 
-IGBetaSkeleton::usage = "IGBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
-IGRelativeNeighborhoodGraph::usage = "IGRelativeNeigborhoodGraph[points] computes the relative neighborhood graph of the given points.";
+IGLuneBetaSkeleton::usage = "IGLuneBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
+IGCircleBetaSkeleton::usage = "IGCircleBetaSkeleton[points, beta] computes the circle-based beta skeleton of the given points.";
+IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighborhood graph of the given points.";
+IGGabrielGraph::usage = "IGGabrielGraph[points] computes the Gabriel graph of the given points.";
 
 IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a weighted graph.";
 IGMeshCellAdjacencyMatrix::usage =
@@ -4935,40 +4937,124 @@ addCompletion[IGCoreness, {0, {"In", "Out", "All"}}]
 (* The following beta-skeleton computation is based on the implementation of Henrik Schumacher
    https://mathematica.stackexchange.com/a/183391/12 *)
 
-IGBetaSkeleton::dim = "Beta skeleton computation is currently only supported `1`.";
+(* Notes:
 
-(* beta >= 1 *)
-igBetaSkeletonEdges1[pts_, beta_] :=
-    Module[{mesh, edges, edgeLengths, p, q, r, centres1, centres2},
-      If[Not@MatchQ[Dimensions[pts], {_, 2|3}],
-        Message[IGBetaSkeleton::dim, "in 2 and 3 dimensions for \[Beta] >= 1"];
+   - The circle-based and lune-based beta skeletons are distinct.
+   - For beta <= 1, the two definitions coincide.
+   - For beta >= 1, the circle-based beta skeleton is a subgraph of the lune-based beta skeleton,
+      which is a subgraph of the Gabriel graph, which is a subgraph of the Delaunay graph.
+   - For beta = 1, the beta skeleton coincides with the Gabriel graph (either definition)
+   - For beta = 2, the lune-based beta skeleton coincides with the relative neighborhood graph
+ *)
+
+IGraphM::bsdim  = "Beta skeleton computation is only supported in 2 dimensions.";
+IGraphM::bsdupl = "Duplicate points must be removed before beta skeleton computations."
+
+betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
+    Module[{mesh, edges, edgeLengths, p, q},
+      If[Not@MatchQ[Dimensions[pts], {_,2}],
+        Message[IGraphM::bsdim];
         throw[$Failed]
       ];
-
       mesh = DelaunayMesh[pts];
-      edges = MeshCells[mesh, 1, "Multicells" -> True][[1,1]];
-      edgeLengths = PropertyValue[{mesh, 1}, MeshCellMeasure];
+      If[Head[mesh] === MeshRegion
+        ,
+        If[MeshCellCount[mesh, 0] =!= Length[pts],
+          Message[IGraphM::bsdupl];
+          throw[$Failed]
+        ];
+        edges = MeshCells[mesh, 1, "Multicells" -> True][[1, 1]];
+        edgeLengths = PropertyValue[{mesh, 1}, MeshCellMeasure];
+        {p, q} = pts[[#]]& /@ Transpose[edges];
+        ,
+        edges = Subsets[Range@Length[pts], {2}];
+        {p, q} = pts[[#]]& /@ Transpose[edges];
+        edgeLengths = Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
+      ];
+      {edges, edgeLengths, p, q}
+    ]
+
+betaSkeletonEdgeSuperset[pts_, beta_ /; beta < 1] :=
+    Module[{edges, edgeLengths, p, q},
+      If[Not@MatchQ[Dimensions[pts], {_,2}],
+        Message[IGraphM::bsdim];
+        throw[$Failed]
+      ];
+      edges = Subsets[Range@Length[pts], {2}];
       {p, q} = pts[[#]]& /@ Transpose[edges];
+      edgeLengths = Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
+      {edges, edgeLengths, p, q}
+    ]
+
+(* beta >= 1, lune-based *)
+igLuneBetaSkeletonEdges[pts_, beta_] :=
+    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
+      nf = Nearest[pts -> Automatic];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
 
       r = 0.5 beta;
 
       centres1 = p + (r-1) (p-q);
       centres2 = q + (r-1) (q-p);
 
-      {edges , edgeLengths, centres1, centres2, r}
+      Pick[
+        edges,
+        MapThread[
+          Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
+          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+        ],
+        0
+      ]
     ]
 
-(* 0 < beta < 1 *)
-igBetaSkeletonEdges2[pts_, beta_] :=
-    Module[{edges, edgeLengths, p, q, r, centres1, centres2},
-      If[Not@MatchQ[Dimensions[pts], {_, 2}],
-        Message[IGBetaSkeleton::dim, "in 2 dimensions for \[Beta] < 1"];
-        throw[$Failed]
+(* beta >= 1, circle-based *)
+igCircleBetaSkeletonEdges[pts_, beta_] :=
+    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
+      nf = Nearest[pts -> Automatic];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
+
+      r = 0.5 beta;
+
+      With[{mid = 0.5 (p+q), perp = Sqrt[r^2 - 0.25] RotationTransform[Pi/2][p-q]},
+        centres1 = mid + perp;
+        centres2 = mid - perp;
       ];
 
-      edges = Subsets[Range@Length[pts], {2}];
-      {p, q} = pts[[#]]& /@ Transpose[edges];
-      edgeLengths =  Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
+      Pick[
+        edges,
+        MapThread[
+          Function[{c1, c2, d}, Length@Union[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
+          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+        ],
+        0
+      ]
+    ]
+
+(* beta = 1, both lune and circle *)
+igGabrielGraphEdges[pts_] :=
+    Module[{nf, edges, edgeLengths, p, q},
+      nf = Nearest[pts -> Automatic];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 1];
+
+      Pick[
+        edges,
+        MapThread[
+          Function[{c, d}, Length@nf[c, {Infinity, d}]],
+          {(p+q)/2, 0.5 edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+        ],
+        0
+      ]
+    ]
+
+(* 0 < beta < 1, both lune and circle *)
+igBetaSkeletonEdges0[pts_, beta_] :=
+    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
+      nf = Nearest[pts -> Automatic];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
 
       r = 0.5 / beta;
 
@@ -4977,33 +5063,61 @@ igBetaSkeletonEdges2[pts_, beta_] :=
         centres2 = mid - perp;
       ];
 
-      {edges , edgeLengths, centres1, centres2, r}
-    ]
-
-SyntaxInformation[IGBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGBetaSkeleton[pts_?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
-    catch@Module[{nf, edges, edgeLengths, centres1, centres2, r},
-
-      {edges , edgeLengths, centres1, centres2, r} = If[beta >= 1, igBetaSkeletonEdges1, igBetaSkeletonEdges2][pts, beta];
-
-      nf = Nearest[pts -> Automatic];
-
-      edges = Pick[
+      Pick[
         edges,
         MapThread[
           Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
-          {centres1, centres2, r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon)}
+          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
         ],
-        2
-      ];
-
-      Graph[Range@Length[pts], edges, opt, VertexCoordinates -> pts]
+        0
+      ]
     ]
 
 
+igLuneBetaSkeleton[pts_, beta_, opt___] :=
+    catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
+      With[{
+          edges = Which[
+            beta  > 1, igLuneBetaSkeletonEdges[pts, beta],
+            beta == 1, igGabrielGraphEdges[pts],
+            beta  < 1, igBetaSkeletonEdges0[pts, beta]
+          ]
+        },
+        Graph[Range@Length[pts], edges, opt, VertexCoordinates -> pts]
+      ]
+    ]
+
+SyntaxInformation[IGLuneBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGLuneBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
+    igLuneBetaSkeleton[pts, beta, opt]
+
+
+igCircleBetaSkeleton[pts_, beta_, opt___] :=
+    catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
+      With[{
+          edges = Which[
+            beta >  1, igCircleBetaSkeletonEdges[pts, beta],
+            beta == 1, igGabrielGraphEdges[pts],
+            beta <  1, igBetaSkeletonEdges0[pts, beta]
+          ]
+        },
+        Graph[Range@Length[pts], edges, opt, VertexCoordinates -> pts]
+      ]
+    ]
+
+SyntaxInformation[IGCircleBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGCircleBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
+    igCircleBetaSkeleton[pts, beta, opt]
+
+
 SyntaxInformation[IGRelativeNeighborhoodGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGRelativeNeighborhoodGraph[points_?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
-    IGBetaSkeleton[points, 2, opt]
+IGRelativeNeighborhoodGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
+    igLuneBetaSkeleton[pts, 2, opt]
+
+
+SyntaxInformation[IGGabrielGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
+    igLuneBetaSkeleton[pts, 1, opt]
 
 
 (***** Converting meshes to graphs *****)
