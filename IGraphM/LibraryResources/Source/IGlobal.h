@@ -44,7 +44,15 @@ public:
         igCheck(igraph_rng_seed(igraph_rng_default(), s));
     }
 
-    // Graph related functions that do not use the graph data structure
+    // Does the array contain any Inf or NaN?
+    bool infOrNanQ(mma::RealTensorRef t) {
+        for (double *x = t.begin(); x != t.end(); ++x)
+            if (std::isnan(*x) || std::isinf(*x))
+                return true;
+        return false;
+    }
+
+    /* Graph related functions that do not use the IG data structure */
 
     // Fast implementation based on Z. Kiraly: Recognizing graphic degree sequences and generating all realizations.
     bool erdosGallai(mma::IntTensorRef deg) {
@@ -90,13 +98,7 @@ public:
         return res;
     }
 
-    bool infOrNanQ(mma::RealTensorRef t) {
-        for (double *x = t.begin(); x != t.end(); ++x)
-            if (std::isnan(*x) || std::isinf(*x))
-                return true;
-        return false;
-    }
-
+    // Compute an edge list from a sparse incidence matrix returned by IncidenceMatrix[]
     mma::IntTensorRef incidenceToEdgeList(mma::SparseMatrixRef<mint> im, bool directed) {
         auto edgeList = mma::makeMatrix<mint>(im.cols(), 2);
         if (directed) {
@@ -140,7 +142,8 @@ public:
         return edgeList;
     }
 
-    // Sorts pairs of integers; used for canonicalizing an undirected edge list, or for directed->unirected conversion
+    // Sorts pairs of integers (an edge list)
+    // Used for canonicalizing an undirected edge list, or for directed->unirected conversion
     mma::IntTensorRef edgeListSortPairs(mma::IntMatrixRef pairs) {
         if (pairs.cols() != 2)
             throw mma::LibraryError("sortPairs: n-by-2 matrix expected.");
@@ -148,11 +151,12 @@ public:
             if (pairs(i,0) > pairs(i,1))
                 std::swap(pairs(i,0), pairs(i,1));
         return pairs;
-    }   
+    }
 
-    mma::IntMatrixRef removeSelfLoops(mma::IntMatrixRef pairs) {
+    // Remove self-loops from an edge list
+    mma::IntMatrixRef edgeListRemoveLoops(mma::IntMatrixRef pairs) {
         if (pairs.cols() != 2)
-            throw mma::LibraryError("removeSelfLoops: n-by-2 matrix expected.");
+            throw mma::LibraryError("removeLoops: n-by-2 matrix expected.");
 
         std::vector<mint> result;
         for (int i=0; i < pairs.rows(); ++i)
@@ -163,7 +167,8 @@ public:
         return mma::makeMatrix<mint>(result.size() / 2, 2, result.data());
     }
 
-    mma::IntTensorRef edgeListMarkVertices1(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
+    // Mark edges when either endpoint is present in 'vertices'
+    mma::IntTensorRef edgeListMarkWhenEitherPresent(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
         std::set<mint> verts(vertices.begin(), vertices.end());
         auto markers = mma::makeVector<mint>(pairs.rows());
 
@@ -172,7 +177,8 @@ public:
         return markers;
     }
 
-    mma::IntTensorRef edgeListMarkVertices2(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
+    // Mark edges when both endpoints are present in 'vertices'
+    mma::IntTensorRef edgeListMarkWhenBothPresent(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
         std::set<mint> verts(vertices.begin(), vertices.end());
         auto markers = mma::makeVector<mint>(pairs.rows());
 
@@ -181,7 +187,10 @@ public:
         return markers;
     }
 
-    mma::IntMatrixRef edgeListDecVertices(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
+    // Recompute indices in an edge list ('pairs') after 'vertices' have just been deleted
+    // Precondition: none of the 'vertices' must be present in 'pairs'
+    // Used in IGWeightedVertexDelete
+    mma::IntMatrixRef edgeListReindexAfterDelete(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
         std::sort(vertices.begin(), vertices.end());
         for (auto &el : pairs) {
             auto i = std::upper_bound(vertices.begin(), vertices.end(), el);
@@ -190,6 +199,9 @@ public:
         return pairs;
     }
 
+    // Replaces the vertex numbers in 'pairs' by their 1-based index in the 'vertices' array
+    // Precondition: all vertices in 'pairs' are also present in 'vertices'
+    // Used in IGWeightedSubgraph
     mma::IntMatrixRef edgeListReindex(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
         std::map<mint, mint> posIndex;
         for (mint i=0; i < vertices.size(); ++i)
@@ -199,6 +211,7 @@ public:
         return pairs;
     }
 
+    // Compute the edge list of a symmetric tree where nodes at level k have splits[k] children
     mma::IntTensorRef symmetricTree(mma::IntTensorRef splits) {
         mint vcount = 1;
         mint c = 1;

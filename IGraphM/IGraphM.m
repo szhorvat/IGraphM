@@ -670,7 +670,7 @@ template = LTemplate["IGraphM",
 
         LFun["infOrNanQ", {{Real, _, "Constant"}}, True|False],
 
-        (* Graph related functions that do not use the graph data structure *)
+        (* Graph related functions that do not use the IG data structure *)
 
         LFun["erdosGallai", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
         LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *)}, True|False],
@@ -678,9 +678,9 @@ template = LTemplate["IGraphM",
         LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 2}],
 
         LFun["edgeListSortPairs", {{Integer, 2} (* not "Constant" because it gets modified and returned! *) }, {Integer, 2}],
-        LFun["edgeListMarkVertices1", {{Integer, 2, "Constant"}, {Integer, 1, "Constant"}}, {Integer, 1}],
-        LFun["edgeListMarkVertices2", {{Integer, 2, "Constant"}, {Integer, 1, "Constant"}}, {Integer, 1}],
-        LFun["edgeListDecVertices", {{Integer, 2} (* not Constant *), {Integer, 1} (* not Constant *)}, {Integer, 2}],
+        LFun["edgeListMarkWhenEitherPresent", {{Integer, 2, "Constant"}, {Integer, 1, "Constant"}}, {Integer, 1}],
+        LFun["edgeListMarkWhenBothPresent", {{Integer, 2, "Constant"}, {Integer, 1, "Constant"}}, {Integer, 1}],
+        LFun["edgeListReindexAfterDelete", {{Integer, 2} (* not Constant *), {Integer, 1} (* not Constant *)}, {Integer, 2}],
         LFun["edgeListReindex", {{Integer, 2} (* not Constant *), {Integer, 1, "Constant"}}, {Integer, 2}],
 
         LFun["symmetricTree", {{Integer, 1, "Constant"}}, {Integer, 2}]
@@ -5379,10 +5379,10 @@ IGWeightedVertexDelete[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
         throw[$Failed]
       ];
       elist = IGIndexEdgeList[g];
-      emarker = igraphGlobal@"edgeListMarkVertices1"[elist, vinds];
+      emarker = igraphGlobal@"edgeListMarkWhenEitherPresent"[elist, vinds];
       Graph[
         Delete[VertexList[g], List /@ vinds],
-        igraphGlobal@"edgeListDecVertices"[Pick[elist, emarker, 0], vinds],
+        igraphGlobal@"edgeListReindexAfterDelete"[Pick[elist, emarker, 0], vinds],
         If[igEdgeWeightedQ[g], EdgeWeight -> Pick[igEdgeWeights[g], emarker, 0], {}],
         DirectedEdges -> DirectedGraphQ[g],
         opt
@@ -5400,7 +5400,7 @@ IGWeightedSubgraph[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
         throw[$Failed]
       ];
       elist = IGIndexEdgeList[g];
-      emarker = igraphGlobal@"edgeListMarkVertices2"[elist, vinds];
+      emarker = igraphGlobal@"edgeListMarkWhenBothPresent"[elist, vinds];
       Graph[
         VertexList[g][[vinds]],
         igraphGlobal@"edgeListReindex"[Pick[elist, emarker, 1], vinds],
