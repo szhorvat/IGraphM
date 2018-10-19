@@ -22,7 +22,10 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
 
 BeginPackage["IGraphM`", {"IGraphM`Utilities`"}];
 
-Needs["HierarchicalClustering`"]; (* do not place in BeginPackage -- we do not want this context exported *)
+(* We do not want the following contexts exported, thus they cannot be placed in BeginPackage *)
+Needs["HierarchicalClustering`"];
+Needs["TriangleLink`"];
+Needs["TetGenLink`"];
 
 Unprotect["IGraphM`*", "IGraphM`Developer`*", "IGraphM`Information`*"];
 
@@ -545,6 +548,7 @@ IGCliqueCover::usage = "IGCliqueCover[graph] finds a minimum clique cover of gra
 
 IGCliqueCoverNumber::usage = "IGCliqueCoverNumber[graphs] finds the clique vertex cover number of graph.";
 
+IGDelaunayGraph::usage = "IGDelaunayGraph[points] computes the Delaunay graph of the given points.";
 IGLuneBetaSkeleton::usage = "IGLuneBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
 IGCircleBetaSkeleton::usage = "IGCircleBetaSkeleton[points, beta] computes the circle-based beta skeleton of the given points.";
 IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighborhood graph of the given points.";
@@ -4932,7 +4936,55 @@ expr : IGCoreness[graph_?igGraphQ, mode_ : "All"] :=
 addCompletion[IGCoreness, {0, {"In", "Out", "All"}}]
 
 
-(***** Mesh processing *****)
+(***** Geometrical computing and mesh processing *****)
+
+(* TODO for Delaunay: Upon failure of computation due to collinear/coplanar points, should we return a beta skeleton instead? *)
+
+delaunayEdges2D[points_] :=
+    Switch[Length[points],
+      0 | 1, {},
+      2, {{1, 2}},
+      _,
+      Module[{pts, triangles},
+        {pts, triangles} = Check[TriangleDelaunay[points], throw[$Failed]]; (* if Check failed, a message was already issued *)
+        If[Length[pts] == Length[points],
+          DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
+            Join @@ Transpose /@ Subsets[Transpose[triangles], {2}]
+          ],
+          Message[IGDelaunayGraph::dupl]; throw[$Failed]
+        ]
+      ]
+    ]
+
+delaunayEdges3D[points_] :=
+    Switch[Length[points],
+      0 | 1, {},
+      2, {{1, 2}},
+      3, {{1, 2}, {2, 3}, {1, 3}},
+      _,
+      Module[{pts, tetrahedra},
+        {pts, tetrahedra} = Check[TetGenDelaunay[points], throw[$Failed]]; (* if Check failed, a message was already issued *)
+        If[Length[pts] == Length[points],
+          DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
+            Join @@ Transpose /@ Subsets[Transpose[tetrahedra], {2}]
+          ],
+          Message[IGDelaunayGraph::dupl]; throw[$Failed]
+        ]
+      ]
+    ]
+
+IGDelaunayGraph::dim  = "Delaunay graph computation is currently only supported in 2 and 3 dimensions.";
+IGDelaunayGraph::dupl = "Remove any duplicate points before the Delaunay graph computation.";
+
+SyntaxInformation[IGDelaunayGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph, Graph3D]};
+IGDelaunayGraph[{}, opt : OptionsPattern[Graph]] := IGEmptyGraph[0, opt]
+IGDelaunayGraph[points_?MatrixQ, opt : OptionsPattern[{Graph, Graph3D}]] :=
+    catch@Switch[Last@Dimensions[points],
+      2,   Graph[Range@Length[points], delaunayEdges2D[points], opt, VertexCoordinates -> points],
+      3, Graph3D[Range@Length[points], delaunayEdges3D[points], opt, VertexCoordinates -> points],
+      _, Message[IGDelaunayGraph::dim]; throw[$Failed]
+    ]
+
 
 (* The following beta-skeleton computation is based on the implementation of Henrik Schumacher
    https://mathematica.stackexchange.com/a/183391/12 *)
