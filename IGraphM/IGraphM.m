@@ -4938,20 +4938,33 @@ addCompletion[IGCoreness, {0, {"In", "Out", "All"}}]
 
 (***** Geometrical computing and mesh processing *****)
 
-(* TODO for Delaunay: Upon failure of computation due to collinear/coplanar points, should we return a beta skeleton instead? *)
+delaunayEdges1D[points_] := Partition[Ordering@N[points], 2, 1]
 
+(* TODO: TriangleDelaunay does not complain about duplicate points--somehow detect this and throw an error. *)
 delaunayEdges2D[points_] :=
     Switch[Length[points],
       0 | 1, {},
       2, {{1, 2}},
       _,
-      Module[{pts, triangles},
-        {pts, triangles} = Check[TriangleDelaunay[points], throw[$Failed]]; (* if Check failed, a message was already issued *)
-        If[Length[pts] == Length[points],
-          DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
-            Join @@ Transpose /@ Subsets[Transpose[triangles], {2}]
-          ],
-          Message[IGDelaunayGraph::dupl]; throw[$Failed]
+      Module[{res, pts, triangles, v1, v2},
+        res = Quiet[TriangleDelaunay[points], TriangleDelaunay::trifc];
+        If[res === $Failed,
+          (* TriangleDelaunay failed: check if points are collinear and if yes, fall back to 1D Delaunay *)
+          pts = PrincipalComponents@N[points];
+          {v1, v2} = Variance[pts];
+          If[v2/v1 < 10^Internal`$EqualTolerance $MachineEpsilon,
+            delaunayEdges1D[ pts[[All,1]] ],
+            Message[IGDelaunayGraph::fail]; throw[$Failed]
+          ]
+          ,
+          (* TriangleDelaunay succeeded: proceed as usual *)
+          {pts, triangles} = res;
+          If[Length[pts] == Length[points],
+            DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
+              Join @@ Transpose /@ Subsets[Transpose[triangles], {2}]
+            ],
+            Message[IGDelaunayGraph::dupl]; throw[$Failed]
+          ]
         ]
       ]
     ]
@@ -4960,28 +4973,41 @@ delaunayEdges3D[points_] :=
     Switch[Length[points],
       0 | 1, {},
       2, {{1, 2}},
-      3, {{1, 2}, {2, 3}, {1, 3}},
+      (* TetGenDelaunay fails gracefully for 3 points, thus this function  *)
       _,
-      Module[{pts, tetrahedra},
-        {pts, tetrahedra} = Check[TetGenDelaunay[points], throw[$Failed]]; (* if Check failed, a message was already issued *)
-        If[Length[pts] == Length[points],
-          DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
-            Join @@ Transpose /@ Subsets[Transpose[tetrahedra], {2}]
-          ],
-          Message[IGDelaunayGraph::dupl]; throw[$Failed]
+      Module[{res, pts, tetrahedra, v1, v2, v3},
+        res = Quiet[TetGenDelaunay[points], TetGenDelaunay::tetfc];
+        If[res === $Failed,
+          (* TetGenDelaunay failed: check if points are collinear and if yes, fall back to 2D Delaunay *)
+          pts = PrincipalComponents@N[points];
+          {v1, v2, v3} = Variance[pts];
+          If[v3/v1 < 10^Internal`$EqualTolerance $MachineEpsilon,
+            delaunayEdges2D[ pts[[All,{1,2}]] ],
+            Message[IGDelaunayGraph::fail]; throw[$Failed]
+          ]
+          ,
+          {pts, tetrahedra} = res;
+          If[Length[pts] == Length[points],
+            DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
+              Join @@ Transpose /@ Subsets[Transpose[tetrahedra], {2}]
+            ],
+            Message[IGDelaunayGraph::dupl]; throw[$Failed]
+          ]
         ]
       ]
     ]
 
 IGDelaunayGraph::dim  = "Delaunay graph computation is currently only supported in 2 and 3 dimensions.";
 IGDelaunayGraph::dupl = "Remove any duplicate points before the Delaunay graph computation.";
+IGDelaunayGraph::fail = "Could not compute Delaunay triangulation."; (* ask user to report? *)
 
 SyntaxInformation[IGDelaunayGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph, Graph3D]};
 IGDelaunayGraph[{}, opt : OptionsPattern[Graph]] := IGEmptyGraph[0, opt]
-IGDelaunayGraph[points_?MatrixQ, opt : OptionsPattern[{Graph, Graph3D}]] :=
+IGDelaunayGraph[points_?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[{Graph, Graph3D}]] :=
     catch@Switch[Last@Dimensions[points],
-      2,   Graph[Range@Length[points], delaunayEdges2D[points], opt, VertexCoordinates -> points],
-      3, Graph3D[Range@Length[points], delaunayEdges3D[points], opt, VertexCoordinates -> points],
+      1,   Graph[Range@Length[points], delaunayEdges1D[points], DirectedEdges -> False, opt, VertexCoordinates -> ArrayPad[points, {{0, 0}, {0, 1}}]],
+      2,   Graph[Range@Length[points], delaunayEdges2D[points], DirectedEdges -> False, opt, VertexCoordinates -> points],
+      3, Graph3D[Range@Length[points], delaunayEdges3D[points], DirectedEdges -> False, opt, VertexCoordinates -> points],
       _, Message[IGDelaunayGraph::dim]; throw[$Failed]
     ]
 
@@ -5002,6 +5028,7 @@ IGDelaunayGraph[points_?MatrixQ, opt : OptionsPattern[{Graph, Graph3D}]] :=
 IGraphM::bsdim  = "Beta skeleton computation is only supported in 2 dimensions.";
 IGraphM::bsdupl = "Duplicate points must be removed before beta skeleton computations."
 
+(*
 betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
     Module[{mesh, edges, edgeLengths, p, q},
       If[Not@MatchQ[Dimensions[pts], {_,2}],
@@ -5023,6 +5050,19 @@ betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
         {p, q} = pts[[#]]& /@ Transpose[edges];
         edgeLengths = Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
       ];
+      {edges, edgeLengths, p, q}
+    ]
+*)
+
+betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
+    Module[{mesh, edges, edgeLengths, p, q},
+      If[Not@MatchQ[Dimensions[pts], {_,2}],
+        Message[IGraphM::bsdim];
+        throw[$Failed]
+      ];
+      edges = check@delaunayEdges2D[pts];
+      {p, q} = pts[[#]]& /@ Transpose[edges];
+      edgeLengths = Sqrt@Dot[Subtract[p, q]^2, ConstantArray[1., 2]];
       {edges, edgeLengths, p, q}
     ]
 
@@ -5135,7 +5175,7 @@ igLuneBetaSkeleton[pts_, beta_, opt___] :=
             beta  < 1, igBetaSkeletonEdges0[pts, beta]
           ]
         },
-        Graph[Range@Length[pts], edges, opt, VertexCoordinates -> pts]
+        Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
       ]
     ]
 
@@ -5153,7 +5193,7 @@ igCircleBetaSkeleton[pts_, beta_, opt___] :=
             beta <  1, igBetaSkeletonEdges0[pts, beta]
           ]
         },
-        Graph[Range@Length[pts], edges, opt, VertexCoordinates -> pts]
+        Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
       ]
     ]
 
