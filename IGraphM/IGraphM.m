@@ -1582,7 +1582,7 @@ IGTriangularLattice[n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[{IGTri
         ],
         DirectedEdges -> OptionValue[DirectedEdges],
         FilterRules[{opt}, Options[Graph]],
-        VertexCoordinates -> Catenate@Table[{j - i / 2, (n - i) Sqrt[3] / 2}, {i, n}, {j, i}]
+        VertexCoordinates -> Join @@ Table[{j - i / 2, (n - i) Sqrt[3] / 2}, {i, n}, {j, i}]
       ]
     ]
 
@@ -5626,7 +5626,7 @@ IGLatticeMesh[name_String, dims : {_?Internal`PositiveIntegerQ, _?Internal`Posit
           throw[$Failed]
         ];
         {m, n} = dims;
-        grid = Catenate@Table[{i - Floor[ratio j], j}, {i, 0, m-1}, {j, 0, n-1}];
+        grid = Join @@ Table[{i - Floor[ratio j], j}, {i, 0, m-1}, {j, 0, n-1}];
         igLatticeMesh[$igLatticeUnits[name], $igLatticeVectors[name], grid.$igLatticeVectors[name], {opt}]
       ]
 IGLatticeMesh[name_String, reg_?RegionQ, opt : OptionsPattern[]] :=
