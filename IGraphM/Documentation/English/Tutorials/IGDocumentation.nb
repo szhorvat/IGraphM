@@ -8041,7 +8041,7 @@ Cell[BoxData[
     
     FormatType->TraditionalForm,
     FrameTicks->None,
-    ImageSize->{94.609375, Automatic}], ",", "All"}], 
+    ImageSize->{94.609375, Automatic}], ",", "\"\<All\>\""}], 
   "]"}]], "Input",ExpressionUUID->"9f8568c6-b2b1-49f7-a470-a71367653c9a"]
 }, Closed]],
 
@@ -29248,7 +29248,7 @@ Cell[TextData[{
 components. "
 }], "Item",ExpressionUUID->"305f9929-091f-433e-99ba-771550028218"]
 }, Open  ]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29267,13 +29267,18 @@ Cell[TextData[{
  " implements the fluid communities algorithm."
 }], "Text",ExpressionUUID->"87d2126d-3a35-4b11-b6d8-c488118b79bd"],
 
-Cell["\<\
-Reference: Ferran Par\[EAcute]s, Dario Garcia-Gasulla, Armand Vilalta, \
-Jonatan Moreno, Eduard Ayguad\[EAcute], Jes\[UAcute]s Labarta, Ulises Cort\
-\[EAcute]s, Toyotaro Suzumura: Fluid Communities: A Competitive, Scalable and \
-Diverse Community Detection Algorithm, https://arxiv.org/abs/1703.09307\
-\>", "Text",ExpressionUUID->"ffb39f02-c1cc-4e17-84c1-8499350b5053"]
-}, Open  ]],
+Cell[TextData[{
+ "Reference: F. Par\[EAcute]s, D. Garcia-Gasulla, A. Vilalta, J. Moreno, E. \
+Ayguad\[EAcute], Jes\[UAcute]s Labarta, U. Cort\[EAcute]s, T. Suzumura: Fluid \
+Communities: A Competitive, Scalable and Diverse Community Detection \
+Algorithm, ",
+ ButtonBox["https://arxiv.org/abs/1703.09307",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://arxiv.org/abs/1703.09307"], None},
+  ButtonNote->"https://arxiv.org/abs/1703.09307"]
+}], "Text",ExpressionUUID->"ffb39f02-c1cc-4e17-84c1-8499350b5053"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29295,11 +29300,16 @@ Cell[TextData[{
 Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"b802fb35-498e-4fda-b36c-1ccec37c5ef0"],
 
-Cell["\<\
-Reference: A Clauset, MEJ Newman, C Moore: Finding community structure in \
-very large networks, http://www.arxiv.org/abs/cond-mat/0408187\
-\>", "Text",ExpressionUUID->"fc423af2-9b63-48ef-a2f5-97c4690554ab"]
-}, Open  ]],
+Cell[TextData[{
+ "Reference: A. Clauset, M. E. J. Newman, C. Moore: Finding community \
+structure in very large networks, ",
+ ButtonBox["http://www.arxiv.org/abs/cond-mat/0408187",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.arxiv.org/abs/cond-mat/0408187"], None},
+  ButtonNote->"http://www.arxiv.org/abs/cond-mat/0408187"]
+}], "Text",ExpressionUUID->"fc423af2-9b63-48ef-a2f5-97c4690554ab"]
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29335,7 +29345,7 @@ equation, ",
   FontSlant->"Italic"],
  " 178, 13 (2009)"
 }], "Text",ExpressionUUID->"a3247e92-6e99-46d7-a501-aca1f4a385e6"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29357,7 +29367,7 @@ algorithm to detect community structures in large-scale networks. ",
   FontSlant->"Italic"],
  " 76, 036106. (2007)."
 }], "Text",ExpressionUUID->"06e5dea3-0750-4d78-af2a-7a1fa13e55d9"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29387,13 +29397,13 @@ requested. Default: ",
 }], "Item",ExpressionUUID->"2b65218d-1359-4b6b-89c6-95c7b91030fa"],
 
 Cell[TextData[{
- "Reference: MEJ Newman: Finding community structure using the eigenvectors \
-of matrices, ",
+ "Reference: M. E. J. Newman: Finding community structure using the \
+eigenvectors of matrices, ",
  StyleBox["Phys. Rev. E",
   FontSlant->"Italic"],
  " 74:036104 (2006)."
 }], "Text",ExpressionUUID->"2e1c97d5-aeb4-4e7c-8ffc-77adf48e48eb"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29416,13 +29426,13 @@ Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"93673697-8300-463f-a446-08928f0297f1"],
 
 Cell[TextData[{
- "Reference: VD Blondel, J-L Guillaume, R Lambiotte and E Lefebvre: Fast \
-unfolding of community hierarchies in large networks, ",
+ "Reference: V. D. Blondel, J.-L. Guillaume, R. Lambiotte and E. Lefebvre: \
+Fast unfolding of community hierarchies in large networks, ",
  StyleBox["J. Stat. Mech.",
   FontSlant->"Italic"],
  " P10008 (2008)"
 }], "Text",ExpressionUUID->"8a9b05c6-3b1c-40b5-a2d2-22ec44539d42"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29441,7 +29451,7 @@ very slow.\
 
 Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"f91b5e0d-8345-46b9-9652-505d978931ef"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29513,7 +29523,12 @@ Cell[TextData[{
   RowBox[{"Method", "\[Rule]", "\"\<Original\>"}]],ExpressionUUID->
   "336770f9-72cd-4cfd-b06c-db664046244c"],
  ", see Joerg Reichardt and Stefan Bornholdt: Statistical Mechanics of \
-Community Detection, http://arxiv.org/abs/cond-mat/0603718 "
+Community Detection, ",
+ ButtonBox["http://arxiv.org/abs/cond-mat/0603718",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://arxiv.org/abs/cond-mat/0603718"], None},
+  ButtonNote->"http://arxiv.org/abs/cond-mat/0603718"]
 }], "Text",ExpressionUUID->"5afdd169-7b86-4890-a1ce-918c1587b022"],
 
 Cell[TextData[{
@@ -29521,11 +29536,15 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"Method", "\[Rule]", "\"\<Negative\>\""}]],ExpressionUUID->
   "547d3949-d8a5-4fa0-87e2-5e14355b3931"],
- ", see ",
- "V.A. Traag and Jeroen Bruggeman: Community detection in networks with \
-positive and negative links, http://arxiv.org/abs/0811.2329 "
+ ", see V. A. Traag and Jeroen Bruggeman: Community detection in networks \
+with positive and negative links, ",
+ ButtonBox["http://arxiv.org/abs/0811.2329",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://arxiv.org/abs/0811.2329"], None},
+  ButtonNote->"http://arxiv.org/abs/0811.2329"]
 }], "Text",ExpressionUUID->"8a3d0057-7b10-4277-957d-6e73cc2a1b80"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -29564,11 +29583,16 @@ Cell[TextData[{
  "."
 }], "Item",ExpressionUUID->"fb817a5a-d497-474c-8f05-7a060bba2899"],
 
-Cell["\<\
-Reference: Pascal Pons, Matthieu Latapy: Computing communities in large \
-networks using random walks, http://arxiv.org/abs/physics/0512106\
-\>", "Text",ExpressionUUID->"4923a9b6-f1fc-4442-96f4-91e890967dc5"]
-}, Open  ]]
+Cell[TextData[{
+ "Reference: Pascal Pons, Matthieu Latapy: Computing communities in large \
+networks using random walks, ",
+ ButtonBox["http://arxiv.org/abs/physics/0512106",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://arxiv.org/abs/physics/0512106"], None},
+  ButtonNote->"http://arxiv.org/abs/physics/0512106"]
+}], "Text",ExpressionUUID->"4923a9b6-f1fc-4442-96f4-91e890967dc5"]
+}, Closed]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -30645,8 +30669,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"902bf7ad-bd22-4054-b195-f8201b817da1"],
 
 Cell[TextData[{
- Cell[BoxData["IGVertexColoringQ"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGVertexColoringQ"],ExpressionUUID->
   "fad79c91-f2cc-4a76-a76f-a4129baa5602"],
  " checks whether neighbouring vertices of a graph are assigned different \
 colours."
@@ -30655,8 +30679,7 @@ colours."
 Cell[TextData[{
  "The colours may be given as a list, with the same ordering as ",
  Cell[BoxData[
-  RowBox[{"VertexList", "[", "graph", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"VertexList", "[", "graph", "]"}]],ExpressionUUID->
   "769a7259-286c-4664-90db-20b4705ab418"],
  "."
 }], "Text",ExpressionUUID->"ded559e4-28ee-41d7-a027-4a56a395335e"],
@@ -31360,6 +31383,7 @@ Cell[BoxData[{
           AspectRatio->1,
           DefaultBaseStyle->"ColorSwatchGraphics",
           Frame->True,
+          
           FrameStyle->RGBColor[
            0.5333333333333334, 0.4, 0.33333333333333337`, 1.],
           FrameTicks->None,
@@ -33371,8 +33395,13 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["Geometrical meshes", \
+Cell["Geometrical computation and meshes", \
 "Section",ExpressionUUID->"24d0e583-e2ae-4f11-8446-2c61dea61096"],
+
+Cell[CellGroupData[{
+
+Cell["Geometrical meshes", \
+"Subsection",ExpressionUUID->"292415e2-3288-4891-a476-e1d3d5dd2fa2"],
 
 Cell[CellGroupData[{
 
@@ -34070,6 +34099,1088 @@ FontColor->RGBColor[1, 0, 0]]\)\>\"", ",", "#"}], "]"}], "&"}], "/@",
          RowBox[{"mesh", ",", "exits"}], "}"}], ",", "MeshCellCentroid"}], 
        "]"}]}], "}"}]}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"e18d006d-23f5-4bbf-92da-6238c5e6f005"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Proximity graphs", \
+"Subsection",ExpressionUUID->"fca6d92c-9f56-4b8e-9455-c701bb4df1a7"],
+
+Cell["\<\
+Proximity graphs are connectivity structures of geometric points based on \
+geometric criteria. IGraph/M implements several proximity graphs for points \
+in two-dimensional Euclidean space.\
+\>", "Text",ExpressionUUID->"01f6b963-f0bb-49b7-8c3e-e92e637d753b"],
+
+Cell[CellGroupData[{
+
+Cell["IGDelaunayGraph", \
+"Subsubsection",ExpressionUUID->"d2d234b1-207b-4bf5-a9a7-40ec3700c37a"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGDelaunayGraph"}]], \
+"Input",ExpressionUUID->"31780e02-a77a-470b-8b99-25a6438fc0ad"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGDelaunayGraph", "[", "points", "]"}]],ExpressionUUID->
+  "d6d1aee3-c14d-434c-9a49-4b06496173dd"],
+ " creates computes the Delaunay graph of the given points in one, two or \
+three dimensions. It is equivalent to ",
+ Cell[BoxData[
+  RowBox[{"IGMeshGraph", "@", 
+   RowBox[{"DelaunayMesh", "[", "points", "]"}]}]],ExpressionUUID->
+  "811c0fad-bc17-4c24-b8a7-0b0853f2fc84"],
+ ", but it is faster and it supports collinear points in 2D and coplanar \
+points in 3D."
+}], "Text",ExpressionUUID->"45e3ea1d-fb31-4f21-9aa3-6227fba0f979"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGDelaunayGraph"],ExpressionUUID->"53e05647-38c5-4393-bd97-bd900a2c4671"],
+ " works in 1D, 2D and 3D."
+}], "Text",ExpressionUUID->"f7b60999-5643-4d5b-bb80-4f852fb30c1e"],
+
+Cell[BoxData[
+ RowBox[{"Table", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"IGDelaunayGraph", "@", 
+    RowBox[{"RandomPoint", "[", 
+     RowBox[{
+      RowBox[{"Ball", "@", 
+       RowBox[{"ConstantArray", "[", 
+        RowBox[{"0", ",", "dim"}], "]"}]}], ",", "30"}], "]"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"dim", ",", "1", ",", "3"}], "}"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"ef97aba3-ac20-4720-b077-585deb53c6b2"],
+
+Cell["IGDelaunayGraph works with collinear points in 2D ...", \
+"Text",ExpressionUUID->"6a9b75cb-52a7-4bd2-bcbc-87d4ff0d75fe"],
+
+Cell[BoxData[
+ RowBox[{"IGDelaunayGraph", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"2", ",", "1"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"8", ",", "4"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"6", ",", "3"}], "}"}]}], "}"}], 
+  "]"}]], "Input",ExpressionUUID->"3b897673-49b5-4e41-a5ad-40fa3738dd58"],
+
+Cell["... or coplanar points in 3D.", \
+"Text",ExpressionUUID->"ace7b21c-be6a-4781-bf35-b43ff41d5b00"],
+
+Cell[BoxData[
+ RowBox[{"IGDelaunayGraph", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "0", ",", "0"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"0", ",", "1", ",", "0"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "1", ",", "0"}], "}"}]}], "}"}], 
+  "]"}]], "Input",ExpressionUUID->"32a18e4d-60cd-4a4a-9fb5-3fca4f147a30"],
+
+Cell["IGDelaunayGraph takes all the usual graph options.", \
+"Text",ExpressionUUID->"0622ae86-86dc-456c-8186-46b6d79f34be"],
+
+Cell[BoxData[
+ RowBox[{"IGDelaunayGraph", "[", 
+  RowBox[{
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "2"}], "}"}]}], "]"}], ",", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<DiagramGold\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"f03c3f60-9138-4b37-9dc5-720554596ca5"],
+
+Cell["\<\
+When there is more than one valid Delaunay triangulation, only one is \
+returned.\
+\>", "Text",ExpressionUUID->"c1154ec6-0cec-461a-937b-5e6c0071f23b"],
+
+Cell[BoxData[
+ RowBox[{"IGDelaunayGraph", "@", 
+  RowBox[{
+  "CirclePoints", "[", "5", 
+   "]"}]}]], "Input",ExpressionUUID->"f6d7beea-dae0-4029-b900-bbeaad6f5b7c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGLuneBetaSkeleton", \
+"Subsubsection",ExpressionUUID->"60acf20b-1079-4362-929b-1205d008f4bd"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGLuneBetaSkeleton"}]], \
+"Input",ExpressionUUID->"b371140e-8b70-48f4-8ce3-ca2af8e1b5c3"],
+
+Cell[TextData[{
+ "The lune-based \[Beta] skeleton connects two points ",
+ Cell[BoxData[
+  FormBox["A", TraditionalForm]],ExpressionUUID->
+  "2d6e248c-5476-4204-b892-36d0e2d4c6a3"],
+ " and ",
+ Cell[BoxData[
+  FormBox["B", TraditionalForm]],ExpressionUUID->
+  "fc1b31d8-83e3-4419-9c7e-e866354aa3f7"],
+ " when intersection of two disks (a lune) having ",
+ Cell[BoxData[
+  FormBox["A", TraditionalForm]],ExpressionUUID->
+  "90e1174c-ef00-4499-b929-534ee2c0cd0d"],
+ " and ",
+ Cell[BoxData[
+  FormBox["B", TraditionalForm]],ExpressionUUID->
+  "c2c5585d-b943-4db5-a023-6bf8981cbe36"],
+ " on its boundary contains no other points."
+}], "Text",ExpressionUUID->"9d441f2f-6644-4a92-9b29-4115445a421e"],
+
+Cell[TextData[{
+ "For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "\[LessEqual]", "1"}], TraditionalForm]],
+  ExpressionUUID->"f1a30b78-1dbb-4058-b23d-a3e27d64dc91"],
+ ", the lune is defined by disks of radius ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    StyleBox["AB",
+     FontSlant->"Italic"], "/", 
+    RowBox[{"(", 
+     RowBox[{"2", "\[Beta]"}], ")"}]}], TraditionalForm]],ExpressionUUID->
+  "4aebd079-ee1b-48cd-8ceb-272a5ed0e9be"],
+ "."
+}], "Text",ExpressionUUID->"5d08e1f6-af63-403d-bb18-6825d6bde354"],
+
+Cell[TextData[Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], 
+        DiskBox[{0, 1.7320508075688772}, 2.], 
+        DiskBox[{0, -1.7320508075688772}, 2.]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "0.5`"}], HoldForm], 
+        TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], 
+        DiskBox[{0, 0.7499999999999999}, 1.25], 
+        DiskBox[{0, -0.7499999999999999}, 1.25]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "0.8`"}], HoldForm], 
+        TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], DiskBox[{0, 0}], 
+        DiskBox[{0, 0}]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "1"}], HoldForm], TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True]}
+   },
+   AutoDelete->False,
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]],
+ CellChangeTimes->{
+  3.7488476345336857`*^9},ExpressionUUID->"ca7abd2b-0077-4c80-bf7b-\
+e7a594642e68"]], \
+"Text",ExpressionUUID->"0e8127d7-e014-4ea6-8bd8-3f0a75e47899"],
+
+Cell[TextData[{
+ "For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "\[GreaterEqual]", "1"}], TraditionalForm]],
+  ExpressionUUID->"c3976341-d7b3-4a79-a1bc-dadb9eab8b2c"],
+ ", the lune is defined by disks of radius ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", " ", 
+    RowBox[{
+     StyleBox["AB",
+      FontSlant->"Italic"], "/", "2"}]}], TraditionalForm]],ExpressionUUID->
+  "e324fb5c-4d6b-463f-bc15-5d3a34dcc910"],
+ "."
+}], "Text",ExpressionUUID->"67e086d2-cb6d-4495-b084-0c902610dce2"],
+
+Cell[TextData[Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], DiskBox[{0, 0}], 
+        DiskBox[{0, 0}]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "1"}], HoldForm], TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], DiskBox[{-0.5, 0.}, 1.5], 
+        DiskBox[{0.5, 0.}, 1.5]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "1.5`"}], HoldForm], 
+        TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], DiskBox[{-1, 0}, 2], 
+        DiskBox[{1, 0}, 2]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "2"}], HoldForm], TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], DiskBox[{-3, 0}, 4], 
+        DiskBox[{3, 0}, 4]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "4"}], HoldForm], TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True]}
+   },
+   AutoDelete->False,
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]],
+ CellChangeTimes->{{3.7488425981362534`*^9, 3.7488426423964357`*^9}, 
+   3.748842701993026*^9, 3.748842755878049*^9, {3.748842798609483*^9, 
+   3.748842800684517*^9}, {3.748842838008831*^9, 3.748842863204792*^9}, {
+   3.7488430446144323`*^9, 3.748843119204782*^9}, {3.748844430458769*^9, 
+   3.74884452452078*^9}},ExpressionUUID->"1824922b-3d5b-40e5-9b10-\
+0c22e24216ef"]], \
+"Text",ExpressionUUID->"f7f110f7-ba65-4bd5-a120-01be885c4823"],
+
+Cell[TextData[{
+ "For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "\[GreaterEqual]", "1"}], TraditionalForm]],
+  ExpressionUUID->"1c0bb965-bb69-48ec-a8e5-261ef13c4907"],
+ ", the \[Beta] skeleton is a subgraph of the Delaunay graph, thus its edges \
+do not cross. For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "\[LessEqual]", "2"}], TraditionalForm]],
+  ExpressionUUID->"d5b48428-d0f2-482c-8eee-3c81f69c45e2"],
+ ", it contains the Euclidean minimum spanning tree, thus it is connected. \
+For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", ">", "2"}], TraditionalForm]],ExpressionUUID->
+  "cb5322d4-1d9e-41fe-b113-dc9ba5caf770"],
+ ", it is typically disconnected."
+}], "Text",ExpressionUUID->"ee587657-d412-4812-bd72-6807ba6ae41d"],
+
+Cell[TextData[{
+ "The implementation of \[Beta] skeleton computation is efficient only for ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "\[GreaterEqual]", "1"}], TraditionalForm]],
+  ExpressionUUID->"81d8f67b-42ab-4bff-941a-ad81b72d8f3d"],
+ "."
+}], "Text",ExpressionUUID->"c036c5ca-96b4-4ffa-bd11-b0e3f742efa4"],
+
+Cell["\<\
+\[Beta] skeletons can be used to reconstruct a shape from a set of points.\
+\>", "Text",ExpressionUUID->"882b6a5c-40d6-46dd-b564-1f5eb45b85de"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"points", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2.21", ",", "3.83"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.5", ",", "3.59"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.9", ",", "3.49"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.33", ",", "3.48"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.79", ",", "3.55"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.27", ",", "3.63"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.74", ",", "3.65"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.25", ",", "3.7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.66", ",", "3.65"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.98", ",", "3.58"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.25", ",", "3.47"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.43", ",", "3.23"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.47", ",", "2.86"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.35", ",", "2.39"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.19", ",", "2.02"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.98", ",", "1.77"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.8", ",", "1.57"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.51", ",", "1.31"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.32", ",", "0.94"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.19", ",", "0.59"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.", ",", "0.42"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.83", ",", "0.31"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.62", ",", "0.28"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.5", ",", "0.37"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.54", ",", "0.51"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.7", ",", "0.58"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.82", ",", "0.68"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.87", ",", "0.91"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.87", ",", "1.17"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.9", ",", "1.6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.91", ",", "1.81"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.7", ",", "1.7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.47", ",", "1.67"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.2", ",", "1.7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.89", ",", "1.72"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.55", ",", "1.84"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.53", ",", "1.61"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.52", ",", "1.33"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.51", ",", "0.95"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.51", ",", "0.48"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.4", ",", "0.25"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.11", ",", "0.21"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.02", ",", "0.34"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.17", ",", "0.5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.16", ",", "0.63"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.07", ",", "0.94"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.", ",", "1.27"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.93", ",", "1.48"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.81", ",", "1.61"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.6", ",", "1.4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.37", ",", "1.29"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.11", ",", "1.1"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.83", ",", "0.99"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.66", ",", "0.7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.52", ",", "0.46"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.33", ",", "0.53"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.37", ",", "0.76"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.47", ",", "1.01"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.7", ",", "1.3"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.91", ",", "1.55"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.1", ",", "1.73"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.29", ",", "1.92"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"2.54", ",", "1.78"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.97", ",", "2.17"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.76", ",", "2.5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.6", ",", "2.74"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.36", ",", "2.98"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.29", ",", "2.92"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.11", ",", "2.88"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.87", ",", "2.97"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.95", ",", "3.16"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.95", ",", "3.45"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.09", ",", "3.78"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.31", ",", "3.92"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.46", ",", "4.01"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.22", ",", "4.11"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.09", ",", "4.31"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.09", ",", "4.39"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.3", ",", "4.34"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.49", ",", "4.23"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.56", ",", "4.07"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.95", ",", "4.01"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.98", ",", "3.91"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.88", ",", "4.07"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0.86", ",", "4.26"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1.04", ",", "4.17"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.99", ",", "1.32"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.21", ",", "1.08"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.52", ",", "0.85"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.53", ",", "0.61"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.53", ",", "0.41"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.46", ",", "0.26"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.63", ",", "0.16"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.84", ",", "0.25"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.88", ",", "0.47"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.89", ",", "0.81"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.86", ",", "1.12"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.69", ",", "1.35"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.56", ",", "1.65"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.55", ",", "1.94"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.6", ",", "2.4"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.61", ",", "3.39"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.77", ",", "3.72"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.81", ",", "4.18"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.76", ",", "4.6"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.7", ",", "5.07"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.74", ",", "5.51"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.99", ",", "5.63"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7.3", ",", "5.71"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7.41", ",", "5.92"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"7.17", ",", "6.11"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.74", ",", "6.11"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.34", ",", "5.86"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.17", ",", "5.46"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.08", ",", "4.98"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.15", ",", "4.57"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.25", ",", "4.19"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"6.21", ",", "3.77"}], "}"}]}], "}"}]}], 
+  ";"}]], "Input",ExpressionUUID->"9606a0c4-07f8-48fd-88af-a01c993b9556"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGLuneBetaSkeleton", "[", 
+    RowBox[{"points", ",", "#", ",", 
+     RowBox[{"PlotLabel", "\[Rule]", "#"}]}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"0.8", ",", "1", ",", "2", ",", "5"}], 
+   "}"}]}]], "Input",ExpressionUUID->"da295c5d-08e7-4f08-8cfe-5bf926413460"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGCircleBetaSkeleton", \
+"Subsubsection",ExpressionUUID->"f016e747-b3c1-4c7d-aa83-c809c3286bc9"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCircleBetaSkeleton"}]], \
+"Input",ExpressionUUID->"ecea3103-8839-44b3-9672-8e71358ad10f"],
+
+Cell[TextData[{
+ "The circle-based \[Beta] skeleton connects two points ",
+ Cell[BoxData[
+  FormBox["A", TraditionalForm]],ExpressionUUID->
+  "6fbb1a0a-0129-41ef-b5cd-f16cbbc7bb5d"],
+ " and ",
+ Cell[BoxData[
+  FormBox["B", TraditionalForm]],ExpressionUUID->
+  "d106e0b7-f62c-4964-8ead-8083f8188a9c"],
+ " if there is no other point ",
+ Cell[BoxData[
+  FormBox["C", TraditionalForm]],ExpressionUUID->
+  "fe0a6d01-1481-48b4-8533-9c24f69fd8e2"],
+ " so that the angle ",
+ Cell[BoxData[
+  FormBox[
+   StyleBox[
+    RowBox[{"\[MeasuredAngle]", 
+     StyleBox["ACB",
+      FontSlant->"Italic"]}]], TraditionalForm]],ExpressionUUID->
+  "74f1169e-6ca5-4b82-b223-78470dda73d7"],
+ " is less sharp the threshold"
+}], "Text",ExpressionUUID->"2e0adb62-eef4-41d4-93b2-60c03ac587e2"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{"\[Theta]", "=", 
+   RowBox[{"\[Piecewise]", "\[NoBreak]", GridBox[{
+      {
+       RowBox[{
+        SuperscriptBox["sin", 
+         RowBox[{"-", "1"}]], "(", 
+        FractionBox["1", "\[Beta]"], ")"}], 
+       RowBox[{"\[Beta]", "\[GreaterEqual]", "1"}]},
+      {
+       RowBox[{"\[Pi]", "-", 
+        RowBox[{
+         SuperscriptBox["sin", 
+          RowBox[{"-", "1"}]], "(", "\[Beta]", ")"}]}], 
+       RowBox[{"\[Beta]", "\[LessEqual]", "1"}]}
+     },
+     GridBoxAlignment->{"Columns" -> {{Center}}, "Rows" -> {{Baseline}}},
+     GridBoxSpacings->{"Columns" -> {
+         Offset[0.27999999999999997`], {
+          Offset[0.7]}, 
+         Offset[0.27999999999999997`]}, "Rows" -> {
+         Offset[0.2], {
+          Offset[0.4]}, 
+         Offset[0.2]}}], "\[NoBreak]"}]}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"10d10c11-b4bc-4868-b0c5-b971b15ab92f"],
+
+Cell[TextData[{
+ "This is equivalent to no point ",
+ Cell[BoxData[
+  FormBox["C", TraditionalForm]],ExpressionUUID->
+  "a1618712-8df8-45d1-9d48-e9f25facff61"],
+ " being contained in the intersection or unions of the disks illustrated \
+below."
+}], "Text",ExpressionUUID->"9160bc59-942a-4d96-b01f-57b4ff7f0f1d"],
+
+Cell[TextData[Cell[BoxData[
+ TagBox[GridBox[{
+    {
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], 
+        DiskBox[{0, 1.7320508075688772}, 2.], 
+        DiskBox[{0, -1.7320508075688772}, 2.]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "0.5`"}], HoldForm], 
+        TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], 
+        DiskBox[{0, 0.7499999999999999}, 1.25], 
+        DiskBox[{0, -0.7499999999999999}, 1.25]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "0.8`"}], HoldForm], 
+        TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.340007, 0.129994], Opacity[
+         NCache[
+          Rational[1, 3], 0.3333333333333333]], DiskBox[{0, 0}], 
+        DiskBox[{0, 0}]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "1"}], HoldForm], TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.6333372222222222, 0.5166633333333334], 
+        DiskBox[{0, 1.118033988749895}, 1.5], 
+        DiskBox[{0, -1.118033988749895}, 1.5]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "1.5`"}], HoldForm], 
+        TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True], 
+     GraphicsBox[{
+       {RGBColor[1., 0.6333372222222222, 0.5166633333333334], 
+        DiskBox[NCache[{0, 3^Rational[1, 2]}, {0, 1.7320508075688772`}], 2], 
+        DiskBox[NCache[{0, -3^Rational[1, 2]}, {0, -1.7320508075688772`}], 
+         2]}, {LineBox[{{-1, 0}, {1, 0}}], 
+        {AbsolutePointSize[4], PointBox[{{-1, 0}, {1, 0}}], InsetBox[
+          TagBox["A",
+           HoldForm], {-1, 0}, {0, -1}], InsetBox[
+          TagBox["B",
+           HoldForm], {1, 0}, {0, -1}]}}},
+      Frame->True,
+      FrameStyle->GrayLevel[0],
+      FrameTicks->None,
+      ImageSize->120,
+      PlotLabel->FormBox[
+        TagBox[
+         RowBox[{"\[Beta]", "\[LongEqual]", "2"}], HoldForm], TraditionalForm],
+      PlotRange->NCache[{{
+          Rational[-9, 4], 
+          Rational[9, 4]}, {-3, 3}}, {{-2.25, 2.25}, {-3, 3}}],
+      PlotRangeClipping->True]}
+   },
+   AutoDelete->False,
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]],
+ CellChangeTimes->{{3.7488475080062847`*^9, 3.748847543693892*^9}, 
+   3.748847617981687*^9},ExpressionUUID->"6684dd74-c115-4d98-b740-\
+4fb04540ea88"]], \
+"Text",ExpressionUUID->"c8e50a5b-4e39-487d-97d3-6a4e2fb4c68d"],
+
+Cell[TextData[{
+ "For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "\[LessEqual]", "1"}], TraditionalForm]],
+  ExpressionUUID->"27591de9-b9d3-41e4-8fe7-bbd6ee2fd052"],
+ ", the circle based and lune based beta skeletons coincide. For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", ">", "1"}], TraditionalForm]],ExpressionUUID->
+  "f5f65399-30c8-45b4-9060-088e17c8efdc"],
+ ", the circle-based beta skeleton is a subgraph of the lune-based one."
+}], "Text",ExpressionUUID->"d73f88c2-62e6-4114-a4b4-8aefedb125b2"],
+
+Cell["Compute the circle-based \[Beta] skeleton of a random point set.", \
+"Text",ExpressionUUID->"ff193f2d-dc78-4c4b-8b72-746bffeea859"],
+
+Cell[BoxData[
+ RowBox[{"IGCircleBetaSkeleton", "[", 
+  RowBox[{
+   RowBox[{"RandomVariate", "[", 
+    RowBox[{
+     RowBox[{"NormalDistribution", "[", 
+      RowBox[{"0", ",", "1"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"100", ",", "2"}], "}"}]}], "]"}], ",", "1.2"}], 
+  "]"}]], "Input",ExpressionUUID->"4a252f42-b72f-4224-a09c-5031592d5370"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGRelativeNeighborhoodGraph", \
+"Subsubsection",ExpressionUUID->"2379c312-b0cf-457f-b1d0-a153abb6bbf0"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGRelativeNeighborhoodGraph"}]], \
+"Input",ExpressionUUID->"7ade8c02-f026-4ab0-89d7-1468fd477337"],
+
+Cell[TextData[{
+ "The relative neighborhood graph is constructed from a set of points in \
+space. Two points ",
+ Cell[BoxData[
+  FormBox["A", TraditionalForm]],ExpressionUUID->
+  "094b4e3f-be22-41a0-b64d-863b62543a6e"],
+ " and ",
+ Cell[BoxData[
+  FormBox["B", TraditionalForm]],ExpressionUUID->
+  "3ed07b64-af38-4d44-be5c-a31262f5b08f"],
+ " are connected if and only if there is no other point ",
+ Cell[BoxData[
+  FormBox["C", TraditionalForm]],ExpressionUUID->
+  "90f5aa71-bd4e-4837-913c-65a0a502db4d"],
+ " so that ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"A", " ", "C"}], "<", 
+    RowBox[{"A", " ", "B"}]}], TraditionalForm]],ExpressionUUID->
+  "e8c1dc6b-d87c-4ec1-87ea-bac10e241195"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"B", " ", "C"}], "<", 
+    RowBox[{"A", " ", "B"}]}], TraditionalForm]],ExpressionUUID->
+  "c273fd9d-2b65-4932-a7be-d0a3d00a7398"],
+ "."
+}], "Text",ExpressionUUID->"aef92e2b-0512-494a-a253-f6a6de5e0d03"],
+
+Cell[TextData[{
+ "The relative neighborhood graph coincides with a \[Beta]-skeleton for ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "=", "2"}], TraditionalForm]],ExpressionUUID->
+  "a65fc48a-4b07-4f7e-ba09-cc3e054224a8"],
+ "."
+}], "Text",ExpressionUUID->"7ac8f4be-70bf-46f2-80f2-3ee5d9a46fed"],
+
+Cell["\<\
+Compute the relative neighbourhood graph of a random set of points.\
+\>", "Text",ExpressionUUID->"f5bc2c7c-17fb-4107-b5a8-2cb966046d93"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGRelativeNeighborhoodGraph", "[", 
+   RowBox[{
+    RowBox[{"RandomReal", "[", 
+     RowBox[{"1", ",", 
+      RowBox[{"{", 
+       RowBox[{"1000", ",", "2"}], "}"}]}], "]"}], ",", 
+    RowBox[{"GraphStyle", "\[Rule]", "\"\<VibrantColor\>\""}], ",", 
+    RowBox[{"VertexSize", "\[Rule]", "5"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"65a217db-d2db-4a2b-b505-7500109010d8"],
+
+Cell["Assign edge lengths as weights ...", \
+"Text",ExpressionUUID->"9ff13730-79de-4d78-8a33-78da8d04ab26"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGEdgeMap", "[", 
+    RowBox[{
+     RowBox[{"Apply", "[", "EuclideanDistance", "]"}], ",", 
+     RowBox[{"EdgeWeight", "\[Rule]", 
+      RowBox[{"IGEdgeVertexProp", "[", "VertexCoordinates", "]"}]}], ",", 
+     "g"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"b1b5c467-f3b3-4922-9d42-202dd370b858"],
+
+Cell["... and compute their distribution.", \
+"Text",ExpressionUUID->"bad6b88f-28da-4935-b15c-78ec5af0ddc4"],
+
+Cell[BoxData[
+ RowBox[{"Histogram", "[", 
+  RowBox[{
+   RowBox[{"IGEdgeProp", "[", "EdgeWeight", "]"}], "[", "g", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"75540db6-8596-48c1-a5f2-30b1bcd1f94f"],
+
+Cell["Plot the relative neighborhood graph of African capitals.", \
+"Text",ExpressionUUID->"fac1b44c-f4d8-47a8-8a80-f7e9ce6bde91"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"capitals", "=", 
+   RowBox[{"CountryData", "[", 
+    RowBox[{"\"\<Africa\>\"", ",", "\"\<CapitalCity\>\""}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"edges", "=", 
+   RowBox[{"IGIndexEdgeList", "@", 
+    RowBox[{"IGRelativeNeighborhoodGraph", "@", 
+     RowBox[{"EntityValue", "[", 
+      RowBox[{"capitals", ",", "\"\<Coordinates\>\""}], "]"}]}]}]}], 
+  ";"}]}], "Input",ExpressionUUID->"481921fe-4df8-434d-9609-a8a6c0e104fb"],
+
+Cell[BoxData[
+ RowBox[{"GeoGraphics", "[", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"Red", ",", "Thick", ",", 
+      RowBox[{"Line", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"capitals", "[", 
+          RowBox[{"[", "#", "]"}], "]"}], "&"}], "/@", "edges"}], "]"}]}], 
+     "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"PointSize", "[", "0.01", "]"}], ",", 
+      RowBox[{"Point", "[", "capitals", "]"}]}], "}"}]}], "}"}], 
+  "]"}]], "Input",ExpressionUUID->"2ea81934-b9a7-4008-a63f-7612d83db2c1"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGGabrielGraph", \
+"Subsubsection",ExpressionUUID->"43181f42-98a2-4bd8-89cd-eb6b924ba36e"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGGabrielGraph"}]], \
+"Input",ExpressionUUID->"30e80212-caa3-4086-8685-ef1edcfa6264"],
+
+Cell[TextData[{
+ "The Gabriel graph is constructed from a set of points in space. Two points ",
+ Cell[BoxData[
+  FormBox["A", TraditionalForm]],ExpressionUUID->
+  "fec75277-0180-4fac-a8a2-09e101e40ce9"],
+ " and ",
+ Cell[BoxData[
+  FormBox["B", TraditionalForm]],ExpressionUUID->
+  "d2d0bfd6-9774-48c2-9e04-d04fe7e2053c"],
+ " are connected if and only if no other point is contained in the disk of \
+which ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"A", " ", "B"}], TraditionalForm]],ExpressionUUID->
+  "71a8f2e8-328d-4820-85f5-7efb17221908"],
+ " is a diameter."
+}], "Text",ExpressionUUID->"a5f76bab-22d6-43ce-a431-87c52bbec161"],
+
+Cell[TextData[{
+ "The Gabriel graph coincides with a \[Beta]-skeleton for ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "=", "1"}], TraditionalForm]],ExpressionUUID->
+  "937d6efb-dfb1-43cd-9557-b804a59fa2c6"],
+ "."
+}], "Text",ExpressionUUID->"7c828559-5ac8-4984-a9bd-f884d269fa2f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pts", "=", 
+   RowBox[{"RandomPoint", "[", 
+    RowBox[{
+     RowBox[{"Disk", "[", "]"}], ",", "100"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"g", "=", 
+  RowBox[{
+  "IGGabrielGraph", "[", "pts", 
+   "]"}]}]}], "Input",ExpressionUUID->"2f709c07-56c6-4e2c-a95e-15755ae664e3"],
+
+Cell["The Gabriel graph is a subgraph of the Delaunay graph.", \
+"Text",ExpressionUUID->"e593cdb4-8006-4c95-aeec-230602f0cd0c"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{
+   RowBox[{"IGMeshGraph", "@", 
+    RowBox[{"DelaunayMesh", "[", "pts", "]"}]}], ",", "g"}], 
+  "]"}]], "Input",ExpressionUUID->"8c90796b-7523-417f-96d6-65cde2d520ba"],
+
+Cell["\<\
+Convert the Gabriel graph to a MeshRegion object by finding its faces, and \
+removing the outer face. Here we use the heuristic that for a graph generated \
+from a random point set, the face with the most vertices is likely to be the \
+outer face.\
+\>", "Text",ExpressionUUID->"85a2bc4a-99de-4be2-ac05-8ab537fa7f44"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"faces", "=", 
+   RowBox[{"IGFaces", "@", 
+    RowBox[{"IGCoordinatesToEmbedding", "[", "g", "]"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"faces", "=", 
+   RowBox[{"Delete", "[", 
+    RowBox[{"faces", ",", 
+     RowBox[{"Ordering", "[", 
+      RowBox[{
+       RowBox[{"Length", "/@", "faces"}], ",", 
+       RowBox[{"-", "1"}]}], "]"}]}], "]"}]}], 
+  ";"}]}], "Input",ExpressionUUID->"cdbe7ed1-d80e-42ac-9137-46c25f895eef"],
+
+Cell[BoxData[
+ RowBox[{"MeshRegion", "[", 
+  RowBox[{"pts", ",", 
+   RowBox[{"Polygon", "[", "faces", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"d9a7a3c5-b4ae-4fd3-a025-d709f35b01d7"]
+}, Closed]]
 }, Closed]]
 }, Closed]],
 
@@ -36871,7 +37982,7 @@ Cell["Now we have a weighted graph.", \
 Cell[BoxData[
  RowBox[{"IGEdgeWeightedQ", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"52b8522d-1e91-45c8-a165-94b1d7caddaf"]
-}, Closed]]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -38781,8 +39892,8 @@ Cell[BoxData[
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{956, 716},
-WindowMargins->{{Automatic, 166}, {Automatic, 42}},
+WindowSize->{670, 709},
+WindowMargins->{{688, Automatic}, {Automatic, -168}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
@@ -38827,8 +39938,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
-2018)",
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (October 15, 2018)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -38848,9 +39958,9 @@ StyleDefinitions->Notebook[{
        StyleData["Item"], DefaultInlineFormatType -> StandardForm], 
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
-       RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> 
-  "11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, 2018)", 
+       RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, 
+  WindowMargins -> {{1316, Automatic}, {Automatic, -56}}, Visible -> False, 
+  FrontEndVersion -> "12.0 for Mac OS X x86 (64-bit) (October 15, 2018)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
