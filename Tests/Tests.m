@@ -2613,6 +2613,155 @@ MT[
 
 
 (*******************************************************************************)
+MTSection["Proximity graphs"]
+
+MT[
+  #[{}],
+  Graph[{},{}],
+  SameTest -> IGSameGraphQ
+]& /@ {IGDelaunayGraph, IGRelativeNeighborhoodGraph, IGGabrielGraph, IGLuneBetaSkeleton[#, 1.5]&, IGLuneBetaSkeleton[#, 0.5]&, IGCircleBetaSkeleton[#, 1.5]&, IGCircleBetaSkeleton[#, 0.5]&}
+
+MT[
+  #[{{0,0}}],
+  Graph[{1},{}],
+  SameTest -> IGSameGraphQ
+]& /@ {IGDelaunayGraph, IGRelativeNeighborhoodGraph, IGGabrielGraph, IGLuneBetaSkeleton[#, 1.5]&, IGLuneBetaSkeleton[#, 0.5]&, IGCircleBetaSkeleton[#, 1.5]&, IGCircleBetaSkeleton[#, 0.5]&}
+
+MT[
+  #[{{0,0}, {1,2}}],
+  CompleteGraph[2],
+  SameTest -> IGSameGraphQ
+]& /@ {IGDelaunayGraph, IGRelativeNeighborhoodGraph, IGGabrielGraph, IGLuneBetaSkeleton[#, 1.5]&, IGLuneBetaSkeleton[#, 0.5]&, IGCircleBetaSkeleton[#, 1.5]&, IGCircleBetaSkeleton[#, 0.5]&}
+
+MT[
+  IGDelaunayGraph[{{0,0}, {1,1}, {2,2}}],
+  Graph[{1<->2, 2<->3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGDelaunayGraph[{{0,0,0}, {1,1,1}, {2,2,2}}],
+  Graph[{1<->2, 2<->3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGDelaunayGraph[{{0,0}, {1,1}, {1,2}}],
+  Graph[{1<->2, 2<->3, 1<->3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGDelaunayGraph[{{0,0,0}, {1,1,1}, {1,2,2}}],
+  Graph[{1<->2, 2<->3, 1<->3}],
+  SameTest -> IGSameGraphQ
+]
+
+points2d = RandomReal[1, {100, 2}];
+MT[
+  IGDelaunayGraph[points2d],
+  IGMeshGraph@DelaunayMesh[points2d],
+  SameTest -> IGSameGraphQ
+]
+
+points3d = RandomReal[1, {100, 2}];
+MT[
+  IGDelaunayGraph[points3d],
+  IGMeshGraph@DelaunayMesh[points3d],
+  SameTest -> IGSameGraphQ
+]
+
+bsPoints = {{-0.59, -0.09}, {0.07, 0.85}, {-0.48, -0.22}, {0.56, -0.12}, {0.02, -0.35}, {-0.05, 1.}, {-0.76, 0.32}, {-0.37, 0.}, {-0.03, 0.39}, {-0.65, -0.49}, {-0.06, 0.6}, {-0.53, 0.76}, {0.91, -0.25}, {0.22, -0.72}, {0.27, -0.18}, {-0.75, -0.3}, {0.85, 0.09}, {0.63, 0.2}, {0.57, 0.16}, {-0.43, -0.51}};
+
+MT[
+  IGLuneBetaSkeleton[bsPoints, 0.8],
+  Graph@{1 <-> 3, 1 <-> 7, 1 <-> 8, 1 <-> 10, 1 <-> 16, 2 <-> 6, 2 <-> 11,
+    2 <-> 12, 2 <-> 18, 2 <-> 19, 3 <-> 5, 3 <-> 8, 3 <-> 10, 3 <-> 16,
+    3 <-> 20, 4 <-> 9, 4 <-> 13, 4 <-> 14, 4 <-> 15, 4 <-> 17, 4 <-> 18,
+    4 <-> 19, 5 <-> 8, 5 <-> 9, 5 <-> 14, 5 <-> 15, 5 <-> 20, 6 <-> 11,
+    6 <-> 12, 7 <-> 8, 7 <-> 9, 7 <-> 11, 7 <-> 12, 7 <-> 16, 8 <-> 9,
+    8 <-> 12, 8 <-> 15, 8 <-> 19, 9 <-> 11, 9 <-> 12, 9 <-> 15, 9 <-> 18,
+    9 <-> 19, 10 <-> 16, 10 <-> 20, 11 <-> 12, 11 <-> 18, 11 <-> 19,
+    13 <-> 14, 13 <-> 17, 13 <-> 18, 13 <-> 19, 14 <-> 15, 14 <-> 20,
+    15 <-> 19, 16 <-> 20, 17 <-> 18, 17 <-> 19, 18 <-> 19},
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGLuneBetaSkeleton[bsPoints, 1.5],
+  Graph@{10 <-> 16, 3 <-> 16, 3 <-> 8, 1 <-> 3, 1 <-> 16, 11 <-> 12, 8 <-> 9,
+    1 <-> 7, 5 <-> 14, 4 <-> 13, 4 <-> 15, 9 <-> 15, 17 <-> 18,
+    18 <-> 19, 3 <-> 20, 5 <-> 8, 1 <-> 8, 10 <-> 20, 9 <-> 11, 2 <-> 6,
+    7 <-> 12, 5 <-> 20, 5 <-> 15, 9 <-> 19, 6 <-> 12, 2 <-> 11,
+    13 <-> 17, 4 <-> 19},
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGLuneBetaSkeleton[bsPoints, 2.5],
+  Graph[
+    Range@Length[bsPoints],
+    {10 <-> 16, 1 <-> 3, 1 <-> 16, 11 <-> 12, 8 <-> 9, 1 <-> 7, 5 <-> 14,
+    4 <-> 15, 17 <-> 18, 18 <-> 19, 3 <-> 20, 10 <-> 20, 9 <-> 11,
+    2 <-> 6, 7 <-> 12, 5 <-> 15, 2 <-> 11, 4 <-> 19}
+  ],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGGabrielGraph[bsPoints],
+  Graph@{10 <-> 16, 3 <-> 16, 3 <-> 10, 3 <-> 8, 1 <-> 3, 1 <-> 16, 11 <-> 12,
+    8 <-> 9, 1 <-> 7, 3 <-> 5, 5 <-> 14, 4 <-> 13, 4 <-> 15, 9 <-> 15,
+    17 <-> 18, 18 <-> 19, 3 <-> 20, 5 <-> 8, 1 <-> 8, 10 <-> 20,
+    9 <-> 11, 2 <-> 6, 7 <-> 12, 5 <-> 20, 5 <-> 15, 4 <-> 17, 9 <-> 19,
+    6 <-> 12, 2 <-> 11, 13 <-> 17, 4 <-> 19},
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRelativeNeighborhoodGraph[bsPoints],
+  Graph@{10 <-> 16, 1 <-> 3, 1 <-> 16, 11 <-> 12, 8 <-> 9, 1 <-> 7, 5 <-> 14,
+    4 <-> 15, 17 <-> 18, 18 <-> 19, 3 <-> 20, 1 <-> 8, 10 <-> 20,
+    9 <-> 11, 2 <-> 6, 7 <-> 12, 5 <-> 20, 5 <-> 15, 9 <-> 19, 2 <-> 11,
+    13 <-> 17, 4 <-> 19},
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 0.9],
+  Graph@{1 <-> 3, 1 <-> 7, 1 <-> 8, 1 <-> 10, 1 <-> 16, 2 <-> 6, 2 <-> 11,
+    2 <-> 12, 2 <-> 18, 2 <-> 19, 3 <-> 5, 3 <-> 8, 3 <-> 10, 3 <-> 16,
+    3 <-> 20, 4 <-> 9, 4 <-> 13, 4 <-> 14, 4 <-> 15, 4 <-> 17, 4 <-> 19,
+    5 <-> 8, 5 <-> 9, 5 <-> 14, 5 <-> 15, 5 <-> 20, 6 <-> 11, 6 <-> 12,
+    7 <-> 8, 7 <-> 9, 7 <-> 11, 7 <-> 12, 8 <-> 9, 8 <-> 12, 8 <-> 15,
+    8 <-> 19, 9 <-> 11, 9 <-> 15, 9 <-> 19, 10 <-> 16, 10 <-> 20,
+    11 <-> 12, 11 <-> 18, 13 <-> 14, 13 <-> 17, 13 <-> 19, 14 <-> 15,
+    14 <-> 20, 15 <-> 19, 17 <-> 18, 18 <-> 19},
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 1.1],
+  Graph@{10 <-> 16, 1 <-> 3, 11 <-> 12, 8 <-> 9, 1 <-> 7, 5 <-> 14, 4 <-> 13,
+    4 <-> 15, 17 <-> 18, 18 <-> 19, 3 <-> 20, 10 <-> 20, 9 <-> 11,
+    2 <-> 6, 7 <-> 12, 5 <-> 15, 2 <-> 11, 13 <-> 17, 4 <-> 19},
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRelativeNeighborhoodGraph@GraphEmbedding@IGTriangularLattice[5],
+  IGTriangularLattice[5],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGLuneBetaSkeleton[GraphEmbedding@IGTriangularLattice[4], 2.01],
+  IGEmptyGraph[10],
+  SameTest -> IGSameGraphQ
+]
+
+
+(*******************************************************************************)
 MTSection["Test remaining functions"]
 
 (* IGData *)
@@ -3099,7 +3248,8 @@ MT[
     Total[
       PropertyValue[{wugi, #}, EdgeWeight]& /@ Cases[EdgeList[wugi], (v ~ UndirectedEdge ~ _) | (_ ~ UndirectedEdge ~ v)]
     ]
-  ] /@ VertexList[wugi]
+  ] /@ VertexList[wugi],
+  SameTest -> Equal
 ]
 
 MT[
@@ -3108,7 +3258,8 @@ MT[
     Total[
       PropertyValue[{wdgi, #}, EdgeWeight]& /@ Cases[EdgeList[wdgi], (v ~ DirectedEdge ~ _)]
     ]
-  ] /@ VertexList[wdgi]
+  ] /@ VertexList[wdgi],
+  SameTest -> Equal
 ]
 
 MT[
@@ -3117,7 +3268,8 @@ MT[
     Total[
       PropertyValue[{wdgi, #}, EdgeWeight]& /@ Cases[EdgeList[wdgi], (_ ~ DirectedEdge ~ v)]
     ]
-  ] /@ VertexList[wdgi]
+  ] /@ VertexList[wdgi],
+  SameTest -> Equal
 ]
 
 MT[
