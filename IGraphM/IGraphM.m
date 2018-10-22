@@ -5166,13 +5166,14 @@ igBetaSkeletonEdges0[pts_, beta_] :=
     ]
 
 
+(* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
 igLuneBetaSkeleton[pts_, beta_, opt___] :=
     catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
       With[{
           edges = Which[
-            beta  > 1, igLuneBetaSkeletonEdges[pts, beta],
-            beta == 1, igGabrielGraphEdges[pts],
-            beta  < 1, igBetaSkeletonEdges0[pts, beta]
+            beta  > 1, igLuneBetaSkeletonEdges[N[pts], beta],
+            beta == 1, igGabrielGraphEdges[N[pts]],
+            beta  < 1, igBetaSkeletonEdges0[N[pts], beta]
           ]
         },
         Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
@@ -5184,13 +5185,14 @@ IGLuneBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ,
     igLuneBetaSkeleton[pts, beta, opt]
 
 
+(* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
 igCircleBetaSkeleton[pts_, beta_, opt___] :=
     catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
       With[{
           edges = Which[
-            beta >  1, igCircleBetaSkeletonEdges[pts, beta],
-            beta == 1, igGabrielGraphEdges[pts],
-            beta <  1, igBetaSkeletonEdges0[pts, beta]
+            beta >  1, igCircleBetaSkeletonEdges[N[pts], beta],
+            beta == 1, igGabrielGraphEdges[N[pts]],
+            beta <  1, igBetaSkeletonEdges0[N[pts], beta]
           ]
         },
         Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
