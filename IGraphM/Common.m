@@ -3,62 +3,60 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2016-06-12 *)
-
 (* :Copyright: (c) 2018 Szabolcs Horvát *)
 
 
-(* The following definitions are used in multiple, independently loadable packages. *)
+Package["IGraphM`"]
 
-(* General::invopt is not present before Mathematica version 10.3. We set it up manually when needed. *)
-If[Not@ValueQ[General::invopt],
-  General::invopt = "Invalid value `1` for parameter `2`. Using default value `3`.";
-]
-
-IGraphM`IGraphM::mixed = "Mixed graphs are not supported by IGraph/M. Use DirectedGraph to convert undirected edges to two reciprocal directed ones.";
-
+PackageScope["igGraphQ"]
 igGraphQ::usage = "igGraphQ[g] checks if g is an igraph-compatible graph.";
-igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM`IGraphM::mixed]; False, True] &;
+igGraphQ = GraphQ[#] && If[MixedGraphQ[#], Message[IGraphM::mixed]; False, True] &;
 
+
+PackageScope["igDirectedQ"]
 igDirectedQ::usage = "igDirectedQ[g] checks if g is a directed graph. Empty graphs are considered undirected.";
 igDirectedQ[graph_] := DirectedGraphQ[graph] && Not@EmptyGraphQ[graph]
 
-amendUsage::usage = "amendUsage[symbol, stringTempl, templArg1, templArg2, ...] amends the usage message of symbol.";
-amendUsage[sym_Symbol, amend_, args___] :=
-    Module[{lines},
-      lines = StringSplit[sym::usage, "\n"];
-      lines[[1]] = lines[[1]] <> " " <> StringTemplate[amend, InsertionFunction -> (ToString[#, InputForm]&)][args];
-      sym::usage = StringJoin@Riffle[lines, "\n"]
-    ]
 
-optNames::usage = "optNames[sym1, sym2, ...] returns the option names associated with the given symbols.";
-optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
-
-
+PackageScope["applyGraphOpt"]
 applyGraphOpt::usage = "applyGraphOpt[options][graph] applies the given options to graph.";
 applyGraphOpt[opt___][graph_] := Graph[graph, Sequence@@FilterRules[{opt}, Options[Graph]]]
 
+
+PackageScope["applyGraphOpt3D"]
 applyGraphOpt3D::usage = "applyGraphOpt3D[options][graph] applies the given options to graph using Graph3D.";
 applyGraphOpt3D[opt___][graph_] := Graph3D[graph, Sequence@@FilterRules[{opt}, Options[Graph3D]]]
 
 
+PackageScope["zeroDiagonal"]
 zeroDiagonal::usage = "zeroDiagonal[mat] replaces the diagonal of a matrix with zeros.";
 zeroDiagonal[mat_] := UpperTriangularize[mat, 1] + LowerTriangularize[mat, -1]
 
 
+PackageScope["adjacencyGraph"]
+(* Fast version of directed or undirected adjacency matrix -> graph conversion.
+   The matrix is not checked to be symmetric in the undirected case. *)
 adjacencyGraph::usage = "adjacencyGraph[vertices, sparseAM, directed]";
 adjacencyGraph[vs_, sa_, True] := Graph[vs, {sa, Null}]
 adjacencyGraph[vs_, sa_, False] := Graph[vs, {Null, sa}]
 
+
+PackageScope["removeSelfLoops"]
 removeSelfLoops::usage = "removeSelfLoops[graph] removes any self loops from graph.";
 removeSelfLoops[g_?LoopFreeGraphQ] := g (* catches empty case *)
 removeSelfLoops[g_] := adjacencyGraph[VertexList[g], zeroDiagonal@AdjacencyMatrix[g], DirectedGraphQ[g]]
 
+
+PackageScope["removeMultiEdges"]
 removeMultiEdges::usage = "removeMultiEdges[graph] removes any multi-edges from graph.";
 removeMultiEdges[g_?MultigraphQ] := adjacencyGraph[VertexList[g], Unitize@AdjacencyMatrix[g], DirectedGraphQ[g]]
 removeMultiEdges[g_] := g
 
 
+PackageScope["transformGraphOptions"]
+
 $graphLink::usage = "$graphLink is a loopback link used to convert atomic graphs to a compound form.";
+
 transformGraphOptions::usage = "transformGraphOptions[fun][graph] applies fun to the list of options stored in graph.";
 transformGraphOptions[fun_][g_?GraphQ] :=
     (
@@ -77,11 +75,13 @@ transformGraphOptions[fun_][g_?GraphQ] :=
     )
 
 
+PackageScope["ruleQ"]
 ruleQ::usage = "ruleQ[expr] gives True if expr is a rule, False otherwise.";
 ruleQ[_Rule | _RuleDelayed] = True;
 ruleQ[_] = False;
 
 
+PackageScope["partitionRagged"]
 partitionRagged::usage = "partitionRagged[list, lengths] partitions list into parts of the given lengths.";
 If[$VersionNumber >= 11.2,
   partitionRagged = TakeList,
@@ -89,22 +89,95 @@ If[$VersionNumber >= 11.2,
 ]
 
 
-(*
-	Numeric codes are for certain special types of completions. Zero means 'don't complete':
+(***** Tools for error handling *****)
 
-	Normal argument     0
-	AbsoluteFilename    2
-	RelativeFilename    3
-	Color               4
-	PackageName         7
-	DirectoryName       8
-	InterpreterType     9
-*)
+(* TODO: we need a better error handling framework.
+ * The message tag should be encapsulated in the thrown object.
+ * catch[] should have a version that takes a head and reports the message under that head (head::tag)
+ *)
 
-addCompletion::usage = "addCompletion[symbol, argSpec] adds FE auto-completion for symbol.";
-addCompletion[fun_Symbol, argSpec_List] :=
-    If[$Notebooks,
-      With[{compl = SymbolName[fun] -> argSpec},
-        FE`Evaluate[FEPrivate`AddSpecialArgCompletion[compl]]
-      ]
-    ]
+igTag::usage = "igTag is a private tag for Throw/Catch within IGraphM.";
+
+PackageScope["throw"]
+throw::usage = "throw[val]";
+throw[val_] := Throw[val, igTag]
+
+PackageScope["catch"]
+catch::usage = "catch[expr]";
+SetAttributes[catch, HoldFirst]
+catch[expr_] := Catch[expr, igTag]
+
+PackageScope["check"]
+check::usage = "check[val]";
+check[val_LibraryFunctionError] := throw[val] (* TODO: change to throw[$Failed] *)
+check[$Failed] := throw[$Failed]
+check[HoldPattern[LibraryFunction[___][___]]] := throw[$Failed]
+check[val_] := val
+
+PackageScope["sck"]
+sck::usage = "sck[val]";
+sck[HoldPattern[LibraryFunction[___][___]]] := $Failed
+sck[val_] := val
+
+
+(***** Functions for argument checking  *****)
+
+(* Note: VectorQ, MatrixQ, etc. are optimized with certain second arguments. For example,
+ * VectorQ[#, NumericQ]& will immediately return True for a packed array without evaluating
+ * NumericQ for each array argument separately. Below it is noted which of these second arguments
+ * the check is fast for. *)
+
+PackageScope["nonNegIntVecQ"]
+nonNegIntVecQ::usage = "nonNegIntVecQ[vec]";
+nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&; (* verified fast M11.1+ *)
+
+PackageScope["posIntVecQ"]
+posIntVecQ::usage = "posIntVecQ[vec]";
+posIntVecQ = VectorQ[#, Internal`PositiveMachineIntegerQ]&; (* verified fast M11.1+ *)
+
+PackageScope["intVecQ"]
+intVecQ::usage = "intVecQ[]";
+intVecQ =
+    If[$VersionNumber < 11.0,
+      VectorQ[#, IntegerQ]&, (* In M10.4 and earlier VectorQ[{}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
+      VectorQ[#, Developer`MachineIntegerQ]& (* verified fast *)
+    ];
+
+PackageScope["intMatQ"]
+intMatQ::usage = "intMatQ[mat]";
+intMatQ =
+    If[$VersionNumber < 11.0,
+      MatrixQ[#, IntegerQ]&, (* In M10.4 and earlier MatrixQ[{{}}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
+      MatrixQ[#, Developer`MachineIntegerQ]& (* verified fast *)
+    ];
+
+PackageScope["positiveNumericQ"]
+positiveNumericQ::usage = "positiveNumericQ[num]";
+positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&;
+
+PackageScope["nonNegativeNumericQ"]
+nonNegativeNumericQ::usage = "nonNegativeNumericQ[num]";
+nonNegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&;
+
+PackageScope["positiveVecQ"]
+positiveVecQ::usage = "positiveVecQ[vec]";
+positiveVecQ = VectorQ[#, Positive]&; (* NOT fast *)
+
+PackageScope["positiveOrInfQ"]
+(* TODO: It seems that this can be replaced by TrueQ@Positive[#}& because Positive[Infinity] === True.
+   Investigate performance. A well-named function is still needed for this purpose for clarity. *)
+positiveOrInfQ::usage = "positiveOrInfQ[val]";
+positiveOrInfQ[Infinity] = True;
+positiveOrInfQ[x_ /; NumericQ[x] && Positive[x]] = True;
+
+(* Replace Infinity by 0 *)
+PackageScope["infToZero"]
+infToZero::usage = "infToZero[]";
+infToZero[arg_] := Replace[arg, Infinity -> 0]
+
+(* Unpack array containing infinities or indeterminates *)
+(* TODO: Test on all platforms that unpacking such arrays produces usable Infinity and Indeterminate *)
+PackageScope["fixInfNaN"]
+fixInfNaN::usage = "fixInfNaN[]";
+fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Developer`FromPackedArray[arr], arr]
+fixInfNaN[arr_] := arr

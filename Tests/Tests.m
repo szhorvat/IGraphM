@@ -249,14 +249,14 @@ t = First@AbsoluteTiming[
 Print["Package load timing: ", t]
 
 t = First@AbsoluteTiming[
-  IGraphM`LTemplate`ValidTemplateQ[IGraphM`Private`template]
+  IGraphM`LTemplate`ValidTemplateQ[IGraphM`IGraphM`PackagePrivate`template]
 ];
 Print["Template verification timing: ", t]
 
 
-IGraphM`LTemplate`UnloadTemplate[IGraphM`Private`template]
+IGraphM`LTemplate`UnloadTemplate[IGraphM`IGraphM`PackagePrivate`template]
 t = First@AbsoluteTiming[
-  IGraphM`Private`LoadIGraphM[]
+  IGraphM`IGraphM`PackagePrivate`LoadIGraphM[]
 ];
 Print["Template load timing: ", t]
 
@@ -266,12 +266,7 @@ nameFromUsage[symname_] :=
       First@StringCases[sym::usage, Shortest[name__] ~~ "[" :> name]]
 
 MT[
-  AllTrue[Complement[Names["IGraphM`*"], {"IGraphM", "IGMinSeparators"}], nameFromUsage[#] === # &],
-  True
-]
-
-MT[
-  AllTrue[Complement[Names["IGraphM`Utilities`*"], {"$IGExportFormats"}], nameFromUsage[#] === # &],
+  AllTrue[Complement[Names["IGraphM`*"], {"IGraphM", "IGMinSeparators", "$IGExportFormats"}], nameFromUsage[#] === # &],
   True
 ]
 
@@ -289,7 +284,7 @@ MT[
 MTSection["Undirected"]
 
 MT[
-  ig = IGraphM`Private`igMake[ugs],
+  ig = IGraphM`PackageScope`igMake[ugs],
   IGraphM`LTemplate`Classes`IG[1]
 ]
 
@@ -320,7 +315,7 @@ MT[
 MTSection["Directed"]
 
 MT[
-  ig = IGraphM`Private`igMake[dgs],
+  ig = IGraphM`PackageScope`igMake[dgs],
   IGraphM`LTemplate`Classes`IG[2]
 ]
 
@@ -351,7 +346,7 @@ MT[
 MTSection["Weighted undirected"]
 
 MT[
-  ig = IGraphM`Private`igMake[wugs],
+  ig = IGraphM`PackageScope`igMake[wugs],
   IGraphM`LTemplate`Classes`IG[3]
 ]
 
@@ -393,7 +388,7 @@ MT[
 MTSection["Weighted directed"]
 
 MT[
-  ig = IGraphM`Private`igMake[wdgs],
+  ig = IGraphM`PackageScope`igMake[wdgs],
   IGraphM`LTemplate`Classes`IG[4]
 ]
 
@@ -436,9 +431,9 @@ MTSection["Cycling grahps through igraph"]
 
 compare[ig_, graph_] :=
     If[DirectedGraphQ[graph],
-      IGraphM`Private`igIndexVec[ig@"edgeList"[]] == List @@@ EdgeList@IndexGraph[graph]
+      IGraphM`PackageScope`igIndexVec[ig@"edgeList"[]] == List @@@ EdgeList@IndexGraph[graph]
       ,
-      Sort /@ IGraphM`Private`igIndexVec[ig@"edgeList"[]] == Sort /@ (List @@@ EdgeList@IndexGraph[graph])
+      Sort /@ IGraphM`PackageScope`igIndexVec[ig@"edgeList"[]] == Sort /@ (List @@@ EdgeList@IndexGraph[graph])
     ]
 
 cycleTestList = {
@@ -449,21 +444,21 @@ cycleTestList = {
 };
 
 MT[
-  compare[IGraphM`Private`igMake[#], #],
+  compare[IGraphM`PackageScope`igMake[#], #],
   True
 ]& /@ cycleTestList
 
 MT[
-  compare[IGraphM`Private`igMake[#], #],
+  compare[IGraphM`PackageScope`igMake[#], #],
   True
 ]& /@ Join[IGData[{"AllDirectedGraphs", 3}], IGData[{"AllDirectedGraphs", 4}]]
 
 MT[
-  compare[IGraphM`Private`igMake[#], #],
+  compare[IGraphM`PackageScope`igMake[#], #],
   True
 ]& /@ Join[IGData[{"AllUndirectedGraphs", 3}], IGData[{"AllUndirectedGraphs", 4}]]
 
-Print["Cycle timing: ", First@Timing[IGraphM`Private`igMake /@ cycleTestList;] ]
+Print["Cycle timing: ", First@Timing[IGraphM`PackageScope`igMake /@ cycleTestList;] ]
 
 
 (*******************************************************************************)
@@ -2283,7 +2278,7 @@ MT[
 
 bipartiteProjectionAM[g_, parts_] :=
     With[{im = IGBipartiteIncidenceMatrix[g, parts]},
-      IGraphM`Private`zeroDiagonal /@ Unitize[{im.Transpose[im], Transpose[im].im}]
+      IGraphM`PackageScope`zeroDiagonal /@ Unitize[{im.Transpose[im], Transpose[im].im}]
     ]
 
 MT[

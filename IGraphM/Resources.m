@@ -5,6 +5,9 @@
 (* :Date: 2017-12-25 *)
 (* :Copyright: (c) 2018 Szabolcs Horvát *)
 
+Package["IGraphM`"]
+
+PackageScope["$igClusterDataIcon"]
 
 $igClusterDataIcon::usage = "$igClusterDataIcon is the icon for IGClusterData summary boxes.";
 $igClusterDataIcon =

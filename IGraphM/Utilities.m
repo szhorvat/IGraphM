@@ -1,127 +1,140 @@
 (* Mathematica Package *)
 (* Created by Mathematica Plugin for IntelliJ IDEA, see http://wlplugin.halirutan.de/ *)
 
-(* :Title: IGraphM Utilities *)
-(* :Context: IGraphM`Utilities` *)
 (* :Author: szhorvat *)
 (* :Date: 2016-06-11 *)
-
 (* :Copyright: (c) 2018 Szabolcs Horvát *)
 
-BeginPackage["IGraphM`Utilities`"];
+Package["IGraphM`"]
 
-Unprotect /@ Names["IGraphM`Utilities`*"];
-
+PackageExport["IGNullGraphQ"]
 IGNullGraphQ::usage = "IGNullGraphQ[graph] tests whether graph has no vertices.";
 
+PackageExport["IGReverseGraph"]
 IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in graph while preserving edge weights.";
 
+PackageExport["IGSimpleGraph"]
 IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self loops and multi edges, according to the given options.";
 
+PackageExport["IGUnweighted"]
 IGUnweighted::usage = "IGUnweighted[graph] returns an unweighted version of an edge-weighted graph, while preserving other graph properties.";
 
+PackageExport["IGWeightedAdjacencyGraph"]
 IGWeightedAdjacencyGraph::usage =
     "IGWeightedAdjacencyGraph[matrix] creates a graph from a weighted adjacency matrix, taking 0 to mean unconnected.\n" <>
     "IGWeightedAdjacencyGraph[vertices, matrix] uses vertices as the vertex names.\n" <>
     "IGWeightedAdjacencyGraph[matrix, z] creates a graph from a weighted adjacency matrix, taking the value z to mean unconnected.\n" <>
     "IGWeightedAdjacencyGraph[vertices, matrix, z] uses vertices as the vertex names.";
 
+PackageExport["IGWeightedAdjacencyMatrix"]
 IGWeightedAdjacencyMatrix::usage =
     "IGWeightedAdjacencyMatrix[graph] gives the adjacency matrix of the edge weights of graph.\n" <>
     "IGWeightedAdjacencyMatrix[graph, z] gives the adjacency matrix of the edge weights of graph, using the value z to represent absent connections.";
 
+PackageExport["IGVertexWeightedQ"]
 IGVertexWeightedQ::usage = "IGVertexWeightedQ[graph] tests if graph is a vertex weighted graph.";
+
+PackageExport["IGEdgeWeightedQ"]
 IGEdgeWeightedQ::usage = "IGEdgeWeightedQ[graph] tests if graph is an edge weighted graph.";
 
-IGVertexProp::usage = "IGVertexProp[prop] is an operator that extracts the values of vertex property prop from a graph.";
-IGEdgeProp::usage   = "IGEdgeProp[prop] is an operator that extracts the values of edge property prop from a graph.";
 
-IGVertexMap::usage =
-    "IGVertexMap[f, prop, graph] maps the function f to the vertex property list of property prop in graph.\n" <>
-    "IGVertexMap[f, prop -> pf, graph] maps the function f to the values returned by pf[graph] and assigns the result to the vertex property prop.\n" <>
-    "IGVertexMap[f, prop -> {pf1, pf2, \[Ellipsis]}, graph] threads f over {pf1[graph], pf2[graph], \[Ellipsis]} and assigns the result to the vertex property prop.\n" <>
-    "IGVertexMap[f, spec] represents an operator form of IGVertexMap that can be applied to a graph.";
-IGEdgeMap::usage =
-    "IGEdgeMap[f, prop, graph] maps the function f to the edge property list of property prop in graph.\n" <>
-    "IGEdgeMap[f, prop -> pf, graph] maps the function f to the values returned by pf[graph] and assigns the result to the edge property prop.\n" <>
-    "IGEdgeMap[f, prop -> {pf1, pf2, \[Ellipsis]}, graph] threads f over {pf1[graph], pf2[graph], \[Ellipsis]} and assigns the result to the edge property prop.\n" <>
-    "IGEdgeMap[f, spec] represents an operator form of IGEdgeMap that can be applied to a graph.";
-
-IGVertexPropertyList::usage = "IGVertexPropertyList[graph] returns the list of available vertex properties in graph.";
-IGEdgePropertyList::usage = "IGEdgePropertyList[graph] returns the list of available edge properties in graph.";
-
+PackageExport["IGVertexStrength"]
 IGVertexStrength::usage =
     "IGVertexStrength[graph] returns the sum of edge weights for edges connecting to each vertex in graph.\n" <>
     "IGVertexStrength[graph, v] returns the sum of edge weights for edges connecting to vertex v in graph.";
+
+PackageExport["IGVertexInStrength"]
 IGVertexInStrength::usage =
     "IGVertexInStrength[graph] returns the sum of edge weights for the incoming edges of each vertex in graph.\n" <>
     "IGVertexInStrength[graph, v] returns the sum of edge weights for incoming edges of vertex v in graph.";
+
+PackageExport["IGVertexOutStrength"]
 IGVertexOutStrength::usage =
     "IGVertexOutStrength[graph] returns the sum of edge weights for the outgoing edges of each vertex in graph.\n" <>
     "IGVertexOutStrength[graph, v] returns the sum of edge weights for outgoing edges of vertex v in graph.";
 
+PackageExport["IGExportString"]
 IGExportString::usage = "IGExportString[graph, format] generates a string corresponding to graph in the given format. See $IGExportFormats for supported formats.";
 
+PackageExport["IGExport"]
 IGExport::usage =
     "IGExport[file, graph] exports graph to file in a format inferred from the file name.\n" <>
     "IGExport[file, graph, format] exports graph to file in the given format. See $IGExportFormats for supported formats.";
 
+PackageExport["$IGExportFormats"]
 $IGExportFormats::usage = "$IGExportFormats is a list of export formats supported by IGExport.";
 
+PackageExport["IGShorthand"]
 IGShorthand::usage = "IGShorthand[\"...\"] builds a graph from a shorthand notation such as \"a->b<-c\" or \"a-b,c-d\".";
 
+PackageExport["IGPartitionsToMembership"]
 IGPartitionsToMembership::usage =
     "IGPartitionsToMembership[elements, partitions] computes a membership vector for the given partitioning of elements.\n" <>
     "IGPartitionsToMembership[graph, partitions] computes a membership vector for the given partitioning of graph's vertices.\n" <>
     "IGPartitionsToMembership[elements] is an operator that can be applied to partitions.";
+
+PackageExport["IGMembershipToPartitions"]
 IGMembershipToPartitions::usage =
     "IGMembershipToPartitions[elements, membership] computes a partitioning of elements based on the given membership vector.\n" <>
     "IGMembershipToPartitions[graph, membership] computes a partitioning graph's vertices based on the given membership vector.\n" <>
     "IGMembershipToPartitions[elements] is an operator that can be applied to membership vectors.";
 
+PackageExport["IGSourceVertexList"]
 IGSourceVertexList::usage = "IGSourceVertexList[graph] returns the list of vertices with no incoming connections.";
+
+PackageExport["IGSinkVertexList"]
 IGSinkVertexList::usage = "IGSinkVertexList[graph] returns the list of vertices with no outgoing connections.";
+
+PackageExport["IGIsolatedVertexList"]
 IGIsolatedVertexList::usage = "IGIsolatedVertexList[graph] returns the list of isolated vertices.";
 
+PackageExport["IGReorderVertices"]
 IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vertices of graph according to the given vertex vector. Graph properties are preserved.";
 
+PackageExport["IGDirectedTree"]
 IGDirectedTree::usage = "IGDirectedTree[] is obsolete. Use IGOrientTree[] instead."; (* TODO: remove *)
+
+PackageExport["IGOrientTree"]
 IGOrientTree::usage =
     "IGOrientTree[tree, root] orients the edges of an undirected tree so that they point away from the root. The vertex order is not preserved: vertices will be ordered topologically.\n" <>
     "IGOrientTree[tree, root, \"In\"] orients the edges so that they point towards the root.";
 
+PackageExport["IGTake"]
 IGTake::usage =
     "IGTake[graph, subgraph] keeps only those vertices and edges of graph which are also present in subgraph, while retaining all graph properties.\n" <>
     "IGTake[graph, edges] uses an edge list as the subgraph specification.";
 
+PackageExport["IGZeroDiagonal"]
 IGZeroDiagonal::usage = "IGZeroDiagonal[matrix] replaces the diagonal of matrix with zeros.";
 
+
+PackageExport["IGAdjacencyMatrixPlot"]
 IGAdjacencyMatrixPlot::usage =
     "IGAdjacencyMatrixPlot[graph] plots the adjacency matrix of graph.\n" <>
     "IGAdjacencyMatrixPlot[graph, {v1, v2, \[Ellipsis]}] plots the adjacency matrix of the subgraph induced by the given vertices, using the specified vertex ordering.";
 
+PackageExport["IGKirchhoffMatrix"]
 IGKirchhoffMatrix::usage =
     "IGKirchhoffMatrix[graph] returns the Kirchhoff matrix, also known as Laplacian matrix of graph.\n" <>
     "IGKirchhoffMatrix[graph, \"In\"] will place the in-degrees on the diagonal instead of the out-degrees.";
 
+PackageExport["IGGiantComponent"]
 IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly connected component of graph.";
 
+PackageExport["IGSameGraphQ"]
 IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given graphs have the same vertices and edges. Graph properties or edge and vertex ordering is not taken into account.";
 
+PackageExport["IGAdjacencyList"]
 IGAdjacencyList::usage =
     "IGAdjacencyList[graph] returns the adjacency list of graph as an association.\n" <>
     "IGAdjacencyList[graph, \"In\"] returns the adjacency list of the reverse of a directed graph.\n" <>
     "IGAdjacencyList[graph, \"All\"] considers both incoming and outgoing edges.";
 
+PackageExport["IGAdjacencyGraph"]
 IGAdjacencyGraph::usage =
     "IGAdjacencyGraph[matrix] creates a graph from the given adjacency matrix.\n" <>
     "IGAdjacencyGraph[vertices, matrix] creates a graph with the given vertices from an adjacency matrix.\n" <>
     "IGAdjacencyGraph[adjList] creates a graph from an association representing an adjacency list.";
-
-Begin["`Private`"];
-
-(* Common definitions *)
-Get["IGraphM`Common`"];
 
 
 (* Utility functions *)
@@ -426,184 +439,6 @@ IGVertexOutStrength[g_?igGraphQ, v_] :=
         ]
       ] /; IntegerQ[index]
     ]
-
-(***** Property transformation functions *****)
-
-missing = Missing["Nonexistent"]; (* this will be used for non-existent property values *)
-
-vertexWrapper::usage = "vertexWrapper is an internal symbolic wrapper used by IGVertexProp to work around retrieving properties from graphs with vertices that are lists.";
-
-SyntaxInformation[IGVertexProp] = {"ArgumentsPattern" -> {_}};
-IGVertexProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
-IGVertexProp[VertexWeight][g_?GraphQ] :=
-    If[IGVertexWeightedQ[g],
-      GraphComputation`WeightVector[g],
-      ConstantArray[missing, VertexCount[g]]
-    ]
-IGVertexProp[prop : (* VertexWeight| *)VertexCapacity (* not VertexCoordinates! *)][g_?GraphQ] :=
-    With[{values = PropertyValue[g, prop]}, (* fails on null graph, but that is caught by the first pattern *)
-      If[values === Automatic,
-        ConstantArray[missing, VertexCount[g]],
-        values
-      ]
-    ]
-IGVertexProp[prop_][g_?GraphQ] :=
-    (* work around PropertyValue failing when some graph vertices are lists *)
-    With[{g2 = If[MemberQ[VertexList[g], _List], VertexReplace[g, v_ :> vertexWrapper[v]], g]},
-      Replace[PropertyValue[{g2,#}, prop]& /@ VertexList[g2], $Failed -> missing, {1}]
-    ]
-
-
-specialEdgePropsPattern = EdgeWeight|EdgeCost|EdgeCapacity;
-
-IGEdgeProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgePropsPattern] <> ".";
-
-SyntaxInformation[IGEdgeProp] = {"ArgumentsPattern" -> {_}};
-IGEdgeProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
-IGEdgeProp[EdgeWeight][g_?GraphQ] :=
-    If[IGEdgeWeightedQ[g],
-      GraphComputation`WeightValues[g],
-      ConstantArray[missing, EdgeCount[g]]
-    ]
-IGEdgeProp[prop : specialEdgePropsPattern][g_?GraphQ] :=
-    With[{values = PropertyValue[g, prop]}, (* fails on null graph, but that is caught by the first pattern *)
-      If[values === Automatic,
-        ConstantArray[missing, EdgeCount[g]],
-        values
-      ]
-    ]
-IGEdgeProp[prop_][g_?GraphQ] :=
-    Module[{multi = MultigraphQ[g]},
-      If[multi, Message[IGEdgeProp::nmg]];
-      Replace[PropertyValue[{g, #}, prop]& /@ EdgeList[g], $Failed -> missing, {1}] /; Not[multi]
-    ]
-
-
-igSetVertexProperty[g_, prop_, values_] /; Length[values] == VertexCount[g] :=
-    SetProperty[g, Properties -> Thread[VertexList[g] -> List /@ Thread[prop -> values]]]
-igSetVertexProperty[g_, prop : VertexWeight|VertexCapacity|VertexCoordinates, values_] /; Length[values] == VertexCount[g] :=
-    transformGraphOptions[ Append[FilterRules[#, Except[prop]], prop -> values]& ][g]
-    (* Graph[VertexList[g], EdgeList[g], prop -> values, FilterRules[Options[g], Except[prop]]] *)
-igSetVertexProperty[g_, prop_, values_] := $Failed
-
-
-igSetEdgeProperty[g_, prop_, values_] /; Length[values] == EdgeCount[g] :=
-    SetProperty[g, Properties -> Thread[EdgeList[g] -> List /@ Thread[prop -> values]]]
-igSetEdgeProperty[g_, prop : specialEdgePropsPattern, values_] /; Length[values] == EdgeCount[g] :=
-    transformGraphOptions[ Append[FilterRules[#, Except[prop]], prop -> values]& ][g]
-    (* Graph[VertexList[g], EdgeList[g], prop -> values, FilterRules[Options[g], Except[prop]]] *)
-igSetEdgeProperty[g_, prop_, values_] := $Failed
-
-
-IGVertexMap::eprop    = "Warning: `` is an edge property. It should not be used as a vertex property name.";
-IGVertexMap::propname = "Warning: Property name `` is not a symbol or string.";
-IGVertexMap::list     = "`` did not return a list of appropriate length when applied to the graph.";
-IGVertexMap::list2    = "The following functions did not return lists of appropriate length when applied to the graph: ``.";
-
-checkVertexProp[prop:
-  EdgeWeight|EdgeCapacity|EdgeCost|
-  EdgeStyle|EdgeShapeFunction|EdgeLabels|EdgeLabelStyle] := Message[IGVertexMap::eprop, prop]
-checkVertexProp[_Symbol | _String] := Null
-checkVertexProp[prop_] := Message[IGVertexMap::propname, prop]
-
-SyntaxInformation[IGVertexMap] = {"ArgumentsPattern" -> {_, _, _.}};
-IGVertexMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
-    Module[{values},
-      checkVertexProp[prop];
-      values = pfun[g];
-      If[Not[ListQ[values] && Length[values] == VertexCount[g]],
-        Message[IGVertexMap::list, pfun];
-        Return[$Failed]
-      ];
-      igSetVertexProperty[g, prop, fun /@ pfun[g]]
-    ]
-IGVertexMap[fun_, (Rule|RuleDelayed)[prop_, pfunlist_List], g_?GraphQ] :=
-    Module[{values, badpos},
-      checkVertexProp[prop];
-      values = Through[pfunlist[g]];
-      badpos = Position[Length /@ values, Except@VertexCount[g], {1}, Heads -> False];
-      If[badpos =!= {},
-        Message[IGVertexMap::list2, Extract[pfunlist, badpos]];
-        Return[$Failed]
-      ];
-      igSetVertexProperty[g, prop, MapThread[fun, Through[pfunlist[g]]]]
-    ]
-IGVertexMap[fun_, prop : Except[_Rule|_RuleDelayed], g_?GraphQ] := IGVertexMap[fun, prop -> IGVertexProp[prop], g]
-IGVertexMap[fun_, spec_][g_] := IGVertexMap[fun, spec, g]
-
-
-IGEdgeMap::vprop    = "Warning: `` is a vertex property. It should not be used as an edge property name.";
-IGEdgeMap::propname = IGVertexMap::propname;
-IGEdgeMap::list     = IGVertexMap::list;
-IGEdgeMap::list2    = IGVertexMap::list2;
-IGEdgeMap::nmg      = IGEdgeProp::nmg;
-
-checkEdgeProp[prop:
-  VertexWeight|VertexCapacity|
-  VertexSize|VertexShape|VertexShapeFunction|VertexStyle|VertexLabels|VertexLabelStyle|
-  VertexCoordinates] := Message[IGEdgeMap::vprop, prop]
-checkEdgeProp[_Symbol | _String] := Null
-checkEdgeProp[prop_] := Message[IGEdgeMap::propname, prop]
-
-SyntaxInformation[IGEdgeMap] = {"ArgumentsPattern" -> {_, _, _.}};
-IGEdgeMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
-    Module[{values},
-      If[MultigraphQ[g] && Not@MatchQ[prop, specialEdgePropsPattern],
-        Message[IGEdgeMap::nmg];
-        Return[$Failed]
-      ];
-      checkEdgeProp[prop];
-      values = pfun[g];
-      If[Not[ListQ[values] && Length[values] == EdgeCount[g]],
-        Message[IGEdgeMap::list, pfun];
-        Return[$Failed]
-      ];
-      igSetEdgeProperty[g, prop, fun /@ values]
-    ]
-IGEdgeMap[fun_, (Rule|RuleDelayed)[prop_, pfunlist_List], g_?GraphQ] :=
-    Module[{values, badpos},
-      If[MultigraphQ[g] && Not@MatchQ[prop, specialEdgePropsPattern],
-        Message[IGEdgeMap::nmg];
-        Return[$Failed]
-      ];
-      checkEdgeProp[prop];
-      values = Through[pfunlist[g]];
-      badpos = Position[Length /@ values, Except@EdgeCount[g], {1}, Heads -> False];
-      If[badpos =!= {},
-        Message[IGEdgeMap::list2, Extract[pfunlist, badpos]];
-        Return[$Failed]
-      ];
-      igSetEdgeProperty[g, prop, MapThread[fun, values]]
-    ]
-IGEdgeMap[fun_, prop : Except[_Rule|_RuleDelayed], g_?GraphQ] := IGEdgeMap[fun, prop -> IGEdgeProp[prop], g]
-IGEdgeMap[fun_, spec_][g_] := IGEdgeMap[fun, spec, g]
-
-
-(* Retrieve available edge and vertex property names *)
-
-hasCustomProp[g_] := OptionValue[Options[g, Properties], Properties] =!= {}
-
-standardVertexProperties = {
-  VertexCoordinates,
-  VertexShape, VertexShapeFunction, VertexSize, VertexStyle,
-  VertexLabels, VertexLabelStyle,
-  VertexWeight, VertexCapacity
-};
-
-SyntaxInformation[IGVertexPropertyList] = {"ArgumentsPattern" -> {_}};
-IGVertexPropertyList[g_?IGNullGraphQ] = {};
-IGVertexPropertyList[g_ /; GraphQ[g] && hasCustomProp[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, VertexList[g]}]]
-IGVertexPropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardVertexProperties]
-
-standardEdgeProperties = {
-  EdgeStyle, EdgeShapeFunction, EdgeLabels, EdgeLabelStyle,
-  EdgeWeight, EdgeCapacity, EdgeCost
-};
-
-SyntaxInformation[IGEdgePropertyList] = {"ArgumentsPattern" -> {_}};
-IGEdgePropertyList[g_?EmptyGraphQ] = {};
-IGEdgePropertyList[g_ /; GraphQ[g] && hasCustomProp[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, EdgeList[g]}]]
-IGEdgePropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardEdgeProperties]
 
 
 (***** Import and export *****)
@@ -1151,13 +986,3 @@ IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPatt
         Mesh -> mesh
       ]
     ]
-
-
-(***** Finalize *****)
-
-(* Protect all package symbols *)
-With[{syms = Names["IGraphM`Utilities`*"]}, SetAttributes[syms, {Protected, ReadProtected}] ];
-
-End[]; (* `Private` *)
-
-EndPackage[];

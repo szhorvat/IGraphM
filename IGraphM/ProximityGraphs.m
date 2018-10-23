@@ -1,0 +1,302 @@
+(* Mathematica Package *)
+(* Created by Mathematica plugin for IntelliJ IDEA *)
+
+(* :Author: szhorvat *)
+(* :Date: 2018-10-23 *)
+(* :Copyright: (c) 2018 Szabolcs Horvát *)
+
+Package["IGraphM`"]
+
+PackageImport["IGraphM`LTemplate`"]
+PackageImport["TriangleLink`"]
+PackageImport["TetGenLink`"]
+
+PackageExport["IGDelaunayGraph"]
+IGDelaunayGraph::usage = "IGDelaunayGraph[points] computes the Delaunay graph of the given points.";
+
+PackageExport["IGLuneBetaSkeleton"]
+IGLuneBetaSkeleton::usage = "IGLuneBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
+
+PackageExport["IGCircleBetaSkeleton"]
+IGCircleBetaSkeleton::usage = "IGCircleBetaSkeleton[points, beta] computes the circle-based beta skeleton of the given points.";
+
+PackageExport["IGRelativeNeighborhoodGraph"]
+IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighborhood graph of the given points.";
+
+PackageExport["IGGabrielGraph"]
+IGGabrielGraph::usage = "IGGabrielGraph[points] computes the Gabriel graph of the given points.";
+
+delaunayEdges1D[points_] := Partition[Ordering@N[points], 2, 1]
+
+(* TODO: TriangleDelaunay does not complain about duplicate points--somehow detect this and throw an error. *)
+delaunayEdges2D[points_] :=
+    Switch[Length[points],
+      0 | 1, {},
+      2, {{1, 2}},
+      _,
+      Module[{res, pts, triangles, v1, v2},
+        res = Quiet[TriangleDelaunay[points], TriangleDelaunay::trifc];
+        If[res === $Failed,
+          (* TriangleDelaunay failed: check if points are collinear and if yes, fall back to 1D Delaunay *)
+          pts = PrincipalComponents@N[points];
+          {v1, v2} = Variance[pts];
+          If[v2/v1 < 10^Internal`$EqualTolerance $MachineEpsilon,
+            delaunayEdges1D[ pts[[All,1]] ],
+            Message[IGDelaunayGraph::fail]; throw[$Failed]
+          ]
+          ,
+          (* TriangleDelaunay succeeded: proceed as usual *)
+          {pts, triangles} = res;
+          If[Length[pts] == Length[points],
+            DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
+              Join @@ Transpose /@ Subsets[Transpose[triangles], {2}]
+            ],
+            Message[IGDelaunayGraph::dupl]; throw[$Failed]
+          ]
+        ]
+      ]
+    ]
+
+delaunayEdges3D[points_] :=
+    Switch[Length[points],
+      0 | 1, {},
+      2, {{1, 2}},
+      (* TetGenDelaunay fails gracefully for 3 points, thus this function  *)
+      _,
+      Module[{res, pts, tetrahedra, v1, v2, v3},
+        res = Quiet[TetGenDelaunay[points], TetGenDelaunay::tetfc];
+        If[res === $Failed,
+          (* TetGenDelaunay failed: check if points are collinear and if yes, fall back to 2D Delaunay *)
+          pts = PrincipalComponents@N[points];
+          {v1, v2, v3} = Variance[pts];
+          If[v3/v1 < 10^Internal`$EqualTolerance $MachineEpsilon,
+            delaunayEdges2D[ pts[[All,{1,2}]] ],
+            Message[IGDelaunayGraph::fail]; throw[$Failed]
+          ]
+          ,
+          {pts, tetrahedra} = res;
+          If[Length[pts] == Length[points],
+            DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
+              Join @@ Transpose /@ Subsets[Transpose[tetrahedra], {2}]
+            ],
+            Message[IGDelaunayGraph::dupl]; throw[$Failed]
+          ]
+        ]
+      ]
+    ]
+
+IGDelaunayGraph::dim  = "Delaunay graph computation is currently only supported in 2 and 3 dimensions.";
+IGDelaunayGraph::dupl = "Remove any duplicate points before the Delaunay graph computation.";
+IGDelaunayGraph::fail = "Could not compute Delaunay triangulation."; (* ask user to report? *)
+
+SyntaxInformation[IGDelaunayGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph, Graph3D]};
+IGDelaunayGraph[{}, opt : OptionsPattern[Graph]] := IGEmptyGraph[0, opt]
+IGDelaunayGraph[points_?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[{Graph, Graph3D}]] :=
+    catch@Switch[Last@Dimensions[points],
+      1,   Graph[Range@Length[points], delaunayEdges1D[points], DirectedEdges -> False, opt, VertexCoordinates -> ArrayPad[points, {{0, 0}, {0, 1}}]],
+      2,   Graph[Range@Length[points], delaunayEdges2D[points], DirectedEdges -> False, opt, VertexCoordinates -> points],
+      3, Graph3D[Range@Length[points], delaunayEdges3D[points], DirectedEdges -> False, opt, VertexCoordinates -> points],
+      _, Message[IGDelaunayGraph::dim]; throw[$Failed]
+    ]
+
+
+(* The following beta-skeleton computation is based on the implementation of Henrik Schumacher
+   https://mathematica.stackexchange.com/a/183391/12 *)
+
+(* Notes:
+
+   - The circle-based and lune-based beta skeletons are distinct.
+   - For beta <= 1, the two definitions coincide.
+   - For beta >= 1, the circle-based beta skeleton is a subgraph of the lune-based beta skeleton,
+      which is a subgraph of the Gabriel graph, which is a subgraph of the Delaunay graph.
+   - For beta = 1, the beta skeleton coincides with the Gabriel graph (either definition)
+   - For beta = 2, the lune-based beta skeleton coincides with the relative neighborhood graph
+ *)
+
+IGraphM::bsdim  = "Beta skeleton computation is only supported in 2 dimensions.";
+IGraphM::bsdupl = "Duplicate points must be removed before beta skeleton computations."
+
+(*
+betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
+    Module[{mesh, edges, edgeLengths, p, q},
+      If[Not@MatchQ[Dimensions[pts], {_,2}],
+        Message[IGraphM::bsdim];
+        throw[$Failed]
+      ];
+      mesh = DelaunayMesh[pts];
+      If[Head[mesh] === MeshRegion
+        ,
+        If[MeshCellCount[mesh, 0] =!= Length[pts],
+          Message[IGraphM::bsdupl];
+          throw[$Failed]
+        ];
+        edges = MeshCells[mesh, 1, "Multicells" -> True][[1, 1]];
+        edgeLengths = PropertyValue[{mesh, 1}, MeshCellMeasure];
+        {p, q} = pts[[#]]& /@ Transpose[edges];
+        ,
+        edges = Subsets[Range@Length[pts], {2}];
+        {p, q} = pts[[#]]& /@ Transpose[edges];
+        edgeLengths = Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
+      ];
+      {edges, edgeLengths, p, q}
+    ]
+*)
+
+betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
+    Module[{mesh, edges, edgeLengths, p, q},
+      If[Not@MatchQ[Dimensions[pts], {_,2}],
+        Message[IGraphM::bsdim];
+        throw[$Failed]
+      ];
+      edges = check@delaunayEdges2D[pts];
+      {p, q} = pts[[#]]& /@ Transpose[edges];
+      edgeLengths = Sqrt@Dot[Subtract[p, q]^2, ConstantArray[1., 2]];
+      {edges, edgeLengths, p, q}
+    ]
+
+betaSkeletonEdgeSuperset[pts_, beta_ /; beta < 1] :=
+    Module[{edges, edgeLengths, p, q},
+      If[Not@MatchQ[Dimensions[pts], {_,2}],
+        Message[IGraphM::bsdim];
+        throw[$Failed]
+      ];
+      edges = Subsets[Range@Length[pts], {2}];
+      {p, q} = pts[[#]]& /@ Transpose[edges];
+      edgeLengths = Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
+      {edges, edgeLengths, p, q}
+    ]
+
+(* beta >= 1, lune-based *)
+igLuneBetaSkeletonEdges[pts_, beta_] :=
+    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
+      nf = Nearest[pts -> Automatic];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
+
+      r = 0.5 beta;
+
+      centres1 = p + (r-1) (p-q);
+      centres2 = q + (r-1) (q-p);
+
+      Pick[
+        edges,
+        MapThread[
+          Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
+          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+        ],
+        0
+      ]
+    ]
+
+(* beta >= 1, circle-based *)
+igCircleBetaSkeletonEdges[pts_, beta_] :=
+    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
+      nf = Nearest[pts -> Automatic];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
+
+      r = 0.5 beta;
+
+      With[{mid = 0.5 (p+q), perp = Sqrt[r^2 - 0.25] RotationTransform[Pi/2][p-q]},
+        centres1 = mid + perp;
+        centres2 = mid - perp;
+      ];
+
+      Pick[
+        edges,
+        MapThread[
+          Function[{c1, c2, d}, Length@Union[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
+          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+        ],
+        0
+      ]
+    ]
+
+(* beta = 1, both lune and circle *)
+igGabrielGraphEdges[pts_] :=
+    Module[{nf, edges, edgeLengths, p, q},
+      nf = Nearest[pts -> Automatic];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 1];
+
+      Pick[
+        edges,
+        MapThread[
+          Function[{c, d}, Length@nf[c, {Infinity, d}]],
+          {(p+q)/2, 0.5 edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+        ],
+        0
+      ]
+    ]
+
+(* 0 < beta < 1, both lune and circle *)
+igBetaSkeletonEdges0[pts_, beta_] :=
+    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
+      nf = Nearest[pts -> Automatic];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
+
+      r = 0.5 / beta;
+
+      With[{mid = 0.5 (p+q), perp = Sqrt[r^2 - 0.25] RotationTransform[Pi/2][p-q]},
+        centres1 = mid + perp;
+        centres2 = mid - perp;
+      ];
+
+      Pick[
+        edges,
+        MapThread[
+          Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
+          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+        ],
+        0
+      ]
+    ]
+
+
+(* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
+igLuneBetaSkeleton[pts_, beta_, opt___] :=
+    catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
+      With[{
+        edges = Which[
+          beta  > 1, igLuneBetaSkeletonEdges[N[pts], beta],
+          beta == 1, igGabrielGraphEdges[N[pts]],
+          beta  < 1, igBetaSkeletonEdges0[N[pts], beta]
+        ]
+      },
+        Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
+      ]
+    ]
+
+SyntaxInformation[IGLuneBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGLuneBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
+    igLuneBetaSkeleton[pts, beta, opt]
+
+
+(* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
+igCircleBetaSkeleton[pts_, beta_, opt___] :=
+    catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
+      With[{
+        edges = Which[
+          beta >  1, igCircleBetaSkeletonEdges[N[pts], beta],
+          beta == 1, igGabrielGraphEdges[N[pts]],
+          beta <  1, igBetaSkeletonEdges0[N[pts], beta]
+        ]
+      },
+        Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
+      ]
+    ]
+
+SyntaxInformation[IGCircleBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGCircleBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
+    igCircleBetaSkeleton[pts, beta, opt]
+
+
+SyntaxInformation[IGRelativeNeighborhoodGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGRelativeNeighborhoodGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
+    igLuneBetaSkeleton[pts, 2, opt]
+
+
+SyntaxInformation[IGGabrielGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
+    igLuneBetaSkeleton[pts, 1, opt]

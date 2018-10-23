@@ -10,439 +10,672 @@
 (* :Mathematica Version: %%mathversion%% *)
 (* :Copyright: (c) 2018 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
-(* :Discussion: igraph interface for Mathematica, see http://igraph.org/ *)
+(* :Discussion: igraph interface for Mathematica, see http://szhorvat.net/mathematica/IGraphM  *)
 
+Package["IGraphM`"]
 
-(* Mathematica version check *)
-If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
-  Print["IGraph/M requires Mathematica 10.0.2 or later.  Aborting."];
-  Abort[]
-]
-
-
-BeginPackage["IGraphM`", {"IGraphM`Utilities`"}];
-
-(* We do not want the following contexts exported, thus they cannot be placed in BeginPackage *)
-Needs["HierarchicalClustering`"];
-Needs["TriangleLink`"];
-Needs["TetGenLink`"];
-
-Unprotect["IGraphM`*", "IGraphM`Developer`*", "IGraphM`Information`*"];
-
-(* Privately load and configure LTemplate *)
-(* NOTE: replaced in build script. Remember to update build script if editing these two lines. *)
-Get["LTemplate`LTemplatePrivate`"];
-ConfigureLTemplate["MessageSymbol" -> IGraphM, "LazyLoading" -> False];
+PackageImport["IGraphM`LTemplate`"]
+PackageImport["HierarchicalClustering`"]
 
 (***** Usage messages *****)
 
+PackageExport["IGraphM"]
 IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
-`Information`$Version::usage = "IGraphM`Information`$Version is a string that gives the version of the currently loaded IGraph/M package.";
-`Developer`Recompile::usage = "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
-`Developer`GetInfo::usage = "IGraphM`Developer`GetInfo[] returns useful information about IGraph/M and the system it is running on, for debugging and troubleshooting purposes.";
-PrependTo[$ContextPath, $Context <> "Developer`"];
+IGraphM`Information`$Version::usage = "IGraphM`Information`$Version is a string that gives the version of the currently loaded IGraph/M package.";
 
+IGraphM`Developer`Recompile::usage = "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
+
+IGraphM`Developer`GetInfo::usage = "IGraphM`Developer`GetInfo[] returns useful information about IGraph/M and the system it is running on, for debugging and troubleshooting purposes.";
+
+(*PrependTo[$ContextPath, $Context <> "Developer`"];*)
+
+PackageExport["IGDocumentation"]
 IGDocumentation::usage = "IGDocumentation[] opens the IGraph/M documentation.";
 
+PackageExport["IGData"]
 IGData::usage =
     "IGData[] returns a list of available items.\n" <>
     "IGData[item] returns the requested item.";
 
+PackageExport["IGVersion"]
 IGVersion::usage = "IGVersion[] returns the IGraph/M version along with the version of the igraph library in use.";
+
+PackageExport["IGSeedRandom"]
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
+PackageExport["IGLCF"]
 IGLCF::usage =
     "IGLCF[shifts, repeats] creates a graph from LCF notation.\n" <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
+
+PackageExport["IGTriangularLattice"]
 IGTriangularLattice::usage =
     "IGTriangularLattice[n] generates a triangular lattice graph on a size n equilateral triangle using n(n+1)/2 vertices.\n" <>
     "IGTriangularLattice[{m, n}] generates a triangular lattice graph on an m by n rectangle.";
+
+PackageExport["IGSquareLattice"]
 IGSquareLattice::usage = "IGSquareLattice[{d1, d2, \[Ellipsis]}] generates a square grid graph of the given dimensions.";
+
+(* TODO: remove eventually *)
+PackageExport["IGMakeLattice"]
 IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a square grid graph of the given dimensions. It is a synonym for IGSquareLattice";
+
+PackageExport["IGGraphAtlas"]
 IGGraphAtlas::usage =
     "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
+
+PackageExport["IGKautzGraph"]
 IGKautzGraph::usage = "IGKautzGraph[m, n] returns a Kautz graph on m+1 characters with string length n+1.";
+
+PackageExport["IGKaryTree"]
 IGKaryTree::usage =
     "IGKaryTree[n] returns a binary tree with n vertices.\n" <>
     "IGKaryTree[n, k] returns a k-ary tree with n vertices.";
 
+PackageExport["IGSymmetricTree"]
 IGSymmetricTree::usage = "IGSymmetricTree[{k1, k2, \[Ellipsis]}] returns a tree where vertices in the (i+1)st layer have k_i children.";
+
+PackageExport["IGBetheLattice"]
 IGBetheLattice::usage =
     "IGBetheLattice[n] returns the first n layers of a Bethe lattice with coordination number 3.\n" <>
     "IGBetheLattice[n, k] returns the first n layers of a Bethe lattice with coordination number k.";
 
+PackageExport["IGFromPrufer"]
 IGFromPrufer::usage = "IGFromPrufer[sequence] constructs a tree from a Prüfer sequence.";
+
+PackageExport["IGCompleteGraph"]
 IGCompleteGraph::usage = "IGCompleteGraph[n] returns a complete graph on n vertices.";
+
+PackageExport["IGCompleteAcyclicGraph"]
 IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.";
+
+PackageExport["IGDeBruijnGraph"]
 IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m characters and string length n.";
+
+PackageExport["IGChordalRing"]
 IGChordalRing::usage = "IGChordalRing[n, w] returns an extended chordal ring on n vertices, based on the vector or matrix w.";
 
+PackageExport["IGEmptyGraph"]
 IGEmptyGraph::usage =
     "IGEmptyGraph[] returns a graph with no edges or vertices.\n" <>
     "IGEmptyGraph[n] returns a graph with no edges and n vertices.";
 
+PackageExport["IGConnectNeighborhood"]
 IGConnectNeighborhood::usage =
     "IGConnectNeighborhood[graph] connects each vertex in graph to its 2nd order neighbourhood.\n" <>
     "IGConnectNeighborhood[graph, k] connects each vertex in graph to its order k neighbourhood. Weights and other graph properties are discarded.";
 
+PackageExport["IGMycielskian"]
 IGMycielskian::usage = "IGMycielskian[graph] returns the Mycielskian of graph.";
 
+PackageExport["IGBetweenness"]
 IGBetweenness::usage =
     "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.\n" <>
     "IGBetweenness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of betweenness centralities for the specified vertices.";
+
+PackageExport["IGEdgeBetweenness"]
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph.";
+
+PackageExport["IGCloseness"]
 IGCloseness::usage =
     "IGCloseness[graph] gives a list of closeness centralities for the vertices of graph.\n" <>
     "IGCloseness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of closeness centralities for the specified vertices.";
 
+PackageExport["IGBetweennessEstimate"]
 IGBetweennessEstimate::usage =
     "IGBetweennessEstimate[graph, cutoff] estimates vertex betweenness by considering only paths of at most length cutoff.\n" <>
     "IGBetweennessEstimate[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] estimates the betweenness of the specified vertices.";
+
+PackageExport["IGEdgeBetweennessEstimate"]
 IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff] estimates edge betweenness by considering only paths of at most length cutoff.";
+
+PackageExport["IGClosenessEstimate"]
 IGClosenessEstimate::usage =
     "IGClosenessEstimate[graph, cutoff] estimates closeness centrality by considering only paths of at most length cutoff.\n" <>
     "IGClosenessEstimate[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] estimates the closeness centrality of the specified vertices.";
 
+PackageExport["IGPageRank"]
 IGPageRank::usage =
     "IGPageRank[graph] gives a list of PageRank centralities for the vertices of the graph.\n" <>
     "IGPageRank[graph, damping] gives a list of PageRank centralities for the vertices of the graph using the given damping factor. The default damping factor is 0.85.";
 
+PackageExport["IGPersonalizedPageRank"]
 IGPersonalizedPageRank::usage =
     "IGPersonalizedPageRank[graph, reset] gives a list of personalized PageRank centralities for the vertices of the graph.\n" <>
     "IGPersonalizedPageRank[graph, reset, damping] gives a list of personalized PageRank centralities for the vertices of the graph using damping factor damping.";
 
+PackageExport["IGEigenvectorCentrality"]
 IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph] return the eigenvector centrality of each vertex.";
+
+PackageExport["IGHubScore"]
 IGHubScore::usage = "IGHubScore[graph] returns Kleinberg's hub score for each vertex.";
+
+PackageExport["IGAuthorityScore"]
 IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority score for each vertex.";
+
+PackageExport["IGConstraintScore"]
 IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint score for each vertex.";
 
+PackageExport["IGDegreeCentralization"]
 IGDegreeCentralization::usage =
     "IGDegreeCentralization[graph] computes the graph level centralization based on degree centralities.\n" <>
     "IGDegreeCentralization[graph, mode] uses the given mode, \"In\", \"Out\", or \"All\" to compute degrees in directed graphs.";
+
+PackageExport["IGBetweennessCentralization"]
 IGBetweennessCentralization::usage = "IGBetweennessCentralization[graph] computes the graph level centralization based on betweenness.";
+
+PackageExport["IGClosenessCentralization"]
 IGClosenessCentralization::usage = "IGClosenessCentralization[graph] computes the graph level centralization based on closeness.";
+
+PackageExport["IGEigenvectorCentralization"]
 IGEigenvectorCentralization::usage = "IGEigenvectorCentralization[graph] computes the graph level centralization based on eigenvector centralities.";
 
-
+PackageExport["IGRewire"]
 IGRewire::usage = "IGRewire[graph, n] attempts to rewire the edges of graph n times while preserving its degree sequence. Weights and other graph properties are discarded.";
+
+PackageExport["IGRewireEdges"]
 IGRewireEdges::usage =
     "IGRewireEdges[graph, p] rewires each edge of the graph with probability p. Weights and other graph properties are discarded.\n" <>
     "IGRewireEdges[graph, p, \"In\"] rewires the starting point of each edge with probability p. The in-degree sequence is preserved.\n" <>
     "IGRewireEdges[graph, p, \"Out\"] rewires the endpoint of each edge with probability p. The out-degree sequence is preserved.";
 
+PackageExport["IGDirectedAcyclicGraphQ"]
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] tests if graph is directed and acyclic.";
+
+PackageExport["IGConnectedQ"]
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
+
+PackageExport["IGWeaklyConnectedQ"]
 IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly connected.";
+
+PackageExport["IGTreeQ"]
 IGTreeQ::usage =
     "IGTreeQ[graph] tests if graph is a tree or out-tree.\n" <>
     "IGTreeQ[graph, \"Out\"] tests if graph is an out-tree (arborescence).\n" <>
     "IGTreeQ[graph, \"In\"] tests if graph is an in-tree (anti-arborescence).\n" <>
     "IGTreeQ[graph, \"All\"] ignores edge directions during the test.";
+
+PackageExport["IGGraphicalQ"]
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if degrees is the degree sequence of any simple undirected graph.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any simple directed graph.";
 
+PackageExport["IGBipartiteQ"]
 IGBipartiteQ::usage =
     "IGBipartiteQ[graph] tests if graph is bipartite.\n" <>
     "IGBipartiteQ[graph, {vertices1, vertices2}] verifies that no edges are running between the two given vertex subsets.";
 
+PackageExport["IGIsomorphicQ"]
 IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic.";
+
+PackageExport["IGSubisomorphicQ"]
 IGSubisomorphicQ::usage = "IGSubisomorphicQ[subgraph, graph] tests if subgraph is contained within graph.";
+
+PackageExport["IGIsoclass"]
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData[] to get list of graphs ordered by isoclass.";
 
+PackageExport["IGBlissCanonicalLabeling"]
 IGBlissCanonicalLabeling::usage =
     "IGBlissCanonicalLabeling[graph] computes a canonical integer labeling of the graph vertices. Using this labeling brings representations of isomorphic graphs to the same form.\n" <>
     "IGBlissCanonicalLabeling[{graph, colorSpec}] computes a canonical integer labeling for the vertices of a vertex coloured graph.";
 
+PackageExport["IGBlissCanonicalPermutation"]
 IGBlissCanonicalPermutation::usage =
     "IGBlissCanonicalPermutation[graph] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.\n" <>
     "IGBlissCanonicalPermutation[{graph, colorSpec}] returns the canonical vertex permutation of a vertex coloured graph.";
+
+PackageExport["IGBlissCanonicalGraph"]
 IGBlissCanonicalGraph::usage =
     "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labeling.\n" <>
     "IGBlissCanonicalGraph[{graph, colorSpec}] returns a canonical graph of a vertex coloured graph, based on the canonical integer labeling. Vertex colors will be stored in the \"Color\" vertex property.";
+
+PackageExport["IGBlissIsomorphicQ"]
 IGBlissIsomorphicQ::usage =
     "IGBlissIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic using the Bliss algorithm.\n" <>
     "IGBlissIsomorphicQ[{graph1, colorSpec}, {graph2, colorSpec}] tests if two vertex coloured graphs are isomorphic using the Bliss algorithm.";
+
+PackageExport["IGBlissGetIsomorphism"]
 IGBlissGetIsomorphism::usage =
     "IGBlissGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.\n" <>
     "IGBlissGetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] returns one isomorphism between two vertex colored graphs, if it exists.";
+
+PackageExport["IGBlissAutomorphismCount"]
 IGBlissAutomorphismCount::usage =
     "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.\n" <>
     "IGBlissAutomorphismCount[{graph, colorSpec}] returns the number of automorphisms of a vertex coloured graph.";
+
+PackageExport["IGBlissAutomorphismGroup"]
 IGBlissAutomorphismGroup::usage =
     "IGBlissAutomorphismGroup[graph] returns a set of generators for the automorphism group of graph. It is not guaranteed to be minimal.\n" <>
     "IGBlissAutomorphismGroup[{graph, colorSpec}] returns a set of generators for the automorphism group of a vertex coloured graph.";
 
+PackageExport["IGVF2IsomorphicQ"]
 IGVF2IsomorphicQ::usage =
     "IGVF2IsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic using the VF2 algorithm.\n" <>
     "IGVF2IsomorphicQ[{graph1, colorSpec}, {graph2, colorSpec}] tests if vertex or edge coloured graphs graph1 and graph2 are isomorphic.";
+
+PackageExport["IGVF2FindIsomorphisms"]
 IGVF2FindIsomorphisms::usage =
     "IGVF2FindIsomorphisms[graph1, graph2] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm.\n" <>
     "IGVF2FindIsomorphisms[graph1, graph2, n] finds at most n isomorphisms between graph1 and graph2.\n" <>
     "IGVF2FindIsomorphisms[{graph1, colorSpec}, {graph2, colorSpec}] finds all isomorphisms between vertex or edge coloured graphs graph1 and graph2.\n" <>
     "IGVF2FindIsomorphisms[{graph1, colorSpec}, {graph2, colorSpec}, n] finds at most n isomorphisms between vertex or edge coloured graphs graph1 and graph2.";
+
+PackageExport["IGVF2GetIsomorphism"]
 IGVF2GetIsomorphism::usage = "IGVF2GetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.\n" <>
     "IGVF2GetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] returns one isomorphism between two vertex or edge colored graphs, if it exists.";
+
+PackageExport["IGVF2SubisomorphicQ"]
 IGVF2SubisomorphicQ::usage =
     "IGVF2SubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph using the VF2 algorithm.\n" <>
     "IGVF2SubisomorphicQ[{subgraph, colorSpec}, {graph, colorSpec}] tests if vertex or edge coloured subgraph is contained in graph.";
+
+PackageExport["IGVF2FindSubisomorphisms"]
 IGVF2FindSubisomorphisms::usage =
     "IGVF2FindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph using the VF2 algorithm.\n" <>
     "IGVF2FindSubisomorphisms[subgraph, graph, n] finds at most n subisomorphisms from subgraph to graph.\n" <>
     "IGVF2FindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] finds all subisomorphisms from vertex or edge coloured subgraph to graph.\n" <>
     "IGVF2FindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}, n] finds at most n subisomorphisms from vertex or edge coloured subgraph to graph.";
+
+PackageExport["IGVF2GetSubisomorphism"]
 IGVF2GetSubisomorphism::usage = "IGVF2GetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.\n" <>
     "IGVF2GetSubisomorphism[{subgraph, colorSpec}, {graph, colorSpec}] returns one subisomorphism from a vertex or edge coloured subgraph to graph, if it exists.";
+
+PackageExport["IGVF2IsomorphismCount"]
 IGVF2IsomorphismCount::usage =
     "IGVF2IsomorphismCount[graph1, graph2] returns the number of isomorphisms between graph1 and graph2.\n" <>
     "IGVF2IsomorphismCount[{graph1, colorSpec}, {graph2, colorSpec}] returns the number of isomorphisms between vertex or edge coloured graphs graph1 and graph2. Note that this is not the same as simply counting the automorphisms of one graph if their colourings differ.";
+
+PackageExport["IGVF2SubisomorphismCount"]
 IGVF2SubisomorphismCount::usage =
     "IGVF2SubisomorphismCount[subgraph, graph] returns the number of mappings from subgraph to graph.\n" <>
     "IGVF2SubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] returns the number of mappings from vertex or edge coloured subgraph to graph.";
 
+PackageExport["IGLADSubisomorphicQ"]
 IGLADSubisomorphicQ::usage =
     "IGLADSubisomorphicQ[subgraph, graph] tests if subgraph is contained in graph. Use the \"Induced\" -> True option to look for induced subgraphs.\n" <>
     "IGLADSubisomorphicQ[{subgraph, colorSpec}, {graph, colorSpec}] tests if a vertex coloured subgraph is contained in graph.";
+
+PackageExport["IGLADGetSubisomorphism"]
 IGLADGetSubisomorphism::usage =
     "IGLADGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.\n" <>
     "IGLADGetSubisomorphism[{subgraph, colorSpec}, {graph, colorSpec}] returns one subisomorphism from a vertex coloured subgraph to graph.";
+
+PackageExport["IGLADFindSubisomorphisms"]
 IGLADFindSubisomorphisms::usage =
     "IGLADFindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph.\n" <>
     "IGLADFindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] finds all subisomorphisms from a vertex coloured subgraph to graph.";
+
+PackageExport["IGLADSubisomorphismCount"]
 IGLADSubisomorphismCount::usage =
     "IGLADSubisomorphismCount[subgraph, graph] counts subisomorphisms from subgraph to graph.\n" <>
     "IGLADSubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] counts subisomorphisms from a vertex coloured subgraph to graph.";
 
+PackageExport["IGSelfComplementaryQ"]
 IGSelfComplementaryQ::usage = "IGSelfComplementaryQ[graph] tests if graph is self-complementary.";
 
+PackageExport["IGTopologicalOrdering"]
 IGTopologicalOrdering::usage =
     "IGTopologicalOrdering[graph] returns a permutation that sorts the vertices in topological order. " <>
     "Note that the values returned are vertex indices, not vertex names.";
+
+PackageExport["IGFeedbackArcSet"]
 IGFeedbackArcSet::usage = "IGFeedbackArcSet[graph] computes a feedback edge set of graph. Removing these edges makes the graph acyclic.";
 
+PackageExport["IGDyadCensus"]
 IGDyadCensus::usage = "IGDyadCensus[graph] classifies dyad in the graph into mutual, asymmetric or null states.";
+
+PackageExport["IGTriadCensus"]
 IGTriadCensus::usage = "IGTriadCensus[graph] classifies triads in the graph into 16 possible states, labelled using MAN (mutual, asymmetric, null) notation.";
+
+PackageExport["IGMotifs"]
 IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.";
+
+PackageExport["IGMotifsTotalCount"]
 IGMotifsTotalCount::usage = "IGMotifsTotalCount[graph, motifSize] returns the total count of motifs (connected subgraphs) of the given size in the graph.";
+
+PackageExport["IGMotifsEstimateTotalCount"]
 IGMotifsEstimateTotalCount::usage = "IGMotifsEstimateTotalCount[graph, motifSize, sampleSize] estimates the total count of motifs (connected subgraphs) of the given size in graph, based on a sample of the give size.";
+
+PackageExport["IGTriangles"]
 IGTriangles::usage = "IGTriangles[graph] lists all triangles in the graph. Edge directions are ignored.";
+
+PackageExport["IGAdjacentTriangleCount"]
 IGAdjacentTriangleCount::usage =
     "IGAdjacentTriangleCount[graph] counts the triangles each vertex participates in. Edge directions are ignored.\n" <>
     "IGAdjacentTriangleCount[graph, vertex] counts the triangles vertex participates in.\n" <>
     "IGAdjacentTriangleCount[graph, {vertex1, vertex2, \[Ellipsis]}] counts the triangles the specified vertices participate in.";
 
+PackageExport["IGTriangleFreeQ"]
 IGTriangleFreeQ::usage = "IGTriangleFreeQ[graph] checks if graph is triangle-free.";
 
+PackageExport["IGDegreeSequenceGame"]
 IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[degrees] generates an undirected random graph with the given degree sequence.\n" <>
     "IGDegreeSequenceGame[indegrees, outdegrees] generates a directed random graph with the given in- and out-degree sequences.";
 
+PackageExport["IGKRegularGame"]
 IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n vertices, i.e. a graph in which all vertices have degree k.";
+
+PackageExport["IGStochasticBlockModelGame"]
 IGStochasticBlockModelGame::usage = "IGStochasticBlockModelGame[ratesMatrix, blockSizes] samples from a stochastic block model.";
+
+PackageExport["IGForestFireGame"]
 IGForestFireGame::usage =
     "IGForestFireGame[n, fwprob]\n" <>
     "IGForestFireGame[n, fwprob, bwfactor]\n" <>
     "IGForestFireGame[n, fwprob, bwfactor, nambassadors]";
 
+PackageExport["IGBipartiteGameGNM"]
 IGBipartiteGameGNM::usage = "IGBipartiteGameGNM[n1, n2, m] generates a bipartite random graph with n1 and n2 vertices in the two partitions and m edges.";
+
+PackageExport["IGBipartiteGameGNP"]
 IGBipartiteGameGNP::usage = "IGBipartiteGameGNP[n1, n2, p] generates a bipartite Bernoulli random graph with n1 and n2 vertices in the two partitions and connection probability p.";
 
+PackageExport["IGErdosRenyiGameGNM"]
 IGErdosRenyiGameGNM::usage = "IGErdosRenyiGameGNM[n, m] generates a random graph with n vertices and m edges.";
+
+PackageExport["IGErdosRenyiGameGNP"]
 IGErdosRenyiGameGNP::usage = "IGErdosRenyiGameGNP[n, p] generates a random graph on n vertices, in which each edge is present with probability p.";
 
+PackageExport["IGGeometricGame"]
 IGGeometricGame::usage = "IGGeometricGame[n, radius] generates an n-vertex geometric random graph on the unit square by connecting points closer than radius.";
 
+PackageExport["IGBarabasiAlbertGame"]
 IGBarabasiAlbertGame::usage =
     "IGBarabasiAlbertGame[n, k] generates an n-vertex Barabási–Albert random graph by adding a new vertex with k (out-)edges in each step.\n" <>
     "IGBarabasiAlbertGame[n, {k2, k3, \[Ellipsis]}] generates an n-vertex Barabási–Albert random graph by adding a new vertex with k2, k3, \[Ellipsis] out-edges in each step.\n" <>
     "IGBarabasiAlbertGame[n, k, {\[Beta], A}] generates a Barabási–Albert random graph with preferential attachment probabilities proportional to d^\[Beta] + A where d is the vertex (in-)degree.";
 
+PackageExport["IGWattsStrogatzGame"]
 IGWattsStrogatzGame::usage =
     "IGWattsStrogatzGame[n, p] generates an n-vertex Watts–Strogatz random graph using rewiring probability p.\n" <>
     "IGWattsStrogatzGame[n, p, k] rewires a lattice where each node is connected to its k-neighbourhood.\n" <>
     "IGWattsStrogatzGame[n, p, {dim, k}] rewires a dim dimensional lattice of n^dim vertices, where each node is connected to its k-neighbourhood.";
 
+PackageExport["IGStaticFitnessGame"]
 IGStaticFitnessGame::usage =
     "IGStaticFitnessGame[m, {f1, f2, \[Ellipsis]}] generates a random undirected graph with m edges where edge i <-> j is inserted with probability proportional to f_i\[Times]f_j.\n" <>
     "IGStaticFitnessGame[m, {fout1, fout2, \[Ellipsis]}, {fin1, fin2, \[Ellipsis]}] generates a random directed graph with m edges where edge i -> j is inserted with probability proportional to fout_i\[Times]fin_j.";
 
+PackageExport["IGStaticPowerLawGame"]
 IGStaticPowerLawGame::usage =
     "IGStaticPowerLawGame[n, m, exp] generates a random graph with n vertices and m edges, having a power-law degree distribution with the given exponent.\n" <>
     "IGStaticPowerLawGame[n, m, expOut, expIn] generates a random directed graph with n vertices and m edges, having power-law in- and out-degree distributions with the given exponents.";
 
+PackageExport["IGGrowingGame"]
 IGGrowingGame::usage = "IGGrowingGame[n, k] generates a growing random graph with n vertices, adding a new vertex and k new edges in each step.";
 
+PackageExport["IGTreeGame"]
 IGTreeGame::usage = "IGTreeGame[n] generates a random tree on n vertices. Sampling is uniform over the set of labelled trees.";
 
+PackageExport["IGCallawayTraitsGame"]
 IGCallawayTraitsGame::usage = "IGCallawayTraitsGame[n, k, typeWeights, preferenceMatrix]";
+
+PackageExport["IGEstablishmentGame"]
 IGEstablishmentGame::usage = "IGEstablishmentGame[n, k, typeWeights, preferenceMatrix]";
 
+PackageExport["IGDistanceMatrix"]
 IGDistanceMatrix::usage =
     "IGDistanceMatrix[graph] computes the shortest path length between each vertex pair in graph.\n" <>
     "IGDistanceMatrix[graph, fromVertices] computes the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
     "IGDistanceMatrix[graph, fromVertices, toVertices] computes the shortest path lengths between the given vertices in graph.";
+
+PackageExport["IGDistanceCounts"]
 IGDistanceCounts::usage =
     "IGDistanceCounts[graph] computes a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k. In undirected graphs, each path is counted only along one traversal direction.\n" <>
     "IGDistanceCounts[graph, fromVertices] computes a histogram of unweighted shortest path lengths from the given vertices to all others.";
+
+PackageExport["IGNeighborhoodSize"]
 IGNeighborhoodSize::usage =
     "IGNeighborhoodSize[graph, vertex] returns the number of direct neighbours of vertex.\n" <>
     "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}] returns the number of direct neighbours of each vertex.\n" <>
     "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, max] returns the number of vertices reachable in at most max hops.\n" <>
     "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, {n}] returns the number of vertices reachable in precisely n hops.\n" <>
     "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, {min, max}] returns the number of vertices reachable in between min and max hops (inclusive).";
+
+PackageExport["IGDistanceHistogram"]
 IGDistanceHistogram::usage =
     "IGDistanceHistogram[graph, binsize] computes a histogram of weighted all-pair shortest path lengths in graph with the given bin size. In case of undirected graphs, path lengths are double counted.\n" <>
     "IGDistanceHistogram[graph, binsize, from] computes a histogram of weighted shortest path lengths in graph for the given starting vertices and bin size.\n" <>
     "IGDistanceHistogram[graph, binsize, from, to] computes a histogram of weighted shortest path lengths in graph for the given starting and ending vertices and bin size.";
+
+PackageExport["IGAveragePathLength"]
 IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of all-pair unweighted shortest path lengths of the graph. Vertex pairs between which there is no path are excluded.";
+
+PackageExport["IGGirth"]
 IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the graph. The graph is treated as undirected, self-loops and multi-edges are ignored.";
+
+PackageExport["IGDiameter"]
 IGDiameter::usage = "IGDiameter[graph] computes the diameter of graph.";
+
+PackageExport["IGFindDiameter"]
 IGFindDiameter::usage = "IGFindDiameter[graph] returns a longest shortest path in graph, i.e. a shortest path with length equal to the graph diameter.";
+
+PackageExport["IGEccentricity"]
 IGEccentricity::usage =
     "IGEccentricity[graph] returns the eccentricity of all vertices.\n" <>
     "IGEccentricity[graph, vertex] returns the eccentricity of the given vertex.\n" <>
     "IGEccentricity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the eccentricity of the given vertices.";
+
+PackageExport["IGRadius"]
 IGRadius::usage = "IGRadius[graph] returns the unweighted graph radius.";
 
+PackageExport["IGCliques"]
 IGCliques::usage =
     "IGCliques[graph] returns all complete subgraphs (cliques) in graph. Note that this is different from the builtin FindCliques[], which finds maximal cliques.\n" <>
     "IGCliques[graph, {min, max}] returns all complete subgraphs between sizes min and max.\n" <>
     "IGCliques[graph, max] returns all complete subgraphs of size at most max.\n" <>
     "IGCliques[graph, {n}] returns all complete subgraphs of size n.";
+
+PackageExport["IGCliqueSizeCounts"]
 IGCliqueSizeCounts::usage =
     "IGCliqueSizeCounts[graph] computes a histogram of clique sizes in graph. The kth element of the result is the number of k-cliques.\n" <>
     "IGCliqueSizeCounts[graph, {min, max}] computes a histogram of clique sizes between min and max in graph.\n" <>
     "IGCliqueSizeCounts[graph, max] computes a histogram of clique sizes no larger than max in graph.\n" <>
     "IGCliqueSizeCounts[graph, {n}] counts cliques of size n in graph.";
+
+PackageExport["IGMaximalCliqueSizeCounts"]
 IGMaximalCliqueSizeCounts::usage =
     "IGMaximalCliqueSizeCounts[graph] computes a histogram of maximal clique sizes in graph. The kth element of the result is the number of maximal k-cliques.\n" <>
     "IGMaximalCliqueSizeCounts[graph, {min, max}] computes a histogram of maximal clique sizes between min and max in graph.\n" <>
     "IGMaximalCliqueSizeCounts[graph, max] computes a histogram of maximal clique sizes no larger than max in graph.\n" <>
     "IGMaximalCliqueSizeCounts[graph, {n}] counts maximal cliques of size n in graph.";
+
+PackageExport["IGMaximalCliques"]
 IGMaximalCliques::usage =
     "IGMaximalCliques[graph] returns all maximal cliques in graph.\n" <>
     "IGMaximalCliques[graph, {min, max}] returns all maximal cliques between sizes min and max.\n" <>
     "IGMaximalCliques[graph, max] returns all maximal cliques of size at most max.\n" <>
     "IGMaximalCliques[graph, {n}] returns all maximal cliques of size n.";
+
+PackageExport["IGMaximalCliquesCount"]
 IGMaximalCliquesCount::usage =
     "IGMaximalCliquesCount[graph] counts all maximal cliques in graph.\n" <>
     "IGMaximalCliquesCount[graph, {min, max}] counts all maximal cliques between sizes min and max.\n" <>
     "IGMaximalCliquesCount[graph, max] counts all maximal cliques of size at most max.\n" <>
     "IGMaximalCliquesCount[graph, {n}] counts all maximal cliques of size n.";
+
+PackageExport["IGLargestCliques"]
 IGLargestCliques::usage = "IGLargestCliques[graph] returns the largest cliques in graph.";
+
+PackageExport["IGCliqueNumber"]
 IGCliqueNumber::usage = "IGCliqueNumber[graph] returns the clique number of graph. The clique number is the size of the largest clique.";
+
+PackageExport["IGWeightedCliques"]
 IGWeightedCliques::usage = "IGWeightedCliques[graph, {min, max}] returns all complete subgraphs having total vertex weight between min and max.";
+
+PackageExport["IGMaximalWeightedCliques"]
 IGMaximalWeightedCliques::usage = "IGMaximalWeightedCliques[graph, {min, max}] returns all maximal cliques having total vertex weight between min and max.";
+
+PackageExport["IGLargestWeightedCliques"]
 IGLargestWeightedCliques::usage = "IGLargestWeightedCliques[graph] returns the cliques having the largest total vertex weight in graph.";
+
+PackageExport["IGWeightedCliqueNumber"]
 IGWeightedCliqueNumber::usage = "IGWeightedCliqueNumber[graph] return the maximum total vertex weight of any clique in graph.";
 
+PackageExport["IGIndependentVertexSets"]
 IGIndependentVertexSets::usage =
     "IGIndependentVertexSets[graphs] returns all independent vertex sets of graph.\n" <>
     "IGIndependentVertexSets[graphs, {min, max}] returns all independent vertex sets of graph between sizes min and max.\n" <>
     "IGIndependentVertexSets[graphs, max] returns all independent vertex sets up to size max.\n" <>
     "IGIndependentVertexSets[graphs, {n}] returns all independent vertex sets of size n.";
+
+PackageExport["IGLargestIndependentVertexSets"]
 IGLargestIndependentVertexSets::usage = "IGLargestIndependentVertexSets[graph] finds the largest independent vertex sets of graph.";
+
+PackageExport["IGMaximalIndependentVertexSets"]
 IGMaximalIndependentVertexSets::usage = "IGMaximalIndependentVertexSets[graph] finds the maximal independent vertex sets of graph.";
+
+PackageExport["IGIndependenceNumber"]
 IGIndependenceNumber::usage = "IGIndependenceNumber[graph] returns the independence number of graph. The independence number is the size of the largest independent vertex set.";
 
+PackageExport["IGLayoutRandom"]
 IGLayoutRandom::usage = "IGLayoutRandom[graph] lays out vertices randomly in the unit square.";
+PackageExport["IGLayoutCircle"]
 IGLayoutCircle::usage = "IGLayoutCircle[graph] lays out vertices on a circle.";
+PackageExport["IGLayoutSphere"]
 IGLayoutSphere::usage = "IGLayoutSphere[graph] lays out vertices approximately uniformly distributed on a sphere.";
+PackageExport["IGLayoutGraphOpt"]
 IGLayoutGraphOpt::usage = "IGLayoutGraphOpt[graph, options] lays out the graph using the GraphOpt algorithm.";
+PackageExport["IGLayoutKamadaKawai"]
 IGLayoutKamadaKawai::usage = "IGLayoutKamadaKawai[graph, options] lays out the graph using the Kamada–Kawai algorithm (similar to \"SpringEmbedding\").";
+PackageExport["IGLayoutKamadaKawai3D"]
 IGLayoutKamadaKawai3D::usage = "IGLayoutKamadaKawai3D[graph, options] lays out the graph in 3D using the Kamada–Kawai algorithm (similar to \"SpringEmbedding\").";
+PackageExport["IGLayoutFruchtermanReingold"]
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options] lays out the graph using the Fruchterman–Reingold algorithm (similar to \"SpringElectricalEmbedding\").";
+PackageExport["IGLayoutFruchtermanReingold3D"]
 IGLayoutFruchtermanReingold3D::usage = "IGLayoutFruchtermanReingold3D[graph, options] lays out the graph using the Fruchterman–Reingold algorithm (similar to \"SpringElectricalEmbedding\").";
+PackageExport["IGLayoutGEM"]
 IGLayoutGEM::usage = "IGLayoutGEM[graph, options] lays out the graph using the GEM algorithm.";
+PackageExport["IGLayoutDavidsonHarel"]
 IGLayoutDavidsonHarel::usage = "IGLayoutDavidsonHarel[graph, options] lays out the graph using the Davidson–Harel algorithm, based on simulated annealing.";
 (* IGLayoutMDS::usage = "IGLayoutMDS[graph]"; *)
+PackageExport["IGLayoutReingoldTilford"]
 IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options] lays out a tree using the Reingold–Tilford algorithm.";
+PackageExport["IGLayoutReingoldTilfordCircular"]
 IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options] lays out a tree radially using the Reingold–Tilford algorithm.";
+PackageExport["IGLayoutDrL"]
 IGLayoutDrL::usage = "IGLayoutDrL[graph, options] lays out the graph using the DrL layout generator.";
+PackageExport["IGLayoutDrL3D"]
 IGLayoutDrL3D::usage = "IGLayoutDrL3D[graph, options] lays out the graph in 3D using the DrL layout generator.";
+PackageExport["IGLayoutBipartite"]
 IGLayoutBipartite::usage = "IGLayoutBipartite[graph, options] lays out a bipartite graph, minimizing the number of edge crossings. Partitions can be specified manually using the \"BipartitePartitions\" option.";
 
+PackageExport["IGLayoutPlanar"]
 IGLayoutPlanar::usage = "IGLayoutPlanar[graph, options] lays out a planar graph using Schnyder's algorithm.";
+PackageExport["IGLayoutTutte"]
 IGLayoutTutte::usage = "IGLayoutTutte[graph, options] lays out a 3-vertex-connected planar graph using the Tutte embedding.";
 
+PackageExport["IGGlobalClusteringCoefficient"]
 IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph] returns the global clustering coefficient of graph.";
+PackageExport["IGLocalClusteringCoefficient"]
 IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph] returns the local clustering coefficient of each vertex.";
+PackageExport["IGAverageLocalClusteringCoefficient"]
 IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficient[graph] returns the average local clustering coefficient of graph.";
+PackageExport["IGWeightedClusteringCoefficient"]
 IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph] computes the weighted local clustering coefficient, as defined by A. Barrat et al. (2004) http://dx.doi.org/10.1073/pnas.0400087101";
 
+PackageExport["IGCocitationCoupling"]
 IGCocitationCoupling::usage =
     "IGCocitationCoupling[graph] returns the cocitation coupling between all vertex pairs in graph. The cocitation coupling of two vertices is the number of vertices connecting to both of them (with directed edges).\n" <>
     "IGCocitationCoupling[graph, vertex] returns the cocitation coupling of vertex with all other vertices in graph.\n" <>
     "IGCocitationCoupling[graph, {vertex1, vertex2, \[Ellipsis]}] returns the cocitation coupling of vertex1, vertex2, \[Ellipsis] with all other vertices in graph.";
 
+PackageExport["IGBibliographicCoupling"]
 IGBibliographicCoupling::usage =
     "IGBibliographicCoupling[graph] returns the bibliographic coupling between all vertex pairs in graph. The bibliographic coupling of two vertices is the number of vertices they both connect to (with directed edges).\n" <>
     "IGBibliographicCoupling[graph, vertex] returns the bibliographic coupling of vertex with all other vertices in graph.\n" <>
     "IGBibliographicCoupling[graph, {vertex1, vertex2, \[Ellipsis]}] returns the bibliographic coupling of vertex1, vertex2, \[Ellipsis] with all other vertices in graph.";
 
+PackageExport["IGJaccardSimilarity"]
 IGJaccardSimilarity::usage =
     "IGJaccardSimilarity[graph] returns the Jaccard similarity between all pairs of vertices.\n" <>
     "IGJaccardSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the Jaccard similarity between the given vertices.";
 
+PackageExport["IGDiceSimilarity"]
 IGDiceSimilarity::usage =
     "IGDiceSimilarity[graph] returns the Dice similarity between all pairs of vertices.\n" <>
     "IGDiceSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the Dice similarity between the given vertices.";
 
+PackageExport["IGInverseLogWeightedSimilarity"]
 IGInverseLogWeightedSimilarity::usage =
     "IGInverseLogWeightedSimilarity[graph] returns the inverse log-weighted similarity between all pairs of vertices.\n" <>
     "IGInverseLogWeightedSimilarity[graph, vertex] returns the inverse log-weighted similarity of vertex to all other vertices.\n" <>
     "IGInverseLogWeightedSimilarity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the inverse log-weighted similarity between the given vertices.";
 
+PackageExport["IGMaximumCardinalitySearch"]
 IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a rank to each vertex, from 1 to n, according to the maximum cardinality search algorithm. Visiting the vertices of the graph by decreasing rank is equivalent to always visiting the next vertex with the most already visited neighbours. Ties are broken randomly.";
+PackageExport["IGChordalQ"]
 IGChordalQ::usage = "IGChordalQ[graph] tests if graph is chordal.";
+PackageExport["IGChordalCompletion"]
 IGChordalCompletion::usage = "IGChordalCompletion[graph] returns a set of edges that, when added to graph, make it chordal. The edge-set this function returns is usually not minimal.";
 
+PackageExport["IGMinSeparators"]
 IGMinSeparators::usage = "IGMinSeparators is deprecated. Use IGMinimumSeparators instead."; (* deprecated in favour of IGMinimumSeparators *)
 
+PackageExport["IGMinimumSeparators"]
 IGMinimumSeparators::usage = "IGMinimumSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph. Edge directions are ignored.";
 
+PackageExport["IGMinimalSeparators"]
 IGMinimalSeparators::usage = "IGMinimalSeparators[graph] returns all minimal separator vertex sets. A vertex set is a separator if its removal disconnects the graph. Edge directions are ignored."
 
+PackageExport["IGVertexSeparatorQ"]
 IGVertexSeparatorQ::usage = "IGVertexSeparatorQ[graph, {vertex1, vertex2, \[Ellipsis]}] tests if the given set of vertices disconnects the graph. Edge directions are ignored.";
 
+PackageExport["IGMinimalVertexSeparatorQ"]
 IGMinimalVertexSeparatorQ::usage = "IGMinimalVertexSeparatorQ[graph, {vertex1, vertex2, \[Ellipsis]}] tests if the given vertex set is a minimal separator. Edge directions are ignored.";
 
+PackageExport["IGArticulationPoints"]
 IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulation points of graph. A vertex is an articulation point if its removal increases the number of (weakly) connected components in the graph.";
 
+PackageExport["IGBiconnectedComponents"]
 IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Size-one components are not returned.";
 
+PackageExport["IGBiconnectedQ"]
 IGBiconnectedQ::usage = "IGBiconnectedQ[graph] tests if graph is biconnected.";
 
+PackageExport["IGBridges"]
 IGBridges::usage = "IGBridges[graph] finds the bridges of graph. A bridge is an edge whose removal increases the number of (weakly) connected components in the graph.";
 
+PackageExport["IGConnectedComponentSizes"]
 IGConnectedComponentSizes::usage = "IGConnectedComponentSizes[graph] returns the sizes of graph's connected components in decreasing order.";
+PackageExport["IGWeaklyConnectedComponentSizes"]
 IGWeaklyConnectedComponentSizes::usage = "IGWeaklyConnectedComponentSizes[graph] returns the sizes of graph's weakly connected components in decreasing order.";
 
 (* Removed due to bug in igraph core https://github.com/igraph/igraph/issues/869 *)
 (*
+PackageExport["IGGraphlets"]
 IGGraphlets::usage =
     "IGGraphlets[graph]\n" <>
     "IGGraphlets[graph, nIterations]";
+PackageExport["IGGraphletBasis"]
 IGGraphletBasis::usage = "IGGraphletBasis[graph]";
+PackageExport["IGGraphletProject"]
 IGGraphletProject::usage =
     "IGGraphletProject[graph, cliques]\n" <>
     "IGGraphletProject[graph, cliques, nIterations]";
 *)
 
+PackageExport["IGVertexConnectivity"]
 IGVertexConnectivity::usage =
     "IGVertexConnectivity[graph] returns the smallest number of vertices whose deletion disconnects graph.\n" <>
     "IGVertexConnectivity[graph, s, t] returns the smallest number of vertices whose deletion disconnects vertices s and t in graph.";
 
+PackageExport["IGEdgeConnectivity"]
 IGEdgeConnectivity::usage =
     "IGEdgeConnectivity[graph] returns the smallest number of edges whose deletion disconnects graph.\n" <>
     "IGEdgeConnectivity[graph, s, t] returns the smallest number of edges whose deletion disconnects vertices s and t in graph.";
 
+PackageExport["IGClusterData"]
 IGClusterData::usage = "IGClusterData[association] represents the output of community detection functions. Properties can be queried using IGClusterData[\[Ellipsis]][\"property\"].";
 
+PackageExport["IGCohesiveBlocks"]
 IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph] computes the cohesive block structure of a simple undirected graph.";
 
+PackageExport["IGCompareCommunities"]
 IGCompareCommunities::usage =
     "IGCompareCommunities[clusterdata1, clusterdata2] compares two community structures given as IGClusterData objects using all available methods.\n" <>
     "IGCompareCommunities[clusterdata1, clusterdata2, method] compares two community structures using method.\n" <>
@@ -451,200 +684,315 @@ IGCompareCommunities::usage =
     "IGCompareCommunities[graph, communities1, communities2, method] compares two community structures using method.\n" <>
     "IGCompareCommunities[graph, communities1, communities2, {method1, \[Ellipsis]}] compares two community structures using each given method.";
 
+PackageExport["IGModularity"]
 IGModularity::usage =
     "IGModularity[graph, {{v11, v12, \[Ellipsis]}, {v21, v22, \[Ellipsis]}, \[Ellipsis]}] computes the modularity of graph based on the given partitioning of the vertex list into communities.\n" <>
     "IGModularity[graph, clusterdata] computes the modularity of graph based on the community structure represented as an IGClusterData object.";
+PackageExport["IGCommunitiesEdgeBetweenness"]
 IGCommunitiesEdgeBetweenness::usage = "IGCommunitiesEdgeBetweenness[graph] finds communities using the Girvan–Newman algorithm.";
+PackageExport["IGCommunitiesGreedy"]
 IGCommunitiesGreedy::usage = "IGCommunitiesGreedy[graph] finds communities using greedy optimization of modularity.";
+PackageExport["IGCommunitiesWalktrap"]
 IGCommunitiesWalktrap::usage =
     "IGCommunitiesWalktrap[graph] finds communities via short random walks (of length 4 by default).\n" <>
     "IGCommunitiesWalktrap[graph, steps] finds communities via random walks of length steps.";
+PackageExport["IGCommunitiesOptimalModularity"]
 IGCommunitiesOptimalModularity::usage = "IGCommunitiesOptimalModularity[graph] finds communities by maximizing the modularity through integer programming.";
+PackageExport["IGCommunitiesMultilevel"]
 IGCommunitiesMultilevel::usage = "IGCommunitiesMultilevel[graph] finds communities using the Louvain method.";
+PackageExport["IGCommunitiesLabelPropagation"]
 IGCommunitiesLabelPropagation::usage = "IGCommunitiesLabelPropagation[graph] finds communities by assigning labels to each vertex and then updating them by majority voting in the neighbourhood of the vertex.";
+PackageExport["IGCommunitiesInfoMAP"]
 IGCommunitiesInfoMAP::usage =
     "IGCommunitiesInfoMAP[graph] finds communities using the InfoMAP algorithm. The default number of trials is 10.\n" <>
     "IGCommunitiesInfoMAP[graph, trials]";
+PackageExport["IGCommunitiesSpinGlass"]
 IGCommunitiesSpinGlass::usage = "IGCommunitiesSpinGlass[graph] finds communities using a spin glass model and simulated annealing.";
+PackageExport["IGCommunitiesLeadingEigenvector"]
 IGCommunitiesLeadingEigenvector::usage = "IGCommunitiesLeadingEigenvector[graph] finds communities based on the leading eigenvector of the modularity matrix.";
+PackageExport["IGCommunitiesFluid"]
 IGCommunitiesFluid::usage = "IGCommunitiesFluid[graph, clusterCount] finds communities using the fluid communities algorithm.";
 
+PackageExport["IGGomoryHuTree"]
 IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 
+PackageExport["IGMinimumCut"]
 IGMinimumCut::usage =
     "IGMinimumCut[graph] finds a minimum edge cut in a weighted graph.\n" <>
     "IGMinimumCut[graph, s, t] finds a minimum s-t edge cut in a weighted graph.";
 
+PackageExport["IGMinimumCutValue"]
 IGMinimumCutValue::usage =
     "IGMinimumCutValue[graph] finds the smallest sum of weights corresponding to an edge cut in graph.\n" <>
     "IGMinimumCutValue[graph, s, t] finds the smallest sum of weights corresponding to an s-t edge cut in graph.";
 
 (* Removed due to bug in graph core https://github.com/igraph/igraph/issues/1102 *)
 (*
+PackageExport["IGFindCuts"]
 IGFindCuts::usage =
     "IGFindCuts[graph, s, t] finds all edge cuts in a directed graph that disconnect s and t.\n" <>
     "IGFindCuts[graph, s, t, \"Minimum\"] restricts the result to minimum cuts.";
 *)
 
+PackageExport["IGUnfoldTree"]
 IGUnfoldTree::usage = "IGUnfoldTree[graph, {root1, root2, \[Ellipsis]}] performs a breadth-first search on graph starting from the given roots, and converts it to a tree or forest by replicating vertices that were found more than once. The original vertex that generated a tree node is stored in the \"OriginalVertex\" property.";
 
+PackageExport["IGBipartitePartitions"]
 IGBipartitePartitions::usage =
      "IGBipartitePartitions[graph] partitions the vertices of a bipartite graph.\n" <>
      "IGBipartitePartitions[graph, vertex] ensures that the first partition which is returned contains vertex.";
 
+PackageExport["IGBipartiteProjections"]
 IGBipartiteProjections::usage =
     "IGBipartiteProjections[graph] returns both bipartite projections of graph. Multiplicities are returned as edge weights. Edge directions are ignored.\n" <>
     "IGBipartiteProjections[graph, {vertices1, vertices2}] returns both bipartite projections according to the specified partitioning.";
 
+PackageExport["IGBipartiteIncidenceMatrix"]
 IGBipartiteIncidenceMatrix::usage =
     "IGBipartiteIncidenceMatrix[graph] returns the incidence matrix of a bipartite graph.\n" <>
     "IGBipartiteIncidenceMatrix[graph, {vertices1, vertices2}] uses the provided vertex partitioning.";
 
+PackageExport["IGBipartiteIncidenceGraph"]
 IGBipartiteIncidenceGraph::usage =
     "IGBipartiteIncidenceGraph[mat] creates a bipartite graph from the given incidence matrix.\n" <>
     "IGBipartiteIncidenceGraph[{vertices1, vertices2}, mat] uses vertices1 and vertices2 as the vertex names in the two partitions.";
 
+PackageExport["IGVertexContract"]
 IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsis]}] returns a graph in which the specified vertex sets are contracted into single vertices.";
 
+PackageExport["IGRandomWalk"]
 IGRandomWalk::usage = "IGRandomWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed vertices is returned.";
+PackageExport["IGRandomEdgeWalk"]
 IGRandomEdgeWalk::usage = "IGRandomEdgeWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed edges is returned.";
+PackageExport["IGRandomEdgeIndexWalk"]
 IGRandomEdgeIndexWalk::usage = "IGRandomEdgeIndexWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of indices for traversed edges is returned.";
 
+PackageExport["IGVertexTransitiveQ"]
 IGVertexTransitiveQ::usage = "IGVertexTransitiveQ[graph] tests if graph is vertex transitive.";
+PackageExport["IGEdgeTransitiveQ"]
 IGEdgeTransitiveQ::usage = "IGEdgeTransitiveQ[graph] tests if graph is edge transitive.";
+PackageExport["IGSymmetricQ"]
 IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it is both vertex transitive and edge transitive.";
 
+PackageExport["IGSpanningTree"]
 IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge directions are ignored. Edge weights are taken into account and are preserved in the tree.";
 
+PackageExport["IGRandomSpanningTree"]
 IGRandomSpanningTree::usage =
     "IGRandomSpanningTree[graph] returns a random spanning tree of graph. All spanning trees are generated with equal probability.\n" <>
     "IGRandomSpanningTree[{graph, vertex}] returns a random spanning tree of the graph component containing vertex.\n" <>
     "IGRandomSpanningTree[spec, n] returns a list of n random spanning trees.";
 
+PackageExport["IGSpanningTreeCount"]
 IGSpanningTreeCount::usage =
     "IGSpanningTreeCount[graph] returns the number of spanning trees of graph.\n" <>
     "IGSpanningTreeCount[graph, vertex] returns the number of spanning trees rooted in vertex for a directed graph.";
 
+PackageExport["IGCoreness"]
 IGCoreness::usage =
     "IGCoreness[graph] returns the coreness of each vertex. Coreness is the highest order of a k-core containing the vertex.\n" <>
     "IGCoreness[graph, \"In\"] considers only in-degrees in a directed graph.\n" <>
     "IGCoreness[graph, \"Out\"] considers only out-degrees in a directed graph.";
 
+PackageExport["IGVertexColoring"]
 IGVertexColoring::usage = "IGVertexColoring[graph] returns a vertex colouring of graph.";
+PackageExport["IGEdgeColoring"]
 IGEdgeColoring::usage = "IGEdgeColoring[graph] returns an edge colouring of graph.";
 
+PackageExport["IGKVertexColoring"]
 IGKVertexColoring::usage = "IGKVertexColoring[graph, k] attempts to find a k-colouring of graph's vertices. If none exist, {} is returned.";
+PackageExport["IGKEdgeColoring"]
 IGKEdgeColoring::usage = "IGKEdgeColoring[graph, k] attempts of find a k-colouring of graph's edges. If none exist, {} is returned.";
 
+PackageExport["IGMinimumVertexColoring"]
 IGMinimumVertexColoring::usage = "IGMinimumVertexColoring[graph] finds a minimum vertex colouring of graph.";
+PackageExport["IGMinimumEdgeColoring"]
 IGMinimumEdgeColoring::usage = "IGMinimumEdgeColoring[graph] finds a minimum edge colouring of graph.";
 
+PackageExport["IGChromaticNumber"]
 IGChromaticNumber::usage = "IGChromaticNumber[graph] returns the chromatic number of graph.";
+PackageExport["IGChromaticIndex"]
 IGChromaticIndex::usage = "IGChromaticIndex[graph] returns the chromatic index of graph.";
 
+PackageExport["IGVertexColoringQ"]
 IGVertexColoringQ::usage = "IGVertexColoringQ[graph, coloring] checks whether neighbouring vertices all have differing colours.";
 
+PackageExport["IGCliqueCover"]
 IGCliqueCover::usage = "IGCliqueCover[graph] finds a minimum clique cover of graph, i.e. a partitioning of its vertices into a smallest number of cliques.";
 
+PackageExport["IGCliqueCoverNumber"]
 IGCliqueCoverNumber::usage = "IGCliqueCoverNumber[graphs] finds the clique vertex cover number of graph.";
 
-IGDelaunayGraph::usage = "IGDelaunayGraph[points] computes the Delaunay graph of the given points.";
-IGLuneBetaSkeleton::usage = "IGLuneBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
-IGCircleBetaSkeleton::usage = "IGCircleBetaSkeleton[points, beta] computes the circle-based beta skeleton of the given points.";
-IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighborhood graph of the given points.";
-IGGabrielGraph::usage = "IGGabrielGraph[points] computes the Gabriel graph of the given points.";
-
+PackageExport["IGMeshGraph"]
 IGMeshGraph::usage = "IGMeshGraph[mesh] converts the edges and vertices of a geometrical mesh to a weighted graph.";
+PackageExport["IGMeshCellAdjacencyMatrix"]
 IGMeshCellAdjacencyMatrix::usage =
     "IGMeshCellAdjacencyMatrix[mesh, d] returns the adjacency matrix of d-dimensional cells in mesh.\n" <>
     "IGMeshCellAdjacencyMatrix[mesh, d1, d2] returns the incidence matrix of d1- and d2-dimensional cells in mesh.";
+PackageExport["IGMeshCellAdjacencyGraph"]
 IGMeshCellAdjacencyGraph::usage =
     "IGMeshCellAdjacencyGraph[mesh, d] returns the connectivity structure of d-dimensional cells in mesh as a graph.\n" <>
     "IGMeshCellAdjacencyGraph[mesh, d1, d2] returns the connectivity structure of d1 and d2 dimensional cells in mesh as a bipartite graph.";
 
+PackageExport["IGIndexEdgeList"]
 IGIndexEdgeList::usage = "IGIndexEdgeList[graph] returns the edge list of graph in terms of vertex indices, as a packed array.";
 
+PackageExport["IGDisjointUnion"]
 IGDisjointUnion::usage = "IGDisjointUnion[{g1, g2, \[Ellipsis]}] computes a disjoint union of the graphs. Each vertex of the result will be a pair consisting of the index of the graph originally containing it and the original name of the vertex.";
 
+PackageExport["IGWeightedSimpleGraph"]
 IGWeightedSimpleGraph::usage =
     "IGWeightedSimpleGraph[graph] combines parallel edges by adding their weights. If graph is not weighted, the resulting weights will be the edge multiplicities of graph.\n" <>
     "IGWeightedSimpleGraph[graph, comb] applies the function comb to the weights of parallel edges to compute a new weight. The default combiner is Plus.";
 
+PackageExport["IGWeightedUndirectedGraph"]
 IGWeightedUndirectedGraph::usage =
     "IGWeightedUndirectedGraph[graph] converts an edge-weighted directed graph to an undirected one. The weights of reciprocal edges added up.\n"<>
     "IGWeightedUndirectedGraph[graph, comb] applies the function comb to the weights of reciprocal edges to compute the weight of the corresponding undirected edge.\n" <>
     "IGWeightedUndirectedGraph[graph, None] converts each directed edge to an undirected one without combining their weights. The result may be a multigraph.";
 
+PackageExport["IGWeightedVertexDelete"]
 IGWeightedVertexDelete::usage =
     "IGWeightedVertexDelete[graph, vertex] deletes the given vertex while preserving edge weights.\n" <>
     "IGWeightedVertexDelete[graph, {v1, v2, \[Ellipsis]}] deletes the given set of vertices while preserving edge weights.";
 
+PackageExport["IGWeightedSubgraph"]
 IGWeightedSubgraph::usage = "IGWeightedSubgraph[graph, {v1, v2, \[Ellipsis]}] returns the subgraph induced by the given vertices while preserving edge weights.";
 
+PackageExport["IGVoronoiCells"]
 IGVoronoiCells::usage = "IGVoronoiCells[graph, {v1, v2, \[Ellipsis]}] find the sets of vertices closest to each given vertex.";
 
-IGEdgeVertexProp::usage = "IGEdgeVertexProp[prop] is an operator that extracts the vertex property prop for the vertex pair corresponding to each edge.";
-
+PackageExport["IGRealizeDegreeSequence"]
 IGRealizeDegreeSequence::usage =
     "IGRealizeDegreeSequence[degseq] returns an undirected graph having the given degree sequence.\n" <>
     "IGRealizeDegreeSequence[outdegseq, indegseq] returns a directed graph having the given out- and in-degree sequences.\n";
 
+PackageExport["IGTreelikeComponents"]
 IGTreelikeComponents::usage = "IGTreelikeComponents[graph] returns the vertices that make up tree-like components.";
 
+PackageExport["IGJointDegreeMatrix"]
 IGJointDegreeMatrix::usage = "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of degree-i vertices connecting to degree-j vertices.";
 
+PackageExport["IGUndirectedGraph"]
 IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Mutual\" creates a single undirected edge only between mutually connected vertices.";
 
+PackageExport["IGLatticeMesh"]
 IGLatticeMesh::usage =
     "IGLatticeMesh[type] creates a mesh of the lattice of the specified type.\n" <>
     "IGLatticeMesh[type, {m, n}] creates a lattice of n by m unit cells.\n" <>
     "IGLatticeMesh[type, region] creates a lattice from the points that fall within region.\n" <>
     "IGLatticeMesh[] returns a list of available lattice types.";
 
+PackageExport["IGSmoothen"]
 IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtaining the smallest topologically equivalent graph. Edge directions are discarded. The weights of merged edges are added up.";
 
+PackageExport["IGHomeomorphicQ"]
 IGHomeomorphicQ::usage = "IGHomeomorphicQ[graph1, graph2] tests if graph1 and graph2 are homeomorphic. Edge directions are ignored.";
 
+PackageExport["IGPerfectQ"]
 IGPerfectQ::usage = "IGPerfectQ[graph] tests is graph is perfect. The chromatic number of clique number is the same in every induced subgraph of a perfect graph.";
 
 (* Planar graphs *)
 
+PackageExport["IGPlanarQ"]
 IGPlanarQ::usage =
     "IGPlanarQ[graph] checks if graph is planar.\n" <>
     "IGPlanarQ[embedding] checks if a combinatorial embedding is planar.";
 
+PackageExport["IGMaximalPlanarQ"]
 IGMaximalPlanarQ::usage = "IGMaximalPlanarQ[graph] checks if graph is maximal planar.";
 
+PackageExport["IGOuterplanarQ"]
 IGOuterplanarQ::usage =
     "IGOuterplanarQ[graph] checks if graph is outerplanar.\n" <>
     "IGOuterplanarQ[embedding] checks if a combinatorial embedding is outerplanar.";
 
+PackageExport["IGKuratowskiEdges"]
 IGKuratowskiEdges::usage = "IGKuratowskiEdges[graph] finds the edges belonging to a Kuratowski subgraph.";
 
+PackageExport["IGEmbeddingQ"]
 IGEmbeddingQ::usage = "IGEmbeddingQ[embedding] checks if embedding represents a combinatorial embedding of a simple graph.";
 
+PackageExport["IGPlanarEmbedding"]
 IGPlanarEmbedding::usage = "IGPlanarEmbedding[graph] returns a planar combinatorial embedding of a graph.";
 
+PackageExport["IGOuterplanarEmbedding"]
 IGOuterplanarEmbedding::usage = "IGOuterplanarEmbedding[graph] returns an outerplanar combinatorial embedding of a graph.";
 
+PackageExport["IGFaces"]
 IGFaces::usage =
     "IGFaces[graph] returns the faces of a planar graph.\n" <>
     "IGFaces[embedding] returns the faces that correspond to a combinatorial embedding.";
 
+PackageExport["IGDualGraph"]
 IGDualGraph::usage =
     "IGDualGraph[graph] returns the dual graph of a planar graph.\n" <>
     "IGDualGraph[embedding] returns the dual graph corresponding to a specific embedding of a graph. The embedding does not need to be planar.";
 
+PackageExport["IGEmbeddingToCoordinates"]
 IGEmbeddingToCoordinates::usage = "IGEmbeddingToCoordinates[embedding] computes the coordinates of a planar drawing based on the given combinatorial embedding.";
 
+PackageExport["IGCoordinatesToEmbedding"]
 IGCoordinatesToEmbedding::usage =
     "IGCoordinatesToEmbedding[graph] computes a combinatorial embedding based on the vertex coordinates of graph.\n" <>
     "IGCoordinatesToEmbedding[graph, coord] uses the given coordinates instead of the VertexCoordinates property.";
 
-Begin["`Private`"];
 
-(* Function to abort loading and leave a clean $ContextPath behind *)
-packageAbort[] := (End[]; EndPackage[]; Abort[])
+(***** Utility functions for setting up definitions and other load-time tasks *****)
+
+(* These functions must be defined in the file that is loaded first, IGraphM.m, to ensure availability in all others *)
+
+PackageScope["optNames"]
+optNames::usage = "optNames[sym1, sym2, ...] returns the option names associated with the given symbols.";
+optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
+
+
+PackageScope["amendUsage"]
+amendUsage::usage = "amendUsage[symbol, stringTempl, templArg1, templArg2, ...] amends the usage message of symbol.";
+amendUsage[sym_Symbol, amend_, args___] :=
+    Module[{lines},
+      lines = StringSplit[sym::usage, "\n"];
+      lines[[1]] = lines[[1]] <> " " <> StringTemplate[amend, InsertionFunction -> (ToString[#, InputForm]&)][args];
+      sym::usage = StringJoin@Riffle[lines, "\n"]
+    ]
+
+
+(*
+	Numeric codes are for certain special types of completions. Zero means 'don't complete':
+
+	Normal argument     0
+	AbsoluteFilename    2
+	RelativeFilename    3
+	Color               4
+	PackageName         7
+	DirectoryName       8
+	InterpreterType     9
+*)
+
+PackageScope["addCompletion"]
+addCompletion::usage = "addCompletion[symbol, argSpec] adds FE auto-completion for symbol.";
+addCompletion[fun_Symbol, argSpec_List] :=
+    If[$Notebooks,
+      With[{compl = SymbolName[fun] -> argSpec},
+        FE`Evaluate[FEPrivate`AddSpecialArgCompletion[compl]]
+      ]
+    ]
+
+
+(* Import compressed expressions. Used in IGData. *)
+(* Avoid Import[] because it doesn't work during kernel initialization. *)
+(* Note: Currently, the loading of all external data files is defined to be lazy. However, the data loading is still
+ * triggered at package load time by some addCompletion[] calls (see IGMakeLattice[]). Thus zimport[] must
+ * be defined in this file (so it is ready by the time other files load) and must not use Import[]. *)
+PackageScope["zimport"]
+zimport::usage = "zimport[file] reads a Compress[]'d expression from a text file.";
+zimport[filename_] :=
+    Module[{stream, str},
+      stream = OpenRead[filename];
+      str = Read[stream, Record, RecordSeparators -> {}];
+      Close[stream];
+      Uncompress[str]
+    ]
 
 
 (***** Package variables *****)
@@ -1100,7 +1448,7 @@ If[FileExistsQ[$buildSettingsFile], Get[$buildSettingsFile] ]
 
 (* GetInfo[] must be defined before the LTemplate functions are loaded because package loading is aborted
    on load failure. We want to be able to get debugging information even in this situation. *)
-GetInfo[] :=
+IGraphM`Developer`GetInfo[] :=
     Module[{res = "", igver, osver},
       res = StringJoin[res, "Mathematica version: \n", System`$Version, "; Release number: ", ToString[$ReleaseNumber], "\n\n"];
       res = StringJoin[res, "Package version: \n", $packageVersion, "\n\n"];
@@ -1127,12 +1475,12 @@ If[Not@MemberQ[$LibraryPath, $libraryDirectory],
 ]
 
 
-Recompile::build = "No build settings found. Please check BuildSettings.m."
+IGraphM`Developer`Recompile::build = "No build settings found. Please check BuildSettings.m."
 
-Recompile[] :=
+IGraphM`Developer`Recompile[] :=
     Module[{},
       If[$buildSettings === None,
-        Message[Recompile::build];
+        Message[IGraphM`Developer`Recompile::build];
         Return[$Failed]
       ];
       If[Not@DirectoryQ[$libraryDirectory],
@@ -1149,6 +1497,7 @@ Recompile[] :=
     ]
 
 
+PackageScope["igraphGlobal"]
 igraphGlobal::usage =
     "igraphGlobal is the unique IGlobal object. There should only be a single object of this type; it's set in LoadIGraphM[] below.";
 
@@ -1170,10 +1519,10 @@ LoadIGraphM[] :=
 (* Load library, compile if necessary. *)
 If[LoadIGraphM[] === $Failed,
   Print[Style["Loading failed, trying to recompile ...", Red]];
-  If[Recompile[] === $Failed
+  If[IGraphM`Developer`Recompile[] === $Failed
     ,
     Print[Style["Cannot load or compile library. \[FreakedSmiley] Aborting.", Red]];
-    packageAbort[]
+    Abort[] (* verified that it is safe to abort while loading a new-style package *)
     ,
     Print[Style["Successfully compiled and loaded the library. \[HappySmiley]", Red]];
   ]
@@ -1187,6 +1536,13 @@ If[LoadIGraphM[] === $Failed,
 
 (***** General messages *****)
 
+(* General::invopt is not present before Mathematica version 10.3. We set it up manually when needed. *)
+If[Not@ValueQ[General::invopt],
+  General::invopt = "Invalid value `1` for parameter `2`. Using default value `3`.";
+]
+
+IGraphM::mixed = "Mixed graphs are not supported by IGraph/M. Use DirectedGraph to convert undirected edges to two reciprocal directed ones.";
+
 IGraphM::lytcrd = "The graph doesn't already have existing vertex coordinates. The \"Continue\" -> True layout option will be ignored.";
 IGraphM::lytdim = "The existing vertex coordinates do not have the appropriate dimension for this layout algorithm. The \"Continue\" -> True layout option will be ignored.";
 IGraphM::lytcnt = "`` is not a valid value for the \"Continue\" layout option.";
@@ -1195,68 +1551,6 @@ IGraphM::lytaln = "`` is not a valid value for the \"Align\" layout option."
 
 (***** Helper functions *****)
 
-(* Common definitions *)
-Get["IGraphM`Common`"]
-
-(* Get resources such as icon graphics *)
-Get["IGraphM`Resources`"]
-
-(* For error handling: *)
-
-igTag::usage = "igTag is a private tag for Throw/Catch within IGraphM.";
-
-throw[val_] := Throw[val, igTag]
-
-SetAttributes[catch, HoldFirst]
-catch[expr_] := Catch[expr, igTag]
-
-check[val_LibraryFunctionError] := throw[val] (* TODO: change to throw[$Failed] *)
-check[$Failed] := throw[$Failed]
-check[HoldPattern[LibraryFunction[___][___]]] := throw[$Failed]
-check[val_] := val
-
-sck[HoldPattern[LibraryFunction[___][___]]] := $Failed
-sck[val_] := val
-
-
-(* For argument checking: *)
-
-nonNegIntVecQ = VectorQ[#, Internal`NonNegativeMachineIntegerQ]&;
-posIntVecQ = VectorQ[#, Internal`PositiveMachineIntegerQ]&;
-intVecQ =
-    If[$VersionNumber < 11.0,
-      VectorQ[#, IntegerQ]&, (* In M10.4 and earlier VectorQ[{}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
-      VectorQ[#, Developer`MachineIntegerQ]&
-    ];
-intMatQ =
-    If[$VersionNumber < 11.0,
-      MatrixQ[#, IntegerQ]&, (* In M10.4 and earlier MatrixQ[{{}}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
-      MatrixQ[#, Developer`MachineIntegerQ]&
-    ];
-positiveNumericQ = NumericQ[#] && TrueQ@Positive[#]&;
-nonnegativeNumericQ = NumericQ[#] && TrueQ@NonNegative[#]&;
-positiveVecQ = VectorQ[#, Positive]&;
-
-positiveOrInfQ[Infinity] = True;
-positiveOrInfQ[x_ /; NumericQ[x] && Positive[x]] = True;
-
-(* Replace Infinity by 0 *)
-infToZero[arg_] := Replace[arg, Infinity -> 0]
-
-(* Unpack array containing infinities or indeterminates *)
-(* TODO: Test on all platforms that unpacking such arrays produces usable Infinity and Indeterminate *)
-fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Developer`FromPackedArray[arr], arr]
-fixInfNaN[arr_] := arr
-
-(* Import compressed expressions. Used in IGData. *)
-(* Avoid Import because it doesn't work during kernel initialization. *)
-zimport[filename_] :=
-    Module[{stream, str},
-      stream = OpenRead[filename];
-      str = Read[stream, Record, RecordSeparators -> {}];
-      Close[stream];
-      Uncompress[str]
-    ]
 
 
 (* Get an IG compatible edge list. *)
@@ -1306,6 +1600,7 @@ igVertexWeights = GraphComputation`WeightVector;
 
 
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
+PackageScope["igIndexVec"]
 igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
 igIndexVec[arr_] := 1 + Round[arr]
 
@@ -1333,6 +1628,7 @@ igMake[g_] :=
     ]
 *)
 
+PackageScope["igMake"]
 igMake[g_] :=
     With[{ig = Make["IG"]},
       If[EmptyGraphQ[g],
@@ -1349,6 +1645,7 @@ igMake[g_] :=
       ig
     ]
 
+PackageScope["igMakeUnweighted"]
 igMakeUnweighted[g_] :=
     With[{ig = Make["IG"]},
       If[EmptyGraphQ[g],
@@ -1376,6 +1673,7 @@ igMakeFast[g_] :=
       ig
     ]
 *)
+PackageScope["igMakeFast"]
 igMakeFast = igMakeUnweighted; (* IncidenceMatrix-based igMake is faster than the above igMakeFast implementation *)
 
 (*
@@ -1409,6 +1707,7 @@ igMakeFastWeighted[g_] :=
       ig
     ]
 *)
+PackageScope["igMakeFastWeighted"]
 igMakeFastWeighted = igMake; (* IncidenceMatrix-based igMake is faster than the above igMakeFast implementation *)
 
 
@@ -1783,7 +2082,7 @@ IGErdosRenyiGameGNP[n_?Internal`NonNegativeMachineIntegerQ, p_?NonNegative, opt 
 
 Options[IGGeometricGame] = {"Periodic" -> False};
 SyntaxInformation[IGGeometricGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGGeometricGame, Graph]};
-IGGeometricGame[n_?Internal`NonNegativeMachineIntegerQ, radius_?nonnegativeNumericQ, opt : OptionsPattern[{IGGeometricGame, Graph}]] :=
+IGGeometricGame[n_?Internal`NonNegativeMachineIntegerQ, radius_?nonNegativeNumericQ, opt : OptionsPattern[{IGGeometricGame, Graph}]] :=
     catch@Block[{ig = Make["IG"], coord},
       coord = check@ig@"geometricGame"[n, radius, OptionValue["Periodic"]];
       applyGraphOpt[VertexCoordinates -> coord, opt]@igToGraph[ig]
@@ -1808,13 +2107,13 @@ IGBarabasiAlbertGame[
 
 IGBarabasiAlbertGame[
   n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
-  power_?nonnegativeNumericQ,
+  power_?nonNegativeNumericQ,
   opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
     igBarabasiAlbertGame[n, m, {power,1}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], OptionValue["StartingGraph"], opt]
 
 IGBarabasiAlbertGame[
   n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
-  {power_?nonnegativeNumericQ, a_?nonnegativeNumericQ},
+  {power_?nonNegativeNumericQ, a_?nonNegativeNumericQ},
   opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
     igBarabasiAlbertGame[n, m, {power, a}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], OptionValue["StartingGraph"], opt]
 
@@ -1884,12 +2183,12 @@ Options[IGStaticPowerLawGame] = { SelfLoops -> False, "MultipleEdges" -> False, 
 SyntaxInformation[IGStaticPowerLawGame] = {
   "ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]
 };
-IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, exp_?nonnegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
+IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, exp_?nonNegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"staticPowerLawGame"[n, m, exp, -1, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
-IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, expOut_?nonnegativeNumericQ, expIn_?nonnegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
+IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, expOut_?nonNegativeNumericQ, expIn_?nonNegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
     catch@Block[{ig = Make["IG"]},
       check@ig@"staticPowerLawGame"[n, m, expOut, expIn, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
       applyGraphOpt[opt]@igToGraph[ig]
@@ -4938,282 +5237,6 @@ addCompletion[IGCoreness, {0, {"In", "Out", "All"}}]
 
 (***** Geometrical computing and mesh processing *****)
 
-delaunayEdges1D[points_] := Partition[Ordering@N[points], 2, 1]
-
-(* TODO: TriangleDelaunay does not complain about duplicate points--somehow detect this and throw an error. *)
-delaunayEdges2D[points_] :=
-    Switch[Length[points],
-      0 | 1, {},
-      2, {{1, 2}},
-      _,
-      Module[{res, pts, triangles, v1, v2},
-        res = Quiet[TriangleDelaunay[points], TriangleDelaunay::trifc];
-        If[res === $Failed,
-          (* TriangleDelaunay failed: check if points are collinear and if yes, fall back to 1D Delaunay *)
-          pts = PrincipalComponents@N[points];
-          {v1, v2} = Variance[pts];
-          If[v2/v1 < 10^Internal`$EqualTolerance $MachineEpsilon,
-            delaunayEdges1D[ pts[[All,1]] ],
-            Message[IGDelaunayGraph::fail]; throw[$Failed]
-          ]
-          ,
-          (* TriangleDelaunay succeeded: proceed as usual *)
-          {pts, triangles} = res;
-          If[Length[pts] == Length[points],
-            DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
-              Join @@ Transpose /@ Subsets[Transpose[triangles], {2}]
-            ],
-            Message[IGDelaunayGraph::dupl]; throw[$Failed]
-          ]
-        ]
-      ]
-    ]
-
-delaunayEdges3D[points_] :=
-    Switch[Length[points],
-      0 | 1, {},
-      2, {{1, 2}},
-      (* TetGenDelaunay fails gracefully for 3 points, thus this function  *)
-      _,
-      Module[{res, pts, tetrahedra, v1, v2, v3},
-        res = Quiet[TetGenDelaunay[points], TetGenDelaunay::tetfc];
-        If[res === $Failed,
-          (* TetGenDelaunay failed: check if points are collinear and if yes, fall back to 2D Delaunay *)
-          pts = PrincipalComponents@N[points];
-          {v1, v2, v3} = Variance[pts];
-          If[v3/v1 < 10^Internal`$EqualTolerance $MachineEpsilon,
-            delaunayEdges2D[ pts[[All,{1,2}]] ],
-            Message[IGDelaunayGraph::fail]; throw[$Failed]
-          ]
-          ,
-          {pts, tetrahedra} = res;
-          If[Length[pts] == Length[points],
-            DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
-              Join @@ Transpose /@ Subsets[Transpose[tetrahedra], {2}]
-            ],
-            Message[IGDelaunayGraph::dupl]; throw[$Failed]
-          ]
-        ]
-      ]
-    ]
-
-IGDelaunayGraph::dim  = "Delaunay graph computation is currently only supported in 2 and 3 dimensions.";
-IGDelaunayGraph::dupl = "Remove any duplicate points before the Delaunay graph computation.";
-IGDelaunayGraph::fail = "Could not compute Delaunay triangulation."; (* ask user to report? *)
-
-SyntaxInformation[IGDelaunayGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph, Graph3D]};
-IGDelaunayGraph[{}, opt : OptionsPattern[Graph]] := IGEmptyGraph[0, opt]
-IGDelaunayGraph[points_?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[{Graph, Graph3D}]] :=
-    catch@Switch[Last@Dimensions[points],
-      1,   Graph[Range@Length[points], delaunayEdges1D[points], DirectedEdges -> False, opt, VertexCoordinates -> ArrayPad[points, {{0, 0}, {0, 1}}]],
-      2,   Graph[Range@Length[points], delaunayEdges2D[points], DirectedEdges -> False, opt, VertexCoordinates -> points],
-      3, Graph3D[Range@Length[points], delaunayEdges3D[points], DirectedEdges -> False, opt, VertexCoordinates -> points],
-      _, Message[IGDelaunayGraph::dim]; throw[$Failed]
-    ]
-
-
-(* The following beta-skeleton computation is based on the implementation of Henrik Schumacher
-   https://mathematica.stackexchange.com/a/183391/12 *)
-
-(* Notes:
-
-   - The circle-based and lune-based beta skeletons are distinct.
-   - For beta <= 1, the two definitions coincide.
-   - For beta >= 1, the circle-based beta skeleton is a subgraph of the lune-based beta skeleton,
-      which is a subgraph of the Gabriel graph, which is a subgraph of the Delaunay graph.
-   - For beta = 1, the beta skeleton coincides with the Gabriel graph (either definition)
-   - For beta = 2, the lune-based beta skeleton coincides with the relative neighborhood graph
- *)
-
-IGraphM::bsdim  = "Beta skeleton computation is only supported in 2 dimensions.";
-IGraphM::bsdupl = "Duplicate points must be removed before beta skeleton computations."
-
-(*
-betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
-    Module[{mesh, edges, edgeLengths, p, q},
-      If[Not@MatchQ[Dimensions[pts], {_,2}],
-        Message[IGraphM::bsdim];
-        throw[$Failed]
-      ];
-      mesh = DelaunayMesh[pts];
-      If[Head[mesh] === MeshRegion
-        ,
-        If[MeshCellCount[mesh, 0] =!= Length[pts],
-          Message[IGraphM::bsdupl];
-          throw[$Failed]
-        ];
-        edges = MeshCells[mesh, 1, "Multicells" -> True][[1, 1]];
-        edgeLengths = PropertyValue[{mesh, 1}, MeshCellMeasure];
-        {p, q} = pts[[#]]& /@ Transpose[edges];
-        ,
-        edges = Subsets[Range@Length[pts], {2}];
-        {p, q} = pts[[#]]& /@ Transpose[edges];
-        edgeLengths = Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
-      ];
-      {edges, edgeLengths, p, q}
-    ]
-*)
-
-betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
-    Module[{mesh, edges, edgeLengths, p, q},
-      If[Not@MatchQ[Dimensions[pts], {_,2}],
-        Message[IGraphM::bsdim];
-        throw[$Failed]
-      ];
-      edges = check@delaunayEdges2D[pts];
-      {p, q} = pts[[#]]& /@ Transpose[edges];
-      edgeLengths = Sqrt@Dot[Subtract[p, q]^2, ConstantArray[1., 2]];
-      {edges, edgeLengths, p, q}
-    ]
-
-betaSkeletonEdgeSuperset[pts_, beta_ /; beta < 1] :=
-    Module[{edges, edgeLengths, p, q},
-      If[Not@MatchQ[Dimensions[pts], {_,2}],
-        Message[IGraphM::bsdim];
-        throw[$Failed]
-      ];
-      edges = Subsets[Range@Length[pts], {2}];
-      {p, q} = pts[[#]]& /@ Transpose[edges];
-      edgeLengths = Sqrt[Dot[Subtract[p, q]^2, ConstantArray[1., 2]]];
-      {edges, edgeLengths, p, q}
-    ]
-
-(* beta >= 1, lune-based *)
-igLuneBetaSkeletonEdges[pts_, beta_] :=
-    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
-      nf = Nearest[pts -> Automatic];
-
-      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
-
-      r = 0.5 beta;
-
-      centres1 = p + (r-1) (p-q);
-      centres2 = q + (r-1) (q-p);
-
-      Pick[
-        edges,
-        MapThread[
-          Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
-          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
-        ],
-        0
-      ]
-    ]
-
-(* beta >= 1, circle-based *)
-igCircleBetaSkeletonEdges[pts_, beta_] :=
-    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
-      nf = Nearest[pts -> Automatic];
-
-      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
-
-      r = 0.5 beta;
-
-      With[{mid = 0.5 (p+q), perp = Sqrt[r^2 - 0.25] RotationTransform[Pi/2][p-q]},
-        centres1 = mid + perp;
-        centres2 = mid - perp;
-      ];
-
-      Pick[
-        edges,
-        MapThread[
-          Function[{c1, c2, d}, Length@Union[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
-          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
-        ],
-        0
-      ]
-    ]
-
-(* beta = 1, both lune and circle *)
-igGabrielGraphEdges[pts_] :=
-    Module[{nf, edges, edgeLengths, p, q},
-      nf = Nearest[pts -> Automatic];
-
-      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 1];
-
-      Pick[
-        edges,
-        MapThread[
-          Function[{c, d}, Length@nf[c, {Infinity, d}]],
-          {(p+q)/2, 0.5 edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
-        ],
-        0
-      ]
-    ]
-
-(* 0 < beta < 1, both lune and circle *)
-igBetaSkeletonEdges0[pts_, beta_] :=
-    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
-      nf = Nearest[pts -> Automatic];
-
-      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
-
-      r = 0.5 / beta;
-
-      With[{mid = 0.5 (p+q), perp = Sqrt[r^2 - 0.25] RotationTransform[Pi/2][p-q]},
-        centres1 = mid + perp;
-        centres2 = mid - perp;
-      ];
-
-      Pick[
-        edges,
-        MapThread[
-          Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
-          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
-        ],
-        0
-      ]
-    ]
-
-
-(* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
-igLuneBetaSkeleton[pts_, beta_, opt___] :=
-    catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
-      With[{
-          edges = Which[
-            beta  > 1, igLuneBetaSkeletonEdges[N[pts], beta],
-            beta == 1, igGabrielGraphEdges[N[pts]],
-            beta  < 1, igBetaSkeletonEdges0[N[pts], beta]
-          ]
-        },
-        Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
-      ]
-    ]
-
-SyntaxInformation[IGLuneBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGLuneBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
-    igLuneBetaSkeleton[pts, beta, opt]
-
-
-(* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
-igCircleBetaSkeleton[pts_, beta_, opt___] :=
-    catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
-      With[{
-          edges = Which[
-            beta >  1, igCircleBetaSkeletonEdges[N[pts], beta],
-            beta == 1, igGabrielGraphEdges[N[pts]],
-            beta <  1, igBetaSkeletonEdges0[N[pts], beta]
-          ]
-        },
-        Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
-      ]
-    ]
-
-SyntaxInformation[IGCircleBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGCircleBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
-    igCircleBetaSkeleton[pts, beta, opt]
-
-
-SyntaxInformation[IGRelativeNeighborhoodGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGRelativeNeighborhoodGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
-    igLuneBetaSkeleton[pts, 2, opt]
-
-
-SyntaxInformation[IGGabrielGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
-    igLuneBetaSkeleton[pts, 1, opt]
-
-
 (***** Converting meshes to graphs *****)
 
 meshQ[_?MeshRegionQ] := True
@@ -5525,19 +5548,6 @@ IGVoronoiCells[g_?igGraphQ, centers_List, opt : OptionsPattern[]] :=
         Transpose[{Extract[vlist, idx], vlist}],
         First -> Last
       ]
-    ]
-
-
-(* Mapping extension *)
-
-SyntaxInformation[IGEdgeVertexProp] = {"ArgumentsPattern" -> {_}};
-IGEdgeVertexProp[prop_][g_?GraphQ] :=
-    Partition[
-      Part[
-        IGVertexProp[prop][g],
-        Flatten@IGIndexEdgeList[g]
-      ],
-      2
     ]
 
 (* Other functions *)
@@ -5872,10 +5882,7 @@ IGDualGraph[graph_?igGraphQ, opt : OptionsPattern[]] := catch@IGDualGraph[check@
 (***** Finalize *****)
 
 (* Protect all package symbols *)
-With[{syms = Join @@ Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"}},
+(*)With[{syms = Join @@ Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"}},
   SetAttributes[syms, {Protected, ReadProtected}]
-];
+];*)
 
-End[]; (* `Private` *)
-
-EndPackage[];

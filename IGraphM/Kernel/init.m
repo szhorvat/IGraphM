@@ -1,7 +1,14 @@
 
-Get["IGraphM`Utilities`"] (* Also loaded in BeginPackage in IGraphM.m. The purpose of this line is to easy re-loading during development. *)
+(* Mathematica version check *)
+If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
+  Print["IGraph/M requires Mathematica 10.0.2 or later.  Aborting."];
+  Abort[]
+]
+
+Unprotect["IGraphM`*", "IGraphM`Developer`*", "IGraphM`Information`*"];
+
 Get["IGraphM`IGraphM`"]
 
-(* Workaround for Utilities auto-completion getting disabled *)
-BeginPackage["IGraphM`Utilities`"]
-EndPackage[]
+With[{syms = Join @@ Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"}},
+  SetAttributes[syms, {Protected, ReadProtected}]
+]
