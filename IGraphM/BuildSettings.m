@@ -11,19 +11,17 @@ Switch[$OperatingSystem,
 
   "MacOSX", (* Compilation settings for OS X *)
   $buildSettings = {
-    (*
-    "Compiler" -> CCompilerDriver`GenericCCompiler`GenericCCompiler,
+    (*)"Compiler" -> CCompilerDriver`GenericCCompiler`GenericCCompiler,
     "CompilerInstallation" -> "/opt/local/bin",
-    "CompilerName" -> "clang++-mp-6.0",
-    "SystemCompileOptions" -> "-O3 -m64 -fPIC -framework Foundation -framework mathlink",
-    *)
+    "CompilerName" -> "clang++-mp-7.0",
+    "SystemCompileOptions" -> "-O3 -m64 -fPIC -framework Foundation -framework mathlink",*)
 
     (* IGraphM requires C++11. With OS X's default compiler this is supported 10.9 and up only,
        thus we need to override the default -mmacosx-version-min=10.6 option. *)
     "CompileOptions" -> {"-mmacosx-version-min=10.9", "-flto=thin"},
 
     (* Statically link the igraph library *)
-    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libemon.a"},
+    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libglpk.a", "$HOME/local/lib/libemon.a"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},

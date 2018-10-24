@@ -56,26 +56,14 @@ Cell[BoxData[
     RowBox[{
      RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
      RowBox[{"{", 
-      RowBox[{"\"\<IGraphM\>\"", ",", "\"\<IGMinSeparators\>\""}], "}"}]}], 
-    "]"}], ",", 
+      RowBox[{
+      "\"\<IGraphM\>\"", ",", "\"\<IGMinSeparators\>\"", ",", 
+       "\"\<$IGExportFormats\>\""}], "}"}]}], "]"}], ",", 
    RowBox[{
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
-    "&"}]}], "]"}]], "Input",
- CellLabel->"In[14]:=",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
-
-Cell[BoxData[
- RowBox[{"Select", "[", 
-  RowBox[{
-   RowBox[{"Complement", "[", 
-    RowBox[{
-     RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}], ",", 
-     RowBox[{"{", "\"\<$IGExportFormats\>\"", "}"}]}], "]"}], ",", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
-    "&"}]}], "]"}]], "Input",
- CellLabel->"In[15]:=",ExpressionUUID->"d7a025cd-0556-4c57-8562-f08bf8bcb27f"],
+    "&"}]}], "]"}]], \
+"Input",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
 
 Cell[BoxData[
  RowBox[{"Select", "[", 
@@ -86,29 +74,14 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{
       "\"\<IGClusterData\>\"", ",", "\"\<IGMinSeparators\>\"", ",", 
-       "\"\<IGraphM\>\""}], "}"}]}], "]"}], ",", 
+       "\"\<IGraphM\>\"", ",", "\"\<IGDirectedTree\>\"", ",", 
+       "\"\<$IGExportFormats\>\""}], "}"}]}], "]"}], ",", 
    RowBox[{
     RowBox[{
      RowBox[{"ToExpression", "[", 
       RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
-     RowBox[{"{", "}"}]}], "&"}]}], "]"}]], "Input",
- CellLabel->"In[16]:=",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
-
-Cell[BoxData[
- RowBox[{"Select", "[", 
-  RowBox[{
-   RowBox[{"Complement", "[", 
-    RowBox[{
-     RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}], ",", 
-     RowBox[{"{", 
-      RowBox[{"\"\<IGDirectedTree\>\"", ",", "\"\<$IGExportFormats\>\""}], 
-      "}"}]}], "]"}], ",", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"ToExpression", "[", 
-      RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
-     RowBox[{"{", "}"}]}], "&"}]}], "]"}]], "Input",
- CellLabel->"In[18]:=",ExpressionUUID->"53a900c7-5c10-417e-98db-92c41560c027"],
+     RowBox[{"{", "}"}]}], "&"}]}], 
+  "]"}]], "Input",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
 
 Cell[BoxData[
  RowBox[{"Scan", "[", "\[IndentingNewLine]", 
@@ -126,12 +99,8 @@ Cell[BoxData[
            RowBox[{"GeneratedCell", "\[Rule]", "True"}]}], "]"}], "]"}], ",", 
         "HoldAll"}], "]"}]}], "\[IndentingNewLine]", "]"}], "&"}], ",", 
    "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], "~", "Join", "~", 
-    RowBox[{"Names", "[", "\"\<IGraphM`Utilities`*\>\"", "]"}]}]}], 
-  "\[IndentingNewLine]", "]"}]], "Input",
- CellLabel->
-  "In[11]:=",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
+   RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
 WindowSize->{1025, 768},
 WindowMargins->{{82, Automatic}, {Automatic, 19}},

@@ -2155,24 +2155,7 @@ public:
         return res;
     }
 
-    double compareCommunities(mma::RealTensorRef c1, mma::RealTensorRef c2, mint m) const {
-        igraph_community_comparison_t method;
-        switch (m) {
-        case 0: method = IGRAPH_COMMCMP_VI; break;
-        case 1: method = IGRAPH_COMMCMP_NMI; break;
-        case 2: method = IGRAPH_COMMCMP_SPLIT_JOIN; break;
-        case 3: method = IGRAPH_COMMCMP_RAND; break;
-        case 4: method = IGRAPH_COMMCMP_ADJUSTED_RAND; break;
-        default: throw mma::LibraryError("Invalid community comparison method.");
-        }
-
-        igraph_vector_t comm1 = igVectorView(c1);
-        igraph_vector_t comm2 = igVectorView(c2);
-        double res;
-        igCheck(igraph_compare_communities(&comm1, &comm2, &res, method));
-        return res;
-    }
-
+    /*
     mma::IntTensorRef splitJoinDistance(mma::RealTensorRef c1, mma::RealTensorRef c2) const {
         igraph_integer_t d1, d2;
 
@@ -2185,7 +2168,7 @@ public:
         res[0] = d1;
         res[1] = d2;
         return res;
-    }
+    }*/
 
     void communityEdgeBetweenness(MLINK link) const {
         mlStream ml{link, "communityEdgeBetweenness"};

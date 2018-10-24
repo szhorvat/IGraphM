@@ -44,13 +44,48 @@ public:
         igCheck(igraph_rng_seed(igraph_rng_default(), s));
     }
 
+    /* Functions useful in argument and result checking */
+
     // Does the array contain any Inf or NaN?
     bool infOrNanQ(mma::RealTensorRef t) {
-        for (double *x = t.begin(); x != t.end(); ++x)
-            if (std::isnan(*x) || std::isinf(*x))
+        for (const auto &el : t)
+            if (std::isnan(el) || std::isinf(el))
                 return true;
         return false;
     }
+
+    // Does the array contain positive numbers only?
+    bool posArrQ(mma::RealTensorRef t) {
+        for (const auto &el : t)
+            if (el <= 0)
+                return false;
+        return true;
+    }
+
+    // Does the array contain negative numbers only?
+    bool negArrQ(mma::RealTensorRef t) {
+        for (const auto &el : t)
+            if (el >= 0)
+                return false;
+        return true;
+    }
+
+    // Does the array contain non-positive numbers only?
+    bool nonPosArrQ(mma::RealTensorRef t) {
+        for (const auto &el : t)
+            if (el > 0)
+                return false;
+        return true;
+    }
+
+    // Does the array contain non-negative numbers only?
+    bool nonNegArrQ(mma::RealTensorRef t) {
+        for (const auto &el : t)
+            if (el < 0)
+                return false;
+        return true;
+    }
+
 
     /* Graph related functions that do not use the IG data structure */
 
@@ -95,6 +130,24 @@ public:
             igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, nullptr, &res));
         else
             igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, &ig_indeg, &res));
+        return res;
+    }
+
+    double compareCommunities(mma::RealTensorRef c1, mma::RealTensorRef c2, mint m) const {
+        igraph_community_comparison_t method;
+        switch (m) {
+        case 0: method = IGRAPH_COMMCMP_VI; break;
+        case 1: method = IGRAPH_COMMCMP_NMI; break;
+        case 2: method = IGRAPH_COMMCMP_SPLIT_JOIN; break;
+        case 3: method = IGRAPH_COMMCMP_RAND; break;
+        case 4: method = IGRAPH_COMMCMP_ADJUSTED_RAND; break;
+        default: throw mma::LibraryError("Invalid community comparison method.");
+        }
+
+        igraph_vector_t comm1 = igVectorView(c1);
+        igraph_vector_t comm2 = igVectorView(c2);
+        double res;
+        igCheck(igraph_compare_communities(&comm1, &comm2, &res, method));
         return res;
     }
 

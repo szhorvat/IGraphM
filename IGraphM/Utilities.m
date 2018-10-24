@@ -7,149 +7,29 @@
 
 Package["IGraphM`"]
 
+(***** Fast structure retrieval *****)
+
+PackageExport["IGIndexEdgeList"]
+IGIndexEdgeList::usage = "IGIndexEdgeList[graph] returns the edge list of graph in terms of vertex indices, as a packed array.";
+
+SyntaxInformation[IGIndexEdgeList] = {"ArgumentsPattern" -> {_}};
+IGIndexEdgeList[graph_?EmptyGraphQ] := {}
+IGIndexEdgeList[graph_?igGraphQ] :=
+    catch[1 + check@igraphGlobal@"incidenceToEdgeList"[IncidenceMatrix[graph], DirectedGraphQ[graph]]]
+
+
+(***** Simple tests *****)
+
 PackageExport["IGNullGraphQ"]
 IGNullGraphQ::usage = "IGNullGraphQ[graph] tests whether graph has no vertices.";
-
-PackageExport["IGReverseGraph"]
-IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in graph while preserving edge weights.";
-
-PackageExport["IGSimpleGraph"]
-IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self loops and multi edges, according to the given options.";
-
-PackageExport["IGUnweighted"]
-IGUnweighted::usage = "IGUnweighted[graph] returns an unweighted version of an edge-weighted graph, while preserving other graph properties.";
-
-PackageExport["IGWeightedAdjacencyGraph"]
-IGWeightedAdjacencyGraph::usage =
-    "IGWeightedAdjacencyGraph[matrix] creates a graph from a weighted adjacency matrix, taking 0 to mean unconnected.\n" <>
-    "IGWeightedAdjacencyGraph[vertices, matrix] uses vertices as the vertex names.\n" <>
-    "IGWeightedAdjacencyGraph[matrix, z] creates a graph from a weighted adjacency matrix, taking the value z to mean unconnected.\n" <>
-    "IGWeightedAdjacencyGraph[vertices, matrix, z] uses vertices as the vertex names.";
-
-PackageExport["IGWeightedAdjacencyMatrix"]
-IGWeightedAdjacencyMatrix::usage =
-    "IGWeightedAdjacencyMatrix[graph] gives the adjacency matrix of the edge weights of graph.\n" <>
-    "IGWeightedAdjacencyMatrix[graph, z] gives the adjacency matrix of the edge weights of graph, using the value z to represent absent connections.";
-
-PackageExport["IGVertexWeightedQ"]
-IGVertexWeightedQ::usage = "IGVertexWeightedQ[graph] tests if graph is a vertex weighted graph.";
-
-PackageExport["IGEdgeWeightedQ"]
-IGEdgeWeightedQ::usage = "IGEdgeWeightedQ[graph] tests if graph is an edge weighted graph.";
-
-
-PackageExport["IGVertexStrength"]
-IGVertexStrength::usage =
-    "IGVertexStrength[graph] returns the sum of edge weights for edges connecting to each vertex in graph.\n" <>
-    "IGVertexStrength[graph, v] returns the sum of edge weights for edges connecting to vertex v in graph.";
-
-PackageExport["IGVertexInStrength"]
-IGVertexInStrength::usage =
-    "IGVertexInStrength[graph] returns the sum of edge weights for the incoming edges of each vertex in graph.\n" <>
-    "IGVertexInStrength[graph, v] returns the sum of edge weights for incoming edges of vertex v in graph.";
-
-PackageExport["IGVertexOutStrength"]
-IGVertexOutStrength::usage =
-    "IGVertexOutStrength[graph] returns the sum of edge weights for the outgoing edges of each vertex in graph.\n" <>
-    "IGVertexOutStrength[graph, v] returns the sum of edge weights for outgoing edges of vertex v in graph.";
-
-PackageExport["IGExportString"]
-IGExportString::usage = "IGExportString[graph, format] generates a string corresponding to graph in the given format. See $IGExportFormats for supported formats.";
-
-PackageExport["IGExport"]
-IGExport::usage =
-    "IGExport[file, graph] exports graph to file in a format inferred from the file name.\n" <>
-    "IGExport[file, graph, format] exports graph to file in the given format. See $IGExportFormats for supported formats.";
-
-PackageExport["$IGExportFormats"]
-$IGExportFormats::usage = "$IGExportFormats is a list of export formats supported by IGExport.";
-
-PackageExport["IGShorthand"]
-IGShorthand::usage = "IGShorthand[\"...\"] builds a graph from a shorthand notation such as \"a->b<-c\" or \"a-b,c-d\".";
-
-PackageExport["IGPartitionsToMembership"]
-IGPartitionsToMembership::usage =
-    "IGPartitionsToMembership[elements, partitions] computes a membership vector for the given partitioning of elements.\n" <>
-    "IGPartitionsToMembership[graph, partitions] computes a membership vector for the given partitioning of graph's vertices.\n" <>
-    "IGPartitionsToMembership[elements] is an operator that can be applied to partitions.";
-
-PackageExport["IGMembershipToPartitions"]
-IGMembershipToPartitions::usage =
-    "IGMembershipToPartitions[elements, membership] computes a partitioning of elements based on the given membership vector.\n" <>
-    "IGMembershipToPartitions[graph, membership] computes a partitioning graph's vertices based on the given membership vector.\n" <>
-    "IGMembershipToPartitions[elements] is an operator that can be applied to membership vectors.";
-
-PackageExport["IGSourceVertexList"]
-IGSourceVertexList::usage = "IGSourceVertexList[graph] returns the list of vertices with no incoming connections.";
-
-PackageExport["IGSinkVertexList"]
-IGSinkVertexList::usage = "IGSinkVertexList[graph] returns the list of vertices with no outgoing connections.";
-
-PackageExport["IGIsolatedVertexList"]
-IGIsolatedVertexList::usage = "IGIsolatedVertexList[graph] returns the list of isolated vertices.";
-
-PackageExport["IGReorderVertices"]
-IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vertices of graph according to the given vertex vector. Graph properties are preserved.";
-
-PackageExport["IGDirectedTree"]
-IGDirectedTree::usage = "IGDirectedTree[] is obsolete. Use IGOrientTree[] instead."; (* TODO: remove *)
-
-PackageExport["IGOrientTree"]
-IGOrientTree::usage =
-    "IGOrientTree[tree, root] orients the edges of an undirected tree so that they point away from the root. The vertex order is not preserved: vertices will be ordered topologically.\n" <>
-    "IGOrientTree[tree, root, \"In\"] orients the edges so that they point towards the root.";
-
-PackageExport["IGTake"]
-IGTake::usage =
-    "IGTake[graph, subgraph] keeps only those vertices and edges of graph which are also present in subgraph, while retaining all graph properties.\n" <>
-    "IGTake[graph, edges] uses an edge list as the subgraph specification.";
-
-PackageExport["IGZeroDiagonal"]
-IGZeroDiagonal::usage = "IGZeroDiagonal[matrix] replaces the diagonal of matrix with zeros.";
-
-
-PackageExport["IGAdjacencyMatrixPlot"]
-IGAdjacencyMatrixPlot::usage =
-    "IGAdjacencyMatrixPlot[graph] plots the adjacency matrix of graph.\n" <>
-    "IGAdjacencyMatrixPlot[graph, {v1, v2, \[Ellipsis]}] plots the adjacency matrix of the subgraph induced by the given vertices, using the specified vertex ordering.";
-
-PackageExport["IGKirchhoffMatrix"]
-IGKirchhoffMatrix::usage =
-    "IGKirchhoffMatrix[graph] returns the Kirchhoff matrix, also known as Laplacian matrix of graph.\n" <>
-    "IGKirchhoffMatrix[graph, \"In\"] will place the in-degrees on the diagonal instead of the out-degrees.";
-
-PackageExport["IGGiantComponent"]
-IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly connected component of graph.";
-
-PackageExport["IGSameGraphQ"]
-IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given graphs have the same vertices and edges. Graph properties or edge and vertex ordering is not taken into account.";
-
-PackageExport["IGAdjacencyList"]
-IGAdjacencyList::usage =
-    "IGAdjacencyList[graph] returns the adjacency list of graph as an association.\n" <>
-    "IGAdjacencyList[graph, \"In\"] returns the adjacency list of the reverse of a directed graph.\n" <>
-    "IGAdjacencyList[graph, \"All\"] considers both incoming and outgoing edges.";
-
-PackageExport["IGAdjacencyGraph"]
-IGAdjacencyGraph::usage =
-    "IGAdjacencyGraph[matrix] creates a graph from the given adjacency matrix.\n" <>
-    "IGAdjacencyGraph[vertices, matrix] creates a graph with the given vertices from an adjacency matrix.\n" <>
-    "IGAdjacencyGraph[adjList] creates a graph from an association representing an adjacency list.";
-
-
-(* Utility functions *)
-
-If[$VersionNumber >= 10.1,
-  keyValueMap = KeyValueMap,
-  keyValueMap[f_, asc_] := f @@@ Normal[asc]
-]
-
-
-(* Main definitions *)
 
 SyntaxInformation[IGNullGraphQ] = {"ArgumentsPattern" -> {_}};
 IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
 IGNullGraphQ[_] = False;
+
+
+PackageExport["IGSameGraphQ"]
+IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given graphs have the same vertices and edges. Graph properties or edge and vertex ordering is not taken into account.";
 
 SyntaxInformation[IGSameGraphQ] = {"ArgumentsPattern" -> {_, _}};
 IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
@@ -158,6 +38,14 @@ IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
       Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
     ]
 
+
+(***** Adjacency list representation (also used for embeddings) *****)
+
+PackageExport["IGAdjacencyList"]
+IGAdjacencyList::usage =
+    "IGAdjacencyList[graph] returns the adjacency list of graph as an association.\n" <>
+    "IGAdjacencyList[graph, \"In\"] returns the adjacency list of the reverse of a directed graph.\n" <>
+    "IGAdjacencyList[graph, \"All\"] considers both incoming and outgoing edges.";
 
 igAdjacencyListSimple[vl_, am_] :=
     AssociationThread[
@@ -193,6 +81,12 @@ IGAdjacencyList[graph_?GraphQ, "In"] :=
 IGAdjacencyList[graph_?GraphQ, "All"] :=
     IGAdjacencyList[graph, "Out"] (* directed graphs were caught earlier, so this applies only to undirected ones *)
 
+
+PackageExport["IGAdjacencyGraph"]
+IGAdjacencyGraph::usage =
+    "IGAdjacencyGraph[matrix] creates a graph from the given adjacency matrix.\n" <>
+    "IGAdjacencyGraph[vertices, matrix] creates a graph with the given vertices from an adjacency matrix.\n" <>
+    "IGAdjacencyGraph[adjList] creates a graph from an association representing an adjacency list.";
 
 IGAdjacencyGraph::dir = "The adjacency list does not describe an undirected graph. Ignoring DirectedEdges -> True.";
 SyntaxInformation[IGAdjacencyGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
@@ -239,11 +133,10 @@ expr : IGAdjacencyGraph[adjList_?AssociationQ, opt : OptionsPattern[{IGAdjacency
     ]
 
 
-SyntaxInformation[IGGiantComponent] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGGiantComponent[g_?IGNullGraphQ, opt : OptionsPattern[Graph]] := Graph[g, opt]
-IGGiantComponent[g_?GraphQ, opt : OptionsPattern[Graph]] :=
-    Subgraph[g, First@WeaklyConnectedComponents[g], opt]
+(***** Simple modifications *****)
 
+PackageExport["IGReverseGraph"]
+IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in graph while preserving edge weights.";
 
 SyntaxInformation[IGReverseGraph] = {"ArgumentsPattern" -> {_}};
 IGReverseGraph::nmg = "Multigraphs are not currently supported.";
@@ -263,6 +156,9 @@ IGReverseGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 
+PackageExport["IGSimpleGraph"]
+IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self loops and multi edges, according to the given options.";
+
 Options[IGSimpleGraph] = { SelfLoops -> False, "MultipleEdges" -> False };
 SyntaxInformation[IGSimpleGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSimpleGraph, Graph]};
 IGSimpleGraph[g_?SimpleGraphQ, opt : OptionsPattern[{IGSimpleGraph, Graph}]] := applyGraphOpt[opt][g]
@@ -277,416 +173,77 @@ IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[{IGSimpleGraph, Graph}]] :=
     ]
 
 
-SyntaxInformation[IGUnweighted] = {"ArgumentsPattern" -> {_}};
-IGUnweighted[g_?IGEdgeWeightedQ] := transformGraphOptions[ FilterRules[#, Except[EdgeWeight]]& ][g]
-IGUnweighted[g_?GraphQ] := g
-(* A more direct implementation is
+PackageExport["IGUndirectedGraph"]
+IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed graph to undirected with the given conversion method: \"Simple\" creates a single edge between connected vertices; \"All\" creates an undirected edge for each directed one and may produce a multigraph; \"Mutual\" creates a single undirected edge only between mutually connected vertices.";
 
-     IGUnweighted[g_?IGEdgeWeightedQ] := Graph[ VertexList[g], EdgeList[g], FilterRules[Options[g], Except[EdgeWeight]] ]
-
-   This implementation is slightly faster if the graph has a large number of properties, such as
-   ExampleData[{"NetworkGraph", "CondensedMatterCollaborations"}]. However, it is noticeable slower for weighted graphs with
-   packed weight vectors and no other properties.
-*)
-
-
-(* Weighted adjacency matrix handling *)
-
-(*
-(* When am is a SparseArray, we need to canonicalize it and ensure that it has no explicit value that is the same as the implicit one. *)
-arrayRules[am_SparseArray, u_] := ArrayRules[SparseArray[am], u]
-arrayRules[am_, u_] := ArrayRules[am, u]
-
-SyntaxInformation[IGWeightedAdjacencyGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[WeightedAdjacencyGraph]};
-IGWeightedAdjacencyGraph[wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[WeightedAdjacencyGraph]] :=
-      WeightedAdjacencyGraph[
-        SparseArray[Most@arrayRules[wam, unconnected], Dimensions[wam], Infinity],
-        opt
-      ]
-IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[WeightedAdjacencyGraph]] :=
-    WeightedAdjacencyGraph[
-      vertices,
-      SparseArray[Most@arrayRules[wam, unconnected], Dimensions[wam], Infinity],
-      opt
-    ]
-*)
-
-SyntaxInformation[IGWeightedAdjacencyGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGWeightedAdjacencyGraph[wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[Graph]] :=
-    IGWeightedAdjacencyGraph[Range@Length[wam], wam, unconnected, opt]
-IGWeightedAdjacencyGraph[vertices_List, wam_?SquareMatrixQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[Graph]] :=
-    Module[{sa = SparseArray[wam, Automatic, unconnected], directedEdges = OptionValue[DirectedEdges]},
-      If[Length[vertices] != Length[sa],
-        Message[IGWeightedAdjacencyGraph::ndims, vertices, wam];
-        Return[$Failed]
-      ];
-      If[directedEdges === Automatic,
-        directedEdges = Not@SymmetricMatrixQ[sa]
-      ];
-      If[Not[directedEdges],
-        sa = UpperTriangularize[sa]
-      ];
-      Graph[vertices, sa["NonzeroPositions"], EdgeWeight -> sa["NonzeroValues"], DirectedEdges -> directedEdges, opt]
-    ]
-
-
-SyntaxInformation[IGWeightedAdjacencyMatrix] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
-Options[IGWeightedAdjacencyMatrix] = Options[WeightedAdjacencyMatrix];
-IGWeightedAdjacencyMatrix[graph_?GraphQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[]] :=
-    With[{sa = WeightedAdjacencyMatrix[graph, opt]},
-      SparseArray[sa["NonzeroPositions"] -> sa["NonzeroValues"], Dimensions[sa], unconnected]
-    ]
-
-
-(* Test for edge and vertex weightedness separately *)
-
-(*
- * The original implementation was
- *     WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &;
- * for testing edge-weightedness.
- * PropertyValue[g, EdgeWeight] fails on the null graph. This is why we had to test with WeightedGraphQ first.
- *
- * This solution was slow because PropertyValue takes a very long time.
- * (Benchmarked on ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}].)
- *
- * The alternative implementation
- *     MemberQ[PropertyList[graph], EdgeWeight]
- * does not return correct result for vertex-weighted but non-edge-weighted graphs
+(* Note: IGUndirectedGraph must ensure that:
+    1. vertex names are not changed
+    2. vertex ordering is not changed
  *)
 
-If[$VersionNumber >= 10.1, (* MinMax was added in M10.1 *)
-  minMax = MinMax,
-  minMax = {Min[#], Max[#]}&
-];
+SyntaxInformation[IGUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 
-SyntaxInformation[IGVertexWeightedQ] = {"ArgumentsPattern" -> {_}};
-IGVertexWeightedQ[g_] :=
-    WeightedGraphQ[g] &&
-    With[{weights = Developer`ToPackedArray@GraphComputation`WeightVector[g]},
-      If[First[weights] === 1 && minMax[weights] === {1, 1},
-        PropertyValue[g, VertexWeight] =!= Automatic,
-        True
-      ]
+IGUndirectedGraph[g_?UndirectedGraphQ, "Simple"|"All"|"Mutual", opt : OptionsPattern[Graph]] := Graph[g, opt]
+IGUndirectedGraph[g_?igGraphQ, "Simple", opt : OptionsPattern[Graph]] :=
+    Graph[VertexList[g], DeleteDuplicates[igraphGlobal@"edgeListSortPairs"@IGIndexEdgeList[g]], DirectedEdges -> False, opt]
+IGUndirectedGraph[g_?igGraphQ, "All", opt : OptionsPattern[Graph]] :=
+    Graph[VertexList[g], IGIndexEdgeList[g], DirectedEdges -> False, opt]
+IGUndirectedGraph[g_?igGraphQ, "Mutual", opt : OptionsPattern[Graph]] :=
+    With[{am = AdjacencyMatrix[g]}, (* null graph has no adjacency matrix, but this case is caught by _?UndirectedGraphQ above *)
+      AdjacencyGraph[VertexList[g], Unitize[am Transpose[am]], opt]
     ]
 
-SyntaxInformation[IGEdgeWeightedQ] = {"ArgumentsPattern" -> {_}};
-IGEdgeWeightedQ[g_?EmptyGraphQ] := False (* avoid error from First if graph has no edges but is vertex weighted *)
-IGEdgeWeightedQ[g_] :=
-    WeightedGraphQ[g] &&
-    With[{weights = Developer`ToPackedArray@GraphComputation`WeightValues[g]},
-      If[First[weights] === 1 && minMax[weights] === {1, 1},
-        PropertyValue[g, EdgeWeight] =!= Automatic,
-        True
-      ]
-    ]
+IGUndirectedGraph[g_, "Reciprocal", opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Mutual", opt]
+
+IGUndirectedGraph[g_, "Each", opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "All", opt]
+IGUndirectedGraph[g_, All, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "All", opt]
+
+IGUndirectedGraph[g_, "Collapse", opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simple", opt]
+IGUndirectedGraph[g_, opt : OptionsPattern[Graph]] := IGUndirectedGraph[g, "Simple", opt]
+
+addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Mutual"}}]
 
 
-(* Vertex strengths, i.e. sums of the weights of incident edges *)
+PackageExport["IGDirectedTree"]
+IGDirectedTree::usage = "IGDirectedTree[] is obsolete. Use IGOrientTree[] instead."; (* TODO: remove eventually *)
 
-SyntaxInformation[IGVertexStrength] = {"ArgumentsPattern" -> {_, _.}};
-IGVertexStrength[g_?IGNullGraphQ] := {}
-IGVertexStrength[g_?igGraphQ] :=
-    With[{am = WeightedAdjacencyMatrix[g]}, (* WeightedAdjacencyMatrix adds up weights in multigraphs. *)
-      If[DirectedGraphQ[g],
-        Total[am] + Total[am, {2}],
-        Total[am] + Diagonal[am]
-      ]
-    ]
-IGVertexStrength[g_?igGraphQ, v_] :=
-    With[{index= VertexIndex[g, v]},
-      With[{am = WeightedAdjacencyMatrix[g]},
-        If[DirectedGraphQ[g],
-          Total[am[[index]]] + Total[am[[;;, index]]],
-          Total[am[[index]]] + am[[index, index]]
-        ]
-      ] /; IntegerQ[index]
-    ]
-
-SyntaxInformation[IGVertexInStrength] = {"ArgumentsPattern" -> {_, _.}};
-IGVertexInStrength[g_?IGNullGraphQ] := {}
-IGVertexInStrength[g_?igGraphQ] :=
-    With[{am = WeightedAdjacencyMatrix[g]},
-      If[DirectedGraphQ[g],
-        Total[am],
-        Total[am] + Diagonal[am]
-      ]
-    ]
-IGVertexInStrength[g_?igGraphQ, v_] :=
-    With[{index= VertexIndex[g, v]},
-      With[{am = WeightedAdjacencyMatrix[g]},
-        If[DirectedGraphQ[g],
-          Total[am[[;;, index]]],
-          Total[am[[index]]] + am[[index, index]]
-        ]
-      ] /; IntegerQ[index]
-    ]
-
-SyntaxInformation[IGVertexOutStrength] = {"ArgumentsPattern" -> {_, _.}};
-IGVertexOutStrength[g_?IGNullGraphQ] := {}
-IGVertexOutStrength[g_?igGraphQ] :=
-    With[{am = WeightedAdjacencyMatrix[g]},
-      If[DirectedGraphQ[g],
-        Total[am, {2}],
-        Total[am] + Diagonal[am]
-      ]
-    ]
-IGVertexOutStrength[g_?igGraphQ, v_] :=
-    With[{index= VertexIndex[g, v]},
-      With[{am = WeightedAdjacencyMatrix[g]},
-        If[DirectedGraphQ[g],
-          Total[am[[index]]],
-          Total[am[[index]]] + am[[index, index]]
-        ]
-      ] /; IntegerQ[index]
-    ]
+IGDirectedTree[tree_, root_, rest___] := IGOrientTree[tree, root, rest] (* old, obsolte naming *)
 
 
-(***** Import and export *****)
+PackageExport["IGOrientTree"]
+IGOrientTree::usage =
+    "IGOrientTree[tree, root] orients the edges of an undirected tree so that they point away from the root. The vertex order is not preserved: vertices will be ordered topologically.\n" <>
+    "IGOrientTree[tree, root, \"In\"] orients the edges so that they point towards the root.";
 
-$IGExportFormats = {"GraphML"};
-
-IGExport::format   = "`` is not a recognized IGExport format.";
-IGExport::infer    = "Cannot infer format of file \"``\".";
-IGExport::mixed    = "Exporting mixed graphs to `` is not supported.";
-IGExport::propname = "Only string or symbol property names are allowed when exporting to ``.";
-
-igExportStringTag::usage = "igExportStringTag is a symbol used to signal use of ExportString instead of Export in IGExport.";
-
-SyntaxInformation[IGExportString] = {"ArgumentsPattern" -> {_, _}};
-IGExportString[g_?GraphQ, format_]  := IGExport[igExportStringTag, g, format]
-addCompletion[IGExportString, {0, $IGExportFormats}]
-
-SyntaxInformation[IGExport] = {"ArgumentsPattern" -> {_, _, _.}};
-IGExport[file_, g_?GraphQ, format_] :=
-    Switch[ToLowerCase[format], (* ToLowerCase doesn't error for non-Strings *)
-      "graphml", ExportGraphML[file, g],
-      _, Message[IGExport::format, format]; $Failed
-    ]
-IGExport[file_, g_?GraphQ] :=
-    Switch[ToLowerCase@FileExtension[file],
-      "graphml", IGExport[file, g, "GraphML"],
-      _, Message[IGExport::infer, FileNameTake[file]]; $Failed
-    ]
-addCompletion[IGExport, {3, 0, $IGExportFormats}]
-
-
-(* Converting to an exportable format, with properties *)
-
-properties::usage =
-    "properties[vertex, association] is a wrapped used to associate properties with a vertex when exporting GraphML." <>
-    "properties[{v1, v2}, association] is used to associate properties with an edge when exporting GraphML.";
-
-$ignoredEdgeProperties = {EdgeShapeFunction, EdgeStyle, EdgeLabelStyle};
-$ignoredVertexProperties = {VertexShapeFunction, VertexShape, VertexStyle, VertexLabelStyle, VertexCoordinates, VertexSize};
-
-(* Memoized *)
-propType[propName_, g_, extractor_] := propType[propName, g, extractor] =
-    With[{list = DeleteMissing[extractor[propName][g]]},
-      Which[
-        VectorQ[list, Developer`MachineIntegerQ], "Integer",
-        VectorQ[list, Internal`RealValuedNumericQ], "Real",
-        VectorQ[list, StringQ], "String",
-        VectorQ[list, BooleanQ], "Boolean",
-        True, "Expression"
-      ]
-    ]
-
-vPropType[propName_, g_] := propType[propName, g, IGVertexProp]
-ePropType[propName_, g_] := propType[propName, g, IGEdgeProp]
-
-(* Memoized *)
-vPropNames[g_] := vPropNames[g] = Complement[IGVertexPropertyList[g], $ignoredVertexProperties]
-ePropNames[g_] := ePropNames[g] = Complement[IGEdgePropertyList[g], $ignoredEdgeProperties]
-
-value[_][m_Missing] := m
-value["Expression"][e_] := ToString[e, InputForm]
-value["String"][e_] := e
-value["Boolean"][e_] := ToString[e]
-value["Integer"][e_] := ToString[e]
-value["Real"][e_] := ToString@CForm@N[e]
-
-getVertexProp[name_, g_] := value[vPropType[name, g]] /@ IGVertexProp[name][g]
-getEdgeProp[name_, g_]   := value[ePropType[name, g]] /@ IGEdgeProp[name][g]
-
-getObj[g_, getProp_, propNames_, list_] :=
-    MapThread[
-      properties,
-      {
-        list,
-        With[{a = AssociationMap[getProp[#, g] &, propNames[g]]},
-          If[a === <||>,
-            ConstantArray[a, Length[list]],
-            DeleteMissing /@ Transpose[a, AllowedHeads -> All]
-          ]
-        ]
-      }
-    ]
-
-getVertices[g_] := getObj[g, getVertexProp, vPropNames, VertexList[g]]
-getEdges[g_] := getObj[g, getEdgeProp, ePropNames, List @@@ EdgeList[g]]
-
-
-(* GraphML *)
-
-graphmlAttrType = <|"Real" -> "double", "Integer" -> "long", "String" -> "string", "Expression" -> "string", "Boolean" -> "boolean"|>;
-
-graphmlAttrName[name_String] := graphmlAttrName[name] = name
-graphmlAttrName[name_Symbol] := graphmlAttrName[name] = ToString[name]
-graphmlAttrName[expr_] := (Message[IGExport::propname, "GraphML"]; Throw[$Failed, graphmlTag])
-
-(* Memoized *)
-graphmlVertexKeyID[name_] := graphmlVertexKeyID[name] = "v_" <> graphmlAttrName[name]
-graphmlEdgeKeyID[name_] := graphmlEdgeKeyID[name] = "e_" <> graphmlAttrName[name]
-
-graphmlEdgeKey[g_][name_] :=
-    XMLElement["key",
-      {"for" -> "edge", "id" -> graphmlEdgeKeyID[name],
-        "attr.name" -> graphmlAttrName[name],
-        "attr.type" -> graphmlAttrType@ePropType[name, g]}, {}
-    ]
-
-graphmlVertexKey[g_][name_] :=
-    XMLElement["key",
-      {"for" -> "node", "id" -> graphmlVertexKeyID[name],
-        "attr.name" -> graphmlAttrName[name],
-        "attr.type" -> graphmlAttrType@vPropType[name, g]}, {}
-    ]
-
-graphmlNode[properties[v_, asc_]] :=
-    XMLElement["node",
-      {"id" -> ToString[v]},
-      graphmlData[asc, graphmlVertexKeyID]
-    ]
-
-graphmlEdge[properties[{v1_, v2_}, asc_]] :=
-    XMLElement["edge",
-      {"source" -> ToString[v1], "target" -> ToString[v2]},
-      graphmlData[asc, graphmlEdgeKeyID]
-    ]
-
-graphmlData[asc_, keyID_] :=
-    keyValueMap[
-      Function[{name, value},
-        XMLElement["data", {"key" -> keyID[name]}, {value}]
-      ],
-      asc
-    ]
-
-graphmlTemplate =
-    XMLObject["Document"][
-      {XMLObject["Declaration"]["Version" -> "1.0", "Encoding" -> "UTF-8"],
-       XMLObject["Comment"][" created by IGraph/M, http://szhorvat.net/mathematica/IGraphM "]},
-      XMLElement["graphml",
-        {{"http://www.w3.org/2000/xmlns/", "xmlns"} ->
-            "http://graphml.graphdrawing.org/xmlns",
-          {"http://www.w3.org/2000/xmlns/", "xsi"} ->
-              "http://www.w3.org/2001/XMLSchema-instance",
-          {"http://www.w3.org/2001/XMLSchema-instance", "schemaLocation"} ->
-              "http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"},
-        {Sequence @@ #Keys,
-          XMLElement["graph",
-            {"id" -> "Graph", "edgedefault" -> #Directed},
-            {Sequence @@ #Nodes, Sequence @@ #Edges}]}
-      ], {}
-    ] &;
-
-graphmlGraph[g_?GraphQ] :=
-    Internal`InheritedBlock[
-      (* all memoized functions will be Block'ed *)
-      {propType, vPropNames, ePropNames, graphmlEdgeKeyID, graphmlVertexKeyID, graphmlAttrName},
-      If[MixedGraphQ[g],
-        Message[IGExport::mixed, "GraphML"];
+SyntaxInformation[IGOrientTree] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+expr : IGOrientTree[tree_?GraphQ, root_, mode : _String : "Out", opt : OptionsPattern[Graph]] :=
+    Module[{verts},
+      If[Not[UndirectedGraphQ[tree] && TreeGraphQ[tree]],
+        Message[IGOrientTree::inv, HoldForm@OutputForm[expr], OutputForm[tree], "undirected tree"];
         Return[$Failed]
       ];
-      Catch[
-        graphmlTemplate[<|
-          "Keys" -> Join[graphmlEdgeKey[g] /@ ePropNames[g], graphmlVertexKey[g] /@ vPropNames[g]],
-          "Nodes" -> (graphmlNode /@ getVertices[g]),
-          "Edges" -> (graphmlEdge /@ getEdges[g]),
-          "Directed" -> If[igDirectedQ[g], "directed", "undirected"]
-        |>],
-        graphMLTag
-      ]
-    ]
-
-ExportGraphML[file_, g_?GraphQ] :=
-    With[{xml = graphmlGraph[g]},
-      If[xml =!= $Failed,
-        If[file === igExportStringTag,
-          ExportString[xml, "XML"],
-          Export[file, xml, "XML"]
-        ],
-        $Failed
-      ]
-    ]
-
-
-(***** Shorthand *****)
-
-(* Notes:
-
-    - We cannot use removeSelfLoops[] and removeMultiEdges[] due to the need to support mixed graphs in this function.
-    - The symbol sep should not be localized in IGShorthand because it is used in shSplitGroup[].
- *)
-
-sep::usage = "sep[s] represents a separator while parsing shorthand notations in IGShorthand.";
-
-SetAttributes[shToExpr, Listable];
-shToExpr[s_String] :=
-    Which[
-      StringMatchQ[s, DigitCharacter ..], ToExpression[s],
-      True, s
-    ]
-
-shSplitGroup[s_sep] := s
-shSplitGroup[s_String] := shToExpr@StringTrim@StringSplit[s, ":"]
-
-Options[IGShorthand] = {
-  SelfLoops -> False,
-  "MultipleEdges" -> False,
-  DirectedEdges -> False,
-  VertexLabels -> "Name"
-};
-SyntaxInformation[IGShorthand] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGShorthand, Graph]};
-IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
-    Module[{comp, seq, edgeSeq, eh, edges, vertices},
-      comp = StringSplit[s, ","];
-      seq = StringSplit[#, (x : "<" | "") ~~ ("-" ..) ~~ (y : "" | ">") :> sep[x <> y]] & /@ comp;
-      seq = Replace[{__sep, mid___, __sep} :> {mid}] /@ seq;
-      seq = Map[shSplitGroup, seq, {2}];
-      edgeSeq = Select[seq, Length[#] > 1 &];
-      eh = If[TrueQ@OptionValue[DirectedEdges], DirectedEdge, UndirectedEdge];
-      edgeSeq = Replace[
-        Catenate[Partition[#, 3, 2] & /@ edgeSeq],
-        {
-          {x_, sep[""], y_}   :> eh[x,y],
-          {x_, sep[">"], y_}  :> DirectedEdge[x,y],
-          {x_, sep["<"], y_}  :> DirectedEdge[y,x],
-          {x_, sep["<>"], y_} :> Sequence[DirectedEdge[x,y], DirectedEdge[y,x]]
-        },
-        {1}
+      If[Not@VertexQ[tree, root],
+        Message[IGOrientTree::inv, HoldForm@OutputForm[expr], root, "vertex"];
+        Return[$Failed]
       ];
-      edges = Catenate[Tuples /@ edgeSeq];
-      Internal`InheritedBlock[{UndirectedEdge},
-        SetAttributes[UndirectedEdge, Orderless];
-        If[Not@TrueQ@OptionValue[SelfLoops],
-          edges = DeleteCases[edges, _[x_, x_]];
-        ];
-        If[Not@TrueQ@OptionValue["MultipleEdges"],
-          edges = DeleteDuplicates[edges];
-        ]
+      verts = First@Last@Reap@BreadthFirstScan[tree, root, "PrevisitVertex" -> Sow];
+      Switch[mode,
+        "Out", Null,
+        "In", verts = Reverse[verts],
+        _, Message[IGOrientTree::inv, HoldForm@OutputForm[expr], mode, "mode"]; Return[$Failed]
       ];
-      vertices = Catenate@DeleteCases[Level[seq, {2}], _sep];
-      Graph[
-        vertices,
-        edges,
-        Sequence @@ FilterRules[{opt}, FilterRules[Options[Graph], Except[VertexLabels|DirectedEdges]]],
-        VertexLabels -> OptionValue[VertexLabels]
-      ]
+      DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", opt]
     ]
+addCompletion[IGOrientTree, {0, 0, {"In", "Out"}}]
 
 
-(* Membership vectors *)
+(***** Membership vectors and vertex partitions *****)
+
+PackageExport["IGPartitionsToMembership"]
+IGPartitionsToMembership::usage =
+    "IGPartitionsToMembership[elements, partitions] computes a membership vector for the given partitioning of elements.\n" <>
+    "IGPartitionsToMembership[graph, partitions] computes a membership vector for the given partitioning of graph's vertices.\n" <>
+    "IGPartitionsToMembership[elements] is an operator that can be applied to partitions.";
 
 IGPartitionsToMembership::invpart = "Invalid element or part specification.";
 SyntaxInformation[IGPartitionsToMembership] = {"ArgumentsPattern" -> {_, _.}};
@@ -704,6 +261,13 @@ IGPartitionsToMembership[elements_List, parts : {___List}] :=
     ]
 IGPartitionsToMembership[elements_][parts_] := IGPartitionsToMembership[elements, parts]
 
+
+PackageExport["IGMembershipToPartitions"]
+IGMembershipToPartitions::usage =
+    "IGMembershipToPartitions[elements, membership] computes a partitioning of elements based on the given membership vector.\n" <>
+    "IGMembershipToPartitions[graph, membership] computes a partitioning graph's vertices based on the given membership vector.\n" <>
+    "IGMembershipToPartitions[elements] is an operator that can be applied to membership vectors.";
+
 SyntaxInformation[IGMembershipToPartitions] = {"ArgumentsPattern" -> {_, _.}};
 IGMembershipToPartitions[graph_?GraphQ, membership_List] := IGMembershipToPartitions[VertexList[graph], membership]
 IGMembershipToPartitions[elements_List, membership_List] :=
@@ -716,19 +280,41 @@ IGMembershipToPartitions[elements_List, membership_List] :=
 IGMembershipToPartitions[elements_][membership_] := IGMembershipToPartitions[elements, membership]
 
 
-(* Source and sink vertices *)
+(***** Graph combination *****)
 
-SyntaxInformation[IGSourceVertexList] = {"ArgumentsPattern" -> {_}};
-IGSourceVertexList[g_?GraphQ] := Pick[VertexList[g], VertexInDegree[g], 0]
+PackageExport["IGDisjointUnion"]
+IGDisjointUnion::usage = "IGDisjointUnion[{g1, g2, \[Ellipsis]}] computes a disjoint union of the graphs. Each vertex of the result will be a pair consisting of the index of the graph originally containing it and the original name of the vertex.";
 
-SyntaxInformation[IGSinkVertexList] = {"ArgumentsPattern" -> {_}};
-IGSinkVertexList[g_?GraphQ] := Pick[VertexList[g], VertexOutDegree[g], 0]
+IGDisjointUnion::mixed = "IGDisjointUnion does not support mixed graphs.";
+SyntaxInformation[IGDisjointUnion] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGDisjointUnion, Graph]};
+IGDisjointUnion[{} | <||>, opt : OptionsPattern[]] := Graph[{}, {}, opt]
+IGDisjointUnion[glist : {__?UndirectedGraphQ}, opt : OptionsPattern[]] :=
+    igDisjointUnion[Range@Length[glist], glist, False, {opt}]
+IGDisjointUnion[glist : {__?DirectedGraphQ}, opt : OptionsPattern[]] :=
+    igDisjointUnion[Range@Length[glist], glist, True, {opt}]
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && AllTrue[gasc, UndirectedGraphQ], opt : OptionsPattern[]] :=
+    igDisjointUnion[Keys[gasc], Values[gasc], False, {opt}]
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && AllTrue[gasc, DirectedGraphQ], opt : OptionsPattern[]] :=
+    igDisjointUnion[Keys[gasc], Values[gasc], True, {opt}]
+IGDisjointUnion[glist : {__?GraphQ}, opt : OptionsPattern[]] :=
+    (Message[IGDisjointUnion::mixed]; $Failed)
+IGDisjointUnion[gasc_ /; AssociationQ[gasc] && AllTrue[gasc, GraphQ], opt : OptionsPattern[]] :=
+    (Message[IGDisjointUnion::mixed]; $Failed)
 
-SyntaxInformation[IGIsolatedVertexList] = {"ArgumentsPattern" -> {_}};
-IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree[g], 0]
+igDisjointUnion[gnames_, glist_, directed_, {opt___}] :=
+    With[{vc = VertexCount /@ glist},
+      Graph[
+        Join @@ MapThread[Tuples@*List, {List /@ gnames, VertexList /@ glist}],
+        Join @@ ((IGIndexEdgeList /@ glist) + FoldList[Plus, 0, Most[vc]]),
+        DirectedEdges -> directed,
+        opt
+      ]
+    ]
 
+(***** Change graph representations *****)
 
-(* Reorder vertices *)
+PackageExport["IGReorderVertices"]
+IGReorderVertices::usage = "IGReorderVertices[vertices, graph] reorders the vertices of graph according to the given vertex vector. Graph properties are preserved.";
 
 findPermutation::usage = "findPermutation[l1, l2] finds the permutation that transforms list l1 into list l2.";
 findPermutation[l1_, l2_] := Ordering[l1][[Ordering@Ordering[l2]]]
@@ -755,33 +341,12 @@ IGReorderVertices[verts_List, graph_?GraphQ, opt : OptionsPattern[]] :=
     ]
 
 
-(* Direct edges of a tree *)
+(***** Transfer properties to a smaller graph *****)
 
-IGDirectedTree[tree_, root_, rest___] := IGOrientTree[tree, root, rest] (* old, obsolte naming *)
-
-SyntaxInformation[IGOrientTree] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-expr : IGOrientTree[tree_?GraphQ, root_, mode : _String : "Out", opt : OptionsPattern[Graph]] :=
-    Module[{verts},
-      If[Not[UndirectedGraphQ[tree] && TreeGraphQ[tree]],
-        Message[IGOrientTree::inv, HoldForm@OutputForm[expr], OutputForm[tree], "undirected tree"];
-        Return[$Failed]
-      ];
-      If[Not@VertexQ[tree, root],
-        Message[IGOrientTree::inv, HoldForm@OutputForm[expr], root, "vertex"];
-        Return[$Failed]
-      ];
-      verts = First@Last@Reap@BreadthFirstScan[tree, root, "PrevisitVertex" -> Sow];
-      Switch[mode,
-        "Out", Null,
-        "In", verts = Reverse[verts],
-        _, Message[IGOrientTree::inv, HoldForm@OutputForm[expr], mode, "mode"]; Return[$Failed]
-      ];
-      DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", opt]
-    ]
-addCompletion[IGOrientTree, {0, 0, {"In", "Out"}}]
-
-
-(* Transfer properties to a smaller graph *)
+PackageExport["IGTake"]
+IGTake::usage =
+    "IGTake[graph, subgraph] keeps only those vertices and edges of graph which are also present in subgraph, while retaining all graph properties.\n" <>
+    "IGTake[graph, edges] uses an edge list as the subgraph specification.";
 
 (* Keep those elements in l1 which are also in l2. l1 may have repeating elements. *)
 keepCases[l1_, l2_] := Pick[l1, Lookup[AssociationThread[l2, ConstantArray[1, Length[l2]]], l1, 0], 1]
@@ -871,118 +436,5 @@ IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
             Normal@KeyDrop[options, allPropNames]
           ],
           opt] (* apply user options *)
-      ]
-    ]
-
-(***** Matrix functions ****)
-
-SyntaxInformation[IGZeroDiagonal] = {"ArgumentsPattern" -> {_}};
-IGZeroDiagonal[mat_?MatrixQ] :=
-    UpperTriangularize[mat, 1] + LowerTriangularize[mat, -1]
-
-
-(* The built-in KirchhoffMatrix gives incorrect results for directed graphs. It uses the total degree
-   on the diagonal. It should use the out-degree instead.
-   KirchoffMatrix also ignores multi-edges. IGKirchhoffMatrix takes them into account.
- *)
-SyntaxInformation[IGKirchhoffMatrix] = {"ArgumentsPattern" -> {_, _.}};
-IGKirchhoffMatrix::nkir = "The null graph does not have a Kirchhoff matrix.";
-IGKirchhoffMatrix[graph_?IGNullGraphQ, _] := (Message[IGKirchhoffMatrix::nkir]; $Failed)
-IGKirchhoffMatrix[graph_?GraphQ] := IGKirchhoffMatrix[graph, "Out"]
-IGKirchhoffMatrix[graph_?GraphQ, "Out"] :=
-    With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
-      DiagonalMatrix@SparseArray@Total[am, {2}] - am
-    ]
-IGKirchhoffMatrix[graph_?GraphQ, "In"] :=
-    With[{am = zeroDiagonal@AdjacencyMatrix[graph]},
-      DiagonalMatrix@SparseArray@Total[am] - am
-    ]
-addCompletion[IGKirchhoffMatrix, {0, {"In", "Out"}}]
-
-
-$unconnected::usage = "$unconnected is used to denote unconnected entries in the implementation of IGAdjacencyMatrixPlot.";
-
-IGAdjacencyMatrixPlot::noprop = "The property `1` does not have a value for some or all edges in the graph.";
-IGAdjacencyMatrixPlot::bdname = "The value of the VertexLabels option must be Automatic, \"Name\", \"Index\" or a list of rules.";
-
-Options[IGAdjacencyMatrixPlot] = Options[MatrixPlot] ~Join~ {
-  EdgeWeight -> Automatic, "UnconnectedColor" -> Automatic, VertexLabels -> Automatic, "RotateColumnLabels" -> True
-};
-SetOptions[IGAdjacencyMatrixPlot, Mesh -> Automatic];
-
-SyntaxInformation[IGAdjacencyMatrixPlot] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-
-IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
-    Module[{$sizeLimit = 50, bigGraphQ, am, vind, rticks, cticks, colRules, rotFun,
-            prop = OptionValue[EdgeWeight], mesh = OptionValue[Mesh], vertexLabels = OptionValue[VertexLabels], ticks = OptionValue[FrameTicks]},
-
-      am = WeightedAdjacencyMatrix[graph, EdgeWeight -> prop];
-      If[Not@MatrixQ[am],
-        If[MemberQ[IGEdgeProp[prop][graph], _Missing],
-          Message[IGAdjacencyMatrixPlot::noprop, prop]
-        ];
-        Return[$Failed]
-      ];
-      If[vs === All,
-        vind = All,
-        Check[vind = VertexIndex[graph, #]& /@ vs, Return[$Failed]];
-      ];
-      am = am[[vind, vind]];
-
-      bigGraphQ = Length[am] > $sizeLimit;
-
-      mesh = Replace[mesh, Automatic :> If[bigGraphQ, False, All]];
-      rotFun = If[TrueQ@OptionValue["RotateColumnLabels"], Rotate[#, Pi/2]&, Identity];
-      vertexLabels = Replace[vertexLabels, Automatic :> If[bigGraphQ, "Index", "Name"]];
-      Switch[vertexLabels,
-        "Index",
-        {rticks, cticks} = {Automatic, Automatic};
-        ,
-        "Name",
-        rticks = Transpose@{Range@Length[am], VertexList[graph][[vind]]};
-        cticks = MapAt[rotFun, rticks, {All, 2}];
-        ,
-        {___?ruleQ},
-        rticks = Transpose@{Range@Length[am], Replace[VertexList[graph], vertexLabels, {1}][[vind]]};
-        cticks = MapAt[rotFun, rticks, {All, 2}];
-        ,
-        _,
-        Message[IGAdjacencyMatrixPlot::bdname];
-        {rticks, cticks} = {Automatic, Automatic};
-      ];
-
-      (* bring ticks to canonical form *)
-      Switch[Dimensions[ticks, 2],
-        {2, 2},
-        Null;
-        ,
-        {2, _|PatternSequence[]},
-        ticks = {#,#}& /@ ticks;
-        ,
-        _, (* catches single symbol, like Automatic, or single list *)
-        ticks = {{#,#}, {#,#}}& @ ticks;
-      ];
-      ticks = Replace[ticks, {All|Automatic|True -> Automatic, None|False -> None}, {2}];
-
-      ticks = MapAt[Replace[Automatic -> rticks], ticks, {1, All}];
-      ticks = MapAt[Replace[Automatic -> cticks], ticks, {2, All}];
-
-      (* construct ColorRules *)
-      If[OptionValue["UnconnectedColor"] === Automatic,
-        colRules = OptionValue[ColorRules]
-        ,
-        am = SparseArray[am["NonzeroPositions"] -> am["NonzeroValues"], Dimensions[am], $unconnected];
-        colRules = {$unconnected -> OptionValue["UnconnectedColor"]};
-        If[Not@MatchQ[OptionValue[ColorRules], Automatic|None],
-          colRules = Flatten[{colRules, OptionValue[ColorRules]}]
-        ]
-      ];
-
-      MatrixPlot[
-        am,
-        ColorRules -> colRules,
-        FrameTicks -> ticks,
-        Sequence @@ FilterRules[{opt}, FilterRules[Options[MatrixPlot], Except[ColorRules|FrameTicks]]],
-        Mesh -> mesh
       ]
     ]

@@ -55,7 +55,8 @@ removeMultiEdges[g_] := g
 
 PackageScope["transformGraphOptions"]
 
-$graphLink::usage = "$graphLink is a loopback link used to convert atomic graphs to a compound form.";
+(* Use 'dummy' instead of 'usage' to prevent IntelliJ from making the symbol known across files *)
+$graphLink::dummy = "$graphLink is a loopback link used to convert atomic graphs to a compound form.";
 
 transformGraphOptions::usage = "transformGraphOptions[fun][graph] applies fun to the list of options stored in graph.";
 transformGraphOptions[fun_][g_?GraphQ] :=
@@ -88,6 +89,15 @@ If[$VersionNumber >= 11.2,
   partitionRagged[v_List, l_?VectorQ] := MapThread[Take[v, {#1, #2}] &, Module[{a = Accumulate[l]}, {a - l + 1, a}]]
 ]
 
+(* Retrieving edge or vertex weights this way is much faster than using PropertyValue *)
+PackageScope["igEdgeWeights"]
+igEdgeWeights::usage = "igEdgeWeights[graph] returns the edge weight vector of graph.";
+igEdgeWeights = GraphComputation`WeightValues;
+
+PackageScope["igVertexWeights"]
+igVertexWeights ::usage = "igVertexWeights[graph] returns the vertex weight vector of graph.";
+igVertexWeights = GraphComputation`WeightVector;
+
 
 (***** Tools for error handling *****)
 
@@ -96,7 +106,8 @@ If[$VersionNumber >= 11.2,
  * catch[] should have a version that takes a head and reports the message under that head (head::tag)
  *)
 
-igTag::usage = "igTag is a private tag for Throw/Catch within IGraphM.";
+(* Use 'dummy' instead of 'usage' to prevent IntelliJ from making the symbol known across files *)
+igTag::dummy = "igTag is a private tag for Throw/Catch within IGraphM.";
 
 PackageScope["throw"]
 throw::usage = "throw[val]";
@@ -181,3 +192,13 @@ PackageScope["fixInfNaN"]
 fixInfNaN::usage = "fixInfNaN[]";
 fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Developer`FromPackedArray[arr], arr]
 fixInfNaN[arr_] := arr
+
+
+(***** *****)
+
+PackageScope["keyValueMap"]
+keyValueMap::usage = "keyValueMap[fun, asc] is a v10.0-compatible replacement for KeyValueMap.";
+If[$VersionNumber >= 10.1,
+  keyValueMap = KeyValueMap,
+  keyValueMap[f_, asc_] := f @@@ Normal[asc]
+]
