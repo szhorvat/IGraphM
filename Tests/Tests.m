@@ -276,7 +276,7 @@ MT[
 ]
 
 MT[
-  IGDocumentation[]; NotebookClose@First@Notebooks[];,
+  IGDocumentation[]; NotebookClose /@ Select[Notebooks[], CurrentValue[#, WindowTitle] === "IGraph/M Documentation"&];,
   Null
 ]
 
