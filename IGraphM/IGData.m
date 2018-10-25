@@ -8,13 +8,11 @@
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
 
+
 PackageExport["IGData"]
 IGData::usage =
     "IGData[] returns a list of available items.\n" <>
     "IGData[item] returns the requested item.";
-
-
-(*  IGData  *)
 
 $igData := $igData = zimport@FileNameJoin[{$packageDirectory, "IGData.mz"}];
 $igDataCategories := $igDataCategories = GroupBy[Select[Keys[$igData], ListQ], First];

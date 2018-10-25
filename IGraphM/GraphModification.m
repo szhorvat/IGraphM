@@ -9,8 +9,6 @@
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
 
-PackageImport["IGraphM`LTemplate`"]
-
 (****************************************)
 (***** Functions that modify graphs *****)
 (****************************************)
@@ -89,7 +87,7 @@ IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtain
 
 SyntaxInformation[IGSmoothen] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGSmoothen[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
-    catch@Module[{ig = Make["IG"], ig2 = igMake[graph], graph2, deletedIndices},
+    catch@Module[{ig = igMakeEmpty[], ig2 = igMake[graph], graph2, deletedIndices},
       deletedIndices = igIndexVec@check@ig@"smoothen"[ManagedLibraryExpressionID[ig2]];
       graph2 = igToWeightedGraphWithNames[ig, VertexList[graph]];
       IGWeightedVertexDelete[graph2, VertexList[graph][[ deletedIndices ]], opt]

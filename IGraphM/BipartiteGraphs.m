@@ -8,8 +8,6 @@
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
 
-PackageImport["IGraphM`LTemplate`"]
-
 (****************************)
 (***** Bipartite graphs *****)
 (****************************)
@@ -69,7 +67,7 @@ IGBipartiteProjections::usage =
 IGBipartiteProjections::bdpart = "`1` is not a valid partitioning of the vertices `2`.";
 SyntaxInformation[IGBipartiteProjections] = {"ArgumentsPattern" -> {_, _.}};
 IGBipartiteProjections[graph_?igGraphQ, parts : {vertices1_List, vertices2_List}] :=
-    catch@Module[{ig = igMakeFast[graph], ig1 = Make["IG"], ig2 = Make["IG"], weights},
+    catch@Module[{ig = igMakeFast[graph], ig1 = igMakeEmpty[], ig2 = igMakeEmpty[], weights},
       If[Not[Sort[Join@@parts] === Sort@VertexList[graph]],
         Message[IGBipartiteProjections::bdpart, parts, VertexList[graph]];
         throw[$Failed]

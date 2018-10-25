@@ -9,8 +9,6 @@
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
 
-PackageImport["IGraphM`LTemplate`"]
-
 (***********************************)
 (***** Random graph generators *****)
 (***********************************)
@@ -37,7 +35,7 @@ IGDegreeSequenceGame[indegrees_?nonNegIntVecQ, outdegrees_?nonNegIntVecQ, opt : 
     catch@applyGraphOpt[opt]@igDegreeSequenceGame[indegrees, outdegrees, OptionValue[Method]]
 
 igDegreeSequenceGame[indegrees_, outdegrees_, method_] :=
-    (* no catch *) Block[{ig = Make["IG"]},
+    (* no catch *) Block[{ig = igMakeEmpty[]},
       check@ig@"degreeSequenceGame"[outdegrees, indegrees, Lookup[igDegreeSequenceGameMethods, method, -1]];
       igToGraph[ig]
     ]
@@ -49,7 +47,7 @@ IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n v
 Options[IGKRegularGame] = { "MultipleEdges" -> False, DirectedEdges -> False };
 SyntaxInformation[IGKRegularGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGKRegularGame, Graph]};
 IGKRegularGame[n_?Internal`NonNegativeMachineIntegerQ, k_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGKRegularGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["MultipleEdges"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -61,7 +59,7 @@ IGStochasticBlockModelGame::usage = "IGStochasticBlockModelGame[ratesMatrix, blo
 Options[IGStochasticBlockModelGame] = { SelfLoops -> False, DirectedEdges -> False };
 SyntaxInformation[IGStochasticBlockModelGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGStochasticBlockModelGame, Graph]};
 IGStochasticBlockModelGame[ratesMatrix_?SquareMatrixQ, blockSizes_?nonNegIntVecQ, opt : OptionsPattern[{IGStochasticBlockModelGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"stochasticBlockModel"[Normal[ratesMatrix], Normal[blockSizes], OptionValue[DirectedEdges], OptionValue[SelfLoops]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -76,7 +74,7 @@ IGForestFireGame::usage =
 Options[IGForestFireGame] = { DirectedEdges -> False };
 SyntaxInformation[IGForestFireGame] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGForestFireGame, Graph]};
 IGForestFireGame[n_?Internal`PositiveMachineIntegerQ, fwprob_?NonNegative, bwratio : _?NonNegative : 1, nambs : _?Internal`NonNegativeIntegerQ : 1, opt : OptionsPattern[{IGForestFireGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"forestFireGame"[n, fwprob, bwratio, nambs, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -89,7 +87,7 @@ IGBipartiteGameGNM::usage = "IGBipartiteGameGNM[n1, n2, m] generates a bipartite
 Options[IGBipartiteGameGNM] = { DirectedEdges -> False, "Bidirectional" -> True, GraphLayout -> "BipartiteEmbedding" };
 SyntaxInformation[IGBipartiteGameGNM] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}, "OptionNames" -> optNames[IGBipartiteGameGNM, Graph]};
 IGBipartiteGameGNM[n1_?Internal`NonNegativeMachineIntegerQ, n2_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGBipartiteGameGNM, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"bipartiteGameGNM"[n1, n2, m, OptionValue[DirectedEdges], OptionValue["Bidirectional"]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
@@ -101,7 +99,7 @@ IGBipartiteGameGNP::usage = "IGBipartiteGameGNP[n1, n2, p] generates a bipartite
 Options[IGBipartiteGameGNP] = { DirectedEdges -> False, "Bidirectional" -> True, GraphLayout -> "BipartiteEmbedding" };
 SyntaxInformation[IGBipartiteGameGNP] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}, "OptionNames" -> optNames[IGBipartiteGameGNP, Graph]};
 IGBipartiteGameGNP[n1_?Internal`NonNegativeMachineIntegerQ, n2_?Internal`NonNegativeMachineIntegerQ, p_?NonNegative, opt : OptionsPattern[{IGBipartiteGameGNP, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"bipartiteGameGNP"[n1, n2, p, OptionValue[DirectedEdges], OptionValue["Bidirectional"]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
@@ -113,7 +111,7 @@ IGErdosRenyiGameGNM::usage = "IGErdosRenyiGameGNM[n, m] generates a random graph
 Options[IGErdosRenyiGameGNM] = { DirectedEdges -> False, SelfLoops -> False };
 SyntaxInformation[IGErdosRenyiGameGNM] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGErdosRenyiGameGNM, Graph]};
 IGErdosRenyiGameGNM[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGErdosRenyiGameGNM, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"erdosRenyiGNM"[n, m, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -125,7 +123,7 @@ IGErdosRenyiGameGNP::usage = "IGErdosRenyiGameGNP[n, p] generates a random graph
 Options[IGErdosRenyiGameGNP] = { DirectedEdges -> False, SelfLoops -> False };
 SyntaxInformation[IGErdosRenyiGameGNP] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGErdosRenyiGameGNP, Graph]};
 IGErdosRenyiGameGNP[n_?Internal`NonNegativeMachineIntegerQ, p_?NonNegative, opt : OptionsPattern[{IGErdosRenyiGameGNP, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"erdosRenyiGNP"[n, p, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -137,7 +135,7 @@ IGGeometricGame::usage = "IGGeometricGame[n, radius] generates an n-vertex geome
 Options[IGGeometricGame] = {"Periodic" -> False};
 SyntaxInformation[IGGeometricGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGGeometricGame, Graph]};
 IGGeometricGame[n_?Internal`NonNegativeMachineIntegerQ, radius_?nonNegativeNumericQ, opt : OptionsPattern[{IGGeometricGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"], coord},
+    catch@Block[{ig = igMakeEmpty[], coord},
       coord = check@ig@"geometricGame"[n, radius, OptionValue["Periodic"]];
       applyGraphOpt[VertexCoordinates -> coord, opt]@igToGraph[ig]
     ]
@@ -178,7 +176,7 @@ IGBarabasiAlbertGame[
     igBarabasiAlbertGame[n, m, {power, a}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], OptionValue["StartingGraph"], opt]
 
 igBarabasiAlbertGame[n_, m_, {power_, a_}, directed_, totalDegree_, method_, initial_, opt___] :=
-    catch@Block[{ig = Make["IG"], start},
+    catch@Block[{ig = igMakeEmpty[], start},
       If[initial === None,
         check@ig@"barabasiAlbertGame"[
           n, power, a,
@@ -218,7 +216,7 @@ IGWattsStrogatzGame[
   n_?Internal`NonNegativeMachineIntegerQ, p_?NonNegative,
   {dim_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineIntegerQ},
   opt : OptionsPattern[{IGWattsStrogatzGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"wattsStrogatzGame"[dim, n, k, p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -244,7 +242,7 @@ SyntaxInformation[IGStaticFitnessGame] = {
 IGStaticFitnessGame[
   m_?Internal`NonNegativeMachineIntegerQ,
   inFitness_?nonNegIntVecQ, outFitness : _?nonNegIntVecQ : {}, opt : OptionsPattern[{IGStaticFitnessGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"staticFitnessGame"[m, Normal[inFitness], Normal[outFitness], OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -260,12 +258,12 @@ SyntaxInformation[IGStaticPowerLawGame] = {
   "ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]
 };
 IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, exp_?nonNegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"staticPowerLawGame"[n, m, exp, -1, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, expOut_?nonNegativeNumericQ, expIn_?nonNegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"staticPowerLawGame"[n, m, expOut, expIn, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -277,7 +275,7 @@ IGGrowingGame::usage = "IGGrowingGame[n, k] generates a growing random graph wit
 Options[IGGrowingGame] = { DirectedEdges -> False, "Citation" -> False };
 SyntaxInformation[IGGrowingGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGGrowingGame, Graph]};
 IGGrowingGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGGrowingGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"growingGame"[n, m, OptionValue[DirectedEdges], OptionValue["Citation"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -291,7 +289,7 @@ igTreeGameMethods = <|"PruferCode" -> 0, "LoopErasedRandomWalk" -> 1|>;
 amendUsage[IGTreeGame, "Available Method options: <*Keys[igTreeGameMethods]*>."];
 SyntaxInformation[IGTreeGame] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGTreeGame, Graph]};
 IGTreeGame[n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[{IGTreeGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"treeGame"[n, OptionValue[DirectedEdges], Lookup[igTreeGameMethods, OptionValue[Method], -1]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -313,7 +311,7 @@ IGCallawayTraitsGame[
   n_?Internal`NonNegativeMachineIntegerQ, k_?Internal`NonNegativeMachineIntegerQ,
   typeWeights_?VectorQ, prefMatrix_?MatrixQ,
   opt : OptionsPattern[{IGCallawayTraitsGame, Graph}]] :=
-      catch@Block[{ig = Make["IG"]},
+      catch@Block[{ig = igMakeEmpty[]},
         If[Not@positiveVecQ[typeWeights],
           Message[IGCallawayTraitsGame::weightnn];
           Return[$Failed];
@@ -346,7 +344,7 @@ IGEstablishmentGame[
   n_?Internal`NonNegativeMachineIntegerQ, k_?Internal`NonNegativeMachineIntegerQ,
   typeWeights_?VectorQ, prefMatrix_?MatrixQ,
   opt : OptionsPattern[{IGEstablishmentGame, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       If[Not@positiveVecQ[typeWeights],
         Message[IGEstablishmentGame::weightnn];
         Return[$Failed];

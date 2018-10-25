@@ -31,7 +31,7 @@ IGLCF::usage =
 Options[IGLCF] = { GraphLayout -> "CircularEmbedding" };
 SyntaxInformation[IGLCF] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGLCF, Graph]};
 IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[{IGLCF, Graph}]] :=
-    catch@Block[{ig = Make["IG"], numVertices},
+    catch@Block[{ig = igMakeEmpty[], numVertices},
       numVertices = Replace[n, Automatic :> Length[shifts] repeats];
       If[numVertices < 2,
         IGEmptyGraph[numVertices]
@@ -52,12 +52,12 @@ igRealizeDegreeSequenceMethods = <|"SmallestFirst" -> 0, "LargestFirst" -> 1, "I
 amendUsage[IGRealizeDegreeSequence, "Available Method options: <*Keys[igRealizeDegreeSequenceMethods]*>."];
 SyntaxInformation[IGRealizeDegreeSequence] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGRealizeDegreeSequence, Graph]};
 IGRealizeDegreeSequence[degrees_?intVecQ, opt : OptionsPattern[{IGRealizeDegreeSequence, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"realizeDegreeSequence"[degrees, {}, Lookup[igRealizeDegreeSequenceMethods, OptionValue[Method], -1]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 IGRealizeDegreeSequence[outdeg_?intVecQ, indeg_?intVecQ, opt : OptionsPattern[{IGRealizeDegreeSequence, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"realizeDegreeSequence"[outdeg, indeg, Lookup[igRealizeDegreeSequenceMethods, OptionValue[Method], -1]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -73,7 +73,7 @@ Options[IGKaryTree] = {
 };
 SyntaxInformation[IGKaryTree] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGKaryTree, Graph]};
 IGKaryTree[m_?Internal`NonNegativeMachineIntegerQ, n : _?Internal`PositiveMachineIntegerQ : 2, opt : OptionsPattern[{IGKaryTree, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"tree"[m, n, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -108,7 +108,7 @@ IGFromPrufer::usage = "IGFromPrufer[sequence] constructs a tree from a Prüfer s
 
 SyntaxInformation[IGFromPrufer] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGFromPrufer, Graph]};
 IGFromPrufer[vec_?intVecQ, opt : OptionsPattern[Graph]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"fromPrufer"[vec - 1];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -123,7 +123,7 @@ Options[IGCompleteGraph] = {
 };
 SyntaxInformation[IGCompleteGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGCompleteGraph, Graph]};
 IGCompleteGraph[m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGCompleteGraph, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"completeGraph"[m, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
@@ -134,7 +134,7 @@ IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete ac
 
 SyntaxInformation[IGCompleteAcyclicGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGCompleteAcyclicGraph[m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"completeCitationGraph"[m, True];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -145,7 +145,7 @@ IGKautzGraph::usage = "IGKautzGraph[m, n] returns a Kautz graph on m+1 character
 
 SyntaxInformation[IGKautzGraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGKautzGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"kautz"[m, n];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -156,7 +156,7 @@ IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m c
 
 SyntaxInformation[IGDeBruijnGraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGDeBruijnGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"deBruijn"[m, n];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -180,7 +180,7 @@ IGChordalRing[n_?Developer`MachineIntegerQ, {}, opt : OptionsPattern[{IGChordalR
 IGChordalRing[n_?Developer`MachineIntegerQ, w_?intVecQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
     IGChordalRing[n, {w}, opt]
 IGChordalRing[n_?Developer`MachineIntegerQ, w_?intMatQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"extendedChordalRing"[n, w, OptionValue[DirectedEdges], OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
@@ -193,7 +193,7 @@ IGGraphAtlas::usage =
 
 SyntaxInformation[IGGraphAtlas] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGGraphAtlas, Graph]};
 IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"graphAtlas"[n];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -249,7 +249,7 @@ PackageExport["IGSquareLattice"]
 IGSquareLattice::usage = "IGSquareLattice[{d1, d2, \[Ellipsis]}] generates a square grid graph of the given dimensions.";
 
 igSquareLattice[dims_, directed_, mutual_, radius_, periodic_, {opt___}] :=
-    catch@Block[{ig = Make["IG"]},
+    catch@Block[{ig = igMakeEmpty[]},
       check@ig@"makeLattice"[dims, radius, directed, mutual, periodic];
       If[Length[dims] === 2 && Not@TrueQ[periodic],
         applyGraphOpt[opt, GraphLayout -> {"GridEmbedding", "Dimension" -> dims}]@igToGraph[ig],

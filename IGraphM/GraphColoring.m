@@ -12,6 +12,7 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Graph colouring *****)
 (***************************)
 
+
 PackageExport["IGVertexColoring"]
 IGVertexColoring::usage = "IGVertexColoring[graph] returns a vertex colouring of graph.";
 

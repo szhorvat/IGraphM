@@ -33,13 +33,14 @@ PackageImport["IGraphM`LTemplate`"]
 PackageExport["IGraphM"]
 IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
-IGraphM`Information`$Version::usage = "IGraphM`Information`$Version is a string that gives the version of the currently loaded IGraph/M package.";
+IGraphM`Information`$Version::usage =
+    "IGraphM`Information`$Version is a string that gives the version of the currently loaded IGraph/M package.";
 
-IGraphM`Developer`Recompile::usage = "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
+IGraphM`Developer`Recompile::usage =
+    "IGraphM`Developer`Recompile[] recompiles the IGraphM library and reloads the functions.";
 
-IGraphM`Developer`GetInfo::usage = "IGraphM`Developer`GetInfo[] returns useful information about IGraph/M and the system it is running on, for debugging and troubleshooting purposes.";
-
-(*PrependTo[$ContextPath, $Context <> "Developer`"];*)
+IGraphM`Developer`GetInfo::usage =
+    "IGraphM`Developer`GetInfo[] returns useful information about IGraph/M and the system it is running on, for debugging and troubleshooting purposes.";
 
 PackageExport["IGDocumentation"]
 IGDocumentation::usage = "IGDocumentation[] opens the IGraph/M documentation.";
@@ -51,7 +52,7 @@ PackageExport["IGSeedRandom"]
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
 
-(***** Utility functions for setting up definitions and other load-time tasks *****)
+(***** Utility functions for setting up definitions and for other load-time tasks *****)
 
 (* These functions must be defined in the file that is loaded first, IGraphM.m, to ensure availability in all others *)
 
@@ -111,7 +112,8 @@ zimport[filename_] :=
 
 (***** Package variables *****)
 
-(* $packageDirectory must be package scope because it is used in functions that read data files, IGData[], IGLatticeMesh[] *)
+(* $packageDirectory must be package scope because it is used in functions that read data files,
+   such as IGData[], IGLatticeMesh[] *)
 PackageScope["$packageDirectory"]
 $packageDirectory::usage = "$packageDirectory is the directory where IGraph/M is installed.";
 
@@ -127,6 +129,8 @@ $buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}];
 
 IGraphM`Information`$Version = $packageVersion;
 
+
+(***** Class interface definition *****)
 
 template = LTemplate["IGraphM",
   {
@@ -665,7 +669,6 @@ IGraphM::mixed = "Mixed graphs are not supported by IGraph/M. Use DirectedGraph 
 (***** Helper functions *****)
 
 
-
 (* Get an IG compatible edge list. *)
 (* This implementation attempts to select the fastest method based on the internal representation
    of the graph. With the "Simple" representation, IndexGraph is very fast. With "Incidence" it's
@@ -691,6 +694,7 @@ igEdgeList[graph_] :=
 (* Not currently in use; was originally used in igMake and related functions.
  * See igraphGlobal@"incidenceToEdgeList" for a faster solution if need arises in the future. *)
 (* Thanks to Carl Woll for the following implementation idea: http://community.wolfram.com/groups/-/m/t/1250373 *)
+(*
 igEdgeList[graph_?EmptyGraphQ] := {}
 igEdgeList[graph_?MultigraphQ] :=
     Developer`ToPackedArray@Lookup[
@@ -705,6 +709,7 @@ igEdgeList[graph_?DirectedGraphQ] :=
     With[{sa = WeightedAdjacencyMatrix[graph, EdgeWeight -> Range@EdgeCount[graph]]},
       sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
     ]
+*)
 
 
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
@@ -732,6 +737,10 @@ igMake[g_] :=
       ig
     ]
 *)
+
+PackageScope["igMakeEmpty"]
+igMakeEmpty::usage = "igMakeEmpty[] creates an empty IG object.";
+igMakeEmpty[] := Make["IG"]
 
 PackageScope["igMake"]
 igMake::usage = "igMake[graph] creates an IG object from a Graph.";

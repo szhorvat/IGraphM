@@ -12,6 +12,7 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Graph layouts *****)
 (*************************)
 
+
 (* Common messages for layout functions. *)
 
 IGraphM::lytcrd = "The graph doesn't already have existing vertex coordinates. The \"Continue\" -> True layout option will be ignored.";

@@ -8,6 +8,11 @@
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
 
+(**********************************************************)
+(***** Utility functions for basic graph manipulation *****)
+(**********************************************************)
+
+
 (***** Fast structure retrieval *****)
 
 PackageExport["IGIndexEdgeList"]

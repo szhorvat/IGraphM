@@ -8,7 +8,6 @@
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
 
-
 (*******************************)
 (***** Centrality measures *****)
 (*******************************)

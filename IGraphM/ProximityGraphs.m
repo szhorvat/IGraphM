@@ -8,24 +8,16 @@
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
 
-PackageImport["IGraphM`LTemplate`"]
 PackageImport["TriangleLink`"]
 PackageImport["TetGenLink`"]
 
+(****************************)
+(***** Proximity graphs *****)
+(****************************)
+
+
 PackageExport["IGDelaunayGraph"]
 IGDelaunayGraph::usage = "IGDelaunayGraph[points] computes the Delaunay graph of the given points.";
-
-PackageExport["IGLuneBetaSkeleton"]
-IGLuneBetaSkeleton::usage = "IGLuneBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
-
-PackageExport["IGCircleBetaSkeleton"]
-IGCircleBetaSkeleton::usage = "IGCircleBetaSkeleton[points, beta] computes the circle-based beta skeleton of the given points.";
-
-PackageExport["IGRelativeNeighborhoodGraph"]
-IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighborhood graph of the given points.";
-
-PackageExport["IGGabrielGraph"]
-IGGabrielGraph::usage = "IGGabrielGraph[points] computes the Gabriel graph of the given points.";
 
 delaunayEdges1D[points_] := Partition[Ordering@N[points], 2, 1]
 
@@ -255,6 +247,9 @@ igBetaSkeletonEdges0[pts_, beta_] :=
     ]
 
 
+PackageExport["IGLuneBetaSkeleton"]
+IGLuneBetaSkeleton::usage = "IGLuneBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
+
 (* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
 igLuneBetaSkeleton[pts_, beta_, opt___] :=
     catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
@@ -273,6 +268,9 @@ SyntaxInformation[IGLuneBetaSkeleton] = {"ArgumentsPattern" -> {_, _, OptionsPat
 IGLuneBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ, opt : OptionsPattern[Graph]] :=
     igLuneBetaSkeleton[pts, beta, opt]
 
+
+PackageExport["IGCircleBetaSkeleton"]
+IGCircleBetaSkeleton::usage = "IGCircleBetaSkeleton[points, beta] computes the circle-based beta skeleton of the given points.";
 
 (* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
 igCircleBetaSkeleton[pts_, beta_, opt___] :=
@@ -293,10 +291,16 @@ IGCircleBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumeric
     igCircleBetaSkeleton[pts, beta, opt]
 
 
+PackageExport["IGRelativeNeighborhoodGraph"]
+IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighborhood graph of the given points.";
+
 SyntaxInformation[IGRelativeNeighborhoodGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGRelativeNeighborhoodGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
     igLuneBetaSkeleton[pts, 2, opt]
 
+
+PackageExport["IGGabrielGraph"]
+IGGabrielGraph::usage = "IGGabrielGraph[points] computes the Gabriel graph of the given points.";
 
 SyntaxInformation[IGGabrielGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=

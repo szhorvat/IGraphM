@@ -12,6 +12,7 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Connectivity and maximum flow *****)
 (*****************************************)
 
+
 (***** Testing *****)
 
 PackageExport["IGConnectedQ"]

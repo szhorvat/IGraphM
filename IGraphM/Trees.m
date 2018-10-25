@@ -8,8 +8,6 @@
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
 
-PackageImport["IGraphM`LTemplate`"]
-
 (******************************************)
 (***** Tree graphs and spanning trees *****)
 (******************************************)
@@ -120,7 +118,7 @@ IGUnfoldTree::usage = "IGUnfoldTree[graph, {root1, root2, \[Ellipsis]}] performs
 Options[IGUnfoldTree] = { DirectedEdges -> True };
 SyntaxInformation[IGUnfoldTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGUnfoldTree, Graph]};
 IGUnfoldTree[graph_?GraphQ, roots_List, opt : OptionsPattern[{IGUnfoldTree, Graph}]] :=
-    catch@Block[{new = Make["IG"], ig = igMakeFast[graph], mapping, tree},
+    catch@Block[{new = igMakeEmpty[], ig = igMakeFast[graph], mapping, tree},
       mapping = check@new@"unfoldTree"[ManagedLibraryExpressionID[ig], vss[graph][roots], OptionValue[DirectedEdges]];
       tree = igToGraph[new];
       applyGraphOpt[opt]@Graph[tree, Properties -> Thread[VertexList[tree] -> List /@ Thread["OriginalVertex" -> igVertexNames[graph]@igIndexVec[mapping]]]]
