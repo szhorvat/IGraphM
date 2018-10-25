@@ -188,9 +188,9 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
         edges,
         MapThread[
           Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
-          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+          {centres1, centres2, r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon)}
         ],
-        0
+        2
       ]
     ]
 
@@ -212,9 +212,9 @@ igCircleBetaSkeletonEdges[pts_, beta_] :=
         edges,
         MapThread[
           Function[{c1, c2, d}, Length@Union[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
-          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+          {centres1, centres2, r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon)}
         ],
-        0
+        2
       ]
     ]
 
@@ -229,9 +229,9 @@ igGabrielGraphEdges[pts_] :=
         edges,
         MapThread[
           Function[{c, d}, Length@nf[c, {Infinity, d}]],
-          {(p+q)/2, 0.5 edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+          {(p+q)/2, 0.5 edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon)}
         ],
-        0
+        2
       ]
     ]
 
@@ -253,9 +253,9 @@ igBetaSkeletonEdges0[pts_, beta_] :=
         edges,
         MapThread[
           Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
-          {centres1, centres2, r edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon)}
+          {centres1, centres2, r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon)}
         ],
-        0
+        2
       ]
     ]
 
