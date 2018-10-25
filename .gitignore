@@ -7,3 +7,5 @@ IGraphM.includes
 IGraphM.creator.user
 LTemplate-IGraphM.cpp
 release
+*.lock
+IGraphM/LibraryResources/Source/.vscode
