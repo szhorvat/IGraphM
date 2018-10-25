@@ -4,8 +4,7 @@
 
 BeginPackage["IGraphM`"]
 
-(* NOTE: replaced in build script. Remember to update build script if editing these two lines. *)
-Get["LTemplate`LTemplatePrivate`"];
-ConfigureLTemplate["MessageSymbol" -> IGraphM, "LazyLoading" -> False]
+Get["LTemplate`LTemplatePrivate`"]; (* REPLACE-TAG *)
+ConfigureLTemplate["MessageSymbol" -> IGraphM, "LazyLoading" -> False] (* REPLACE-TAG *)
 
 EndPackage[]

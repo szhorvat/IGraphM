@@ -7,7 +7,7 @@
 
 (* This script requires the following versions of Mathematica:
  * 10.0 for writing 10.0-compatible notebooks
- * 10.4 for evaluating the documentation notebook and obtaining a result that renders correctly in 10.x
+ * 11.0 for evaluating the documentation notebook and obtaining a result that renders correctly in 10.x
  * 11.1 for creating old-style documentation indexes
  * 11.2 for creating new-style documentation indexes
  *)
@@ -15,7 +15,7 @@
 $appName = "IGraphM";
 $LTemplateRepo = "~/Repos/LTemplate";
 
-Print["\nScript running in Mathematica ", $Version];
+Print["\nScript running in Mathematica ", $Version, ".\n"];
 
 (* Prints an error message and aborts the script *)
 printAbort[str_] := (Print["ABORTING: ", Style[str, Red, Bold]]; Quit[])
@@ -77,27 +77,51 @@ PacletDirectoryAdd[$dir]
 Needs[$appName <> "`"]
 
 
-source = Import["IGraphM.m", "String"];
+Print["Making source replacements..."]
+
+replaceLines[repl_][file_] :=
+    Module[{source},
+      source = Import[file, "String"];
+      source = StringReplace[source, repl];
+      Export[file, source, "String"]
+    ]
+
+
+replaceLines[{
+    "Get[\"LTemplate`LTemplatePrivate`\"]; (* REPLACE-TAG *)" -> "Get[\"IGraphM`LTemplate`LTemplatePrivate`\"]",
+    "ConfigureLTemplate[\"MessageSymbol\" -> IGraphM, \"LazyLoading\" -> False] (* REPLACE-TAG *)"
+        -> "ConfigureLTemplate[\"MessageSymbol\" -> IGraphM, \"LazyLoading\" -> True]"
+  }]@FileNameJoin[{$appTarget, "LTemplate.m"}]
 
 
 igDataCompletionRepl = StringTemplate["addCompletion[IGData, ``];"]@
-    ToString[{Join[Keys[IGraphM`Private`$igDataCategories],
-      Select[Keys[IGraphM`Private`$igData], StringQ]]},
+    ToString[{Join[Keys[IGraphM`IGData`PackagePrivate`$igDataCategories],
+      Select[Keys[IGraphM`IGData`PackagePrivate`$igData], StringQ]]},
       InputForm
     ]
 
-repl = {
-  "Get[\"LTemplate`LTemplatePrivate`\"]" -> "Get[\"IGraphM`LTemplate`LTemplatePrivate`\"]",
-  "\"LazyLoading\" -> False" -> "\"LazyLoading\" -> True",
-  "addCompletion[IGData, {Join[Keys[$igDataCategories], Select[Keys[$igData], StringQ]]}];" -> igDataCompletionRepl
-};
+replaceLines[{
+  "addCompletion[IGData, {Join[Keys[$igDataCategories], Select[Keys[$igData], StringQ]]}]; (* REPLACE-TAG *)" -> igDataCompletionRepl
+  }]@FileNameJoin[{$appTarget, "IGData.m"}]
 
 
-source = StringReplace[source, repl, Length[repl]];
+igLatticeMeshCompletionRepl = StringTemplate["addCompletion[IGLatticeMesh, ``];"]@
+    ToString[{IGLatticeMesh[]},
+      InputForm
+    ]
+
+replaceLines[{
+  "addCompletion[IGLatticeMesh, {IGLatticeMesh[]}]; (* REPLACE-TAG *)" -> igLatticeMeshCompletionRepl
+  }]@FileNameJoin[{$appTarget, "Meshes.m"}]
 
 
-template = StringTemplate[source, Delimiters -> {"%%", "%%", "<%", "%>"}];
-
+applyTemplate[templateData_][file_] :=
+    Module[{source, template},
+      source = Import[file, "String"];
+      template = StringTemplate[source, Delimiters -> {"%%", "%%", "<%", "%>"}];
+      source = template[templateData];
+      Export[file, source, "String"];
+    ]
 
 versionData = <|
   "version" -> Lookup[PacletInformation[$appName], "Version"],
@@ -105,11 +129,7 @@ versionData = <|
   "date" -> DateString[{"MonthName", " ", "DayShort", ", ", "Year"}]
 |>
 
-
-source = template[versionData];
-
-
-Export[FileNameJoin[{$appTarget, "IGraphM.m"}], source, "String"]
+applyTemplate[versionData] /@ FileNames["*.m", $appTarget]
 
 
 (* Replace unicode characters with their Mathematica FullForm, to ensure that
@@ -117,12 +137,12 @@ Export[FileNameJoin[{$appTarget, "IGraphM.m"}], source, "String"]
 Print["\nRe-encoding source files as ASCII"]
 AddPath["PackageTools"]
 Needs["PackageTools`"]
-With[{$appTarget = $appTarget},
+With[{$appTarget = $appTarget, files = FileNames["*.m", $appTarget]},
   MRun[
     MCode[
       UsingFrontEnd[
         NotebookSave@NotebookOpen[FileNameJoin[{$appTarget, #}]]& /@
-            {"IGraphM.m", "PacletInfo.m", "Common.m", "Utilities.m", "Resources.m"}
+            files
       ]
     ]
   ]
@@ -152,7 +172,7 @@ ResetDirectory[] (* LTemplate *)
 Print["\nProcessing documentation."]
 SetDirectory@FileNameJoin[{"Documentation", "English", "Tutorials"}]
 
-Print["Evaluating..."]
+Print["Evaluating documentation notebook..."]
 With[{$buildDir = $buildDir},
   MRun[
     MCode[
@@ -170,7 +190,7 @@ With[{$buildDir = $buildDir},
   ]
 ]
 
-Print["Rewriting..."]
+Print["Rewriting documentation notebook..."]
 
 taggingRules = {
   "ModificationHighlight" -> False,
@@ -218,6 +238,7 @@ With[{taggingRules = taggingRules},
 
 DeleteFile["Stylesheet.nb"]
 
+
 SetDirectory[".."]
 Print["Indexing for 11.1- ..."]
 MRun[
@@ -239,7 +260,7 @@ MRun[
     Needs["DocumentationSearch`"];
     DocumentationSearch`CreateDocumentationIndex[Directory[], Directory[], "TextSearchIndex", "UseWolframLanguageData" -> False];
   ],
-  "11.2"
+  "11.3"
 ]
 ResetDirectory[] (* .. *)
 

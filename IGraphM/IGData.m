@@ -24,5 +24,4 @@ SyntaxInformation[IGData] = {"ArgumentsPattern" -> {_.}};
 IGData[] := Keys[$igData]
 IGData[item_] := Lookup[$igDataAll, Key[item], Missing["NotAvailable"]]
 
-(* NOTE: replaced in build script. Remember to update build script if editing this line. *)
-addCompletion[IGData, {Join[Keys[$igDataCategories], Select[Keys[$igData], StringQ]]}];
+addCompletion[IGData, {Join[Keys[$igDataCategories], Select[Keys[$igData], StringQ]]}]; (* REPLACE-TAG *)

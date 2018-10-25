@@ -256,4 +256,4 @@ igLatticeMesh[unit_, vec_, trpts_, {opt___}] :=
         opt
       ]
     ]
-addCompletion[IGLatticeMesh, {IGLatticeMesh[]}];
+addCompletion[IGLatticeMesh, {IGLatticeMesh[]}]; (* REPLACE-TAG *)
