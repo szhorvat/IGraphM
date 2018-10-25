@@ -7,6 +7,12 @@
 
 
 Package["IGraphM`"]
+igContextSetup[igPackagePrivateSymbol]
+
+(********************************************)
+(***** Common (package scope) functions *****)
+(********************************************)
+
 
 PackageScope["igGraphQ"]
 igGraphQ::usage = "igGraphQ[g] checks if g is an igraph-compatible graph.";
@@ -194,7 +200,7 @@ fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Deve
 fixInfNaN[arr_] := arr
 
 
-(***** *****)
+(***** Workarounds for old versions missing some functions *****)
 
 PackageScope["keyValueMap"]
 keyValueMap::usage = "keyValueMap[fun, asc] is a v10.0-compatible replacement for KeyValueMap.";

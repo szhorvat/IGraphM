@@ -7,6 +7,7 @@
 (* :Copyright: (c) 2018 Szabolcs Horvát *)
 
 Package["IGraphM`"]
+igContextSetup[igPackagePrivateSymbol]
 
 PackageImport["IGraphM`LTemplate`"]
 

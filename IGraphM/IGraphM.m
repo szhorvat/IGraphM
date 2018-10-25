@@ -14,6 +14,18 @@
 
 Package["IGraphM`"]
 
+(* igContextSetup[] is a workaround for $Context and $ContextPath not being set during loading of new-style packages
+   before M11.0. See also the corresponding Block'ing of $Context and $ContextPath in Kernel/init.m.
+   Every file that is part of IGraphM` must evaluate igContextSetup[igPackagePrivateSymbol] at the beginning. *)
+PackageScope["igContextSetup"]
+If[$VersionNumber < 11.0,
+  igContextSetup::usage = "igContextSetup[localSymbol]";
+  igContextSetup[packagePrivateSymbol_] :=
+      ($Context = Context[packagePrivateSymbol];
+       $ContextPath = {"IGraphM`PackageScope`", "IGraphM`", "System`"})
+]
+igContextSetup[igPackagePrivateSymbol]
+
 PackageImport["IGraphM`LTemplate`"]
 
 (***** Usage messages *****)

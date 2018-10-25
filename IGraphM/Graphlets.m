@@ -5,8 +5,12 @@
 (* :Date: 2018-10-24 *)
 (* :Copyright: (c) 2018 Szabolcs Horvát *)
 
-(* CURRENTLY DISABLED due to bug igraph core https://github.com/igraph/igraph/issues/869 *)
-(* Package["IGraphM`"] *)
+(* LOADING IS CURRENTLY DISABLED
+   due to bug igraph core https://github.com/igraph/igraph/issues/869 *)
+(*
+Package["IGraphM`"]
+igContextSetup[igPackagePrivateSymbol]
+*)
 
 (*********************)
 (***** Graphlets *****)

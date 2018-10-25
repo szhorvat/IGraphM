@@ -1,4 +1,3 @@
-
 (* Mathematica Package *)
 (* Created by Mathematica plugin for IntelliJ IDEA *)
 
@@ -7,6 +6,7 @@
 (* :Copyright: (c) 2018 Szabolcs Horvát *)
 
 Package["IGraphM`"]
+igContextSetup[igPackagePrivateSymbol]
 
 PackageImport["IGraphM`LTemplate`"]
 
