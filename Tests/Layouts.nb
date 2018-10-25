@@ -1,21 +1,18 @@
 Notebook[{
 Cell[BoxData[
  RowBox[{"Off", "[", 
-  RowBox[{"General", "::", "stop"}], 
-  "]"}]], "Input",ExpressionUUID->"6869e0a7-b9b9-4850-9e52-0529b62a2912"],
+  RowBox[{"General", "::", "stop"}], "]"}]], "Input",
+ CellLabel->"In[1]:=",ExpressionUUID->"6869e0a7-b9b9-4850-9e52-0529b62a2912"],
 
 Cell[BoxData[
- RowBox[{"<<", 
-  "IGraphM`"}]], \
-"Input",ExpressionUUID->"8e1d63c3-7f89-456e-8de8-c2f2c258d8fd"],
+ RowBox[{"<<", "IGraphM`"}]], "Input",
+ CellLabel->"In[2]:=",ExpressionUUID->"8e1d63c3-7f89-456e-8de8-c2f2c258d8fd"],
 
 Cell[BoxData[
  RowBox[{"layouts", "=", 
   RowBox[{"Symbol", "/@", 
-   RowBox[{
-   "Names", "[", "\"\<IGLayout*\>\"", 
-    "]"}]}]}]], \
-"Input",ExpressionUUID->"da13cc9b-041a-48ff-a629-326d9db61f17"],
+   RowBox[{"Names", "[", "\"\<IGLayout*\>\"", "]"}]}]}]], "Input",
+ CellLabel->"In[3]:=",ExpressionUUID->"da13cc9b-041a-48ff-a629-326d9db61f17"],
 
 Cell[BoxData[{
  RowBox[{
@@ -50,18 +47,20 @@ Cell[BoxData[{
      "}"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
-   RowBox[{"g", "[", "4", "]"}], "=", 
-   RowBox[{"Graph", "[", 
-    RowBox[{
-     RowBox[{"Range", "[", "128", "]"}], ",", 
-     RowBox[{"{", "}"}]}], "]"}]}], ";", 
+   RowBox[{
+    RowBox[{"g", "[", "4", "]"}], "=", 
+    RowBox[{"Graph", "[", 
+     RowBox[{
+      RowBox[{"Range", "[", "128", "]"}], ",", 
+      RowBox[{"{", "}"}]}], "]"}]}], ";"}], 
   RowBox[{"(*", 
    RowBox[{
     RowBox[{"ExampleData", "[", 
      RowBox[{"{", 
       RowBox[{
       "\"\<NetworkGraph\>\"", ",", "\"\<BipartiteDiseasomeNetwork\>\""}], 
-      "}"}], "]"}], ";"}], "*)"}], "\[IndentingNewLine]", 
+      "}"}], "]"}], ";"}], "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
   RowBox[{
    RowBox[{"g", "[", "5", "]"}], "=", 
    RowBox[{"ExampleData", "[", 
@@ -151,13 +150,13 @@ Cell[BoxData[{
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<PowerGrid\>\""}], "}"}], 
-    "]"}]}], ";"}]}], \
-"Input",ExpressionUUID->"22510cb5-9ae0-4799-a4b4-645bec10fa4a"],
+    "]"}]}], ";"}]}], "Input",
+ CellLabel->"In[4]:=",ExpressionUUID->"22510cb5-9ae0-4799-a4b4-645bec10fa4a"],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"n", "=", "18"}], 
-  ";"}]], "Input",ExpressionUUID->"a1dc8ba3-b034-4b63-b039-ef5ff99946e1"],
+  RowBox[{"n", "=", "18"}], ";"}]], "Input",
+ CellLabel->"In[24]:=",ExpressionUUID->"a1dc8ba3-b034-4b63-b039-ef5ff99946e1"],
 
 Cell[BoxData[
  RowBox[{"Table", "[", 
@@ -165,8 +164,8 @@ Cell[BoxData[
    RowBox[{"VertexCount", "[", 
     RowBox[{"g", "[", "i", "]"}], "]"}], ",", 
    RowBox[{"{", 
-    RowBox[{"i", ",", "0", ",", "n"}], "}"}]}], 
-  "]"}]], "Input",ExpressionUUID->"41429fb8-878a-42d6-9309-72affe4fe907"],
+    RowBox[{"i", ",", "0", ",", "n"}], "}"}]}], "]"}]], "Input",
+ CellLabel->"In[25]:=",ExpressionUUID->"41429fb8-878a-42d6-9309-72affe4fe907"],
 
 Cell[BoxData[{
  RowBox[{"IGSeedRandom", "[", "42", "]"}], "\[IndentingNewLine]", 
@@ -257,9 +256,39 @@ Cell[BoxData[{
             RowBox[{"g", "[", "i", "]"}], "]"}], ">", "1200"}]}], ",", 
          "\[IndentingNewLine]", 
          RowBox[{
-          RowBox[{"Print", "[", "\"\<avoid large 3D layouts\>\"", "]"}], 
-          ";"}]}], "\[IndentingNewLine]", "\[IndentingNewLine]", "]"}], ";", 
-       "\[IndentingNewLine]", 
+          RowBox[{"Print", "[", "\"\<avoid large 3D layouts\>\"", "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Continue", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"MemberQ", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"IGLayoutPlanar", ",", "IGLayoutTutte"}], "}"}], ",", 
+            "ly"}], "]"}], "&&", 
+          RowBox[{"Not", "@", 
+           RowBox[{"PlanarGraphQ", "[", 
+            RowBox[{"g", "[", "i", "]"}], "]"}]}]}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Print", "[", "\"\<Graph not planar\>\"", "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Continue", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"ly", "===", "IGLayoutTutte"}], "&&", 
+          RowBox[{"Not", "@", 
+           RowBox[{"KVertexConnectedGraphQ", "[", 
+            RowBox[{"g", ",", "3"}], "]"}]}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"Print", "[", "\"\<Graph not 3-connected\>\"", "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Continue", "[", "]"}]}]}], "\[IndentingNewLine]", "]"}], 
+       ";", "\[IndentingNewLine]", 
        RowBox[{"Print", "[", 
         RowBox[{"Labeled", "[", 
          RowBox[{
@@ -273,12 +302,11 @@ Cell[BoxData[{
     RowBox[{"i", ",", "0", ",", "n"}], "}"}]}], "\[IndentingNewLine]", 
   "]"}]}], "Input",ExpressionUUID->"5d843435-a778-4c1b-b60f-3c56630b56f5"]
 },
-WindowSize->{808, 751},
+WindowSize->{1067, 1266},
 WindowMargins->{{20, Automatic}, {Automatic, 44}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"11.1 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 18, \
-2017)",
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (October 15, 2018)",
 StyleDefinitions->"Default.nb"
 ]
 
