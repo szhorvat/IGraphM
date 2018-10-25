@@ -19,18 +19,34 @@ PackageImport["TetGenLink`"]
 PackageExport["IGDelaunayGraph"]
 IGDelaunayGraph::usage = "IGDelaunayGraph[points] computes the Delaunay graph of the given points.";
 
+IGDelaunayGraph::dim  = "Delaunay graph computation is currently only supported in 2 and 3 dimensions.";
+IGDelaunayGraph::dupl = "Remove any duplicate points before the Delaunay graph computation.";
+IGDelaunayGraph::fail = "Could not compute Delaunay triangulation."; (* ask user to report? *)
+
 delaunayEdges1D[points_] := Partition[Ordering@N[points], 2, 1]
 
-(* TODO: TriangleDelaunay does not complain about duplicate points--somehow detect this and throw an error. *)
+(* Replacement for TriangleDelaunay[]; Removes duplicate points from result. *)
+triangleDelaunay[points_] :=
+    Module[{in, out, pts, elements},
+      in = TriangleCreate[];
+      TriangleSetPoints[in, points];
+      out = TriangleTriangulate[in, "-jQ "];
+      If[Not@ManagedLibraryExpressionQ[out], Return[$Failed]];
+      pts = TriangleGetPoints[out];
+      elements = TriangleGetElements[out];
+      If[elements === {}, Return[$Failed]];
+      {pts, elements}
+    ]
+
 delaunayEdges2D[points_] :=
     Switch[Length[points],
       0 | 1, {},
       2, {{1, 2}},
       _,
       Module[{res, pts, triangles, v1, v2},
-        res = Quiet[TriangleDelaunay[points], TriangleDelaunay::trifc];
+        res = triangleDelaunay[points];
         If[res === $Failed,
-          (* TriangleDelaunay failed: check if points are collinear and if yes, fall back to 1D Delaunay *)
+          (* triangleDelaunay[] failed: check if points are collinear and if yes, fall back to 1D Delaunay *)
           pts = PrincipalComponents@N[points];
           {v1, v2} = Variance[pts];
           If[v2/v1 < 10^Internal`$EqualTolerance $MachineEpsilon,
@@ -38,7 +54,7 @@ delaunayEdges2D[points_] :=
             Message[IGDelaunayGraph::fail]; throw[$Failed]
           ]
           ,
-          (* TriangleDelaunay succeeded: proceed as usual *)
+          (* triangleDelaunay[] succeeded: proceed as usual *)
           {pts, triangles} = res;
           If[Length[pts] == Length[points],
             DeleteDuplicates@igraphGlobal@"edgeListSortPairs"[
@@ -78,9 +94,6 @@ delaunayEdges3D[points_] :=
       ]
     ]
 
-IGDelaunayGraph::dim  = "Delaunay graph computation is currently only supported in 2 and 3 dimensions.";
-IGDelaunayGraph::dupl = "Remove any duplicate points before the Delaunay graph computation.";
-IGDelaunayGraph::fail = "Could not compute Delaunay triangulation."; (* ask user to report? *)
 
 SyntaxInformation[IGDelaunayGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph, Graph3D]};
 IGDelaunayGraph[{}, opt : OptionsPattern[Graph]] := IGEmptyGraph[0, opt]
