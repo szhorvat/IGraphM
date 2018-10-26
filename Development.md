@@ -4,9 +4,11 @@ Contributions to IGraph/M are most welcome!  igraph is a large graph library wit
 
 If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][1] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
 
+Help is also welcome with writing or editing documentation, adding examples to the documentation, and writing unit tests.
+
 ## Compiling igraph
 
-The following tools are required for building: a C++11-capable C++ compiler (gcc 4.8 works), `autoconf`, `automake`, `libtool`, `flex`, `bison`.
+The following tools are required for building the igraph C library: a C++ compiler (gcc 4.8 works), `autoconf`, `automake`, `libtool`, `flex`, `bison`.
 
 ### OS X and Linux
 
@@ -27,6 +29,20 @@ On OS X, set the following environment variable before compiling the libraries:
 If the tests have passed, install it with `make install`.
 
 To maximize compatibility with different types of CPUs, consider using the `--host=...` option to the `configure` script. Use the output of `configfsf.guess` as the target host.
+
+##### GLPK
+
+igraph already includes GLPK, but an external GLPK can be used for improved performance in `IGCommunitiesOptimalModularity` and `IGFeedbackArcSet`.
+
+If desired, [download GLPK](https://www.gnu.org/software/glpk/), and compile it the same way as GMP.
+
+    ./configure --prefix=$HOME/local --with-pic
+    make
+    make check
+
+If the tests have passed, install it with `make install`.
+
+When compiling igraph, pass `--with-external-glpk` to the `configure` script.
 
 ##### igraph
 
@@ -69,6 +85,12 @@ Clone [this fork of the igraph](https://github.com/szhorvat/igraph) and check ou
 This will produce a DLL named `libigraph-0.dll` in `$HOME/local/bin`.  It must be copied into `IGraphM/LibraryResources/Windows-x86-64`.  When using the above version of MinGW-w64, it is also necessary to copy the dependencies `libgcc_s_seh-1.dll`, `libstdc++-6.dll` and `libwinpthread-1.dll` to the same directory.
 
 IGraph/M needs to be told about what dependencies it has to load.  This is done by creating a file named `dependencies.m` in the same directory and adding `LibraryLoad` calls to it in the appropriate order.  For an example see `dependencies.m` on the `release` branch of the IGraph/M GitHub repo.
+
+## Compiling LEMON
+
+Follow the installation guide of LEMON: http://lemon.cs.elte.hu/trac/lemon/wiki/InstallGuide
+
+When running `cmake`, use the option `-DCMAKE_INSTALL_PREFIX:PATH=$HOME/local` to set the correct installation location.
 
 ## Compiling IGraph/M
 
