@@ -1,3 +1,4 @@
+(* Kernel/init.m *)
 
 (* Mathematica version check *)
 If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
@@ -15,11 +16,11 @@ If[$VersionNumber < 11.0,
   Block[{$Context, $ContextPath},
     Get["IGraphM`IGraphM`"];
   ];
-  PrependTo[$ContextPath, "IGraphM`"]
+  PrependTo[$ContextPath, "IGraphM`"];
   ,
+  (* In M11.0 and later, load as normal *)
   Get["IGraphM`IGraphM`"];
 ]
 
-With[{IGraphM`IGraphM`PackagePrivate`syms = Join @@ Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"}},
-  SetAttributes[IGraphM`IGraphM`PackagePrivate`syms, {Protected, ReadProtected}]
-];
+SetAttributes[#, {Protected, ReadProtected}]& /@
+    Join @@ Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"};
