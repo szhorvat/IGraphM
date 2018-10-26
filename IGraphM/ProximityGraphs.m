@@ -21,9 +21,7 @@ IGDelaunayGraph::usage = "IGDelaunayGraph[points] computes the Delaunay graph of
 
 IGDelaunayGraph::dim  = "Delaunay graph computation is currently only supported in 2 and 3 dimensions.";
 IGDelaunayGraph::dupl = "Remove any duplicate points before the Delaunay graph computation.";
-IGDelaunayGraph::fail = "Could not compute Delaunay triangulation."; (* ask user to report? *)
-
-delaunayEdges1D[points_] := Partition[Ordering@N[points], 2, 1]
+IGDelaunayGraph::fail = "Could not compute Delaunay triangulation."; (* This is triggered if *)
 
 (* Replacement for TriangleDelaunay[]; Removes duplicate points from result. *)
 triangleDelaunay[points_] :=
@@ -38,11 +36,28 @@ triangleDelaunay[points_] :=
       {pts, elements}
     ]
 
+delaunayEdges1D[points_] :=
+    With[{pts = N[points]},
+      If[DuplicateFreeQ[pts], (* TODO: Eventually replace with a DuplicateFreeQ equivalent that uses tolerances *)
+        Partition[Ordering[pts], 2, 1],
+        Message[IGDelaunayGraph::dupl]; throw[$Failed]
+      ]
+    ]
+
 delaunayEdges2D[points_] :=
     Switch[Length[points],
       0 | 1, {},
-      2, {{1, 2}},
+
+      2,
+      If[Unequal@@N[points],
+        {{1, 2}},
+        Message[IGDelaunayGraph::dupl]; throw[$Failed]
+      ],
+
       _,
+      If[Not@Unequal@@N[points], (* Workaround for: TriangleLink crashes when given identical points *)
+        Message[IGDelaunayGraph::dupl]; throw[$Failed]
+      ];
       Module[{res, pts, triangles, v1, v2},
         res = triangleDelaunay[points];
         If[res === $Failed,
@@ -69,8 +84,15 @@ delaunayEdges2D[points_] :=
 delaunayEdges3D[points_] :=
     Switch[Length[points],
       0 | 1, {},
-      2, {{1, 2}},
-      (* TetGenDelaunay fails gracefully for 3 points, thus this function  *)
+
+      2,
+      If[Unequal@@N[points],
+        {{1, 2}},
+        Message[IGDelaunayGraph::dupl]; throw[$Failed]
+      ],
+
+      (* 3: TetGenDelaunay fails gracefully for 3 points, thus we do not need an extra case for that. *)
+
       _,
       Module[{res, pts, tetrahedra, v1, v2, v3},
         res = Quiet[TetGenDelaunay[points], TetGenDelaunay::tetfc];
