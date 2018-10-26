@@ -275,9 +275,11 @@ MT[
   True
 ]
 
-MT[
-  IGDocumentation[]; NotebookClose /@ Select[Notebooks[], CurrentValue[#, WindowTitle] === "IGraph/M Documentation"&];,
-  Null
+If[$Notebooks,
+  MT[
+    IGDocumentation[]; NotebookClose /@ Select[Notebooks[], CurrentValue[#, WindowTitle] === "IGraph/M Documentation"&];,
+    Null
+  ]
 ]
 
 (*******************************************************************************)
@@ -2652,6 +2654,12 @@ MT[
   SameTest -> IGSameGraphQ
 ]
 
+MT[
+  IGDelaunayGraph[{{0, 0}, {1, 0}, {0, 1}, {0, 0}}],
+  $Failed,
+  {IGDelaunayGraph::dupl}
+]
+
 points2d = RandomReal[1, {100, 2}];
 MT[
   IGDelaunayGraph[points2d],
@@ -2745,13 +2753,21 @@ MT[
 
 MT[
   IGRelativeNeighborhoodGraph@GraphEmbedding@IGTriangularLattice[5],
-  IGTriangularLattice[5],
+  IGEmptyGraph@VertexCount@IGTriangularLattice[5],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGLuneBetaSkeleton[GraphEmbedding@IGTriangularLattice[4], 2.01],
-  IGEmptyGraph[10],
+  IGLuneBetaSkeleton[GraphEmbedding@IGTriangularLattice[4], 1.99],
+  IGTriangularLattice[4],
+  SameTest -> IGSameGraphQ
+]
+
+circlePoints[n_] := Table[{Cos[x], Sin[x]}, {x, 0, 2Pi - 2Pi/n, 2Pi/n}]
+
+MT[
+  IGGabrielGraph[circlePoints[7]],
+  CycleGraph[7],
   SameTest -> IGSameGraphQ
 ]
 
