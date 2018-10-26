@@ -43,6 +43,7 @@ IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
       SetAttributes[UndirectedEdge, Orderless];
       Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
     ]
+IGSameGraphQ[_, _] := False (* return False when at least one argument is not a graph *)
 
 
 (***** Adjacency list representation (also used for embeddings) *****)
