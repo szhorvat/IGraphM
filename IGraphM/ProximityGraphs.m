@@ -55,7 +55,9 @@ delaunayEdges2D[points_] :=
       ],
 
       _,
-      If[Not@Unequal@@N[points], (* Workaround for: TriangleLink crashes when given identical points *)
+      (* Workaround for: TriangleLink crashes when given all-identical identical points.
+         We only check the first two points in the list to avoid unpacking. *)
+      If[N[points[[1]]] == N[points[[2]]],
         Message[IGDelaunayGraph::dupl]; throw[$Failed]
       ];
       Module[{res, pts, triangles, v1, v2},
