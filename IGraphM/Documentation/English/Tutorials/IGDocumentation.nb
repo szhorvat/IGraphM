@@ -89,7 +89,7 @@ Cell[TextData[{
  ButtonBox["Documentation Center",
   BaseStyle->"Link",
   ButtonData->"paclet:IGraphM"],
- ". It cannot be saved, so feel free to edit and re-evaluate input cells, and \
+ ". It cannot be saved, so feel free to edit and evaluate input cells, and \
 experiment!"
 }], "Text",ExpressionUUID->"ebfd4b26-386f-4053-9151-6da87d9a61bc"],
 
@@ -112,7 +112,7 @@ Cell[TextData[{
   ButtonData->{
     URL["http://igraph.org/"], None},
   ButtonNote->"http://igraph.org/"],
- ", as well as many other utility functions for working with graphs in ",
+ ", as well as many other functions for working with graphs in ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  ". The purpose of IGraph/M is not to replace ",
@@ -39161,16 +39161,32 @@ Cell[BoxData[{
    "}"}], "//", 
   "Grid"}]}], "Input",ExpressionUUID->"baa619d5-b7e9-42bb-a534-4486891fe4d2"],
 
-Cell["\<\
-IGraph/M (and the igraph C library) also include the graphs listed in An \
-Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University \
-Press, 1998.\
-\>", "Text",ExpressionUUID->"5004b67a-9782-4e5c-86e7-bc434b4d36ec"],
+Cell[TextData[{
+ "The ",
+ Cell[BoxData["IGGraphAtlas"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "58e6c9c9-2be0-48df-83c7-7df24e2e05b0"],
+ " function provides access to the graphs listed in An Atlas of Graphs by \
+Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998."
+}], "Text",ExpressionUUID->"5004b67a-9782-4e5c-86e7-bc434b4d36ec"],
 
 Cell[BoxData[
  RowBox[{"?", 
   "IGGraphAtlas"}]], \
-"Input",ExpressionUUID->"3c3c570e-c56a-4d51-8444-efc5af719005"]
+"Input",ExpressionUUID->"3c3c570e-c56a-4d51-8444-efc5af719005"],
+
+Cell[BoxData[
+ RowBox[{"IGGraphAtlas", "[", "341", 
+  "]"}]], "Input",ExpressionUUID->"c475be1b-5159-4490-aae9-15a2c115fad3"],
+
+Cell[TextData[{
+ "Finally, remember that Mathematica itself comes with a large database of \
+graphs and graph properties, accessible through ",
+ Cell[BoxData["GraphData"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "87932ffd-5a39-4793-b336-a5da42c6c515"],
+ "."
+}], "Text",ExpressionUUID->"1f106ce0-48db-4651-a8c3-9944dc5297e3"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -39178,24 +39194,22 @@ Cell[CellGroupData[{
 Cell["Lattice data", \
 "Subsection",ExpressionUUID->"7223c8d4-ad02-4c7c-a719-cbd13ab09b61"],
 
+Cell[TextData[{
+ "The ",
+ Cell[BoxData[
+ "IGLatticeMesh"],ExpressionUUID->"28d6c8ec-543d-49ce-a3a3-0afd40167388"],
+ " function includes a set of pre-defined two-dimensional lattice structures. \
+Evaluate ",
+ Cell[BoxData[
+  RowBox[{"IGLatticeMesh", "[", "]"}]],ExpressionUUID->
+  "333db461-f29a-4db3-8b3c-2d95d724d07b"],
+ " to get the list of available lattices."
+}], "Text",ExpressionUUID->"4fbbc8f1-a496-4412-9f99-c7ec412d50d1"],
+
 Cell[BoxData[
  RowBox[{"?", 
   "IGLatticeMesh"}]], \
 "Input",ExpressionUUID->"e18ed809-fe4c-41ce-b8ec-f1ac2d340b63"],
-
-Cell[TextData[{
- "The ",
- Cell[BoxData["IGLatticeMesh"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "157804ec-d5e0-41b1-9a9a-34bf674d591b"],
- " function includes a set of pre-defined two-dimensional lattice structures. \
-Evaluate ",
- Cell[BoxData[
-  RowBox[{"IGLatticeMesh", "[", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
-  "49a517e3-dc8a-4f49-88fc-2592ec4b5483"],
- " to get the list of available lattices."
-}], "Text",ExpressionUUID->"4fbbc8f1-a496-4412-9f99-c7ec412d50d1"],
 
 Cell[BoxData[
  RowBox[{"IGLatticeMesh", "[", 
@@ -39210,8 +39224,34 @@ Cell["IGraph/M system functions", \
 
 Cell[CellGroupData[{
 
+Cell["Seeding the random number generator", \
+"Subsubsection",ExpressionUUID->"a57f4900-93c7-401b-80d8-9460c67af5ff"],
+
+Cell["\<\
+The igraph C library\[CloseCurlyQuote]s random number generator can be seeded \
+using\
+\>", "Text",ExpressionUUID->"50673cc3-c875-4d13-8a9e-65a77f7faf5d"],
+
+Cell[BoxData[
+ RowBox[{"IGSeedRandom", "[", "123", 
+  "]"}]], "Input",ExpressionUUID->"ed689825-a2d8-475b-8b83-78af9152c681"],
+
+Cell["\<\
+Most IGraph/M functions that return a non-deterministic result, such as \
+functions that implement random graph models, use this random number \
+generator.\
+\>", "Text",ExpressionUUID->"5ebd84f8-fd54-4b07-a943-73b2b9936823"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["Library version", \
 "Subsubsection",ExpressionUUID->"a25f0b41-acc1-445b-ac81-477957e89630"],
+
+Cell["\<\
+The following symbols and functions can be used to retrieve the IGraph/M \
+version.\
+\>", "Text",ExpressionUUID->"53c095c2-8976-4e25-8167-afa62bf1fb2b"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -39233,21 +39273,6 @@ Cell[BoxData["IGraphM`Information`$Version"], \
 
 Cell[CellGroupData[{
 
-Cell["Random number generator", \
-"Subsubsection",ExpressionUUID->"a57f4900-93c7-401b-80d8-9460c67af5ff"],
-
-Cell["\<\
-The igraph C library\[CloseCurlyQuote]s random number generator can be seeded \
-using\
-\>", "Text",ExpressionUUID->"50673cc3-c875-4d13-8a9e-65a77f7faf5d"],
-
-Cell[BoxData[
- RowBox[{"IGSeedRandom", "[", "123", 
-  "]"}]], "Input",ExpressionUUID->"ed689825-a2d8-475b-8b83-78af9152c681"]
-}, Closed]],
-
-Cell[CellGroupData[{
-
 Cell["Support and troubleshooting", \
 "Subsubsection",ExpressionUUID->"df16ae0c-5de4-41d3-a25b-25be823f5eff"],
 
@@ -39260,8 +39285,7 @@ Cell[TextData[{
   ButtonNote->"https://github.com/szhorvat/IGraphM/issues"],
  ". Always include the output of the ",
  Cell[BoxData[
-  RowBox[{"GetInfo", "[", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"GetInfo", "[", "]"}]],ExpressionUUID->
   "5ca27974-ba65-465b-afa4-1fe88e2c27f0"],
  " function with problem reports."
 }], "Text",ExpressionUUID->"b326712e-73de-4ad2-b79b-5302b8b65ce3"],
@@ -39271,10 +39295,50 @@ Cell[BoxData[
   "IGraphM`Developer`GetInfo"}]], \
 "Input",ExpressionUUID->"ff9950c7-58de-43e9-9c58-3e042335a32a"]
 }, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Acknowledgements", \
+"Section",ExpressionUUID->"67e683fc-435d-42dc-b815-24cbb8d4bb28"],
+
+Cell[TextData[{
+ "Most functions in IGraph/M are based on the igraph C library, written by G\
+\[AAcute]bor Cs\[AAcute]rdi and Tam\[AAcute]s Nepusz. ",
+ ButtonBox["http://igraph.org/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://igraph.org"], None},
+  ButtonNote->"http://igraph.org"]
+}], "Text",ExpressionUUID->"6bdb25cb-fd82-4ed1-bac9-f29a4e4f0dcc"],
+
+Cell[TextData[{
+ "Some functions, in particular in the area of planar graphs, use the LEMON \
+graph library. ",
+ ButtonBox["https://lemon.cs.elte.hu/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://lemon.cs.elte.hu/"], None},
+  ButtonNote->"https://lemon.cs.elte.hu/"]
+}], "Text",ExpressionUUID->"8c1a7a91-41b0-4884-a007-8f33eea239a7"],
+
+Cell["People who have contributed to IGraph/M:", \
+"Text",ExpressionUUID->"7c84d6d5-d64f-402a-90b7-1158a6d23b8b"],
+
+Cell[CellGroupData[{
+
+Cell["Szabolcs Horv\[AAcute]t (main author)", \
+"Item",ExpressionUUID->"40ebc97e-4305-4d88-92da-92b6c8670438"],
+
+Cell["\<\
+Henrik Schumacher (help with mesh-graph conversion and proximity graph \
+functions)\
+\>", "Item",ExpressionUUID->"6fe65a77-f56b-400b-8eff-239b9fa0e3c9"]
+}, Open  ]]
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{817, 752},
+WindowSize->{1008, 1095},
 WindowMargins->{{236, Automatic}, {Automatic, 42}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
