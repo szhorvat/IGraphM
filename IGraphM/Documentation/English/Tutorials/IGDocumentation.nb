@@ -36616,6 +36616,13 @@ Cell[CellGroupData[{
 Cell["Graphicality", \
 "Subsection",ExpressionUUID->"1dbd4178-335d-49b2-a6c7-8f60d1e3733b"],
 
+Cell[TextData[{
+ "A sequence of integers is called ",
+ StyleBox["graphical",
+  FontSlant->"Italic"],
+ " if there is a simple undirected graph that has them as its degree sequence."
+}], "Text",ExpressionUUID->"4085ea6c-2001-4b6d-a168-078703d9c429"],
+
 Cell[BoxData[
  RowBox[{"?", 
   "IGGraphicalQ"}]], \
@@ -36702,6 +36709,11 @@ Cell[CellGroupData[{
 
 Cell["Constructing graphs", \
 "Subsection",ExpressionUUID->"e981086e-765b-43d0-8414-92331c36da1c"],
+
+Cell["\<\
+See the Graph creation section for a detailed description of these functions.\
+\
+\>", "Text",ExpressionUUID->"aa128256-4f98-44e8-b925-f24cab117639"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -37254,18 +37266,32 @@ Cell[TextData[{
  Cell[BoxData[
  "VertexLabels"],ExpressionUUID->"d42ccfc5-2f2b-4127-bb62-b7027e497642"],
  " controls how to label the matrix\[CloseCurlyQuote]s columns and rows. \
-Possible values: ",
+Possible values: "
+}], "Item",ExpressionUUID->"025f6fea-2038-431d-b521-697cd5937fc1"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
  Cell[BoxData[
- "\"\<Index\>\""],ExpressionUUID->"88e3ec8b-4062-414a-a832-b6ec7c672e1b"],
- " uses vertex indices. ",
+ "\"\<Index\>\""],ExpressionUUID->"030334e7-8c69-4684-bae2-d8233e488624"],
+ " uses row and column numbers. These are identical to vertex indices when \
+the full adjacency matrix is plotted, but not when a partial matrix is \
+plotted or if the vertices are re-ordered."
+}], "Subitem",ExpressionUUID->"47ca2ff8-ff99-4403-aeb1-b56fe9624e02"],
+
+Cell[TextData[{
  Cell[BoxData[
- "\"\<Name\>\""],ExpressionUUID->"be065ccd-e3e1-4dea-a616-f73337989efb"],
- " uses vertex names. ",
+ "\"\<Name\>\""],ExpressionUUID->"1ac547d1-d718-4e4c-987a-e517a334396d"],
+ " uses vertex names."
+}], "Subitem",ExpressionUUID->"bd4e82d1-44d3-4f1c-b40c-fba029d195a8"],
+
+Cell[TextData[{
  Cell[BoxData[
- "Automatic"],ExpressionUUID->"2c8d6bd0-3564-4098-8f14-fe5050dc0b2a"],
+ "Automatic"],ExpressionUUID->"445ec88e-8df4-4dad-adeb-e81e02dc2abe"],
  " uses indices for large graphs and names for small ones. Use a list of \
 rules to set different names for each vertex."
-}], "Item",ExpressionUUID->"025f6fea-2038-431d-b521-697cd5937fc1"],
+}], "Subitem",ExpressionUUID->"ab0e3d06-4609-44da-a448-8f7d26fa92bc"]
+}, Open  ]],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -39163,9 +39189,8 @@ Cell[BoxData[{
 
 Cell[TextData[{
  "The ",
- Cell[BoxData["IGGraphAtlas"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "58e6c9c9-2be0-48df-83c7-7df24e2e05b0"],
+ Cell[BoxData[
+ "IGGraphAtlas"],ExpressionUUID->"58e6c9c9-2be0-48df-83c7-7df24e2e05b0"],
  " function provides access to the graphs listed in An Atlas of Graphs by \
 Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998."
 }], "Text",ExpressionUUID->"5004b67a-9782-4e5c-86e7-bc434b4d36ec"],
@@ -39182,9 +39207,8 @@ Cell[BoxData[
 Cell[TextData[{
  "Finally, remember that Mathematica itself comes with a large database of \
 graphs and graph properties, accessible through ",
- Cell[BoxData["GraphData"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "87932ffd-5a39-4793-b336-a5da42c6c515"],
+ Cell[BoxData[
+ "GraphData"],ExpressionUUID->"87932ffd-5a39-4793-b336-a5da42c6c515"],
  "."
 }], "Text",ExpressionUUID->"1f106ce0-48db-4651-a8c3-9944dc5297e3"]
 }, Closed]],
@@ -39322,7 +39346,17 @@ graph library. ",
   ButtonNote->"https://lemon.cs.elte.hu/"]
 }], "Text",ExpressionUUID->"8c1a7a91-41b0-4884-a007-8f33eea239a7"],
 
-Cell["People who have contributed to IGraph/M:", \
+Cell[TextData[{
+ "The help of the ",
+ ButtonBox["Mathematica StackExchange",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://mathematica.stackexchange.com/"], None},
+  ButtonNote->"https://mathematica.stackexchange.com/"],
+ " community has been invaluable while developing this package."
+}], "Text",ExpressionUUID->"08e0faaa-2f5e-4d6b-b0c6-4f44d0a98a0e"],
+
+Cell["People who have contributed functionality to IGraph/M:", \
 "Text",ExpressionUUID->"7c84d6d5-d64f-402a-90b7-1158a6d23b8b"],
 
 Cell[CellGroupData[{
@@ -39338,8 +39372,8 @@ functions)\
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{1008, 1095},
-WindowMargins->{{236, Automatic}, {Automatic, 42}},
+WindowSize->{721, 704},
+WindowMargins->{{236, Automatic}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
