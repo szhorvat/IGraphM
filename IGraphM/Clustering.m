@@ -25,6 +25,7 @@ PackageExport["IGLocalClusteringCoefficient"]
 IGLocalClusteringCoefficient::usage = "IGLocalClusteringCoefficient[graph] returns the local clustering coefficient of each vertex.";
 
 SyntaxInformation[IGLocalClusteringCoefficient] = {"ArgumentsPattern" -> {_}};
+(* See https://github.com/igraph/igraph/issues/907 for why SimpleGraph and UndirectedGraph are needed. *)
 IGLocalClusteringCoefficient[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[SimpleGraph@UndirectedGraph[graph]]}, ig@"transitivityLocalUndirected"[]]
 
