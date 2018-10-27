@@ -1392,6 +1392,36 @@ MT[
   True
 ]
 
+MT[
+  IGGlobalClusteringCoefficient[Graph[{1,2,3},{1<->2}]],
+  0.
+]
+
+MT[
+  IGGlobalClusteringCoefficient[Graph[{1,2,3},{1<->2}], "ExcludeIsolates" -> True],
+  Indeterminate
+]
+
+MT[
+  IGLocalClusteringCoefficient[Graph[{1,2,3,4}, {1<->2, 2<->3, 3<->1, 3<->4}]],
+  N@{1, 1, 1/3, 0}
+]
+
+MT[
+  IGLocalClusteringCoefficient[Graph[{1,2,3,4}, {1<->2, 2<->3, 3<->1, 3<->4}], "ExcludeIsolates" -> True],
+  N@{1, 1, 1/3, Indeterminate}
+]
+
+MT[
+  IGAverageLocalClusteringCoefficient[Graph[{1, 2, 3, 4}, {1 <-> 2, 2 <-> 3, 3 <-> 1, 3 <-> 4}]],
+  N[7/12]
+]
+
+MT[
+  IGAverageLocalClusteringCoefficient[Graph[{1, 2, 3, 4}, {1 <-> 2, 2 <-> 3, 3 <-> 1, 3 <-> 4}], "ExcludeIsolates" -> True],
+  N[7/9]
+]
+
 
 (*******************************************************************************)
 MTSection["Cliques"]

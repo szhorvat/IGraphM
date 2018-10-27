@@ -427,10 +427,10 @@ template = LTemplate["IGraphM",
 
         (* Clustering coefficient *)
 
-        LFun["transitivityUndirected", {}, Real],
-        LFun["transitivityLocalUndirected", {}, {Real, 1}],
-        LFun["transitivityAverageLocalUndirected", {}, Real],
-        LFun["transitivityBarrat", {}, {Real, 1}],
+        LFun["transitivityUndirected", {True|False (* exclude isolates? *)}, Real],
+        LFun["transitivityLocalUndirected", {True|False (* exclude isolates? *)}, {Real, 1}],
+        LFun["transitivityAverageLocalUndirected", {True|False (* exclude isolates? *)}, Real],
+        LFun["transitivityBarrat", {True|False (* exclude isolates? *)}, {Real, 1}],
 
         (* Similarity *)
 
