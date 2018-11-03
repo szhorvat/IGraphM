@@ -34725,6 +34725,21 @@ Cell[BoxData[
   RowBox[{"mesh", ",", "2"}], 
   "]"}]], "Input",ExpressionUUID->"58076edb-189a-4ef3-bc07-fca9df005160"],
 
+Cell["Create the graph of a Goldberg polyhedron.", \
+"Text",ExpressionUUID->"43efa02d-a444-4919-b9ee-b8926446bfc3"],
+
+Cell[BoxData[
+ RowBox[{"IGMeshCellAdjacencyGraph", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"BoundaryDiscretizeRegion", "[", 
+    RowBox[{
+     RowBox[{"Ball", "[", "]"}], ",", 
+     RowBox[{"PrecisionGoal", "\[Rule]", "1"}], ",", 
+     RowBox[{"MaxCellMeasure", "\[Rule]", "0.5"}]}], "]"}], ",", "2", ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"VertexCoordinates", "\[Rule]", "Automatic"}]}], 
+  "]"}]], "Input",ExpressionUUID->"c6973021-02e1-4a02-9e4e-6bb8158fcbd6"],
+
 Cell["\<\
 Compute the connectivity of faces and edges, and colour nodes based on \
 whether they represent a face or an edge.\
@@ -38043,8 +38058,8 @@ Cell[BoxData[
   RowBox[{"ExampleData", "[", 
    RowBox[{"{", 
     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<DolphinSocialNetwork\>\""}], 
-    "}"}], 
-   "]"}]}]], "Input",ExpressionUUID->"026cf505-08f9-4566-a5f8-ae34bb6ba9d2"],
+    "}"}], "]"}]}]], \
+"Input",ExpressionUUID->"026cf505-08f9-4566-a5f8-ae34bb6ba9d2"],
 
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", "g", 
