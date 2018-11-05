@@ -5,10 +5,14 @@ Most functions in IGraph/M are based on the igraph library (http://igraph.org/) 
 
  - Gábor Csárdi, Tamás Nepusz: The igraph software package for complex network research. InterJournal Complex Systems, 1695, 2006.
 
+Some functions, especially in the functionality area of planar graphs, make use of the LEMON graph library (https://lemon.cs.elte.hu).
+
 The following people have contributed to IGraph/M:
 
- - Henrik Schumacher contributed functions for constructing mesh-cell adjacency graphs
+ - Henrik Schumacher contributed to the functions for constructing mesh-cell adjacency graphs and proximity graphs.
 
 IGraph/M was created with the help of the Mathematica plugin for IntelliJ IDEA by Patrick Scheibe, http://wlplugin.halirutan.de/
 Without the help of this IDE, it would have been difficult to manage to complexity of this package.
+
+The help of the Mathematica StackExchange community was invaluable while developing this package.
 
