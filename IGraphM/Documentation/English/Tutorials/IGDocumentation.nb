@@ -425,7 +425,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "d7cae271-71b2-4cbf-9410-cca7d4130fb8"],
  " keeps parallel edges in the graph."
 }], "Item",ExpressionUUID->"dab67fb7-a80d-4fe9-b7c1-226ef3d87a05"]
@@ -557,8 +557,7 @@ re-enabled using the ",
  "SelfLoops"],ExpressionUUID->"b9d96814-0051-4ed1-ba53-ea7ab6f96171"],
  " or ",
  Cell[BoxData[
- "\"\<MultipleEdges\>\""],ExpressionUUID->
-  "09a3bcfa-5785-41e3-89f5-2f17498bffff"],
+ "MultiEdges"],ExpressionUUID->"09a3bcfa-5785-41e3-89f5-2f17498bffff"],
  " options when desired."
 }], "Text",ExpressionUUID->"902cc1e8-8fa2-47be-a694-542eac87504c"],
 
@@ -572,13 +571,13 @@ Cell[BoxData[
  RowBox[{"IGShorthand", "[", 
   RowBox[{"\"\<1:2:3 - 1:2:3\>\"", ",", 
    RowBox[{"SelfLoops", "\[Rule]", "True"}], ",", 
-   RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]}], 
+   RowBox[{"MultiEdges", "\[Rule]", "True"}]}], 
   "]"}]], "Input",ExpressionUUID->"3c1b8e11-f4e0-45d4-b4aa-8ce69f312a8f"],
 
 Cell[BoxData[
  RowBox[{"IGShorthand", "[", 
   RowBox[{"\"\<1-2-1-3\>\"", ",", 
-   RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]}], 
+   RowBox[{"MultiEdges", "\[Rule]", "True"}]}], 
   "]"}]], "Input",ExpressionUUID->"a3b2eb10-d775-41fa-b7e1-78267f23d0cd"],
 
 Cell["\<\
@@ -876,8 +875,7 @@ the ",
  "SelfLoops"],ExpressionUUID->"308787cc-0b20-47f6-a4b3-73b6cc3d975a"],
  " or ",
  Cell[BoxData[
- "\"\<MultipleEdges\>\""],ExpressionUUID->
-  "70081c3f-3a5f-456b-ac60-009ba7444033"],
+ "MultiEdges"],ExpressionUUID->"70081c3f-3a5f-456b-ac60-009ba7444033"],
  " options to ",
  Cell[BoxData["False"],ExpressionUUID->"68f1759c-fd9f-44d7-bd21-d6160d9c3c1f"],
  "."
@@ -895,7 +893,7 @@ Cell[BoxData[
        RowBox[{"-", "3"}], ",", 
        RowBox[{"-", "4"}], ",", 
        RowBox[{"-", "8"}]}], "}"}]}], "}"}], ",", 
-   RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "False"}]}], 
+   RowBox[{"MultiEdges", "\[Rule]", "False"}]}], 
   "]"}]], "Input",ExpressionUUID->"ffdad3a4-6031-4bfc-9a38-1ff21c6609b7"],
 
 Cell["Create a chordal graph with directed edges.", \
@@ -2289,7 +2287,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "4dd049df-28de-4582-9faa-72d9fc573a78"],
  " allows the creation of parallel edges."
 }], "Item",ExpressionUUID->"1ec5c395-dde7-4a5b-a925-b1baa5e3407f"]
@@ -2712,7 +2710,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "0bac0963-c90f-4b75-a278-1c95abdee203"],
  " allows the creation of parallel edges."
 }], "Item",ExpressionUUID->"b4055413-d59c-4e2f-9d27-043ab919cb17"]
@@ -2811,7 +2809,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "dd3a1159-12bf-4599-83e2-4c39998a9070"],
  " allows the creation of parallel edges."
 }], "Item",ExpressionUUID->"7b951afb-8717-47a7-aff8-83ad5a372a39"],
@@ -3600,7 +3598,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "3aee6336-5504-4df8-a471-b1c4c5e94dc3"],
  " allows the creation of multiple edges."
 }], "Item",ExpressionUUID->"a9124eac-016d-40f7-8972-159eb70c8bb2"]
@@ -3617,7 +3615,7 @@ Cell[BoxData[
    RowBox[{"RandomGraph", "[", 
     RowBox[{"{", 
      RowBox[{"10", ",", "20"}], "}"}], "]"}], ",", "1", ",", 
-   RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]}], 
+   RowBox[{"MultiEdges", "\[Rule]", "True"}]}], 
   "]"}]], "Input",ExpressionUUID->"4cba0a7b-7704-4340-b10e-45c348e75e18"],
 
 Cell[BoxData[
@@ -3652,7 +3650,7 @@ retained only when using ",
   "f6845132-0fc4-4240-8b97-7b16b007217b"],
  " and ",
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "cde5644f-7099-4db4-86a1-3987f611f99d"],
  "."
 }], "Text",ExpressionUUID->"8aa9b7e2-4d02-4214-9ca8-95a729bc9bb6"],
@@ -3677,7 +3675,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "729a5ba9-dff1-44eb-a97e-8c1608eb2fbf"],
  " keeps any parallel edges created during contraction."
 }], "Item",ExpressionUUID->"e7a46974-dd64-497f-92fc-a54a62860d12"]
@@ -3798,7 +3796,7 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"4", ",", "5"}], "}"}]}], "}"}], ",", 
    RowBox[{"SelfLoops", "\[Rule]", "True"}], ",", 
-   RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]}], 
+   RowBox[{"MultiEdges", "\[Rule]", "True"}]}], 
   "]"}]], "Input",ExpressionUUID->"b40759ad-953f-4b3a-b111-d5d49a2650d4"],
 
 Cell[BoxData[
@@ -3810,7 +3808,7 @@ Cell[BoxData[
       RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
      RowBox[{"{", 
       RowBox[{"4", ",", "5"}], "}"}]}], "}"}], ",", 
-   RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]}], 
+   RowBox[{"MultiEdges", "\[Rule]", "True"}]}], 
   "]"}]], "Input",ExpressionUUID->"328c2827-c9f9-45f5-b76a-782f0b4ee492"],
 
 Cell[TextData[{
@@ -3820,7 +3818,7 @@ Cell[TextData[{
   "81175107-4261-4c8c-87a1-9285e5db743b"],
  " and ",
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "08aa6aed-21ca-443d-8bbd-e23ec5af600b"],
  ", the edge ordering is maintained relative to the input graph. This allows \
 easily transferring edge weights, and combining them if necessary."
@@ -3846,8 +3844,7 @@ Cell[BoxData[
        RowBox[{"\"\<a\>\"", ",", "\"\<b\>\""}], "}"}], "}"}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{"SelfLoops", "\[Rule]", "True"}], ",", 
-     RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}], ",", 
-     "\[IndentingNewLine]", 
+     RowBox[{"MultiEdges", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
      RowBox[{"EdgeWeight", "\[Rule]", 
       RowBox[{
        RowBox[{"IGEdgeProp", "[", "EdgeWeight", "]"}], "[", "g", "]"}]}]}], 
@@ -4241,8 +4238,7 @@ Cell[BoxData[
      DynamicModuleBox[{Typeset`graph = HoldComplete[
        Graph[{1, 2, 3, 4, 5, 6, 7, 8}, {
         Null, {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {2, 6}, {6, 7}, {5, 7}, {5, 
-         8}}}, {
-        PerformanceGoal -> "Quality", VertexLabels -> {None}, 
+         8}}}, {PerformanceGoal -> "Quality", VertexLabels -> {None}, 
          VertexShapeFunction -> {"Name"}}]], Typeset`boxes, 
       Typeset`boxes$s2d = GraphicsGroupBox[{{
          Directive[
@@ -9299,7 +9295,7 @@ Cell[BoxData[
  RowBox[{"g", "=", 
   RowBox[{"IGShorthand", "[", 
    RowBox[{"\"\<1-2-3-1,1-2\>\"", ",", 
-    RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}], ",", 
+    RowBox[{"MultiEdges", "\[Rule]", "True"}], ",", 
     RowBox[{"ImageSize", "\[Rule]", "Small"}]}], 
    "]"}]}]], "Input",ExpressionUUID->"3942f66e-6dda-4f21-a261-8adea54390df"],
 
@@ -38478,7 +38474,7 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "3bc76cc3-d4f0-443c-bd64-bd2b28330c4d"],
  " keeps parallel edges in the graph."
 }], "Item",ExpressionUUID->"563c984a-50fa-4425-9b9b-3287e571c34b"]
@@ -38526,7 +38522,7 @@ QK66L8jqPqFV9w32g/1gP9gP9oP9YD/Yj/+cWMiL
       FormatType->TraditionalForm,
       FrameTicks->None], ",", 
      RowBox[{"SelfLoops", "\[Rule]", "#1"}], ",", 
-     RowBox[{"\"\<MultipleEdges\>\"", "\[Rule]", "#2"}]}], "]"}], "&"}], "@@@", 
+     RowBox[{"MultiEdges", "\[Rule]", "#2"}]}], "]"}], "&"}], "@@@", 
   RowBox[{"{", 
    RowBox[{
     RowBox[{"{", 
@@ -38536,12 +38532,8 @@ QK66L8jqPqFV9w32g/1gP9gP9oP9YD/Yj/+cWMiL
     RowBox[{"{", 
      RowBox[{"False", ",", "True"}], "}"}], ",", 
     RowBox[{"{", 
-     RowBox[{"False", ",", "False"}], "}"}]}], "}"}]}]], "Input",
- CellChangeTimes->{{3.700641674644528*^9, 3.700641682379426*^9}, {
-   3.700641748375844*^9, 3.700641757023178*^9}, {3.700641787078874*^9, 
-   3.7006418302218513`*^9}, {3.700641882163836*^9, 3.700641896848023*^9}, 
-   3.700643848369686*^9},ExpressionUUID->"a157bd10-2fc1-4657-b049-\
-f225e5e63f16"]
+     RowBox[{"False", ",", "False"}], "}"}]}], 
+   "}"}]}]], "Input",ExpressionUUID->"a157bd10-2fc1-4657-b049-f225e5e63f16"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -39691,8 +39683,7 @@ adjacency matrix or adjacency list."
 
 Cell[TextData[{
  "Compute the adjacency list of a graph, then convert it back to a ",
- Cell[BoxData["Graph"],ExpressionUUID->"b5943bf7-0a7c-474e-84f7-7c238fab010c"]
- ,
+ Cell[BoxData["Graph"],ExpressionUUID->"b5943bf7-0a7c-474e-84f7-7c238fab010c"],
  " expression."
 }], "Text",ExpressionUUID->"92f5b7e6-8b99-41fe-8591-35f568c0c178"],
 
@@ -40040,7 +40031,7 @@ functions)\
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{728, 535},
+WindowSize->{742, 711},
 WindowMargins->{{236, Automatic}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
