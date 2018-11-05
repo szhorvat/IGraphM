@@ -30,7 +30,8 @@ Switch[$OperatingSystem,
 
   "Unix", (* Compilation settings for Linux *)
   $buildSettings = {
-    "CompileOptions" -> { "-flto" },
+    (* Compile with -static-libgcc on Linux for better compatibility with various distros *)
+    "CompileOptions" -> { "-static-libgcc" },
 
     (* Statically link the igraph library *)
     "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libemon.a"},
