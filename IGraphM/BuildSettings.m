@@ -30,8 +30,10 @@ Switch[$OperatingSystem,
 
   "Unix", (* Compilation settings for Linux *)
   $buildSettings = {
-    (* Compile with -static-libgcc on Linux for better compatibility with various distros *)
-    "CompileOptions" -> { "-static-libgcc" },
+    "CompileOptions" -> {
+      (* Compile with -static-libgcc on non-RPi Linux for better compatibility with various distros *)
+      If[$SystemID =!= "Linux-ARM", "-static-libgcc", Unevaluated@Sequence[]]
+    },
 
     (* Statically link the igraph library *)
     "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libemon.a"},
