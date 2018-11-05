@@ -399,6 +399,13 @@ Cell[CellGroupData[{
 Cell["IGShorthand", \
 "Subsubsection",ExpressionUUID->"16b5f24d-d786-48d2-aee4-0d9f8f9aee55"],
 
+Cell[TextData[{
+ Cell[BoxData[
+ "IGShorthand"],ExpressionUUID->"5fd84221-a51d-4473-aebe-8f5107a78bdb"],
+ " provides an easy way to create small graphs from a simple and \
+quick-to-type notation."
+}], "Text",ExpressionUUID->"5f029bc1-063e-4288-a6d3-e449a375e336"],
+
 Cell[BoxData[
  RowBox[{"?", 
   "IGShorthand"}]], \
@@ -34435,6 +34442,30 @@ Cell[BoxData[
      RowBox[{"5", ",", "4", ",", "6"}], "}"}]}]}], 
   "]"}]], "Input",ExpressionUUID->"4b88bb3e-9ec0-4f9f-8950-3b751cacf95e"],
 
+Cell["\<\
+For some graphs, the best result is achieved when the outer face is not \
+chosen to be a largest one.\
+\>", "Text",ExpressionUUID->"9c2e0bdb-e9dd-4064-893f-54118dd473be"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"GraphData", "[", "\"\<TutteGraph\>\"", "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"b1516d24-db92-49ca-80fe-86cbecc495b4"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"IGLayoutTutte", "[", "g", "]"}], ",", 
+   RowBox[{"IGLayoutTutte", "[", 
+    RowBox[{"g", ",", 
+     RowBox[{"\"\<OuterFace\>\"", "->", 
+      RowBox[{"{", 
+       RowBox[{
+       "2", ",", "8", ",", "9", ",", "10", ",", "7", ",", "6", ",", "5", ",", 
+        "4", ",", "3"}], "}"}]}]}], "]"}]}], 
+  "}"}]], "Input",ExpressionUUID->"07300718-85bc-46ee-8a26-4de1e91e040a"],
+
 Cell[TextData[{
  Cell[BoxData[
  "IGLayoutTutte"],ExpressionUUID->"e8086e00-f2b7-4c4a-9766-9598a06c83eb"],
@@ -39660,7 +39691,8 @@ adjacency matrix or adjacency list."
 
 Cell[TextData[{
  "Compute the adjacency list of a graph, then convert it back to a ",
- Cell[BoxData["Graph"],ExpressionUUID->"b5943bf7-0a7c-474e-84f7-7c238fab010c"],
+ Cell[BoxData["Graph"],ExpressionUUID->"b5943bf7-0a7c-474e-84f7-7c238fab010c"]
+ ,
  " expression."
 }], "Text",ExpressionUUID->"92f5b7e6-8b99-41fe-8591-35f568c0c178"],
 
@@ -39810,9 +39842,12 @@ Cell[BoxData[
 
 Cell[TextData[{
  "Finally, remember that Mathematica itself comes with a large database of \
-graphs and graph properties, accessible through ",
+graphs and their properties, accessible through ",
  Cell[BoxData[
- "GraphData"],ExpressionUUID->"87932ffd-5a39-4793-b336-a5da42c6c515"],
+  ButtonBox["GraphData",
+   BaseStyle->"Link",
+   ButtonData->"paclet:ref/GraphData"]],ExpressionUUID->
+  "87932ffd-5a39-4793-b336-a5da42c6c515"],
  "."
 }], "Text",ExpressionUUID->"1f106ce0-48db-4651-a8c3-9944dc5297e3"]
 }, Closed]],
@@ -39911,6 +39946,12 @@ Cell[TextData[{
   ButtonData->{
     URL["https://github.com/szhorvat/IGraphM/issues"], None},
   ButtonNote->"https://github.com/szhorvat/IGraphM/issues"],
+ " or the ",
+ ButtonBox["Gitter chatroom",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://gitter.im/IGraphM/Lobby"], None},
+  ButtonNote->"https://gitter.im/IGraphM/Lobby"],
  ". Always include the output of the ",
  Cell[BoxData[
   RowBox[{"GetInfo", "[", "]"}]],ExpressionUUID->
@@ -39932,17 +39973,26 @@ Cell["Acknowledgements", \
 
 Cell[TextData[{
  "Most functions in IGraph/M are based on the igraph C library, written by G\
-\[AAcute]bor Cs\[AAcute]rdi and Tam\[AAcute]s Nepusz. ",
+\[AAcute]bor Cs\[AAcute]rdi and Tam\[AAcute]s Nepusz. To cite the igraph C \
+library in publications, see ",
+ ButtonBox["Citing igraph in the igraph Reference Manual",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://igraph.org/c/doc/igraph-introduction.html#idm470952874400"], 
+    None},
+  ButtonNote->
+   "http://igraph.org/c/doc/igraph-introduction.html#idm470952874400"],
+ ". Website: ",
  ButtonBox["http://igraph.org/",
   BaseStyle->"Hyperlink",
   ButtonData->{
-    URL["http://igraph.org"], None},
-  ButtonNote->"http://igraph.org"]
+    URL["http://igraph.org/"], None},
+  ButtonNote->"http://igraph.org/"]
 }], "Text",ExpressionUUID->"6bdb25cb-fd82-4ed1-bac9-f29a4e4f0dcc"],
 
 Cell[TextData[{
  "Some functions, in particular in the area of planar graphs, use the LEMON \
-graph library. ",
+graph library. Website: ",
  ButtonBox["https://lemon.cs.elte.hu/",
   BaseStyle->"Hyperlink",
   ButtonData->{
@@ -39951,13 +40001,27 @@ graph library. ",
 }], "Text",ExpressionUUID->"8c1a7a91-41b0-4884-a007-8f33eea239a7"],
 
 Cell[TextData[{
+ "IGraph/M was developed with the ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " plugin for IntelliJ IDEA by Patrick Scheibe. Without the help of this IDE, \
+it would have been difficult to manage to complexity of this package. \
+Website: ",
+ ButtonBox["http://wlplugin.halirutan.de/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://wlplugin.halirutan.de/"], None},
+  ButtonNote->"http://wlplugin.halirutan.de/"]
+}], "Text",ExpressionUUID->"dd1be29b-c2ce-463a-837f-d2568510ebca"],
+
+Cell[TextData[{
  "The help of the ",
  ButtonBox["Mathematica StackExchange",
   BaseStyle->"Hyperlink",
   ButtonData->{
     URL["https://mathematica.stackexchange.com/"], None},
   ButtonNote->"https://mathematica.stackexchange.com/"],
- " community has been invaluable while developing this package."
+ " community was invaluable while developing this package."
 }], "Text",ExpressionUUID->"08e0faaa-2f5e-4d6b-b0c6-4f44d0a98a0e"],
 
 Cell["People who have contributed functionality to IGraph/M:", \
@@ -39965,7 +40029,7 @@ Cell["People who have contributed functionality to IGraph/M:", \
 
 Cell[CellGroupData[{
 
-Cell["Szabolcs Horv\[AAcute]t (main author)", \
+Cell["Szabolcs Horv\[AAcute]t (main author and maintainer)", \
 "Item",ExpressionUUID->"40ebc97e-4305-4d88-92da-92b6c8670438"],
 
 Cell["\<\
@@ -39976,8 +40040,8 @@ functions)\
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{1017, 685},
-WindowMargins->{{Automatic, 187}, {Automatic, 0}},
+WindowSize->{728, 535},
+WindowMargins->{{236, Automatic}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
