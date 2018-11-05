@@ -466,6 +466,121 @@ Print["Cycle timing: ", First@Timing[IGraphM`PackageScope`igMake /@ cycleTestLis
 (*******************************************************************************)
 MTSection["Creation"]
 
+(* IGShorthand *)
+
+MT[
+  IGShorthand[""],
+  IGEmptyGraph[],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1"],
+  IGEmptyGraph[1],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1, 2"],
+  IGEmptyGraph[2],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["a,b"],
+  Graph[{"a", "b"}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  VertexList@IGShorthand["2,1,1-2"],
+  {2, 1}
+]
+
+MT[
+  IGShorthand["1-2"],
+  Graph[{1<->2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1 -- 2"],
+  Graph[{1<->2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1->2"],
+  Graph[{1->2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1-->2"],
+  Graph[{1->2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1<-2"],
+  Graph[{2->1}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1 <--- 2"],
+  Graph[{2->1}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1:2:3:4 - 1:2:3:4"],
+  CompleteGraph[4],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1:2:3:4 - 5:6:7"],
+  CompleteGraph[{4, 3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1----2 -3--4 - 1"],
+  CycleGraph[4],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1-2-1"],
+  Graph[{1 <-> 2}, VertexLabels -> "Name"]
+]
+
+MT[
+  IGShorthand["1:2:3 - 3:2:1", SelfLoops -> True],
+  Graph[{1<->2, 2<->3, 3<->1, 1<->1, 2<->2, 3<->3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1:2:3 - 3:2:1", SelfLoops -> True],
+  IGCompleteGraph[3, SelfLoops -> True],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1:2:3 - 3:2:1", SelfLoops -> True, "MultipleEdges" -> True],
+  Graph[{1 <-> 3, 1 <-> 2, 1 <-> 1, 2 <-> 3, 2 <-> 2, 2 <-> 1, 3 <-> 3, 3 <-> 2, 3 <-> 1}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGShorthand["1:2:3 - 3:2:1", "MultipleEdges" -> True],
+  Graph[{1 <-> 3, 1 <-> 2, 2 <-> 3, 1 <-> 2, 2 <-> 3, 1 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+
 (* IGGraphAtlas *)
 
 MT[
@@ -513,6 +628,55 @@ MT[
   True
 ]
 
+(* IGSymmetricTree *)
+
+MT[
+  IGSymmetricTree[{2, 3, 1}],
+  Graph[{1 <-> 2, 1 <-> 3, 2 <-> 4, 2 <-> 5, 2 <-> 6, 3 <-> 7, 3 <-> 8,
+   3 <-> 9, 4 <-> 10, 5 <-> 11, 6 <-> 12, 7 <-> 13, 8 <-> 14, 9 <-> 15}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSymmetricTree[{}],
+  IGEmptyGraph[1],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSymmetricTree[{5}],
+  StarGraph[6],
+  SameTest -> IGSameGraphQ
+]
+
+(* must stay unevaluated *)
+MT[
+  Head@IGSymmetricTree[{0}],
+  IGSymmetricTree
+]
+
+(* must stay unevaluated *)
+MT[
+  Head@IGSymmetricTree[{-1}],
+  IGSymmetricTree
+]
+
+(* IGBetheLattice *)
+
+MT[
+  IGBetheLattice[3],
+  Graph[{1 <-> 2, 1 <-> 3, 1 <-> 4, 2 <-> 5, 2 <-> 6, 3 <-> 7, 3 <-> 8, 4 <-> 9, 4 <-> 10}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGBetheLattice[3, 4],
+  Graph[{1 <-> 2, 1 <-> 3, 1 <-> 4, 1 <-> 5, 2 <-> 6, 2 <-> 7, 2 <-> 8,
+   3 <-> 9, 3 <-> 10, 3 <-> 11, 4 <-> 12, 4 <-> 13, 4 <-> 14, 5 <-> 15,
+   5 <-> 16, 5 <-> 17}],
+  SameTest -> IGSameGraphQ
+]
+
 (* IGCompleteGraph *)
 
 MT[
@@ -549,26 +713,22 @@ MT[
 (* IGDeBruijnGraph *)
 
 MT[
-  IGIsomorphicQ[
-    IGDeBruijnGraph[3, 4],
-    DeBruijnGraph[3, 4]
-  ],
-  True
+  IGDeBruijnGraph[3, 4],
+  DeBruijnGraph[3, 4],
+  SameTest -> IGSameGraphQ
 ]
 
 (* IGChordalRing *)
 
 MT[
-  IGIsomorphicQ[
-    IGChordalRing[15, {{3, 12, 4}, {7, 8, 11}}],
-    Graph[{1 -> 2, 2 -> 3, 3 -> 4, 4 -> 5, 5 -> 6, 6 -> 7, 7 -> 8, 8 -> 9,
-      9 -> 10, 10 -> 11, 11 -> 12, 12 -> 13, 13 -> 14, 14 -> 15, 1 -> 15,
-      1 -> 4, 1 -> 8, 2 -> 14, 2 -> 10, 3 -> 7, 3 -> 14, 4 -> 7, 4 -> 11,
-      2 -> 5, 5 -> 13, 6 -> 10, 2 -> 6, 7 -> 10, 7 -> 14, 5 -> 8, 1 -> 8,
-      9 -> 13, 5 -> 9, 10 -> 13, 2 -> 10, 8 -> 11, 4 -> 11, 1 -> 12,
-      8 -> 12, 1 -> 13, 5 -> 13, 11 -> 14, 7 -> 14, 4 -> 15, 11 -> 15}, DirectedEdges -> False]
-  ],
-  True
+  IGChordalRing[15, {{3, 12, 4}, {7, 8, 11}}],
+  Graph[{1 -> 2, 2 -> 3, 3 -> 4, 4 -> 5, 5 -> 6, 6 -> 7, 7 -> 8, 8 -> 9,
+    9 -> 10, 10 -> 11, 11 -> 12, 12 -> 13, 13 -> 14, 14 -> 15, 1 -> 15,
+    1 -> 4, 1 -> 8, 2 -> 14, 2 -> 10, 3 -> 7, 3 -> 14, 4 -> 7, 4 -> 11,
+    2 -> 5, 5 -> 13, 6 -> 10, 2 -> 6, 7 -> 10, 7 -> 14, 5 -> 8, 1 -> 8,
+    9 -> 13, 5 -> 9, 10 -> 13, 2 -> 10, 8 -> 11, 4 -> 11, 1 -> 12,
+    8 -> 12, 1 -> 13, 5 -> 13, 11 -> 14, 7 -> 14, 4 -> 15, 11 -> 15}, DirectedEdges -> False],
+  SameTest -> IGSameGraphQ
 ]
 
 MT[
@@ -715,37 +875,108 @@ MT[
   100
 ]
 
-(* IGMakeLattice *)
+(* IGSquareLattice *)
 
 MT[
-  IGIsomorphicQ[IGMakeLattice[{3,4}], GridGraph[{3,4}]],
+  IGSquareLattice[{3,4}],
+  GridGraph[{3,4}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  PathGraphQ@IGSquareLattice[{5}],
   True
 ]
 
 MT[
-  PathGraphQ@IGMakeLattice[{5}],
-  True
+  IGSquareLattice[{5}, "Periodic" -> True],
+  CycleGraph[5],
+  SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGIsomorphicQ[IGMakeLattice[{5}, "Periodic" -> True], CycleGraph[5]],
-  True
+  IGSquareLattice[{9}, "Periodic" -> True, "Radius" -> 2],
+  GraphPower[CycleGraph[9], 2],
+  SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGIsomorphicQ[
-    IGMakeLattice[{9}, "Periodic" -> True, "Radius" -> 2],
-    GraphPower[CycleGraph[9], 2]
-  ],
-  True
+  IGSquareLattice[{2, 3}, DirectedEdges -> True, "Mutual" -> True],
+  DirectedGraph[GridGraph[{2, 3}]],
+  SameTest -> IGSameGraphQ
+]
+
+
+(* IGTriangularLattice *)
+
+MT[
+  IGTriangularLattice[0],
+  IGEmptyGraph[0]
 ]
 
 MT[
-  IGIsomorphicQ[
-    IGMakeLattice[{2, 3}, DirectedEdges -> True, "Mutual" -> True],
-    DirectedGraph[GridGraph[{2, 3}]]
-  ],
-  True
+  IGTriangularLattice[1],
+  IGEmptyGraph[1],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGTriangularLattice[{0,0}],
+  IGEmptyGraph[0]
+]
+
+MT[
+  IGTriangularLattice[{0,1}],
+  IGEmptyGraph[0]
+]
+
+MT[
+  IGTriangularLattice[{1,0}],
+  IGEmptyGraph[0]
+]
+
+MT[
+  IGTriangularLattice[{1,1}],
+  IGEmptyGraph[1],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGTriangularLattice[{1, 5}],
+  PathGraph@Range[5],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGTriangularLattice[{5,1}],
+  PathGraph@Range[5],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGTriangularLattice[4],
+  Graph[{1 <-> 2, 1 <-> 3, 2 <-> 3, 2 <-> 4, 2 <-> 5, 4 <-> 5, 3 <-> 5,
+   3 <-> 6, 5 <-> 6, 4 <-> 7, 4 <-> 8, 7 <-> 8, 5 <-> 8, 5 <-> 9,
+   8 <-> 9, 6 <-> 9, 6 <-> 10, 9 <-> 10}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGTriangularLattice[{3,4}],
+  Graph[{1 <-> 4, 2 <-> 5, 3 <-> 6, 4 <-> 7, 5 <-> 8, 6 <-> 9, 7 <-> 10,
+   8 <-> 11, 9 <-> 12, 1 <-> 2, 2 <-> 3, 4 <-> 5, 5 <-> 6, 7 <-> 8,
+   8 <-> 9, 10 <-> 11, 11 <-> 12, 2 <-> 4, 2 <-> 6, 5 <-> 7, 5 <-> 9,
+   8 <-> 10, 8 <-> 12}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGTriangularLattice[{4,3}],
+  Graph[{1 <-> 5, 2 <-> 6, 3 <-> 7, 4 <-> 8, 5 <-> 9, 6 <-> 10, 7 <-> 11,
+   8 <-> 12, 1 <-> 2, 2 <-> 3, 3 <-> 4, 5 <-> 6, 6 <-> 7, 7 <-> 8,
+   9 <-> 10, 10 <-> 11, 11 <-> 12, 2 <-> 5, 2 <-> 7, 4 <-> 7, 6 <-> 9,
+   6 <-> 11, 8 <-> 11}],
+  SameTest -> IGSameGraphQ
 ]
 
 
@@ -781,7 +1012,7 @@ MT[
 MT[
   IsomorphicGraphQ[
     IGConnectNeighborhood[CycleGraph[10], 2],
-    IGMakeLattice[{10}, "Periodic" -> True, "Radius" -> 2]
+    IGSquareLattice[{10}, "Periodic" -> True, "Radius" -> 2]
   ],
   True
 ]
