@@ -166,11 +166,11 @@ IGReverseGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
 PackageExport["IGSimpleGraph"]
 IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self loops and multi edges, according to the given options.";
 
-Options[IGSimpleGraph] = { SelfLoops -> False, "MultipleEdges" -> False };
+Options[IGSimpleGraph] = { SelfLoops -> False, MultiEdges -> False };
 SyntaxInformation[IGSimpleGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSimpleGraph, Graph]};
 IGSimpleGraph[g_?SimpleGraphQ, opt : OptionsPattern[{IGSimpleGraph, Graph}]] := applyGraphOpt[opt][g]
 IGSimpleGraph[g_?igGraphQ, opt : OptionsPattern[{IGSimpleGraph, Graph}]] :=
-    Module[{self = Not@TrueQ@OptionValue[SelfLoops], multi = Not@TrueQ@OptionValue["MultipleEdges"]},
+    Module[{self = Not@TrueQ@OptionValue[SelfLoops], multi = Not@TrueQ@multiEdgesOptionReplace@OptionValue[MultiEdges]},
       applyGraphOpt[opt]@Which[
         self && multi, SimpleGraph[g],
         self, removeSelfLoops[g],

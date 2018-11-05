@@ -35,13 +35,13 @@ IGRewireEdges::usage =
     "IGRewireEdges[graph, p, \"In\"] rewires the starting point of each edge with probability p. The in-degree sequence is preserved.\n" <>
     "IGRewireEdges[graph, p, \"Out\"] rewires the endpoint of each edge with probability p. The out-degree sequence is preserved.";
 
-Options[IGRewireEdges] = { SelfLoops -> False, "MultipleEdges" -> False };
+Options[IGRewireEdges] = { SelfLoops -> False, MultiEdges -> False };
 SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewireEdges, Graph]};
 IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : All|"All"|"In"|"Out" : All, opt : OptionsPattern[{IGRewireEdges, Graph}]] :=
     catch@Block[{ig = igMakeFast[g]},
       Switch[mode,
         All|"All",
-        check@ig@"rewireEdges"[p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]]
+        check@ig@"rewireEdges"[p, OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges]]
         ,
         "In",
         check@ig@"rewireDirectedEdges"[p, OptionValue[SelfLoops], False]

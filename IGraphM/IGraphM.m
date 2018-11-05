@@ -33,6 +33,9 @@ PackageImport["IGraphM`LTemplate`"]
 PackageExport["IGraphM"]
 IGraphM::usage = "IGraphM is a symbol to which igraph related messages are associated.";
 
+PackageExport["MultiEdges"]
+MultiEdges::usage = "MultiEdges is an option for several IGraph/M functions that specifies whether multi-edges should be generated.";
+
 IGraphM`Information`$Version::usage =
     "IGraphM`Information`$Version is a string that gives the version of the currently loaded IGraph/M package.";
 
@@ -42,23 +45,17 @@ IGraphM`Developer`Recompile::usage =
 IGraphM`Developer`GetInfo::usage =
     "IGraphM`Developer`GetInfo[] returns useful information about IGraph/M and the system it is running on, for debugging and troubleshooting purposes.";
 
-PackageExport["IGDocumentation"]
-IGDocumentation::usage = "IGDocumentation[] opens the IGraph/M documentation.";
-
-PackageExport["IGVersion"]
-IGVersion::usage = "IGVersion[] returns the IGraph/M version along with the version of the igraph library in use.";
-
-PackageExport["IGSeedRandom"]
-IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
-
 
 (***** Utility functions for setting up definitions and for other load-time tasks *****)
 
 (* These functions must be defined in the file that is loaded first, IGraphM.m, to ensure availability in all others *)
 
+symName[s_Symbol] := SymbolName[s]
+symName[s_String] := s
+
 PackageScope["optNames"]
 optNames::usage = "optNames[sym1, sym2, ...] returns the option names associated with the given symbols.";
-optNames[syms___] := Union @@ (Options[#][[All, 1]]& /@ {syms})
+optNames[syms___] := symName /@ Union @@ (Options[#][[All, 1]]& /@ {syms})
 
 
 PackageScope["amendUsage"]
@@ -921,6 +918,9 @@ Which[
 
 (***** Public functions *****)
 
+PackageExport["IGDocumentation"]
+IGDocumentation::usage = "IGDocumentation[] opens the IGraph/M documentation.";
+
 SyntaxInformation[IGDocumentation] = {"ArgumentsPattern" -> {}};
 IGDocumentation[] :=
     If[$Notebooks,
@@ -932,6 +932,10 @@ IGDocumentation[] :=
       Print["Built-in documentation is only available when running with a Front End.\nSee the online version at http://szhorvat.net/mathematica/IGraphM"]
     ]
 
+
+PackageExport["IGVersion"]
+IGVersion::usage = "IGVersion[] returns the IGraph/M version along with the version of the igraph library in use.";
+
 SyntaxInformation[IGVersion] = {"ArgumentsPattern" -> {}};
 IGVersion[] :=
     "IGraph/M " <> $packageVersion <>
@@ -939,5 +943,30 @@ IGVersion[] :=
     $System;
 
 
+PackageExport["IGSeedRandom"]
+IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
+
 SyntaxInformation[IGSeedRandom] = {"ArgumentsPattern" -> {_}};
 IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := sck@igraphGlobal@"seedRandom"[seed]
+
+
+(***** Backwards compatibility helpers *****)
+
+IGraphM::depr = "`1` is deprecated. Use `2` instead.";
+
+(* TODO: remove this eventually, along with all uses *)
+
+PackageScope["multiEdgesOptionReplace"]
+multiEdgesOptionReplace::usage = "multiEdgesOptionReplace[]";
+SetAttributes[multiEdgesOptionReplace, HoldAll]
+
+multiEdgesOptionReplace[ov : OptionValue[syms_, opts_, MultiEdges]] :=
+    If[KeyMemberQ[opts, "MultipleEdges"],
+      Message[IGraphM::depr, "The option \"MultipleEdges\"", "MultiEdges"];
+      OptionValue[
+        syms,
+        Replace[opts, (rule : Rule | RuleDelayed)["MultipleEdges", val_] :> rule[MultiEdges, val], {1}],
+        MultiEdges
+      ],
+      ov
+    ]

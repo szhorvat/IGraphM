@@ -169,7 +169,7 @@ Options[IGChordalRing] = {
   GraphLayout -> "CircularEmbedding",
   DirectedEdges -> False,
   SelfLoops -> True,
-  "MultipleEdges" -> True
+  MultiEdges -> True
 };
 SyntaxInformation[IGChordalRing] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGChordalRing, Graph]};
 IGChordalRing::nv = "A chordal ring must have at least 3 vertices.";
@@ -181,7 +181,7 @@ IGChordalRing[n_?Developer`MachineIntegerQ, w_?intVecQ, opt : OptionsPattern[{IG
     IGChordalRing[n, {w}, opt]
 IGChordalRing[n_?Developer`MachineIntegerQ, w_?intMatQ, opt : OptionsPattern[{IGChordalRing, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"extendedChordalRing"[n, w, OptionValue[DirectedEdges], OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
+      check@ig@"extendedChordalRing"[n, w, OptionValue[DirectedEdges], OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
 
@@ -299,7 +299,7 @@ shSplitGroup[s_String] := shToExpr@StringTrim@StringSplit[s, ":"]
 
 Options[IGShorthand] = {
   SelfLoops -> False,
-  "MultipleEdges" -> False,
+  MultiEdges -> False,
   DirectedEdges -> False,
   VertexLabels -> "Name"
 };
@@ -328,7 +328,7 @@ IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
         If[Not@TrueQ@OptionValue[SelfLoops],
           edges = DeleteCases[edges, _[x_, x_]];
         ];
-        If[Not@TrueQ@OptionValue["MultipleEdges"],
+        If[Not@TrueQ@multiEdgesOptionReplace@OptionValue[MultiEdges],
           edges = DeleteDuplicates[edges];
         ]
       ];

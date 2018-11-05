@@ -44,11 +44,11 @@ igDegreeSequenceGame[indegrees_, outdegrees_, method_] :=
 PackageExport["IGKRegularGame"]
 IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n vertices, i.e. a graph in which all vertices have degree k.";
 
-Options[IGKRegularGame] = { "MultipleEdges" -> False, DirectedEdges -> False };
+Options[IGKRegularGame] = { MultiEdges -> False, DirectedEdges -> False };
 SyntaxInformation[IGKRegularGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGKRegularGame, Graph]};
 IGKRegularGame[n_?Internal`NonNegativeMachineIntegerQ, k_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGKRegularGame, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], OptionValue["MultipleEdges"]];
+      check@ig@"kRegularGame"[n, k, OptionValue[DirectedEdges], multiEdgesOptionReplace@OptionValue[MultiEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
@@ -207,7 +207,7 @@ IGWattsStrogatzGame::usage =
     "IGWattsStrogatzGame[n, p, {dim, k}] rewires a dim dimensional lattice of n^dim vertices, where each node is connected to its k-neighbourhood.";
 
 Options[IGWattsStrogatzGame] = {
-  SelfLoops -> False, "MultipleEdges" -> False
+  SelfLoops -> False, MultiEdges -> False
 };
 SyntaxInformation[IGWattsStrogatzGame] = {
   "ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGWattsStrogatzGame, Graph]
@@ -217,7 +217,7 @@ IGWattsStrogatzGame[
   {dim_?Internal`PositiveMachineIntegerQ, k_?Internal`PositiveMachineIntegerQ},
   opt : OptionsPattern[{IGWattsStrogatzGame, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"wattsStrogatzGame"[dim, n, k, p, OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
+      check@ig@"wattsStrogatzGame"[dim, n, k, p, OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 IGWattsStrogatzGame[
@@ -235,7 +235,7 @@ IGStaticFitnessGame::usage =
     "IGStaticFitnessGame[m, {f1, f2, \[Ellipsis]}] generates a random undirected graph with m edges where edge i <-> j is inserted with probability proportional to f_i\[Times]f_j.\n" <>
     "IGStaticFitnessGame[m, {fout1, fout2, \[Ellipsis]}, {fin1, fin2, \[Ellipsis]}] generates a random directed graph with m edges where edge i -> j is inserted with probability proportional to fout_i\[Times]fin_j.";
 
-Options[IGStaticFitnessGame] = { SelfLoops -> False, "MultipleEdges" -> False };
+Options[IGStaticFitnessGame] = { SelfLoops -> False, MultiEdges -> False };
 SyntaxInformation[IGStaticFitnessGame] = {
   "ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticFitnessGame, Graph]
 };
@@ -243,7 +243,7 @@ IGStaticFitnessGame[
   m_?Internal`NonNegativeMachineIntegerQ,
   inFitness_?nonNegIntVecQ, outFitness : _?nonNegIntVecQ : {}, opt : OptionsPattern[{IGStaticFitnessGame, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"staticFitnessGame"[m, Normal[inFitness], Normal[outFitness], OptionValue[SelfLoops], OptionValue["MultipleEdges"]];
+      check@ig@"staticFitnessGame"[m, Normal[inFitness], Normal[outFitness], OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
@@ -253,18 +253,18 @@ IGStaticPowerLawGame::usage =
     "IGStaticPowerLawGame[n, m, exp] generates a random graph with n vertices and m edges, having a power-law degree distribution with the given exponent.\n" <>
     "IGStaticPowerLawGame[n, m, expOut, expIn] generates a random directed graph with n vertices and m edges, having power-law in- and out-degree distributions with the given exponents.";
 
-Options[IGStaticPowerLawGame] = { SelfLoops -> False, "MultipleEdges" -> False, "FiniteSizeCorrection" -> True };
+Options[IGStaticPowerLawGame] = { SelfLoops -> False, MultiEdges -> False, "FiniteSizeCorrection" -> True };
 SyntaxInformation[IGStaticPowerLawGame] = {
   "ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]
 };
 IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, exp_?nonNegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"staticPowerLawGame"[n, m, exp, -1, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
+      check@ig@"staticPowerLawGame"[n, m, exp, -1, OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges], OptionValue["FiniteSizeCorrection"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 IGStaticPowerLawGame[n_?Internal`NonNegativeMachineIntegerQ, m_?Internal`NonNegativeMachineIntegerQ, expOut_?nonNegativeNumericQ, expIn_?nonNegativeNumericQ, opt : OptionsPattern[{IGStaticPowerLawGame, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"staticPowerLawGame"[n, m, expOut, expIn, OptionValue[SelfLoops], OptionValue["MultipleEdges"], OptionValue["FiniteSizeCorrection"]];
+      check@ig@"staticPowerLawGame"[n, m, expOut, expIn, OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges], OptionValue["FiniteSizeCorrection"]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
