@@ -88,7 +88,7 @@ replaceLines[repl_][file_] :=
 
 
 replaceLines[{
-    "Get[\"LTemplate`LTemplatePrivate`\"]; (* REPLACE-TAG *)" -> "Get[\"IGraphM`LTemplate`LTemplatePrivate`\"]",
+    "Get[\"LTemplate`LTemplatePrivate`\"]; (* REPLACE-TAG *)" -> "Get[\"IGraphM`LTemplate`LTemplatePrivateNoCompile`\"]",
     "ConfigureLTemplate[\"MessageSymbol\" -> IGraphM, \"LazyLoading\" -> False] (* REPLACE-TAG *)"
         -> "ConfigureLTemplate[\"MessageSymbol\" -> IGraphM, \"LazyLoading\" -> True]"
   }]@FileNameJoin[{$appTarget, "LTemplate.m"}]
