@@ -169,7 +169,7 @@ Options[IGChordalRing] = {
   GraphLayout -> "CircularEmbedding",
   DirectedEdges -> False,
   SelfLoops -> True,
-  MultiEdges -> True
+  MultiEdges -> True, "MultipleEdges" -> "Deprecated"
 };
 SyntaxInformation[IGChordalRing] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGChordalRing, Graph]};
 IGChordalRing::nv = "A chordal ring must have at least 3 vertices.";
@@ -299,7 +299,7 @@ shSplitGroup[s_String] := shToExpr@StringTrim@StringSplit[s, ":"]
 
 Options[IGShorthand] = {
   SelfLoops -> False,
-  MultiEdges -> False,
+  MultiEdges -> False, "MultipleEdges" -> "Deprecated",
   DirectedEdges -> False,
   VertexLabels -> "Name"
 };

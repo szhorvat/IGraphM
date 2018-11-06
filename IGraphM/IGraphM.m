@@ -55,7 +55,11 @@ symName[s_String] := s
 
 PackageScope["optNames"]
 optNames::usage = "optNames[sym1, sym2, ...] returns the option names associated with the given symbols.";
-optNames[syms___] := symName /@ Union @@ (Options[#][[All, 1]]& /@ {syms})
+optNames[syms___] :=
+    Complement[
+      symName /@ Union @@ (Options[#][[All, 1]]& /@ {syms}),
+      {"MultipleEdges"} (* these option names are deprecated *)
+    ]
 
 
 PackageScope["amendUsage"]
@@ -957,12 +961,13 @@ IGraphM::depr = "`1` is deprecated. Use `2` instead.";
 (* TODO: remove this eventually, along with all uses *)
 
 PackageScope["multiEdgesOptionReplace"]
-multiEdgesOptionReplace::usage = "multiEdgesOptionReplace[]";
+multiEdgesOptionReplace::usage =
+    "multiEdgesOptionReplace@OptionValue[MultiEdges] provides backwards compatibility for the \"MultipleEdges\" option name.";
 SetAttributes[multiEdgesOptionReplace, HoldAll]
 
 multiEdgesOptionReplace[ov : OptionValue[syms_, opts_, MultiEdges]] :=
     If[KeyMemberQ[opts, "MultipleEdges"],
-      Message[IGraphM::depr, "The option \"MultipleEdges\"", "MultiEdges"];
+      Message[IGraphM::depr, "The option name \"MultipleEdges\"", "MultiEdges"];
       OptionValue[
         syms,
         Replace[opts, (rule : Rule | RuleDelayed)["MultipleEdges", val_] :> rule[MultiEdges, val], {1}],

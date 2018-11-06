@@ -44,7 +44,7 @@ igDegreeSequenceGame[indegrees_, outdegrees_, method_] :=
 PackageExport["IGKRegularGame"]
 IGKRegularGame::usage = "IGKRegularGame[n, k] generates a k-regular graph on n vertices, i.e. a graph in which all vertices have degree k.";
 
-Options[IGKRegularGame] = { MultiEdges -> False, DirectedEdges -> False };
+Options[IGKRegularGame] = { DirectedEdges -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated" };
 SyntaxInformation[IGKRegularGame] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGKRegularGame, Graph]};
 IGKRegularGame[n_?Internal`NonNegativeMachineIntegerQ, k_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGKRegularGame, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
@@ -207,7 +207,7 @@ IGWattsStrogatzGame::usage =
     "IGWattsStrogatzGame[n, p, {dim, k}] rewires a dim dimensional lattice of n^dim vertices, where each node is connected to its k-neighbourhood.";
 
 Options[IGWattsStrogatzGame] = {
-  SelfLoops -> False, MultiEdges -> False
+  SelfLoops -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated"
 };
 SyntaxInformation[IGWattsStrogatzGame] = {
   "ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGWattsStrogatzGame, Graph]
@@ -235,7 +235,7 @@ IGStaticFitnessGame::usage =
     "IGStaticFitnessGame[m, {f1, f2, \[Ellipsis]}] generates a random undirected graph with m edges where edge i <-> j is inserted with probability proportional to f_i\[Times]f_j.\n" <>
     "IGStaticFitnessGame[m, {fout1, fout2, \[Ellipsis]}, {fin1, fin2, \[Ellipsis]}] generates a random directed graph with m edges where edge i -> j is inserted with probability proportional to fout_i\[Times]fin_j.";
 
-Options[IGStaticFitnessGame] = { SelfLoops -> False, MultiEdges -> False };
+Options[IGStaticFitnessGame] = { SelfLoops -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated" };
 SyntaxInformation[IGStaticFitnessGame] = {
   "ArgumentsPattern" -> {_, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticFitnessGame, Graph]
 };
@@ -253,7 +253,11 @@ IGStaticPowerLawGame::usage =
     "IGStaticPowerLawGame[n, m, exp] generates a random graph with n vertices and m edges, having a power-law degree distribution with the given exponent.\n" <>
     "IGStaticPowerLawGame[n, m, expOut, expIn] generates a random directed graph with n vertices and m edges, having power-law in- and out-degree distributions with the given exponents.";
 
-Options[IGStaticPowerLawGame] = { SelfLoops -> False, MultiEdges -> False, "FiniteSizeCorrection" -> True };
+Options[IGStaticPowerLawGame] = {
+  SelfLoops -> False,
+  MultiEdges -> False, "MultipleEdges" -> "Deprecated",
+  "FiniteSizeCorrection" -> True
+};
 SyntaxInformation[IGStaticPowerLawGame] = {
   "ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]
 };

@@ -51,7 +51,7 @@ IGVertexContract::usage = "IGVertexContract[g, {{v1, v2, \[Ellipsis]}, \[Ellipsi
 IGVertexContract::inv = "The vertices `` are not present in the graph.";
 IGVertexContract::vset = "`` must be a list of disjoint vertex sets.";
 
-Options[IGVertexContract] = { SelfLoops -> False, MultiEdges -> False };
+Options[IGVertexContract] = { SelfLoops -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated" };
 SyntaxInformation[IGVertexContract] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGVertexContract, Graph]};
 IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[{IGVertexContract, Graph}]] :=
     catch@Module[{ig = igMakeFast[graph], allElements = Join @@ sets, fullSets, g, self, multi},
