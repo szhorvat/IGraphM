@@ -833,9 +833,9 @@ Cell[TextData[{
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<MultipleEgdes\>\"", "\[Rule]", "False"}]],ExpressionUUID->
+  RowBox[{"MultiEgdes", "\[Rule]", "False"}]],ExpressionUUID->
   "67d3be01-ee30-4ab2-a9bd-142fbfee9768"],
- " prevents the creation of multiple edges between the same vertices."
+ " prevents the creation of multi-edges."
 }], "Item",ExpressionUUID->"7086adfb-23d9-4024-a4fa-28b7c7004582"]
 }, Open  ]],
 
@@ -869,8 +869,8 @@ Cell[BoxData[
 Cell[TextData[{
  Cell[BoxData[
  "IGChordalGraph"],ExpressionUUID->"d9ea098e-2a0c-49a5-9009-36003d919878"],
- " may create self-loops or multiple edges. This can be prevented by setting \
-the ",
+ " may create self-loops or multi-edges. This can be prevented by setting the \
+",
  Cell[BoxData[
  "SelfLoops"],ExpressionUUID->"308787cc-0b20-47f6-a4b3-73b6cc3d975a"],
  " or ",
@@ -2116,7 +2116,7 @@ Cell[TextData[{
  "\"\<ConfigurationModel\>\""],ExpressionUUID->
   "c05263f2-a314-4ed0-839c-453ccdef353e"],
  " implements the configuration model: it connects up vertex stubs randomly. \
-It may generate both self-loops and multiple edges. Undirected graphs are \
+It may generate both self-loops and multi-edges. Undirected graphs are \
 generated with probability proportional to ",
  Cell[BoxData[
   FormBox[
@@ -2178,7 +2178,7 @@ sequence. This method can be very slow for dense graphs."
 Cell[TextData[{
  Cell[BoxData[
  "\"\<FastSimple\>\""],ExpressionUUID->"9a1a42cd-4301-4a76-80dc-e2ab9b3a5b36"],
- " is a fast generation algorithm that avoids self-loops and multiple edges. \
+ " is a fast generation algorithm that avoids self-loops and multi-edges. \
 This method can generate any simple graph with the given degree sequence, but \
 it does not sample them uniformly."
 }], "Item",ExpressionUUID->"11da02b4-c05a-4164-97b9-22e2ceb96f09"],
@@ -2485,7 +2485,7 @@ Cell[TextData[{
  " works by putting the IDs of the vertices into a bag exactly as many times \
 as their (in-)degree, plus once more. Then the required number of cited \
 vertices are drawn from the bag, with replacement. This method might generate \
-multiple edges. It only works if ",
+multi-edges. It only works if ",
  Cell[BoxData[
   FormBox[
    RowBox[{"\[Beta]", "=", "1"}], TraditionalForm]],ExpressionUUID->
@@ -2502,7 +2502,7 @@ Cell[TextData[{
  Cell[BoxData[
  "\"\<PSumTree\>\""],ExpressionUUID->"d6a29c08-23fa-424d-ad7a-7fa12075cc19"],
  " uses a partial prefix-sum tree to generate the graph. It does not generate \
-multiple edges and works for any ",
+multi-edges and works for any ",
  Cell[BoxData[
   FormBox["\[Beta]", TraditionalForm]],ExpressionUUID->
   "6cfb3cef-7a38-4d57-a140-be9a0dd83ec9"],
@@ -2520,7 +2520,7 @@ Cell[TextData[{
  " works like ",
  Cell[BoxData[
  "\"\<PSumTree\>\""],ExpressionUUID->"f0184989-e548-456c-a497-621585538a13"],
- " but allows multiple edges."
+ " but allows multi-edges."
 }], "Item",ExpressionUUID->"70379514-1ab5-44f5-bf88-0fa52fbed671"]
 }, Open  ]],
 
@@ -3600,13 +3600,13 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"MultiEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "3aee6336-5504-4df8-a471-b1c4c5e94dc3"],
- " allows the creation of multiple edges."
+ " allows the creation of multi-edges."
 }], "Item",ExpressionUUID->"a9124eac-016d-40f7-8972-159eb70c8bb2"]
 }, Open  ]],
 
 Cell["\<\
 Create a random graph with 10 vertices and 20 edges, while allowing for \
-multiple edges:\
+multi-edges:\
 \>", "Text",ExpressionUUID->"5597900e-ad59-4dbf-a337-86f584ff1feb"],
 
 Cell[BoxData[
@@ -9992,7 +9992,7 @@ Cell[BoxData[
   "}"}]], "Input",ExpressionUUID->"5a03ac27-2462-4b8b-8edd-e92beb47f08e"],
 
 Cell["\<\
-By default, edge directions are ignored, and multiple edges are considered.\
+By default, edge directions are ignored, and multi-edges are considered.\
 \>", "Text",ExpressionUUID->"56103903-3d81-4408-8b43-71afae2e0402"],
 
 Cell[BoxData[
@@ -10929,9 +10929,9 @@ Cell[TextData[{
   RowBox[{"IGSubisomorphicQ", "[", "]"}]],ExpressionUUID->
   "fa4e7a5d-c76e-4d92-89f4-353439e94837"],
  " try to select the best algorithm for the given graphs. For graphs without \
-multiple edges, they use igraph\[CloseCurlyQuote]s default algorithm \
-selection. For multigraphs, they use VF2 after internally transforming the \
-multigraphs to edge coloured simple graphs."
+multi-edges, they use igraph\[CloseCurlyQuote]s default algorithm selection. \
+For multigraphs, they use VF2 after internally transforming the multigraphs \
+to edge coloured simple graphs."
 }], "Text",ExpressionUUID->"7fafb07c-326b-407b-96e0-04af295bc978"],
 
 Cell[BoxData[
@@ -38456,7 +38456,7 @@ Cell["IGSimpleGraph", \
 Cell[TextData[{
  Cell[BoxData[
  "IGSimpleGraph"],ExpressionUUID->"1b952653-9fe6-40b9-abc6-58661eae3a5a"],
- " removes self loops and multiple edges between the same vertices, as \
+ " removes self loops and collapses multi-edges into simple ones, as \
 specified in the options."
 }], "Text",ExpressionUUID->"c567f88a-8777-47cb-bb7f-583bd10c365a"],
 
