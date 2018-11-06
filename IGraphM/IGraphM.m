@@ -652,7 +652,10 @@ If[LoadIGraphM[] === $Failed,
   ,
   If[Not@MemberQ[Stack[], BeginPackage],
     Print["IGraph/M " <> $packageVersion];
-    Print["Evaluate IGDocumentation[] to get started."]
+    Print@If[$Notebooks, (* The string with hyperlink would print fine in normal command line mode, but not when running in a script *)
+      "Evaluate \!\(\*ButtonBox[\"IGDocumentation[]\",BaseStyle->\"Link\",ButtonData->\"paclet:IGraphM\"]\) to get started.",
+      "Evaluate IGDocumentation[] to get started."
+    ]
   ]
 ]
 
