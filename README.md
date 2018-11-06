@@ -37,11 +37,11 @@ To automatically download and install the latest version of IGraph/M, evaluate t
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.101.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.102.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.3.101.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.3.102.paclet"]
 ```
 
 IGraph/M requires Mathematica 10.0.2 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
@@ -108,7 +108,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
   * **"No build settings found. Please check `BuildSettings.m`"**
 
-    This error may be shown when trying to load IGraph/M on an incompatible platform.  Currently, the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux x86_64 with gcc 5 or later, Raspberry Pi with Raspbian Stretch.
+    This error may be shown when trying to load IGraph/M on an incompatible platform.  Currently, the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux x86_64 with glibc 2.14 or later, Raspberry Pi with Raspbian Stretch.
 
     It may be possible to run IGraph/M on other platforms, however, it will be necessary to compile it from source.
 
@@ -163,6 +163,8 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
     * `IGBetweenness(Estimate)` and `IGEdgeBetweenness(Estimate)` now have the `Normalized` option.
     * `IGBlissCanonicalGraph` will now include include vertex colours into its output when appropriate, encoded as the `"Color"` vertex property.
     * `IGRandomWalk` now supports edge weights and the `EdgeWeights` option. Use `EdgeWeights -> None` to ignore weights, and thus restore the previous behaviour.
+    * Clustering coefficient functions support the `"ExcludeIsolates"` option.
+ - Renamed `"MultipleEdges"` option to `MultiEdges` for convenient typing and auto-completion.
  - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
  - Removed graphlet functions due to [long-time unresolved bug in igraph core](https://github.com/igraph/igraph/issues/869).
  - New utility functions:
@@ -170,7 +172,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
     * Easier property handling and graph styling:  `IGVertexProp`, `IGEdgeProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
     * Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
     * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTake`, `IGZeroDiagonal`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGGiantComponent`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`.
- - Improved compatibility with Mathematica 11.2, handling of `TwoWayRule` as an edge specification.
+ - Improved compatibility with Mathematica 11.2 and later, handling of `TwoWayRule` as an edge specification.
  - Bug fixes, performance improvements, documentation updates, and polish.
 
 ##### v0.3.0
