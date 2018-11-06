@@ -32580,8 +32580,9 @@ Cell[BoxData[
    RowBox[{"IGRandomWalk", "[", 
     RowBox[{"g", ",", 
      RowBox[{"RandomChoice", "@", 
-      RowBox[{"VertexList", "[", "g", "]"}]}], ",", "200"}], "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"9d19f1e1-7d8a-4cfa-a7a0-ac8f19cba2d8"],
+      RowBox[{"VertexList", "@", 
+       RowBox[{"IGGiantComponent", "[", "g", "]"}]}]}], ",", "200"}], "]"}]}],
+   "]"}]], "Input",ExpressionUUID->"9d19f1e1-7d8a-4cfa-a7a0-ac8f19cba2d8"],
 
 Cell[BoxData[
  RowBox[{"CommunityGraphPlot", "[", "%", 
