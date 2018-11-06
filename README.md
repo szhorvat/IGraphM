@@ -1,6 +1,7 @@
-[![GitHub (pre-)release](https://img.shields.io/github/release/szhorvat/IGraphM/all.svg)](https://github.com/szhorvat/IGraphM/releases)
-[![DOI](https://zenodo.org/badge/41793262.svg)](https://zenodo.org/badge/latestdoi/41793262)
 [![Join the chat at https://gitter.im/IGraphM/Lobby](https://badges.gitter.im/IGraphM/Lobby.svg)](https://gitter.im/IGraphM/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![GitHub (pre-)release](https://img.shields.io/github/release/szhorvat/IGraphM/all.svg)](https://github.com/szhorvat/IGraphM/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/szhorvat/IGraphM/total.svg)](https://github.com/szhorvat/IGraphM/releases)
+[![DOI](https://zenodo.org/badge/41793262.svg)](https://zenodo.org/badge/latestdoi/41793262)
 
 # [IGraph/M – igraph for Mathematica][main]
 
