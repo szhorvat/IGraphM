@@ -92,7 +92,7 @@ PackageScope["partitionRagged"]
 partitionRagged::usage = "partitionRagged[list, lengths] partitions list into parts of the given lengths.";
 If[$VersionNumber >= 11.2,
   partitionRagged = TakeList,
-  partitionRagged[v_List, l_?VectorQ] := MapThread[Take[v, {#1, #2}] &, Module[{a = Accumulate[l]}, {a - l + 1, a}]]
+  partitionRagged[v_List, l_?VectorQ] := MapThread[Take[v, {#1, #2}] &, With[{a = Accumulate[l]}, {a - l + 1, a}]]
 ]
 
 (* Retrieving edge or vertex weights this way is much faster than using PropertyValue *)
