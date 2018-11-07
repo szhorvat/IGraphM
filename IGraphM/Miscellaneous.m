@@ -127,7 +127,10 @@ IGTreelikeComponents[graph_?igGraphQ] :=
 
 
 PackageExport["IGJointDegreeMatrix"]
-IGJointDegreeMatrix::usage = "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of degree-i vertices connecting to degree-j vertices.";
+IGJointDegreeMatrix::usage =
+    "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of degree-i vertices connecting to degree-j vertices.\n" <>
+    "IGJointDegreeMatrix[graph, d] returns the d by d joint degree matrix of graph, up to degree d.\n" <>
+    "IGJointDegreeMatrix[graph, {dOut, dIn}] returns the dOut by dIn joint degree matrix of graph."
 
 Options[IGJointDegreeMatrix] = { Normalized -> False };
 SyntaxInformation[IGJointDegreeMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -148,11 +151,20 @@ IGJointDegreeMatrix[graph_?igGraphQ, opt : OptionsPattern[]] :=
           pairs = Transpose@{VertexOutDegree[graph][[a]], VertexInDegree[graph][[b]]};
           res = SparseArray[pairs -> ConstantArray[1, Length[pairs]]];
           If[TrueQ@OptionValue[Normalized],
-            res / Total[res, 2],
+            If[UndirectedGraphQ[graph], 2, 1] res / Total[res, 2],
             res
           ]
         ]
         ,
         SetSystemOptions[sao]
       ]
+    ]
+IGJointDegreeMatrix[graph_?igGraphQ, maxDeg : (_?Internal`PositiveIntegerQ | {_?Internal`PositiveIntegerQ, _?Internal`PositiveIntegerQ}), opt : OptionsPattern[]] :=
+    Module[{sa = IGJointDegreeMatrix[graph, opt], max, mdOut, mdIn},
+      If[ListQ[maxDeg],
+        {mdOut, mdIn} = maxDeg,
+        {mdOut, mdIn} = {maxDeg, maxDeg}
+      ];
+      max = Max[maxDeg, Dimensions[sa]];
+      SparseArray[sa, {max, max}][[1;;mdOut, 1;;mdIn]]
     ]
