@@ -96,8 +96,9 @@ IGAdjacencyGraph::usage =
     "IGAdjacencyGraph[adjList] creates a graph from an association representing an adjacency list.";
 
 IGAdjacencyGraph::dir = "The adjacency list does not describe an undirected graph. Ignoring DirectedEdges -> True.";
-SyntaxInformation[IGAdjacencyGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 Options[IGAdjacencyGraph] = { DirectedEdges -> Automatic };
+SyntaxInformation[IGAdjacencyGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGAdjacencyGraph, Graph]};
+(* Fall back to AdjacencyGraph if the input is a matrix. *)
 IGAdjacencyGraph[am_?MatrixQ, opt : OptionsPattern[]] :=
     With[{graph = AdjacencyGraph[am, opt, OptionValue[DirectedEdges]]},
       If[GraphQ[graph], graph, $Failed]
@@ -106,6 +107,9 @@ IGAdjacencyGraph[vertices_, am_?MatrixQ, opt : OptionsPattern[]] :=
     With[{graph = AdjacencyGraph[vertices, am, opt, OptionValue[DirectedEdges]]},
       If[GraphQ[graph], graph, $Failed]
     ]
+(* The main purpose of this function is to handle adjacency lists stored as associations. *)
+IGAdjacencyGraph[<||>, opt : OptionsPattern[]] :=
+    Graph[{}, {}, opt] (* Needed because the SparseArray based implementation does not work for empty graphs. *)
 expr : IGAdjacencyGraph[adjList_?AssociationQ, opt : OptionsPattern[{IGAdjacencyGraph, Graph}]] :=
     If[SubsetQ[Keys[adjList], Catenate[adjList]],
       Module[{sa, ind, symm},
@@ -119,7 +123,8 @@ expr : IGAdjacencyGraph[adjList_?AssociationQ, opt : OptionsPattern[{IGAdjacency
                   Transpose[{
                     Join @@ MapThread[ConstantArray, {Range@Length[adjList], Length /@ Values[adjList]}],
                     Lookup[ind, Catenate[adjList]]
-                  }] -> 1, Length[adjList] {1, 1}
+                  }] -> 1,
+                  Length[adjList] {1, 1}
                 ];
             symm = Not@TrueQ@OptionValue[DirectedEdges] && SymmetricMatrixQ[sa];
             If[OptionValue[DirectedEdges] === False && Not[symm],
