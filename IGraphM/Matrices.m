@@ -45,3 +45,47 @@ IGKirchhoffMatrix[graph_?GraphQ, "In"] :=
       DiagonalMatrix@SparseArray@Total[am] - am
     ]
 addCompletion[IGKirchhoffMatrix, {0, {"In", "Out"}}]
+
+
+PackageExport["IGJointDegreeMatrix"]
+IGJointDegreeMatrix::usage =
+    "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of degree-i vertices connecting to degree-j vertices.\n" <>
+    "IGJointDegreeMatrix[graph, d] returns the d by d joint degree matrix of graph, up to degree d.\n" <>
+    "IGJointDegreeMatrix[graph, {dOut, dIn}] returns the dOut by dIn joint degree matrix of graph."
+
+Options[IGJointDegreeMatrix] = { Normalized -> False };
+SyntaxInformation[IGJointDegreeMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+(* Justification for returning {{}} for empty graph:
+ * {{}} is MatrixQ, and it is more general not to fail for this case.
+ * However, it is not SquareMatrixQ, and transposing yields {}. *)
+IGJointDegreeMatrix[graph_?EmptyGraphQ, opt : OptionsPattern[]] := {{}}
+IGJointDegreeMatrix[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    With[{sao = SystemOptions["SparseArrayOptions"]},
+      Internal`WithLocalSettings[
+        SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> Total]
+        ,
+        Module[{a, b, pairs, res},
+          {a, b} = Transpose@IGIndexEdgeList[graph];
+          If[UndirectedGraphQ[graph],
+            {a, b} = {Join[a, b], Join[b, a]};
+          ];
+          pairs = Transpose@{VertexOutDegree[graph][[a]], VertexInDegree[graph][[b]]};
+          res = SparseArray[pairs -> ConstantArray[1, Length[pairs]]];
+          If[TrueQ@OptionValue[Normalized],
+            If[UndirectedGraphQ[graph], 2, 1] res / Total[res, 2],
+            res
+          ]
+        ]
+        ,
+        SetSystemOptions[sao]
+      ]
+    ]
+IGJointDegreeMatrix[graph_?igGraphQ, maxDeg : (_?Internal`PositiveIntegerQ | {_?Internal`PositiveIntegerQ, _?Internal`PositiveIntegerQ}), opt : OptionsPattern[]] :=
+    Module[{sa = IGJointDegreeMatrix[graph, opt], max, mdOut, mdIn},
+      If[ListQ[maxDeg],
+        {mdOut, mdIn} = maxDeg,
+        {mdOut, mdIn} = {maxDeg, maxDeg}
+      ];
+      max = Max[maxDeg, Dimensions[sa]];
+      SparseArray[sa, {max, max}][[1;;mdOut, 1;;mdIn]]
+    ]
