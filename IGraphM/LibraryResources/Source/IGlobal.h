@@ -200,7 +200,7 @@ public:
     mma::IntTensorRef edgeListSortPairs(mma::IntMatrixRef pairs) {
         if (pairs.cols() != 2)
             throw mma::LibraryError("sortPairs: n-by-2 matrix expected.");
-        for (int i=0; i < pairs.rows(); ++i)
+        for (mint i=0; i < pairs.rows(); ++i)
             if (pairs(i,0) > pairs(i,1))
                 std::swap(pairs(i,0), pairs(i,1));
         return pairs;
@@ -212,7 +212,7 @@ public:
             throw mma::LibraryError("removeLoops: n-by-2 matrix expected.");
 
         std::vector<mint> result;
-        for (int i=0; i < pairs.rows(); ++i)
+        for (mint i=0; i < pairs.rows(); ++i)
             if (pairs(i,0) != pairs(0,1)) {
                 result.push_back(pairs(i,0));
                 result.push_back(pairs(i,1));
@@ -225,7 +225,7 @@ public:
         std::set<mint> verts(vertices.begin(), vertices.end());
         auto markers = mma::makeVector<mint>(pairs.rows());
 
-        for (int i=0; i < pairs.rows(); ++i)
+        for (mint i=0; i < pairs.rows(); ++i)
             markers[i] = static_cast<mint>(verts.find(pairs(i,0)) != verts.end() || verts.find(pairs(i,1)) != verts.end());
         return markers;
     }
@@ -235,7 +235,7 @@ public:
         std::set<mint> verts(vertices.begin(), vertices.end());
         auto markers = mma::makeVector<mint>(pairs.rows());
 
-        for (int i=0; i < pairs.rows(); ++i)
+        for (mint i=0; i < pairs.rows(); ++i)
             markers[i] = static_cast<mint>(verts.find(pairs(i,0)) != verts.end() && verts.find(pairs(i,1)) != verts.end());
         return markers;
     }
