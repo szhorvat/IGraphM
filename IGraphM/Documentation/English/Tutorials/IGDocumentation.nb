@@ -1382,7 +1382,30 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"1", ",", "1", ",", "2", ",", "2"}], "}"}], ",", 
    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
-  "]"}]], "Input",ExpressionUUID->"2a841c78-b5e8-4cf7-8da9-4427bf30c543"]
+  "]"}]], "Input",ExpressionUUID->"2a841c78-b5e8-4cf7-8da9-4427bf30c543"],
+
+Cell["Generate all labelled trees on 4 nodes:", \
+"Text",ExpressionUUID->"507845f5-2738-4ed2-9276-95920c339eec"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGFromPrufer", "[", 
+    RowBox[{"#", ",", 
+     RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], "]"}], "&"}], "/@", 
+  RowBox[{"Tuples", "[", 
+   RowBox[{
+    RowBox[{"Range", "[", "4", "]"}], ",", 
+    RowBox[{"{", "2", "}"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"51393f87-253f-44ef-ba0d-130cedf27577"],
+
+Cell["Of these, only two are non-isomorphic.", \
+"Text",ExpressionUUID->"ba665fdf-9e8e-4c40-8bde-cf67973ce05d"],
+
+Cell[BoxData[
+ RowBox[{"DeleteDuplicates", "[", 
+  RowBox[{"CanonicalGraph", "/@", "%"}], 
+  "]"}]], "Input",ExpressionUUID->"63926f38-f9bf-4eea-a59a-821a0091f939"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -10234,113 +10257,6 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"1", ",", "3"}], "}"}]}], "}"}]}], 
   "]"}]], "Input",ExpressionUUID->"68a321da-3296-4be2-8552-4fcdd4514e0b"]
-}, Closed]],
-
-Cell[CellGroupData[{
-
-Cell["IGJointDegreeMatrix", \
-"Subsubsection",ExpressionUUID->"2cb1805f-607a-40e2-a3e6-460bdde4a3c0"],
-
-Cell[BoxData[
- RowBox[{"?", 
-  "IGJointDegreeMatrix"}]], \
-"Input",ExpressionUUID->"aff7d321-dc80-46bf-957f-9ae2a9ee87aa"],
-
-Cell[TextData[{
- "Entry ",
- Cell[BoxData[
-  FormBox[
-   SubscriptBox["J", 
-    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
-  ExpressionUUID->"a91393fa-7831-4915-ae02-ca765da035ed"],
- " of the joint degree matrix ",
- Cell[BoxData[
-  FormBox["J", TraditionalForm]],ExpressionUUID->
-  "d7181d57-9c0a-4d10-afdc-d04c8c90f146"],
- " is the number of edges connecting a degree ",
- Cell[BoxData[
-  FormBox["i", TraditionalForm]],ExpressionUUID->
-  "6338098a-6e3c-498d-8fed-685d61313b29"],
- " and a degree ",
- Cell[BoxData[
-  FormBox["j", TraditionalForm]],ExpressionUUID->
-  "133748b6-d15a-4c09-9c88-1915cf40c999"],
- " vertex. For a directed graph, ",
- Cell[BoxData[
-  FormBox[
-   SubscriptBox["J", 
-    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
-  ExpressionUUID->"a462f140-ae22-4fe7-bf57-f17932234408"],
- " is the number of edges from a vertex with out-degree ",
- Cell[BoxData[
-  FormBox["i", TraditionalForm]],ExpressionUUID->
-  "04aa9f7c-ad26-4709-bd5f-20d7c5bfafdc"],
- " to a vertex with in-degree ",
- Cell[BoxData[
-  FormBox["j", TraditionalForm]],ExpressionUUID->
-  "954124c5-0d57-4b77-b63c-4698cad50277"],
- "."
-}], "Text",ExpressionUUID->"7f6df30b-4e26-4fda-bedb-4c19accec4e4"],
-
-Cell[TextData[{
- "For an empty (i.e. edgeless) graph, ",
- Cell[BoxData[
-  RowBox[{"{", 
-   RowBox[{"{", "}"}], "}"}]],ExpressionUUID->
-  "7bec5ee3-8a1c-4257-8cd1-0577480f5177"],
- " is returned."
-}], "Text",ExpressionUUID->"ada9176b-9c52-4d90-92b8-6e2ed3f6b797"],
-
-Cell["The available options are:", \
-"Text",ExpressionUUID->"88a2cd94-cbb2-4f1c-ba79-3aa1b3a48db5"],
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"Normalized", "\[Rule]", "True"}]],ExpressionUUID->
-  "c31ffdc4-e2f9-47e9-81be-bb91e63074ac"],
- " will normalize the matrix by the sum of entries. Thus a matrix entry ",
- Cell[BoxData[
-  FormBox[
-   SubscriptBox["J", 
-    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
-  ExpressionUUID->"6d2a7d59-1bdb-4a36-9be0-2fb704d471c9"],
- " can be interpreted as the probability that a randomly selected edge will \
-connect vertices of degrees ",
- Cell[BoxData[
-  FormBox["i", TraditionalForm]],ExpressionUUID->
-  "c1c3777f-79b6-426a-b36b-86c03392b183"],
- " and ",
- Cell[BoxData[
-  FormBox["j", TraditionalForm]],ExpressionUUID->
-  "bae9c5bd-74dc-48eb-87da-923945920934"],
- "."
-}], "Item",ExpressionUUID->"f7d49a88-2ccb-4e80-a1c5-94785e750cba"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"IGJointDegreeMatrix", "@", 
-   RowBox[{"ExampleData", "[", 
-    RowBox[{"{", 
-     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<ZacharyKarateClub\>\""}], 
-     "}"}], "]"}]}], "//", 
-  "MatrixPlot"}]], \
-"Input",ExpressionUUID->"e1e2063f-8564-43e9-b92c-acefa03661be"],
-
-Cell["\<\
-The joint degree matrix of a directed graph is not necessarily square.\
-\>", "Text",ExpressionUUID->"2ca88655-da09-40d4-a306-12e8e36c438e"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"RandomGraph", "[", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{"10", ",", "15"}], "}"}], ",", 
-     RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}], "//", 
-   "IGJointDegreeMatrix"}], "//", 
-  "MatrixPlot"}]], \
-"Input",ExpressionUUID->"748c71fc-0ccd-4f05-9c67-6c663b56c7d4"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -30287,8 +30203,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
 
 Cell[BoxData[
  RowBox[{
@@ -37366,117 +37282,6 @@ Cell["Matrix functions", \
 
 Cell[CellGroupData[{
 
-Cell["IGZeroDiagonal", \
-"Subsubsection",ExpressionUUID->"d0d3f3c6-6b18-4e99-9920-e21e098defeb"],
-
-Cell[BoxData[
- RowBox[{"?", 
-  "IGZeroDiagonal"}]], \
-"Input",ExpressionUUID->"447de482-0aab-4307-bb0e-2b00a7f23c69"],
-
-Cell[TextData[{
- Cell[BoxData[
- "IGZeroDiagonal"],ExpressionUUID->"e7dd9da3-20a3-4151-a282-9ab2482cfde6"],
- " replaces the diagonal of a matrix with zeros. It works on dense and sparse \
-matrices, and supports non-square matrices. This function is particularly \
-useful when constructing adjacency matrices that are to be converted to a \
-graph."
-}], "Text",ExpressionUUID->"fee340a6-4e57-4d41-9749-1d0f7acea074"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"mat", "=", 
-   RowBox[{"RandomReal", "[", 
-    RowBox[{"1", ",", 
-     RowBox[{"{", 
-      RowBox[{"6", ",", "4"}], "}"}]}], "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"806d38eb-695a-4f80-8db9-5f1d2df5657f"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"IGZeroDiagonal", "[", "mat", "]"}], "//", 
-  "MatrixForm"}]], \
-"Input",ExpressionUUID->"649d6332-7a22-470a-b1f6-0de6e16002bc"],
-
-Cell["\<\
-Connect those points in the plane whose Euclidean distance is less than 0.2, \
-but do not connect each point with itself.\
-\>", "Text",ExpressionUUID->"44782f1e-8c60-4f6c-8abf-f7f54baa6c9a"],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"pts", "=", 
-   RowBox[{"RandomReal", "[", 
-    RowBox[{"1", ",", 
-     RowBox[{"{", 
-      RowBox[{"30", ",", "2"}], "}"}]}], "]"}]}], ";"}], "\n", 
- RowBox[{"AdjacencyGraph", "[", "\[IndentingNewLine]", 
-  RowBox[{
-   RowBox[{"IGZeroDiagonal", "@", 
-    RowBox[{"UnitStep", "[", 
-     RowBox[{"0.2", "-", 
-      RowBox[{"DistanceMatrix", "[", "pts", "]"}]}], "]"}]}], ",", 
-   "\[IndentingNewLine]", 
-   RowBox[{"VertexCoordinates", "\[Rule]", "pts"}]}], "\[IndentingNewLine]", 
-  "]"}]}], "Input",ExpressionUUID->"9ae39a5c-7ed2-4f06-9d29-5741f19d6e44"],
-
-Cell["\<\
-Connect each cell in a rectangular mesh to its Moore neighbours.\
-\>", "Text",ExpressionUUID->"0cb45604-c9aa-495a-9f6f-32da4a32dc7d"],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"arr", "=", 
-   RowBox[{"RandomInteger", "[", 
-    RowBox[{"1", ",", 
-     RowBox[{"{", 
-      RowBox[{"10", ",", "10"}], "}"}]}], "]"}]}], ";"}], "\n", 
- RowBox[{"mesh", "=", 
-  RowBox[{"ArrayMesh", "[", "arr", "]"}]}]}], "Input",
- CellChangeTimes->{{3.725535919284374*^9, 3.725535927187551*^9}, 
-   3.725536823913075*^9},ExpressionUUID->"96785b21-ecda-4c17-94fb-\
-3414ac0225cb"],
-
-Cell["First, generate the square\[Dash]vertex adjacency matrix.", \
-"Text",ExpressionUUID->"ba448a32-8f58-4130-a3f9-77b9b2588ec1"],
-
-Cell[BoxData[
- RowBox[{"mat", "=", 
-  RowBox[{"IGMeshCellAdjacencyMatrix", "[", 
-   RowBox[{"mesh", ",", "2", ",", "0"}], 
-   "]"}]}]], "Input",ExpressionUUID->"9fef5baa-0ee0-427e-bc0c-7135ba2b1556"],
-
-Cell["\<\
-Then find the graph of squares adjacent through a corner point, but excluding \
-self-adjacencies.\
-\>", "Text",ExpressionUUID->"e0d2c36a-2b13-4ea3-ba4c-a785934b077e"],
-
-Cell[BoxData[
- RowBox[{"AdjacencyGraph", "[", "\[IndentingNewLine]", 
-  RowBox[{
-   RowBox[{"IGZeroDiagonal", "@", 
-    RowBox[{"Unitize", "[", 
-     RowBox[{"mat", ".", 
-      RowBox[{"Transpose", "[", "mat", "]"}]}], "]"}]}], ",", 
-   "\[IndentingNewLine]", 
-   RowBox[{"VertexCoordinates", "\[Rule]", 
-    RowBox[{"PropertyValue", "[", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"mesh", ",", "2"}], "}"}], ",", "MeshCellCentroid"}], "]"}]}], 
-   ",", "\[IndentingNewLine]", 
-   RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], 
-  "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"b908a389-a78c-479f-8c6e-9b6cb31b92f7"],
-
-Cell[BoxData[
- RowBox[{"Show", "[", 
-  RowBox[{"mesh", ",", "%"}], 
-  "]"}]], "Input",ExpressionUUID->"a8b149a9-0816-480f-ae0a-2812613f828c"]
-}, Closed]],
-
-Cell[CellGroupData[{
-
 Cell["IGKirchhoffMatrix", \
 "Subsubsection",ExpressionUUID->"bcfb344f-6d13-4167-9b52-b6fd54f10c0b"],
 
@@ -37853,6 +37658,136 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGJointDegreeMatrix", \
+"Subsubsection",ExpressionUUID->"2cb1805f-607a-40e2-a3e6-460bdde4a3c0"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGJointDegreeMatrix"}]], \
+"Input",ExpressionUUID->"aff7d321-dc80-46bf-957f-9ae2a9ee87aa"],
+
+Cell[TextData[{
+ "Entry ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["J", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
+  ExpressionUUID->"96c734d7-d5f0-487e-8243-c8344345ae71"],
+ " of the joint degree matrix ",
+ Cell[BoxData[
+  FormBox["J", TraditionalForm]],ExpressionUUID->
+  "75da1616-ad32-4b8d-acce-3b6d04257345"],
+ " is the number of edges connecting a degree ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "050159b0-fba9-4bb5-97fc-460d4854cac3"],
+ " and a degree ",
+ Cell[BoxData[
+  FormBox["j", TraditionalForm]],ExpressionUUID->
+  "30fd5016-6cf4-4606-9fdb-7911f2fb71d9"],
+ " vertex. For a directed graph, ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["J", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
+  ExpressionUUID->"f59ab907-f238-437a-87ca-42a5186b768e"],
+ " is the number of edges from a vertex with out-degree ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "bc11ca2c-99bf-478a-8e7e-18f1a029ee47"],
+ " to a vertex with in-degree ",
+ Cell[BoxData[
+  FormBox["j", TraditionalForm]],ExpressionUUID->
+  "69a1882e-2669-4558-90d6-be005e2c3701"],
+ "."
+}], "Text",ExpressionUUID->"7f6df30b-4e26-4fda-bedb-4c19accec4e4"],
+
+Cell[TextData[{
+ "For an empty (i.e. edgeless) graph, ",
+ Cell[BoxData[
+  RowBox[{"{", 
+   RowBox[{"{", "}"}], "}"}]],ExpressionUUID->
+  "24cde41e-4448-43ee-8464-a3e907f728a2"],
+ " is returned."
+}], "Text",ExpressionUUID->"ada9176b-9c52-4d90-92b8-6e2ed3f6b797"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"88a2cd94-cbb2-4f1c-ba79-3aa1b3a48db5"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"Normalized", "\[Rule]", "True"}]],ExpressionUUID->
+  "98deaec5-fc4a-4ca8-9689-2d10fbe39d0c"],
+ " will normalize the matrix by the sum of entries for directed graph. For \
+undirected graphs, the sum of upper triangular entries is used. Thus a matrix \
+entry ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["J", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
+  ExpressionUUID->"bb7b25bf-767a-417d-a232-cc6bcf873a9d"],
+ " can be interpreted as the probability that a randomly selected edge will \
+connect vertices of degrees ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "4c082221-bdb5-4e5e-a56d-cae3cefc85a2"],
+ " and ",
+ Cell[BoxData[
+  FormBox["j", TraditionalForm]],ExpressionUUID->
+  "9e53cd1f-a404-4a4b-82d4-742175be20bf"],
+ "."
+}], "Item",ExpressionUUID->"f7d49a88-2ccb-4e80-a1c5-94785e750cba"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGJointDegreeMatrix", "@", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<ZacharyKarateClub\>\""}], 
+     "}"}], "]"}]}], "//", 
+  "MatrixPlot"}]], \
+"Input",ExpressionUUID->"e1e2063f-8564-43e9-b92c-acefa03661be"],
+
+Cell["\<\
+The joint degree matrix of a directed graph is not necessarily square.\
+\>", "Text",ExpressionUUID->"2ca88655-da09-40d4-a306-12e8e36c438e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"10", ",", "15"}], "}"}], ",", 
+     RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}], "//", 
+   "IGJointDegreeMatrix"}], "//", 
+  "MatrixPlot"}]], \
+"Input",ExpressionUUID->"748c71fc-0ccd-4f05-9c67-6c663b56c7d4"],
+
+Cell["\<\
+The second argument allows for obtaining joint degree matrices of a \
+predictable size. This makes it convenient to operate together multiple joint \
+degree matrices.\
+\>", "Text",ExpressionUUID->"1d2a2eab-45b3-49d2-8aed-7749ebd19c5d"],
+
+Cell[BoxData[
+ RowBox[{"MatrixPlot", "@", 
+  RowBox[{"Mean", "@", 
+   RowBox[{"Table", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"IGJointDegreeMatrix", "[", 
+      RowBox[{
+       RowBox[{"RandomGraph", "[", 
+        RowBox[{"{", 
+         RowBox[{"10", ",", "20"}], "}"}], "]"}], ",", "9", ",", 
+       RowBox[{"Normalized", "\[Rule]", "True"}]}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", "1000", "}"}]}], "\[IndentingNewLine]", 
+    "]"}]}]}]], "Input",ExpressionUUID->"a602ca8b-e1e3-4b6b-88c9-622f9eb19d43"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["IGAdjacencyMatrixPlot", \
 "Subsubsection",ExpressionUUID->"8049853c-6573-4eb2-acc1-a5552d0c5da7"],
 
@@ -38184,6 +38119,245 @@ Cell[BoxData[
       RowBox[{"0", "\[Rule]", "White"}], ",", 
       RowBox[{"1", "\[Rule]", "Black"}]}], "}"}]}]}], 
   "]"}]], "Input",ExpressionUUID->"466ba9cc-8876-4fb1-bb66-0e2aeedbecd0"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGZeroDiagonal", \
+"Subsubsection",ExpressionUUID->"d0d3f3c6-6b18-4e99-9920-e21e098defeb"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGZeroDiagonal"}]], \
+"Input",ExpressionUUID->"447de482-0aab-4307-bb0e-2b00a7f23c69"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGZeroDiagonal"],ExpressionUUID->"82f0d26c-17c1-44e7-acc0-6861fb516a25"],
+ " replaces the diagonal of a matrix with zeros. It works on dense and sparse \
+matrices, and supports non-square matrices. This function is particularly \
+useful when constructing adjacency matrices that are to be converted to a \
+graph."
+}], "Text",ExpressionUUID->"fee340a6-4e57-4d41-9749-1d0f7acea074"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"mat", "=", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"6", ",", "4"}], "}"}]}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"806d38eb-695a-4f80-8db9-5f1d2df5657f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGZeroDiagonal", "[", "mat", "]"}], "//", 
+  "MatrixForm"}]], \
+"Input",ExpressionUUID->"649d6332-7a22-470a-b1f6-0de6e16002bc"],
+
+Cell["\<\
+Connect those points in the plane whose Euclidean distance is less than 0.2, \
+but do not connect each point with itself.\
+\>", "Text",ExpressionUUID->"44782f1e-8c60-4f6c-8abf-f7f54baa6c9a"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pts", "=", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"30", ",", "2"}], "}"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{"AdjacencyGraph", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"IGZeroDiagonal", "@", 
+    RowBox[{"UnitStep", "[", 
+     RowBox[{"0.2", "-", 
+      RowBox[{"DistanceMatrix", "[", "pts", "]"}]}], "]"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"VertexCoordinates", "\[Rule]", "pts"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"9ae39a5c-7ed2-4f06-9d29-5741f19d6e44"],
+
+Cell["\<\
+Connect each cell in a rectangular mesh to its Moore neighbours.\
+\>", "Text",ExpressionUUID->"0cb45604-c9aa-495a-9f6f-32da4a32dc7d"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"arr", "=", 
+   RowBox[{"RandomInteger", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "10"}], "}"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{"mesh", "=", 
+  RowBox[{"ArrayMesh", "[", "arr", "]"}]}]}], "Input",
+ CellChangeTimes->{{3.725535919284374*^9, 3.725535927187551*^9}, 
+   3.725536823913075*^9},ExpressionUUID->"96785b21-ecda-4c17-94fb-\
+3414ac0225cb"],
+
+Cell["First, generate the square\[Dash]vertex adjacency matrix.", \
+"Text",ExpressionUUID->"ba448a32-8f58-4130-a3f9-77b9b2588ec1"],
+
+Cell[BoxData[
+ RowBox[{"mat", "=", 
+  RowBox[{"IGMeshCellAdjacencyMatrix", "[", 
+   RowBox[{"mesh", ",", "2", ",", "0"}], 
+   "]"}]}]], "Input",ExpressionUUID->"9fef5baa-0ee0-427e-bc0c-7135ba2b1556"],
+
+Cell["\<\
+Then find the graph of squares adjacent through a corner point, but excluding \
+self-adjacencies.\
+\>", "Text",ExpressionUUID->"e0d2c36a-2b13-4ea3-ba4c-a785934b077e"],
+
+Cell[BoxData[
+ RowBox[{"AdjacencyGraph", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"IGZeroDiagonal", "@", 
+    RowBox[{"Unitize", "[", 
+     RowBox[{"mat", ".", 
+      RowBox[{"Transpose", "[", "mat", "]"}]}], "]"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"VertexCoordinates", "\[Rule]", 
+    RowBox[{"PropertyValue", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"mesh", ",", "2"}], "}"}], ",", "MeshCellCentroid"}], "]"}]}], 
+   ",", "\[IndentingNewLine]", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"b908a389-a78c-479f-8c6e-9b6cb31b92f7"],
+
+Cell[BoxData[
+ RowBox[{"Show", "[", 
+  RowBox[{"mesh", ",", "%"}], 
+  "]"}]], "Input",ExpressionUUID->"a8b149a9-0816-480f-ae0a-2812613f828c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGTakeUpper and IGTakeLower", \
+"Subsubsection",ExpressionUUID->"c0d40a85-988f-4b80-8e98-d4b3c6489264"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGTakeUpper"}]], \
+"Input",ExpressionUUID->"d0d61f05-dbcc-46f1-801a-054781006db9"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGTakeLower"}]], \
+"Input",ExpressionUUID->"f7cf0b1b-0941-4230-8bd5-0ad4f690c2d8"],
+
+Cell[TextData[{
+ Cell[BoxData["IGTakeUpper"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8a7a40bd-b3e1-483b-9a91-22b27f4c3f49"],
+ " and ",
+ Cell[BoxData["IGTakeLower"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "ef8e34cf-5a6a-415c-913f-886d3a1d7c4b"],
+ " extract the above-diagonal and below-diagonal elements of a matrix. The \
+matrix does not need to be square. The elements are always extracted \
+row-by-row."
+}], "Text",ExpressionUUID->"ee47cc66-1658-4094-bb08-26ef8840efd4"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"mat", "=", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"Range", "[", "16", "]"}], ",", "4"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"MatrixForm", "[", "mat", 
+  "]"}]}], "Input",ExpressionUUID->"73f56aeb-769e-4054-a843-7dcb1f22b72d"],
+
+Cell[BoxData[
+ RowBox[{"IGTakeUpper", "[", "mat", 
+  "]"}]], "Input",ExpressionUUID->"8fa9a5ac-b3e2-46f5-85c4-4bc0730ab4d0"],
+
+Cell[BoxData[
+ RowBox[{"IGTakeLower", "[", "mat", 
+  "]"}]], "Input",ExpressionUUID->"1a644d60-c669-44b9-a96f-3c2268758be3"],
+
+Cell[TextData[{
+ Cell[BoxData["IGTakeUpper"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "ffb64e71-5641-4cc8-83c3-a6b907df2f50"],
+ " and ",
+ Cell[BoxData["IGTakeLower"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "05ffdf89-ec04-4f96-869f-b8be1b4c11a2"],
+ " support sparse matrices. When given a sparse array as input, the result \
+will also be a sparse array."
+}], "Text",ExpressionUUID->"7055c950-1c87-44e0-8477-6325ba5df49b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"sa", "=", 
+   RowBox[{"SparseArray", "[", 
+    RowBox[{
+     RowBox[{"RandomInteger", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"1", ",", "6"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"10", ",", "2"}], "}"}]}], "]"}], "\[Rule]", 
+     RowBox[{"RandomInteger", "[", 
+      RowBox[{"10", ",", "10"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"MatrixForm", "[", "sa", 
+  "]"}]}], "Input",ExpressionUUID->"c6443c23-b2b0-48d1-827d-a23beb18181d"],
+
+Cell[BoxData[
+ RowBox[{"IGTakeUpper", "[", "sa", 
+  "]"}]], "Input",ExpressionUUID->"d5cbac74-baf4-4cea-a890-1e9425b638dd"],
+
+Cell[BoxData[
+ RowBox[{"Normal", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"b5a80ec5-6bf5-4210-9d60-554e63e8efc1"],
+
+Cell[TextData[{
+ Cell[BoxData["IGTakeUpper"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "03ddbad0-77de-4251-bac9-658692bfb0a0"],
+ " and ",
+ Cell[BoxData["IGTakeLower"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "659ae852-13ef-409e-8c2e-92aebee1a9e7"],
+ " are optimized for performance."
+}], "Text",ExpressionUUID->"02811039-c1de-4bc3-be0c-8587315f4a81"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"mat", "=", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"1000", ",", "1000"}], "}"}]}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"7131b940-755d-41f3-be19-b17f484c999f"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGTakeUpper", "[", "mat", "]"}], ";"}], "//", 
+  "RepeatedTiming"}]], \
+"Input",ExpressionUUID->"88d38bdf-fbae-475a-b4dc-aad1209ca619"],
+
+Cell["Compute the mean pairwise distance of a random point set.", \
+"Text",ExpressionUUID->"ff47a3d4-0684-4b1a-b30f-d4ff0eed47b8"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pts", "=", 
+   RowBox[{"RandomReal", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"100", ",", "2"}], "}"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{"Mean", "@", 
+  RowBox[{"IGTakeUpper", "@", 
+   RowBox[{
+   "DistanceMatrix", "[", "pts", 
+    "]"}]}]}]}], \
+"Input",ExpressionUUID->"f335c6c0-e543-49ea-bd3d-e5aa5ab4543b"]
 }, Closed]]
 }, Closed]],
 
@@ -40033,7 +40207,7 @@ functions)\
 }, Open  ]]
 },
 WindowSize->{742, 711},
-WindowMargins->{{236, Automatic}, {Automatic, 0}},
+WindowMargins->{{344, Automatic}, {71, Automatic}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
