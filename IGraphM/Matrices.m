@@ -89,3 +89,66 @@ IGJointDegreeMatrix[graph_?igGraphQ, maxDeg : (_?Internal`PositiveIntegerQ | {_?
       max = Max[maxDeg, Dimensions[sa]];
       SparseArray[sa, {max, max}][[1;;mdOut, 1;;mdIn]]
     ]
+
+
+(* Extracting the upper and lower triangular parts *)
+
+upperSparse[sa_SparseArray] :=
+    Module[{idx, rows, cols},
+      {rows, cols} = Dimensions[sa];
+      idx = igraphGlobal@"upperIndexPairPositions"[sa["NonzeroPositions"], cols];
+      SparseArray[
+        idx[[All, 2]] -> sa["NonzeroValues"][[ idx[[All, 1]] ]],
+        List@If[cols > rows, rows * (rows - 1) / 2 + rows * (cols - rows), cols * (cols - 1) / 2],
+        sa["Background"]
+      ]
+    ]
+
+lowerSparse[sa_SparseArray] :=
+    Module[{idx, rows, cols},
+      {rows, cols} = Dimensions[sa];
+      idx = igraphGlobal@"lowerIndexPairPositions"[sa["NonzeroPositions"], cols];
+      SparseArray[
+        idx[[All, 2]] -> sa["NonzeroValues"][[ idx[[All, 1]] ]],
+        List@If[rows > cols, cols * (cols - 1) / 2 + cols * (rows - cols), rows * (rows - 1) / 2],
+        sa["Background"]
+      ]
+    ]
+
+upperDense[mat_?SquareMatrixQ] := Statistics`Library`UpperTriangularMatrixToVector[mat]
+upperDense[mat_] := Join @@ Pick[mat, UpperTriangularize[ConstantArray[1, Dimensions[mat]], 1], 1]
+
+lowerDense[mat_] := Join @@ Pick[mat, LowerTriangularize[ConstantArray[1, Dimensions[mat]], -1], 1]
+
+
+PackageExport["IGTakeUpper"]
+
+IGTakeUpper::arg = IGTakeLower::arg = "A single matrix argument is expected.";
+
+IGTakeUpper::usage = "IGTakeUpper[matrix] extracts the elements of a matrix that are above the diagonal.";
+IGTakeUpper[matrix_?MatrixQ] :=
+    With[{mat = Developer`ToPackedArray[matrix]},
+      Switch[mat,
+        m_ /; Developer`PackedArrayQ[m, Integer, 2], igraphGlobal@"takeUpperInteger"[mat],
+        m_ /; Developer`PackedArrayQ[m, Real, 2], igraphGlobal@"takeUpperReal"[mat],
+        m_ /; Developer`PackedArrayQ[m, Complex, 2], igraphGlobal@"takeUpperComplex"[mat],
+        _SparseArray, upperSparse[mat],
+        _, upperDense[mat]
+      ]
+    ]
+IGTakeUpper[___] := (Message[IGTakeUpper::arg]; $Failed)
+
+PackageExport["IGTakeLower"]
+
+IGTakeLower::usage = "IGTakeLower[matrix] extracts the elements of a matrix that are below the diagonal.";
+IGTakeLower[matrix_?MatrixQ] :=
+    With[{mat = Developer`ToPackedArray[matrix]},
+      Switch[mat,
+        m_ /; Developer`PackedArrayQ[m, Integer, 2], igraphGlobal@"takeLowerInteger"[mat],
+        m_ /; Developer`PackedArrayQ[m, Real, 2], igraphGlobal@"takeLowerReal"[mat],
+        m_ /; Developer`PackedArrayQ[m, Complex, 2], igraphGlobal@"takeLowerComplex"[mat],
+        _SparseArray, lowerSparse[mat],
+        _, lowerDense[mat]
+      ]
+    ]
+IGTakeLower[___] := (Message[IGTakeLower::arg]; $Failed)

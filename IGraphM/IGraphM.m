@@ -159,7 +159,19 @@ template = LTemplate["IGraphM",
         LFun["edgeListReindexAfterDelete", {{Integer, 2} (* not Constant *), {Integer, 1} (* not Constant *)}, {Integer, 2}],
         LFun["edgeListReindex", {{Integer, 2} (* not Constant *), {Integer, 1, "Constant"}}, {Integer, 2}],
 
-        LFun["symmetricTree", {{Integer, 1, "Constant"}}, {Integer, 2}]
+        LFun["symmetricTree", {{Integer, 1, "Constant"}}, {Integer, 2}],
+
+        (* Matrix functions *)
+
+        LFun["takeLowerInteger", {{Integer, 2, "Constant"}}, {Integer, 1}],
+        LFun["takeLowerReal", {{Real, 2, "Constant"}}, {Real, 1}],
+        LFun["takeLowerComplex", {{Complex, 2, "Constant"}}, {Complex, 1}],
+        LFun["takeUpperInteger", {{Integer, 2, "Constant"}}, {Integer, 1}],
+        LFun["takeUpperReal", {{Real, 2, "Constant"}}, {Real, 1}],
+        LFun["takeUpperComplex", {{Complex, 2, "Constant"}}, {Complex, 1}],
+
+        LFun["upperIndexPairPositions", {{Integer, 2, "Constant"}, Integer}, {Integer, 2}],
+        LFun["lowerIndexPairPositions", {{Integer, 2, "Constant"}, Integer}, {Integer, 2}]
       }
     ],
     LClass["IG",

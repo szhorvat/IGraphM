@@ -293,6 +293,92 @@ public:
 
         return edges;
     }
+
+    /* Matrix functions */
+
+    template<typename T>
+    mma::TensorRef<T> takeLower(mma::MatrixRef<T> mat) const {
+        const mint nrow = mat.rows();
+        const mint ncol = mat.cols();
+
+        mint len;
+        if (nrow > ncol)
+            len = ncol*(ncol-1)/2 + ncol*(nrow-ncol);
+        else
+            len = nrow*(nrow-1)/2;
+
+        auto result = mma::makeVector<T>(len);
+        T *r = result.begin();
+        for (mint i=0; i < nrow; ++i)
+            for (mint j=0; j < i && j < ncol; j++) {
+                *r = mat(i,j);
+                r++;
+            }
+
+        return result;
+    }
+
+    mma::IntTensorRef takeLowerInteger(mma::IntMatrixRef mat) { return takeLower(mat); }
+    mma::RealTensorRef takeLowerReal(mma::RealMatrixRef mat) { return takeLower(mat); }
+    mma::ComplexTensorRef takeLowerComplex(mma::ComplexMatrixRef mat) { return takeLower(mat); }
+
+    template<typename T>
+    mma::TensorRef<T> takeUpper(mma::MatrixRef<T> mat) const {
+        const mint nrow = mat.rows();
+        const mint ncol = mat.cols();
+
+        mint len;
+        if (ncol > nrow)
+            len = nrow*(nrow-1)/2 + nrow*(ncol-nrow);
+        else
+            len = ncol*(ncol-1)/2;
+
+        auto result = mma::makeVector<T>(len);
+        T *r = result.begin();
+        for (mint i=0; i < nrow; ++i)
+            for (mint j=i+1; j < ncol; j++) {
+                *r = mat(i,j);
+                r++;
+            }
+
+        return result;
+    }
+
+    mma::IntTensorRef takeUpperInteger(mma::IntMatrixRef mat) { return takeUpper(mat); }
+    mma::RealTensorRef takeUpperReal(mma::RealMatrixRef mat) { return takeUpper(mat); }
+    mma::ComplexTensorRef takeUpperComplex(mma::ComplexMatrixRef mat) { return takeUpper(mat); }
+
+    // Input: index-pair list from a sparse matrix; no. of columns of matrix
+    // Output: index of elements that are below the diagonal; index of same elements in result of IGTakeLower
+    mma::IntMatrixRef lowerIndexPairPositions(mma::IntMatrixRef pairs, mint cols) {
+        std::vector<mint> result;
+        result.reserve(2*pairs.rows());
+        for (mint i=0; i < pairs.rows(); ++i) {
+            mint r = pairs(i,0);
+            mint c = pairs(i,1);
+            if (r > c) {
+                result.push_back(i+1); // index in value list
+                result.push_back( ( r > cols ? (cols-1)*cols/2 + cols*(r-cols-1) : (r-1)*(r-2)/2 ) + c  ); // index in final result
+            }
+        }
+        return mma::makeMatrix<mint>(result.size()/2, 2, result.data());
+    }
+
+    // See comment for lowerIndexPairPositions(); works identically but used for extracting above-diagonal elements
+    mma::IntMatrixRef upperIndexPairPositions(mma::IntMatrixRef pairs, mint cols) {
+        std::vector<mint> result;
+        result.reserve(2*pairs.rows());
+        for (mint i=0; i < pairs.rows(); ++i) {
+            mint r = pairs(i,0);
+            mint c = pairs(i,1);
+            if (r < c) {
+                result.push_back(i+1); // index in value list
+                result.push_back( (r-1)*cols - (r+1)*r/2 + c ); // index in final result
+            }
+        }
+        return mma::makeMatrix<mint>(result.size()/2, 2, result.data());
+    }
+
 };
 
 #endif // IGLOBAL_H
