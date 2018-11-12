@@ -5,8 +5,7 @@
 
 tolEq[a_, b_, tol_ : 1*^-8 ] := Max@Abs[a-b] < tol
 
-takeUpper[mat_?SquareMatrixQ] := Extract[mat, Subsets[Range@Length[mat], {2}]]
-takeLower[mat_?SquareMatrixQ] := takeUpper@Transpose[mat]
+takeNonDiag[mat_] := IGraphM`IGTakeUpper[mat] ~Join~ IGraphM`IGTakeLower[mat]
 
 sameGraphQ[g1_, g2_] :=
     Block[{UndirectedEdge},
@@ -234,6 +233,20 @@ MT[
     {sa["NonzeroPositions"], sa["NonzeroValues"], sa["Background"]}
   ],
   {{{1, 2}, {2, 1}}, {2, 0}, 0}
+]
+
+
+(* Statistics`Library`UpperTriangularMatrixToVector is used in IGTakeUpper.
+   Verify that this undocumented symbol exists and that it works. *)
+
+MT[
+  Names["Statistics`Library`UpperTriangularMatrixToVector"],
+  {"Statistics`Library`UpperTriangularMatrixToVector"}
+]
+
+MT[
+  Statistics`Library`UpperTriangularMatrixToVector@Partition[Range[16], 4],
+  {2, 3, 4, 7, 8, 12}
 ]
 
 
@@ -2303,14 +2316,14 @@ MT[
 
 MT[
   IGDistanceHistogram[wdgs, 0.1],
-  With[{vals=takeUpper@GraphDistanceMatrix[wdgs] ~Join~ takeLower@GraphDistanceMatrix[wdgs]},
+  With[{vals = takeNonDiag@GraphDistanceMatrix[wdgs]},
     BinCounts[vals, {0, Ceiling[Max[vals], 0.1], 0.1}]
   ]
 ]
 
 MT[
   IGDistanceHistogram[wugs, 0.1],
-  With[{vals=takeUpper@GraphDistanceMatrix[wugs] ~Join~ takeLower@GraphDistanceMatrix[wugs]},
+  With[{vals = takeNonDiag@GraphDistanceMatrix[wugs]},
     BinCounts[vals, {0, Ceiling[Max[vals], 0.1], 0.1}]
   ]
 ]
@@ -2319,7 +2332,7 @@ MT[
 (* undirected, unweighted, connected *)
 MT[
   IGDistanceCounts[dolphin],
-  hist = Values@KeySort@Counts@takeUpper@GraphDistanceMatrix[dolphin]
+  hist = Values@KeySort@Counts@IGTakeUpper@GraphDistanceMatrix[dolphin]
 ]
 
 MT[
@@ -3619,4 +3632,40 @@ MT[
 MT[
   IGVertexProp["Foo"][ Graph[{Property[1, "Foo" -> 37]}, {1<->2}] ],
   {37, Missing["Nonexistent"]}
+]
+
+
+(*******************************************************************************)
+MTSection["Matrix functions"]
+
+mat= RandomInteger[2, {10,10}];
+
+MT[
+  Diagonal@IGZeroDiagonal[mat],
+  ConstantArray[0, Length[mat]]
+]
+
+MT[
+  Diagonal@IGZeroDiagonal@SparseArray[mat],
+  SparseArray[{}, {Length[mat]}]
+]
+
+MT[
+  Diagonal@IGZeroDiagonal[ mat[[All, 1;;5]] ],
+  ConstantArray[0, 5]
+]
+
+MT[
+  Diagonal@IGZeroDiagonal[ mat[[1;;5, All]] ],
+  ConstantArray[0, 5]
+]
+
+MT[
+  Diagonal@IGZeroDiagonal@SparseArray[ mat[[1;;5, All]] ],
+  SparseArray[{}, {5}]
+]
+
+MT[
+  IGZeroDiagonal[{{}}],
+  {{}}
 ]
