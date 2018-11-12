@@ -12,8 +12,6 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Matrix utilities and graph matrices *****)
 (***********************************************)
 
-(* TODO: Add TakeUpper, TakeLower, TakeNondiagonal *)
-(* TODO: Replace any uses of TakeUpper, etc. in other files with new efficient versions *)
 
 PackageExport["IGZeroDiagonal"]
 IGZeroDiagonal::usage = "IGZeroDiagonal[matrix] replaces the diagonal of matrix with zeros.";
@@ -137,6 +135,7 @@ IGTakeUpper[matrix_?MatrixQ] :=
       ]
     ]
 IGTakeUpper[___] := (Message[IGTakeUpper::arg]; $Failed)
+
 
 PackageExport["IGTakeLower"]
 
