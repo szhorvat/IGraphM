@@ -29927,8 +29927,8 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{"Multicolumn", "[", "layouts", 
   "]"}]}], "Input",ExpressionUUID->"3c460ad1-bedc-423a-b0e6-52d45efc22f4"]
-}, Open  ]]
-}, Open  ]],
+}, Closed]]
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -40222,7 +40222,7 @@ functions)\
 }, Open  ]]
 },
 WindowSize->{742, 711},
-WindowMargins->{{Automatic, 279}, {47, Automatic}},
+WindowMargins->{{1245, Automatic}, {269, Automatic}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
