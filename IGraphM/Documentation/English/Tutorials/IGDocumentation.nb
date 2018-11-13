@@ -349,7 +349,11 @@ Cell[TextData[{
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  " ",
- Cell[BoxData["Graph"],ExpressionUUID->"e00421ed-23eb-4e61-aedb-f36fdc79c0b2"],
+ Cell[BoxData[
+  ButtonBox["Graph",
+   BaseStyle->"Link",
+   ButtonData->"paclet:ref/Graph"]],ExpressionUUID->
+  "e00421ed-23eb-4e61-aedb-f36fdc79c0b2"],
  " option such as ",
  Cell[BoxData[
  "VertexLabels"],ExpressionUUID->"0f7c3399-9f76-4514-a513-8ef409d2f346"],
@@ -3755,7 +3759,6 @@ Cell[BoxData[
             StripOnInput->False,
             ShowContents->False], InsetBox["2", {2.0165474817978133, 0.},
             BaseStyle->"Graphics"]}, {
-           
            StyleBox[
             DiskBox[{2.01740198110203, 0.8031084746249071}, 
              0.16049605784358253],
@@ -10167,9 +10170,11 @@ Cell[BoxData[
 Cell[TextData[{
  Cell[BoxData[
  "IGIndexEdgeList"],ExpressionUUID->"3ae81ce7-2a68-4b40-a503-3f8fb6ee8c65"],
- " is useful for implementing graph processing functions in Mathematica, and \
-is used internally by many IGraph/M functions that do not call the igraph \
-library."
+ " is useful for implementing graph processing functions in ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ ", and is used internally by many IGraph/M functions that do not call the \
+igraph library."
 }], "Text",ExpressionUUID->"5e1acc8c-4d50-4092-bfab-f9adf39353ba"],
 
 Cell[BoxData[
@@ -29922,8 +29927,8 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{"Multicolumn", "[", "layouts", 
   "]"}]}], "Input",ExpressionUUID->"3c460ad1-bedc-423a-b0e6-52d45efc22f4"]
-}, Closed]]
-}, Closed]],
+}, Open  ]]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -34411,7 +34416,7 @@ based on the obtained edge lengths.\
 \>", "Text",ExpressionUUID->"769ba124-3a47-469e-a7cd-1bda6f4e14ac"],
 
 Cell[BoxData[
- RowBox[{"g", "=", 
+ RowBox[{"pg", "=", 
   RowBox[{"IGLayoutTutte", "@", 
    RowBox[{
    "GraphData", "[", "\"\<GreatRhombicosidodecahedralGraph\>\"", 
@@ -34425,7 +34430,7 @@ Cell[BoxData[
     RowBox[{"Apply", "[", "EuclideanDistance", "]"}], ",", 
     RowBox[{"EdgeWeight", "\[Rule]", 
      RowBox[{"IGEdgeVertexProp", "[", "VertexCoordinates", "]"}]}], ",", 
-    "g"}], "]"}]}]], \
+    "pg"}], "]"}]}]], \
 "Input",ExpressionUUID->"565b685a-0f99-40b2-950f-b88838b48c9a"],
 
 Cell["\<\
@@ -34447,7 +34452,7 @@ Cell[BoxData[
         "&"}], ",", 
        RowBox[{"EdgeWeight", "\[Rule]", 
         RowBox[{"IGEdgeVertexProp", "[", "VertexCoordinates", "]"}]}], ",", 
-       "g"}], "]"}], ",", "\[IndentingNewLine]", 
+       "pg"}], "]"}], ",", "\[IndentingNewLine]", 
      RowBox[{"VertexSize", "\[Rule]", 
       RowBox[{"1", "/", "2"}]}]}], "\[IndentingNewLine]", "]"}], ",", 
    "\[IndentingNewLine]", 
@@ -34908,8 +34913,12 @@ Cell[TextData[{
 tilings."
 }], "Text",ExpressionUUID->"bacf0b22-98b1-4bc0-b11e-051fbe2a75da"],
 
-Cell["Generate a Kagome lattice consisting of 6 by 4 unit cells.", \
-"Text",ExpressionUUID->"83aaf104-8b47-4422-9bad-29071ab72e4f"],
+Cell[TextData[{
+ "Generate a ",
+ StyleBox["kagome lattice",
+  FontSlant->"Italic"],
+ " consisting of 6 by 4 unit cells."
+}], "Text",ExpressionUUID->"83aaf104-8b47-4422-9bad-29071ab72e4f"],
 
 Cell[BoxData[
  RowBox[{"IGLatticeMesh", "[", 
@@ -36975,7 +36984,10 @@ Cell[BoxData[
 "Input",ExpressionUUID->"25d6de5d-62f4-4808-abe4-fbbf373b9fff"],
 
 Cell[TextData[{
- "As of Mathematica 11.3, the built-in ",
+ "In ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 11.3 and earlier, the built-in ",
  Cell[BoxData[
  "VertexDelete"],ExpressionUUID->"60964e8d-3caa-426e-8453-e6f71bb3f64e"],
  " does not handle edge weights correctly, and may sometimes produce ",
@@ -37104,7 +37116,10 @@ Cell[BoxData[
 "Input",ExpressionUUID->"9c944d4a-2666-42e7-95b9-12171a7a5078"],
 
 Cell[TextData[{
- "The built-in ",
+ "In ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 11.3 and earlier, the built-in ",
  Cell[BoxData[
  "Subgraph"],ExpressionUUID->"f0b8de07-aa15-40f1-8c26-35500b313fb9"],
  " function does not preserve edge weights. ",
@@ -38104,8 +38119,8 @@ Cell[BoxData[
          RowBox[{"ImageSize", "\[Rule]", "20"}]}], "]"}], "&"}], "/@", 
       RowBox[{
        RowBox[{"IGVertexProp", "[", "VertexShape", "]"}], "[", "g", "]"}]}], 
-     ")"}]}], "]"}]}]], \
-"Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
+     ")"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
 
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
@@ -38248,13 +38263,11 @@ Cell[BoxData[
 "Input",ExpressionUUID->"f7cf0b1b-0941-4230-8bd5-0ad4f690c2d8"],
 
 Cell[TextData[{
- Cell[BoxData["IGTakeUpper"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "8a7a40bd-b3e1-483b-9a91-22b27f4c3f49"],
+ Cell[BoxData[
+ "IGTakeUpper"],ExpressionUUID->"8a7a40bd-b3e1-483b-9a91-22b27f4c3f49"],
  " and ",
- Cell[BoxData["IGTakeLower"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "ef8e34cf-5a6a-415c-913f-886d3a1d7c4b"],
+ Cell[BoxData[
+ "IGTakeLower"],ExpressionUUID->"ef8e34cf-5a6a-415c-913f-886d3a1d7c4b"],
  " extract the above-diagonal and below-diagonal elements of a matrix. The \
 matrix does not need to be square. The elements are always extracted \
 row-by-row."
@@ -38279,13 +38292,11 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"1a644d60-c669-44b9-a96f-3c2268758be3"],
 
 Cell[TextData[{
- Cell[BoxData["IGTakeUpper"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "ffb64e71-5641-4cc8-83c3-a6b907df2f50"],
+ Cell[BoxData[
+ "IGTakeUpper"],ExpressionUUID->"ffb64e71-5641-4cc8-83c3-a6b907df2f50"],
  " and ",
- Cell[BoxData["IGTakeLower"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "05ffdf89-ec04-4f96-869f-b8be1b4c11a2"],
+ Cell[BoxData[
+ "IGTakeLower"],ExpressionUUID->"05ffdf89-ec04-4f96-869f-b8be1b4c11a2"],
  " support sparse matrices. When given a sparse array as input, the result \
 will also be a sparse array."
 }], "Text",ExpressionUUID->"7055c950-1c87-44e0-8477-6325ba5df49b"],
@@ -38316,13 +38327,11 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"b5a80ec5-6bf5-4210-9d60-554e63e8efc1"],
 
 Cell[TextData[{
- Cell[BoxData["IGTakeUpper"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "03ddbad0-77de-4251-bac9-658692bfb0a0"],
+ Cell[BoxData[
+ "IGTakeUpper"],ExpressionUUID->"03ddbad0-77de-4251-bac9-658692bfb0a0"],
  " and ",
- Cell[BoxData["IGTakeLower"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "659ae852-13ef-409e-8c2e-92aebee1a9e7"],
+ Cell[BoxData[
+ "IGTakeLower"],ExpressionUUID->"659ae852-13ef-409e-8c2e-92aebee1a9e7"],
  " are optimized for performance."
 }], "Text",ExpressionUUID->"02811039-c1de-4bc3-be0c-8587315f4a81"],
 
@@ -39514,7 +39523,10 @@ Cell[TextData[{
   "9c195a17-3a4d-450d-b68e-216f6faa86e6"],
  " changes the order in which graph vertices are stored. The graph itself is \
 not modified, only its representation. The ordering of vertices affects how \
-several of Mathematica\[CloseCurlyQuote]s graph processing functions work."
+several of ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ "\[CloseCurlyQuote]s graph processing functions work."
 }], "Text",ExpressionUUID->"5bd253d0-148a-4cdb-bc48-e1ede91c23a4"],
 
 Cell["\<\
@@ -39545,8 +39557,8 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"{", 
      RowBox[{"5", ",", "4", ",", "3", ",", "2", ",", "1"}], "}"}], ",", 
-    "g1"}], "]"}]}]], \
-"Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
+    "g1"}], 
+   "]"}]}]], "Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
 
 Cell[BoxData[
  RowBox[{"VertexList", "/@", 
@@ -40007,8 +40019,11 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"c475be1b-5159-4490-aae9-15a2c115fad3"],
 
 Cell[TextData[{
- "Finally, remember that Mathematica itself comes with a large database of \
-graphs and their properties, accessible through ",
+ "Finally, remember that ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " itself comes with a large database of graphs and their properties, \
+accessible through ",
  Cell[BoxData[
   ButtonBox["GraphData",
    BaseStyle->"Link",
@@ -40207,7 +40222,7 @@ functions)\
 }, Open  ]]
 },
 WindowSize->{742, 711},
-WindowMargins->{{344, Automatic}, {71, Automatic}},
+WindowMargins->{{Automatic, 279}, {47, Automatic}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
