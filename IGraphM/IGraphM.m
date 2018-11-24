@@ -174,6 +174,7 @@ template = LTemplate["IGraphM",
         LFun["lowerIndexPairPositions", {{Integer, 2, "Constant"}, Integer}, {Integer, 2}]
       }
     ],
+
     LClass["IG",
       {
         (* Create *)
@@ -547,6 +548,7 @@ template = LTemplate["IGraphM",
         LFun["perfectQ", {}, True|False]
       }
     ],
+
     LClass["Embedding",
       {
         LFun["set", LinkObject],
@@ -557,6 +559,7 @@ template = LTemplate["IGraphM",
         LFun["dualGraph", {}, {Integer, 1}]
       }
     ],
+
     LClass["LemonGraph",
       {
         LFun["fromEdgeList", {{Integer, 2, "Constant"}, Integer}, "Void"],
@@ -565,6 +568,25 @@ template = LTemplate["IGraphM",
         LFun["layoutPlanar", {}, {Integer, 2}],
         LFun["planarEmbedding", {}, {Integer, 1}],
         LFun["embeddingToCoordinates", {LExpressionID["Embedding"]}, {Integer, 2}]
+      }
+    ],
+
+    LClass["IGFlann2D",
+      {
+        LFun["setPoints", {{Real, 2, "Constant"}}, "Void"],
+        LFun["query", {{Real, 1, "Constant"} (* centre *), Real (* distance *)}, {Integer, 1}],
+        LFun["queryMultiple", {{Real, 2, "Constant"} (* centres *), {Real, 1, "Constant"} (* distances *)}, {Integer, 1}],
+        LFun["neighborCounts", {{Real, 2, "Constant"} (* centres *), {Real, 1, "Constant"}}, {Integer, 1}],
+        LFun["intersectionCounts",
+          {{Real, 2, "Constant"} (* centres1 *),
+           {Real, 2, "Constant"} (* centres2 *),
+           {Real, 1, "Constant"} (* distances *)},
+          {Integer, 1}],
+        LFun["unionCounts",
+          {{Real, 2, "Constant"} (* centres1 *),
+           {Real, 2, "Constant"} (* centres2 *),
+           {Real, 1, "Constant"} (* distances *)},
+          {Integer, 1}]
       }
     ]
   }

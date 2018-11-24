@@ -197,6 +197,7 @@ betaSkeletonEdgeSuperset[pts_, beta_ /; beta < 1] :=
     ]
 
 (* beta >= 1, lune-based *)
+(*
 igLuneBetaSkeletonEdges[pts_, beta_] :=
     Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
       nf = Nearest[pts -> Automatic];
@@ -217,8 +218,29 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
         2
       ]
     ]
+*)
+igLuneBetaSkeletonEdges[pts_, beta_] :=
+    Module[{flann, edges, edgeLengths, p, q, r, centres1, centres2, dists},
+      flann = makeFlann[pts];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
+
+      r = 0.5 beta;
+
+      centres1 = p + (r-1) (p-q);
+      centres2 = q + (r-1) (q-p);
+      dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
+
+      Pick[
+        edges,
+        flann@"intersectionCounts"[centres1, centres2, dists],
+        2
+      ]
+    ]
+
 
 (* beta >= 1, circle-based *)
+(*
 igCircleBetaSkeletonEdges[pts_, beta_] :=
     Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
       nf = Nearest[pts -> Automatic];
@@ -241,8 +263,30 @@ igCircleBetaSkeletonEdges[pts_, beta_] :=
         2
       ]
     ]
+*)
+igCircleBetaSkeletonEdges[pts_, beta_] :=
+    Module[{flann, edges, edgeLengths, p, q, r, centres1, centres2, dists},
+      flann = makeFlann[pts];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
+
+      r = 0.5 beta;
+
+      With[{mid = 0.5 (p+q), perp = Sqrt[r^2 - 0.25] RotationTransform[Pi/2][p-q]},
+        centres1 = mid + perp;
+        centres2 = mid - perp;
+      ];
+      dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
+
+      Pick[
+        edges,
+        flann@"unionCounts"[centres1, centres2, dists],
+        2
+      ]
+    ]
 
 (* beta = 1, both lune and circle *)
+(*
 igGabrielGraphEdges[pts_] :=
     Module[{nf, edges, edgeLengths, p, q},
       nf = Nearest[pts -> Automatic];
@@ -258,11 +302,25 @@ igGabrielGraphEdges[pts_] :=
         2
       ]
     ]
+*)
+igGabrielGraphEdges[pts_] :=
+    Module[{flann, edges, edgeLengths, p, q, dists},
+      flann = makeFlann[pts];
+
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 1];
+      dists = 0.5 edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
+
+      Pick[
+        edges,
+        flann@"neighborCounts"[(p+q)/2, dists],
+        2
+      ]
+    ]
 
 (* 0 < beta < 1, both lune and circle *)
 igBetaSkeletonEdges0[pts_, beta_] :=
-    Module[{nf, edges, edgeLengths, p, q, r, centres1, centres2},
-      nf = Nearest[pts -> Automatic];
+    Module[{flann, edges, edgeLengths, p, q, r, centres1, centres2, dists},
+      flann = makeFlann[pts];
 
       {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
 
@@ -272,13 +330,11 @@ igBetaSkeletonEdges0[pts_, beta_] :=
         centres1 = mid + perp;
         centres2 = mid - perp;
       ];
+      dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
       Pick[
         edges,
-        MapThread[
-          Function[{c1, c2, d}, Length@Intersection[nf[c1, {Infinity, d}], nf[c2, {Infinity, d}]]],
-          {centres1, centres2, r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon)}
-        ],
+        flann@"intersectionCounts"[centres1, centres2, dists],
         2
       ]
     ]
