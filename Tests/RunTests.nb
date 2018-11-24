@@ -57,31 +57,43 @@ Cell[BoxData[
      RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
      RowBox[{"{", 
       RowBox[{
-      "\"\<IGraphM\>\"", ",", "\"\<IGMinSeparators\>\"", ",", 
-       "\"\<$IGExportFormats\>\""}], "}"}]}], "]"}], ",", 
+      "\"\<IGraphM\>\"", ",", "\"\<$IGExportFormats\>\"", ",", 
+       "\"\<MultiEdges\>\""}], "}"}]}], "]"}], ",", 
    RowBox[{
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
-    "&"}]}], "]"}]], \
-"Input",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
+    "&"}]}], "]"}]], "Input",
+ CellLabel->"In[11]:=",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
 
 Cell[BoxData[
- RowBox[{"Select", "[", 
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{"Complement", "[", 
     RowBox[{
      RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
-     RowBox[{"{", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", "\[IndentingNewLine]", 
       RowBox[{
-      "\"\<IGClusterData\>\"", ",", "\"\<IGMinSeparators\>\"", ",", 
-       "\"\<IGraphM\>\"", ",", "\"\<IGDirectedTree\>\"", ",", 
-       "\"\<$IGExportFormats\>\""}], "}"}]}], "]"}], ",", 
+      "\"\<MultiEdges\>\"", ",", "\"\<IGClusterData\>\"", ",", 
+       "\"\<IGraphM\>\"", ",", "\"\<$IGExportFormats\>\"", ",", 
+       RowBox[{"(*", " ", 
+        RowBox[{"non", "-", 
+         RowBox[{
+         "functions", " ", "do", " ", "not", " ", "need", " ", 
+          "SyntaxInformation"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+       "\"\<IGDirectedTree\>\"", ",", "\"\<IGMinSeparators\>\"", ",", 
+       "\"\<IGTake\>\""}], " ", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "deprecated", " ", "names", " ", "do", " ", "not", " ", "need", " ", 
+        "SyntaxInformation"}], " ", "*)"}], "\[IndentingNewLine]", "}"}]}], 
+    "\[IndentingNewLine]", "]"}], ",", 
    RowBox[{
     RowBox[{
      RowBox[{"ToExpression", "[", 
       RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
-     RowBox[{"{", "}"}]}], "&"}]}], 
-  "]"}]], "Input",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
+     RowBox[{"{", "}"}]}], "&"}]}], "]"}]], "Input",
+ CellLabel->"In[14]:=",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
 
 Cell[BoxData[
  RowBox[{"Scan", "[", "\[IndentingNewLine]", 
@@ -100,10 +112,12 @@ Cell[BoxData[
         "HoldAll"}], "]"}]}], "\[IndentingNewLine]", "]"}], "&"}], ",", 
    "\[IndentingNewLine]", 
    RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
+  "]"}]], "Input",
+ CellLabel->
+  "In[15]:=",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
 WindowSize->{1025, 768},
-WindowMargins->{{82, Automatic}, {Automatic, 19}},
+WindowMargins->{{111, Automatic}, {-14, Automatic}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
 SpellingDictionaries->{"CorrectWords"->{

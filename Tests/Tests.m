@@ -279,7 +279,7 @@ nameFromUsage[symname_] :=
       First@StringCases[sym::usage, Shortest[name__] ~~ "[" :> name]]
 
 MT[
-  AllTrue[Complement[Names["IGraphM`*"], {"IGraphM", "IGMinSeparators", "$IGExportFormats", "MultiEdges"}], nameFromUsage[#] === # &],
+  AllTrue[Complement[Names["IGraphM`*"], {"IGraphM", "$IGExportFormats", "MultiEdges"}], nameFromUsage[#] === # &],
   True
 ]
 
@@ -3668,4 +3668,102 @@ MT[
 MT[
   IGZeroDiagonal[{{}}],
   {{}}
+]
+
+
+(*******************************************************************************)
+MTSection["IGTakeSubgraph"]
+
+ruleQ[_Rule | _RuleDelayed] := True
+ruleQ[_] = False;
+
+rulePropQ[{__?ruleQ}] := True;
+rulePropQ[_] = False;
+
+defRulePropQ[{_, __?ruleQ}] := True;
+defRulePropQ[_] = False;
+
+normalizeGraphOpt[opt_] :=
+    MapAt[
+      Which[
+        rulePropQ[#], Sort[#],
+        defRulePropQ[#], Prepend[Sort@Rest[#], First[#]],
+        True, #
+      ] &,
+      opt,
+      {All, 2}
+    ]
+
+samePropGraphQ[g1_, g2_] :=
+    Internal`InheritedBlock[{UndirectedEdge},
+      SetAttributes[UndirectedEdge, Orderless];
+      VertexList[g1] === VertexList[g2] &&
+          EdgeList[g1] === EdgeList[g2] &&
+          normalizeGraphOpt@Options[g1] === normalizeGraphOpt@Options[g2]
+    ]
+
+
+MT[
+  IGTakeSubgraph[terrorist, {"Azzam" <-> "Fazul", "Fazul" <-> "Atwah"}],
+  Graph[{"Azzam", "Fazul", "Atwah"}, {UndirectedEdge["Azzam", "Fazul"],
+    UndirectedEdge["Atwah", "Fazul"]},
+    {Properties -> {"Fazul" -> {"FullName" -> "Fazul Abdullah Mohammed",
+      "Group" -> "Nairobi Cell"}, "Atwah" ->
+        {"FullName" -> "Muhsin Musa Matwalli Atwah", "Group" -> "Planners"},
+      "Azzam" -> {"FullName" -> "Azzam", "Group" -> "Nairobi Cell"}},
+      EdgeStyle -> {UndirectedEdge["Azzam", "Fazul"] -> Thickness[0.0048],
+        UndirectedEdge["Atwah", "Fazul"] -> Thickness[0.0012]},
+      VertexLabels -> {Placed["Name", Above], "Fazul" -> Placed["Name", Below],
+        "Azzam" -> Placed["Name", Below], "Atwah" -> Placed["Name", Below]},
+      VertexStyle -> {"Atwah" -> GrayLevel[0], "Fazul" -> RGBColor[0.6, 0.4, 0.2],
+        "Azzam" -> RGBColor[0.6, 0.4, 0.2]}, EdgeWeight -> {0.48, 0.12},
+      VertexCoordinates -> {{0.046, 0.115}, {0.2405, 0.049}, {0.423, 0.069}}}],
+  SameTest -> samePropGraphQ
+]
+
+MT[
+  IGTakeSubgraph[terrorist, Subgraph[terrorist, {"Owhali", "Fawwaz", "Fazul", "Odeh", "Kherchtou", "Ghailani"}]],
+  Graph[{"Owhali", "Fawwaz", "Fazul", "Odeh", "Kherchtou", "Ghailani"},
+    {UndirectedEdge["Fawwaz", "Kherchtou"], UndirectedEdge["Kherchtou", "Odeh"],
+      UndirectedEdge["Fawwaz", "Owhali"], UndirectedEdge["Odeh", "Owhali"],
+      UndirectedEdge["Fazul", "Odeh"], UndirectedEdge["Fazul", "Owhali"]},
+    {Properties -> {"Ghailani" -> {"FullName" -> "Ahmed Khalfan Ghailani",
+      "Group" -> "Dar es Salaam Cell"},
+      "Fazul" -> {"FullName" -> "Fazul Abdullah Mohammed", "Group" -> "Nairobi Cell"},
+      "Fawwaz" -> {"FullName" -> "Khalid al-Fawwaz", "Group" -> "Planners"},
+      "Odeh" -> {"FullName" -> "Mohamed Sadeek Odeh", "Group" -> "Nairobi Cell"},
+      "Owhali" -> {"FullName" -> "Mohamed Rashed Daoud al-Owhali",
+        "Group" -> "Nairobi Cell"}, "Kherchtou" -> {"FullName" -> "Kherchtou",
+        "Group" -> "Planners"}}, EdgeStyle ->
+        {UndirectedEdge["Fazul", "Odeh"] -> Thickness[0.0064],
+          UndirectedEdge["Kherchtou", "Odeh"] -> Thickness[0.0036],
+          UndirectedEdge["Fawwaz", "Kherchtou"] -> Thickness[0.0036],
+          UndirectedEdge["Fazul", "Owhali"] -> Thickness[0.0064],
+          UndirectedEdge["Fawwaz", "Owhali"] -> Thickness[0.0036],
+          UndirectedEdge["Odeh", "Owhali"] -> Thickness[0.0048]},
+      VertexLabels -> {Placed["Name", Above], "Ghailani" -> Placed["Name", After],
+        "Fazul" -> Placed["Name", Below], "Owhali" -> Placed["Name", After],
+        "Kherchtou" -> Placed["Name", After], "Odeh" -> Placed["Name", Before]},
+      VertexStyle -> {"Ghailani" -> RGBColor[0.5, 0, 0.5], "Fawwaz" -> GrayLevel[0],
+        "Kherchtou" -> GrayLevel[0], "Fazul" -> RGBColor[0.6, 0.4, 0.2],
+        "Odeh" -> RGBColor[0.6, 0.4, 0.2], "Owhali" -> RGBColor[0.6, 0.4, 0.2]},
+      EdgeWeight -> {0.36, 0.36, 0.36, 0.48, 0.64, 0.64}, VertexCoordinates -> {{0.0115,
+      0.272}, {0.216, 0.33}, {0.2405, 0.049}, {0.2285, 0.209}, {0.5135, 0.293}, {0.7015,
+      0.016}}}],
+  SameTest -> samePropGraphQ
+]
+
+MT[
+  WeightedAdjacencyMatrix@IGTakeSubgraph[terrorist, Subgraph[terrorist, {"Owhali", "Fawwaz", "Fazul", "Odeh", "Kherchtou", "Ghailani"}]],
+  WeightedAdjacencyMatrix@IGWeightedSubgraph[terrorist, {"Owhali", "Fawwaz", "Fazul", "Odeh", "Kherchtou", "Ghailani"}]
+]
+
+MT[
+  IGTakeSubgraph[terrorist, {}],
+  Graph[{}, {}]
+]
+
+MT[
+  IGTakeSubgraph[terrorist, IGEmptyGraph[]],
+  Graph[{}, {}]
 ]
