@@ -357,9 +357,17 @@ IGReorderVertices[verts_List, graph_?GraphQ, opt : OptionsPattern[]] :=
 (***** Transfer properties to a smaller graph *****)
 
 PackageExport["IGTake"]
-IGTake::usage =
-    "IGTake[graph, subgraph] keeps only those vertices and edges of graph which are also present in subgraph, while retaining all graph properties.\n" <>
-    "IGTake[graph, edges] uses an edge list as the subgraph specification.";
+
+IGTake::usage = "IGTake is deprecated. Use IGTakeSubgraph instead.";
+IGTake::deprec = "IGTake is deprecated and will be removed from future versions of IGraph/M. Use IGTakeSubgraph instead."
+
+IGTake[args___] := (Message[IGTake::deprec]; IGTakeSubgraph[args])
+
+
+PackageExport["IGTakeSubgraph"]
+IGTakeSubgraph::usage =
+    "IGTakeSubgraph[graph, subgraph] keeps only those vertices and edges of graph which are also present in subgraph, while retaining all graph properties.\n" <>
+    "IGTakeSubgraph[graph, edges] uses an edge list as the subgraph specification.";
 
 (* Keep those elements in l1 which are also in l2. l1 may have repeating elements. *)
 keepCases[l1_, l2_] := Pick[l1, Lookup[AssociationThread[l2, ConstantArray[1, Length[l2]]], l1, 0], 1]
@@ -372,27 +380,27 @@ allPropNames = {
   EdgeStyle, EdgeShapeFunction, EdgeLabels, EdgeLabelStyle
 };
 
-IGTake::nsg = "Some of the edges or vertices of the second graph are not present in the first.";
+IGTakeSubgraph::nsg = "Some of the edges or vertices of the second graph are not present in the first.";
 
-Options[IGTake] = Options[Graph];
+Options[IGTakeSubgraph] = Options[Graph];
 
-SyntaxInformation[IGTake] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+SyntaxInformation[IGTakeSubgraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 
-IGTake[g_?GraphQ, edges_List, opt : OptionsPattern[]] :=
+IGTakeSubgraph[g_?GraphQ, edges_List, opt : OptionsPattern[]] :=
     Module[{sg},
       sg = Quiet@Graph[edges, opt];
-      IGTake[g, sg, opt] /; GraphQ[sg]
+      IGTakeSubgraph[g, sg, opt] /; GraphQ[sg]
     ]
 
-IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
+IGTakeSubgraph[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
     Internal`InheritedBlock[{UndirectedEdge}, (* ensure that a <-> b compares equal to b <-> a *)
       SetAttributes[UndirectedEdge, Orderless];
       Module[{options, prop, vindex, eindex, sgEdgeList, vlist, elist, handleList, handleRule},
         sgEdgeList = DeleteDuplicates@EdgeList[sg];
 
-        (* Check that sg is contained within g (ignores edge multiplicites). *)
+        (* Check that sg is contained within g (ignores edge multiplicities). *)
         If[Not[SubsetQ[VertexList[g], VertexList[sg]] && SubsetQ[EdgeList[g], sgEdgeList]],
-          Message[IGTake::nsg];
+          Message[IGTakeSubgraph::nsg];
           Return[$Failed]
         ];
 
@@ -401,7 +409,7 @@ IGTake[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
 
         (* Used to find vertex/edge indices *)
         vindex = AssociationThread[VertexList[g], Range@VertexCount[g]];
-        eindex = PositionIndex@EdgeList[g]; (* edge multiplicites must be handled *)
+        eindex = PositionIndex@EdgeList[g]; (* edge multiplicities must be handled *)
 
         vlist = VertexList[sg];
         elist = keepCases[EdgeList[g], sgEdgeList];
