@@ -273,6 +273,7 @@ IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly co
 SyntaxInformation[IGGiantComponent] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGGiantComponent[g_?IGNullGraphQ, opt : OptionsPattern[Graph]] := Graph[g, opt]
 IGGiantComponent[g_?GraphQ, opt : OptionsPattern[Graph]] :=
+    (* keep Subgraph as-is for v12.0 so IGGiantComponent can preserve properties *)
     Subgraph[g, First@WeaklyConnectedComponents[g], opt]
 
 

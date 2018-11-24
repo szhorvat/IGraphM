@@ -943,7 +943,7 @@ PackageScope["igSubgraph"]
 igSubgraph::usage = "igSubgraph[graph, spec]";
 Which[
   (* In M12.0 and later Subgraph preserves properties, which makes it slow.
-     We disable this when not needed for performance. *)
+     We disable this when not needed, for performance. *)
   $VersionNumber >= 12.0,
   igSubgraph[args___] := Subgraph[args, Properties -> None] (* TODO verify in M12.0 final *)
   ,

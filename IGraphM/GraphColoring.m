@@ -125,7 +125,7 @@ igKColoringHeuristic["MaxDegreeClique"][graph_] :=
     Module[{g = IndexGraph@UndirectedGraph[graph], vd, v, sg, cl},
       vd = VertexDegree[g];
       v = Extract[VertexList[g], Ordering[vd, -1]];
-      sg = Subgraph[g, Prepend[AdjacencyList[g, v], v]];
+      sg = igSubgraph[g, Prepend[AdjacencyList[g, v], v]];
       cl = First@MaximalBy[
         FindClique[sg, Length /@ FindClique[sg], 512 (* limit number of cliques *)],
         Reverse@Sort@Part[vd, #] &
@@ -262,7 +262,7 @@ SyntaxInformation[IGPerfectQ] = {"ArgumentsPattern" -> {_}};
 IGPerfectQ[graph_?EmptyGraphQ] := True
 IGPerfectQ[graph_?UndirectedGraphQ] :=
     catch@With[{g = IndexGraph@SimpleGraph[graph]}, (* IndexGraph is to work around the unreliability of Subgraph with arbitrary vertex names *)
-      AllTrue[ConnectedComponents[g], check@igPerfectQ@Subgraph[g, #]&]
+      AllTrue[ConnectedComponents[g], check@igPerfectQ@igSubgraph[g, #]&]
     ]
 IGPerfectQ[graph_?GraphQ] := (Message[IGPerfectQ::undir]; False)
 IGPerfectQ[_] := False
