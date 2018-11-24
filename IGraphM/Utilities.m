@@ -347,7 +347,8 @@ IGReorderVertices[verts_List, graph_?GraphQ, opt : OptionsPattern[]] :=
         opt,
         Replace[
           Options[graph],
-          Verbatim[Rule][sym : VertexWeight|VertexCapacity|VertexCoordinates, val_List] :> Rule[sym, val[[perm]]]
+          Verbatim[Rule][sym : VertexWeight|VertexCapacity|VertexCoordinates, val_List] :> Rule[sym, val[[perm]]],
+          {1}
         ]
       ]
     ]
