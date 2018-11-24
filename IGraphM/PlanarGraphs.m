@@ -185,7 +185,7 @@ IGEmbeddingToCoordinates[emb_] :=
 PackageExport["IGCoordinatesToEmbedding"]
 IGCoordinatesToEmbedding::usage =
     "IGCoordinatesToEmbedding[graph] computes a combinatorial embedding based on the vertex coordinates of graph.\n" <>
-    "IGCoordinatesToEmbedding[graph, coord] uses the given coordinates instead of the VertexCoordinates property.";
+    "IGCoordinatesToEmbedding[graph, coordinates] uses the given coordinates instead of the VertexCoordinates property.";
 
 SyntaxInformation[IGCoordinatesToEmbedding] = {"ArgumentsPattern" -> {_, _.}};
 IGCoordinatesToEmbedding[graph_?igGraphQ, coords_] :=

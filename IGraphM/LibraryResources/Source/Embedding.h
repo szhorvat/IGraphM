@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018 Szabolcs Horvát.
+ *
+ * See the file LICENSE.txt for copying permission.
+ */
+
 #ifndef EMBEDDING_H
 #define EMBEDDING_H
 
