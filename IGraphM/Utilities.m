@@ -217,9 +217,10 @@ addCompletion[IGUndirectedGraph, {0, {"Simple", "All", "Mutual"}}]
 
 
 PackageExport["IGDirectedTree"]
-IGDirectedTree::usage = "IGDirectedTree[] is obsolete. Use IGOrientTree[] instead."; (* TODO: remove eventually *)
+IGDirectedTree::usage = "IGDirectedTree[] is deprecated. Use IGOrientTree[] instead.";
+IGDirectedTree::deprec = "IGDirectedTree is deprecated and will be removed from future versions of IGraph/M. Use IGOrientTree instead.";
 
-IGDirectedTree[tree_, root_, rest___] := IGOrientTree[tree, root, rest] (* old, obsolte naming *)
+IGDirectedTree[tree_, root_, rest___] := IGOrientTree[tree, root, rest] (* TODO: remove eventually *)
 
 
 PackageExport["IGOrientTree"]
@@ -358,10 +359,10 @@ IGReorderVertices[verts_List, graph_?GraphQ, opt : OptionsPattern[]] :=
 
 PackageExport["IGTake"]
 
-IGTake::usage = "IGTake is deprecated. Use IGTakeSubgraph instead.";
+IGTake::usage = "IGTake[] is deprecated. Use IGTakeSubgraph[] instead.";
 IGTake::deprec = "IGTake is deprecated and will be removed from future versions of IGraph/M. Use IGTakeSubgraph instead."
 
-IGTake[args___] := (Message[IGTake::deprec]; IGTakeSubgraph[args])
+IGTake[args___] := (Message[IGTake::deprec]; IGTakeSubgraph[args]) (* TODO: remove eventually *)
 
 
 PackageExport["IGTakeSubgraph"]

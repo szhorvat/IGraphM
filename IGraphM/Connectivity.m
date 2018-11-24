@@ -44,10 +44,10 @@ IGBiconnectedQ[graph_?igGraphQ] :=
 (***** Vertex cuts *****)
 
 PackageExport["IGMinSeparators"]
-IGMinSeparators::usage = "IGMinSeparators is deprecated. Use IGMinimumSeparators instead."; (* deprecated in favour of IGMinimumSeparators *)
-
+IGMinSeparators::usage = "IGMinSeparators[] is deprecated. Use IGMinimumSeparators[] instead."; (* deprecated in favour of IGMinimumSeparators *)
 IGMinSeparators::deprec = "IGMinSeparators is deprecated and will be removed from future versions of IGraph/M. Use IGMinimumSeparators instead.";
-IGMinSeparators[graph_] := (Message[IGMinSeparators::deprec]; IGMinimumSeparators[graph])
+
+IGMinSeparators[graph_] := (Message[IGMinSeparators::deprec]; IGMinimumSeparators[graph]) (* TODO: remove eventually *)
 
 
 PackageExport["IGMinimumSeparators"]
