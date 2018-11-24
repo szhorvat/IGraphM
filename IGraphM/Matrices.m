@@ -124,6 +124,7 @@ PackageExport["IGTakeUpper"]
 IGTakeUpper::arg = IGTakeLower::arg = "A single matrix argument is expected.";
 
 IGTakeUpper::usage = "IGTakeUpper[matrix] extracts the elements of a matrix that are above the diagonal.";
+SyntaxInformation[IGTakeUpper] = {"ArgumentsPattern" -> {_}};
 IGTakeUpper[matrix_?MatrixQ] :=
     With[{mat = Developer`ToPackedArray[matrix]},
       Switch[mat,
@@ -140,6 +141,7 @@ IGTakeUpper[___] := (Message[IGTakeUpper::arg]; $Failed)
 PackageExport["IGTakeLower"]
 
 IGTakeLower::usage = "IGTakeLower[matrix] extracts the elements of a matrix that are below the diagonal.";
+SyntaxInformation[IGTakeLower] = {"ArgumentsPattern" -> {_}};
 IGTakeLower[matrix_?MatrixQ] :=
     With[{mat = Developer`ToPackedArray[matrix]},
       Switch[mat,
