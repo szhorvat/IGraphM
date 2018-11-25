@@ -4788,7 +4788,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{8.515798609067184, 
-         334.19513889093275`}, {-66.4842013909328, 67.54963362661188}}],
+         334.19513889093275`}, {-66.4842013909328, 67.54963362661194}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -5513,7 +5513,33 @@ Cell["Eigenvector centrality", \
 Cell[BoxData[
  RowBox[{"?", 
   "IGEigenvectorCentrality"}]], \
-"Input",ExpressionUUID->"b232d0a7-b812-41a4-b84b-95f0c26bd575"]
+"Input",ExpressionUUID->"b232d0a7-b812-41a4-b84b-95f0c26bd575"],
+
+Cell["Weighted graphs are supported.", \
+"Text",ExpressionUUID->"014eb6bc-107d-409f-a180-72150f3fde29"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"d24951c0-b2f7-436a-8348-22384e767886"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"Normaized", "\[Rule]", "True"}]],ExpressionUUID->
+  "5d504ba7-691e-4826-923e-db015d7a4e04"],
+ " will scale the result so that the maximum centrality is 1. The default is ",
+ Cell[BoxData[
+ "True"],ExpressionUUID->"4f8fa286-e1f6-4b65-9516-e9971558ed63"],
+ "."
+}], "Item",ExpressionUUID->"2727de48-4d6e-4240-9233-0c708fb7c20e"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],ExpressionUUID->
+  "6b6ce274-ae36-4181-a964-37a4c1ce0e12"],
+ " ignores edge directions."
+}], "Item",ExpressionUUID->"015fcb8c-27cf-4e1a-af4f-e14b9d0d0e50"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -5529,7 +5555,23 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"?", 
   "IGAuthorityScore"}]], \
-"Input",ExpressionUUID->"ff0a0a67-cc20-4d46-8c74-736c307de164"]
+"Input",ExpressionUUID->"ff0a0a67-cc20-4d46-8c74-736c307de164"],
+
+Cell["Weighted graphs are supported.", \
+"Text",ExpressionUUID->"544dd1d4-cd7f-4ef6-bcab-9c6ff8a26d3e"],
+
+Cell["The available options are:", \
+"Text",ExpressionUUID->"c533ff98-d07e-4a82-be41-a3f79ef7d354"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"Normalized", "\[Rule]", "True"}]],ExpressionUUID->
+  "e9808803-639d-47ea-8a19-0624c98a1dd4"],
+ " scales the result so that the maximum centrality is 1. The default is ",
+ Cell[BoxData[
+ "True"],ExpressionUUID->"dc4e059c-37b0-4fb8-8a44-a5a5c3538e87"],
+ "."
+}], "Item",ExpressionUUID->"a3b30af7-2fe2-4e14-8a29-bc8bac651852"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -5540,7 +5582,10 @@ Cell["Burt\[CloseCurlyQuote]s constraint score", \
 Cell[BoxData[
  RowBox[{"?", 
   "IGConstraintScore"}]], \
-"Input",ExpressionUUID->"0238acee-1a6a-4ea1-9937-30a8b91401d3"]
+"Input",ExpressionUUID->"0238acee-1a6a-4ea1-9937-30a8b91401d3"],
+
+Cell["Weighted graphs are supported.", \
+"Text",ExpressionUUID->"daa3101d-25bf-4d9b-a9cf-46f7a8301f10"]
 }, Closed]]
 }, Closed]],
 
