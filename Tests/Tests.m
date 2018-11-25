@@ -135,9 +135,6 @@ dbipartite = Graph[
 ];
 
 
-grid = GridGraph[{3,3,3,3}];
-
-
 (* ::Section::Closed:: *)
 (*Sanity checks for Mathematica built-ins*)
 
@@ -1445,6 +1442,9 @@ MT[
 MTSection["Isomorphism"]
 
 
+grid = IGSquareLattice[{3,3,3,3}]; (* do not use GridGraph because it may crash in M11.3 *)
+
+
 randomize[g_] := Graph[RandomSample@VertexList[g], EdgeList[g]]
 
 
@@ -1913,30 +1913,50 @@ MT[
 ]
 
 MT[
-  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "Arnoldi"] == IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "PRPACK"],
-  True
+  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "Arnoldi"],
+  IGPageRank[Graph[{1 <-> 2, 2 <-> 3}], Method -> "PRPACK"],
+  SameTest -> Equal
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGEigenvectorCentrality*)
 
 
-(* TODO *)
+MT[
+  Normalize[IGEigenvectorCentrality[#], Total],
+  EigenvectorCentrality[#],
+  SameTest -> tolEq
+]& /@ {ugs, dgs, dolphin}
+
+
+MT[
+  IGEigenvectorCentrality[umulti],
+  IGEigenvectorCentrality@IGWeightedSimpleGraph[umulti],
+  SameTest -> Equal
+]
+
+
+(* weighted *)
+MT[
+  Normalize@IGEigenvectorCentrality[lesmiserables],
+  Normalize@First@Eigenvectors[N@WeightedAdjacencyMatrix[lesmiserables], 1],
+  SameTest -> tolEq
+]
 
 
 (* ::Subsubsection:: *)
 (*IGHubScore and IGAuthorityScore*)
 
 
-(* TODO *)
+(* TODO unweighted and weighted *)
 
 
 (* ::Subsubsection:: *)
 (*IGConstraintScore*)
 
 
-(* TODO *)
+(* TODO unweighted and weighted *)
 
 
 (* ::Section::Closed:: *)
