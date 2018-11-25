@@ -140,41 +140,51 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
 ##### v0.4.0dev (work in progress)
 
- - New deterministic graph generators: `IGKautzGraph`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGKaryTree`, `IGSymmetricTree`, `IGBetheLattice`, `IGTriangularLattice`.
- - New random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`, `IGTreeGame`, `IGErdosRenyiGameGNM`, `IGErdosRenyiGameGNP`.
- - New weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`.
- - New graph colouring functions: `IGVertexColoring`, `IGEdgeColoring`, `IGKVertexColoring`, `IGKEdgeColoring`, `IGMinimumVertexColoring`, `IGMinimumEdgeColoring`, `IGChromaticNumber`, `IGChromaticIndex`, `IGVertexColoringQ`.
- - New functions for clique cover: `IGCliqueCover`, `IGCliqueCoverNumber`.
- - New functions for mesh/graph conversion: `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`.
- - New functions for lattice generation: `IGLatticeMesh`, `IGTriangularLattice`.
- - New functions for proximity graphs: `IGDelaunayGraph`, `IGGabrielGraph`, `IGRelativeNeighborhoodGraph`, `IGLuneBetaSkeleton`, `IGCircleBetaSkeleton`.
- - New functions for centralization: `IGDegreeCentralization`, `IGBetweennessCentralization`, `IGClosenessCentralization`, `IGEigenvectorCentralization`.
- - Community detection: several functions support the `"ClusterCount"` option now; added `IGCommunitiesFluid`.
+New functions in this release:
+
+ - Deterministic graph generators: `IGKautzGraph`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGKaryTree`, `IGSymmetricTree`, `IGBetheLattice`, `IGTriangularLattice`.
+ - Random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`, `IGTreeGame`, `IGErdosRenyiGameGNM`, `IGErdosRenyiGameGNP`.
+ - Weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`, `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
+ - Graph colouring functions: `IGVertexColoring`, `IGEdgeColoring`, `IGKVertexColoring`, `IGKEdgeColoring`, `IGMinimumVertexColoring`, `IGMinimumEdgeColoring`, `IGChromaticNumber`, `IGChromaticIndex`, `IGVertexColoringQ`.
+ - Clique cover: `IGCliqueCover`, `IGCliqueCoverNumber`.
+ - Mesh/graph conversion: `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`.
+ - Lattice generation: `IGLatticeMesh`, `IGTriangularLattice`.
+ - Proximity graphs: `IGDelaunayGraph`, `IGGabrielGraph`, `IGRelativeNeighborhoodGraph`, `IGLuneBetaSkeleton`, `IGCircleBetaSkeleton`.
+ - Centralization: `IGDegreeCentralization`, `IGBetweennessCentralization`, `IGClosenessCentralization`, `IGEigenvectorCentralization`.
+ - Planar graphs: `IGPlanarQ`, `IGMaximalPlanarQ`, `IGOuterplanarQ`, `IGKurtowskiEdges`, `IGFaces`, `IGDualGraph`, `IGEmbeddingQ`, `IGPlanarEmbedding`, `IGOuterplanarEmbedding`, `IGCoordinatesToEmbedding`, `IGEmbeddingToCoordinates`, `IGLayoutPlanar`, `IGLayoutTutte`. 
+ - Spanning trees and other tree-related functionality: `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGUnfoldTree`, `IGTreeQ`, `IGTreelikeComponents`, `IGTreeGame`.
+ - A framework for easy property transformations and graph styling: `IGVertexProp`, `IGEdgeProp`, `IGEdgeVertexProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
+ - Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
+ - Matrix functions: `IGZeroDiagonal`, `IGTakeUpper`, `IGTakeLower`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGJointDegreeMatrix`
  - Added `IGIndexEdgeList` for retrieving the edge list of a graph in terms of vertex indices. This function is very fast and returns a packed array. It facilitates the efficient implementation of graph processing functions in pure Mathematica code, or interfacing with C libraries.
- - Functions for working with planar graphs: `IGPlanarQ`, `IGMaximalPlanarQ`, `IGOuterplanarQ`, `IGKurtowskiEdges`, `IGFaces`, `IGDualGraph`, `IGEmbeddingQ`, `IGPlanarEmbedding`, `IGOuterplanarEmbedding`, `IGCoordinatesToEmbedding`, `IGEmbeddingToCoordinates`, `IGLayoutPlanar`, `IGLayoutTutte`.
- - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGTriangleFreeQ`, `IGSelfComplementaryQ`, `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGUnfoldTree`, `IGTreeQ`, `IGTreelikeComponents`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGBipartiteProjections`, `IGNeighborhoodSize`, `IGCoreness`, `IGVoronoiCells`, `IGMinimalSeparators`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGJointDegreeMatrix`, `IGMycielskian`, `IGSmoothen`, `IGHomeomorphicQ`.
- - Updates:
-    * `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges (instead of both).
-    * `IGBipartiteQ` now supports checking that a given partitioning is valid for a bipartite graph.
-    * `IGBipartitePartitions` now provides control over the ordering of partitions using its second argument.
-    * Isomorphism functions now ignore the directedness of empty graphs.
-    * `IGDistanceCounts` now optionally takes a list of starting vertices.
-    * Isomorphism functions can now take vertex or edge colours from graph attributes.
-    * `IGBetweenness(Estimate)` and `IGCloseness(Estimate)` now optionally take a set of vertices to do the calculation on.
-    * `IGBetweenness(Estimate)` and `IGEdgeBetweenness(Estimate)` now have the `Normalized` option.
-    * `IGBlissCanonicalGraph` will now include include vertex colours into its output when appropriate, encoded as the `"Color"` vertex property.
-    * `IGRandomWalk` now supports edge weights and the `EdgeWeights` option. Use `EdgeWeights -> None` to ignore weights, and thus restore the previous behaviour.
-    * Clustering coefficient functions support the `"ExcludeIsolates"` option.
+ - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGTriangleFreeQ`, `IGSelfComplementaryQ`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGBipartiteProjections`, `IGNeighborhoodSize`, `IGCoreness`, `IGVoronoiCells`, `IGMinimalSeparators`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGMycielskian`, `IGSmoothen`, `IGHomeomorphicQ`,`IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTakeSubgraph`, , `IGGiantComponent`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`
+ 
+Updates to existing functions:
+ 
+ - Community detection: Several functions support the `"ClusterCount"` option now; added `IGCommunitiesFluid`.
+ - `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges (instead of both).
+ - `IGBipartiteQ` now supports checking that a given partitioning is valid for a bipartite graph.
+ - `IGBipartitePartitions` now provides control over the ordering of partitions using its second argument.
+ - Isomorphism functions now ignore the directedness of empty graphs.
+ - Isomorphism functions can now take vertex or edge colours from graph attributes.
+ - `IGBlissCanonicalGraph` will now include include vertex colours into its output when appropriate, encoded as the `"Color"` vertex property.
+ - `IGDistanceCounts` now optionally takes a list of starting vertices.
+ - `IGBetweenness(Estimate)` and `IGCloseness(Estimate)` now optionally take a set of vertices to do the calculation on.
+ - `IGBetweenness(Estimate)` and `IGEdgeBetweenness(Estimate)` now have the `Normalized` option.
+ - `IGRandomWalk` now supports edge weights and the `EdgeWeights` option. Use `EdgeWeights -> None` to ignore weights, and thus restore the previous behaviour.
+ - Clustering coefficient functions support the `"ExcludeIsolates"` option.
+ 
+Incompatible changes from IGraph/M 0.3:
+ 
+ - A flat namespace structure is used. Functions from ``IGraphM`Utilities` `` have been moved to ``IGraphM` ``.
  - Renamed `"MultipleEdges"` option to `MultiEdges` for convenient typing and auto-completion.
  - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
- - Removed graphlet functions due to [long-time unresolved bug in igraph core](https://github.com/igraph/igraph/issues/869).
- - New utility functions:
-    * Weighted graphs: `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
-    * Easier property handling and graph styling:  `IGVertexProp`, `IGEdgeProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
-    * Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
-    * Other: `IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTake`, `IGZeroDiagonal`, `IGTakeUpper`, `IGTakeLower`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGGiantComponent`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`.
- - Improved compatibility with Mathematica 11.2 and later, handling of `TwoWayRule` as an edge specification.
- - Bug fixes, performance improvements, documentation updates, and polish.
+ - Removed graphlet functions due to [a long-time unresolved bug in the igraph C core](https://github.com/igraph/igraph/issues/869).   
+
+Other changes:    
+    
+ - Improved compatibility with Mathematica 11.2 and 11.3; handling of `TwoWayRule` as an edge specification.
+ - Bug fixes, performance improvements, documentation updates, and general polish.
 
 ##### v0.3.0
 
