@@ -123,3 +123,12 @@ IGUnfoldTree[graph_?GraphQ, roots_List, opt : OptionsPattern[{IGUnfoldTree, Grap
       tree = igToGraph[new];
       applyGraphOpt[opt]@Graph[tree, Properties -> Thread[VertexList[tree] -> List /@ Thread["OriginalVertex" -> igVertexNames[graph]@igIndexVec[mapping]]]]
     ]
+
+
+PackageExport["IGStrahlerNumber"]
+IGStrahlerNumber::usage = "IGStrahlerNumber[tree] computes the Horton–Strahler number of each vertex in a directed out-tree.";
+SyntaxInformation[IGStrahlerNumber] = {"ArgumentsPattern" -> {_}};
+IGStrahlerNumber[g_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[g]},
+      check@ig@"strahlerNumber"[]
+    ]

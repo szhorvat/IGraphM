@@ -545,7 +545,9 @@ template = LTemplate["IGraphM",
 
         LFun["coordinatesToEmbedding", {{Real, 2, "Constant"}}, {Integer, 1}],
 
-        LFun["perfectQ", {}, True|False]
+        LFun["perfectQ", {}, True|False],
+
+        LFun["strahlerNumber", {}, {Integer, 1}]
       }
     ],
 

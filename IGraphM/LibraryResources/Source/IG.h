@@ -2791,6 +2791,43 @@ public:
 
         return true;
     }
+
+    mma::IntTensorRef strahlerNumber() const {
+
+        // special case for 1-vertex graph, which is not directedQ()
+        if (vertexCount() == 1) {
+            auto res = mma::makeVector<mint>(1);
+            res[0] = 1;
+            return res;
+        }
+
+        if (! directedQ() || ! treeQ(IGRAPH_OUT))
+            throw mma::LibraryError("strahlerNumber: the graph is not a directed out-tree.");
+
+        igVector degree;
+        igraph_degree(&graph, &degree.vec, igraph_vss_all(), IGRAPH_IN, false);
+
+        // Find the root---this will not go out of bounds since we already verified that the graph is an out-tree.
+        long root;
+        for (root=0; root < degree.length(); ++root)
+            if (degree[root] == 0)
+                break;
+
+        igVector postorder, parent;
+        igraph_dfs(&graph, root, IGRAPH_OUT, false, nullptr, &postorder.vec, &parent.vec, nullptr, nullptr, nullptr, nullptr);
+
+        auto res = mma::makeVector<mint>(postorder.length());
+        std::fill(res.begin(), res.end(), 1);
+
+        for (long i=0; i < postorder.length(); ++i) {
+            long c = postorder[i];
+            long p = parent[c];
+            if (res[p] <= res[c])
+                res[p] = res[c] + 1;
+        }
+
+        return res;
+    }
 };
 
 #endif // IG_H
