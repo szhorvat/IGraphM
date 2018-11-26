@@ -126,7 +126,7 @@ catch[expr_] := Catch[expr, igTag]
 
 PackageScope["check"]
 check::usage = "check[val]";
-check[val_LibraryFunctionError] := throw[val] (* TODO: change to throw[$Failed] *)
+check[val_LibraryFunctionError] := throw[$Failed] (* this was originally throw[val] *)
 check[$Failed] := throw[$Failed]
 check[HoldPattern[LibraryFunction[___][___]]] := throw[$Failed]
 check[val_] := val
@@ -134,6 +134,7 @@ check[val_] := val
 PackageScope["sck"]
 sck::usage = "sck[val]";
 sck[HoldPattern[LibraryFunction[___][___]]] := $Failed
+sck[val_LibraryFunctionError] := $Failed (* this was originally val *)
 sck[val_] := val
 
 
