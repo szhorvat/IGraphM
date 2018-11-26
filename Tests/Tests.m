@@ -9,7 +9,7 @@
 
 
 (* ::Section::Closed:: *)
-(*Utility functions*)
+(*Utility functions for testing*)
 
 
 tolEq[a_, b_, tol_ : 1*^-8 ] := Max@Abs[a-b] < tol
@@ -1441,6 +1441,142 @@ MT[
 
 
 (* ::Section::Closed:: *)
+(*Trees*)
+
+
+MTSection["Trees"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGTreeQ*)
+
+
+MT[
+  IGTreeQ[IGEmptyGraph[]],
+  False
+]
+
+
+MT[
+  IGTreeQ@IGEmptyGraph[1],
+  True
+]
+
+
+MT[
+  IGTreeQ[Graph[{1->2}]],
+  True
+]
+
+
+MT[
+  IGTreeQ[Graph[{1<->2}]],
+  True
+]
+
+
+MT[
+  IGTreeQ[Graph@{1->2,3->2}],
+  False
+]
+
+MT[
+  IGTreeQ[Graph@{1->2,3->2}, "Out"],
+  False
+]
+
+MT[
+  IGTreeQ[Graph@{1->2,3->2}, "In"],
+  True
+]
+
+MT[
+  IGTreeQ[Graph@{1->2,3->2}, "All"],
+  True
+]
+
+
+MT[
+  IGTreeQ[Graph@{1->2,1->3,4->3}],
+  False
+]
+
+MT[
+  IGTreeQ[Graph@{1->2,1->3,4->3}, "Out"],
+  False
+]
+
+MT[
+  IGTreeQ[Graph@{1->2,1->3,4->3}, "In"],
+  False
+]
+
+MT[
+  IGTreeQ[Graph@{1->2,1->3,4->3}, "All"],
+  True
+]
+
+
+MT[
+  AllTrue[Table[IGTreeGame@RandomInteger[{1,50}], {10}], IGTreeQ],
+  True
+]
+
+
+MT[
+  AllTrue[Table[IGTreeGame[RandomInteger[{1,50}], DirectedEdges -> True], {10}], IGTreeQ],
+  True
+]
+
+
+(* ::Subsubsection:: *)
+(*IGTreelikeComponents*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGStrahlerNumber*)
+
+
+MT[
+  IGStrahlerNumber[IGEmptyGraph[1]],
+  {1}
+]
+
+
+MT[
+  IGStrahlerNumber[IGEmptyGraph[]],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGStrahlerNumber[Graph[{1->2, 3->2}]],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGStrahlerNumber[Graph[{1<->2}]],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGStrahlerNumber@Graph[
+    {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20},
+    {17->9,9->8,17->15,9->14,14->3,3->19,14->11,11->7,7->4,4->16,9->1,7->5,5->6,6->10,16->18,19->12,3->2,2->13,8->20}
+  ],
+  {1,2,3,3,3,2,4,2,7,1,5,1,1,6,1,2,8,1,2,1}
+]
+
+
+(* ::Section::Closed:: *)
 (*Isomorphism*)
 
 
@@ -1567,7 +1703,7 @@ directedIsomorphismTest[if_] := {
   ],
   MT[
     if[dgs, ugs],
-    LibraryFunctionError["LIBRARY_FUNCTION_ERROR", 6],
+    $Failed,
     {IGraphM::error}
   ]
 }
@@ -1778,6 +1914,10 @@ MT[
 ]
 
 
+(* TODO non-trivial examples with isomorphism checking, and not with canonical labelling *)
+(* TODO test for Bliss coloured graph bug that was fixed recently in the igraph core *)
+
+
 (* ::Section::Closed:: *)
 (*Isomorphism: multigraphs*)
 
@@ -1819,7 +1959,7 @@ MT[
 
 MT[
   #[gm1, gm2],
-  LibraryFunctionError["LIBRARY_FUNCTION_ERROR", 6],
+  $Failed,
   {IGraphM::error}
 ]& /@ {IGLADFindSubisomorphisms, IGLADGetSubisomorphism, IGLADSubisomorphicQ}
 
@@ -2518,7 +2658,7 @@ MT[
 
 MT[
   IGVertexConnectivity[ugs, 1, 2],
-  LibraryFunctionError["LIBRARY_FUNCTION_ERROR", 6],
+  $Failed,
   {IGraphM::error}
 ]
 
