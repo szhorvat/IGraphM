@@ -181,6 +181,10 @@ PackageScope["positiveVecQ"]
 positiveVecQ::usage = "positiveVecQ[vec]";
 positiveVecQ = VectorQ[#, Positive]&; (* NOT fast *)
 
+PackageScope["emptyArrayQ"]
+emptyArrayQ::usage = "emptyArrayQ[arr]";
+emptyArrayQ[arr_] := MemberQ[Dimensions[arr], 0]
+
 PackageScope["positiveOrInfQ"]
 (* TODO: It seems that this can be replaced by TrueQ@Positive[#}& because Positive[Infinity] === True.
    Investigate performance. A well-named function is still needed for this purpose for clarity. *)

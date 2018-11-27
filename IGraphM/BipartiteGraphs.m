@@ -143,18 +143,18 @@ Options[IGBipartiteIncidenceGraph] = { DirectedEdges -> False };
 SyntaxInformation[IGBipartiteIncidenceGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGBipartiteIncidenceGraph, Graph]};
 
 IGBipartiteIncidenceGraph[names : {vertices1_List, vertices2_List}, bm_?MatrixQ, opt : OptionsPattern[{IGBipartiteIncidenceGraph, Graph}]] :=
-    Module[{sbm = SparseArray[bm], good = True},
-      If[Dimensions[sbm] =!= Length /@ names,
-        Message[IGBipartiteIncidenceGraph::bdsz, names];
-        good = False;
-      ];
-      If[Not@DisjointQ[vertices1, vertices2],
-        Message[IGBipartiteIncidenceGraph::bdvl, Intersection @@ names];
-        good = False;
-      ];
+    Module[{sbm = If[emptyArrayQ[bm], {}, SparseArray[bm]], good = True},
       If[Not@MatrixQ[sbm, Internal`NonNegativeIntegerQ],
         Message[IGBipartiteIncidenceGraph::inv, bm];
         good = False
+      ];
+      If[good && Dimensions[sbm] =!= Length /@ names,
+        Message[IGBipartiteIncidenceGraph::bdsz, names];
+        good = False;
+      ];
+      If[good && Not@DisjointQ[vertices1, vertices2],
+        Message[IGBipartiteIncidenceGraph::bdvl, Intersection @@ names];
+        good = False;
       ];
       AdjacencyGraph[
         Join[vertices1, vertices2],
@@ -164,7 +164,7 @@ IGBipartiteIncidenceGraph[names : {vertices1_List, vertices2_List}, bm_?MatrixQ,
     ]
 
 IGBipartiteIncidenceGraph[bm_?MatrixQ, opt : OptionsPattern[{IGBipartiteIncidenceGraph, Graph}]] :=
-    Module[{sbm = SparseArray[bm], good = True},
+    Module[{sbm = If[emptyArrayQ[bm], {}, SparseArray[bm]], good = True},
       If[Not@MatrixQ[sbm, Internal`NonNegativeIntegerQ],
         Message[IGBipartiteIncidenceGraph::inv, bm];
         good = False
