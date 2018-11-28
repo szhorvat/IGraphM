@@ -19,10 +19,13 @@ If[{$VersionNumber, $ReleaseNumber} < {10.0, 2},
 BeginPackage["IGInstaller`"]
 Begin["`Private`"]
 
+check[$Failed] := Throw[$Failed]
+check[val_] := val
+
 updateIGraphM[] :=
-  Module[{json, download, target, msg},
+  Catch@Module[{json, download, target, msg},
     Check[
-      json = Import["https://api.github.com/repos/szhorvat/IGraphM/releases", "JSON"];
+      json = check@Import["https://api.github.com/repos/szhorvat/IGraphM/releases", "JSON"];
       download = Lookup[First@Lookup[First[json], "assets"], "browser_download_url"];
       msg = "Downloading IGraph/M " <> Lookup[First[json], "tag_name"] <> " ...";
       target = FileNameJoin[{CreateDirectory[], "IGraphM.paclet"}];
@@ -32,7 +35,7 @@ updateIGraphM[] :=
       ];
       URLSave[download, target]
       ,
-      Return[$Failed]
+      Throw[$Failed]
     ];
     If[FileExistsQ[target], PacletManager`PacletInstall[target], $Failed]
   ]
