@@ -11,30 +11,11 @@ The IGraph/M package provides a [_Mathematica_](http://www.wolfram.com/mathemati
 
 First, note that the system requirements are _Mathematica_ 10.0.2 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
 
-The simplest way to install automatically from the internet is to use the following function:
+The simplest way to install automatically from the internet is to evaluate the following line in Mathematica:
 
 ```mathematica
-updateIGraphM[] :=
-  Module[{json, download, target, msg},
-    Check[
-      json = Import["https://api.github.com/repos/szhorvat/IGraphM/releases", "JSON"];
-      download = Lookup[First@Lookup[First[json], "assets"], "browser_download_url"];
-      msg = "Downloading IGraph/M " <> Lookup[First[json], "tag_name"] <> " ...";
-      target = FileNameJoin[{CreateDirectory[], "IGraphM.paclet"}];
-      If[$Notebooks,
-        PrintTemporary@Labeled[ProgressIndicator[Appearance -> "Necklace"], msg, Right],
-        Print[msg]
-      ];
-      URLSave[download, target]
-      ,
-      Return[$Failed]
-    ];
-    If[FileExistsQ[target], PacletManager`PacletInstall[target], $Failed]
-  ]
+Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 ```
-
-To automatically download and install the latest version of IGraph/M, evaluate the above definition, then run `updateIGraphM[]`.
-
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
@@ -52,6 +33,8 @@ After installation, the package can now be loaded with
     << IGraphM`
 
 Check that it works by evaluating `IGVersion[]`, then continue to the documentation with `IGDocumentation[]`.
+
+To uninstall all currently installed versions of IGraph/M, evaluate `PacletUninstall["IGraphM]`. This will remove all traces of IGraph/M from your system.
 
 ## Documentation
 
@@ -72,7 +55,7 @@ For additional details about functions, or for paper references for the methods 
 
 Contributions to IGraph/M are very welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all of igraph.  However, the main framework is there, and adding new functions is relatively quick and easy.
 
-If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][1] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
+If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][ltemplate] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
 
 Please see [Development.md](Development.md) for additional information.
 
@@ -238,6 +221,6 @@ igraph (and consequently the IGraph/M binary packages) can be distributed under 
 
 See [LICENSE.md](IGraphM/LICENSE.md) for details.
 
- [1]: https://github.com/szhorvat/LTemplate/
+ [ltemplate]: https://github.com/szhorvat/LTemplate/
  [main]: http://szhorvat.net/mathematica/IGraphM
  [chat]: https://gitter.im/IGraphM/Lobby
