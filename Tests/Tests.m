@@ -3184,15 +3184,42 @@ MT[
 MTSection["Bipartite graphs"]
 
 
+(* ::Subsubsection::Closed:: *)
+(*IGBipartiteQ*)
+
+
+{
+  MT[IGBipartiteQ[#], True],
+  MT[IGBipartiteQ[#, IGBipartitePartitions[#]], True]
+} & /@ Hold[
+  bipartite, dbipartite,
+  IGEmptyGraph[0], IGEmptyGraph[5], CycleGraph[4],
+  IGBipartiteGameGNM[10, 12, 33], IGBipartiteGameGNM[8, 17, 33, DirectedEdges -> True],
+  IGBipartiteGameGNP[9, 6, 0.3], IGBipartiteGameGNP[21, 5, 0.6, DirectedEdges -> True]
+] // ReleaseHold
+
+
+MT[
+  IGBipartiteQ@CycleGraph[3],
+  False
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGBipartitePartitions*)
+
+
 MT[
   IGBipartitePartitions[bipartite],
   {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10, 11, 12}}
 ]
 
+
 MT[
   IGBipartitePartitions[empty],
   {{},{}}
 ]
+
 
 (* not the only valid result, change test if implementation changes *)
 MT[
@@ -3200,20 +3227,16 @@ MT[
   {{1,2,3,4}, {}}
 ]
 
-{
-  MT[IGBipartiteQ[#], True],
-  MT[IGBipartiteQ[#, IGBipartitePartitions[#]], True]
-} & /@ Hold[
-  bipartite, dbipartite,
-  IGEmptyGraph[0], IGEmptyGraph[5],
-  IGBipartiteGameGNM[10, 12, 33], IGBipartiteGameGNM[8, 17, 33, DirectedEdges -> True],
-  IGBipartiteGameGNP[9, 6, 0.3], IGBipartiteGameGNP[21, 5, 0.6, DirectedEdges -> True]
-] // ReleaseHold
 
 MT[
   IGBipartitePartitions[dbipartite],
   {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10, 11, 12}}
 ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGBipartiteProjections*)
+
 
 bipartiteProjectionAM[g_, parts_] :=
     With[{im = IGBipartiteIncidenceMatrix[g, parts]},
@@ -3227,6 +3250,20 @@ MT[
   ],
   True
 ]
+
+
+(* ::Subsubsection:: *)
+(*IGBipartiteIncidenceGraph*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGBipartiteIncidenceMatrix*)
+
+
+(* TODO *)
 
 
 (* ::Section::Closed:: *)
@@ -3589,6 +3626,12 @@ MT[
 ]
 
 
+MT[
+  IGMinimumVertexColoring[IGEmptyGraph[]],
+  {}
+]
+
+
 (* ::Subsubsection:: *)
 (*IGMinimumEdgeColoring*)
 
@@ -3603,6 +3646,12 @@ MT[
 MT[
   IGChromaticNumber /@ NestList[IGMycielskian, IGEmptyGraph[], 6],
   Range[0, 6]
+]
+
+
+MT[
+  IGChromaticNumber[IGEmptyGraph[]],
+  0
 ]
 
 
@@ -3838,6 +3887,9 @@ MT[
 (*Degree sequences*)
 
 
+MTSection["Degree sequences"]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGGraphicalQ*)
 
@@ -3847,35 +3899,54 @@ MT[
   True
 ]& /@ ulist
 
+
 MT[
   IGGraphicalQ[VertexInDegree[#], VertexOutDegree[#]],
   True
 ]& /@ dlist
+
 
 MT[
   IGGraphicalQ[VertexOutDegree[#], VertexInDegree[#]],
   True
 ]& /@ dlist
 
+
 MT[
   IGGraphicalQ[{1,2,1}],
   True
 ]
+
 
 MT[
   IGGraphicalQ[{1,2,2}],
   False
 ]
 
+
+MT[
+  IGGraphicalQ[{4,4,4,1,1,1,1}],
+  False
+]
+
+
+MT[
+  IGGraphicalQ[{4,0,0,0,2,4,2}],
+  False
+]
+
+
 MT[
   IGGraphicalQ[{1,0},{1,0}],
   False
 ]
 
+
 MT[
   IGGraphicalQ[{1,0},{0,1}],
   True
 ]
+
 
 MT[
   IGGraphicalQ[{}],
@@ -3883,11 +3954,137 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+MT[
+  IGGraphicalQ["not a degree sequence"],
+  False
+]
+
+
+MT[
+  IGGraphicalQ[{a,b}],
+  False
+]
+
+
+MT[
+  IGGraphicalQ[{0}],
+  True
+]
+
+
+MT[
+  IGGraphicalQ[{-1,1}],
+  False
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*IGRealizeDegreeSequence*)
 
 
-(* TODO *)
+MT[
+  IGRealizeDegreeSequence[{3,2,1}, Method -> #],
+  $Failed,
+  {IGraphM::error}
+]&/@{"SmallestFirst", "LargestFirst", "Index"}
+
+
+MT[
+  IGRealizeDegreeSequence[{4,4,4,1,1,1,1}, Method -> #],
+  $Failed,
+  {IGraphM::error}
+]&/@{"SmallestFirst", "LargestFirst", "Index"}
+
+
+MT[
+  IGRealizeDegreeSequence[{4,0,0,0,2,4,2}, Method -> #],
+  $Failed,
+  {IGraphM::error}
+]&/@{"SmallestFirst", "LargestFirst", "Index"}
+
+
+MT[
+  IGRealizeDegreeSequence[{}, Method -> #],
+  IGEmptyGraph[],
+  SameTest -> IGSameGraphQ
+]&/@{"SmallestFirst", "LargestFirst", "Index"}
+
+
+MT[
+  IGRealizeDegreeSequence[{3,6,3,5,5,5,2,4,4,3}, Method->"LargestFirst"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{2\[UndirectedEdge]6,2\[UndirectedEdge]5,2\[UndirectedEdge]4,2\[UndirectedEdge]9,2\[UndirectedEdge]8,2\[UndirectedEdge]10,5\[UndirectedEdge]6,4\[UndirectedEdge]6,6\[UndirectedEdge]9,6\[UndirectedEdge]8,4\[UndirectedEdge]5,3\[UndirectedEdge]5,1\[UndirectedEdge]5,3\[UndirectedEdge]4,1\[UndirectedEdge]4,8\[UndirectedEdge]9,9\[UndirectedEdge]10,7\[UndirectedEdge]8,7\[UndirectedEdge]10,1\[UndirectedEdge]3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{3,6,3,5,5,5,2,4,4,3}, Method->"SmallestFirst"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{2\[UndirectedEdge]7,4\[UndirectedEdge]7,2\[UndirectedEdge]10,5\[UndirectedEdge]10,6\[UndirectedEdge]10,2\[UndirectedEdge]3,3\[UndirectedEdge]5,3\[UndirectedEdge]6,1\[UndirectedEdge]4,1\[UndirectedEdge]8,1\[UndirectedEdge]9,4\[UndirectedEdge]6,6\[UndirectedEdge]8,6\[UndirectedEdge]9,2\[UndirectedEdge]9,5\[UndirectedEdge]9,2\[UndirectedEdge]8,5\[UndirectedEdge]8,4\[UndirectedEdge]5,2\[UndirectedEdge]4}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{3,6,3,5,5,5,2,4,4,3}, Method->"Index"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{1\[UndirectedEdge]2,1\[UndirectedEdge]4,1\[UndirectedEdge]5,2\[UndirectedEdge]6,2\[UndirectedEdge]4,2\[UndirectedEdge]5,2\[UndirectedEdge]8,2\[UndirectedEdge]9,3\[UndirectedEdge]6,3\[UndirectedEdge]4,3\[UndirectedEdge]5,4\[UndirectedEdge]6,4\[UndirectedEdge]8,5\[UndirectedEdge]9,5\[UndirectedEdge]10,6\[UndirectedEdge]9,6\[UndirectedEdge]10,7\[UndirectedEdge]8,7\[UndirectedEdge]9,8\[UndirectedEdge]10}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"LargestFirst"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{6\[UndirectedEdge]8,4\[UndirectedEdge]8,8\[UndirectedEdge]10,7\[UndirectedEdge]8,4\[UndirectedEdge]6,6\[UndirectedEdge]10,6\[UndirectedEdge]7,4\[UndirectedEdge]9,4\[UndirectedEdge]5,2\[UndirectedEdge]3,1\[UndirectedEdge]3,1\[UndirectedEdge]2,5\[UndirectedEdge]9,7\[UndirectedEdge]10}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"SmallestFirst"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{4\[UndirectedEdge]9,6\[UndirectedEdge]9,5\[UndirectedEdge]8,4\[UndirectedEdge]5,3\[UndirectedEdge]8,3\[UndirectedEdge]6,2\[UndirectedEdge]7,2\[UndirectedEdge]10,1\[UndirectedEdge]7,1\[UndirectedEdge]10,8\[UndirectedEdge]10,6\[UndirectedEdge]7,4\[UndirectedEdge]8,4\[UndirectedEdge]6}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"Index"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{1\[UndirectedEdge]4,1\[UndirectedEdge]6,2\[UndirectedEdge]8,2\[UndirectedEdge]4,3\[UndirectedEdge]8,3\[UndirectedEdge]6,4\[UndirectedEdge]7,4\[UndirectedEdge]10,5\[UndirectedEdge]7,5\[UndirectedEdge]10,6\[UndirectedEdge]8,6\[UndirectedEdge]9,7\[UndirectedEdge]8,9\[UndirectedEdge]10}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"LargestFirst"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{6\[UndirectedEdge]8,4\[UndirectedEdge]8,8\[UndirectedEdge]10,7\[UndirectedEdge]8,4\[UndirectedEdge]6,6\[UndirectedEdge]10,6\[UndirectedEdge]7,4\[UndirectedEdge]9,4\[UndirectedEdge]5,2\[UndirectedEdge]3,1\[UndirectedEdge]3,1\[UndirectedEdge]2,5\[UndirectedEdge]9,7\[UndirectedEdge]10}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"SmallestFirst"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{4\[UndirectedEdge]9,6\[UndirectedEdge]9,5\[UndirectedEdge]8,4\[UndirectedEdge]5,3\[UndirectedEdge]8,3\[UndirectedEdge]6,2\[UndirectedEdge]7,2\[UndirectedEdge]10,1\[UndirectedEdge]7,1\[UndirectedEdge]10,8\[UndirectedEdge]10,6\[UndirectedEdge]7,4\[UndirectedEdge]8,4\[UndirectedEdge]6}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"Index"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{1\[UndirectedEdge]4,1\[UndirectedEdge]6,2\[UndirectedEdge]8,2\[UndirectedEdge]4,3\[UndirectedEdge]8,3\[UndirectedEdge]6,4\[UndirectedEdge]7,4\[UndirectedEdge]10,5\[UndirectedEdge]7,5\[UndirectedEdge]10,6\[UndirectedEdge]8,6\[UndirectedEdge]9,7\[UndirectedEdge]8,9\[UndirectedEdge]10}],
+  SameTest -> IGSameGraphQ
+]
+
+
+(* directed case *)
+MT[
+  IGRealizeDegreeSequence[{3,1,2,0,0,2,5,1,1,0},{2,2,1,1,2,1,1,4,1,0},Method->"LargestFirst"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{8\[DirectedEdge]1,2\[DirectedEdge]8,7\[DirectedEdge]8,7\[DirectedEdge]2,7\[DirectedEdge]5,7\[DirectedEdge]1,7\[DirectedEdge]6,3\[DirectedEdge]8,3\[DirectedEdge]9,1\[DirectedEdge]8,1\[DirectedEdge]3,1\[DirectedEdge]2,6\[DirectedEdge]4,6\[DirectedEdge]5,9\[DirectedEdge]7}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{3,1,2,0,0,2,5,1,1,0},{2,2,1,1,2,1,1,4,1,0},Method->"SmallestFirst"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{9\[DirectedEdge]8,3\[DirectedEdge]8,3\[DirectedEdge]1,6\[DirectedEdge]8,6\[DirectedEdge]2,8\[DirectedEdge]5,2\[DirectedEdge]7,7\[DirectedEdge]1,7\[DirectedEdge]8,7\[DirectedEdge]2,7\[DirectedEdge]5,7\[DirectedEdge]4,1\[DirectedEdge]9,1\[DirectedEdge]3,1\[DirectedEdge]6}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{3,1,2,0,0,2,5,1,1,0},{2,2,1,1,2,1,1,4,1,0},Method->"Index"],
+  Graph[{1,2,3,4,5,6,7,8,9,10},{1\[DirectedEdge]8,1\[DirectedEdge]2,1\[DirectedEdge]5,2\[DirectedEdge]8,3\[DirectedEdge]8,3\[DirectedEdge]1,6\[DirectedEdge]7,6\[DirectedEdge]8,7\[DirectedEdge]9,7\[DirectedEdge]6,7\[DirectedEdge]1,7\[DirectedEdge]3,7\[DirectedEdge]2,8\[DirectedEdge]5,9\[DirectedEdge]4}],
+  SameTest -> IGSameGraphQ
+]
 
 
 (* ::Section::Closed:: *)
@@ -4564,6 +4761,7 @@ MT[
 (*IGTakeSubgraph*)
 
 
+(* just edges, non-induced subgraph result expected *)
 MT[
   IGTakeSubgraph[terrorist, {"Azzam" <-> "Fazul", "Fazul" <-> "Atwah"}],
   Graph[{"Azzam", "Fazul", "Atwah"}, {UndirectedEdge["Azzam", "Fazul"],
@@ -4582,6 +4780,8 @@ MT[
   SameTest -> samePropGraphQ
 ]
 
+
+(* subgraph *)
 MT[
   IGTakeSubgraph[terrorist, Subgraph[terrorist, {"Owhali", "Fawwaz", "Fazul", "Odeh", "Kherchtou", "Ghailani"}]],
   Graph[{"Owhali", "Fawwaz", "Fazul", "Odeh", "Kherchtou", "Ghailani"},
@@ -4614,11 +4814,15 @@ MT[
   SameTest -> samePropGraphQ
 ]
 
+
+(* check weights *)
 MT[
   WeightedAdjacencyMatrix@IGTakeSubgraph[terrorist, Subgraph[terrorist, {"Owhali", "Fawwaz", "Fazul", "Odeh", "Kherchtou", "Ghailani"}]],
   WeightedAdjacencyMatrix@IGWeightedSubgraph[terrorist, {"Owhali", "Fawwaz", "Fazul", "Odeh", "Kherchtou", "Ghailani"}]
 ]
 
+
+(* empty graph behaviour *)
 MT[
   IGTakeSubgraph[terrorist, {}],
   Graph[{}, {}]
@@ -4627,6 +4831,11 @@ MT[
 MT[
   IGTakeSubgraph[terrorist, IGEmptyGraph[]],
   Graph[{}, {}]
+]
+
+MT[
+  IGTakeSubgraph[IGEmptyGraph[],IGEmptyGraph[]],
+  IGEmptyGraph[]
 ]
 
 
