@@ -242,7 +242,7 @@ SyntaxInformation[IGLayoutDavidsonHarel] = {"ArgumentsPattern" -> {_, OptionsPat
 
 IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDavidsonHarel,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], tuneiter, edgelenw, edgecrossw, edgedistw, dens, scale = 0.1},
-      dens = If[VertexCount[graph] == 0, 0, GraphDensity[graph]];
+      dens = If[VertexCount[graph] <= 1, 0, GraphDensity[graph]];
       tuneiter = Replace[OptionValue["FineTuningIterations"], Automatic :> Max[10, Round@Log[2, VertexCount[graph]]]];
       edgelenw = Replace[OptionValue["EdgeLengthWeight"], Automatic :> dens/10];
       edgecrossw = Replace[OptionValue["EdgeCrossingWeight"], Automatic :> 1 - dens];
