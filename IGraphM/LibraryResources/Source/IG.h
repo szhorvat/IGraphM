@@ -1745,6 +1745,19 @@ public:
             mma::RealTensorRef initial, bool use_seed,
             mint maxiter, double temp_max, double temp_min, double temp_init) const
     {
+        // workaround for 0- and 1-vertex graph
+        if (vertexCount() == 0)
+            return mma::makeMatrix<double>(0, 2);
+        if (vertexCount() == 1) {
+            if (use_seed)
+                return initial.clone();
+            else {
+                auto res = mma::makeMatrix<double>(1, 2);
+                res(0,0) = res(0,1) = 0.0;
+                return res;
+            }
+        }
+
         igMatrix mat;
         mat.copyFromMTensor(initial);
         igCheck(igraph_layout_gem(&graph, &mat.mat, use_seed, maxiter, temp_max, temp_min, temp_init));
@@ -1811,6 +1824,19 @@ public:
     }
 
     mma::RealTensorRef layoutDrL3D(mma::RealTensorRef initial, bool use_seed, mint opt) const {
+        // workaround for 0- and 1-vertex graph
+        if (vertexCount() == 0)
+            return mma::makeMatrix<double>(0, 3);
+        if (vertexCount() == 1) {
+            if (use_seed)
+                return initial.clone();
+            else {
+                auto res = mma::makeMatrix<double>(1, 3);
+                res(0,0) = res(0,1) = res(0,2) = 0.0;
+                return res;
+            }
+        }
+
         igMatrix mat;
         mat.copyFromMTensor(initial);
 
