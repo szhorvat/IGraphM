@@ -23,7 +23,7 @@ IGMaximumMatching[graph_?igGraphQ] :=
 
 
 PackageExport["IGMatchingNumber"]
-IGMatchingNumber::usage = "IGMaximumMatching[graph] returns the matching number of graph.";
+IGMatchingNumber::usage = "IGMatchingNumber[graph] returns the matching number of graph.";
 SyntaxInformation[IGMatchingNumber] = {"ArgumentsPattern" -> {_}};
 IGMatchingNumber[graph_?igGraphQ] :=
     Block[{lg = lgMake[graph]},
