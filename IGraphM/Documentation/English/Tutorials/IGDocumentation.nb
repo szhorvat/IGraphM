@@ -336,7 +336,7 @@ Cell["\<\
 The following sections provide general information on each functionality \
 area, and show common usage patterns.\
 \>", "Text",ExpressionUUID->"30339ffb-b0e8-4bfb-968e-40d3e48f635e"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -9151,7 +9151,64 @@ Cell[BoxData[
     FormatType->TraditionalForm,
     FrameTicks->None,
     ImageSize->{94.609375, Automatic}], ",", "\"\<All\>\""}], 
-  "]"}]], "Input",ExpressionUUID->"9f8568c6-b2b1-49f7-a470-a71367653c9a"]
+  "]"}]], "Input",ExpressionUUID->"9f8568c6-b2b1-49f7-a470-a71367653c9a"],
+
+Cell["Check if a graph is a forest.", \
+"Text",ExpressionUUID->"595c8be7-69b7-4d43-bd62-21d694e9053a"],
+
+Cell[BoxData[
+ RowBox[{"AllTrue", "[", 
+  RowBox[{
+   RowBox[{"ConnectedGraphComponents", "[", 
+    GraphicsBox[
+     NamespaceBox["NetworkGraphics",
+      DynamicModuleBox[{Typeset`graph = HoldComplete[
+        Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, {
+         Null, {{1, 2}, {2, 3}, {2, 4}, {4, 5}, {4, 6}, {7, 8}, {7, 9}, {7, 
+          10}, {7, 11}, {7, 12}}}, {
+         GraphLayout -> {"PackingLayout" -> "LayeredLeft"}, 
+          VertexLabels -> {None}, VertexSize -> {Medium}}]]}, 
+       TagBox[
+        GraphicsGroupBox[
+         GraphicsComplexBox[{{3.325861995674786, -1.7690092222954563`}, {
+          4.018904115339238, -1.1218839016790128`}, {
+          3.324895133366253, -0.4747965323004171}, {
+          5.202920542935289, -1.1217665303819007`}, {
+          5.8975787574161505`, -0.47621170609707386`}, {
+          5.8979560555871515`, -1.7669723615519644`}, {
+          1.4139255006164673`, -1.4739044549594866`}, {
+          0.7961099789195158, -2.260577072158629}, {
+          1.971794462388056, -2.303601900426146}, {
+          2.375302068765419, -1.1997568108406216`}, {
+          1.45103908109693, -0.47479653230041685`}, {
+          0.47479653230041696`, -1.1291212907692783`}}, {
+           {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+            {Arrowheads[0.], ArrowBox[{1, 2}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{2, 3}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{2, 4}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{4, 5}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{4, 6}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{7, 8}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{7, 9}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{7, 10}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{7, 11}, 0.09481975322747531]}, 
+            {Arrowheads[0.], ArrowBox[{7, 12}, 0.09481975322747531]}}, 
+           {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+            DiskBox[1, 0.09481975322747531], DiskBox[2, 0.09481975322747531], 
+            DiskBox[3, 0.09481975322747531], DiskBox[4, 0.09481975322747531], 
+            DiskBox[5, 0.09481975322747531], DiskBox[6, 0.09481975322747531], 
+            DiskBox[7, 0.09481975322747531], DiskBox[8, 0.09481975322747531], 
+            DiskBox[9, 0.09481975322747531], DiskBox[10, 0.09481975322747531],
+             DiskBox[11, 0.09481975322747531], 
+            DiskBox[12, 0.09481975322747531]}}]],
+        MouseAppearanceTag["NetworkGraphics"]],
+       AllowKernelInitialization->False]],
+     DefaultBaseStyle->{
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+     FormatType->TraditionalForm,
+     FrameTicks->None,
+     ImageSize->{125.796875, Automatic}], "]"}], ",", "IGTreeQ"}], 
+  "]"}]], "Input",ExpressionUUID->"95d1600c-a80b-4507-af2f-e3a9dd2c6b4e"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -9165,9 +9222,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"7af8580d-75ee-4013-8e1f-68ad8e17ad03"],
 
 Cell[TextData[{
- Cell[BoxData["IGStrahlerNumber"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "550a94b4-8277-43dc-9e3c-d98afdf1b13f"],
+ Cell[BoxData[
+ "IGStrahlerNumber"],ExpressionUUID->"550a94b4-8277-43dc-9e3c-d98afdf1b13f"],
  " computes the Horton\[Dash]Strahler index of each vertex in a rooted tree. \
 The tree must be directed\[LongDash]this is how the root is encoded. The \
 Horton\[Dash]Strahler index of the tree itself is the index of the root, i.e. \
@@ -9203,9 +9259,8 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"488ea3a7-5723-4d27-beab-decb493cb072"],
 
 Cell[TextData[{
- Cell[BoxData["IGStrahlerNumber"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "893cbf9e-433f-4147-8af2-efbf91726228"],
+ Cell[BoxData[
+ "IGStrahlerNumber"],ExpressionUUID->"893cbf9e-433f-4147-8af2-efbf91726228"],
  " requires a directed (i.e. rooted) tree as input."
 }], "Text",ExpressionUUID->"42ef14a7-d01b-49e4-b302-a4e5edb5b474"],
 
@@ -9339,9 +9394,8 @@ Cell[BoxData[
 Cell[TextData[{
  "Orient undirected trees, effectively specifying a root vertex, before \
 passing them to ",
- Cell[BoxData["IGStrahlerNumber"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "f4e7fd9c-9989-46c0-91fa-1a5deac572a5"],
+ Cell[BoxData[
+ "IGStrahlerNumber"],ExpressionUUID->"f4e7fd9c-9989-46c0-91fa-1a5deac572a5"],
  "."
 }], "Text",ExpressionUUID->"e512f3a3-fb21-4483-9b52-4f2c3bb97615"],
 
@@ -10563,6 +10617,68 @@ Cell[BoxData[
  RowBox[{"IGCoreness", "[", 
   RowBox[{"g", ",", "\"\<Out\>\""}], 
   "]"}]], "Input",ExpressionUUID->"131a4000-2c87-432a-8ee0-371bec46e642"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Matchings", \
+"Subsection",ExpressionUUID->"a9bbd8fc-1c4f-46a7-8799-1d5488214dc0"],
+
+Cell[CellGroupData[{
+
+Cell["IGMaximumMatching", \
+"Subsubsection",ExpressionUUID->"e6079f85-0160-436f-85e4-9d2ebc7faade"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMaximumMatching"}]], \
+"Input",ExpressionUUID->"58a0f8a2-7d4f-4387-b00f-45694b6d323a"],
+
+Cell["\<\
+A matching of a graph is also known as an independent edge set.\
+\>", "Text",ExpressionUUID->"b014d4af-38ef-4afc-b596-3e730aed4aee"],
+
+Cell[TextData[{
+ Cell[BoxData["IGMaximumMatching"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "844ca206-85c9-4768-b660-720975e79181"],
+ " ignores edge directions and edge weights."
+}], "Text",ExpressionUUID->"4d50416e-85f3-43a9-ae71-3f5d0226d8de"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{"{", 
+     RowBox[{"10", ",", "20"}], "}"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"a986154c-5604-44ab-a442-4a1b97f49290"],
+
+Cell[BoxData[
+ RowBox[{"IGMaximumMatching", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"f588a19f-d44f-4233-bce1-95c7e339323f"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"IGMaximumMatching", "[", "g", "]"}], ",", 
+   RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<Thick\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"1ffe59f0-d809-4cba-a3a2-3e2bc0a1c125"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGMatchingNumber", \
+"Subsubsection",ExpressionUUID->"782443ac-c744-4e0f-847e-8a57ea5d46cc"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMatchingNumber"}]], \
+"Input",ExpressionUUID->"a754de40-732f-4f3c-9dd8-c38f19e903da"],
+
+Cell["\<\
+The matching number of a graph is the size of its maximum matchings.\
+\>", "Text",ExpressionUUID->"06f80f09-9f5d-403b-871b-70818e6b1d33"]
+}, Closed]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -30621,8 +30737,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
 
 Cell[BoxData[
  RowBox[{
@@ -40016,8 +40132,8 @@ Cell[BoxData[
    RowBox[{
     RowBox[{"{", 
      RowBox[{"5", ",", "4", ",", "3", ",", "2", ",", "1"}], "}"}], ",", 
-    "g1"}], "]"}]}]], \
-"Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
+    "g1"}], 
+   "]"}]}]], "Input",ExpressionUUID->"b8a0d636-8a59-4951-842f-0da2773eb653"],
 
 Cell[BoxData[
  RowBox[{"VertexList", "/@", 
@@ -40329,8 +40445,7 @@ adjacency matrix or adjacency list."
 
 Cell[TextData[{
  "Compute the adjacency list of a graph, then convert it back to a ",
- Cell[BoxData["Graph"],ExpressionUUID->"b5943bf7-0a7c-474e-84f7-7c238fab010c"]
- ,
+ Cell[BoxData["Graph"],ExpressionUUID->"b5943bf7-0a7c-474e-84f7-7c238fab010c"],
  " expression."
 }], "Text",ExpressionUUID->"92f5b7e6-8b99-41fe-8591-35f568c0c178"],
 
@@ -40701,7 +40816,7 @@ functions)\
 }, Open  ]]
 },
 WindowSize->{742, 711},
-WindowMargins->{{441, Automatic}, {Automatic, 219}},
+WindowMargins->{{320, Automatic}, {Automatic, 40}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
