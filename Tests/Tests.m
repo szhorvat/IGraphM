@@ -4233,6 +4233,32 @@ MT[
 (*IGRealizeDegreeSequence*)
 
 
+(* ::Text:: *)
+(*Check that degree sequences are preserved as expected.*)
+
+
+Do[
+  MT[
+    VertexDegree@IGRealizeDegreeSequence[VertexDegree[g],Method->m],
+    VertexDegree[g]
+  ],
+  {g,ulist}, {m,{"LargestFirst","SmallestFirst","Index"}}
+]
+
+
+Do[
+  MT[
+    Through[{VertexOutDegree,VertexInDegree}@IGRealizeDegreeSequence[VertexOutDegree[g],VertexInDegree[g],Method->m]],
+    {VertexOutDegree[g],VertexInDegree[g]}
+  ],
+  {g,dlist}, {m,{"LargestFirst","SmallestFirst","Index"}}
+]
+
+
+(* ::Text:: *)
+(*Non-graphical cases must fail.*)
+
+
 MT[
   IGRealizeDegreeSequence[{3,2,1}, Method -> #],
   $Failed,
@@ -4261,79 +4287,86 @@ MT[
 ]&/@{"SmallestFirst", "LargestFirst", "Index"}
 
 
+(* ::Text:: *)
+(*Undirected examples.*)
+
+
 MT[
-  IGRealizeDegreeSequence[{3,6,3,5,5,5,2,4,4,3}, Method->"LargestFirst"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{2<->6,2<->5,2<->4,2<->9,2<->8,2<->10,5<->6,4<->6,6<->9,6<->8,4<->5,3<->5,1<->5,3<->4,1<->4,8<->9,9<->10,7<->8,7<->10,1<->3}],
+  IGRealizeDegreeSequence[{3, 6, 3, 5, 5, 5, 2, 4, 4, 3}, Method -> "LargestFirst"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {2 <-> 6, 2 <-> 5, 2 <-> 4, 2 <-> 9, 2 <-> 8, 2 <-> 10, 5 <-> 6, 4 <-> 6, 6 <-> 9, 6 <-> 8, 4 <-> 5, 3 <-> 5, 1 <-> 5, 3 <-> 4, 1 <-> 4, 8 <-> 9, 9 <-> 10, 7 <-> 8, 7 <-> 10, 1 <-> 3}],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGRealizeDegreeSequence[{3,6,3,5,5,5,2,4,4,3}, Method->"SmallestFirst"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{2<->7,4<->7,2<->10,5<->10,6<->10,2<->3,3<->5,3<->6,1<->4,1<->8,1<->9,4<->6,6<->8,6<->9,2<->9,5<->9,2<->8,5<->8,4<->5,2<->4}],
+  IGRealizeDegreeSequence[{3, 6, 3, 5, 5, 5, 2, 4, 4, 3}, Method -> "SmallestFirst"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {2 <-> 7, 4 <-> 7, 2 <-> 10, 5 <-> 10, 6 <-> 10, 2 <-> 3, 3 <-> 5, 3 <-> 6, 1 <-> 4, 1 <-> 8, 1 <-> 9, 4 <-> 6, 6 <-> 8, 6 <-> 9, 2 <-> 9, 5 <-> 9, 2 <-> 8, 5 <-> 8, 4 <-> 5, 2 <-> 4}],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGRealizeDegreeSequence[{3,6,3,5,5,5,2,4,4,3}, Method->"Index"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{1<->2,1<->4,1<->5,2<->6,2<->4,2<->5,2<->8,2<->9,3<->6,3<->4,3<->5,4<->6,4<->8,5<->9,5<->10,6<->9,6<->10,7<->8,7<->9,8<->10}],
-  SameTest -> IGSameGraphQ
-]
-
-
-MT[
-  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"LargestFirst"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{6<->8,4<->8,8<->10,7<->8,4<->6,6<->10,6<->7,4<->9,4<->5,2<->3,1<->3,1<->2,5<->9,7<->10}],
-  SameTest -> IGSameGraphQ
-]
-
-MT[
-  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"SmallestFirst"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{4<->9,6<->9,5<->8,4<->5,3<->8,3<->6,2<->7,2<->10,1<->7,1<->10,8<->10,6<->7,4<->8,4<->6}],
-  SameTest -> IGSameGraphQ
-]
-
-MT[
-  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"Index"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{1<->4,1<->6,2<->8,2<->4,3<->8,3<->6,4<->7,4<->10,5<->7,5<->10,6<->8,6<->9,7<->8,9<->10}],
+  IGRealizeDegreeSequence[{3, 6, 3, 5, 5, 5, 2, 4, 4, 3}, Method -> "Index"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {1 <-> 2, 1 <-> 4, 1 <-> 5, 2 <-> 6, 2 <-> 4, 2 <-> 5, 2 <-> 8, 2 <-> 9, 3 <-> 6, 3 <-> 4, 3 <-> 5, 4 <-> 6, 4 <-> 8, 5 <-> 9, 5 <-> 10, 6 <-> 9, 6 <-> 10, 7 <-> 8, 7 <-> 9, 8 <-> 10}],
   SameTest -> IGSameGraphQ
 ]
 
 
 MT[
-  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"LargestFirst"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{6<->8,4<->8,8<->10,7<->8,4<->6,6<->10,6<->7,4<->9,4<->5,2<->3,1<->3,1<->2,5<->9,7<->10}],
+  IGRealizeDegreeSequence[{2, 2, 2, 4, 2, 4, 3, 4, 2, 3}, Method -> "LargestFirst"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {6 <-> 8, 4 <-> 8, 8 <-> 10, 7 <-> 8, 4 <-> 6, 6 <-> 10, 6 <-> 7, 4 <-> 9, 4 <-> 5, 2 <-> 3, 1 <-> 3, 1 <-> 2, 5 <-> 9, 7 <-> 10}],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"SmallestFirst"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{4<->9,6<->9,5<->8,4<->5,3<->8,3<->6,2<->7,2<->10,1<->7,1<->10,8<->10,6<->7,4<->8,4<->6}],
+  IGRealizeDegreeSequence[{2, 2, 2, 4, 2, 4, 3, 4, 2, 3}, Method -> "SmallestFirst"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {4 <-> 9, 6 <-> 9, 5 <-> 8, 4 <-> 5, 3 <-> 8, 3 <-> 6, 2 <-> 7, 2 <-> 10, 1 <-> 7, 1 <-> 10, 8 <-> 10, 6 <-> 7, 4 <-> 8, 4 <-> 6}],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGRealizeDegreeSequence[{2,2,2,4,2,4,3,4,2,3}, Method->"Index"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{1<->4,1<->6,2<->8,2<->4,3<->8,3<->6,4<->7,4<->10,5<->7,5<->10,6<->8,6<->9,7<->8,9<->10}],
+  IGRealizeDegreeSequence[{2, 2, 2, 4, 2, 4, 3, 4, 2, 3}, Method -> "Index"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {1 <-> 4, 1 <-> 6, 2 <-> 8, 2 <-> 4, 3 <-> 8, 3 <-> 6, 4 <-> 7, 4 <-> 10, 5 <-> 7, 5 <-> 10, 6 <-> 8, 6 <-> 9, 7 <-> 8, 9 <-> 10}],
   SameTest -> IGSameGraphQ
 ]
 
 
-(* directed case *)
 MT[
-  IGRealizeDegreeSequence[{3,1,2,0,0,2,5,1,1,0},{2,2,1,1,2,1,1,4,1,0},Method->"LargestFirst"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{8->1,2->8,7->8,7->2,7->5,7->1,7->6,3->8,3->9,1->8,1->3,1->2,6->4,6->5,9->7}],
+  IGRealizeDegreeSequence[{2, 2, 2, 4, 2, 4, 3, 4, 2, 3}, Method -> "LargestFirst"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {6 <-> 8, 4 <-> 8, 8 <-> 10, 7 <-> 8, 4 <-> 6, 6 <-> 10, 6 <-> 7, 4 <-> 9, 4 <-> 5, 2 <-> 3, 1 <-> 3, 1 <-> 2, 5 <-> 9, 7 <-> 10}],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGRealizeDegreeSequence[{3,1,2,0,0,2,5,1,1,0},{2,2,1,1,2,1,1,4,1,0},Method->"SmallestFirst"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{9->8,3->8,3->1,6->8,6->2,8->5,2->7,7->1,7->8,7->2,7->5,7->4,1->9,1->3,1->6}],
+  IGRealizeDegreeSequence[{2, 2, 2, 4, 2, 4, 3, 4, 2, 3}, Method -> "SmallestFirst"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {4 <-> 9, 6 <-> 9, 5 <-> 8, 4 <-> 5, 3 <-> 8, 3 <-> 6, 2 <-> 7, 2 <-> 10, 1 <-> 7, 1 <-> 10, 8 <-> 10, 6 <-> 7, 4 <-> 8, 4 <-> 6}],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGRealizeDegreeSequence[{3,1,2,0,0,2,5,1,1,0},{2,2,1,1,2,1,1,4,1,0},Method->"Index"],
-  Graph[{1,2,3,4,5,6,7,8,9,10},{1->8,1->2,1->5,2->8,3->8,3->1,6->7,6->8,7->9,7->6,7->1,7->3,7->2,8->5,9->4}],
+  IGRealizeDegreeSequence[{2, 2, 2, 4, 2, 4, 3, 4, 2, 3}, Method -> "Index"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {1 <-> 4, 1 <-> 6, 2 <-> 8, 2 <-> 4, 3 <-> 8, 3 <-> 6, 4 <-> 7, 4 <-> 10, 5 <-> 7, 5 <-> 10, 6 <-> 8, 6 <-> 9, 7 <-> 8, 9 <-> 10}],
+  SameTest -> IGSameGraphQ
+]
+
+
+(* ::Text:: *)
+(*Directed examples.*)
+
+
+MT[
+  IGRealizeDegreeSequence[{3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, {2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, Method -> "LargestFirst"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {8 -> 1, 2 -> 8, 7 -> 8, 7 -> 2, 7 -> 5, 7 -> 1, 7 -> 3, 6 -> 8, 6 -> 9, 1 -> 8, 1 -> 6, 1 -> 2, 3 -> 5, 3 -> 7, 9 -> 4}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, {2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, Method -> "SmallestFirst"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {9 -> 8, 6 -> 8, 6 -> 1, 3 -> 8, 3 -> 2, 2 -> 5, 8 -> 7, 7 -> 1, 7 -> 8, 7 -> 5, 7 -> 2, 7 -> 3, 1 -> 6, 1 -> 9, 1 -> 4}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRealizeDegreeSequence[{3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, {2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, Method -> "Index"],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {1 -> 8, 1 -> 2, 1 -> 5, 2 -> 8, 3 -> 8, 3 -> 1, 6 -> 7, 6 -> 8, 7 -> 9, 7 -> 6, 7 -> 1, 7 -> 3, 7 -> 2, 8 -> 5, 9 -> 4}],
   SameTest -> IGSameGraphQ
 ]
 
