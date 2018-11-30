@@ -14,18 +14,6 @@ PackageImport["IGraphM`LTemplate`"] (* we use Make[] in the definition of lgMake
 (***** Planar graphs and combinatorial embeddings *****)
 (******************************************************)
 
-(***** Utility functions for communicating with the C++ library *****)
-
-(* Make a LemonGraph object *)
-
-(* lgMake is package scope because it is also used in IGLayoutPlanar, defined in GraphLayouts.m *)
-PackageScope["lgMake"]
-lgMake::usage = "lgMake[graph] converts graph to a LemonGraph object.";
-lgMake[g_] :=
-    With[{lg = Make["LemonGraph"]},
-      lg@"fromEdgeList"[IGIndexEdgeList[g]-1, VertexCount[g]];
-      lg
-    ]
 
 (* Make an embedding *)
 

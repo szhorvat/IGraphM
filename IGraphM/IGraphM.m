@@ -569,7 +569,10 @@ template = LTemplate["IGraphM",
         LFun["kuratowskiSubgraph", {}, {Integer, 1}],
         LFun["layoutPlanar", {}, {Integer, 2}],
         LFun["planarEmbedding", {}, {Integer, 1}],
-        LFun["embeddingToCoordinates", {LExpressionID["Embedding"]}, {Integer, 2}]
+        LFun["embeddingToCoordinates", {LExpressionID["Embedding"]}, {Integer, 2}],
+
+        LFun["maximumMatching", {}, {Integer, 1}],
+        LFun["matchingNumber", {}, Integer]
       }
     ],
 

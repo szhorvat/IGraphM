@@ -19,6 +19,7 @@
 #include <lemon/static_graph.h>
 #include <lemon/planarity.h>
 #include <lemon/connectivity.h>
+#include <lemon/matching.h>
 #include <lemon/adaptors.h>
 
 #include <vector>
@@ -62,6 +63,9 @@ public:
         for (int i=0; i < indices.size(); ++i)
             edgeIndex[digraph.arc(i)] = indices[i];
     }
+
+
+    /* Planarity */
 
     bool planarQ() const {
         return lemon::checkPlanarity(graph);
@@ -189,6 +193,28 @@ public:
         }
 
         return coord;
+    }
+
+
+    /* Matching */
+
+    mma::IntTensorRef maximumMatching() const {
+
+        lemon::MaxMatching<Graph> matching(graph);
+        matching.run();
+
+        std::vector<mint> mat;
+        for (Graph::EdgeIt e(graph); e != lemon::INVALID; ++e)
+            if (matching.matching(e))
+                mat.push_back(edgeIndex[e]);
+
+        return mma::makeVector<mint>(mat.size(), mat.data());
+    }
+
+    mint matchingNumber() const {
+        lemon::MaxMatching<Graph> matching(graph);
+        matching.run();
+        return matching.matchingSize();
     }
 };
 
