@@ -18,7 +18,7 @@ Switch[$OperatingSystem,
 
     (* IGraphM requires C++11. With OS X's default compiler this is supported 10.9 and up only,
        thus we need to override the default -mmacosx-version-min=10.6 option. *)
-    "CompileOptions" -> {"-mmacosx-version-min=10.9", "-flto=thin"},
+    "CompileOptions" -> {"-mmacosx-version-min=10.9", "-fsanitize=address", " -fsanitize-recover=address", "-fno-omit-frame-pointer"},
 
     (* Statically link the igraph library *)
     "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libglpk.a", "$HOME/local/lib/libemon.a"},
@@ -33,7 +33,7 @@ Switch[$OperatingSystem,
     "CompileOptions" -> {
       (* Compile with -static-libgcc on non-RPi Linux for better compatibility with various distros *)
       If[$SystemID =!= "Linux-ARM",
-        Unevaluated@Sequence["-static-libgcc", "-D_GLIBCXX_USE_CXX11_ABI=0"]
+        Unevaluated@Sequence["-static-libgcc", "-D_GLIBCXX_USE_CXX11_ABI=0", "-flto"],
         Unevaluated@Sequence[]
       ]
     },
