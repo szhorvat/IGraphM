@@ -11,7 +11,7 @@ Switch[$OperatingSystem,
 
   "MacOSX", (* Compilation settings for OS X *)
   $buildSettings = {
-    (*)"Compiler" -> CCompilerDriver`GenericCCompiler`GenericCCompiler,
+    (*"Compiler" -> CCompilerDriver`GenericCCompiler`GenericCCompiler,
     "CompilerInstallation" -> "/opt/local/bin",
     "CompilerName" -> "clang++-mp-7.0",
     "SystemCompileOptions" -> "-O3 -m64 -fPIC -framework Foundation -framework mathlink",*)
@@ -32,11 +32,14 @@ Switch[$OperatingSystem,
   $buildSettings = {
     "CompileOptions" -> {
       (* Compile with -static-libgcc on non-RPi Linux for better compatibility with various distros *)
-      If[$SystemID =!= "Linux-ARM", "-static-libgcc", Unevaluated@Sequence[]]
+      If[$SystemID =!= "Linux-ARM",
+        Unevaluated@Sequence["-static-libgcc", "-D_GLIBCXX_USE_CXX11_ABI=0"]
+        Unevaluated@Sequence[]
+      ]
     },
 
     (* Statically link the igraph library *)
-    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libemon.a"},
+    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libglpk.a", "$HOME/local/lib/libemon.a"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
