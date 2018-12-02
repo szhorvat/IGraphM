@@ -206,10 +206,11 @@ public:
         return pairs;
     }
 
+    /*
     // Remove self-loops from an edge list
     mma::IntMatrixRef edgeListRemoveLoops(mma::IntMatrixRef pairs) {
         if (pairs.cols() != 2)
-            throw mma::LibraryError("removeLoops: n-by-2 matrix expected.");
+            throw mma::LibraryError("edgeListRemoveLoops: n-by-2 matrix expected.");
 
         std::vector<mint> result;
         for (mint i=0; i < pairs.rows(); ++i)
@@ -219,6 +220,21 @@ public:
             }
         return mma::makeMatrix<mint>(result.size() / 2, 2, result.data());
     }
+    */
+
+    /*
+    mma::IntTensorRef edgeListNonLoopPositions(mma::IntMatrixRef pairs) {
+        mint m = pairs.rows();
+
+        std::vector<mint> vec;
+        vec.reserve(m);
+        for (mint i=0; i < m; ++i)
+            if (pairs(0,i) != pairs(i,1))
+                vec.push_back(i);
+
+        return mma::makeVector<mint>(vec.size(), vec.data());
+    }
+    */
 
     // Mark edges when either endpoint is present in 'vertices'
     mma::IntTensorRef edgeListMarkWhenEitherPresent(mma::IntMatrixRef pairs, mma::IntTensorRef vertices) {
