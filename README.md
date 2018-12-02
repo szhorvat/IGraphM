@@ -19,11 +19,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.103.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.104.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.3.103.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.3.104.paclet"]
 ```
 
 IGraph/M requires Mathematica 10.0.2 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
@@ -119,6 +119,8 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
    * LAD functions may crash with certain inputs.  [This is a bug in the igraph C core.](https://github.com/szhorvat/IGraphM/issues/1)
 
    * `IGDocumentation[]` may not work with Mathematica 11.1 on Linux.  Please enter `IGraphM/IGDocumentation` in the Documentation Center address bar to access it (or simply search for `igraph` in the Documentation Center).
+   
+   * `IGZeroDiagonal` will crash with non-square sparse matrices in Mathematica 11.1 and earlier. This is a bug in those versions of Mathematica.
 
    * See also https://github.com/szhorvat/IGraphM/issues
 
@@ -139,6 +141,7 @@ New functions in this release:
  - Centralization: `IGDegreeCentralization`, `IGBetweennessCentralization`, `IGClosenessCentralization`, `IGEigenvectorCentralization`.
  - Planar graphs: `IGPlanarQ`, `IGMaximalPlanarQ`, `IGOuterplanarQ`, `IGKuratowskiEdges`, `IGFaces`, `IGDualGraph`, `IGEmbeddingQ`, `IGPlanarEmbedding`, `IGOuterplanarEmbedding`, `IGCoordinatesToEmbedding`, `IGEmbeddingToCoordinates`, `IGLayoutPlanar`, `IGLayoutTutte`. 
  - Spanning trees and other tree-related functionality: `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGUnfoldTree`, `IGTreeQ`, `IGTreelikeComponents`, `IGTreeGame`, `IGStrahlerNumber`.
+ - Matching functions: `IGMaximumMatching`, `IGMatchingNumber`.
  - A framework for easy property transformations and graph styling: `IGVertexProp`, `IGEdgeProp`, `IGEdgeVertexProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
  - Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
  - Matrix functions: `IGZeroDiagonal`, `IGTakeUpper`, `IGTakeLower`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGJointDegreeMatrix`
@@ -171,6 +174,10 @@ Other changes:
     
  - Improved compatibility with Mathematica 11.2 and 11.3; handling of `TwoWayRule` as an edge specification.
  - Bug fixes, performance improvements, documentation updates, and general polish.
+ 
+Notes:
+
+ - IGraph/M 0.4 will be the last version of IGraph/M to support Mathematica 10.0. Starting with IGraph/M 0.5, it will only work [with versions of Mathematica that are still supported by Wolfram Research](http://support.wolfram.com/kb/22107).
 
 ##### v0.3.0
 
