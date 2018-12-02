@@ -344,21 +344,22 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpperTriangularMatrixToVector*)
 
 
-(* Statistics`Library`UpperTriangularMatrixToVector is used in IGTakeUpper.
+(* Statistics`Library`UpperTriangularMatrixToVector is used in IGTakeUpper in M \[GreaterEqual] 10.4.
    Verify that this undocumented symbol exists and that it works. *)
 
-MT[
-  Names["Statistics`Library`UpperTriangularMatrixToVector"],
-  {"Statistics`Library`UpperTriangularMatrixToVector"}
-]
-
-MT[
-  Statistics`Library`UpperTriangularMatrixToVector@Partition[Range[16], 4],
-  {2, 3, 4, 7, 8, 12}
+If[$VersionNumber >= 10.4,
+  MT[
+    Names["Statistics`Library`UpperTriangularMatrixToVector"],
+    {"Statistics`Library`UpperTriangularMatrixToVector"}
+  ];
+  MT[
+    Statistics`Library`UpperTriangularMatrixToVector@Partition[Range[16], 4],
+    {2, 3, 4, 7, 8, 12}
+  ]
 ]
 
 
@@ -4480,9 +4481,14 @@ MT[
   ConstantArray[0, 5]
 ]
 
-MT[
-  Diagonal@IGZeroDiagonal@SparseArray[ mat[[1;;5, All]] ],
-  SparseArray[{}, {5}]
+(* UpperTriangularize crashes with non-rectangular sparse arrays in M \[LessEqual] 11.2 
+   It is not worth working around this in IGraph/M at this moment, so we disable
+   this test for affected versions. *)
+If[$VersionNumber >= 11.2,
+  MT[
+    Diagonal@IGZeroDiagonal@SparseArray[ mat[[1;;5, All]] ],
+    SparseArray[{}, {5}]
+  ]
 ]
 
 MT[
