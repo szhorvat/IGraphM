@@ -31,9 +31,10 @@ Switch[$OperatingSystem,
   "Unix", (* Compilation settings for Linux *)
   $buildSettings = {
     "CompileOptions" -> {
-      (* Compile with -static-libgcc on non-RPi Linux for better compatibility with various distros *)
       If[$SystemID =!= "Linux-ARM",
-        Unevaluated@Sequence["-static-libgcc", "-D_GLIBCXX_USE_CXX11_ABI=0", "-flto"],
+        (* Compile with -static-libgcc on non-RPi Linux for better compatibility with older distros *)
+        (* Do not use -flto at this point when compiling on Ubuntu 16.04 as it leads to crashed when igraph returns an error *)
+        Unevaluated@Sequence["-static-libgcc", "-D_GLIBCXX_USE_CXX11_ABI=0"(*, "-flto"*)],
         Unevaluated@Sequence[]
       ]
     },
