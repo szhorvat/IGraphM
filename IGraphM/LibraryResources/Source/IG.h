@@ -2636,7 +2636,7 @@ public:
         }
 
         // This vector records the vertices that are smoothed out, so that
-        // latre they can be deleted in pure Mathematica code.
+        // later they can be deleted in pure Mathematica code.
         std::vector<mint> deletedVertices;
 
         int key = ecount;
