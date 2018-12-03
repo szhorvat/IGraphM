@@ -121,6 +121,8 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
    * `IGDocumentation[]` may not work with Mathematica 11.1 on Linux.  Please enter `IGraphM/IGDocumentation` in the Documentation Center address bar to access it (or simply search for `igraph` in the Documentation Center).
    
    * `IGZeroDiagonal` will crash with non-square sparse matrices in Mathematica 11.1 and earlier. This is a bug in those versions of Mathematica.
+   
+   * When loading IGraph/M in Mathematica 10.0 on recent versions of macOS (e.g. Mojave), the front end might crash. This is a problem specific to Mathematica 10.0, and, as far as I am aware, does not occur with newer versions. If this problem affects you, load IGraph/M as ``Block[{Print}, Needs["IGraphM`"]]``. 
 
    * See also https://github.com/szhorvat/IGraphM/issues
 
