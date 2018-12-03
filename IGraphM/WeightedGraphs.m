@@ -235,6 +235,9 @@ IGWeightedVertexDelete::usage =
     "IGWeightedVertexDelete[graph, vertex] deletes the given vertex while preserving edge weights.\n" <>
     "IGWeightedVertexDelete[graph, {v1, v2, \[Ellipsis]}] deletes the given set of vertices while preserving edge weights.";
 
+(* Delete with multiple indices is slow on non-packed arrays: https://mathematica.stackexchange.com/q/187206/12 *)
+fastDelete[list_, inds_] := Part[list, Delete[Range@Length[list], Transpose@Developer`ToPackedArray@List@inds]]
+
 SyntaxInformation[IGWeightedVertexDelete] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGWeightedVertexDelete[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
     catch@Module[{elist, emarker, vinds},
@@ -245,7 +248,7 @@ IGWeightedVertexDelete[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
       elist = IGIndexEdgeList[g];
       emarker = igraphGlobal@"edgeListMarkWhenEitherPresent"[elist, vinds];
       Graph[
-        Delete[VertexList[g], List /@ vinds],
+        fastDelete[VertexList[g], vinds],
         igraphGlobal@"edgeListReindexAfterDelete"[Pick[elist, emarker, 0], vinds],
         If[IGEdgeWeightedQ[g], EdgeWeight -> Pick[igEdgeWeights[g], emarker, 0], {}],
         DirectedEdges -> DirectedGraphQ[g],
