@@ -10697,9 +10697,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"f09f0662-1331-4ef5-a86b-fa234cf3b8c1"],
 
 Cell[TextData[{
- Cell[BoxData["IGUnfoldTree"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "34bac7da-5c0d-4f9d-b850-acec988b344d"],
+ Cell[BoxData[
+ "IGUnfoldTree"],ExpressionUUID->"34bac7da-5c0d-4f9d-b850-acec988b344d"],
  " creates a tree based on the breadth-first traversal of a graph. Each time \
 a graph vertex is found, a new tree vertex is created."
 }], "Text",ExpressionUUID->"071d88fd-7482-4942-9a39-a51f026f8cd3"],
@@ -30638,8 +30637,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
 
 Cell[BoxData[
  RowBox[{
@@ -31416,9 +31415,8 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"e905508f-a069-4a0d-842e-f106a0ca732e"],
 
 Cell[TextData[{
- Cell[BoxData["IGVertexColoring"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "5ec09a46-1462-42aa-a6e1-300ae13a4cfd"],
+ Cell[BoxData[
+ "IGVertexColoring"],ExpressionUUID->"5ec09a46-1462-42aa-a6e1-300ae13a4cfd"],
  " returns a list of integers, each representing the colour of the vertex \
 that is in the same position in the vertex list."
 }], "Text",ExpressionUUID->"c42f6ec1-06ed-4f4d-ade6-16b1208e1840"],
@@ -31769,8 +31767,8 @@ Cell[BoxData[
    RowBox[{"IGKVertexColoring", "[", 
     RowBox[{"g", ",", "5", ",", 
      RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]}], "]"}], ",", 
-   "5"}], 
-  "]"}]], "Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
+   "5"}], "]"}]], \
+"Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
 
 Cell["\<\
 Forcing colours in the appropriate way reduces the computation time \
@@ -32892,6 +32890,7 @@ Cell[BoxData[{
           AspectRatio->1,
           DefaultBaseStyle->"ColorSwatchGraphics",
           Frame->True,
+          
           FrameStyle->RGBColor[
            0.5333333333333334, 0.4, 0.33333333333333337`, 1.],
           FrameTicks->None,
@@ -37778,9 +37777,8 @@ Cell[TextData[{
  "IGraph/M includes a set of functions that make it easy to extract vertex \
 and edge properties (attributes), transform them with an arbitrary function, \
 set their values based on the output of various functions such as ",
- Cell[BoxData["IGBetweenness"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "a2cd0184-6661-4c5c-898b-aa195b7bebde"],
+ Cell[BoxData[
+ "IGBetweenness"],ExpressionUUID->"a2cd0184-6661-4c5c-898b-aa195b7bebde"],
  ", or to copy values from one graph property into another."
 }], "Text",ExpressionUUID->"58f1b835-2572-4c7f-a719-0feaded2e25c"],
 
@@ -37794,8 +37792,7 @@ distinguished, and it is assumed that when a property exists for one vertex \
 (or edge), it also exists for all others. When this is not the case, the \
 value ",
  Cell[BoxData[
-  RowBox[{"Missing", "[", "\"\<Nonexistent\>\"", "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"Missing", "[", "\"\<Nonexistent\>\"", "]"}]],ExpressionUUID->
   "8ee8f3bb-ca6f-47e1-9b04-159fdeca27ef"],
  " is used."
 }], "Text",ExpressionUUID->"dd06c992-2345-45bc-a1ec-3205f355fcfa"],
@@ -41299,6 +41296,99 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"IGAdjacencyGraph", "[", "%", 
   "]"}]], "Input",ExpressionUUID->"8cec51c3-1705-4382-b278-bc47c0d08e5c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGExpressionTree", \
+"Subsubsection",ExpressionUUID->"47f97ce3-cbbc-420b-a285-58c7afad986e"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGExpressionTree"}]], \
+"Input",ExpressionUUID->"4f275949-4b0a-435a-95d5-3fa9afcf8219"],
+
+Cell[TextData[{
+ Cell[BoxData["IGExpressionTree"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "6cfb5bb0-4fc4-4e62-a7f6-2dbaf8d4934b"],
+ " constructs a graph corresponding to the structure of a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " expression. "
+}], "Text",ExpressionUUID->"d9aba7f8-9c34-41a8-84a9-bad94e63cab2"],
+
+Cell[BoxData[
+ RowBox[{"tree", "=", 
+  RowBox[{"IGExpressionTree", "[", 
+   RowBox[{"expr", "=", 
+    RowBox[{
+     RowBox[{"x", "^", "2"}], "+", "1"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"4b597dd9-d1d9-4994-b28d-2b1c967be520"],
+
+Cell[TextData[{
+ "The expression tree is similar to what ",
+ Cell[BoxData["TreeForm"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "c058406c-515b-48e6-a22f-8580fb1ae13b"],
+ " displays, but unlike ",
+ Cell[BoxData["TreeForm"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "ccbd59d6-aa9b-44ec-9044-29db9f7fefc9"],
+ "\[CloseCurlyQuote]s output, it is a ",
+ Cell[BoxData["Graph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "f82461a4-ef82-4b01-ab7e-9eb7fd523236"],
+ " object that works with all graph functions."
+}], "Text",ExpressionUUID->"9679a793-0e40-47b7-832c-b075e6504af2"],
+
+Cell[BoxData[
+ RowBox[{"TreeForm", "[", "expr", 
+  "]"}]], "Input",ExpressionUUID->"b28a699d-8d39-403b-b8f6-cbd68ad988a7"],
+
+Cell["\<\
+The vertex names are the position specifications of the corresponding \
+subexpressions.\
+\>", "Text",ExpressionUUID->"87548249-8e38-4444-b79f-73f108b927b2"],
+
+Cell[BoxData[
+ RowBox[{"VertexList", "[", "tree", 
+  "]"}]], "Input",ExpressionUUID->"13a75c93-7263-484f-bb8e-68047c3338da"],
+
+Cell[BoxData[
+ RowBox[{"Extract", "[", 
+  RowBox[{"expr", ",", "%"}], 
+  "]"}]], "Input",ExpressionUUID->"cea69cee-85bc-43e7-8af1-f1b559a7402f"],
+
+Cell["Place the vertex labels in the centre.", \
+"Text",ExpressionUUID->"b3d6be35-c60e-43b8-bea9-35d41af31eb7"],
+
+Cell[BoxData[
+ RowBox[{"IGExpressionTree", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"x", "^", "2"}], "+", 
+    RowBox[{"y", "^", "2"}]}], ",", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<DiagramGold\>\""}], ",", 
+   RowBox[{"VertexLabels", "\[Rule]", 
+    RowBox[{"Placed", "[", 
+     RowBox[{"Automatic", ",", "Center"}], "]"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"bc9c03bc-cbfc-4893-8611-d81f5a0d1d8a"],
+
+Cell["\<\
+Certain trees are easier to construct through their corresponding nested \
+expression.\
+\>", "Text",ExpressionUUID->"5f6767d5-5553-461a-b6cc-a52977cb8ec9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGExpressionTree", "[", 
+    RowBox[{"#", ",", 
+     RowBox[{"VertexLabels", "\[Rule]", "None"}]}], "]"}], "&"}], "/@", 
+  RowBox[{"Groupings", "[", 
+   RowBox[{"5", ",", "3"}], 
+   "]"}]}]], "Input",ExpressionUUID->"0b2a634d-f6c7-4b43-998d-bce2e9cf6244"]
 }, Closed]]
 }, Closed]]
 }, Closed]],
