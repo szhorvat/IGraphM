@@ -126,23 +126,27 @@ IGTreelikeComponents[graph_?igGraphQ] :=
     ]
 
 
-PackageExport["IGExpressionGraph"]
+PackageExport["IGExpressionTree"]
+IGExpressionTree::usage = "IGExpressionTree[expression] constructs a tree graph from an arbitrary Mathematica expression.";
 
 SetAttributes[exprHead, HoldFirst]
 exprHead[expr_ /; AtomQ@Unevaluated[expr]] := HoldForm[expr]
 exprHead[expr_] := Extract[Unevaluated[expr], 0, HoldForm]
 
-Options[IGExpressionGraph] = { VertexLabels -> Automatic };
-SyntaxInformation[IGExpressionGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGExpressionGraph, Graph]};
+Options[IGExpressionTree] = { VertexLabels -> Automatic };
+SyntaxInformation[IGExpressionTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGExpressionTree, Graph]};
 (* TODO: Is there an AtomQ that Position will enter into? If yes, exprHead[] will label it incorrectly. *)
-IGExpressionGraph[expr_, opt : OptionsPattern[{IGExpressionGraph, Graph}]] :=
+IGExpressionTree[expr_, opt : OptionsPattern[{IGExpressionTree, Graph}]] :=
     Module[{vertices, edges, vertexLabels},
       vertices = Position[expr, _, {0, Infinity}, Heads -> False];
       edges = If[Length[#] > 0, DirectedEdge[Most[#], #], Unevaluated@Sequence[]] & /@ vertices;
       vertexLabels =
           Replace[
             OptionValue[VertexLabels],
-            Automatic :> Thread[vertices -> Extract[expr, vertices, exprHead]]
+            {
+              Automatic :> Thread[vertices -> Extract[expr, vertices, exprHead]],
+              Placed[Automatic, rest___] :> Thread[vertices -> Extract[expr, vertices, Placed[#, rest]& @* exprHead]]
+            }
           ];
       Graph[vertices, edges,
         GraphLayout -> {"LayeredEmbedding", "RootVertex" -> {}},
