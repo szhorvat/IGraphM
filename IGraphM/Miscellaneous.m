@@ -130,31 +130,35 @@ PackageExport["IGExpressionTree"]
 IGExpressionTree::usage = "IGExpressionTree[expression] constructs a tree graph from an arbitrary Mathematica expression.";
 
 SetAttributes[exprHead, HoldFirst]
+exprHead[expr_Association] := HoldForm[Association] (* Associations are atoms, but Position does descend into them *)
 exprHead[expr_ /; AtomQ@Unevaluated[expr]] := HoldForm[expr]
 exprHead[expr_] := Extract[Unevaluated[expr], 0, HoldForm]
 
-Options[IGExpressionTree] = { VertexLabels -> Automatic };
+Options[IGExpressionTree] = { VertexLabels -> "Head" };
 SyntaxInformation[IGExpressionTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGExpressionTree, Graph]};
 (* TODO: Is there an AtomQ that Position will enter into? If yes, exprHead[] will label it incorrectly. *)
 IGExpressionTree[expr_, opt : OptionsPattern[{IGExpressionTree, Graph}]] :=
     Module[{vertices, edges, vertexLabels},
       (* We could reverse the vertex list to make the root the first node rather than the last one.
-       * But this would cause the leaves to be displayed in reverse order with LayeredEmbedding. *)
+         But this would cause the leaves to be displayed in reverse order with LayeredEmbedding. *)
       vertices = Position[expr, _, {0, Infinity}, Heads -> False];
       edges = MapThread[DirectedEdge, {vertices[[;; -2, ;; -2]], vertices[[;; -2]]}];
       vertexLabels =
           Replace[
             OptionValue[VertexLabels],
             {
-              Automatic :> Thread[vertices -> Extract[expr, vertices, exprHead]],
-              Placed[Automatic, rest___] :> Thread[vertices -> Extract[expr, vertices, Placed[#, rest]& @* exprHead]]
+              "Head" :> Thread[vertices -> Extract[expr, vertices, exprHead]],
+              Placed["Head", rest___] :> Thread[vertices -> Extract[expr, vertices, Placed[#, rest]& @* exprHead]],
+              "Subexpression" :> Thread[vertices -> Extract[expr, vertices, HoldForm]],
+              Placed["Subexpression", rest___] :> Thread[vertices -> Extract[expr, vertices, Placed[#, rest]& @* HoldForm]]
             }
           ];
       Graph[vertices, edges,
         VertexLabels -> vertexLabels,
         opt,
         (* Do not set root vertex manually, as this would break rendering after applying IndexGraph.
-         * Trade-off: The root vertex will not be detected for all graphs. *)
-        GraphLayout -> "LayeredEmbedding"
+           We use LayeredDigraphEmbedding instead of LayeredEmbedding.
+           Trade-off: It detects the root vertex of an out-tree, but it reorders the nodes of each layer. *)
+        GraphLayout -> "LayeredDigraphEmbedding"
       ]
     ]
