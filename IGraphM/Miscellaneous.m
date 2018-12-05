@@ -138,8 +138,10 @@ SyntaxInformation[IGExpressionTree] = {"ArgumentsPattern" -> {_, OptionsPattern[
 (* TODO: Is there an AtomQ that Position will enter into? If yes, exprHead[] will label it incorrectly. *)
 IGExpressionTree[expr_, opt : OptionsPattern[{IGExpressionTree, Graph}]] :=
     Module[{vertices, edges, vertexLabels},
+      (* We could reverse the vertex list to make the root the first node rather than the last one.
+       * But this would cause the leaves to be displayed in reverse order with LayeredEmbedding. *)
       vertices = Position[expr, _, {0, Infinity}, Heads -> False];
-      edges = If[Length[#] > 0, DirectedEdge[Most[#], #], Unevaluated@Sequence[]] & /@ vertices;
+      edges = MapThread[DirectedEdge, {vertices[[;; -2, ;; -2]], vertices[[;; -2]]}];
       vertexLabels =
           Replace[
             OptionValue[VertexLabels],
@@ -149,8 +151,10 @@ IGExpressionTree[expr_, opt : OptionsPattern[{IGExpressionTree, Graph}]] :=
             }
           ];
       Graph[vertices, edges,
-        GraphLayout -> {"LayeredEmbedding", "RootVertex" -> {}},
         VertexLabels -> vertexLabels,
-        opt
+        opt,
+        (* Do not set root vertex manually, as this would break rendering after applying IndexGraph.
+         * Trade-off: The root vertex will not be detected for all graphs. *)
+        GraphLayout -> "LayeredEmbedding"
       ]
     ]
