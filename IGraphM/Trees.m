@@ -38,7 +38,7 @@ IGForestQ::usage =
 
 SyntaxInformation[IGForestQ] = {"ArgumentsPattern" -> {_, _.}};
 IGForestQ[graph_?igGraphQ, mode_ : "Out"] :=
-    AllTrue[connectedGraphComponents[graph], IGTreeQ[#, mode]&]
+    Block[{ig = igMakeFast[graph]}, sck@ig@"forestQ"[Lookup[<|"Out" -> 1, "In" -> 2, "All" -> 3|>, mode, -1]]]
 IGForestQ[_, _ : "Out"] := False
 addCompletion[IGForestQ, {0, {"In", "Out", "All"}}]
 

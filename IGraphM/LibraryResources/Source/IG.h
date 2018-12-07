@@ -594,6 +594,38 @@ public:
         return res;
     }
 
+    bool forestQ(mint mode) const {
+        igraph_neimode_t imode;
+        switch (mode) {
+        case 1:
+            imode = IGRAPH_OUT; break;
+        case 2:
+            imode = IGRAPH_IN; break;
+        case 3:
+            imode = IGRAPH_ALL; break;
+        default:
+            throw mma::LibraryError("forestQ: invalid mode");
+        }
+
+        igGraphList components;
+
+        // connected components with less than 3 vertices are always trees, even if directed
+        igraph_decompose(&graph, &components.list, IGRAPH_WEAK, -1, 3);
+
+        bool res = true;
+
+        long n = components.length();
+        for (long i=0; i < n; ++i) {
+            igraph_bool_t is_tree;
+            igraph_is_tree(components[i], &is_tree, nullptr, imode);
+            res = res && is_tree;
+            if (! res)
+                break;
+        }
+
+        return res;
+    }
+
     bool bipartiteQ() const {
         igraph_bool_t res;
         igCheck(igraph_is_bipartite(&graph, &res, nullptr));

@@ -257,6 +257,7 @@ template = LTemplate["IGraphM",
         LFun["simpleQ", {}, True|False],
         LFun["connectedQ", {True|False (* strongly connected *)}, True|False],
         LFun["treeQ", {Integer (* mode *)}, True|False],
+        LFun["forestQ", {Integer (* mode *)}, True|False],
         LFun["bipartiteQ", {}, True|False],
 
         (* Centrality *)
