@@ -212,4 +212,35 @@ Most IGraph/M functions that create graphs take all standard `Graph` options suc
 Functions that would otherwise be free-standing (not member functions) should go in the `IGlobal` class.
 
 
+## Running and writing unit tests
+
+IGraph/M's tests rely on the [MicroTest][2] utility package. Please install this first.
+
+To run the current tests, evaluate the cells in `Tests/RunTests.nb` one by one. If no red text is printed in the notebook then the tests have passed.
+
+To add more tests, edit `Tests.m`. Unlike the rest of the IGraph/M sources, it is recommended to edit this file with the Mathematica Front End.
+
+The basic format of a test is `MT[expression, expected]`. For example,
+
+```mathematica
+MT[
+  1+1,
+  2
+]
+```
+
+If evaluation generates messages, the test will fail. To specify expected messages, use
+
+```mathematica
+MT[
+  1/0,
+  ComplexInfinity,
+  {Power::infy}
+]
+```
+
+An `MT` expression is normally inert, and does not evaluate. To evaluate a test, wrap it in `MTRun`. To evaluate all tests in `Tests.m`, `MTRun@Get["Tests.m"]` is used.
+
+
   [1]: https://github.com/szhorvat/LTemplate/
+  [2]: https://github.com/szhorvat/MicroTest
