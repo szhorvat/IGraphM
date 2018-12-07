@@ -25,8 +25,22 @@ IGTreeQ::usage =
 SyntaxInformation[IGTreeQ] = {"ArgumentsPattern" -> {_, _.}};
 IGTreeQ[graph_?igGraphQ, mode_ : "Out"] :=
     Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[Lookup[<|"Out" -> 1, "In" -> 2, "All" -> 3|>, mode, -1]]]
-IGTreeQ[_] := False (* provide this only for the single argument form *)
+IGTreeQ[_, _ : "Out"] := False
 addCompletion[IGTreeQ, {0, {"In", "Out", "All"}}]
+
+
+PackageExport["IGForestQ"]
+IGForestQ::usage =
+    "IGForestQ[graph] tests if graph is a forest of trees or out-trees.\n" <>
+    "IGForestQ[graph, \"Out\"] tests if graph is a forest of out-trees (arborescences).\n" <>
+    "IGForestQ[graph, \"In\"] tests if graph is a forest of in-trees (anti-arborescences).\n" <>
+    "IGForestQ[graph, \"All\"] ignores edge directions during the test.";
+
+SyntaxInformation[IGForestQ] = {"ArgumentsPattern" -> {_, _.}};
+IGForestQ[graph_?igGraphQ, mode_ : "Out"] :=
+    AllTrue[connectedGraphComponents[graph], IGTreeQ[#, mode]&]
+IGForestQ[_, _ : "Out"] := False
+addCompletion[IGForestQ, {0, {"In", "Out", "All"}}]
 
 
 (***** Spanning trees *****)

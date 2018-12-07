@@ -213,3 +213,10 @@ If[$VersionNumber >= 10.1,
   keyValueMap = KeyValueMap,
   keyValueMap[f_, asc_] := f @@@ Normal[asc]
 ]
+
+PackageScope["connectedGraphComponents"]
+connectedGraphComponents::usage = "connectedGraphComponents[graph]";
+If[$VersionNumber >= 10.4,
+  connectedGraphComponents = WeaklyConnectedGraphComponents,
+  connectedGraphComponents[g_] := Subgraph[g, #]& /@ WeaklyConnectedComponents[g]
+]
