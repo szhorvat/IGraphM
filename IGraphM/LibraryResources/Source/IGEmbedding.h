@@ -20,7 +20,7 @@
  * of each vertex. Vertices are represented by non-negative integers (0, 1, ...), i.e. indexing
  * is 0-based.
  */
-struct Embedding {
+struct IGEmbedding {
     std::vector<std::vector<mint>> embedding;
 
     void set(MLINK link) {

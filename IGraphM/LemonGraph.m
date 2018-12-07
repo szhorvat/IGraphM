@@ -15,13 +15,13 @@ PackageImport["IGraphM`LTemplate`"] (* we use Make[] in the definition of lgMake
 (**********************************************************)
 
 
-(* Make a LemonGraph object *)
+(* Make an IGLemonGraph object *)
 
 (* lgMake is package scope because it is also used in IGLayoutPlanar, defined in GraphLayouts.m *)
 PackageScope["lgMake"]
-lgMake::usage = "lgMake[graph] converts graph to a LemonGraph object.";
+lgMake::usage = "lgMake[graph] converts graph to an IGLemonGraph object.";
 lgMake[g_] :=
-    With[{lg = Make["LemonGraph"]},
+    With[{lg = Make["IGLemonGraph"]},
       lg@"fromEdgeList"[IGIndexEdgeList[g]-1, VertexCount[g]];
       lg
     ]

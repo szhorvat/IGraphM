@@ -551,7 +551,7 @@ template = LTemplate["IGraphM",
       }
     ],
 
-    LClass["Embedding",
+    LClass["IGEmbedding",
       {
         LFun["set", LinkObject],
         LFun["get", LinkObject],
@@ -562,14 +562,14 @@ template = LTemplate["IGraphM",
       }
     ],
 
-    LClass["LemonGraph",
+    LClass["IGLemonGraph",
       {
         LFun["fromEdgeList", {{Integer, 2, "Constant"}, Integer}, "Void"],
         LFun["planarQ", {}, True|False],
         LFun["kuratowskiSubgraph", {}, {Integer, 1}],
         LFun["layoutPlanar", {}, {Integer, 2}],
         LFun["planarEmbedding", {}, {Integer, 1}],
-        LFun["embeddingToCoordinates", {LExpressionID["Embedding"]}, {Integer, 2}],
+        LFun["embeddingToCoordinates", {LExpressionID["IGEmbedding"]}, {Integer, 2}],
 
         LFun["maximumMatching", {}, {Integer, 1}],
         LFun["matchingNumber", {}, Integer]

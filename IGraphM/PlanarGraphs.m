@@ -24,7 +24,7 @@ igIndexEmbedding[emb_?AssociationQ] :=
 
 IGraphM::invemb = "`1` is not a valid combinatorial embedding.";
 embMake[emb_?AssociationQ] /; VectorQ[Values[emb], ListQ] && SubsetQ[Keys[emb], Catenate[emb]] :=
-    Block[{embedding = Make["Embedding"]},
+    Block[{embedding = Make["IGEmbedding"]},
       check@embedding@"set"[igIndexEmbedding[emb]-1];
       If[TrueQ@embedding@"validQ"[],
         embedding,

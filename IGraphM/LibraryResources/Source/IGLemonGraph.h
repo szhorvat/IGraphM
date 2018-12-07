@@ -7,7 +7,7 @@
 #ifndef LEMON_GRAPH_H
 #define LEMON_GRAPH_H
 
-#include "Embedding.h"
+#include "IGEmbedding.h"
 
 #include "LTemplate.h"
 #include "mlstream.h"
@@ -28,7 +28,7 @@
 #include <functional>
 #include <numeric>
 
-class LemonGraph {
+class IGLemonGraph {
     typedef lemon::StaticDigraph Digraph;
     typedef lemon::Undirector<const Digraph> Graph;
 
@@ -38,7 +38,7 @@ class LemonGraph {
     Digraph::ArcMap<mint> edgeIndex; // mapping back to the original edge indices
 
 public:
-    LemonGraph() :
+    IGLemonGraph() :
         graph(digraph),
         edgeIndex(digraph)
     { }
@@ -154,7 +154,7 @@ public:
     }
 
     // embedding must be a valid combinatorial embedding for the graph
-    mma::IntTensorRef embeddingToCoordinates(const Embedding &embedding) const {
+    mma::IntTensorRef embeddingToCoordinates(const IGEmbedding &embedding) const {
 
         // work around crash in LEMON under the following conditions
         if (digraph.arcNum() == 0 && digraph.nodeNum() < 3) {
