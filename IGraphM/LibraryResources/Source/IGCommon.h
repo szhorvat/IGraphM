@@ -173,21 +173,22 @@ struct igMatrix {
 };
 
 
-// RAII for igraph_vector_ptr_t
-class igList {
+// RAII for igraph_vector_ptr_t containing igraph_vector_t
+template<typename ElemType, void DestroyElem(ElemType *)>
+class igPtrVector {
 
     void destroy_items() {
         for (void **ptr = list.stor_begin; ptr < list.end; ++ptr)
-            igraph_vector_destroy(reinterpret_cast<igraph_vector_t *>(*ptr));
+            DestroyElem(reinterpret_cast<ElemType *>(*ptr));
     }
 
 public:
     igraph_vector_ptr_t list;
 
-    igList() {
+    igPtrVector() {
         igraph_vector_ptr_init(&list, 0);
     }
-    ~igList() {
+    ~igPtrVector() {
         // we destroy items manually ...
         destroy_items();
 
@@ -207,7 +208,13 @@ public:
     long length() const { return igraph_vector_ptr_size(&list); }
 
     void push(igraph_vector_t *vec) { igraph_vector_ptr_push_back(&list, vec); }
+
+    const ElemType *operator [] (long i) const { return static_cast<const ElemType *>(list.stor_begin[i]); }
 };
+
+
+typedef igPtrVector<igraph_vector_t, igraph_vector_destroy> igList;
+typedef igPtrVector<igraph_t, igraph_destroy> igGraphList;
 
 
 // extend mlstream with igraph-specific types
