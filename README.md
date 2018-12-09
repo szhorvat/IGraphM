@@ -19,11 +19,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.105.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.106.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.3.105.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.3.106.paclet"]
 ```
 
 IGraph/M requires Mathematica 10.0.2 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
@@ -142,13 +142,13 @@ New functions in this release:
  - Proximity graphs: `IGDelaunayGraph`, `IGGabrielGraph`, `IGRelativeNeighborhoodGraph`, `IGLuneBetaSkeleton`, `IGCircleBetaSkeleton`.
  - Centralization: `IGDegreeCentralization`, `IGBetweennessCentralization`, `IGClosenessCentralization`, `IGEigenvectorCentralization`.
  - Planar graphs: `IGPlanarQ`, `IGMaximalPlanarQ`, `IGOuterplanarQ`, `IGKuratowskiEdges`, `IGFaces`, `IGDualGraph`, `IGEmbeddingQ`, `IGPlanarEmbedding`, `IGOuterplanarEmbedding`, `IGCoordinatesToEmbedding`, `IGEmbeddingToCoordinates`, `IGLayoutPlanar`, `IGLayoutTutte`. 
- - Spanning trees and other tree-related functionality: `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGUnfoldTree`, `IGTreeQ`, `IGTreelikeComponents`, `IGTreeGame`, `IGStrahlerNumber`.
+ - Spanning trees and other tree-related functionality: `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGUnfoldTree`, `IGTreeQ`, `IGForestQ`, `IGTreelikeComponents`, `IGTreeGame`, `IGStrahlerNumber`.
  - Matching functions: `IGMaximumMatching`, `IGMatchingNumber`.
  - A framework for easy property transformations and graph styling: `IGVertexProp`, `IGEdgeProp`, `IGEdgeVertexProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
  - Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
  - Matrix functions: `IGZeroDiagonal`, `IGTakeUpper`, `IGTakeLower`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGJointDegreeMatrix`
  - Added `IGIndexEdgeList` for retrieving the edge list of a graph in terms of vertex indices. This function is very fast and returns a packed array. It facilitates the efficient implementation of graph processing functions in pure Mathematica code, or interfacing with C libraries.
- - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGTriangleFreeQ`, `IGSelfComplementaryQ`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGBipartiteProjections`, `IGNeighborhoodSize`, `IGCoreness`, `IGVoronoiCells`, `IGMinimalSeparators`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGMycielskian`, `IGSmoothen`, `IGHomeomorphicQ`,`IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTakeSubgraph`, `IGGiantComponent`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`.
+ - Other new functions: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGTriangleFreeQ`, `IGSelfComplementaryQ`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGBipartiteProjections`, `IGNeighborhoodSize`, `IGCoreness`, `IGVoronoiCells`, `IGMinimalSeparators`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGMycielskian`, `IGSmoothen`, `IGHomeomorphicQ`,`IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTakeSubgraph`, `IGGiantComponent`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`, `IGExpressionTree`.
  
 Updates to existing functions:
  
