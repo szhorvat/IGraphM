@@ -1485,6 +1485,270 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGExpressionTree", "Subsubsection",
+ ExpressionUUID -> "47f97ce3-cbbc-420b-a285-58c7afad986e"],
+
+Cell[BoxData[
+ RowBox[{"?", "IGExpressionTree"}]], "Input",
+ ExpressionUUID -> "4f275949-4b0a-435a-95d5-3fa9afcf8219"],
+
+Cell[TextData[{
+ Cell[BoxData["IGExpressionTree"],
+  ExpressionUUID -> "d1c7679b-ef7d-40c0-87cd-5a81056dba9f"],
+ " constructs the tree graph corresponding to an arbitrary ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " expression. The vertices of the tree will be the positions of the \
+corresponding subexpressions."
+}], "Text",
+ ExpressionUUID -> "63f10348-c091-456e-8ba9-31d4d7f01429"],
+
+Cell[TextData[{
+ Cell[BoxData["IGExpressionTree"],
+  ExpressionUUID -> "02437527-77dc-4a58-bc13-b4f8bc7e26ad"],
+ " takes all standard ",
+ Cell[BoxData["Graph"],
+  ExpressionUUID -> "e6b95323-24d3-45a1-9c4d-dbf6426b8840"],
+ " options. The ",
+ Cell[BoxData["VertexLabels"],
+  ExpressionUUID -> "6ed89874-65a2-4914-983b-07e55a6dee8e"],
+ " option takes the following special values:"
+}], "Text",
+ ExpressionUUID -> "a6eac6f6-8469-4bef-b3f9-202b8e28423c"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"VertexLabels", "\[Rule]", "\"\<Head\>\""}]],
+  ExpressionUUID -> "447813a3-4189-42d1-be33-8a37e2d4af70"],
+ " labels branch vertices with the ",
+ Cell[BoxData["Head"],
+  ExpressionUUID -> "cfe0e9f7-d497-43b8-bb92-8a3992e6e02b"],
+ " of the corresponding subexpression and leaf vertices with the \
+corresponding atomic expression."
+}], "Item",
+ ExpressionUUID -> "4b4692f7-678c-489f-8a92-dde367560049"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"VertexLabels", "\[Rule]", "\"\<Subexpression\>\""}]],
+  ExpressionUUID -> "6f834030-f90e-47d2-9616-f0d5ef1f23ec"],
+ " labels vertices with the corresponding subexpression."
+}], "Item",
+ ExpressionUUID -> "150d4f60-2657-4ccd-9466-45a98037682d"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]],
+  ExpressionUUID -> "5488e94b-41db-415b-9702-360c6168770e"],
+ " labels vertices with their name, i.e. the position of the corresponding \
+subexpression."
+}], "Item",
+ ExpressionUUID -> "25599789-6241-4a9a-bdeb-aeea99da4d5b"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"VertexLabels", "\[Rule]", "None"}]],
+  ExpressionUUID -> "61b1f0ef-c479-46a1-9e71-8fba334f4581"],
+ " uses no labels."
+}], "Item",
+ ExpressionUUID -> "be07085a-0365-43d9-9458-7d99562305cf"]
+}, Open  ]],
+
+Cell[TextData[{
+ Cell[BoxData["IGExpressionTree"],
+  ExpressionUUID -> "6cfb5bb0-4fc4-4e62-a7f6-2dbaf8d4934b"],
+ " constructs a graph corresponding to the structure of a ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " expression. "
+}], "Text",
+ ExpressionUUID -> "d9aba7f8-9c34-41a8-84a9-bad94e63cab2"],
+
+Cell[BoxData[
+ RowBox[{"tree", "=", 
+  RowBox[{"IGExpressionTree", "[", 
+   RowBox[{"expr", "=", 
+    RowBox[{"1", "+", 
+     RowBox[{"x", "^", "2"}]}]}], "]"}]}]], "Input",
+ ExpressionUUID -> "4b597dd9-d1d9-4994-b28d-2b1c967be520"],
+
+Cell[TextData[{
+ "The expression tree is similar to what ",
+ Cell[BoxData["TreeForm"],
+  ExpressionUUID -> "c058406c-515b-48e6-a22f-8580fb1ae13b"],
+ " displays, but unlike ",
+ Cell[BoxData["TreeForm"],
+  ExpressionUUID -> "ccbd59d6-aa9b-44ec-9044-29db9f7fefc9"],
+ "\[CloseCurlyQuote]s output, it is a ",
+ Cell[BoxData["Graph"],
+  ExpressionUUID -> "f82461a4-ef82-4b01-ab7e-9eb7fd523236"],
+ " object that works with all graph functions."
+}], "Text",
+ ExpressionUUID -> "9679a793-0e40-47b7-832c-b075e6504af2"],
+
+Cell[BoxData[
+ RowBox[{"TreeForm", "[", "expr", "]"}]], "Input",
+ ExpressionUUID -> "b28a699d-8d39-403b-b8f6-cbd68ad988a7"],
+
+Cell["\<\
+The vertex names are the position specifications of the corresponding \
+subexpressions.\
+\>", "Text",
+ ExpressionUUID -> "87548249-8e38-4444-b79f-73f108b927b2"],
+
+Cell[BoxData[
+ RowBox[{"VertexList", "[", "tree", "]"}]], "Input",
+ ExpressionUUID -> "13a75c93-7263-484f-bb8e-68047c3338da"],
+
+Cell[BoxData[
+ RowBox[{"Extract", "[", 
+  RowBox[{"expr", ",", "%"}], "]"}]], "Input",
+ ExpressionUUID -> "cea69cee-85bc-43e7-8af1-f1b559a7402f"],
+
+Cell["\<\
+Place the vertex labels in the centre and construct an undirected graph.\
+\>", "Text",
+ ExpressionUUID -> "b3d6be35-c60e-43b8-bea9-35d41af31eb7"],
+
+Cell[BoxData[
+ RowBox[{"IGExpressionTree", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"x", "^", "2"}], "+", 
+    RowBox[{"y", "^", "2"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<DiagramGold\>\""}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"VertexLabels", "\[Rule]", 
+    RowBox[{"Placed", "[", 
+     RowBox[{"\"\<Head\>\"", ",", "Center"}], "]"}]}], ",", 
+   RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ ExpressionUUID -> "bc9c03bc-cbfc-4893-8611-d81f5a0d1d8a"],
+
+Cell["Create an undirected graph, labeled with subexpressions.", "Text"],
+
+Cell[BoxData[
+ RowBox[{"IGExpressionTree", "[", 
+  RowBox[{
+   RowBox[{"Normal", "[", 
+    RowBox[{
+     RowBox[{"Sin", "[", "x", "]"}], "+", 
+     RowBox[{
+      RowBox[{"O", "[", "x", "]"}], "^", "5"}]}], "]"}], ",", 
+   RowBox[{"DirectedEdges", "\[Rule]", "False"}], ",", "\[IndentingNewLine]", 
+   
+   RowBox[{"VertexLabels", "\[Rule]", "\"\<Subexpression\>\""}]}], 
+  "]"}]], "Input"],
+
+Cell["\<\
+Certain trees are easier to construct through their corresponding nested \
+expression.\
+\>", "Text",
+ ExpressionUUID -> "5f6767d5-5553-461a-b6cc-a52977cb8ec9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGExpressionTree", "[", 
+    RowBox[{"#", ",", 
+     RowBox[{"VertexLabels", "\[Rule]", "\"\<Index\>\""}]}], "]"}], "&"}], "/@", 
+  RowBox[{"Groupings", "[", 
+   RowBox[{"5", ",", "3"}], "]"}]}]], "Input",
+ ExpressionUUID -> "0b2a634d-f6c7-4b43-998d-bce2e9cf6244"],
+
+Cell[TextData[{
+ "An equivalent of ",
+ Cell[BoxData["IGSymmetricTree"],
+  ExpressionUUID -> "4a07bbba-d94e-4b41-90f8-151dcba1c795"],
+ " can be easily implemented using ",
+ Cell[BoxData["IGExpressionTree"]],
+ "."
+}], "Text",
+ ExpressionUUID -> "6830fb1f-8dc0-4915-bd16-a68e6792887d"],
+
+Cell[BoxData[
+ RowBox[{"IGExpressionTree", "[", 
+  RowBox[{
+   RowBox[{"ConstantArray", "[", 
+    RowBox[{"1", ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "4", ",", "5"}], "}"}]}], "]"}], ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "None"}], ",", 
+   RowBox[{"GraphLayout", "\[Rule]", "\"\<RadialEmbedding\>\""}]}], 
+  "]"}]], "Input",
+ ExpressionUUID -> "2b3bd0c6-272e-4daf-9593-fac387d73616"],
+
+Cell["Define a tree through a substitution system.", "Text",
+ ExpressionUUID -> "f372d436-082c-480d-9801-9ddd6e44d2a9"],
+
+Cell[BoxData[
+ RowBox[{"IGExpressionTree", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Nest", "[", 
+    RowBox[{
+     RowBox[{"ReplaceAll", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"0", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{"0", ",", "1"}], "}"}]}], ",", 
+        RowBox[{"1", "\[Rule]", 
+         RowBox[{"{", "0", "}"}]}]}], "}"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1"}], "}"}], ",", "3"}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"VertexLabels", "\[Rule]", "None"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ ExpressionUUID -> "c0db6eef-8d89-4ee8-a878-963f019c9acd"],
+
+Cell[TextData[{
+ "To format each node so that it fits a label, it is necessary to set an \
+explicit ",
+ Cell[BoxData["VertexShapeFunction"],
+  FormatType->"StandardForm"],
+ "."
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGExpressionTree", "[", 
+    RowBox[{
+     RowBox[{"First", "@", 
+      RowBox[{"Roots", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"x", "^", "2"}], "+", 
+          RowBox[{"a", " ", "x"}], "+", "1"}], "==", "0"}], ",", "x"}], 
+       "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"VertexLabels", "\[Rule]", "\"\<Subexpression\>\""}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"PerformanceGoal", "\[Rule]", "\"\<Quality\>\""}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"ImageSize", "\[Rule]", "280"}]}], "\[IndentingNewLine]", "]"}], 
+   "//", "\[IndentingNewLine]", 
+   RowBox[{"IGVertexMap", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Function", "[", 
+      RowBox[{"e", ",", 
+       RowBox[{
+        RowBox[{"Inset", "[", 
+         RowBox[{
+          RowBox[{"Panel", "[", "e", "]"}], ",", "#1"}], "]"}], "&"}]}], 
+      "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"VertexShapeFunction", "\[Rule]", 
+      RowBox[{"IGVertexProp", "[", "VertexLabels", "]"}]}]}], 
+    "\[IndentingNewLine]", "]"}]}], "//", 
+  RowBox[{
+   RowBox[{"RemoveProperty", "[", 
+    RowBox[{"#", ",", "VertexLabels"}], "]"}], "&"}]}]], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["IGCompleteGraph", "Subsubsection",
  ExpressionUUID -> "dc384a6b-349a-412c-bb98-bd306dbff6dc"],
 
@@ -41824,220 +42088,6 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"IGAdjacencyGraph", "[", "%", "]"}]], "Input",
  ExpressionUUID -> "8cec51c3-1705-4382-b278-bc47c0d08e5c"]
-}, Closed]],
-
-Cell[CellGroupData[{
-
-Cell["IGExpressionTree", "Subsubsection",
- ExpressionUUID -> "47f97ce3-cbbc-420b-a285-58c7afad986e"],
-
-Cell[BoxData[
- RowBox[{"?", "IGExpressionTree"}]], "Input",
- ExpressionUUID -> "4f275949-4b0a-435a-95d5-3fa9afcf8219"],
-
-Cell[TextData[{
- Cell[BoxData["IGExpressionTree"],
-  ExpressionUUID -> "d1c7679b-ef7d-40c0-87cd-5a81056dba9f"],
- " constructs the tree graph corresponding to an arbitrary ",
- StyleBox["Mathematica",
-  FontSlant->"Italic"],
- " expression. The vertices of the tree will be the positions of the \
-corresponding subexpressions."
-}], "Text",
- ExpressionUUID -> "63f10348-c091-456e-8ba9-31d4d7f01429"],
-
-Cell[TextData[{
- Cell[BoxData["IGExpressionTree"],
-  ExpressionUUID -> "02437527-77dc-4a58-bc13-b4f8bc7e26ad"],
- " takes all standard ",
- Cell[BoxData["Graph"],
-  ExpressionUUID -> "e6b95323-24d3-45a1-9c4d-dbf6426b8840"],
- " options. The ",
- Cell[BoxData["VertexLabels"],
-  ExpressionUUID -> "6ed89874-65a2-4914-983b-07e55a6dee8e"],
- " option takes the following special values:"
-}], "Text",
- ExpressionUUID -> "a6eac6f6-8469-4bef-b3f9-202b8e28423c"],
-
-Cell[CellGroupData[{
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"VertexLabels", "\[Rule]", "\"\<Head\>\""}]],
-  ExpressionUUID -> "447813a3-4189-42d1-be33-8a37e2d4af70"],
- " labels branch vertices with the ",
- Cell[BoxData["Head"],
-  ExpressionUUID -> "cfe0e9f7-d497-43b8-bb92-8a3992e6e02b"],
- " of the corresponding subexpression and leaf vertices with the \
-corresponding atomic expression."
-}], "Item",
- ExpressionUUID -> "4b4692f7-678c-489f-8a92-dde367560049"],
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"VertexLabels", "\[Rule]", "\"\<Subexpression\>\""}]],
-  ExpressionUUID -> "6f834030-f90e-47d2-9616-f0d5ef1f23ec"],
- " labels vertices with the corresponding subexpression."
-}], "Item",
- ExpressionUUID -> "150d4f60-2657-4ccd-9466-45a98037682d"],
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]],
-  ExpressionUUID -> "5488e94b-41db-415b-9702-360c6168770e"],
- " labels vertices with their name, i.e. the position of the corresponding \
-subexpression."
-}], "Item",
- ExpressionUUID -> "25599789-6241-4a9a-bdeb-aeea99da4d5b"],
-
-Cell[TextData[{
- Cell[BoxData[
-  RowBox[{"VertexLabels", "\[Rule]", "None"}]],
-  ExpressionUUID -> "61b1f0ef-c479-46a1-9e71-8fba334f4581"],
- " uses no labels."
-}], "Item",
- ExpressionUUID -> "be07085a-0365-43d9-9458-7d99562305cf"]
-}, Open  ]],
-
-Cell[TextData[{
- Cell[BoxData["IGExpressionTree"],
-  ExpressionUUID -> "6cfb5bb0-4fc4-4e62-a7f6-2dbaf8d4934b"],
- " constructs a graph corresponding to the structure of a ",
- StyleBox["Mathematica",
-  FontSlant->"Italic"],
- " expression. "
-}], "Text",
- ExpressionUUID -> "d9aba7f8-9c34-41a8-84a9-bad94e63cab2"],
-
-Cell[BoxData[
- RowBox[{"tree", "=", 
-  RowBox[{"IGExpressionTree", "[", 
-   RowBox[{"expr", "=", 
-    RowBox[{
-     RowBox[{"x", "^", "2"}], "+", "1"}]}], "]"}]}]], "Input",
- ExpressionUUID -> "4b597dd9-d1d9-4994-b28d-2b1c967be520"],
-
-Cell[TextData[{
- "The expression tree is similar to what ",
- Cell[BoxData["TreeForm"],
-  ExpressionUUID -> "c058406c-515b-48e6-a22f-8580fb1ae13b"],
- " displays, but unlike ",
- Cell[BoxData["TreeForm"],
-  ExpressionUUID -> "ccbd59d6-aa9b-44ec-9044-29db9f7fefc9"],
- "\[CloseCurlyQuote]s output, it is a ",
- Cell[BoxData["Graph"],
-  ExpressionUUID -> "f82461a4-ef82-4b01-ab7e-9eb7fd523236"],
- " object that works with all graph functions."
-}], "Text",
- ExpressionUUID -> "9679a793-0e40-47b7-832c-b075e6504af2"],
-
-Cell[BoxData[
- RowBox[{"TreeForm", "[", "expr", "]"}]], "Input",
- ExpressionUUID -> "b28a699d-8d39-403b-b8f6-cbd68ad988a7"],
-
-Cell["\<\
-The vertex names are the position specifications of the corresponding \
-subexpressions.\
-\>", "Text",
- ExpressionUUID -> "87548249-8e38-4444-b79f-73f108b927b2"],
-
-Cell[BoxData[
- RowBox[{"VertexList", "[", "tree", "]"}]], "Input",
- ExpressionUUID -> "13a75c93-7263-484f-bb8e-68047c3338da"],
-
-Cell[BoxData[
- RowBox[{"Extract", "[", 
-  RowBox[{"expr", ",", "%"}], "]"}]], "Input",
- ExpressionUUID -> "cea69cee-85bc-43e7-8af1-f1b559a7402f"],
-
-Cell[TextData[{
- "Place the vertex labels in the centre and use a layout similar to that of \
-",
- Cell[BoxData["TreeForm"],
-  ExpressionUUID -> "f5f42764-44dd-4393-be7c-7ce2f485e4e8"],
- "."
-}], "Text",
- ExpressionUUID -> "b3d6be35-c60e-43b8-bea9-35d41af31eb7"],
-
-Cell[BoxData[
- RowBox[{"IGExpressionTree", "[", 
-  RowBox[{
-   RowBox[{
-    RowBox[{"x", "^", "2"}], "+", 
-    RowBox[{"y", "^", "2"}]}], ",", "\[IndentingNewLine]", 
-   RowBox[{"GraphStyle", "\[Rule]", "\"\<DiagramGold\>\""}], ",", 
-   "\[IndentingNewLine]", 
-   RowBox[{"VertexLabels", "\[Rule]", 
-    RowBox[{"Placed", "[", 
-     RowBox[{"\"\<Head\>\"", ",", "Center"}], "]"}]}], ",", 
-   "\[IndentingNewLine]", 
-   RowBox[{"GraphLayout", "\[Rule]", 
-    RowBox[{"{", 
-     RowBox[{"\"\<LayeredEmbedding\>\"", ",", 
-      RowBox[{"\"\<RootVertex\>\"", "\[Rule]", 
-       RowBox[{"{", "}"}]}]}], "}"}]}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",
- ExpressionUUID -> "bc9c03bc-cbfc-4893-8611-d81f5a0d1d8a"],
-
-Cell["\<\
-Certain trees are easier to construct through their corresponding nested \
-expression.\
-\>", "Text",
- ExpressionUUID -> "5f6767d5-5553-461a-b6cc-a52977cb8ec9"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"IGExpressionTree", "[", 
-    RowBox[{"#", ",", 
-     RowBox[{"VertexLabels", "\[Rule]", "\"\<Index\>\""}]}], "]"}], "&"}], "/@", 
-  RowBox[{"Groupings", "[", 
-   RowBox[{"4", ",", "2"}], "]"}]}]], "Input",
- ExpressionUUID -> "0b2a634d-f6c7-4b43-998d-bce2e9cf6244"],
-
-Cell[TextData[{
- "A possible implementation of ",
- Cell[BoxData["IGSymmetricTree"],
-  ExpressionUUID -> "4a07bbba-d94e-4b41-90f8-151dcba1c795"],
- ":"
-}], "Text",
- ExpressionUUID -> "6830fb1f-8dc0-4915-bd16-a68e6792887d"],
-
-Cell[BoxData[
- RowBox[{"IGExpressionTree", "[", 
-  RowBox[{
-   RowBox[{"ConstantArray", "[", 
-    RowBox[{"1", ",", 
-     RowBox[{"{", 
-      RowBox[{"3", ",", "4", ",", "5"}], "}"}]}], "]"}], ",", 
-   RowBox[{"VertexLabels", "\[Rule]", "None"}], ",", 
-   RowBox[{"GraphLayout", "\[Rule]", "\"\<RadialEmbedding\>\""}]}], 
-  "]"}]], "Input",
- ExpressionUUID -> "2b3bd0c6-272e-4daf-9593-fac387d73616"],
-
-Cell["A tree defined through a substitution system:", "Text",
- ExpressionUUID -> "f372d436-082c-480d-9801-9ddd6e44d2a9"],
-
-Cell[BoxData[
- RowBox[{"IGLayoutReingoldTilford", "@", 
-  RowBox[{"IGExpressionTree", "[", "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{"Nest", "[", 
-     RowBox[{
-      RowBox[{"ReplaceAll", "[", 
-       RowBox[{"{", 
-        RowBox[{
-         RowBox[{"0", "\[Rule]", 
-          RowBox[{"{", 
-           RowBox[{"0", ",", "1"}], "}"}]}], ",", 
-         RowBox[{"1", "\[Rule]", 
-          RowBox[{"{", "0", "}"}]}]}], "}"}], "]"}], ",", 
-      RowBox[{"{", 
-       RowBox[{"0", ",", "1"}], "}"}], ",", "3"}], "]"}], ",", 
-    "\[IndentingNewLine]", 
-    RowBox[{"VertexLabels", "\[Rule]", "None"}]}], "\[IndentingNewLine]", 
-   "]"}]}]], "Input",
- ExpressionUUID -> "c0db6eef-8d89-4ee8-a878-963f019c9acd"]
 }, Closed]]
 }, Closed]]
 }, Closed]],
@@ -42392,8 +42442,8 @@ Cell[TextData[{
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{737, 764},
-WindowMargins->{{Automatic, 282}, {Automatic, 42}},
+WindowSize->{828, 818},
+WindowMargins->{{Automatic, 303}, {0, Automatic}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
