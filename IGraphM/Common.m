@@ -220,3 +220,10 @@ If[$VersionNumber >= 10.4,
   connectedGraphComponents = WeaklyConnectedGraphComponents,
   connectedGraphComponents[g_] := Subgraph[g, #]& /@ WeaklyConnectedComponents[g]
 ]
+
+PackageScope["circularEmbedding"]
+circularEmbedding::usage = "circularEmbedding is a GraphLayout.";
+If[$VersionNumber < 12.0,
+  circularEmbedding = "CircularEmbedding",
+  circularEmbedding = {"CircularEmbedding", "OptimalOrder" -> False}
+]

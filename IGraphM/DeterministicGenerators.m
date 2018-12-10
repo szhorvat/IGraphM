@@ -28,7 +28,7 @@ PackageExport["IGLCF"]
 IGLCF::usage =
     "IGLCF[shifts, repeats] creates a graph from LCF notation.\n" <>
     "IGLCF[shifts, repeats, vertexCount] creates a graph from LCF notation with the number of vertices specified.";
-Options[IGLCF] = { GraphLayout -> "CircularEmbedding" };
+Options[IGLCF] = { GraphLayout -> circularEmbedding };
 SyntaxInformation[IGLCF] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGLCF, Graph]};
 IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?Internal`PositiveMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[{IGLCF, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[], numVertices},
@@ -82,13 +82,14 @@ IGKaryTree[m_?Internal`NonNegativeMachineIntegerQ, n : _?Internal`PositiveMachin
 PackageExport["IGSymmetricTree"]
 IGSymmetricTree::usage = "IGSymmetricTree[{k1, k2, \[Ellipsis]}] returns a tree where vertices in the (i+1)st layer have k_i children.";
 
+Options[IGSymmetricTree] = { GraphLayout -> "RadialEmbedding" };
 SyntaxInformation[IGSymmetricTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionsNames" -> optNames[IGSymmetricTree, Graph]};
 IGSymmetricTree[splits_?posIntVecQ, opt : OptionsPattern[]] :=
     With[{edges = igraphGlobal@"symmetricTree"[splits]},
       Graph[
         Range[Length[edges] + 1], edges + 1,
-        opt,
-        GraphLayout -> {"RadialEmbedding"}
+        GraphLayout -> OptionValue[GraphLayout],
+        opt
       ]
     ]
 
@@ -166,7 +167,7 @@ PackageExport["IGChordalRing"]
 IGChordalRing::usage = "IGChordalRing[n, w] returns an extended chordal ring on n vertices, based on the vector or matrix w.";
 
 Options[IGChordalRing] = {
-  GraphLayout -> "CircularEmbedding",
+  GraphLayout -> circularEmbedding,
   DirectedEdges -> False,
   SelfLoops -> True,
   MultiEdges -> True, "MultipleEdges" -> "Deprecated"
