@@ -134,7 +134,11 @@ exprHead[expr_Association] := HoldForm[Association] (* Associations are atoms, b
 exprHead[expr_ /; AtomQ@Unevaluated[expr]] := HoldForm[expr]
 exprHead[expr_] := Extract[Unevaluated[expr], 0, HoldForm]
 
-Options[IGExpressionTree] = { VertexLabels -> "Head" };
+Options[IGExpressionTree] = {
+  VertexLabels -> "Head",
+  GraphLayout -> "LayeredEmbedding",
+  DirectedEdges -> True
+};
 SyntaxInformation[IGExpressionTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGExpressionTree, Graph]};
 (* TODO: Is there an AtomQ that Position will enter into? If yes, exprHead[] will label it incorrectly. *)
 IGExpressionTree[expr_, opt : OptionsPattern[{IGExpressionTree, Graph}]] :=
@@ -142,7 +146,7 @@ IGExpressionTree[expr_, opt : OptionsPattern[{IGExpressionTree, Graph}]] :=
       (* We could reverse the vertex list to make the root the first node rather than the last one.
          But this would cause the leaves to be displayed in reverse order with LayeredEmbedding. *)
       vertices = Position[expr, _, {0, Infinity}, Heads -> False];
-      edges = MapThread[DirectedEdge, {vertices[[;; -2, ;; -2]], vertices[[;; -2]]}];
+      edges = MapThread[Rule, {vertices[[;; -2, ;; -2]], vertices[[;; -2]]}];
       vertexLabels =
           Replace[
             OptionValue[VertexLabels],
@@ -156,9 +160,8 @@ IGExpressionTree[expr_, opt : OptionsPattern[{IGExpressionTree, Graph}]] :=
       Graph[vertices, edges,
         VertexLabels -> vertexLabels,
         opt,
-        (* Do not set root vertex manually, as this would break rendering after applying IndexGraph.
-           We use LayeredDigraphEmbedding instead of LayeredEmbedding.
-           Trade-off: It detects the root vertex of an out-tree, but it reorders the nodes of each layer. *)
-        GraphLayout -> "LayeredDigraphEmbedding"
+        GraphRoot -> {},
+        GraphLayout -> OptionValue[GraphLayout],
+        DirectedEdges -> OptionValue[DirectedEdges]
       ]
     ]
