@@ -1624,6 +1624,31 @@ MT[
 
 
 (* ::Subsubsection:: *)
+(*IGForestQ*)
+
+
+MT[
+  IGForestQ@IGEmptyGraph[#],
+  True
+]& /@ Range[0,3]
+
+
+MT[
+  IGForestQ@IGShorthand["1-2-3,4-5-6"],
+  True
+]
+
+
+MT[
+  IGForestQ@IGShorthand["1-2-3-1,4-5-6"],
+  False
+]
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
 (*IGTreelikeComponents*)
 
 
