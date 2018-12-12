@@ -255,7 +255,7 @@ IGCliqueCoverNumber[graph_?igGraphQ] :=
 
 
 PackageExport["IGPerfectQ"]
-IGPerfectQ::usage = "IGPerfectQ[graph] tests is graph is perfect. The chromatic number of clique number is the same in every induced subgraph of a perfect graph.";
+IGPerfectQ::usage = "IGPerfectQ[graph] tests if graph is perfect. The chromatic number and the clique number are the same in every induced subgraph of a perfect graph.";
 
 IGPerfectQ::undir = "The input graph must be undirected.";
 SyntaxInformation[IGPerfectQ] = {"ArgumentsPattern" -> {_}};
