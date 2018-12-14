@@ -281,6 +281,16 @@ IGMaximumFlowMatrix[graph_?igGraphQ, s_, t_] :=
     ]
 
 
+PackageExport["IGMaximumFlowValue"]
+IGMaximumFlowValue::usage = "IGMaximumFlowValue[graph, s, t] returns the value of the maximum flow from  to t.";
+
+SyntaxInformation[IGMaximumFlowValue] = {"ArgumentsPattern" -> {_, _, _}};
+IGMaximumFlowValue[graph_?igGraphQ, s_, t_] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+      check@ig@"maxFlowValue"[vs[graph][s], vs[graph][t], edgeCapacities[graph]]
+    ]
+
+
 PackageExport["IGGomoryHuTree"]
 IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 

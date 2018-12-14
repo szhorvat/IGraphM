@@ -2089,6 +2089,13 @@ public:
         return flows.makeMTensor();
     }
 
+    double maxFlowValue(mint s, mint t, mma::RealTensorRef tcapacity) const {
+        igraph_vector_t capacity = igVectorView(tcapacity);
+        double value;
+        igraph_maxflow_value(&graph, &value, s, t, tcapacity.length() == 0 ? nullptr : &capacity, nullptr);
+        return value;
+    }
+
     double minCutValue() const {
         double value;
         igCheck(igraph_mincut_value(&graph, &value, passWeights()));

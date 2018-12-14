@@ -508,6 +508,7 @@ template = LTemplate["IGraphM",
 
         (* LFun["maxFlowMatrix", {Integer (* s *), Integer (* t *)}, LType[SparseArray, Real, 2]], *)
         LFun["maxFlow", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"}}, {Real, 1}],
+        LFun["maxFlowValue", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"}}, Real],
 
         LFun["minCutValue", {}, Real],
         LFun["minCutValueST", {Integer (* s *), Integer (* t *)}, Real],
