@@ -2037,6 +2037,58 @@ public:
         return flows.makeMTensor();
     }
 
+    /*
+    mma::SparseArrayRef<double> maxFlowMatrix(mint s, mint t) const {
+        igVector flow;
+        igCheck(igraph_maxflow(&graph, nullptr, &flow.vec, nullptr, nullptr, nullptr, s, t, passWeights(), nullptr));
+
+        mint ec = edgeCount();
+
+        massert(ec == flow.length());
+
+        auto dims = mma::makeVector<mint>(2);
+        dims[0] = dims[1] = vertexCount();
+
+        if (directedQ()) {
+            auto pos = mma::makeMatrix<mint>(ec, 2);
+            auto val = mma::makeVector<double>(ec);
+
+            for (mint i=0; i < ec; ++i) {
+                long s = IGRAPH_FROM(&graph, i), t = IGRAPH_TO(&graph, i);
+                pos(i, 0) = s+1;
+                pos(i, 1) = t+1;
+                val[i] = flow[i];
+            }
+
+            return mma::makeSparseArray<double>(pos, val, dims);
+        } else {
+            auto pos = mma::makeMatrix<mint>(2*ec, 2);
+            auto val = mma::makeVector<double>(2*ec);
+
+            for (mint i=0; i < ec; ++i) {
+                long s = IGRAPH_FROM(&graph, i), t = IGRAPH_TO(&graph, i);
+                if (s > t)
+                    std::swap(s, t);
+                pos(2*i, 0) = s+1;
+                pos(2*i, 1) = t+1;
+                pos(2*i+1, 0) = t+1;
+                pos(2*i+1, 1) = s+1;
+                val[2*i] = flow[i];
+                val[2*i+1] = -flow[i];
+            }
+
+            return mma::makeSparseArray<double>(pos, val, dims);
+        }
+    }
+    */
+
+    mma::RealTensorRef maxFlow(mint s, mint t, mma::RealTensorRef tcapacity) const {
+        igraph_vector_t capacity = igVectorView(tcapacity);
+        igVector flows;
+        igCheck(igraph_maxflow(&graph, nullptr, &flows.vec, nullptr, nullptr, nullptr, s, t, tcapacity.length() == 0 ? nullptr : &capacity, nullptr));
+        return flows.makeMTensor();
+    }
+
     double minCutValue() const {
         double value;
         igCheck(igraph_mincut_value(&graph, &value, passWeights()));

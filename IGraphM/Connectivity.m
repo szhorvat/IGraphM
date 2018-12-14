@@ -248,7 +248,38 @@ IGFindCuts[graph_?igGraphQ, s_, t_, "Minimum"] :=
     ]
 
 
-(***** Other functions *****)
+(***** Maximum flow *****)
+
+edgeCapacities[graph_] :=
+    With[{capacities = PropertyValue[graph, EdgeCapacity]},
+      If[VectorQ[capacities], capacities, {}]
+    ]
+
+
+PackageExport["IGMaximumFlowMatrix"]
+IGMaximumFlowMatrix::usage = "IGMaximumFlowMatrix[graph, s, t] returns the flow matrix of a maximum flow from s to t.";
+
+SyntaxInformation[IGMaximumFlowMatrix] = {"ArgumentsPattern" -> {_, _, _}};
+IGMaximumFlowMatrix[graph_?igGraphQ, s_, t_] :=
+    catch@Block[{ig = igMakeUnweighted[graph], flows},
+      flows = check@ig@"maxFlow"[vs[graph][s], vs[graph][t], edgeCapacities[graph]];
+      With[{sao = SystemOptions["SparseArrayOptions"]},
+        Internal`WithLocalSettings[
+          SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> Total]
+          ,
+          If[DirectedGraphQ[graph],
+            SparseArray[IGIndexEdgeList[graph] -> flows, VertexCount[graph] {1, 1}, 0.]
+            ,
+            With[{pairs = igraphGlobal@"edgeListSortPairs"[IGIndexEdgeList[graph]]},
+              SparseArray[Join[pairs, Reverse[pairs, 2]] -> Join[flows, -flows], VertexCount[graph] {1, 1}, 0.]
+            ]
+          ]
+          ,
+          SetSystemOptions[sao]
+        ]
+      ]
+    ]
+
 
 PackageExport["IGGomoryHuTree"]
 IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
@@ -256,16 +287,16 @@ IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
 (* Note: edge ordering is critical *)
 SyntaxInformation[IGGomoryHuTree] = {"ArgumentsPattern" -> {_}};
 IGGomoryHuTree[graph_?GraphQ] :=
-    catch@Block[{new = Make["IG"], ig = igMake[graph], flow, capacity},
-      capacity = PropertyValue[graph, EdgeCapacity];
-      If[Not@VectorQ[capacity], capacity = {}];
-      flow = check@new@"gomoryHuTree"[ManagedLibraryExpressionID[ig], capacity];
+    catch@Block[{new = igMakeEmpty[], ig = igMakeUnweighted[graph], flow},
+      flow = check@new@"gomoryHuTree"[ManagedLibraryExpressionID[ig], edgeCapacities[graph]];
       <|
         "Tree" -> igToGraphWithNames[new, VertexList[graph]],
         "Flow" -> flow
       |>
     ]
 
+
+(***** Other functions *****)
 
 PackageExport["IGGiantComponent"]
 IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly connected component of graph.";
