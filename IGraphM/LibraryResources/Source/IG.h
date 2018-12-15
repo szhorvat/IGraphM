@@ -2037,6 +2037,22 @@ public:
         return flows.makeMTensor();
     }
 
+    // note that this is a constructor!
+    void dominatorTree(const IG &ig, mint root) {
+        destroy();
+        igConstructorCheck(igraph_dominator_tree(&ig.graph, root, nullptr, &graph, nullptr, IGRAPH_OUT));
+    }
+
+    mma::RealTensorRef immediateDominators(mint root) const {
+        igVector dom;
+        igCheck(igraph_dominator_tree(&graph, root, &dom.vec, nullptr, nullptr, IGRAPH_OUT));
+        for (auto &el : dom) {
+            if (! (el >= 0))
+                el = -1;
+        }
+        return dom.makeMTensor();
+    }
+
     /*
     mma::SparseArrayRef<double> maxFlowMatrix(mint s, mint t) const {
         igVector flow;
@@ -2135,12 +2151,6 @@ public:
         return packListIntoIntTensor(list);
     }
 
-    /*
-    mma::RealTensorRef immediateDominators(mint root) const {
-        igVector dom;
-        igraph_dominator_tree(&graph, root, &dom.vec, nullptr, nullptr, IGRAPH_OUT);
-        return dom.makeMTensor();
-    }*/
 
     // Connected components
 

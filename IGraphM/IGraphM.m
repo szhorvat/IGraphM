@@ -506,6 +506,9 @@ template = LTemplate["IGraphM",
 
         LFun["gomoryHuTree", {LExpressionID["IG"], {Real, 1, "Constant"}}, {Real, 1}],
 
+        LFun["dominatorTree", {LExpressionID["IG"], Integer (* root *)}, "Void"],
+        LFun["immediateDominators", {Integer (* root *)}, {Real, 1}],
+
         (* LFun["maxFlowMatrix", {Integer (* s *), Integer (* t *)}, LType[SparseArray, Real, 2]], *)
         LFun["maxFlow", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"}}, {Real, 1}],
         LFun["maxFlowValue", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"}}, Real],
@@ -880,11 +883,12 @@ igMakeFastWeighted = igMake; (* IncidenceMatrix-based igMake is faster than the 
 (* Create Mathematica Graph from IG object. *)
 PackageScope["igToGraph"]
 igToGraph::usage = "igToGraph[ig] converts back an IG object to a Graph.";
-igToGraph[ig_] :=
+igToGraph[ig_, opt___] :=
     Graph[
       Range[ig@"vertexCount"[]],
       igIndexVec[ig@"edgeList"[]],
-      DirectedEdges -> ig@"directedQ"[]
+      DirectedEdges -> ig@"directedQ"[],
+      opt
     ]
 
 (* Create Mathematica Graph from IG object and assign vertex names. *)
@@ -895,12 +899,14 @@ igToGraph[ig_] :=
  *)
 PackageScope["igToGraphWithNames"]
 igToGraphWithNames::usage = "igToGraphWithNames[ig, vertexNames] converts back an IG object to a Graph and uses the give vertex names.";
-igToGraphWithNames[ig_, verts_] :=
+igToGraphWithNames[ig_, verts_, opt___] :=
     Graph[
       verts,
       igIndexVec[ig@"edgeList"[]],
-      DirectedEdges -> ig@"directedQ"[]
+      DirectedEdges -> ig@"directedQ"[],
+      opt
     ]
+
 
 (* Warning: this function does not check if the graph is actually weighted! *)
 PackageScope["igToWeightedGraphWithNames"]

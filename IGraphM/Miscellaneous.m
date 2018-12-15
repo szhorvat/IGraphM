@@ -114,6 +114,29 @@ IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"g
 IGGraphicalQ[___] := False
 
 
+(***** Dominators *****)
+
+PackageExport["IGDominatorTree"]
+IGDominatorTree::usage = "IGDominatorTree[graph, root] returns the dominator tree of a directed graph starting from root.";
+SyntaxInformation[IGDominatorTree] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGDominatorTree[graph_?igGraphQ, root_, opt : OptionsPattern[Graph]] :=
+    catch@Block[{new = igMakeEmpty[], ig = igMakeUnweighted[graph]},
+      check@new@"dominatorTree"[ManagedLibraryExpressionID[ig], vs[graph][root]];
+      igToGraphWithNames[new, VertexList[graph], opt, GraphRoot -> root]
+    ]
+
+
+PackageExport["IGImmediateDominators"]
+IGImmediateDominators::usage = "IGImmediateDominators[graph, root] returns the immediate dominator of each vertex relative to root.";
+SyntaxInformation[IGImmediateDominators] = {"ArgumentsPattern" -> {_, _}};
+IGImmediateDominators[graph_?igGraphQ, root_] :=
+    catch@Block[{ig = igMakeUnweighted[graph], dominators, mask},
+      dominators = check@ig@"immediateDominators"[vs[graph][root]];
+      mask = UnitStep[dominators];
+      AssociationThread[Pick[VertexList[graph], mask, 1], VertexList[graph][[Pick[igIndexVec[dominators], mask, 1]]]]
+    ]
+
+
 (***** Other functions *****)
 
 PackageExport["IGTreelikeComponents"]
