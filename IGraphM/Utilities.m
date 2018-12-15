@@ -245,7 +245,7 @@ expr : IGOrientTree[tree_?GraphQ, root_, mode : _String : "Out", opt : OptionsPa
         "In", verts = Reverse[verts],
         _, Message[IGOrientTree::inv, HoldForm@OutputForm[expr], mode, "mode"]; Return[$Failed]
       ];
-      DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", opt]
+      DirectedGraph[IGReorderVertices[verts, tree], "Acyclic", GraphRoot -> root, opt]
     ]
 addCompletion[IGOrientTree, {0, 0, {"In", "Out"}}]
 
