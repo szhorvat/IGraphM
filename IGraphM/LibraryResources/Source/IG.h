@@ -2092,7 +2092,7 @@ public:
     double maxFlowValue(mint s, mint t, mma::RealTensorRef tcapacity) const {
         igraph_vector_t capacity = igVectorView(tcapacity);
         double value;
-        igraph_maxflow_value(&graph, &value, s, t, tcapacity.length() == 0 ? nullptr : &capacity, nullptr);
+        igCheck(igraph_maxflow_value(&graph, &value, s, t, tcapacity.length() == 0 ? nullptr : &capacity, nullptr));
         return value;
     }
 
@@ -2503,7 +2503,7 @@ public:
             finalMembership = membership;
             igraph_integer_t cc = 1 + static_cast<igraph_integer_t>( *std::max_element(membership.begin(), membership.end()) );
             igCheck(igraph_le_community_to_membership(&merges.mat, cc - n_communities, &membership.vec, nullptr));
-            igraph_modularity(&graph, &membership.vec, &modularity, passWeights());
+            igCheck(igraph_modularity(&graph, &membership.vec, &modularity, passWeights()));
         }
 
         ml.newPacket();
@@ -2922,7 +2922,7 @@ public:
             throw mma::LibraryError("strahlerNumber: the graph is not a directed out-tree.");
 
         igVector degree;
-        igraph_degree(&graph, &degree.vec, igraph_vss_all(), IGRAPH_IN, false);
+        igCheck(igraph_degree(&graph, &degree.vec, igraph_vss_all(), IGRAPH_IN, false));
 
         // Find the root---this will not go out of bounds since we already verified that the graph is an out-tree.
         long root;
@@ -2931,7 +2931,7 @@ public:
                 break;
 
         igVector postorder, parent;
-        igraph_dfs(&graph, root, IGRAPH_OUT, false, nullptr, &postorder.vec, &parent.vec, nullptr, nullptr, nullptr, nullptr);
+        igCheck(igraph_dfs(&graph, root, IGRAPH_OUT, false, nullptr, &postorder.vec, &parent.vec, nullptr, nullptr, nullptr, nullptr));
 
         auto res = mma::makeVector<mint>(postorder.length());
         std::fill(res.begin(), res.end(), 1);
