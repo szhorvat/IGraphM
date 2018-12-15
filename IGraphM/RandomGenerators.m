@@ -203,8 +203,8 @@ igBarabasiAlbertGame[n_, m_, {power_, a_}, directed_, totalDegree_, method_, ini
 PackageExport["IGWattsStrogatzGame"]
 IGWattsStrogatzGame::usage =
     "IGWattsStrogatzGame[n, p] generates an n-vertex Watts–Strogatz random graph using rewiring probability p.\n" <>
-    "IGWattsStrogatzGame[n, p, k] rewires a lattice where each node is connected to its k-neighbourhood.\n" <>
-    "IGWattsStrogatzGame[n, p, {dim, k}] rewires a dim dimensional lattice of n^dim vertices, where each node is connected to its k-neighbourhood.";
+    "IGWattsStrogatzGame[n, p, k] rewires a lattice where each vertex is connected to its k-neighbourhood.\n" <>
+    "IGWattsStrogatzGame[n, p, {dim, k}] rewires a dim dimensional lattice of n^dim vertices, where each vertex is connected to its k-neighbourhood.";
 
 Options[IGWattsStrogatzGame] = {
   SelfLoops -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated"

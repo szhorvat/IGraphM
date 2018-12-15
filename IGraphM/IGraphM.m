@@ -504,14 +504,14 @@ template = LTemplate["IGraphM",
 
         (* Maximum flow *)
 
-        LFun["gomoryHuTree", {LExpressionID["IG"], {Real, 1, "Constant"}}, {Real, 1}],
+        LFun["gomoryHuTree", {LExpressionID["IG"], {Real, 1, "Constant"} (* capacities *)}, {Real, 1}],
 
         LFun["dominatorTree", {LExpressionID["IG"], Integer (* root *)}, "Void"],
         LFun["immediateDominators", {Integer (* root *)}, {Real, 1}],
 
         (* LFun["maxFlowMatrix", {Integer (* s *), Integer (* t *)}, LType[SparseArray, Real, 2]], *)
-        LFun["maxFlow", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"}}, {Real, 1}],
-        LFun["maxFlowValue", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"}}, Real],
+        LFun["maxFlow", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"} (* capacities *)}, {Real, 1}],
+        LFun["maxFlowValue", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"} (* capacities *)}, Real],
 
         LFun["minCutValue", {}, Real],
         LFun["minCutValueST", {Integer (* s *), Integer (* t *)}, Real],
