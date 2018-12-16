@@ -227,6 +227,18 @@ IGMinimumCut[graph_?igGraphQ, s_, t_] :=
     ]
 
 
+PackageExport["IGGomoryHuTree"]
+IGGomoryHuTree::usage = "IGGomoryHuTree[graph] returns the Gomory–Hu tree of a graph.";
+
+(* Note: edge ordering is critical *)
+SyntaxInformation[IGGomoryHuTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGGomoryHuTree[graph_?GraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{new = igMakeEmpty[], ig = igMake[graph], flow},
+      flow = check@new@"gomoryHuTree"[ManagedLibraryExpressionID[ig]];
+      igToGraphWithNames[new, VertexList[graph], EdgeWeight -> flow, opt]
+    ]
+
+
 (* Removed due to bug in graph core https://github.com/igraph/igraph/issues/1102 *)
 (*
 PackageExport["IGFindCuts"]
@@ -288,21 +300,6 @@ SyntaxInformation[IGMaximumFlowValue] = {"ArgumentsPattern" -> {_, _, _}};
 IGMaximumFlowValue[graph_?igGraphQ, s_, t_] :=
     catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"maxFlowValue"[vs[graph][s], vs[graph][t], edgeCapacities[graph]]
-    ]
-
-
-PackageExport["IGGomoryHuTree"]
-IGGomoryHuTree::usage = "IGGomoryHuTree[graph]";
-
-(* Note: edge ordering is critical *)
-SyntaxInformation[IGGomoryHuTree] = {"ArgumentsPattern" -> {_}};
-IGGomoryHuTree[graph_?GraphQ] :=
-    catch@Block[{new = igMakeEmpty[], ig = igMakeUnweighted[graph], flow},
-      flow = check@new@"gomoryHuTree"[ManagedLibraryExpressionID[ig], edgeCapacities[graph]];
-      <|
-        "Tree" -> igToGraphWithNames[new, VertexList[graph]],
-        "Flow" -> flow
-      |>
     ]
 
 

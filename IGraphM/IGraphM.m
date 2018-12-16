@@ -504,7 +504,7 @@ template = LTemplate["IGraphM",
 
         (* Maximum flow *)
 
-        LFun["gomoryHuTree", {LExpressionID["IG"], {Real, 1, "Constant"} (* capacities *)}, {Real, 1}],
+        LFun["gomoryHuTree", {LExpressionID["IG"]}, {Real, 1}],
 
         LFun["dominatorTree", {LExpressionID["IG"], Integer (* root *)}, "Void"],
         LFun["immediateDominators", {Integer (* root *)}, {Real, 1}],

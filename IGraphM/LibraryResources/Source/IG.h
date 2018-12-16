@@ -2029,11 +2029,10 @@ public:
     // Maximum flow
 
     // note that this is a constructor!
-    mma::RealTensorRef gomoryHuTree(const IG &ig, mma::RealTensorRef tcapacity) {
-        igraph_vector_t capacity = igVectorView(tcapacity);
+    mma::RealTensorRef gomoryHuTree(const IG &ig) {
         igVector flows;
         destroy();
-        igConstructorCheck(igraph_gomory_hu_tree(&ig.graph, &graph, &flows.vec, tcapacity.length() == 0 ? nullptr : &capacity));
+        igConstructorCheck(igraph_gomory_hu_tree(&ig.graph, &graph, &flows.vec, ig.passWeights()));
         return flows.makeMTensor();
     }
 
