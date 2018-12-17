@@ -446,7 +446,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "ad4d8b82-39bc-49d8-b5f3-a1f4b0f2746b"],
- " keeps self loops in the graph."
+ " keeps self-loops in the graph."
 }], "Item",
  ExpressionUUID -> "0fcba618-f6c4-4db9-a23f-e1a592bdbaee"],
 
@@ -1325,7 +1325,7 @@ Cell[BoxData[
 Cell[TextData[{
  Cell[BoxData["IGSymmetricTree"],
   ExpressionUUID -> "c9759348-084b-4c5e-b19b-9406c4cee792"],
- " is guarantees to label vertices in breadth-first order. Deeper layers have \
+ " is guaranteed to label vertices in breadth-first order. Deeper layers have \
 higher integer labels."
 }], "Text",
  ExpressionUUID -> "16acf47a-a632-4f7a-a0dc-f8e130897e85"],
@@ -1349,7 +1349,7 @@ Cell[BoxData[
  ExpressionUUID -> "c607d641-1465-446c-bd21-058d0f7fd540"],
 
 Cell[TextData[{
- "A Bethe lattice is an infinite tree in which all nodes have the same \
+ "A Bethe lattice is an infinite tree in which all vertices have the same \
 degree. ",
  Cell[BoxData[
   RowBox[{"IGBetheLattice", "[", 
@@ -1358,7 +1358,7 @@ degree. ",
  " computes the first ",
  Cell[BoxData["n"],
   ExpressionUUID -> "57dd6f4f-748d-41b3-b2fd-b60d1b0c5853"],
- " layers of such a tree tree. Each non-leaf node will have degree ",
+ " layers of such a tree. Each non-leaf vertex will have degree ",
  Cell[BoxData["k"],
   ExpressionUUID -> "f01ca67a-2895-495f-af57-15e5eeafb77a"],
  ". The default degree is 3."
@@ -1627,7 +1627,7 @@ Cell[BoxData[
   "]"}]], "Input",
  ExpressionUUID -> "bc9c03bc-cbfc-4893-8611-d81f5a0d1d8a"],
 
-Cell["Create an undirected graph, labeled with subexpressions.", "Text",
+Cell["Create an undirected graph, labelled with subexpressions.", "Text",
  ExpressionUUID -> "805aba48-9f14-4957-b40d-84f526156ee4"],
 
 Cell[BoxData[
@@ -1778,7 +1778,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "243dcc99-7547-45d6-af22-e3c52937aa37"],
- " includes self loops."
+ " includes self-loops."
 }], "Item",
  ExpressionUUID -> "b25bfb9b-a0b6-4e58-bd77-2eb68b772358"]
 }, Open  ]],
@@ -2105,7 +2105,7 @@ Cell[TextData[{
  Cell[BoxData["IGErdosRenyiGameGNP"],
   ExpressionUUID -> "06dd8d3b-9145-4aa2-b0fd-740ea52bec23"],
  ", each edge is present with the same and independent probability. This \
-model is know as the Erd\[ODoubleAcute]s\[Dash]R\[EAcute]nyi ",
+model is known as the Erd\[ODoubleAcute]s\[Dash]R\[EAcute]nyi ",
  Cell[BoxData[
   FormBox[
    RowBox[{"G", "(", 
@@ -2132,7 +2132,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "3df7dbfc-717b-4136-b9f8-15c82639b303"],
- " allows self loops."
+ " allows self-loops."
 }], "Item",
  ExpressionUUID -> "2c20d4ae-367f-415a-9b0f-58c0370fa93b"]
 }, Open  ]],
@@ -2174,7 +2174,7 @@ Cell[TextData[{
    RowBox[{"G", "(", 
     RowBox[{"n", ",", "p"}], ")"}], TraditionalForm]],
   ExpressionUUID -> "cfeb86fe-8100-4507-9c1e-33dcb1793383"],
- " model produces connected graph with high probability for ",
+ " model produces connected graphs with high probability for ",
  Cell[BoxData[
   FormBox[
    RowBox[{"p", ">", 
@@ -3011,7 +3011,7 @@ Cell[BoxData[
  ExpressionUUID -> "657cc855-c546-4dd1-b032-0cfc8a2a706d"],
 
 Cell["\<\
-Create a preferential attachment graph using a 4-node complete graph as \
+Create a preferential attachment graph using a 4-node complete graph as the \
 starting point.\
 \>", "Text",
  ExpressionUUID -> "d41f1500-c331-42d4-8677-31709e6e2236"],
@@ -3087,7 +3087,7 @@ score. The algorithm starts with ",
  " vertices and no edges. Two vertices are selected with probabilities \
 proportional to their fitness scores (for directed graphs, a starting vertex \
 is selected based on its out-fitness and an end vertex based on its \
-in-fitness).  If they are not yet connected, and edge is inserted between \
+in-fitness).  If they are not yet connected, an edge is inserted between \
 them. The procedure is repeated until the number of edges reached ",
  Cell[BoxData[
   FormBox["m", TraditionalForm]],
@@ -3105,7 +3105,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "ab928b5c-13ca-4a1f-af14-ed9c3c820af0"],
- " allows the creation of self loops."
+ " allows the creation of self-loops."
 }], "Item",
  ExpressionUUID -> "8a53b0a8-3a34-4cf3-81b0-1d9c6af27a06"],
 
@@ -3207,7 +3207,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "82e5332f-fc55-4757-9cd5-c980d5da9c2f"],
- " allows the creation of self loops."
+ " allows the creation of self-loops."
 }], "Item",
  ExpressionUUID -> "38b7e755-3b6f-4f66-a991-6e7176f3902d"],
 
@@ -3315,7 +3315,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "6fc50f27-b700-47ca-b85d-b16828466792"],
- " allows the creation of self loops."
+ " allows the creation of self-loops."
 }], "Item",
  ExpressionUUID -> "90efc1be-9415-4369-940a-9ed7e7bd6a40"]
 }, Open  ]],
@@ -3550,7 +3550,7 @@ Cell[TextData[{
  Cell[BoxData["IGRewire"],
   ExpressionUUID -> "f0869098-41df-4edc-88ce-d6495526f151"],
  " will try to rewire the edges of the graph the given number of times  by \
-switching random pairs of edges as below, thus preserving the graphs\
+switching random pairs of edges as below, thus preserving the graph\
 \[CloseCurlyQuote]s degree sequence."
 }], "Text",
  ExpressionUUID -> "fa6d1af2-ce82-48e2-a3aa-e19d5f3fddb7"],
@@ -3820,7 +3820,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "fd69ebcd-280f-4d88-9909-c123d984dff2"],
- " allows the creation of self loops."
+ " allows the creation of self-loops."
 }], "Item",
  ExpressionUUID -> "9d4498ba-08ed-49b5-86e4-68e29515828a"],
 
@@ -3948,7 +3948,58 @@ Cell[BoxData[
     
     FormatType->TraditionalForm,
     FrameTicks->None,
-    ImageSize->{88.984375, Automatic}], ",", "10", ",", 
+    ImageSize->{88.984375, Automatic},
+    ImageCache->GraphicsData["CompressedBitmap", "\<\
+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\
+\>"]], ",", "10", ",", 
    RowBox[{"VertexShapeFunction", "\[Rule]", "\"\<Name\>\""}]}], 
   "]"}]], "Input",
  ExpressionUUID -> "bec2ec60-b511-4aac-967a-b85c9d307fca"],
@@ -4032,7 +4083,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "99c230b2-817e-4ac6-b738-bf43b7e8dae7"],
- " allows the creation of self loops."
+ " allows the creation of self-loops."
 }], "Item",
  ExpressionUUID -> "1fac8189-02e3-4f66-89d4-f98006fa6725"],
 
@@ -4158,7 +4209,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "1ef01eee-5a20-489d-b2b3-39b501ac9136"],
- " keeps any self loops created during contraction."
+ " keeps any self-loops created during contraction."
 }], "Item",
  ExpressionUUID -> "ae3f5d7a-d216-4134-974b-f88474c07af8"],
 
@@ -4229,7 +4280,6 @@ Cell[BoxData[
             StripOnInput->False,
             ShowContents->False], InsetBox["4", {0., 0.8028039324489454},
             BaseStyle->"Graphics"]}, {
-           
            StyleBox[
             DiskBox[{0.0008060506593086103, 0.0003240480495921849}, 
              0.16049605784358253],
@@ -4377,7 +4427,7 @@ Cell[TextData[{
  " differs from the built-in ",
  Cell[BoxData["GraphPower"],
   ExpressionUUID -> "dcd4b1e0-39be-4141-8fec-b9b95f3ff97d"],
- " in that it preserves parallel edges and self loops."
+ " in that it preserves parallel edges and self-loops."
 }], "Text",
  ExpressionUUID -> "8738eb89-9011-4cdb-86a8-2917b1f7b24c"],
 
@@ -5588,7 +5638,7 @@ Cell[TextData[StyleBox["Possible issues:",
 
 Cell["\<\
 Weighted betweenness calculations may be affected by numerical precision when \
-non-integer weights are used. Betweenness computations count shortest path, \
+non-integer weights are used. Betweenness computations count shortest paths, \
 which means that the total weight of different paths must be compared for \
 equality.  Equality testing with floating point numbers is unreliable.  This \
 can be demonstrated on an example which is purposefully constructed to be \
@@ -6048,7 +6098,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"Normalized", "\[Rule]", "True"}]],
   ExpressionUUID -> "49a0892b-6fac-4833-b393-bad2260716c8"],
- ", the result is normalized by dividing it by the highest value is can \
+ ", the result is normalized by dividing it by the highest value it can \
 achieve for a graph of the same directedness on the same number of vertices."
 }], "Text",
  ExpressionUUID -> "211d33bc-9971-4727-a7f6-88a163c8c646"],
@@ -6299,7 +6349,7 @@ Cell[BoxData[
 Cell["\<\
 The maximum cardinality search algorithm visits the vertices of the graph in \
 such an order so that every time the vertex with the most already visited \
-neighbors is visited next. The visiting order is animated below:\
+neighbours is visited next. The visiting order is animated below:\
 \>", "Text",
  ExpressionUUID -> "81cddfa8-d15a-4b48-8c60-88bd57062f7b"],
 
@@ -8206,7 +8256,7 @@ Cell[BoxData[
 
 Cell["\<\
 The Dice similarity coefficient of two vertices is twice the number of common \
-neighbors divided by the sum of the degrees of the vertices.\
+neighbours divided by the sum of the degrees of the vertices.\
 \>", "Text",
  ExpressionUUID -> "6c16ae25-867b-4d57-86a3-89e0ac0885d2"],
 
@@ -8216,7 +8266,7 @@ Cell[BoxData[
 
 Cell["\<\
 The Jaccard similarity coefficient of two vertices is the number of common \
-neighbors divided by the number of vertices that are neighbors of at least \
+neighbours divided by the number of vertices that are neighbours of at least \
 one of the two vertices being considered.\
 \>", "Text",
  ExpressionUUID -> "2c887069-f601-45f5-a32b-d3f9d27c66e3"],
@@ -8227,10 +8277,10 @@ Cell[BoxData[
 
 Cell["\<\
 The inverse log-weighted similarity of two vertices is the number of their \
-common neighbors, weighted by the inverse logarithm of their degrees. It is \
+common neighbours, weighted by the inverse logarithm of their degrees. It is \
 based on the assumption that two vertices should be considered more similar \
-if they share a low-degree common neighbor, since high-degree common \
-neighbors are more likely to appear even by pure chance.\
+if they share a low-degree common neighbour, since high-degree common \
+neighbours are more likely to appear even by pure chance.\
 \>", "Text",
  ExpressionUUID -> "394cf961-6191-43ca-ad48-b7ee709c5b49"],
 
@@ -8906,7 +8956,7 @@ Cell[TextData[{
 
 Cell["\<\
 The articulation vertices will be part of more than a single components, thus \
-the biconnected components are not disjoints subsets of the vertex set.\
+the biconnected components are not disjoint subsets of the vertex set.\
 \>", "Text",
  ExpressionUUID -> "47a078fe-8845-4458-b2b3-0b4ae029846f"],
 
@@ -10329,9 +10379,7 @@ Cell[BoxData[
     RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}]}]], "Input",
  ExpressionUUID -> "7d3f12a3-b312-4e76-a652-45f644729e4d"],
 
-Cell["\<\
-Create mazes by taking a random spanning trees of grid graphs.\
-\>", "Text",
+Cell["Create mazes by taking random spanning trees of grid graphs.", "Text",
  ExpressionUUID -> "a25799a0-bb65-4acb-9e45-14aad55c6b4d"],
 
 Cell[BoxData[{
@@ -12959,7 +13007,7 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"cang1", "===", "cang2"}]], "Input",
  ExpressionUUID -> "9c34baf7-c468-4017-9ea6-8195fd9d7227"]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -13041,7 +13089,7 @@ Cell[BoxData[
 
 Cell[TextData[{
  "VF2 supports vertex coloured and edge coloured graphs. A colour \
-specification consists of one of more of the ",
+specification consists of one or more of the ",
  Cell[BoxData["\"\<VertexColors\>\""],
   ExpressionUUID -> "274a277b-1caa-4e44-ad99-690eee7058c4"],
  " and ",
@@ -32178,7 +32226,7 @@ Cell[BoxData[
  ExpressionUUID -> "1c8262de-c098-4d73-b626-3475223f1635"],
 
 Cell[TextData[{
- "The data available in the object can be queries using ",
+ "The data available in the object can be queried using ",
  Cell[BoxData[
   RowBox[{
    RowBox[{"IGClusterData", "[", "\[Ellipsis]", "]"}], "[", 
@@ -32985,7 +33033,7 @@ Cell[BoxData[
  ExpressionUUID -> "39560326-e099-46c1-8f50-ca4975be87d5"],
 
 Cell[TextData[{
- "Visualize the a hierarchical clustering using the ",
+ "Visualize the hierarchical clustering using the ",
  ButtonBox["Hierarchical Clustering Package",
   BaseStyle->"Link",
   ButtonData->"paclet:HierarchicalClustering/tutorial/HierarchicalClustering"],
@@ -33080,7 +33128,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"1", ",", "2", ",", "\[Ellipsis]"}]],
   ExpressionUUID -> "a64d7420-6758-44c7-8075-8112d115666e"],
- ". Edge directions and self loops are ignored."
+ ". Edge directions and self-loops are ignored."
 }], "Text",
  ExpressionUUID -> "b92f7698-1a0c-44d7-b65a-59c39f544e51"],
 
@@ -34815,7 +34863,7 @@ Cell[BoxData[
  ExpressionUUID -> "fdc47f92-459f-419b-b72c-e30029afebff"],
 
 Cell["\<\
-Let us visualize them by showing an an initial (black) triangle and its (red) \
+Let us visualize them by showing an initial (black) triangle and its (red) \
 transformation.\
 \>", "Text",
  ExpressionUUID -> "0c75bf21-2866-4023-8276-cc1903a2e5f6"],
@@ -35564,7 +35612,9 @@ Cell[BoxData[{
     "\[RightAssociation]"}]}], ";"}]}], "Input",
  ExpressionUUID -> "f93be589-f3e7-400e-95c0-f42a95ae94e4"],
 
-Cell["The are both planar, but only the second one is outerplanar.", "Text",
+Cell["\<\
+They are both planar, but only the second one is outerplanar.\
+\>", "Text",
  ExpressionUUID -> "6d16526f-6fba-495e-ba77-814489191edc"],
 
 Cell[BoxData[
@@ -36634,7 +36684,7 @@ Cell[BoxData[
  ExpressionUUID -> "565b685a-0f99-40b2-950f-b88838b48c9a"],
 
 Cell["\<\
-By applying a  further power-transformation of the weight, we can fine tune \
+By applying a  further power-transformation of the weight, we can fine-tune \
 the layout.\
 \>", "Text",
  ExpressionUUID -> "4dd73b3b-8b80-4cb2-87c7-8c4d7a315751"],
@@ -37584,7 +37634,7 @@ Cell[TextData[{
  Cell[BoxData[
   FormBox["B", TraditionalForm]],
   ExpressionUUID -> "fc1b31d8-83e3-4419-9c7e-e866354aa3f7"],
- " when intersection of two disks (a lune) having ",
+ " when the intersection of two disks (a lune) having ",
  Cell[BoxData[
   FormBox["A", TraditionalForm]],
   ExpressionUUID -> "90e1174c-ef00-4499-b929-534ee2c0cd0d"],
@@ -38335,7 +38385,7 @@ Cell[BoxData[
  ExpressionUUID -> "7ade8c02-f026-4ab0-89d7-1468fd477337"],
 
 Cell[TextData[{
- "The relative neighborhood graph is constructed from a set of points in \
+ "The relative neighbourhood graph is constructed from a set of points in \
 space. Two points ",
  Cell[BoxData[
   FormBox["A", TraditionalForm]],
@@ -38367,7 +38417,7 @@ space. Two points ",
  ExpressionUUID -> "aef92e2b-0512-494a-a253-f6a6de5e0d03"],
 
 Cell[TextData[{
- "The relative neighborhood graph coincides with a \[Beta]-skeleton for ",
+ "The relative neighbourhood graph coincides with a \[Beta]-skeleton for ",
  Cell[BoxData[
   FormBox[
    RowBox[{"\[Beta]", "=", "2"}], TraditionalForm]],
@@ -38419,7 +38469,7 @@ Cell[BoxData[
   "]"}]], "Input",
  ExpressionUUID -> "75540db6-8596-48c1-a5f2-30b1bcd1f94f"],
 
-Cell["Plot the relative neighborhood graph of African capitals.", "Text",
+Cell["Plot the relative neighbourhood graph of African capitals.", "Text",
  ExpressionUUID -> "fac1b44c-f4d8-47a8-8a80-f7e9ce6bde91"],
 
 Cell[BoxData[{
@@ -39005,7 +39055,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "False"}]],
   ExpressionUUID -> "719e3e4c-ec27-4cad-ba29-bf4e85dbecbe"],
- " will discard self loops. The default is to keep them."
+ " will discard self-loops. The default is to keep them."
 }], "Item",
  ExpressionUUID -> "961d5a69-e1a9-4806-8369-d5d42241a669"],
 
@@ -39027,7 +39077,7 @@ Cell[BoxData[
      RowBox[{"IGEdgeProp", "[", "EdgeWeight", "]"}]}]}], "]"}]}]], "Input",
  ExpressionUUID -> "70efc547-e480-4f20-add4-32ace07e4f4e"],
 
-Cell["Discard self loops and apply additional graph options.", "Text",
+Cell["Discard self-loops and apply additional graph options.", "Text",
  ExpressionUUID -> "45f76b1a-4d8a-4448-bdc7-27864183a1a4"],
 
 Cell[BoxData[
@@ -39787,7 +39837,7 @@ Cell[BoxData[
     "\[IndentingNewLine]", "]"}]}]}]], "Input",
  ExpressionUUID -> "6eebd448-3a0d-47ce-a394-88d7820fb82a"],
 
-Cell["Label a graph with circular layout:", "Text",
+Cell["Label a graph with a circular layout:", "Text",
  ExpressionUUID -> "38db27d6-debd-41a1-8f86-3499c0aba8b1"],
 
 Cell[BoxData[
@@ -41502,7 +41552,7 @@ Cell[TextData[{
 other graph manipulation packages, such as the igraph library itself. ",
  Cell[BoxData["IGExport"],
   ExpressionUUID -> "e6b1f313-b264-499c-af67-cfc9c6184bec"],
- " provides a standards compliant implementation."
+ " provides a standards-compliant implementation."
 }], "Text",
  ExpressionUUID -> "9a15030c-6ebb-4d30-a3b0-c4c3c8203a9e"],
 
@@ -41762,7 +41812,7 @@ Cell[BoxData[
 Cell[TextData[{
  Cell[BoxData["IGSimpleGraph"],
   ExpressionUUID -> "1b952653-9fe6-40b9-abc6-58661eae3a5a"],
- " removes self loops and collapses multi-edges into simple ones, as \
+ " removes self-loops and collapses multi-edges into simple ones, as \
 specified in the options."
 }], "Text",
  ExpressionUUID -> "c567f88a-8777-47cb-bb7f-583bd10c365a"],
@@ -41776,7 +41826,7 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"SelfLoops", "\[Rule]", "True"}]],
   ExpressionUUID -> "f2df03bd-7b7d-4d6a-8eec-96a267118054"],
- " keeps self loops in the graph."
+ " keeps self-loops in the graph."
 }], "Item",
  ExpressionUUID -> "36c21515-bb7c-468e-b7d0-b70970d583e2"],
 
@@ -43779,7 +43829,7 @@ Cell[TextData[{
  StyleBox["Mathematica",
   FontSlant->"Italic"],
  " plugin for IntelliJ IDEA by Patrick Scheibe. Without the help of this IDE, \
-it would have been difficult to manage to complexity of this package. \
+it would have been difficult to manage the complexity of this package. \
 Website: ",
  ButtonBox["http://wlplugin.halirutan.de/",
   BaseStyle->"Hyperlink",
