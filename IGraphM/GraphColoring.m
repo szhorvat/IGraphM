@@ -142,7 +142,7 @@ igKColoringHeuristic[_][graph_] := {}
 
 
 PackageExport["IGKEdgeColoring"]
-IGKEdgeColoring::usage = "IGKEdgeColoring[graph, k] attempts of find a k-colouring of graph's edges. If none exist, {} is returned.";
+IGKEdgeColoring::usage = "IGKEdgeColoring[graph, k] attempts to find a k-colouring of graph's edges. If none exist, {} is returned.";
 
 Options[IGKEdgeColoring] = { "ForcedColoring" -> "MaxDegreeClique" };
 SyntaxInformation[IGKEdgeColoring] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};

@@ -385,7 +385,7 @@ IGCircleBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumeric
 
 
 PackageExport["IGRelativeNeighborhoodGraph"]
-IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighborhood graph of the given points.";
+IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighbourhood graph of the given points.";
 
 SyntaxInformation[IGRelativeNeighborhoodGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGRelativeNeighborhoodGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=

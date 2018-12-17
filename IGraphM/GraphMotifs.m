@@ -65,7 +65,7 @@ IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : Optio
 
 
 PackageExport["IGMotifsEstimateTotalCount"]
-IGMotifsEstimateTotalCount::usage = "IGMotifsEstimateTotalCount[graph, motifSize, sampleSize] estimates the total count of motifs (connected subgraphs) of the given size in graph, based on a sample of the give size.";
+IGMotifsEstimateTotalCount::usage = "IGMotifsEstimateTotalCount[graph, motifSize, sampleSize] estimates the total count of motifs (connected subgraphs) of the given size in graph, based on a sample of the given size.";
 
 Options[IGMotifsEstimateTotalCount] = { DirectedEdges -> Automatic };
 SyntaxInformation[IGMotifsEstimateTotalCount] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};

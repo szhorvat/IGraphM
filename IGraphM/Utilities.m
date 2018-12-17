@@ -35,7 +35,7 @@ IGNullGraphQ[_] = False;
 
 
 PackageExport["IGSameGraphQ"]
-IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given graphs have the same vertices and edges. Graph properties or edge and vertex ordering is not taken into account.";
+IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given graphs have the same vertices and edges. Graph properties or edge and vertex orderings are not taken into account.";
 
 SyntaxInformation[IGSameGraphQ] = {"ArgumentsPattern" -> {_, _}};
 IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
@@ -169,7 +169,7 @@ IGReverseGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 PackageExport["IGSimpleGraph"]
-IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self loops and multi edges, according to the given options.";
+IGSimpleGraph::usage = "IGSimpleGraph[graph] converts graph to a simple graph by removing self-loops and multi-edges, according to the given options.";
 
 Options[IGSimpleGraph] = { SelfLoops -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated" };
 SyntaxInformation[IGSimpleGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSimpleGraph, Graph]};

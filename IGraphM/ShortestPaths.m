@@ -125,7 +125,7 @@ IGNeighborhoodSize[graph_?igGraphQ, v_, ord : _?ordQ : {1}] :=
 
 PackageExport["IGDistanceHistogram"]
 IGDistanceHistogram::usage =
-    "IGDistanceHistogram[graph, binsize] computes a histogram of weighted all-pair shortest path lengths in graph with the given bin size. In case of undirected graphs, path lengths are double counted.\n" <>
+    "IGDistanceHistogram[graph, binsize] computes a histogram of weighted all-pair shortest path lengths in graph with the given bin size. In the case of undirected graphs, path lengths are double counted.\n" <>
     "IGDistanceHistogram[graph, binsize, from] computes a histogram of weighted shortest path lengths in graph for the given starting vertices and bin size.\n" <>
     "IGDistanceHistogram[graph, binsize, from, to] computes a histogram of weighted shortest path lengths in graph for the given starting and ending vertices and bin size.";
 

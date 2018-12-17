@@ -61,7 +61,7 @@ igMultigraphSubisomorphicQ[subgraph_, graph_] :=
 
 
 PackageExport["IGIsoclass"]
-IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData to get list of graphs ordered by isoclass.";
+IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData to get lists of graphs ordered by isoclass.";
 
 SyntaxInformation[IGIsoclass] = {"ArgumentsPattern" -> {_}};
 IGIsoclass[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"isoclass"[]]
@@ -147,11 +147,11 @@ blissSplittingHeuristics = AssociationThread[blissSplittingHeuristicsNames, Rang
 
 PackageExport["IGBlissCanonicalLabeling"]
 IGBlissCanonicalLabeling::usage =
-    "IGBlissCanonicalLabeling[graph] computes a canonical integer labeling of the graph vertices. Using this labeling brings representations of isomorphic graphs to the same form.\n" <>
-    "IGBlissCanonicalLabeling[{graph, colorSpec}] computes a canonical integer labeling for the vertices of a vertex coloured graph.";
+    "IGBlissCanonicalLabeling[graph] computes a canonical integer labelling of the graph vertices. Using this labelling brings representations of isomorphic graphs to the same form.\n" <>
+    "IGBlissCanonicalLabeling[{graph, colorSpec}] computes a canonical integer labelling for the vertices of a vertex coloured graph.";
 
 amendUsage[IGBlissCanonicalLabeling,
-  " Available values for the \"SplittingHeuristics\" option: ``. The labeling depends on the splitting heuristics used.",
+  " Available values for the \"SplittingHeuristics\" option: ``. The labelling depends on the splitting heuristics used.",
   blissSplittingHeuristicsNames
 ];
 
@@ -200,8 +200,8 @@ IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Opt
 
 PackageExport["IGBlissCanonicalGraph"]
 IGBlissCanonicalGraph::usage =
-    "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labeling.\n" <>
-    "IGBlissCanonicalGraph[{graph, colorSpec}] returns a canonical graph of a vertex coloured graph, based on the canonical integer labeling. Vertex colors will be stored in the \"Color\" vertex property.";
+    "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labelling.\n" <>
+    "IGBlissCanonicalGraph[{graph, colorSpec}] returns a canonical graph of a vertex coloured graph, based on the canonical integer labelling. Vertex colours will be stored in the \"Color\" vertex property.";
 
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
 SyntaxInformation[IGBlissCanonicalGraph] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};

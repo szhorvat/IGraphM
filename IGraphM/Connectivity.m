@@ -294,7 +294,7 @@ IGMaximumFlowMatrix[graph_?igGraphQ, s_, t_] :=
 
 
 PackageExport["IGMaximumFlowValue"]
-IGMaximumFlowValue::usage = "IGMaximumFlowValue[graph, s, t] returns the value of the maximum flow from  to t.";
+IGMaximumFlowValue::usage = "IGMaximumFlowValue[graph, s, t] returns the value of the maximum flow from s to t.";
 
 SyntaxInformation[IGMaximumFlowValue] = {"ArgumentsPattern" -> {_, _, _}};
 IGMaximumFlowValue[graph_?igGraphQ, s_, t_] :=

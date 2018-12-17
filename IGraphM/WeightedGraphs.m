@@ -113,7 +113,7 @@ If[$VersionNumber >= 10.1, (* MinMax was added in M10.1 *)
 
 
 PackageExport["IGVertexWeightedQ"]
-IGVertexWeightedQ::usage = "IGVertexWeightedQ[graph] tests if graph is a vertex weighted graph.";
+IGVertexWeightedQ::usage = "IGVertexWeightedQ[graph] tests if graph is a vertex-weighted graph.";
 
 SyntaxInformation[IGVertexWeightedQ] = {"ArgumentsPattern" -> {_}};
 If[$VersionNumber >= 12.0,
@@ -131,7 +131,7 @@ If[$VersionNumber >= 12.0,
 
 
 PackageExport["IGEdgeWeightedQ"]
-IGEdgeWeightedQ::usage = "IGEdgeWeightedQ[graph] tests if graph is an edge weighted graph.";
+IGEdgeWeightedQ::usage = "IGEdgeWeightedQ[graph] tests if graph is an edge-weighted graph.";
 
 SyntaxInformation[IGEdgeWeightedQ] = {"ArgumentsPattern" -> {_}};
 If[$VersionNumber >= 12.0,
