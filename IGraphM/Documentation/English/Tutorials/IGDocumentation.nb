@@ -14504,9 +14504,103 @@ Cell[TextData[{
 
 Cell[TextData[{
  "Edge capacities are taken from the ",
- Cell[BoxData["EdgeCapacity"]],
+ Cell[BoxData["EdgeCapacity"],
+  ExpressionUUID -> "96c5462a-fcef-442b-9dc2-cacc3d024d54"],
  " property."
-}], "Text"]
+}], "Text",
+ ExpressionUUID -> "61df8ce2-7018-44a9-8d0d-679dbe1b2b66"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 
+        6}, {{{1, 2}, {2, 3}, {3, 4}, {5, 4}, {6, 5}, {1, 6}, {2, 6}, {5, 3}},
+          Null}, {EdgeCapacity -> {3.5, 2, 1, 2.5, 5, 1, 3.5, 4}, EdgeStyle -> {
+           Directive[
+            Opacity[1], 
+            Arrowheads[0.08], 
+            RGBColor[0.3, 0.45, 0.78]], DirectedEdge[3, 4] -> 
+           Thickness[0.005], DirectedEdge[5, 3] -> Thickness[0.02], 
+           DirectedEdge[1, 2] -> Thickness[0.0175], DirectedEdge[2, 3] -> 
+           Thickness[0.01], DirectedEdge[6, 5] -> Thickness[0.025], 
+           DirectedEdge[1, 6] -> Thickness[0.005], DirectedEdge[2, 6] -> 
+           Thickness[0.0175], DirectedEdge[5, 4] -> Thickness[0.0125]}, 
+         GraphLayout -> "SpringElectricalEmbedding", VertexLabels -> {
+           Placed["Name", Center]}, VertexSize -> {0.3}, VertexStyle -> {
+           RGBColor[
+           0.7792314074074074, 0.8257191111111111, 0.9651546666666667]}}]]}, 
+      TagBox[GraphicsGroupBox[{
+         {RGBColor[0.3, 0.45, 0.78], Opacity[1], Arrowheads[0.08], 
+          {Thickness[0.0175], 
+           ArrowBox[{{0., 0.42880234979817766`}, {0.8729046959103667, 0.}}, 
+            0.1287744093092715]}, 
+          {Thickness[0.005], 
+           ArrowBox[{{0., 0.42880234979817766`}, {0.8721007115726392, 
+            0.8586516800763827}}, 0.1287744093092715]}, 
+          {Thickness[0.01], 
+           ArrowBox[{{0.8729046959103667, 0.}, {2.0419279145059956`, 
+            0.00010764519335110245`}}, 0.1287744093092715]}, 
+          {Thickness[0.0175], 
+           ArrowBox[{{0.8729046959103667, 0.}, {0.8721007115726392, 
+            0.8586516800763827}}, 0.1287744093092715]}, 
+          {Thickness[0.005], 
+           ArrowBox[{{2.0419279145059956`, 0.00010764519335110245`}, {
+            2.9166144352044694`, 0.4286360965942635}}, 0.1287744093092715]}, 
+          {Thickness[0.02], 
+           ArrowBox[{{2.0432183440889897`, 0.8586027374141084}, {
+            2.0419279145059956`, 0.00010764519335110245`}}, 
+            0.1287744093092715]}, 
+          {Thickness[0.0125], 
+           ArrowBox[{{2.0432183440889897`, 0.8586027374141084}, {
+            2.9166144352044694`, 0.4286360965942635}}, 0.1287744093092715]}, 
+          {Thickness[0.025], 
+           ArrowBox[{{0.8721007115726392, 0.8586516800763827}, {
+            2.0432183440889897`, 0.8586027374141084}}, 
+            0.1287744093092715]}}, 
+         {RGBColor[
+          0.7792314074074074, 0.8257191111111111, 0.9651546666666667], 
+          EdgeForm[{GrayLevel[0], Opacity[
+          0.7]}], {DiskBox[{0., 0.42880234979817766}, 0.1287744093092715], 
+           InsetBox["1", {0., 0.42880234979817766},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0.8729046959103667, 0.}, 0.1287744093092715], 
+           InsetBox["2", {0.8729046959103667, 0.},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{2.0419279145059956, 0.00010764519335110245}, 
+            0.1287744093092715], 
+           InsetBox["3", {2.0419279145059956, 0.00010764519335110245},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{2.9166144352044694, 0.4286360965942635}, 
+            0.1287744093092715], 
+           InsetBox["4", {2.9166144352044694, 0.4286360965942635},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{2.0432183440889897, 0.8586027374141084}, 
+            0.1287744093092715], 
+           InsetBox["5", {2.0432183440889897, 0.8586027374141084},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0.8721007115726392, 0.8586516800763827}, 
+            0.1287744093092715], 
+           InsetBox["6", {0.8721007115726392, 0.8586516800763827},
+            BaseStyle->"Graphics"]}}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{218.77734375, Automatic}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"IGEdgeProp", "[", "EdgeCapacity", "]"}], "[", "g", "]"}]}], "Input",
+ ExpressionUUID -> "7bb634a0-e15b-4539-b532-9f2d7bbf90c2"],
+
+Cell[BoxData[
+ RowBox[{"IGMaximumFlowValue", "[", 
+  RowBox[{"g", ",", "1", ",", "4"}], "]"}]], "Input",
+ ExpressionUUID -> "571588c0-eeb2-4e29-acbb-75764646e044"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -14549,9 +14643,140 @@ Cell[TextData[{
 
 Cell[TextData[{
  "Edge capacities are taken from the ",
- Cell[BoxData["EdgeCapacity"]],
+ Cell[BoxData["EdgeCapacity"],
+  ExpressionUUID -> "7fdc0fcf-6d61-467e-91c5-408c208e635b"],
  " property."
-}], "Text"]
+}], "Text",
+ ExpressionUUID -> "b30e1c2d-16d6-449b-87ad-2cfe1cae7f13"],
+
+Cell["Let us take a directed graph with edge capacities set ...", "Text",
+ ExpressionUUID -> "914b15b1-bd17-41d0-899d-5eae791865a6"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 
+        6}, {{{1, 2}, {2, 3}, {3, 4}, {5, 4}, {6, 5}, {1, 6}, {2, 6}, {5, 3}},
+          Null}, {EdgeCapacity -> {3.5, 2, 1, 2.5, 5, 1, 3.5, 4}, EdgeStyle -> {
+           Directive[
+            Opacity[1], 
+            Arrowheads[0.08], 
+            RGBColor[0.3, 0.45, 0.78]], DirectedEdge[3, 4] -> 
+           Thickness[0.005], DirectedEdge[5, 3] -> Thickness[0.02], 
+           DirectedEdge[1, 2] -> Thickness[0.0175], DirectedEdge[2, 3] -> 
+           Thickness[0.01], DirectedEdge[6, 5] -> Thickness[0.025], 
+           DirectedEdge[1, 6] -> Thickness[0.005], DirectedEdge[2, 6] -> 
+           Thickness[0.0175], DirectedEdge[5, 4] -> Thickness[0.0125]}, 
+         GraphLayout -> "SpringElectricalEmbedding", VertexLabels -> {
+           Placed["Name", Center]}, VertexSize -> {0.3}, VertexStyle -> {
+           RGBColor[
+           0.7792314074074074, 0.8257191111111111, 0.9651546666666667]}}]]}, 
+      TagBox[GraphicsGroupBox[{
+         {RGBColor[0.3, 0.45, 0.78], Opacity[1], Arrowheads[0.08], 
+          {Thickness[0.0175], 
+           ArrowBox[{{0., 0.42880234979817766`}, {0.8729046959103667, 0.}}, 
+            0.1287744093092715]}, 
+          {Thickness[0.005], 
+           ArrowBox[{{0., 0.42880234979817766`}, {0.8721007115726392, 
+            0.8586516800763827}}, 0.1287744093092715]}, 
+          {Thickness[0.01], 
+           ArrowBox[{{0.8729046959103667, 0.}, {2.0419279145059956`, 
+            0.00010764519335110245`}}, 0.1287744093092715]}, 
+          {Thickness[0.0175], 
+           ArrowBox[{{0.8729046959103667, 0.}, {0.8721007115726392, 
+            0.8586516800763827}}, 0.1287744093092715]}, 
+          {Thickness[0.005], 
+           ArrowBox[{{2.0419279145059956`, 0.00010764519335110245`}, {
+            2.9166144352044694`, 0.4286360965942635}}, 0.1287744093092715]}, 
+          {Thickness[0.02], 
+           ArrowBox[{{2.0432183440889897`, 0.8586027374141084}, {
+            2.0419279145059956`, 0.00010764519335110245`}}, 
+            0.1287744093092715]}, 
+          {Thickness[0.0125], 
+           ArrowBox[{{2.0432183440889897`, 0.8586027374141084}, {
+            2.9166144352044694`, 0.4286360965942635}}, 0.1287744093092715]}, 
+          {Thickness[0.025], 
+           ArrowBox[{{0.8721007115726392, 0.8586516800763827}, {
+            2.0432183440889897`, 0.8586027374141084}}, 
+            0.1287744093092715]}}, 
+         {RGBColor[
+          0.7792314074074074, 0.8257191111111111, 0.9651546666666667], 
+          EdgeForm[{GrayLevel[0], Opacity[
+          0.7]}], {DiskBox[{0., 0.42880234979817766}, 0.1287744093092715], 
+           InsetBox["1", {0., 0.42880234979817766},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0.8729046959103667, 0.}, 0.1287744093092715], 
+           InsetBox["2", {0.8729046959103667, 0.},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{2.0419279145059956, 0.00010764519335110245}, 
+            0.1287744093092715], 
+           InsetBox["3", {2.0419279145059956, 0.00010764519335110245},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{2.9166144352044694, 0.4286360965942635}, 
+            0.1287744093092715], 
+           InsetBox["4", {2.9166144352044694, 0.4286360965942635},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{2.0432183440889897, 0.8586027374141084}, 
+            0.1287744093092715], 
+           InsetBox["5", {2.0432183440889897, 0.8586027374141084},
+            BaseStyle->"Graphics"]}, {
+           DiskBox[{0.8721007115726392, 0.8586516800763827}, 
+            0.1287744093092715], 
+           InsetBox["6", {0.8721007115726392, 0.8586516800763827},
+            BaseStyle->"Graphics"]}}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{218.77734375, Automatic}]}], ";"}]], "Input",
+ ExpressionUUID -> "5d709cab-8401-4cfb-a9f3-f0e3d8518983"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGEdgeProp", "[", "EdgeCapacity", "]"}], "[", "g", "]"}]], "Input",
+ 
+ ExpressionUUID -> "72c900ae-5f87-4d27-89ed-130ff91970f4"],
+
+Cell["\<\
+... and compute the maximum flow between two of its vertices.\
+\>", "Text",
+ ExpressionUUID -> "0b857c17-89b6-40dd-96fb-7d4a68ae0e63"],
+
+Cell[BoxData[
+ RowBox[{"flowMat", "=", 
+  RowBox[{"IGMaximumFlowMatrix", "[", 
+   RowBox[{"g", ",", "1", ",", "4"}], "]"}]}]], "Input",
+ ExpressionUUID -> "6f270f59-6c70-45e5-8692-46e0e5932124"],
+
+Cell["\<\
+The result is returned as a sparse matrix containing the flows through each \
+edge.\
+\>", "Text",
+ ExpressionUUID -> "8b2ad706-aa0c-4840-b520-3d29cc86ca89"],
+
+Cell[BoxData[
+ RowBox[{"MatrixForm", "[", "flowMat", "]"}]], "Input",
+ ExpressionUUID -> "3d5cd2ab-e172-4add-93c7-3ec22c5e1977"],
+
+Cell["\<\
+If the input is an undirected graph, the flow matrix contains entries of \
+opposing sign for the two directions along each edge.\
+\>", "Text",
+ ExpressionUUID -> "75234b51-ed58-4243-afb1-7f78b36e35f7"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGMaximumFlowMatrix", "[", 
+   RowBox[{
+    RowBox[{"UndirectedGraph", "[", "g", "]"}], ",", "1", ",", "4"}], "]"}], "//",
+   "MatrixForm"}]], "Input",
+ ExpressionUUID -> "ffa935ae-5902-47f2-a8bb-a7acf25b27bf"]
 }, Closed]]
 }, Closed]],
 
@@ -14582,10 +14807,12 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["IGGomoryHuTree", "Subsubsection"],
+Cell["IGGomoryHuTree", "Subsubsection",
+ ExpressionUUID -> "2cd20380-d619-43dd-a3d2-af05a5e1781a"],
 
 Cell[BoxData[
- RowBox[{"?", "IGGomoryHuTree"}]], "Input"],
+ RowBox[{"?", "IGGomoryHuTree"}]], "Input",
+ ExpressionUUID -> "1c3092cc-140a-4643-a212-ac5acd9a5f28"],
 
 Cell[TextData[{
  "The Gomory\[Dash]Hu tree is a weighted tree that encodes the minimum cuts \
@@ -14593,21 +14820,27 @@ between all pairs of vertices of an undirected graph. The Gomory\[Dash]Hu \
 tree has the same vertices as the graph it characterizes. The minimum cut \
 between an ",
  Cell[BoxData[
-  FormBox["s", TraditionalForm]]],
+  FormBox["s", TraditionalForm]],
+  ExpressionUUID -> "1ed0ce10-c3fd-439e-a0ed-ec7a0a17e209"],
  "-",
  Cell[BoxData[
-  FormBox["t", TraditionalForm]]],
+  FormBox["t", TraditionalForm]],
+  ExpressionUUID -> "5d447a46-ecd4-4c50-8762-54102d058a87"],
  " pair of the graph has the same size as smallest edge weight on the path \
 from ",
  Cell[BoxData[
-  FormBox["s", TraditionalForm]]],
+  FormBox["s", TraditionalForm]],
+  ExpressionUUID -> "d50f14ba-bc50-4372-8a0e-8a4213a4358a"],
  " to ",
  Cell[BoxData[
-  FormBox["t", TraditionalForm]]],
+  FormBox["t", TraditionalForm]],
+  ExpressionUUID -> "6cdc3f60-6bcd-4bb4-98eb-09f4b8241744"],
  " in the Gomory\[Dash]Hu tree."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "72bf7db4-adc8-4f28-a3f5-3821ba715ceb"],
 
-Cell["Weighted graphs are supported.", "Text"],
+Cell["Weighted graphs are supported.", "Text",
+ ExpressionUUID -> "afd2d996-aa24-4954-9109-94040d86c9e0"],
 
 Cell[BoxData[
  RowBox[{
@@ -14756,7 +14989,8 @@ Cell[BoxData[
     
     FormatType->TraditionalForm,
     FrameTicks->None,
-    ImageSize->{217.1484375, Automatic}]}], ";"}]], "Input"],
+    ImageSize->{217.1484375, Automatic}]}], ";"}]], "Input",
+ ExpressionUUID -> "61c4df21-88c7-4830-8787-e204fa09650b"],
 
 Cell[BoxData[
  RowBox[{"t", "=", 
@@ -14764,20 +14998,24 @@ Cell[BoxData[
    RowBox[{"g", ",", "\[IndentingNewLine]", 
     RowBox[{"EdgeLabels", "\[Rule]", "\"\<EdgeWeight\>\""}], ",", 
     RowBox[{"VertexShapeFunction", "\[Rule]", "\"\<Name\>\""}]}], 
-   "\[IndentingNewLine]", "]"}]}]], "Input"],
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ ExpressionUUID -> "94e51169-00a7-4855-9288-008c6642e63e"],
 
 Cell[TextData[{
  "The path from 1 to 9 is ",
  Cell[BoxData[
   RowBox[{
   "1", "\[UndirectedEdge]", "2", "\[UndirectedEdge]", "5", 
-   "\[UndirectedEdge]", "9"}]]],
+   "\[UndirectedEdge]", "9"}]],
+  ExpressionUUID -> "ef718001-01a9-4403-8ed2-8c7a900ca8a3"],
  " and has the weights ",
  Cell[BoxData[
   RowBox[{"{", 
-   RowBox[{"3", ",", "5", ",", "4"}], "}"}]]],
+   RowBox[{"3", ",", "5", ",", "4"}], "}"}]],
+  ExpressionUUID -> "6341a615-69f6-4398-b5ef-79493f0c5c92"],
  ". The smallest one, 3, is the minimum value of a cut separating 1 from 9."
-}], "Text"],
+}], "Text",
+ ExpressionUUID -> "80b8b896-1864-4bd3-903a-63e4269c0715"],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -14785,7 +15023,8 @@ Cell[BoxData[
    RowBox[{"IGMinimumCutValue", "[", 
     RowBox[{"g", ",", "1", ",", "9"}], "]"}], ",", 
    RowBox[{"IGMinimumCutValue", "[", 
-    RowBox[{"t", ",", "1", ",", "9"}], "]"}]}], "}"}]], "Input"]
+    RowBox[{"t", ",", "1", ",", "9"}], "]"}]}], "}"}]], "Input",
+ ExpressionUUID -> "2d05dc94-6dab-4f6f-9e38-feb1980edf04"]
 }, Closed]]
 }, Closed]],
 
@@ -38545,7 +38784,7 @@ Cell[TextData[{
  " does not return ",
  Cell[BoxData["True"],
   ExpressionUUID -> "033ecd09-d9da-4685-9bcd-246e39c5d3cf"],
- " for vertex weighted graphs that have no edge weights."
+ " for vertex-weighted graphs that have no edge weights."
 }], "Text",
  ExpressionUUID -> "08f91b39-562c-4ae2-bd6b-72bf5468b98f"],
 
@@ -38593,7 +38832,7 @@ Cell[TextData[{
  " does not return ",
  Cell[BoxData["True"],
   ExpressionUUID -> "5ec45187-5fed-4355-b5ad-60f10be750b9"],
- " for edge weighted graphs that have no vertex weights."
+ " for edge-weighted graphs that have no vertex weights."
 }], "Text",
  ExpressionUUID -> "702e0174-7689-4d49-81d2-eda3df74f2c6"],
 
