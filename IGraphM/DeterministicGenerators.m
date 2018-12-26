@@ -83,8 +83,8 @@ PackageExport["IGSymmetricTree"]
 IGSymmetricTree::usage = "IGSymmetricTree[{k1, k2, \[Ellipsis]}] returns a tree where vertices in the (i+1)st layer have k_i children.";
 
 Options[IGSymmetricTree] = { GraphLayout -> "RadialEmbedding" };
-SyntaxInformation[IGSymmetricTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionsNames" -> optNames[IGSymmetricTree, Graph]};
-IGSymmetricTree[splits_?posIntVecQ, opt : OptionsPattern[]] :=
+SyntaxInformation[IGSymmetricTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSymmetricTree, Graph]};
+IGSymmetricTree[splits_?posIntVecQ, opt : OptionsPattern[{IGSymmetricTree, Graph}]] :=
     With[{edges = igraphGlobal@"symmetricTree"[splits]},
       Graph[
         Range[Length[edges] + 1], edges + 1,
