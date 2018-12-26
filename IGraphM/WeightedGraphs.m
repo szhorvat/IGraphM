@@ -151,18 +151,28 @@ If[$VersionNumber >= 12.0,
 
 (***** Weighted graph modification *****)
 
-(* TODO: consolidate igWeightedAdjacencyGraph and IGWeightedAdjacencyGraph without performance loss *)
+(* Notes:
+    - igWeightedAdjacencyGraph requires a sparse matrix input. A dense matrix cannot be used.
+    - igWeightedAdjacencyGraph must ignore the background value of the sparse matrix, as this may not be 0.
+      See IGWeightedSimpleGraph for an example use.
+ *)
 
-igWeightedAdjacencyGraph::dummy = "igWeightedAdjacencyGraph[vertexList, sparseAdjacencyMatrix, directedQ, graphOptions]";
+igWeightedAdjacencyGraph::dummy = "igWeightedAdjacencyGraph[vertexList, sparseAdjacencyMatrix, directedQ, loopQ, graphOptions]";
 
-igWeightedAdjacencyGraph[vertices_, sa_SparseArray, True, opt___] :=
+igWeightedAdjacencyGraph[vertices_, sa_SparseArray, True, True, opt___] :=
     Graph[vertices, sa["NonzeroPositions"], DirectedEdges -> True, EdgeWeight -> sa["NonzeroValues"], opt]
 
-igWeightedAdjacencyGraph[vertices_, sa_SparseArray, False, opt___] :=
-    With[{sa2 = UpperTriangularize[sa]},
-      Graph[vertices, sa2["NonzeroPositions"], DirectedEdges -> False, EdgeWeight -> sa2["NonzeroValues"], opt]
+igWeightedAdjacencyGraph[vertices_, sa_SparseArray, True, False, opt___] :=
+    With[{pos = igraphGlobal@"nondiagPos"[sa["NonzeroPositions"]]},
+      Graph[vertices, sa["NonzeroPositions"][[pos]], DirectedEdges -> True, EdgeWeight -> sa["NonzeroValues"][[pos]], opt]
     ]
 
+igWeightedAdjacencyGraph[vertices_, sa_SparseArray, False, loop_, opt___] :=
+    With[{pos = igraphGlobal@"upperPos"[sa["NonzeroPositions"], loop]},
+      Graph[vertices, sa["NonzeroPositions"][[pos]], DirectedEdges -> False, EdgeWeight -> sa["NonzeroValues"][[pos]], opt]
+    ]
+
+$unconnected::dummy = "$unconnected is used to denote unconnected entries in the implementation of IGWeightedSimpleGraph and IGWeightedUndirectedGraph.";
 
 PackageExport["IGWeightedSimpleGraph"]
 IGWeightedSimpleGraph::usage =
@@ -174,16 +184,14 @@ SyntaxInformation[IGWeightedSimpleGraph] = {"ArgumentsPattern" -> {_, _., Option
 IGWeightedSimpleGraph[g_?EmptyGraphQ, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[{IGWeightedSimpleGraph, Graph}]] :=
     applyGraphOpt[opt][g]
 IGWeightedSimpleGraph[g_?igGraphQ, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[{IGWeightedSimpleGraph, Graph}]] :=
-    With[{sao = SystemOptions["SparseArrayOptions"]},
+    With[{sao = SystemOptions["SparseArrayOptions"], vc = VertexCount[g]},
       Internal`WithLocalSettings[
         SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> comb],
         igWeightedAdjacencyGraph[
           VertexList[g],
-          If[TrueQ@OptionValue[SelfLoops],
-            Identity,
-            zeroDiagonal
-          ]@SparseArray[IGIndexEdgeList[g] -> igEdgeWeights[g], VertexCount[g] {1,1}],
+          SparseArray[IGIndexEdgeList[g] -> igEdgeWeights[g], {vc, vc}, $unconnected],
           DirectedGraphQ[g],
+          TrueQ@OptionValue[SelfLoops],
           FilterRules[{opt}, Options[Graph]]
         ],
         SetSystemOptions[sao]
@@ -199,7 +207,7 @@ IGWeightedUndirectedGraph::usage =
 
 IGWeightedUndirectedGraph::mg = "The input is a multigraph. Weights of parallel edges will be combined with the same combiner function as used for reciprocal edges.";
 SyntaxInformation[IGWeightedUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGWeightedUndirectedGraph[g_?UndirectedGraphQ, None, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[Graph]] := (* also catches empty case *)
+IGWeightedUndirectedGraph[g_?UndirectedGraphQ, comb : Except[_?OptionQ] : Total, opt : OptionsPattern[Graph]] := (* also catches empty case *)
     applyGraphOpt[opt][g]
 IGWeightedUndirectedGraph[g_?igGraphQ, None, opt : OptionsPattern[Graph]] :=
     If[IGEdgeWeightedQ[g],
@@ -212,13 +220,14 @@ IGWeightedUndirectedGraph[g_?igGraphQ, comb : Except[_?OptionQ] : Total, opt : O
     If[IGEdgeWeightedQ[g],
       (* weighted case *)
       If[MultigraphQ[g], Message[IGWeightedUndirectedGraph::mg]];
-      With[{sao = SystemOptions["SparseArrayOptions"]},
+      With[{sao = SystemOptions["SparseArrayOptions"], vc = VertexCount[g]},
         Internal`WithLocalSettings[
           SetSystemOptions["SparseArrayOptions" -> "TreatRepeatedEntries" -> comb],
           igWeightedAdjacencyGraph[
             VertexList[g],
-            SparseArray[(igraphGlobal@"edgeListSortPairs"@IGIndexEdgeList[g]) -> igEdgeWeights[g], VertexCount[g] {1, 1}],
+            SparseArray[(igraphGlobal@"edgeListSortPairs"@IGIndexEdgeList[g]) -> igEdgeWeights[g], {vc, vc}, $unconnected],
             False,
+            True,
             opt
           ],
           SetSystemOptions[sao]

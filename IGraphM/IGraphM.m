@@ -171,7 +171,11 @@ template = LTemplate["IGraphM",
         LFun["takeUpperComplex", {{Complex, 2, "Constant"}}, {Complex, 1}],
 
         LFun["upperIndexPairPositions", {{Integer, 2, "Constant"}, Integer}, {Integer, 2}],
-        LFun["lowerIndexPairPositions", {{Integer, 2, "Constant"}, Integer}, {Integer, 2}]
+        LFun["lowerIndexPairPositions", {{Integer, 2, "Constant"}, Integer}, {Integer, 2}],
+
+        (* used in igWeightedAdjacencyGraph *)
+        LFun["upperPos", {{Integer, 2, "Constant"}, True|False (* diagonal *)}, {Integer, 1}],
+        LFun["nondiagPos", {{Integer, 2, "Constant"}}, {Integer, 1}]
       }
     ],
 

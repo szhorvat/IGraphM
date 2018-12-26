@@ -395,6 +395,40 @@ public:
         return mma::makeMatrix<mint>(result.size()/2, 2, result.data());
     }
 
+    // Input: index-pair list from a sparse matrix
+    // Output: index of pairs above diagonal; if 'diag', on-diagonal pairs are included too
+    mma::IntTensorRef upperPos(mma::IntMatrixRef pairs, bool diag) {
+        std::vector<mint> result;
+        result.reserve(pairs.rows());
+        for (mint i=0; i < pairs.rows(); ++i) {
+            mint r = pairs(i,0);
+            mint c = pairs(i,1);
+            if (diag) {
+                if (r <= c)
+                    result.push_back(i+1); // index in value list
+            } else {
+                if (r < c)
+                    result.push_back(i+1); // index in value list
+            }
+        }
+        return mma::makeVector<mint>(result.size(), result.data());
+    }
+
+    // Input: index-pair list from a sparse matrix
+    // Output: index of pairs not on the diagonal
+    mma::IntTensorRef nondiagPos(mma::IntMatrixRef pairs) {
+        std::vector<mint> result;
+        result.reserve(pairs.rows());
+        for (mint i=0; i < pairs.rows(); ++i) {
+            mint r = pairs(i,0);
+            mint c = pairs(i,1);
+
+            if (r != c)
+                result.push_back(i+1); // index in value list
+        }
+        return mma::makeVector<mint>(result.size(), result.data());
+    }
+
 };
 
 #endif // IGLOBAL_H
