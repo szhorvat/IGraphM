@@ -90,6 +90,8 @@ IGEdgeVertexProp[prop_][g_?GraphQ] :=
 
 igSetVertexProperty[g_, prop_, values_] /; Length[values] == VertexCount[g] :=
     SetProperty[g, Properties -> Thread[VertexList[g] -> List /@ Thread[prop -> values]]]
+igSetVertexProperty[g_, VertexShapeFunction, values_] /; Length[values] == VertexCount[g] :=
+    SetProperty[g, VertexShapeFunction -> Thread[VertexList[g] -> values]] (* workaround for bug #87 *)
 igSetVertexProperty[g_, prop : VertexWeight|VertexCapacity|VertexCoordinates, values_] /; Length[values] == VertexCount[g] :=
     transformGraphOptions[ Append[FilterRules[#, Except[prop]], prop -> values]& ][g]
 (* Graph[VertexList[g], EdgeList[g], prop -> values, FilterRules[Options[g], Except[prop]]] *)
