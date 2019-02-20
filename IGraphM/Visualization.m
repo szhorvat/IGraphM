@@ -18,7 +18,7 @@ IGAdjacencyMatrixPlot::usage =
     "IGAdjacencyMatrixPlot[graph] plots the adjacency matrix of graph.\n" <>
     "IGAdjacencyMatrixPlot[graph, {v1, v2, \[Ellipsis]}] plots the adjacency matrix of the subgraph induced by the given vertices, using the specified vertex ordering.";
 
-$unconnected::usage = "$unconnected is used to denote unconnected entries in the implementation of IGAdjacencyMatrixPlot.";
+$unconnected::dummy = "$unconnected is used to denote unconnected entries in the implementation of IGAdjacencyMatrixPlot.";
 
 IGAdjacencyMatrixPlot::noprop = "The property `1` does not have a value for some or all edges in the graph.";
 IGAdjacencyMatrixPlot::bdname = "The value of the VertexLabels option must be Automatic, \"Name\", \"Index\" or a list of rules.";
