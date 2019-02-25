@@ -559,7 +559,9 @@ template = LTemplate["IGraphM",
 
         LFun["perfectQ", {}, True|False],
 
-        LFun["strahlerNumber", {}, {Integer, 1}]
+        LFun["strahlerNumber", {}, {Integer, 1}],
+
+        LFun["toPrufer", {}, {Integer, 1}]
       }
     ],
 

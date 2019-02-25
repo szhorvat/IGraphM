@@ -261,6 +261,12 @@ public:
         igConstructorCheck(igraph_from_prufer(&graph, &vec.vec));
     }
 
+    mma::IntTensorRef toPrufer() const {
+        igIntVector vec;
+        igCheck(igraph_to_prufer(&graph, &vec.vec));
+        return vec.makeMTensor();
+    }
+
     void completeGraph(mint n, bool directed, bool loops) {
         destroy();
         igConstructorCheck(igraph_full(&graph, n, directed, loops));

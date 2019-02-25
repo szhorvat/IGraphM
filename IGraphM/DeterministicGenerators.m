@@ -115,6 +115,16 @@ IGFromPrufer[vec_?intVecQ, opt : OptionsPattern[Graph]] :=
     ]
 
 
+PackageExport["IGToPrufer"]
+IGToPrufer::usage = "IGToPrufer[tree] returns the Prüfer sequence of a tree.";
+
+SyntaxInformation[IGToPrufer] = {"ArgumentsPattern" -> {_}};
+IGToPrufer[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+      ig@"toPrufer"[] + 1
+    ]
+
+
 PackageExport["IGCompleteGraph"]
 IGCompleteGraph::usage = "IGCompleteGraph[n] returns a complete graph on n vertices.";
 
