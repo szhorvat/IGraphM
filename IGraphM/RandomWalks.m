@@ -37,8 +37,8 @@ igMakeWithWeightSpec[graph_, edgeWeight_ ] :=
 PackageExport["IGRandomWalk"]
 IGRandomWalk::usage = "IGRandomWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed vertices is returned.";
 
-SyntaxInformation[IGRandomWalk] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 Options[IGRandomWalk] = { EdgeWeight -> Automatic };
+SyntaxInformation[IGRandomWalk] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 IGRandomWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ, OptionsPattern[]] :=
     catch@Block[{ig = igMakeWithWeightSpec[graph, OptionValue[EdgeWeight]]},
       Part[
@@ -51,8 +51,8 @@ IGRandomWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ
 PackageExport["IGRandomEdgeIndexWalk"]
 IGRandomEdgeIndexWalk::usage = "IGRandomEdgeIndexWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of indices for traversed edges is returned.";
 
-SyntaxInformation[IGRandomEdgeIndexWalk] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 Options[IGRandomEdgeIndexWalk] = { EdgeWeight -> Automatic };
+SyntaxInformation[IGRandomEdgeIndexWalk] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 IGRandomEdgeIndexWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ, OptionsPattern[]] :=
     catch@Block[{ig = igMakeWithWeightSpec[graph, OptionValue[EdgeWeight]]},
       igIndexVec@check@ig@"randomEdgeWalk"[vs[graph][start], steps]
@@ -62,8 +62,8 @@ IGRandomEdgeIndexWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachin
 PackageExport["IGRandomEdgeWalk"]
 IGRandomEdgeWalk::usage = "IGRandomEdgeWalk[graph, start, steps] takes a random walk of length steps on graph, starting at vertex 'start'. The list of traversed edges is returned.";
 
-SyntaxInformation[IGRandomEdgeWalk] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 Options[IGRandomEdgeWalk] = { EdgeWeight -> Automatic };
+SyntaxInformation[IGRandomEdgeWalk] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 IGRandomEdgeWalk[graph_?igGraphQ, start_, steps_?Internal`NonNegativeMachineIntegerQ, OptionsPattern[]] :=
     catch@Block[{ig = igMakeWithWeightSpec[graph, OptionValue[EdgeWeight]]},
       Part[
