@@ -39,6 +39,7 @@ IGBiconnectedQ[graph_?igGraphQ] :=
     Block[{ig = igMakeFast[graph]},
       sck@ig@"biconnectedQ"[]
     ]
+IGBiconnectedQ[_] := False (* for non-graphs *)
 
 
 (***** Vertex cuts *****)
