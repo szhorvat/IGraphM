@@ -120,8 +120,8 @@ IGToPrufer::usage = "IGToPrufer[tree] returns the Prüfer sequence of a tree.";
 
 SyntaxInformation[IGToPrufer] = {"ArgumentsPattern" -> {_}};
 IGToPrufer[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeUnweighted[graph]},
-      ig@"toPrufer"[] + 1
+    sck@Block[{ig = igMakeUnweighted[graph]},
+      igIndexVec@ig@"toPrufer"[]
     ]
 
 
