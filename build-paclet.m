@@ -137,12 +137,11 @@ applyTemplate[versionData] /@ FileNames["*.m", $appTarget]
 Print["\nRe-encoding source files as ASCII"]
 AddPath["PackageTools"]
 Needs["PackageTools`"]
-With[{$appTarget = $appTarget, files = FileNames["*.m", $appTarget]},
+With[{$appTarget = $appTarget, files = AbsoluteFileName /@ FileNames["*.m", $appTarget]},
   MRun[
     MCode[
       UsingFrontEnd[
-        NotebookSave@NotebookOpen[FileNameJoin[{$appTarget, #}]]& /@
-            files
+        NotebookSave@NotebookOpen[#]& /@ files
       ]
     ]
   ]
