@@ -88,6 +88,8 @@ IGEdgeVertexProp[prop_][g_?GraphQ] :=
 
 (***** Edge and vertex property mapping *****)
 
+PackageScope["igSetVertexProperty"]
+igSetVertexProperty::usage = "igSetVertexProperty[graph, prop, values]";
 igSetVertexProperty[g_, prop_, values_] /; Length[values] == VertexCount[g] :=
     SetProperty[g, Properties -> Thread[VertexList[g] -> List /@ Thread[prop -> values]]]
 igSetVertexProperty[g_, VertexShapeFunction, values_] /; Length[values] == VertexCount[g] :=
@@ -98,6 +100,8 @@ igSetVertexProperty[g_, prop : VertexWeight|VertexCapacity|VertexCoordinates, va
 igSetVertexProperty[g_, prop_, values_] := $Failed
 
 
+PackageScope["igSetEdgeProperty"]
+igSetEdgeProperty::usage = "igSetEdgeProperty[graph, prop, values]";
 igSetEdgeProperty[g_, prop_, values_] /; Length[values] == EdgeCount[g] :=
     SetProperty[g, Properties -> Thread[EdgeList[g] -> List /@ Thread[prop -> values]]]
 igSetEdgeProperty[g_, prop : specialEdgePropsPattern, values_] /; Length[values] == EdgeCount[g] :=
