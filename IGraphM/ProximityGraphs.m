@@ -173,7 +173,7 @@ betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
 *)
 
 betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
-    Module[{mesh, edges, edgeLengths, p, q},
+    Module[{edges, edgeLengths, p, q},
       If[Not@MatchQ[Dimensions[pts], {_,2}],
         Message[IGraphM::bsdim];
         throw[$Failed]

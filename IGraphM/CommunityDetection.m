@@ -74,7 +74,7 @@ IGClusterData[asc_?AssociationQ]["HierarchicalClusters"] :=
     ]
 
 mergesToTree[asc_] :=
-    Module[{mc, root, elems, ec, merges = asc["Merges"], leafIndices, g, s},
+    Module[{mc, root, elems, ec, merges = asc["Merges"], leafIndices, s},
       elems = Switch[asc@"Algorithm",
         "LeadingEigenvector", asc@"FinalCommunities",
         _,                    asc@"Elements"

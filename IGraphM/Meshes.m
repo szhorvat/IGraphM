@@ -199,7 +199,7 @@ IGLatticeMesh::regemp = "The given region does not contain any lattice points.";
 SyntaxInformation[IGLatticeMesh] = {"ArgumentsPattern" -> {_., _., OptionsPattern[]}, "OptionNames" -> optNames[MeshRegion]};
 IGLatticeMesh[] := Keys[$igLatticeUnits]
 IGLatticeMesh[name_String, dims : {_?Internal`PositiveIntegerQ, _?Internal`PositiveIntegerQ} : {7, 7}, opt : OptionsPattern[]] :=
-      catch@Module[{m, n, grid, polys, pts, newpts, nf, ratio = 0},
+      catch@Module[{m, n, grid, ratio = 0},
         If[Not@KeyExistsQ[$igLatticeUnits, name],
           Message[IGLatticeMesh::noval, name];
           throw[$Failed]
