@@ -1,0 +1,568 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Fuzz and compare with GraphData", "Title",
+ CellChangeTimes->{{3.76423137194506*^9, 
+  3.764231375794499*^9}},ExpressionUUID->"d5b7d3f4-c35c-4843-a4c4-\
+2113c16227fb"],
+
+Cell[BoxData["Quit"], "Input",
+ CellChangeTimes->{{3.7642313789811172`*^9, 3.764231379302072*^9}},
+ CellLabel->"In[32]:=",ExpressionUUID->"511db3c4-224e-4abd-b188-c02a0c169ac1"],
+
+Cell[BoxData[{
+ RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"SeedRandom", "[", "7564", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"IGSeedRandom", "[", "4657", "]"}]}], "Input",
+ CellChangeTimes->{{3.7642313803906307`*^9, 3.764231400562212*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"5cb4f2d9-4663-4161-8e7f-289109f33789"],
+
+Cell[CellGroupData[{
+
+Cell["Tests", "Section",
+ CellChangeTimes->{{3.764250769472826*^9, 
+  3.7642507698460903`*^9}},ExpressionUUID->"e1bb5213-8ea1-4401-98a5-\
+fcdfda3dcb3b"],
+
+Cell[TextData[{
+ "All outputs are expected to be ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", "}"}], TraditionalForm]],ExpressionUUID->
+  "b1d52bed-9821-4445-a839-d4dd2f8e5bf9"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.764250839338747*^9, 
+  3.764250845767811*^9}},ExpressionUUID->"538df661-3b39-4527-be0e-\
+85890958e85a"],
+
+Cell[CellGroupData[{
+
+Cell["Operations that work on large graphs", "Subsubsection",
+ CellChangeTimes->{{3.764250403490204*^9, 
+  3.764250408144692*^9}},ExpressionUUID->"23e0e0ab-b575-47ef-bda7-\
+192176df1255"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"graphs", "=", 
+   RowBox[{"RandomSample", "[", 
+    RowBox[{
+     RowBox[{"GraphData", "[", "]"}], ",", "300"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.764231415835464*^9, 3.764231428231976*^9}, 
+   3.7642315811419687`*^9},
+ CellLabel->"In[4]:=",ExpressionUUID->"bfdd0de4-4b70-419e-8fc5-640230c012ab"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGPlanarQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Planar\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.764231430623715*^9, 3.764231459477627*^9}},
+ CellLabel->"In[5]:=",ExpressionUUID->"62c1322a-1fcd-4f9e-a77b-42cab6f0a5e2"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGMaximalPlanarQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Triangulated\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.764231515180389*^9, 3.764231523118651*^9}},
+ CellLabel->"In[6]:=",ExpressionUUID->"6d0de1de-8c62-4ca9-a14b-c68c3316d3e9"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGMatchingNumber", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<MatchingNumber\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}},
+ CellLabel->"In[7]:=",ExpressionUUID->"7e6cd0b5-aff1-4a77-a54b-cbb20c33f802"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGCliqueNumber", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<CliqueNumber\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.7642506304727573`*^9, 3.764250636204032*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"c548d825-5a75-400a-bb3b-4ff838efb37d"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Sort", "[", 
+      RowBox[{"Sort", "/@", 
+       RowBox[{"IGBridges", "[", 
+        RowBox[{"GraphData", "[", "#", "]"}], "]"}]}], "]"}], "=!=", 
+     RowBox[{"Sort", "[", 
+      RowBox[{"Sort", "/@", 
+       RowBox[{"GraphData", "[", 
+        RowBox[{"#", ",", "\"\<Bridges\>\""}], "]"}]}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.764250682333681*^9, 3.764250719682459*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"7a072fa9-9e6b-4162-b496-09819e202128"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Replace", "[", 
+      RowBox[{
+       RowBox[{"IGGirth", "[", 
+        RowBox[{"GraphData", "[", "#", "]"}], "]"}], ",", 
+       RowBox[{"0", "\[Rule]", "Infinity"}]}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Girth\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.764250332569828*^9, 3.764250353352639*^9}, {
+  3.7642509346548147`*^9, 3.764250938744503*^9}, {3.764250999559237*^9, 
+  3.764251005909212*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"ff7b626d-04d5-447a-b5b8-d587a1a73684"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGDiameter", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Diameter\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}},
+ CellLabel->"In[11]:=",ExpressionUUID->"166dcf30-8ee8-441f-8307-1a62f55502b2"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGConnectedQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Connected\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.76425132320791*^9}},
+ CellLabel->"In[12]:=",ExpressionUUID->"fd2af6d8-36dc-4d7d-b643-da700116ff45"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGBiconnectedQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Biconnected\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"df7f7bfa-9ebf-4b5e-b9e6-b82923b45b86"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGChordalQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Chordal\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}},
+ CellLabel->"In[14]:=",ExpressionUUID->"3bc0c30a-549a-4303-a73d-d8bb410ce058"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGSymmetricQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Symmetric\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.764252072846374*^9}},
+ CellLabel->"In[15]:=",ExpressionUUID->"daad9f74-95ef-4745-b128-c71fa7e5c2ac"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGEdgeTransitiveQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<EdgeTransitive\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.764252088198306*^9}},
+ CellLabel->"In[16]:=",ExpressionUUID->"3755c826-cc20-416c-9a83-b1e391975893"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGVertexTransitiveQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<VertexTransitive\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}},
+ CellLabel->"In[17]:=",ExpressionUUID->"5dd7c0a9-46dc-4cf7-8afc-f4e51c93fc19"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGSelfComplementaryQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<SelfComplementary\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}, {3.764252140618421*^9, 3.764252144423637*^9}},
+ CellLabel->"In[18]:=",ExpressionUUID->"8f85567a-19f7-4d23-8919-37ffa152218b"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGTreeQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Tree\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}, {3.764252155543358*^9, 3.7642521594027777`*^9}},
+ CellLabel->"In[19]:=",ExpressionUUID->"222d4af9-8f2e-4f7e-b02b-31126230808e"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGTriangleFreeQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<TriangleFree\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}, {3.764252155543358*^9, 3.7642521594027777`*^9}, {
+  3.764252378748582*^9, 3.764252383882401*^9}},
+ CellLabel->"In[20]:=",ExpressionUUID->"1a9649f5-7c47-494d-98c4-71bf159c2ce0"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Length", "@", 
+      RowBox[{"IGTriangles", "[", 
+       RowBox[{"GraphData", "[", "#", "]"}], "]"}]}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<TriangleCount\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}, {3.764252155543358*^9, 3.7642521594027777`*^9}, {
+  3.764252378748582*^9, 3.764252408353704*^9}},
+ CellLabel->"In[21]:=",ExpressionUUID->"a829c047-4556-4414-93b9-21505d9c6bbf"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Sort", "@", 
+      RowBox[{"IGArticulationPoints", "[", 
+       RowBox[{"GraphData", "[", "#", "]"}], "]"}]}], "=!=", 
+     RowBox[{"Sort", "@", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"#", ",", "\"\<ArticulationVertices\>\""}], "]"}]}]}], "&"}]}],
+   "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.764252999768091*^9, 3.764253034400532*^9}},
+ CellLabel->"In[22]:=",ExpressionUUID->"171187c3-7248-4b58-9ce6-03b44e959537"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGEdgeConnectivity", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<EdgeConnectivity\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}, {3.764252155543358*^9, 3.7642521594027777`*^9}, {
+  3.764252378748582*^9, 3.764252408353704*^9}, {3.764253043066835*^9, 
+  3.7642530729958076`*^9}},
+ CellLabel->"In[23]:=",ExpressionUUID->"db159c6a-1dea-4e7e-be79-e465a2eebaaa"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Length", "@", 
+      RowBox[{"IGConnectedComponentSizes", "[", 
+       RowBox[{"GraphData", "[", "#", "]"}], "]"}]}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<ConnectedComponentCount\>\""}], "]"}]}], "&"}]}],
+   "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}, {3.764252155543358*^9, 3.7642521594027777`*^9}, {
+  3.764252378748582*^9, 3.764252408353704*^9}, {3.764253043066835*^9, 
+  3.7642530729958076`*^9}, {3.764253194138804*^9, 3.764253200846089*^9}},
+ CellLabel->"In[24]:=",ExpressionUUID->"f22ca7fe-e4d0-46db-9e7a-ce066d5657d8"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Sort", "@", 
+      RowBox[{"IGIsolatedVertexList", "[", 
+       RowBox[{"GraphData", "[", "#", "]"}], "]"}]}], "=!=", 
+     RowBox[{"Sort", "@", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"#", ",", "\"\<IsolatedPoints\>\""}], "]"}]}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.7642532692915373`*^9, 3.764253284734817*^9}},
+ CellLabel->"In[25]:=",ExpressionUUID->"860d8505-f816-44c9-921d-13e56c403781"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"1", "+", 
+      RowBox[{"Total", "@", 
+       RowBox[{"IGCliqueSizeCounts", "[", 
+        RowBox[{"GraphData", "[", "#", "]"}], "]"}]}]}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<CliqueCount\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}, {3.764252155543358*^9, 3.7642521594027777`*^9}, {
+  3.764252378748582*^9, 3.764252408353704*^9}, {3.764253043066835*^9, 
+  3.7642530729958076`*^9}, {3.764253194138804*^9, 3.764253200846089*^9}, {
+  3.764253410189736*^9, 3.764253420141992*^9}},
+ CellLabel->
+  "In[26]:=",ExpressionUUID->"333470d1-265f-4954-93ed-a692573e8297"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Operations that are feasible for smaller graphs only", "Subsubsection",
+ CellChangeTimes->{{3.7642503910362043`*^9, 
+  3.7642503989105186`*^9}},ExpressionUUID->"db1cd35f-35f5-4ddb-b868-\
+cae8ffb63c1d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"graphs", "=", 
+   RowBox[{"RandomSample", "[", 
+    RowBox[{
+     RowBox[{"GraphData", "[", 
+      RowBox[{";;", "15"}], "]"}], ",", "300"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.764231972765451*^9, 3.764231988362249*^9}, {
+  3.7642503789686337`*^9, 3.76425037899259*^9}, {3.764253513485923*^9, 
+  3.7642535352437363`*^9}},
+ CellLabel->"In[27]:=",ExpressionUUID->"3577309d-b582-4aa6-b2db-6d05f89ac055"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGSpanningTreeCount", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<SpanningTreeCount\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}},
+ CellLabel->"In[28]:=",ExpressionUUID->"5af4153b-b495-4cc1-9f6c-f3428d5ca0f9"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGPerfectQ", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<Perfect\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.764250332569828*^9, 3.764250353352639*^9}},
+ CellLabel->"In[29]:=",ExpressionUUID->"691bb12c-f7a8-4e08-8f4f-27aae26099f0"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGVertexConnectivity", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<VertexConnectivity\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.76423192429673*^9, 3.764231928492633*^9}, {3.764251027887888*^9, 
+  3.764251037562997*^9}, {3.7642513191323*^9, 3.764251334529499*^9}, {
+  3.764251365234728*^9, 3.764251369234394*^9}, {3.764252069032069*^9, 
+  3.7642520990563602`*^9}, {3.764252155543358*^9, 3.7642521594027777`*^9}, {
+  3.764252378748582*^9, 3.764252408353704*^9}, {3.764253043066835*^9, 
+  3.764253048677746*^9}},
+ CellLabel->"In[30]:=",ExpressionUUID->"21456e0b-6e3f-4dfb-92a9-d28b721da2b4"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGIndependenceNumber", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<IndependenceNumber\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.76423171401267*^9, 3.764231720672646*^9}, {
+  3.7642506304727573`*^9, 3.764250636204032*^9}, {3.764253471247343*^9, 
+  3.7642534754612417`*^9}},
+ CellLabel->
+  "In[31]:=",ExpressionUUID->"25213ead-b7ea-4916-b363-0f9d89972d74"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Even smaller graphs", "Subsubsection",
+ CellChangeTimes->{{3.764250494118671*^9, 
+  3.764250496137184*^9}},ExpressionUUID->"bf8b4b56-3c53-4a8b-a89a-\
+435e8657f3a4"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"graphs", "=", 
+   RowBox[{"RandomSample", "[", 
+    RowBox[{
+     RowBox[{"GraphData", "[", 
+      RowBox[{";;", "10"}], "]"}], ",", "100"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.764250498812838*^9, 3.764250500353396*^9}, {
+  3.7642505739073877`*^9, 3.7642505858668623`*^9}},
+ CellLabel->"In[32]:=",ExpressionUUID->"344d352e-b6a4-4f72-acec-5e44d4af22f6"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGChromaticNumber", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<ChromaticNumber\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.7642504333333187`*^9, 3.764250454568233*^9}},
+ CellLabel->"In[33]:=",ExpressionUUID->"f82ba191-a783-4e84-9805-1566c7e0cf5f"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGChromaticIndex", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<EdgeChromaticNumber\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.764250469118876*^9, 3.764250511319145*^9}},
+ CellLabel->"In[34]:=",ExpressionUUID->"f6e6c64b-d025-4a8f-b4ea-2abc24f57222"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{"graphs", ",", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"IGCliqueCoverNumber", "[", 
+      RowBox[{"GraphData", "[", "#", "]"}], "]"}], "=!=", 
+     RowBox[{"GraphData", "[", 
+      RowBox[{"#", ",", "\"\<CliqueCoveringNumber\>\""}], "]"}]}], "&"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.764250540096483*^9, 3.764250567692992*^9}},
+ CellLabel->
+  "In[35]:=",ExpressionUUID->"3b59a05e-5ba6-4bc7-b89b-4ff08e3bef84"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{116, Automatic}, {Automatic, 44}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 11, 2019)",
+StyleDefinitions->"Default.nb"
+]
