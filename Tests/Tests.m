@@ -8,7 +8,7 @@
 (*This is a MicroTest test file. See https://github.com/szhorvat/MicroTest*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Utility functions for testing*)
 
 
@@ -27,6 +27,10 @@ sameGraphQ[g1_, g2_] :=
 
 (* ::Subsubsection::Closed:: *)
 (*samePropGraphQ*)
+
+
+(* ::Text:: *)
+(*Check that two graphs are the same and have the same properties and property values.*)
 
 
 ruleQ[_Rule | _RuleDelayed] := True
@@ -409,7 +413,7 @@ MT[
 
 
 (* ::Text:: *)
-(*Only test IGDocumentation is running with notebooks.*)
+(*Only test IGDocumentation when running with notebooks.*)
 
 
 If[$Notebooks,
@@ -424,7 +428,10 @@ If[$Notebooks,
 (*Seed the igraph random number generator for reproducible testing.*)
 
 
-IGSeedRandom[137]
+MT[
+  IGSeedRandom[137],
+  Null
+]
 
 
 (* ::Section::Closed:: *)
@@ -1534,14 +1541,14 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Trees*)
 
 
 MTSection["Trees"]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGTreeQ*)
 
 
@@ -1623,6 +1630,13 @@ MT[
 ]
 
 
+(* https://github.com/szhorvat/IGraphM/issues/90 *)
+MT[
+  IGTreeQ@Graph[Range[5], {1<->4, 1<->5, 2<->4, 2<->5}],
+  False
+]
+
+
 (* ::Subsubsection:: *)
 (*IGForestQ*)
 
@@ -1648,11 +1662,63 @@ MT[
 (* TODO *)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGTreelikeComponents*)
 
 
-(* TODO *)
+MT[
+  Sort[IGTreelikeComponents[Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {6 <-> 9, 8 <-> 9, 5 <-> 8, 3 <-> 8, 3 <-> 7, 3 <-> 4, 2 <-> 7, 1 <-> 5, 4 <-> 10}]]],
+  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+]
+
+
+MT[
+  Sort[IGTreelikeComponents[CycleGraph[3]]],
+  {}
+]
+
+
+MT[
+  Sort[IGTreelikeComponents[CycleGraph[10]]],
+  {}
+]
+
+
+MT[
+  Sort[IGTreelikeComponents[PathGraph[Range[10]]]],
+  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+]
+
+
+MT[
+  Sort[IGTreelikeComponents[IGEmptyGraph[]]],
+  {}
+]
+
+
+MT[
+  Sort[IGTreelikeComponents[IGShorthand["1-2-3-4-2"]]],
+  {1}
+]
+
+
+(* directed -- directions are ignored *)
+MT[
+  Sort[IGTreelikeComponents[IGShorthand["1->2->3->4->2"]]],
+  {1}
+]
+
+
+(* multigraphs *)
+MT[
+  IGTreelikeComponents[Graph[{1 <-> 2, 1 <-> 2, 2 <-> 3}]],
+  {3}
+]
+
+MT[
+  IGTreelikeComponents[Graph[{1 <-> 2, 1 <-> 2}]],
+  {}
+]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1695,11 +1761,312 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGFromPrufer*)
 
 
-(* TODO *)
+MT[
+  IGFromPrufer[{}],
+  Graph[{1 <-> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGFromPrufer[{0}],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGFromPrufer[{1}],
+  Graph[{1 <-> 2, 1 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGFromPrufer[{2}],
+  Graph[{1 <-> 2, 2 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGFromPrufer[{3}],
+  Graph[{1, 2, 3}, {1 <-> 3, 2 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGFromPrufer[{4}],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGFromPrufer[{1, 5, 2}],
+  Graph[{1, 2, 3, 4, 5}, {1 <-> 3, 1 <-> 5, 2 <-> 4, 2 <-> 5}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGFromPrufer@IGToPrufer[#],
+  #,
+  SameTest -> IGSameGraphQ
+]& /@ Table[IGTreeGame[k], {k, 3, 10}]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGToPrufer*)
+
+
+MT[
+  IGToPrufer@IGEmptyGraph[],
+  $Failed,
+  {IGraphM::error}
+]
+
+MT[
+  IGToPrufer@IGEmptyGraph[1],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGToPrufer[Graph[{1 <-> 2}]],
+  {}
+]
+
+
+MT[
+  IGToPrufer[Graph[{1 <-> 2, 2 <-> 3}]],
+  {2}
+]
+
+
+MT[
+  IGToPrufer[Graph[{1 <-> 2, 1 <-> 3}]],
+  {1}
+]
+
+
+MT[
+  IGToPrufer[Graph[{1 <-> 2, 1 <-> 3, 2 <-> 3}]],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGToPrufer[Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {6 <-> 9, 8 <-> 9, 5 <-> 8, 3 <-> 8, 3 <-> 7, 3 <-> 4, 2 <-> 7, 1 <-> 5, 4 <-> 10}]],
+  {5, 7, 8, 9, 3, 8, 3, 4}
+]
+
+
+(* directed -- directions are ignored *)
+MT[
+  IGToPrufer[IGShorthand["1->2<-3"]],
+  {2}
+]
+
+
+(* multigraph -- not a tree *)
+MT[
+  IGToPrufer[Graph[{1 <-> 2, 1 <-> 2}]],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGSpanningTreeCount*)
+
+
+(* ::Text:: *)
+(*Undirected graphs*)
+
+
+MT[
+  IGSpanningTreeCount[IGEmptyGraph[]],
+  0
+]
+
+
+MT[
+  IGSpanningTreeCount[IGEmptyGraph[1]],
+  1
+]
+
+
+(* not connected, so zero *)
+MT[
+  IGSpanningTreeCount[IGEmptyGraph[2]],
+  0
+]
+
+
+MT[
+  IGSpanningTreeCount[CycleGraph[3]],
+  3
+]
+
+
+(* multigraph *)
+MT[
+  IGSpanningTreeCount[CycleGraph[2]],
+  2
+]
+
+
+MT[
+  IGSpanningTreeCount[CompleteGraph[2]],
+  1
+]
+
+
+MT[
+  IGSpanningTreeCount[CompleteGraph[4]],
+  16
+]
+
+
+MT[
+  IGSpanningTreeCount[GridGraph[{2, 3}]],
+  15
+]
+
+
+MT[
+  IGSpanningTreeCount[Graph[{1 <-> 2, 3 <-> 4}]],
+  0
+]
+
+
+(* ::Text:: *)
+(*Directed graphs*)
+
+
+MT[
+  IGSpanningTreeCount[GridGraph[{2, 3}, DirectedEdges -> True]],
+  4
+]
+
+
+MT[
+  IGSpanningTreeCount[Graph[{1 -> 2}]],
+  1
+]
+
+
+MT[
+  IGSpanningTreeCount[Graph[{1 -> 2, 2 -> 1}]],
+  2
+]
+
+
+(* ::Text:: *)
+(*Directed graph with starting vertex*)
+
+
+MT[
+  IGSpanningTreeCount[GridGraph[{2, 3}, DirectedEdges -> True], 1],
+  4
+]
+
+
+MT[
+  IGSpanningTreeCount[GridGraph[{2, 3}, DirectedEdges -> True], 2],
+  0
+]
+
+
+MT[
+  IGSpanningTreeCount[Graph[{1 -> 2, 2 -> 1}], 2],
+  1
+]
+
+
+(* ::Text:: *)
+(*Nonexistent vertex*)
+
+
+MT[
+  IGSpanningTreeCount[Graph[{1 -> 2, 2 -> 1}], 3],
+  $Failed,
+  {VertexIndex::inv}
+]
+
+
+MT[
+  IGSpanningTreeCount[Graph[{1 <-> 2}], 3],
+  $Failed,
+  {VertexIndex::inv}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGRandomSpanningTree*)
+
+
+MT[
+  IGRandomSpanningTree[IGEmptyGraph[]],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGRandomSpanningTree[IGEmptyGraph[1]],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGRandomSpanningTree[IGEmptyGraph[5]],
+  Graph[{1, 2, 3, 4, 5}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGTreeQ[IGRandomSpanningTree[RandomGraph[{10, 20}]]],
+  True
+]
+
+
+MT[
+  AllTrue[IGRandomSpanningTree[RandomGraph[{10, 20}], 10], IGTreeQ],
+  True
+]
+
+
+MT[
+  IGRandomSpanningTree[{Graph[{1, 2, 3}, {1 <-> 2}], 1}],
+  Graph[{1 <-> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGRandomSpanningTree[{Graph[{1 <-> 2, 3 <-> 4}], 3}],
+  Graph[{3 <-> 4}],
+  SameTest -> IGSameGraphQ
+]
+
+
+(* https://github.com/szhorvat/IGraphM/issues/89 *)
+MT[
+  IGRandomSpanningTree[{Graph[{1, 2, 3}, {1 <-> 2}], 3}],
+  Graph[{3},{}],
+  SameTest -> IGSameGraphQ
+]
 
 
 (* ::Section::Closed:: *)
@@ -2090,7 +2457,7 @@ MT[
 ]& /@ {IGLADFindSubisomorphisms, IGLADGetSubisomorphism, IGLADSubisomorphicQ}
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Centralities*)
 
 
@@ -2103,8 +2470,12 @@ MT[
 ]& /@ {IGBetweenness, IGEdgeBetweenness, IGCloseness, IGPageRank, IGEigenvectorCentrality, IGHubScore, IGAuthorityScore, IGConstraintScore}
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Betweenness*)
+
+
+(* ::Text:: *)
+(*Note: BetweennessCentrality does not support multigraphs.*)
 
 
 MT[
@@ -2131,6 +2502,17 @@ MT[
   IGEdgeBetweenness[#],
   SameTest -> Equal
 ]& /@ {dgs, dgi}
+
+
+(* test on one instance of a multigraph *)
+MT[
+  IGBetweenness@Graph[Range[6],{1 <-> 2,2 <-> 3,3 <-> 4,2 <-> 5,4 <-> 5,4 <-> 5,4 <-> 6}],
+  {0.`,4.3333333320000005`,1.333333332`,4.666666665`,2.666666664`,0.`},
+  SameTest -> Equal
+]
+
+
+(* TODO directed multigraph *)
 
 
 (* ::Subsubsection::Closed:: *)
@@ -2190,7 +2572,7 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGEigenvectorCentrality*)
 
 
@@ -2518,6 +2900,10 @@ MT[
 MTSection["Motifs and subgraph counts"]
 
 
+(* ::Subsubsection::Closed:: *)
+(*IGTriangles*)
+
+
 triangleCount[am_?MatrixQ] := Tr[am.am.am]/6
 triangleCount[g_?GraphQ] := triangleCount@AdjacencyMatrix[g]
 
@@ -2535,6 +2921,17 @@ MT[
   IGTriangles[edgeless],
   {}
 ]
+
+
+MT[
+  Length@IGTriangles[dolphin],
+  95
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGMotifs*)
+
 
 MT[
   IGMotifs[web, 3],
@@ -2563,23 +2960,8 @@ MT[
 ]
 
 MT[
-  IGMotifsTotalCount[web, 3],
-  102246
-]
-
-MT[
-  IGMotifsTotalCount[web, 4],
-  4052036
-]
-
-MT[
   IGMotifs[dolphin, 3],
   {Indeterminate, Indeterminate, 638, 95}
-]
-
-MT[
-  Length@IGTriangles[dolphin],
-  95
 ]
 
 MT[
@@ -2608,6 +2990,21 @@ MT[
   {Indeterminate, Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, 0, 0, 0, 0, 0}
 ]
 
+
+(* ::Subsubsection::Closed:: *)
+(*IGMotifsTotalCount*)
+
+
+MT[
+  IGMotifsTotalCount[web, 3],
+  102246
+]
+
+MT[
+  IGMotifsTotalCount[web, 4],
+  4052036
+]
+
 MT[
   IGMotifsTotalCount[dolphin, 3],
   733
@@ -2627,6 +3024,11 @@ MT[
   IGMotifsTotalCount[edgeless, 3],
   0
 ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGTriadCensus*)
+
 
 MT[
   IGTriadCensus[web],
@@ -2668,6 +3070,11 @@ MT[
   {False, False, True, False, True, True, True, True, True, True, True, True, True, True, True, True}
 ]
 
+
+(* ::Subsubsection::Closed:: *)
+(*IGDyadCensus*)
+
+
 MT[
   IGDyadCensus[empty],
   <|"Mutual" -> 0, "Asymmetric" -> 0, "Null" -> 0|>,
@@ -2683,6 +3090,26 @@ MT[
 MT[
   IGDyadCensus[web],
   <|"Mutual" -> 13, "Asymmetric" -> 3927, "Null" -> 746985|>
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGAdjacentTriangleCount*)
+
+
+MT[
+  IGAdjacentTriangleCount[#],
+  With[{am = AdjacencyMatrix[#]}, Normal@Diagonal[am.am.am]/2]
+]& /@ ulist
+
+MT[
+  IGAdjacentTriangleCount[empty],
+  {}
+]
+
+MT[
+  IGAdjacentTriangleCount[Graph[{1,2,3},{}]],
+  {0,0,0}
 ]
 
 
@@ -3314,10 +3741,14 @@ MTSection["Bipartite graphs"]
 (*IGBipartiteQ*)
 
 
-{
-  MT[IGBipartiteQ[#], True],
-  MT[IGBipartiteQ[#, IGBipartitePartitions[#]], True]
-} & /@ Hold[
+Function[graph,
+  With[{g = graph},
+    {MT[IGBipartiteQ[g], True],
+     MT[IGBipartiteQ[g, IGBipartitePartitions[g]], True]}
+  ],
+  HoldAll
+] /@ 
+Hold[
   bipartite, dbipartite,
   IGEmptyGraph[0], IGEmptyGraph[5], CycleGraph[4],
   IGBipartiteGameGNM[10, 12, 33], IGBipartiteGameGNM[8, 17, 33, DirectedEdges -> True],
@@ -3378,7 +3809,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGBipartiteIncidenceGraph*)
 
 
@@ -3407,7 +3838,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGBipartiteIncidenceMatrix*)
 
 
@@ -4632,6 +5063,179 @@ MT[
 
 
 (* ::Section::Closed:: *)
+(*Planar graphs*)
+
+
+MTSection["Planar graphs"]
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGPlanarQ*)
+
+
+(* ::Text:: *)
+(*Note that PlanarGraphQ does not consider the null graph planar while IGPlanarQ does.*)
+
+
+MT[
+  IGPlanarQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0, 3]
+
+
+MT[
+  IGPlanarQ[CompleteGraph[#]],
+  True
+]& /@ Range[0,4]
+
+
+Function[g,
+  MT[
+    IGPlanarQ[g],
+    False
+  ],
+  HoldAll
+] /@
+Hold[
+  CompleteGraph[5], CompleteGraph[7], CompleteGraph[{3,3}], 
+  GraphData[{"DoubleToroidal",{8,5}}], GraphData[{"HamiltonLaceable",{8,5}}],
+  PetersenGraph[],
+  IGMeshCellAdjacencyGraph[IGLatticeMesh["PentagonType4"],1]
+] // ReleaseHold
+
+
+Function[g,
+  MT[
+    IGPlanarQ[g],
+    True
+  ],
+  HoldAll
+] /@ 
+Hold[
+  GraphData[{"Tadpole",{5,5}}],
+  GridGraph[{3,4}],
+  IGTriangularLattice[15],
+  CycleGraph[7],
+  IGTreeGame[123],
+  GraphData[{"JohnsonSkeleton",64}],
+  IGDelaunayGraph@RandomReal[{-1,1}, {100,2}],
+  IGLuneBetaSkeleton[RandomReal[{-1,1}, {100,2}], 1],
+  IGLuneBetaSkeleton[RandomReal[{-1,1}, {100,2}], 1.5],
+  IGLuneBetaSkeleton[RandomReal[{-1,1}, {100,2}], 2],
+  IGLuneBetaSkeleton[RandomReal[{-1,1}, {100,2}], 2.5],
+  IGCircleBetaSkeleton[RandomReal[{-1,1}, {100,2}], 1.5],
+  IGMeshGraph@IGLatticeMesh["CairoPentagonal"],
+  IGMeshCellAdjacencyGraph[IGLatticeMesh["PentagonType3"],0],
+  IGMeshCellAdjacencyGraph[IGLatticeMesh["PentagonType4"],2,1],
+  IGMeshCellAdjacencyGraph[IGLatticeMesh["PentagonType4"],2],
+  IGMeshCellAdjacencyGraph[IGLatticeMesh["Basketweave"],2],
+  IGMeshCellAdjacencyGraph[IGLatticeMesh["PentagonType1"],0,2],
+  GraphData[{"SierpinskiCarpet", 4}]
+] // ReleaseHold
+
+
+(* TODO *)
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGMaximalPlanarQ*)
+
+
+MT[
+  IGMaximalPlanarQ[IGEmptyGraph[]],
+  True
+]
+
+
+MT[
+  IGMaximalPlanarQ[IGEmptyGraph[1]],
+  True
+]
+
+
+MT[
+  IGMaximalPlanarQ[IGEmptyGraph[2]],
+  False
+]
+
+
+MT[
+  IGMaximalPlanarQ[Graph[{1 <-> 2}]],
+  True
+]
+
+
+MT[
+  IGMaximalPlanarQ[Graph[{1 <-> 2, 2 <-> 3}]],
+  False
+]
+
+
+MT[
+  IGMaximalPlanarQ[CycleGraph[3]],
+  True
+]
+
+
+MT[
+  IGMaximalPlanarQ[CompleteGraph[4]],
+  True
+]
+
+
+(* not planar *)
+MT[
+  IGMaximalPlanarQ[CompleteGraph[5]],
+  False
+]
+
+
+MT[
+  IGMaximalPlanarQ[CompleteGraph[{3, 2}]],
+  False
+]
+
+
+(* not planar *)
+MT[
+  IGMaximalPlanarQ[CompleteGraph[{3, 3}]],
+  False
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGOuterPlanarQ*)
+
+
+MT[
+  IGOuterplanarQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0,5]
+
+
+MT[
+  IGOuterplanarQ[CycleGraph[#]],
+  True
+]& /@ Range[1,6]
+
+
+MT[
+  IGOuterplanarQ[CompleteGraph[4]],
+  False
+]
+
+
+(* not planar *)
+MT[
+  IGOuterplanarQ[CompleteGraph[5]],
+  False
+]
+
+
+(* ::Section::Closed:: *)
 (*Layout functions*)
 
 
@@ -4707,6 +5311,366 @@ MT[
 
 (* TODO basic checks to ensure that layout functions work 
    and do not throw errors for reasonable edge cases *)
+
+
+(* ::Section::Closed:: *)
+(*Weighted graphs*)
+
+
+MTSection["Weighted graphs"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGEdgeWeightedQ, IGVertexWeightedQ*)
+
+
+vwg = Graph[{1,2,3},{1<->2},VertexWeight->{1,2,3}];
+
+MT[
+  IGEdgeWeightedQ[#],
+  False
+]& /@ Hold[
+  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
+  vwg
+] // ReleaseHold
+
+MT[
+  IGVertexWeightedQ[#],
+  False
+]& /@ Hold[
+  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
+  wugi, wugs, wdgi, wdgs
+] // ReleaseHold
+
+MT[
+  IGEdgeWeightedQ[#],
+  True
+]& /@ Hold[wugi, wugs, wdgi, wdgs] // ReleaseHold
+
+MT[
+  IGVertexWeightedQ[vwg],
+  True
+]
+
+MT[
+  IGEdgeWeightedQ@IGEmptyGraph[],
+  False
+]
+
+MT[
+  IGVertexWeightedQ@IGEmptyGraph[],
+  False
+]
+
+MT[
+  IGVertexWeightedQ@IGEmptyGraph[],
+  False
+]
+
+MT[
+  IGEdgeWeightedQ@IGEmptyGraph[3, VertexWeight -> {1, 2, 3}],
+  False
+]
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGWeighedAdjacencyGraph*)
+
+
+MT[
+  sameGraphQ[
+    IGWeightedAdjacencyGraph[{{0,1},{2,3}}],
+    Graph[{1->2, 2->1, 2->2}]
+  ],
+  True
+]
+
+MT[
+  IGEdgeProp[EdgeWeight]@IGWeightedAdjacencyGraph[{{0,1},{2,3}}],
+  {1,2,3}
+]
+
+MT[
+  sameGraphQ[
+    IGWeightedAdjacencyGraph[{{0,1},{1,3}}],
+    Graph[{1<->2, 2<->2}]
+  ],
+  True
+]
+
+MT[
+  IGEdgeProp[EdgeWeight]@IGWeightedAdjacencyGraph[{{0,1},{1,3}}],
+  {1,3}
+]
+
+MT[
+  sameGraphQ[
+    IGWeightedAdjacencyGraph[{"a","b"}, {{0,1},{2,3}}],
+    Graph[{"a"->"b", "b"->"a", "b"->"b"}]
+  ],
+  True
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGWeigthedAdjacencyMatrix*)
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 <-> 2, 2 <-> 3}]],
+  SparseArray[Automatic, {3, 3}, 0, {1, {{0, 1, 3, 4}, {{2}, {1}, {3}, {2}}}, {1, 1, 1, 1}}]
+]
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 <-> 2, 2 <-> 3}, EdgeWeight->{xx, yy}]],
+  SparseArray[Automatic, {3, 3}, 0, {1, {{0, 1, 3, 4}, {{2}, {1}, {3}, {2}}}, {xx, xx, yy, yy}}]
+]
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 <-> 2, 2 <-> 3}, EdgeWeight->{5., 6.}]],
+  SparseArray[Automatic, {3, 3}, 0, {1, {{0, 1, 3, 4}, {{2}, {1}, {3}, {2}}}, {5., 5., 6., 6.}}]
+]
+
+
+MT[
+  IGWeightedAdjacencyMatrix[IGEmptyGraph[1]],
+  SparseArray[Automatic, {1, 1}, 0, {1, {{0, 0}, {}}, {}}]
+]
+
+
+(* ::Text:: *)
+(*Verify that zero weights are preserved.*)
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 <-> 2, 2 <-> 3}, EdgeWeight->{0., 6.}], Infinity],
+  SparseArray[Automatic, {3, 3}, Infinity, {1, {{0, 1, 3, 4}, {{2}, {1}, {3}, {2}}}, {0., 0., 6., 6.}}]
+]
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 <-> 2, 2 <-> 3}, EdgeWeight->{0, 6}], Infinity],
+  SparseArray[Automatic, {3, 3}, Infinity, {1, {{0, 1, 3, 4}, {{2}, {1}, {3}, {2}}}, {0, 0, 6, 6}}]
+]
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 <-> 2, 2 <-> 3}, EdgeWeight->{0, 6}], dummy],
+  SparseArray[Automatic, {3, 3}, dummy, {1, {{0, 1, 3, 4}, {{2}, {1}, {3}, {2}}}, {0, 0, 6, 6}}]
+]
+
+
+(* ::Text:: *)
+(*Verify that weights of parallel edges are added up.*)
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 <-> 2, 1 <-> 2, 2 <-> 3}, EdgeWeight->{4,5,6}]],
+  SparseArray[Automatic, {3, 3}, 0, {1, {{0, 1, 3, 4}, {{2}, {1}, {3}, {2}}}, {9, 9, 6, 6}}]
+]
+
+
+(* ::Text:: *)
+(*Directed graph.*)
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 -> 2, 2 -> 1, 2 -> 3}, EdgeWeight->{4,5,6}]],
+  SparseArray[Automatic, {3, 3}, 0, {1, {{0, 1, 3, 3}, {{2}, {1}, {3}}}, {4, 5, 6}}]
+]
+
+
+(* ::Text:: *)
+(*Mixed graph.*)
+
+
+MT[
+  IGWeightedAdjacencyMatrix[Graph[{1 -> 2, 2 -> 1, 2 <-> 3}, EdgeWeight->{4,5,6}]],
+  SparseArray[Automatic, {3, 3}, 0, {1, {{0, 1, 3, 4}, {{2}, {1}, {3}, {2}}}, {4, 5, 6, 6}}]
+]
+
+
+(* ::Text:: *)
+(*Null graph.*)
+
+
+MT[
+  IGWeightedAdjacencyMatrix[IGEmptyGraph[]],
+  $Failed,
+  {IGWeightedAdjacencyMatrix::nadj}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGUnweighted*)
+
+
+(* ::Text:: *)
+(*Do not use IGSameGraphQ. We must check that properties are preserved.*)
+
+
+MT[
+  IGUnweighted@Graph[{1 <-> 2}, EdgeWeight -> {2.5}, VertexCapacity -> {5,2}],
+  Graph[{1 <-> 2}, VertexCapacity -> {5,2}],
+  SameTest -> samePropGraphQ
+]
+
+
+MT[
+  IGUnweighted@Graph[{1 <-> 2}, VertexWeight -> {3,4}],
+  Graph[{1 <-> 2}, VertexWeight -> {3,4}],
+  SameTest -> samePropGraphQ
+]
+
+
+MT[
+  IGUnweighted@AdjacencyGraph[{{0,1},{1,0}}, EdgeWeight -> {2.5}, VertexCapacity -> {5,2}],
+  AdjacencyGraph[{{0,1},{1,0}}, VertexCapacity -> {5,2}],
+  SameTest -> samePropGraphQ
+]
+
+
+MT[
+  IGUnweighted@IGEmptyGraph[],
+  IGEmptyGraph[]
+]
+
+
+MT[
+  IGUnweighted@IGEmptyGraph[1, VertexStyle -> {1 -> Red}],
+  IGEmptyGraph[1, VertexStyle -> {1 -> Red}],
+  SameTest -> samePropGraphQ
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*Vertex strength*)
+
+
+MT[
+  IGVertexStrength[#],
+  VertexDegree[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+
+MT[
+  IGVertexInStrength[#],
+  VertexInDegree[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+
+MT[
+  IGVertexOutStrength[#],
+  VertexOutDegree[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+
+MT[
+  IGVertexStrength[#],
+  Function[v, IGVertexStrength[#, v]] /@ VertexList[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+
+MT[
+  IGVertexInStrength[#],
+  Function[v, IGVertexInStrength[#, v]] /@ VertexList[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+
+MT[
+  IGVertexOutStrength[#],
+  Function[v, IGVertexOutStrength[#, v]] /@ VertexList[#]
+]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
+
+
+MT[
+  IGVertexStrength[wugi],
+  Function[v,
+    Total[
+      PropertyValue[{wugi, #}, EdgeWeight]& /@ Cases[EdgeList[wugi], (v ~ UndirectedEdge ~ _) | (_ ~ UndirectedEdge ~ v)]
+    ]
+  ] /@ VertexList[wugi],
+  SameTest -> Equal
+]
+
+
+MT[
+  IGVertexOutStrength[wdgi],
+  Function[v,
+    Total[
+      PropertyValue[{wdgi, #}, EdgeWeight]& /@ Cases[EdgeList[wdgi], (v ~ DirectedEdge ~ _)]
+    ]
+  ] /@ VertexList[wdgi],
+  SameTest -> Equal
+]
+
+
+MT[
+  IGVertexInStrength[wdgi],
+  Function[v,
+    Total[
+      PropertyValue[{wdgi, #}, EdgeWeight]& /@ Cases[EdgeList[wdgi], (_ ~ DirectedEdge ~ v)]
+    ]
+  ] /@ VertexList[wdgi],
+  SameTest -> Equal
+]
+
+
+MT[
+  IGVertexStrength[Graph[{1<->2, 1<->2, 2<->3}, EdgeWeight -> {4,5,6}]],
+  {9, 15, 6}
+]
+
+
+MT[
+  #[IGEmptyGraph[]],
+  {}
+]& /@ {IGVertexStrength, IGVertexInStrength, IGVertexOutStrength}
+
+
+(* ::Section::Closed:: *)
+(*Visualization*)
+
+
+MTSection["Visualization"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGAdjacencyMatrixPlot*)
+
+
+(* ::Text:: *)
+(*Exercise function.*)
+
+
+MT[
+  Head[IGAdjacencyMatrixPlot[Graph[{1 <-> 2}]]],
+  Graphics
+]
+
+
+(* ::Text:: *)
+(*Test for invalid input.*)
+
+
+MT[
+  IGAdjacencyMatrixPlot[IGEmptyGraph[]],
+  $Failed,
+  {WeightedAdjacencyMatrix::nadj}
+]
+
+
+MT[
+  IGAdjacencyMatrixPlot[Graph[{1 <-> 2}], EdgeWeight -> "foo"],
+  $Failed,
+  {IGAdjacencyMatrixPlot::noprop}
+]
+
+
+(* TODO *)
 
 
 (* ::Section::Closed:: *)
@@ -4938,166 +5902,6 @@ MT[
   True
 ]
 
-
-
-(* ::Subsubsection::Closed:: *)
-(*IGEdgeWeightedQ, IGVertexWeightedQ*)
-
-
-vwg = Graph[{1,2,3},{1<->2},VertexWeight->{1,2,3}];
-
-MT[
-  IGEdgeWeightedQ[#],
-  False
-]& /@ Hold[
-  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
-  vwg
-] // ReleaseHold
-
-MT[
-  IGVertexWeightedQ[#],
-  False
-]& /@ Hold[
-  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
-  wugi, wugs, wdgi, wdgs
-] // ReleaseHold
-
-MT[
-  IGEdgeWeightedQ[#],
-  True
-]& /@ Hold[wugi, wugs, wdgi, wdgs] // ReleaseHold
-
-MT[
-  IGVertexWeightedQ[vwg],
-  True
-]
-
-MT[
-  IGEdgeWeightedQ@IGEmptyGraph[],
-  False
-]
-
-MT[
-  IGVertexWeightedQ@IGEmptyGraph[],
-  False
-]
-
-MT[
-  IGVertexWeightedQ@IGEmptyGraph[],
-  False
-]
-
-MT[
-  IGEdgeWeightedQ@IGEmptyGraph[3, VertexWeight -> {1, 2, 3}],
-  False
-]
-
-
-
-(* ::Subsubsection::Closed:: *)
-(*IGWeighedAdjacencyGraph*)
-
-
-MT[
-  sameGraphQ[
-    IGWeightedAdjacencyGraph[{{0,1},{2,3}}],
-    Graph[{1->2, 2->1, 2->2}]
-  ],
-  True
-]
-
-MT[
-  IGEdgeProp[EdgeWeight]@IGWeightedAdjacencyGraph[{{0,1},{2,3}}],
-  {1,2,3}
-]
-
-MT[
-  sameGraphQ[
-    IGWeightedAdjacencyGraph[{{0,1},{1,3}}],
-    Graph[{1<->2, 2<->2}]
-  ],
-  True
-]
-
-MT[
-  IGEdgeProp[EdgeWeight]@IGWeightedAdjacencyGraph[{{0,1},{1,3}}],
-  {1,3}
-]
-
-MT[
-  sameGraphQ[
-    IGWeightedAdjacencyGraph[{"a","b"}, {{0,1},{2,3}}],
-    Graph[{"a"->"b", "b"->"a", "b"->"b"}]
-  ],
-  True
-]
-
-(* Vertex strength *)
-
-MT[
-  IGVertexStrength[#],
-  VertexDegree[#]
-]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
-
-MT[
-  IGVertexInStrength[#],
-  VertexInDegree[#]
-]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
-
-MT[
-  IGVertexOutStrength[#],
-  VertexOutDegree[#]
-]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
-
-MT[
-  IGVertexStrength[#],
-  Function[v, IGVertexStrength[#, v]] /@ VertexList[#]
-]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
-
-MT[
-  IGVertexInStrength[#],
-  Function[v, IGVertexInStrength[#, v]] /@ VertexList[#]
-]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
-
-MT[
-  IGVertexOutStrength[#],
-  Function[v, IGVertexOutStrength[#, v]] /@ VertexList[#]
-]& /@ {ugi, ugs, dgi, dgs, umulti, dmulti}
-
-MT[
-  IGVertexStrength[wugi],
-  Function[v,
-    Total[
-      PropertyValue[{wugi, #}, EdgeWeight]& /@ Cases[EdgeList[wugi], (v ~ UndirectedEdge ~ _) | (_ ~ UndirectedEdge ~ v)]
-    ]
-  ] /@ VertexList[wugi],
-  SameTest -> Equal
-]
-
-MT[
-  IGVertexOutStrength[wdgi],
-  Function[v,
-    Total[
-      PropertyValue[{wdgi, #}, EdgeWeight]& /@ Cases[EdgeList[wdgi], (v ~ DirectedEdge ~ _)]
-    ]
-  ] /@ VertexList[wdgi],
-  SameTest -> Equal
-]
-
-MT[
-  IGVertexInStrength[wdgi],
-  Function[v,
-    Total[
-      PropertyValue[{wdgi, #}, EdgeWeight]& /@ Cases[EdgeList[wdgi], (_ ~ DirectedEdge ~ v)]
-    ]
-  ] /@ VertexList[wdgi],
-  SameTest -> Equal
-]
-
-MT[
-  IGVertexStrength[Graph[{1<->2, 1<->2, 2<->3}, EdgeWeight -> {4,5,6}]],
-  {9, 15, 6}
-]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -5334,6 +6138,150 @@ MT[
 ]
 
 
+(* check for bad input *)
+MT[
+  IGTakeSubgraph[Graph[{1 <-> 2, 2 <-> 3}], Graph[{3 <-> 4}]],
+  $Failed,
+  {IGTakeSubgraph::nsg}
+]
+
+MT[
+  IGTakeSubgraph[Graph[{1 <-> 2, 2 <-> 3}], {3 <-> 3}],
+  $Failed,
+  {IGTakeSubgraph::nsg}
+]
+
+MT[
+  IGTakeSubgraph[Graph[{1 <-> 2, 2 <-> 3}], Graph[{3, 4, 2}, {2 <-> 3}]],
+  $Failed,
+  {IGTakeSubgraph::nsg}
+]
+
+
+(* check TwoWayRule handling *)
+If[$VersionNumber >= 11.2,
+  MT[
+    IGTakeSubgraph[CycleGraph[5], {TwoWayRule[1,2],TwoWayRule[2,3]}],
+    Graph[{1<->2,2<->3}],
+    SameTest->IGSameGraphQ
+  ];
+
+  MT[
+    IGTakeSubgraph[CycleGraph[5], {UndirectedEdge[1,2],TwoWayRule[2,3]}],
+    Graph[{1<->2,2<->3}],
+    SameTest->IGSameGraphQ
+  ]
+]
+
+MT[
+  IGTakeSubgraph[CycleGraph[5], {UndirectedEdge[1,2],UndirectedEdge[2,3]}],
+  Graph[{1<->2,2<->3}],
+  SameTest->IGSameGraphQ
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGDisjointUnion*)
+
+
+MT[
+  IGDisjointUnion[{}],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[Association[]],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[{IGShorthand["1-2-3"], IGShorthand["1-2-3"]}],
+  Graph[{{1, 1} <-> {1, 2}, {1, 2} <-> {1, 3}, {2, 1} <-> {2, 2}, {2, 2} <-> {2, 3}}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[{IGShorthand["1-2-3"], IGShorthand["a-b-c"]}],
+  Graph[{{1, 1} <-> {1, 2}, {1, 2} <-> {1, 3}, {2, "a"} <-> {2, "b"}, {2, "b"} <-> {2, "c"}}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[{IGShorthand["1-2-3"], IGShorthand["a-b"], CycleGraph[5]}],
+  Graph[{{1, 1}, {1, 2}, {1, 3}, {2, "a"}, {2, "b"}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5}}, {{1, 1} <-> {1, 2}, {1, 2} <-> {1, 3}, {2, "a"} <-> {2, "b"}, {3, 1} <-> {3, 2}, {3, 1} <-> {3, 5}, {3, 2} <-> {3, 3}, {3, 3} <-> {3, 4}, {3, 4} <-> {3, 5}}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[Association["one" -> IGShorthand["1-2-3"], "two" -> IGShorthand["a-b"], "three" -> CycleGraph[5]]],
+  Graph[{{"one", 1}, {"one", 2}, {"one", 3}, {"two", "a"}, {"two", "b"}, {"three", 1}, {"three", 2}, {"three", 3}, {"three", 4}, {"three", 5}}, {{"one", 1} <-> {"one", 2}, {"one", 2} <-> {"one", 3}, {"two", "a"} <-> {"two", "b"}, {"three", 1} <-> {"three", 2}, {"three", 1} <-> {"three", 5}, {"three", 2} <-> {"three", 3}, {"three", 3} <-> {"three", 4}, {"three", 4} <-> {"three", 5}}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[Association["one" -> IGShorthand["1-2-3"], "two" -> IGEmptyGraph[], "three" -> CycleGraph[5]]],
+  Graph[{{"one", 1}, {"one", 2}, {"one", 3}, {"three", 1}, {"three", 2}, {"three", 3}, {"three", 4}, {"three", 5}}, {{"one", 1} <-> {"one", 2}, {"one", 2} <-> {"one", 3}, {"three", 1} <-> {"three", 2}, {"three", 1} <-> {"three", 5}, {"three", 2} <-> {"three", 3}, {"three", 3} <-> {"three", 4}, {"three", 4} <-> {"three", 5}}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[{IGEmptyGraph[], IGEmptyGraph[]}],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[{IGEmptyGraph[], IGEmptyGraph[2]}],
+  Graph[{{2, 1}, {2, 2}}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[{Graph[{1 -> 2}]}],
+  Graph[{{1, 1} -> {1, 2}}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[{Graph[{1 -> 2}], Graph[{2 -> 1}]}],
+  Graph[{{1, 1} -> {1, 2}, {2, 2} -> {2, 1}}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGDisjointUnion[{Graph[{1 -> 2}], Graph[{2 <-> 1}]}],
+  $Failed,
+  {IGDisjointUnion::mixed}
+]
+
+
+MT[
+  IGDisjointUnion[{Graph[{1 -> 2, 2 <-> 3}]}],
+  $Failed,
+  {IGDisjointUnion::mixed}
+]
+
+
+MT[
+  IGDisjointUnion[{Graph[{1 -> 2, 1 -> 2}], Graph[{"a" -> "b"}]}],
+  Graph[{{1, 1} -> {1, 2}, {1, 1} -> {1, 2}, {2, "a"} -> {2, "b"}}],
+  SameTest -> IGSameGraphQ
+]
+
+
 (* ::Section::Closed:: *)
 (*Import/Export*)
 
@@ -5363,6 +6311,44 @@ MT[
 
 
 (* ::Section::Closed:: *)
+(*Q functions*)
+
+
+MTSection["Q functions"]
+
+
+(* ::Text:: *)
+(*Check that Q functions that take a certain expression type (such as a graph) will return False when given a different expression type.*)
+
+
+(MT[#[1234], False]; MT[#[DUMMY], False])& /@ {
+	IGBiconnectedQ, IGConnectedQ, IGWeaklyConnectedQ,
+	IGBipartiteQ, 
+	IGChordalQ,
+	IGDirectedAcyclicGraphQ, 
+	IGEdgeTransitiveQ, IGVertexTransitiveQ, IGSymmetricQ,
+	IGSelfComplementaryQ,
+	IGEdgeWeightedQ, IGVertexWeightedQ,
+	IGForestQ, IGTreeQ,
+	IGPlanarQ, IGMaximalPlanarQ, IGOuterplanarQ,
+	IGNullGraphQ,
+	IGTriangleFreeQ,
+	IGPerfectQ
+}	
+
+
+MT[IGGraphicalQ[123], False]
+MT[IGGraphicalQ[123, 456], False]
+
+MT[IGGraphicalQ[DUMMY], False]
+MT[IGGraphicalQ[DUMMY1, DUMMY2], False]
+
+
+MT[IGEmbeddingQ[123], False]
+MT[IGEmbeddingQ[{1,2,3}], False]
+
+
+(* ::Section::Closed:: *)
 (*Miscellaneous functions*)
 
 
@@ -5383,6 +6369,29 @@ MT[
   True
 ]
 
+
+MT[
+  IGIsoclass/@IGData[{"AllDirectedGraphs", 3}],
+  Range[0, 15]
+]
+
+
+MT[
+  IGIsoclass/@IGData[{"AllDirectedGraphs", 4}],
+  Range[0, 217]
+]
+
+
+MT[
+  IGIsoclass/@IGData[{"AllUndirectedGraphs", 3}],
+  Range[0, 3]
+]
+
+
+MT[
+  IGIsoclass/@IGData[{"AllUndirectedGraphs", 4}],
+  Range[0, 10]
+]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -5417,20 +6426,60 @@ MT[
 
 
 (* ::Subsubsection::Closed:: *)
-(*IGAdjacentTriangleCount*)
+(*IGraphM`Developer`GetInfo*)
+
+
+(* exercise GetInfo *)
+MT[
+  StringQ@IGraphM`Developer`GetInfo[],
+  True
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGraphM`Information`$Version*)
 
 
 MT[
-  IGAdjacentTriangleCount[#],
-  With[{am = AdjacencyMatrix[#]}, Normal@Diagonal[am.am.am]/2]
-]& /@ ulist
+  StringQ[IGraphM`Information`$Version],
+  True
+]
 
+
+(* ::Section::Closed:: *)
+(*Finalize*)
+
+
+MTSection["Finalize"]
+
+
+(* No IG managed library expressions should be alive *)
 MT[
-  IGAdjacentTriangleCount[empty],
+  IGraphM`LTemplate`LExpressionList["IG"],
   {}
 ]
 
+
 MT[
-  IGAdjacentTriangleCount[Graph[{1,2,3},{}]],
-  {0,0,0}
+  IGraphM`LTemplate`LExpressionList["IGEmbedding"],
+  {}
+]
+
+
+MT[
+  IGraphM`LTemplate`LExpressionList["IGLemonGraph"],
+  {}
+]
+
+
+MT[
+  IGraphM`LTemplate`LExpressionList["IGFlann2D"],
+  {}
+]
+
+
+(* There should be precisely one IGlobal object at any time. *)
+MT[
+  IGraphM`LTemplate`LExpressionList["IGlobal"],
+  {IGraphM`LTemplate`Classes`IGlobal[1]}
 ]
