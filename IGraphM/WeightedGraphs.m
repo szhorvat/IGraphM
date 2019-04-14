@@ -110,6 +110,8 @@ IGWeightedAdjacencyMatrix::usage =
 
 Options[IGWeightedAdjacencyMatrix] = Options[WeightedAdjacencyMatrix];
 SyntaxInformation[IGWeightedAdjacencyMatrix] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+IGWeightedAdjacencyMatrix[graph_?IGNullGraphQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[]] :=
+    (Message[IGWeightedAdjacencyMatrix::nadj]; $Failed)  (* This falls back on General::nadj *)
 IGWeightedAdjacencyMatrix[graph_?GraphQ, unconnected : Except[_?OptionQ] : 0, opt : OptionsPattern[]] :=
     With[{sa = WeightedAdjacencyMatrix[graph, opt]},
       SparseArray[sa["NonzeroPositions"] -> sa["NonzeroValues"], Dimensions[sa], unconnected]
