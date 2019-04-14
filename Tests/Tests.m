@@ -648,7 +648,7 @@ Print["Cycle timing: ", First@Timing[IGraphM`PackageScope`igMake /@ cycleTestLis
 MTSection["Creation: deterministic"]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGShorthand*)
 
 
@@ -1548,7 +1548,7 @@ MT[
 MTSection["Trees"]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGTreeQ*)
 
 
@@ -5062,7 +5062,7 @@ MT[
 (* TODO sparse arrays *)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Planar graphs*)
 
 
@@ -5087,7 +5087,7 @@ MT[
 
 
 MT[
-  IGPlanarQ[CompleteGraph[#]],
+  IGPlanarQ[IGCompleteGraph[#]],
   True
 ]& /@ Range[0,4]
 
@@ -5101,7 +5101,7 @@ Function[g,
 ] /@
 Hold[
   CompleteGraph[5], CompleteGraph[7], CompleteGraph[{3,3}], 
-  GraphData[{"DoubleToroidal",{8,5}}], GraphData[{"HamiltonLaceable",{8,5}}],
+  GraphData[{"NoncayleyTransitive",{20,5}}], GraphData[{"HamiltonLaceable",{8,5}}],
   PetersenGraph[],
   IGMeshCellAdjacencyGraph[IGLatticeMesh["PentagonType4"],1]
 ] // ReleaseHold
