@@ -1,5 +1,8 @@
 (* Kernel/init.m *)
 
+(* Reminder: Avoid mentioning any non-System` symbols in this file,
+   otherwise they will be created in Global` when the package is loaded. *)
+
 (* Mathematica version check *)
 If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
   Print["IGraph/M requires Mathematica 10.0.2 or later.  Aborting."];
@@ -22,5 +25,8 @@ If[$VersionNumber < 11.0,
   Get["IGraphM`IGraphM`"];
 ]
 
-SetAttributes[#, {Protected, ReadProtected}]& /@
-    Join @@ Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"};
+(* Protect all package symbols *)
+SetAttributes[
+  Evaluate@Flatten[Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"}],
+  {Protected, ReadProtected}
+]
