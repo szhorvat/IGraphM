@@ -12,7 +12,7 @@ Cell["Restart the kernel before evaluating this notebook.", \
 "Text",ExpressionUUID->"ab995c80-1261-4e9b-a0aa-7e0daf7cbc81"],
 
 Cell[BoxData["Quit"], "Input",
- CellLabel->"In[7]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
+ CellLabel->"In[18]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
 
 Cell[BoxData[{
  RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]", 
@@ -49,6 +49,9 @@ Cell[BoxData[
  RowBox[{"IGraphM`Developer`GetInfo", "[", "]"}]], "Input",
  CellLabel->"In[8]:=",ExpressionUUID->"fd205d26-5c77-4015-bd7d-573598871284"],
 
+Cell["Check that the name of symbols matches their usage message.", \
+"Text",ExpressionUUID->"ecc0c256-e8de-4b32-8072-72ef92f9bcd4"],
+
 Cell[BoxData[
  RowBox[{"Select", "[", 
   RowBox[{
@@ -63,7 +66,10 @@ Cell[BoxData[
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
     "&"}]}], "]"}]], "Input",
- CellLabel->"In[11]:=",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
+ CellLabel->"In[9]:=",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
+
+Cell["Check that all symbols have SyntaxInformation set.", \
+"Text",ExpressionUUID->"404ed351-38c2-466e-85fd-5fa914985d71"],
 
 Cell[BoxData[
  RowBox[{"Select", "[", "\[IndentingNewLine]", 
@@ -93,7 +99,11 @@ Cell[BoxData[
      RowBox[{"ToExpression", "[", 
       RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
      RowBox[{"{", "}"}]}], "&"}]}], "]"}]], "Input",
- CellLabel->"In[14]:=",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
+ CellLabel->"In[10]:=",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
+
+Cell["\<\
+Print all usage messages for eyeball verification and spellchecking.\
+\>", "Text",ExpressionUUID->"f5c16b33-26ba-4067-a8af-964cda1cd299"],
 
 Cell[BoxData[
  RowBox[{"Scan", "[", "\[IndentingNewLine]", 
@@ -114,7 +124,7 @@ Cell[BoxData[
    RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",
  CellLabel->
-  "In[15]:=",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
+  "In[11]:=",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
 WindowSize->{1025, 768},
 WindowMargins->{{111, Automatic}, {-14, Automatic}},
@@ -124,8 +134,7 @@ SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
   "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
   "builtin"}},
-FrontEndVersion->"11.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (March 5, \
-2018)",
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 11, 2019)",
 StyleDefinitions->"Default.nb"
 ]
 

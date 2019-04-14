@@ -1,0 +1,121 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Check definition orderings", "Title",
+ CellChangeTimes->{{3.764223257482424*^9, 
+  3.764223260112164*^9}},ExpressionUUID->"c761ac66-33d4-4b7c-8842-\
+b34b9b6dc31c"],
+
+Cell["Start in a fresh kernel.", "Text",
+ CellChangeTimes->{{3.764223261993041*^9, 
+  3.764223264465786*^9}},ExpressionUUID->"c92339a1-675c-4206-a603-\
+7d85ed593ca2"],
+
+Cell[BoxData["Quit"], "Input",
+ CellChangeTimes->{{3.760338176816296*^9, 3.76033817709793*^9}},
+ CellLabel->"In[6]:=",ExpressionUUID->"f266e122-38d6-4037-8bf4-562c44a7a650"],
+
+Cell[TextData[{
+ "Check that ",
+ Cell[BoxData[
+  FormBox["SyntaxInformation", TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "387a2d64-6cb9-43b9-9980-15050f82e17d"],
+ " always comes after ",
+ Cell[BoxData[
+  FormBox["Options", TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "7e980bd5-f085-4f2c-84b8-f2ef0094243c"],
+ ", so it can pick up the appropriate option names."
+}], "Text",
+ CellChangeTimes->{{3.7603395520174017`*^9, 3.7603395719039288`*^9}, {
+  3.7642232674813137`*^9, 
+  3.764223269639852*^9}},ExpressionUUID->"50f048ff-71ee-458d-a4df-\
+73a01c7a46b4"],
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "@", 
+  RowBox[{"FileNameJoin", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<..\>\"", ",", 
+     "\"\<IGraphM\>\""}], "}"}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.760339310869871*^9, 3.760339313729822*^9}, {
+  3.760339530361768*^9, 3.760339534133417*^9}, {3.760339593678076*^9, 
+  3.7603396028434896`*^9}},
+ CellLabel->"In[7]:=",ExpressionUUID->"0cba06f2-9cd3-475e-96ba-10b18dd86294"],
+
+Cell[BoxData[
+ RowBox[{"files", "=", 
+  RowBox[{"FileNames", "[", "\"\<*.m\>\"", "]"}]}]], "Input",
+ CellChangeTimes->{{3.760339316293097*^9, 3.76033932742283*^9}, {
+   3.760339540084079*^9, 3.760339542885281*^9}, 3.760339606425617*^9},
+ CellLabel->"In[8]:=",ExpressionUUID->"70b4b948-372e-4b75-a8fc-dc8a54151cfd"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"checkSI", "[", "file_", "]"}], ":=", "\[IndentingNewLine]", 
+  RowBox[{"Cases", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"Cases", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Import", "[", 
+         RowBox[{"file", ",", "\"\<HeldExpressions\>\""}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"e", ":", 
+          RowBox[{"(", 
+           RowBox[{"_SyntaxInformation", "|", "_Options"}], ")"}]}], 
+         "\[RuleDelayed]", 
+         RowBox[{"HoldComplete", "[", "e", "]"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"1", ",", "4"}], "}"}]}], "\[IndentingNewLine]", "]"}], "/.", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"SyntaxInformation", "\[Rule]", "ss"}], ",", 
+        RowBox[{"Options", "\[Rule]", "oo"}]}], "}"}]}], "//", 
+     "ReleaseHold"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"___", ",", 
+       RowBox[{"ss", "[", "sym_", "]"}], ",", 
+       RowBox[{"oo", "[", "sym_", "]"}], ",", "___"}], "}"}], 
+     "\[RuleDelayed]", "sym"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"{", "0", "}"}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.760338977904891*^9, 3.760339303236788*^9}, {
+  3.760339335251655*^9, 3.760339341137084*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"48c79567-d3cd-4cc4-82fb-d1a2618fac37"],
+
+Cell[TextData[{
+ "The expected result is ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", "}"}], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "1e1fafe6-9266-432b-a4b8-4e53bc888c7c"],
+ " for all files."
+}], "Text",
+ CellChangeTimes->{{3.764223302498928*^9, 
+  3.76422330877798*^9}},ExpressionUUID->"becbdef4-4901-4323-a94f-\
+79488d9f3928"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"AssociationMap", "[", 
+    RowBox[{"checkSI", ",", "files"}], "]"}], "//", "Normal"}], "//", 
+  "TableForm"}]], "Input",
+ CellChangeTimes->{{3.7603393431814613`*^9, 3.760339375484833*^9}},
+ CellLabel->
+  "In[10]:=",ExpressionUUID->"4e0dbedd-8044-4a6f-b669-a95b56ecba74"]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 11, 2019)",
+StyleDefinitions->"Default.nb"
+]

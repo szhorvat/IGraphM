@@ -1,11 +1,28 @@
 Notebook[{
+
+Cell[CellGroupData[{
+Cell["Tests for graph layouts", \
+"Title",ExpressionUUID->"c437950c-af77-46d1-95fd-7913a4a041b9"],
+
+Cell["Exercise all graph layouts and do eyeball tests.", \
+"Text",ExpressionUUID->"371931ff-24ab-4fed-acd2-1cc1014551fb"],
+
+Cell[CellGroupData[{
+
+Cell["Setup", \
+"Subsection",ExpressionUUID->"9a0a3a98-b72f-4a78-b0a5-3e16aad7e43f"],
+
+Cell[BoxData["Quit"], "Input",
+ CellLabel->
+  "In[136]:=",ExpressionUUID->"b4cc94ed-bd4a-4970-96be-22addf32b933"],
+
 Cell[BoxData[
  RowBox[{"Off", "[", 
   RowBox[{"General", "::", "stop"}], "]"}]], "Input",
  CellLabel->"In[1]:=",ExpressionUUID->"6869e0a7-b9b9-4850-9e52-0529b62a2912"],
 
 Cell[BoxData[
- RowBox[{"<<", "IGraphM`"}]], "Input",
+ RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]], "Input",
  CellLabel->"In[2]:=",ExpressionUUID->"8e1d63c3-7f89-456e-8de8-c2f2c258d8fd"],
 
 Cell[BoxData[
@@ -165,7 +182,14 @@ Cell[BoxData[
     RowBox[{"g", "[", "i", "]"}], "]"}], ",", 
    RowBox[{"{", 
     RowBox[{"i", ",", "0", ",", "n"}], "}"}]}], "]"}]], "Input",
- CellLabel->"In[25]:=",ExpressionUUID->"41429fb8-878a-42d6-9309-72affe4fe907"],
+ CellLabel->
+  "In[25]:=",ExpressionUUID->"41429fb8-878a-42d6-9309-72affe4fe907"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Run tests", \
+"Subsection",ExpressionUUID->"1aee3bc7-0d9c-488d-a627-c1b930a3554e"],
 
 Cell[BoxData[{
  RowBox[{"IGSeedRandom", "[", "42", "]"}], "\[IndentingNewLine]", 
@@ -269,7 +293,7 @@ Cell[BoxData[{
              RowBox[{"IGLayoutPlanar", ",", "IGLayoutTutte"}], "}"}], ",", 
             "ly"}], "]"}], "&&", 
           RowBox[{"Not", "@", 
-           RowBox[{"PlanarGraphQ", "[", 
+           RowBox[{"IGPlanarQ", "[", 
             RowBox[{"g", "[", "i", "]"}], "]"}]}]}], ",", 
          "\[IndentingNewLine]", 
          RowBox[{
@@ -300,13 +324,17 @@ Cell[BoxData[{
    "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
    RowBox[{"{", 
     RowBox[{"i", ",", "0", ",", "n"}], "}"}]}], "\[IndentingNewLine]", 
-  "]"}]}], "Input",ExpressionUUID->"5d843435-a778-4c1b-b60f-3c56630b56f5"]
+  "]"}]}], "Input",
+ CellLabel->
+  "In[26]:=",ExpressionUUID->"5d843435-a778-4c1b-b60f-3c56630b56f5"]
+}, Open  ]]
+}, Open  ]]
 },
 WindowSize->{1067, 1266},
 WindowMargins->{{20, Automatic}, {Automatic, 44}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (October 15, 2018)",
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 11, 2019)",
 StyleDefinitions->"Default.nb"
 ]
 
