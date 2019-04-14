@@ -73,7 +73,10 @@ IGRandomSpanningTree::usage =
 igRandomSpanningTree[graph_, ig_, vid_, {opt___}] :=
     With[{indices = igIndexVec@check@ig@"randomSpanningTree"[vid]},
       Graph[
-        If[vid < 0, VertexList[graph], Unevaluated@Sequence[]],
+        (* When a starting vertex is specified (i.e. vid >= 0), we must always include it in the vertex list.
+           The C function only returns an edge list and we must handle the case when the starting vertex
+           is an isolated component by itself. *)
+        If[vid < 0, VertexList[graph], {VertexList[graph][[vid+1]]} ],
         EdgeList[graph][[indices]],
         opt
       ]
