@@ -31,19 +31,24 @@ SetOptions[IGAdjacencyMatrixPlot, Mesh -> Automatic];
 SyntaxInformation[IGAdjacencyMatrixPlot] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
-    Module[{$sizeLimit = 50, bigGraphQ, am, vind, rticks, cticks, colRules, rotFun,
-            prop = OptionValue[EdgeWeight], mesh = OptionValue[Mesh], vertexLabels = OptionValue[VertexLabels], ticks = OptionValue[FrameTicks]},
+    catch@Module[
+        {
+          $sizeLimit = 50, bigGraphQ, am, vind, rticks, cticks, colRules, rotFun,
+          prop = OptionValue[EdgeWeight], mesh = OptionValue[Mesh],
+          vertexLabels = OptionValue[VertexLabels], ticks = OptionValue[FrameTicks],
+          unconnCol = OptionValue["UnconnectedColor"]
+        },
 
       am = WeightedAdjacencyMatrix[graph, EdgeWeight -> prop];
       If[Not@MatrixQ[am],
         If[MemberQ[IGEdgeProp[prop][graph], _Missing],
           Message[IGAdjacencyMatrixPlot::noprop, prop]
         ];
-        Return[$Failed]
+        throw[$Failed]
       ];
       If[vs === All,
         vind = All,
-        Check[vind = VertexIndex[graph, #]& /@ vs, Return[$Failed]];
+        Check[vind = VertexIndex[graph, #]& /@ vs, throw[$Failed]];
       ];
       am = am[[vind, vind]];
 
@@ -86,11 +91,15 @@ IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPatt
       ticks = MapAt[Replace[Automatic -> cticks], ticks, {2, All}];
 
       (* construct ColorRules *)
-      If[OptionValue["UnconnectedColor"] === Automatic,
+      If[unconnCol =!= Automatic && Not@ColorQ[unconnCol],
+        Message[IGAdjacencyMatrixPlot::invopt, unconnCol, "UnconnectedColor", Automatic];
+        unconnCol = Automatic;
+      ];
+      If[unconnCol === Automatic,
         colRules = OptionValue[ColorRules]
         ,
         am = SparseArray[am["NonzeroPositions"] -> am["NonzeroValues"], Dimensions[am], $unconnected];
-        colRules = {$unconnected -> OptionValue["UnconnectedColor"]};
+        colRules = {$unconnected -> unconnCol};
         If[Not@MatchQ[OptionValue[ColorRules], Automatic|None],
           colRules = Flatten[{colRules, OptionValue[ColorRules]}]
         ]
