@@ -47,7 +47,7 @@ addCompletion[IGKirchhoffMatrix, {0, {"In", "Out"}}]
 
 PackageExport["IGJointDegreeMatrix"]
 IGJointDegreeMatrix::usage =
-    "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of degree-i vertices connecting to degree-j vertices.\n" <>
+    "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of edges connecting degree-i and degree-j vertices.\n" <>
     "IGJointDegreeMatrix[graph, d] returns the d by d joint degree matrix of graph, up to degree d.\n" <>
     "IGJointDegreeMatrix[graph, {dOut, dIn}] returns the dOut by dIn joint degree matrix of graph."
 
@@ -70,9 +70,13 @@ IGJointDegreeMatrix[graph_?igGraphQ, opt : OptionsPattern[]] :=
           pairs = Transpose@{VertexOutDegree[graph][[a]], VertexInDegree[graph][[b]]};
           res = SparseArray[pairs -> ConstantArray[1, Length[pairs]]];
           If[TrueQ@OptionValue[Normalized],
-            If[UndirectedGraphQ[graph], 2, 1] res / Total[res, 2],
-            res
-          ]
+            res = If[UndirectedGraphQ[graph], 2, 1] res / Total[res, 2]
+          ];
+          (* correct the diagonal entries for the undirected case *)
+          If[UndirectedGraphQ[graph],
+            res = res - DiagonalMatrix[Diagonal[res]/2]
+          ];
+          res
         ]
         ,
         SetSystemOptions[sao]
