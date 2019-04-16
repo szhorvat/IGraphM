@@ -1,11 +1,13 @@
 [![Join the chat at https://gitter.im/IGraphM/Lobby](https://badges.gitter.im/IGraphM/Lobby.svg)](https://gitter.im/IGraphM/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![GitHub (pre-)release](https://img.shields.io/github/release/szhorvat/IGraphM/all.svg)](https://github.com/szhorvat/IGraphM/releases)
 [![GitHub All Releases](https://img.shields.io/github/downloads/szhorvat/IGraphM/total.svg)](https://github.com/szhorvat/IGraphM/releases)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/szhorvat/IGraphM#contributions)
 [![DOI](https://zenodo.org/badge/41793262.svg)](https://zenodo.org/badge/latestdoi/41793262)
 
 # [IGraph/M – igraph for Mathematica][main]
 
 The IGraph/M package provides a [_Mathematica_](http://www.wolfram.com/mathematica/) interface to the popular [igraph](http://igraph.org/) network analysis and graph theory package, as well as many other functions for working with graphs in _Mathematica_.  Check out the [blog post][main] for an overview.
+
 
 ## Installation
 
@@ -19,11 +21,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.108.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.109.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.3.108.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.3.109.paclet"]
 ```
 
 IGraph/M requires Mathematica 10.0.2 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
@@ -35,6 +37,7 @@ After installation, the package can now be loaded with
 Check that it works by evaluating `IGVersion[]`, then continue to the documentation with `IGDocumentation[]`.
 
 To uninstall all currently installed versions of IGraph/M, evaluate `PacletUninstall["IGraphM]`. This will remove all traces of IGraph/M from your system.
+
 
 ## Documentation
 
@@ -49,26 +52,28 @@ The documentation is not yet complete and contributions are very welcome.  If yo
 
 For additional details about functions, or for paper references for the methods used, also check [the igraph documentation pages](http://igraph.org/c/doc/).
 
+
 ## Contributions
 
 **Update: Help wanted with editing documentation and writing unit tests! Only basic Mathematica knowledge is required for this.** 
 
-Contributions to IGraph/M are very welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all of igraph.  However, the main framework is there, and adding new functions is relatively quick and easy.
+Contributions to IGraph/M are very welcome!  Mathematica programmers of all levels of expertise can contribute.
 
-If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][ltemplate] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
+In order of increasing difficulty, help is needed with the following tasks:
 
-Please see [Development.md](Development.md) for additional information.
-
-If you do not program in C++, there are many other ways you can still help out:
-
- - Implement functions in pure Mathematica code
- - Expand the (currently incomplete) documentation
- - Write unit tests
- - Just test the package and try to find problems
-
-You can contact me by email.  Evaluate the following in Mathematica to get my email address:
-
+ - Just test the package and try to find problems.
+ - Create examples for the documentation or edit the documentation.
+ - Write formal unit tests.
+ - Implement new functions in pure Wolfram Language code.
+ - Expose more igraph library functions to IGraph/M (C++ knowledge required)
+ - Implement entirely new functions in C++.
+ 
+If you are interested in contributing, send me an email for guidance. Evaluate the following in Mathematica to get my email address:
+                                                                      
     Uncompress["1:eJxTTMoPChZiYGAorsrILypLLHFIz03MzNFLzs8FAG/xCOI="]
+
+C++ programmers should look at [Development.md](Development.md) for additional information.
+
 
 ## Bugs and troubleshooting
 
@@ -126,15 +131,16 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
    * See also https://github.com/szhorvat/IGraphM/issues
 
+
 ## Revision history
 
 ##### v0.4.0dev (work in progress)
 
 New functions in this release:
 
- - Deterministic graph generators: `IGKautzGraph`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGKaryTree`, `IGSymmetricTree`, `IGBetheLattice`, `IGTriangularLattice`.
+ - Deterministic graph generators: `IGKautzGraph`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGToPrufer`, `IGKaryTree`, `IGSymmetricTree`, `IGBetheLattice`, `IGTriangularLattice`.
  - Random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`, `IGTreeGame`, `IGErdosRenyiGameGNM`, `IGErdosRenyiGameGNP`.
- - Weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`, `IGUnweighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
+ - Weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`, `IGUnweighted`, `IGDistanceWeighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
  - Graph colouring functions: `IGVertexColoring`, `IGEdgeColoring`, `IGKVertexColoring`, `IGKEdgeColoring`, `IGMinimumVertexColoring`, `IGMinimumEdgeColoring`, `IGChromaticNumber`, `IGChromaticIndex`, `IGVertexColoringQ`.
  - Clique cover: `IGCliqueCover`, `IGCliqueCoverNumber`.
  - Mesh/graph conversion: `IGMeshGraph`, `IGMeshCellAdjacencyMatrix`, `IGMeshCellAdjacencyGraph`.
