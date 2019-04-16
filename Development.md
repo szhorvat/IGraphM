@@ -1,10 +1,14 @@
 # Development guide for IGraph/M
 
-Contributions to IGraph/M are most welcome!  igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all igraph functions.  However, the main framework is there, and adding new functions is relatively quick and easy.
+Contributions to IGraph/M are most welcome!  
+
+IGraph/M serves both to expose the [igraph C library][3] to the Wolfram Language, as well as to provide independent graph theory and network analysis functionality.
+
+igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all igraph functions.  However, the main framework is there, and adding new functions is relatively quick and easy.
 
 If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][1] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
 
-Help is also welcome with writing or editing documentation, adding examples to the documentation, and writing unit tests.
+Help is also very welcome with writing or editing documentation, adding examples to the documentation, and writing unit tests.
 
 
 ## Compiling igraph
@@ -155,7 +159,7 @@ LFun["connectedQ", {True|False (* strongly connected *)}, True|False]
 
 And finally we write a Mathematica function that calls this member function on an `IG` object. It is found in `Connectivity.m`.
 
-```mathematica
+```mma
 IGConnectedQ[g_?igGraphQ] :=
     catch@Block[{ig = igMake[g]},
         check@ig@"connectedQ"[True]
@@ -193,7 +197,7 @@ Instead of `igCheck` we must use `igConstructorCheck` to handle igraph error cod
 
 On the Mathematica side, we write
 
-```mathematica
+```mma
 IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMakeEmpty[]},
       check@ig@"graphAtlas"[n];
@@ -216,13 +220,13 @@ Functions that would otherwise be free-standing (not member functions) should go
 
 IGraph/M's tests rely on the [MicroTest][2] utility package. Please install this first.
 
-To run the current tests, evaluate the cells in `Tests/RunTests.nb` one by one. If no red text is printed in the notebook then the tests have passed.
+To run the current tests, evaluate the cells in `Tests/RunTests.nb` one by one. A summary is given at the end indicating the number of failures. Failures are also reported in red text.
 
 To add more tests, edit `Tests.m`. Unlike the rest of the IGraph/M sources, it is recommended to edit this file with the Mathematica Front End.
 
 The basic format of a test is `MT[expression, expected]`. For example,
 
-```mathematica
+```mma
 MT[
   1+1,
   2
@@ -231,7 +235,7 @@ MT[
 
 If evaluation generates messages, the test will fail. To specify expected messages, use
 
-```mathematica
+```mma
 MT[
   1/0,
   ComplexInfinity,
@@ -241,6 +245,9 @@ MT[
 
 An `MT` expression is normally inert, and does not evaluate. To evaluate a test, wrap it in `MTRun`. To evaluate all tests in `Tests.m`, `MTRun@Get["Tests.m"]` is used.
 
+The `Tests/MakeTests.nb` notebook provides an easy way to generate tests that can be pasted into `Tests.m`.
+
 
   [1]: https://github.com/szhorvat/LTemplate/
   [2]: https://github.com/szhorvat/MicroTest
+  [3]: https://igraph.org
