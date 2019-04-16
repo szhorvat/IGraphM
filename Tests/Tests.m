@@ -8,7 +8,7 @@
 (*This is a MicroTest test file. See https://github.com/szhorvat/MicroTest*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Utility functions for testing*)
 
 
@@ -1281,11 +1281,65 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGTreeGame*)
 
 
-(* TODO *)
+MT[
+  IGTreeQ@IGTreeGame[12],
+  True
+]    
+
+
+MT[
+  VertexCount@IGTreeGame[67],
+  67
+]
+
+
+MT[
+  IGTreeGame[#],
+  IGCompleteGraph[#],
+  SameTest -> IGSameGraphQ
+]& /@ Range[0,2]
+
+
+MT[
+  IGTreeGame[3],
+  Graph[{1 <-> 2, 2 <-> 3}],
+  SameTest -> IGIsomorphicQ (* all 3-vertex trees are isomorphic *)
+]
+
+
+MT[
+  Table[IGTreeGame[5],{1000}]//DeleteDuplicatesBy[AdjacencyMatrix]//Length,
+  125
+]
+
+
+MT[
+  Table[IGTreeGame[4,Method->"PruferCode"],{500}]//DeleteDuplicatesBy[AdjacencyMatrix]//Length,
+  16
+]
+
+
+MT[
+  DirectedGraphQ@IGTreeGame[5,DirectedEdges->True],
+  True
+]
+
+
+MT[
+  IGTreeQ[IGTreeGame[5, DirectedEdges -> True]],
+  True
+]
+
+
+MT[
+  IGTreeGame[4, Method -> "PruferCode", DirectedEdges -> True],
+  $Failed,
+  {IGraphM::error}
+]
 
 
 (* ::Section::Closed:: *)
@@ -2010,6 +2064,14 @@ MT[
 ]
 
 
+With[{g=IGGiantComponent@RandomGraph[{9,13}]},
+  MT[
+    IGSpanningTreeCount[g],
+    Length@DeleteDuplicatesBy[IGRandomSpanningTree[g,5000],AdjacencyMatrix]
+  ]
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGRandomSpanningTree*)
 
@@ -2036,13 +2098,19 @@ MT[
 
 
 MT[
-  IGTreeQ[IGRandomSpanningTree[RandomGraph[{10, 20}]]],
+  IGTreeQ@IGRandomSpanningTree@IGGiantComponent@RandomGraph[{10, 20}],
   True
 ]
 
 
 MT[
-  AllTrue[IGRandomSpanningTree[RandomGraph[{10, 20}], 10], IGTreeQ],
+  IGForestQ@IGRandomSpanningTree@RandomGraph[{20, 20}],
+  True
+]
+
+
+MT[
+  AllTrue[IGRandomSpanningTree[IGGiantComponent@RandomGraph[{10, 20}], 10], IGTreeQ],
   True
 ]
 
@@ -3291,6 +3359,59 @@ MT[
 MT[
   IGMinimumSeparators[#] =!= {} & /@ ulist,
   ConnectedGraphQ /@ ulist
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGGiantComponent*)
+
+
+MT[
+  IGGiantComponent[Graph[{1 <-> 2}]],
+  Graph[{1 <-> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGGiantComponent[Graph[{1 <-> 2, 3 <-> 4, 4 <-> 5}]],
+  Graph[{5, 4, 3}, {4 <-> 5, 3 <-> 4}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGGiantComponent[IGEmptyGraph[]],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGGiantComponent[IGEmptyGraph[1]],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGGiantComponent[Graph[{1 -> 2, 2 -> 3}]],
+  Graph[{1 -> 2, 2 -> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGGiantComponent[Graph[{1 -> 1}]],
+  Graph[{1 -> 1}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGGiantComponent[Graph[{1, 2, 3}, {2 <-> 3}]],
+  Graph[{2 <-> 3}],
+  SameTest -> IGSameGraphQ
 ]
 
 
@@ -5062,7 +5183,123 @@ MT[
 (* TODO sparse arrays *)
 
 
-(* ::Section:: *)
+(* ::Subsubsection::Closed:: *)
+(*IGJointDegreeMatrix*)
+
+
+(* null graph *)
+MT[
+  IGJointDegreeMatrix[IGEmptyGraph[]],
+  {{}}
+]
+
+
+(* edgeless graph *)
+MT[
+  IGJointDegreeMatrix[IGEmptyGraph[10]],
+  {{}}
+]
+
+
+(* this verifies that the diagonal is not double-counted *)
+MT[
+  Normal[IGJointDegreeMatrix[IGShorthand["1-2-3-4-2"]]],
+  {{0, 0, 1}, {0, 1, 2}, {1, 2, 0}}
+]
+
+MT[
+  Normal[IGJointDegreeMatrix[CycleGraph[12]]],
+  {{0, 0}, {0, 12}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[Graph[{1 <-> 1}]]],
+  {{0, 0}, {0, 1}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[Graph[{1 <-> 2, 1 <-> 2, 2 <-> 3}]]],
+  {{0, 0, 1}, {0, 0, 2}, {1, 2, 0}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[Graph[{1 -> 2}]]],
+  {{1}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[Graph[{1 -> 2, 1 -> 2}]]],
+  {{0, 0}, {0, 2}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[Graph[{1 -> 2, 2 -> 1}]]],
+  {{2}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[Graph[{1 -> 1}]]],
+  {{1}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[Graph[{1 -> 2, 1 -> 2, 2 -> 2, 3 -> 2}]]],
+  {{0, 0, 0, 2}, {0, 0, 0, 2}}
+]
+
+
+(* ::Text:: *)
+(*Test normalization*)
+
+
+MT[
+  Normal[IGJointDegreeMatrix[Graph[{1 -> 2, 1 -> 2, 2 -> 2, 3 -> 2, 4 -> 3}], Normalized -> True]],
+  {{1/5, 0, 0, 2/5}, {0, 0, 0, 2/5}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[IGShorthand["1-2-3-4-2"], Normalized -> True]],
+  {{0, 0, 1/4}, {0, 1/4, 1/2}, {1/4, 1/2, 0}}
+]
+
+
+(* ::Text:: *)
+(*Test cropping and padding*)
+
+
+MT[
+  Normal[IGJointDegreeMatrix[IGShorthand["1-2-3-4-2"], {2, 5}]],
+  {{0, 0, 1, 0, 0}, {0, 1, 2, 0, 0}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[IGShorthand["1-2-3-4-2"], {2, 2}]],
+  {{0, 0}, {0, 1}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[IGShorthand["1-2-3-4-2"], 2]],
+  {{0, 0}, {0, 1}}
+]
+
+
+MT[
+  Normal[IGJointDegreeMatrix[IGShorthand["1-2-3-4-2"], 7]],
+  {{0, 0, 1, 0, 0, 0, 0}, {0, 1, 2, 0, 0, 0, 0}, {1, 2, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0}}
+]
+
+
+(* ::Section::Closed:: *)
 (*Planar graphs*)
 
 
@@ -5072,7 +5309,7 @@ MTSection["Planar graphs"]
 (* TODO *)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGPlanarQ*)
 
 
@@ -5137,7 +5374,25 @@ Hold[
 ] // ReleaseHold
 
 
-(* TODO *)
+(* multigraph with self-loops *)
+MT[
+  IGPlanarQ[Graph[{1 <-> 2, 1 <-> 2, 2 <-> 2}]],
+  True
+]
+
+
+(* directed graph *)
+MT[
+  IGPlanarQ[Graph[{1 -> 2, 2 -> 3}]],
+  True
+]
+
+
+(* disconnected graph also containing an isolated vertex *)
+MT[
+  IGPlanarQ[Graph[{1, 2, 3, 4, 5, 6}, {1 -> 2, 2 -> 3, 4 -> 5}]],
+  True
+]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -5206,6 +5461,13 @@ MT[
 ]
 
 
+(* disconnected with maximal planar components *)
+MT[
+  IGMaximalPlanarQ[IGDisjointUnion[{CycleGraph[3], CycleGraph[3]}]],
+  False
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGOuterPlanarQ*)
 
@@ -5222,6 +5484,14 @@ MT[
 ]& /@ Range[1,6]
 
 
+(* disconnected *)
+MT[
+  IGOuterplanarQ[IGDisjointUnion[{CycleGraph[3], CycleGraph[4]}]],
+  True
+]
+
+
+(* planar but not outerplanar *)
 MT[
   IGOuterplanarQ[CompleteGraph[4]],
   False
