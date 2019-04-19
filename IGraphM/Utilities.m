@@ -191,6 +191,12 @@ IGUndirectedGraph::usage = "IGUndirectedGraph[graph, conv] converts a directed g
 (* Note: IGUndirectedGraph must ensure that:
     1. vertex names are not changed
     2. vertex ordering is not changed
+    3. when using "All", edge ordering is not changed (relied upon in edge colouring functions)
+ *)
+
+(* Note:
+   Another potential implementation for "All" is IncidenceGraph[VertexList[g], Abs@IncidenceMatrix[g]]
+   This is slower than th IGIndexEdgeList[] based implementation due to the bad performance of IncidenceGraph[].
  *)
 
 SyntaxInformation[IGUndirectedGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
