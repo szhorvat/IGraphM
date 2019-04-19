@@ -26,7 +26,7 @@ IGVertexColoring[graph_?igGraphQ] :=
 PackageExport["IGEdgeColoring"]
 IGEdgeColoring::usage = "IGEdgeColoring[graph] returns an edge colouring of graph.";
 
-SyntaxInformation[IGEdgeColoring] = {"ArgumentsPattern" -> {_, _}};
+SyntaxInformation[IGEdgeColoring] = {"ArgumentsPattern" -> {_}};
 IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph@IGUndirectedGraph[graph, "All"]
 
 
