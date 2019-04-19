@@ -141,17 +141,31 @@ igKColoringHeuristic[clique_List][graph_] := Check[VertexIndex[graph, #]& /@ cli
 igKColoringHeuristic[_][graph_] := {}
 
 
+lineToVertexForcedColoring[graph_, lineForced_] :=
+    Switch[lineForced,
+      "LargestClique",
+      If[EmptyGraphQ[graph], (* edgeless graphs have no incidence matrix *)
+        {},
+        (* a largest clique in the line graph consists of the incident edges of the max degree vertex of the graph *)
+        Flatten@Part[IncidenceMatrix[graph], First@Ordering[VertexDegree[graph], -1]]["ColumnIndices"]
+      ]
+      ,
+      _List,
+      Check[EdgeIndex[graph, #]& /@ lineForced, throw[$Failed]]
+      ,
+      _,
+      lineForced
+    ]
+
 PackageExport["IGKEdgeColoring"]
 IGKEdgeColoring::usage = "IGKEdgeColoring[graph, k] attempts to find a k-colouring of graph's edges. If none exist, {} is returned.";
 
-Options[IGKEdgeColoring] = { "ForcedColoring" -> "MaxDegreeClique" };
+Options[IGKEdgeColoring] = { "ForcedColoring" -> "LargestClique" };
 SyntaxInformation[IGKEdgeColoring] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGKEdgeColoring[graph_?igGraphQ, k_Integer?Positive, opt : OptionsPattern[]] :=
-    catch@Module[{fc = OptionValue["ForcedColoring"]},
-      If[ListQ[fc],
-        fc = Check[EdgeIndex[graph, #]& /@ fc, throw[$Failed]]
-      ];
-      IGKVertexColoring[LineGraph@IGUndirectedGraph[graph, "All"], k, "ForcedColoring" -> fc]
+    catch@IGKVertexColoring[
+      LineGraph@IGUndirectedGraph[graph, "All"], k,
+      "ForcedColoring" -> lineToVertexForcedColoring@OptionValue["ForcedColoring"]
     ]
 
 
@@ -175,14 +189,12 @@ IGMinimumVertexColoring[graph_?igGraphQ, opt : OptionsPattern[]] :=
 PackageExport["IGMinimumEdgeColoring"]
 IGMinimumEdgeColoring::usage = "IGMinimumEdgeColoring[graph] finds a minimum edge colouring of graph.";
 
-Options[IGMinimumEdgeColoring] = { "ForcedColoring" -> "MaxDegreeClique" };
+Options[IGMinimumEdgeColoring] = { "ForcedColoring" -> "LargestClique" };
 SyntaxInformation[IGMinimumEdgeColoring] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGMinimumEdgeColoring[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{fc = OptionValue["ForcedColoring"]},
-      If[ListQ[fc],
-        fc = Check[EdgeIndex[graph, #]& /@ fc, throw[$Failed]]
-      ];
-      IGMinimumVertexColoring[LineGraph@IGUndirectedGraph[graph, "All"], "ForcedColoring" -> fc]
+    catch@IGMinimumVertexColoring[
+      LineGraph@IGUndirectedGraph[graph, "All"],
+      "ForcedColoring" -> lineToVertexForcedColoring@OptionValue["ForcedColoring"]
     ]
 
 
