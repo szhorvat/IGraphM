@@ -3145,28 +3145,6 @@ Cell[TextData[{
 }], "Item",ExpressionUUID->"a6d9489d-7b89-4032-8a20-93eab0cd330d"]
 }, Open  ]],
 
-Cell[TextData[StyleBox["References:",
- FontWeight->
-  "Bold"]], "Text",ExpressionUUID->"3afdf528-5350-409c-80ce-df9822e8c22c"],
-
-Cell[CellGroupData[{
-
-Cell["\<\
-Goh K-I, Kahng B, Kim D: Universal behaviour of load distribution in \
-scale-free networks. Phys Rev Lett 87(27):278701, 2001.\
-\>", "Item",ExpressionUUID->"7b5856a3-a213-4c0c-98e2-4f30b9fec1d4"],
-
-Cell["\<\
-Chung F and Lu L: Connected components in a random graph with given degree \
-sequences. Annals of Combinatorics 6, 125-145, 2002.\
-\>", "Item",ExpressionUUID->"7c5d9bef-fbed-41fc-b0d5-e709c7c9434f"],
-
-Cell["\<\
-Cho YS, Kim JS, Park J, Kahng B, Kim D: Percolation transitions in scale-free \
-networks under the Achlioptas process. Phys Rev Lett 103:135702, 2009.\
-\>", "Item",ExpressionUUID->"59d6f99c-3442-42b3-92a6-f302582ce9c2"]
-}, Open  ]],
-
 Cell[BoxData[
  RowBox[{
   RowBox[{"g", "=", 
@@ -3190,7 +3168,31 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"IGStaticPowerLawGame", "[", 
   RowBox[{"50", ",", "150", ",", "3", ",", "3"}], 
-  "]"}]], "Input",ExpressionUUID->"b427ad36-e783-46c9-9ff4-47a25bdf4074"]
+  "]"}]], "Input",ExpressionUUID->"b427ad36-e783-46c9-9ff4-47a25bdf4074"],
+
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"97cfb8f2-bb15-4f87-8651-acc6502da89b"],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Goh K-I, Kahng B, Kim D: Universal behaviour of load distribution in \
+scale-free networks. Phys Rev Lett 87(27):278701, 2001.\
+\>", "Item",ExpressionUUID->"7b5856a3-a213-4c0c-98e2-4f30b9fec1d4"],
+
+Cell["\<\
+Chung F and Lu L: Connected components in a random graph with given degree \
+sequences. Annals of Combinatorics 6, 125-145, 2002.\
+\>", "Item",ExpressionUUID->"7c5d9bef-fbed-41fc-b0d5-e709c7c9434f"],
+
+Cell["\<\
+Cho YS, Kim JS, Park J, Kahng B, Kim D: Percolation transitions in scale-free \
+networks under the Achlioptas process. Phys Rev Lett 103:135702, 2009.\
+\>", "Item",ExpressionUUID->"59d6f99c-3442-42b3-92a6-f302582ce9c2"]
+}, Open  ]]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3274,15 +3276,6 @@ Cell[BoxData[
   "IGForestFireGame"}]], \
 "Input",ExpressionUUID->"1ea5f895-ac67-4fb7-812d-ae9dce7cdae1"],
 
-Cell[TextData[{
- "Reference: Jure Leskovec, Jon Kleinberg and Christos Faloutsos. Graphs over \
-time: densification laws, shrinking diameters and possible explanations. ",
- StyleBox["KDD \[OpenCurlyQuote]05: Proceeding of the eleventh ACM SIGKDD \
-international conference on Knowledge discovery in data mining",
-  FontSlant->"Italic"],
- ", 177\[Dash]187, 2005."
-}], "Text",ExpressionUUID->"2b80bbb8-f407-48d1-86cd-c9374c22f9e3"],
-
 Cell[BoxData[
  RowBox[{"IGForestFireGame", "[", 
   RowBox[{"100", ",", "0.2", ",", "1", ",", "2", ",", " ", 
@@ -3291,7 +3284,22 @@ Cell[BoxData[
      RowBox[{
      "\"\<EdgeLayout\>\"", "\[Rule]", "\"\<HierarchicalEdgeBundling\>\""}], 
      "}"}]}]}], 
-  "]"}]], "Input",ExpressionUUID->"ad816d80-3088-413c-9865-6ba090f38ac8"]
+  "]"}]], "Input",ExpressionUUID->"ad816d80-3088-413c-9865-6ba090f38ac8"],
+
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"2b80bbb8-f407-48d1-86cd-c9374c22f9e3"],
+
+Cell[TextData[{
+ "Jure Leskovec, Jon Kleinberg and Christos Faloutsos. Graphs over time: \
+densification laws, shrinking diameters and possible explanations. ",
+ StyleBox["KDD '05: Proceeding of the eleventh ACM SIGKDD international \
+conference on Knowledge discovery in data mining",
+  FontSlant->"Italic"],
+ ", 177\[Dash]187, 2005."
+}], "Item",ExpressionUUID->"32bc169f-7135-44cc-ae73-a0f85f7e90a9"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3846,58 +3854,7 @@ Cell[BoxData[
     
     FormatType->TraditionalForm,
     FrameTicks->None,
-    ImageSize->{88.984375, Automatic},
-    ImageCache->GraphicsData["CompressedBitmap", "\<\
-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\
-\>"]], ",", "10", ",", 
+    ImageSize->{88.984375, Automatic}], ",", "10", ",", 
    RowBox[{"VertexShapeFunction", "\[Rule]", "\"\<Name\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"bec2ec60-b511-4aac-967a-b85c9d307fca"],
 
@@ -8128,13 +8085,18 @@ Isolated vertices will have zero similarity to any other vertex. \
 Self-similarities are not calculated.\
 \>", "Text",ExpressionUUID->"906c1d88-56d7-4110-89f0-72ad31f8ca8a"],
 
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"09657536-6581-486e-b24b-765b9b5399c4"],
+
 Cell[TextData[{
- "Reference: Lada A. Adamic and Eytan Adar: Friends and neighbors on the Web, \
-",
+ "Lada A. Adamic and Eytan Adar: Friends and neighbors on the Web, ",
  StyleBox["Social Networks",
   FontSlant->"Italic"],
  ", 25(3):211-230, 2003."
-}], "Text",ExpressionUUID->"09657536-6581-486e-b24b-765b9b5399c4"]
+}], "Item",ExpressionUUID->"ac385150-585f-4b2a-b65d-1d740717d241"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -8451,8 +8413,8 @@ Cell[BoxData[
   RowBox[{"g", ",", 
    RowBox[{"{", 
     RowBox[{"\"\<Anna\>\"", ",", "\"\<Nora\>\"", ",", "\"\<Larry\>\""}], 
-    "}"}]}], "]"}]], \
-"Input",ExpressionUUID->"16d0a77a-db51-4439-8d51-e89d9a002c75"],
+    "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"16d0a77a-db51-4439-8d51-e89d9a002c75"],
 
 Cell["But it is not minimal:", \
 "Text",ExpressionUUID->"c51ac6a0-c522-409b-a619-c91409cab091"],
@@ -8615,7 +8577,24 @@ Cell[TextData[{
  "IGMinimumCutValue"],ExpressionUUID->
   "af381ad3-5045-45dc-9ace-7b47c2d72a8b"],
  " instead."
-}], "Text",ExpressionUUID->"0aa472d9-e846-4e04-8038-57957665bead"]
+}], "Text",ExpressionUUID->"0aa472d9-e846-4e04-8038-57957665bead"],
+
+Cell["Compute the edge connectivity of the dodecahedral graph.", \
+"Text",ExpressionUUID->"0d15fc90-1bd3-4a40-a09d-c2cb58cc7cb5"],
+
+Cell[BoxData[
+ RowBox[{"IGEdgeConnectivity", "[", 
+  RowBox[{"GraphData", "[", "\"\<DodecahedralGraph\>\"", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"c191f8bb-c59d-465b-b48b-6d7e18a4f5a0"],
+
+Cell["\<\
+The edge connectivity of the singleton graph is returned as 0.\
+\>", "Text",ExpressionUUID->"ce5b9882-d11c-44fb-8581-5e787797c693"],
+
+Cell[BoxData[
+ RowBox[{"IGEdgeConnectivity", "[", 
+  RowBox[{"IGEmptyGraph", "[", "1", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"1c142653-2d74-4e7e-87f6-e345393aca1f"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -8630,7 +8609,7 @@ Cell[BoxData[
 
 Cell["\<\
 According to Steinitz\[CloseCurlyQuote]s theorem, the skeleton of every \
-convex polyhedron is a 3-connected planar graph.\
+convex polyhedron is a 3-vertex-connected planar graph.\
 \>", "Text",ExpressionUUID->"1cbc1882-4c53-4957-ae85-3aa861bbb3e6"],
 
 Cell[BoxData[
@@ -8657,7 +8636,16 @@ Cell[TextData[{
 
 Cell[BoxData[
  RowBox[{"IGMinimumSeparators", "[", "g", 
-  "]"}]], "Input",ExpressionUUID->"428d7f93-e4d2-4871-8cdf-0984929c121c"]
+  "]"}]], "Input",ExpressionUUID->"428d7f93-e4d2-4871-8cdf-0984929c121c"],
+
+Cell["\<\
+The vertex connectivity of the singleton graph is returned as 0.\
+\>", "Text",ExpressionUUID->"98d6b1c6-5888-4fb9-8569-5b29803fa255"],
+
+Cell[BoxData[
+ RowBox[{"IGVertexConnectivity", "[", 
+  RowBox[{"IGEmptyGraph", "[", "1", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"77f545a1-fc46-4fb8-a272-924f456ee88a"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -9928,8 +9916,7 @@ Cell[BoxData[
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
      DefaultBaseStyle->{
-      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]}
-      ,
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
      FormatType->TraditionalForm,
      FrameTicks->None,
      ImageSize->{113.30859375, Automatic}], ",", "5"}], 
@@ -14342,7 +14329,7 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["Maximum flow and connectivity", \
+Cell["Maximum flow and minimum cut", \
 "Section",ExpressionUUID->"0b190476-19cd-4672-980b-9408a1bb1330"],
 
 Cell[CellGroupData[{
@@ -14672,7 +14659,53 @@ Cell["IGMinimumCutValue", \
 Cell[BoxData[
  RowBox[{"?", 
   "IGMinimumCutValue"}]], \
-"Input",ExpressionUUID->"0d3233e4-ee82-4115-aad2-ab495ebd2346"]
+"Input",ExpressionUUID->"0d3233e4-ee82-4115-aad2-ab495ebd2346"],
+
+Cell[TextData[{
+ "Unlike ",
+ Cell[BoxData["IGEdgeConnectivity"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "07493be9-bcb1-4268-ad18-5c7c78efbc29"],
+ ", ",
+ Cell[BoxData["IGMinimumCutValue"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "79a7242c-14aa-4f62-b484-4b4359f1ae74"],
+ " takes weights into account."
+}], "Text",ExpressionUUID->"4531e260-f4ef-4d02-9909-710017fd869b"],
+
+Cell[BoxData[
+ RowBox[{"IGMinimumCutValue", "[", 
+  RowBox[{"Graph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"1", "\[UndirectedEdge]", "2"}], ",", 
+      RowBox[{"2", "\[UndirectedEdge]", "3"}]}], "}"}], ",", 
+    RowBox[{"EdgeWeight", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"3.5", ",", "5.6"}], "}"}]}]}], "]"}], 
+  "]"}]], "Input",ExpressionUUID->"927c5513-04ab-4151-a56a-b4ab78782b5c"],
+
+Cell[TextData[{
+ "The minimum cut value of the null graph and singleton graph are returned as \
+",
+ Cell[BoxData["0"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "6cbf6ebc-fb9c-495f-be17-fa6bc610ec5e"],
+ " and ",
+ Cell[BoxData["\[Infinity]"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "13604236-ddac-4bd6-805b-1c80ac2d5f1b"],
+ ", respectively."
+}], "Text",ExpressionUUID->"544f53b4-2369-4cd0-886a-fec7dd078de8"],
+
+Cell[BoxData[
+ RowBox[{"IGMinimumCutValue", "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"IGEmptyGraph", "[", "0", "]"}], ",", 
+    RowBox[{"IGEmptyGraph", "[", "1", "]"}]}], 
+   "}"}]}]], "Input",ExpressionUUID->"1c9083d5-b77c-4d9e-b5dc-61ba9eb0082a"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32211,14 +32244,6 @@ Cell[TextData[{
  "."
 }], "Item",ExpressionUUID->"b4376456-17b1-4004-acd1-c7a46b1c48b3"],
 
-Cell[TextData[{
- "Reference:  M. Girvan and M. E. J. Newman: Community structure in social \
-and biological networks, ",
- StyleBox["PNAS",
-  FontSlant->"Italic"],
- " 99, 7821-7826 (2002)."
-}], "Text",ExpressionUUID->"70f434ff-8326-4c12-a743-209385f07ab9"],
-
 Cell["Special properties returned with the result:", \
 "Text",ExpressionUUID->"92dafc9f-f40d-42b3-8083-efdb94b27b77"],
 
@@ -32237,6 +32262,20 @@ Cell[TextData[{
  " records the steps which resulted in splitting the graph into more \
 components. "
 }], "Item",ExpressionUUID->"305f9929-091f-433e-99ba-771550028218"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"70f434ff-8326-4c12-a743-209385f07ab9"],
+
+Cell[TextData[{
+ "M. Girvan and M. E. J. Newman: Community structure in social and biological \
+networks, ",
+ StyleBox["PNAS",
+  FontSlant->"Italic"],
+ " 99, 7821-7826 (2002)."
+}], "Item",ExpressionUUID->"b89beb8d-0c29-44bd-9b70-d3383c582d00"]
 }, Open  ]]
 }, Closed]],
 
@@ -32257,9 +32296,14 @@ Cell[TextData[{
  " implements the fluid communities algorithm."
 }], "Text",ExpressionUUID->"87d2126d-3a35-4b11-b6d8-c488118b79bd"],
 
+Cell[CellGroupData[{
+
+Cell["Reference", \
+"Subsubsubsection",ExpressionUUID->"ffb39f02-c1cc-4e17-84c1-8499350b5053"],
+
 Cell[TextData[{
- "Reference: F. Par\[EAcute]s, D. Garcia-Gasulla, A. Vilalta, J. Moreno, E. \
-Ayguad\[EAcute], Jes\[UAcute]s Labarta, U. Cort\[EAcute]s, T. Suzumura: Fluid \
+ "F. Par\[EAcute]s, D. Garcia-Gasulla, A. Vilalta, J. Moreno, E. Ayguad\
+\[EAcute], Jes\[UAcute]s Labarta, U. Cort\[EAcute]s, T. Suzumura: Fluid \
 Communities: A Competitive, Scalable and Diverse Community Detection \
 Algorithm, ",
  ButtonBox["https://arxiv.org/abs/1703.09307",
@@ -32267,7 +32311,8 @@ Algorithm, ",
   ButtonData->{
     URL["https://arxiv.org/abs/1703.09307"], None},
   ButtonNote->"https://arxiv.org/abs/1703.09307"]
-}], "Text",ExpressionUUID->"ffb39f02-c1cc-4e17-84c1-8499350b5053"]
+}], "Item",ExpressionUUID->"8f7d1cc3-3cba-41d3-8733-6b1cd8100458"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32290,15 +32335,21 @@ Cell[TextData[{
 Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"b802fb35-498e-4fda-b36c-1ccec37c5ef0"],
 
+Cell[CellGroupData[{
+
+Cell["Reference", \
+"Subsubsubsection",ExpressionUUID->"fc423af2-9b63-48ef-a2f5-97c4690554ab"],
+
 Cell[TextData[{
- "Reference: A. Clauset, M. E. J. Newman, C. Moore: Finding community \
-structure in very large networks, ",
+ "A. Clauset, M. E. J. Newman, C. Moore: Finding community structure in very \
+large networks, ",
  ButtonBox["http://www.arxiv.org/abs/cond-mat/0408187",
   BaseStyle->"Hyperlink",
   ButtonData->{
     URL["http://www.arxiv.org/abs/cond-mat/0408187"], None},
   ButtonNote->"http://www.arxiv.org/abs/cond-mat/0408187"]
-}], "Text",ExpressionUUID->"fc423af2-9b63-48ef-a2f5-97c4690554ab"]
+}], "Item",ExpressionUUID->"7b4ff314-e76c-4dbf-afce-70279c2665e5"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32324,17 +32375,29 @@ Cell["It supports both edge weights and vertex weights.", \
 Cell["The default number of trials is 10.", \
 "Text",ExpressionUUID->"2ad31c05-38d1-4c72-822e-41d307997f5b"],
 
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"a3247e92-6e99-46d7-a501-aca1f4a385e6"],
+
+Cell[CellGroupData[{
+
 Cell[TextData[{
- "References:\nM. Rosvall and C. T. Bergstrom, Maps of information flow \
-reveal community structure in complex networks, ",
+ "M. Rosvall and C. T. Bergstrom, Maps of information flow reveal community \
+structure in complex networks, ",
  StyleBox["PNAS",
   FontSlant->"Italic"],
- " 105, 1118 (2008)\nM. Rosvall, D. Axelsson, and C. T. Bergstrom, The map \
-equation, ",
+ " 105, 1118 (2008)"
+}], "Item",ExpressionUUID->"abe5fca1-8fb8-40bf-a70f-824f4f00717c"],
+
+Cell[TextData[{
+ "M. Rosvall, D. Axelsson, and C. T. Bergstrom, The map equation, ",
  StyleBox["Eur. Phys. J. Special Topics",
   FontSlant->"Italic"],
  " 178, 13 (2009)"
-}], "Text",ExpressionUUID->"a3247e92-6e99-46d7-a501-aca1f4a385e6"]
+}], "Item",ExpressionUUID->"758c25dc-ed84-4eb1-ad35-9b70f89d192c"]
+}, Open  ]]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32350,13 +32413,19 @@ Cell[BoxData[
 Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"9480008c-d945-4b67-a9c1-d640bca7b9da"],
 
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"06e5dea3-0750-4d78-af2a-7a1fa13e55d9"],
+
 Cell[TextData[{
- "Reference:  Raghavan, U.N. and Albert, R. and Kumara, S.: Near linear time \
-algorithm to detect community structures in large-scale networks. ",
+ "Raghavan, U.N. and Albert, R. and Kumara, S.: Near linear time algorithm to \
+detect community structures in large-scale networks. ",
  StyleBox["Phys. Rev. E",
   FontSlant->"Italic"],
  " 76, 036106. (2007)."
-}], "Text",ExpressionUUID->"06e5dea3-0750-4d78-af2a-7a1fa13e55d9"]
+}], "Item",ExpressionUUID->"b6e3212f-c812-48d1-9deb-e27790aa7bb8"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32386,13 +32455,19 @@ requested. Default: ",
  "."
 }], "Item",ExpressionUUID->"2b65218d-1359-4b6b-89c6-95c7b91030fa"],
 
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"2e1c97d5-aeb4-4e7c-8ffc-77adf48e48eb"],
+
 Cell[TextData[{
- "Reference: M. E. J. Newman: Finding community structure using the \
-eigenvectors of matrices, ",
+ "M. E. J. Newman: Finding community structure using the eigenvectors of \
+matrices, ",
  StyleBox["Phys. Rev. E",
   FontSlant->"Italic"],
  " 74:036104 (2006)."
-}], "Text",ExpressionUUID->"2e1c97d5-aeb4-4e7c-8ffc-77adf48e48eb"]
+}], "Item",ExpressionUUID->"176466c1-22f0-445c-bb11-1f318a6c15ac"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32415,13 +32490,19 @@ Cell[TextData[{
 Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"93673697-8300-463f-a446-08928f0297f1"],
 
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"8a9b05c6-3b1c-40b5-a2d2-22ec44539d42"],
+
 Cell[TextData[{
- "Reference: V. D. Blondel, J.-L. Guillaume, R. Lambiotte and E. Lefebvre: \
-Fast unfolding of community hierarchies in large networks, ",
+ "V. D. Blondel, J.-L. Guillaume, R. Lambiotte and E. Lefebvre: Fast \
+unfolding of community hierarchies in large networks, ",
  StyleBox["J. Stat. Mech.",
   FontSlant->"Italic"],
  " P10008 (2008)"
-}], "Text",ExpressionUUID->"8a9b05c6-3b1c-40b5-a2d2-22ec44539d42"]
+}], "Item",ExpressionUUID->"78001294-5303-4512-914a-8622eec45cd6"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32504,8 +32585,12 @@ Cell[TextData[{
   "5c169961-2569-4097-ba0c-266a5548bf0c"]
 }], "Text",ExpressionUUID->"b9d5d68d-a911-479f-9255-e306d472247c"],
 
-Cell["References:", \
-"Text",ExpressionUUID->"874a7ea3-2b38-4b0d-a849-fda1f0656207"],
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"874a7ea3-2b38-4b0d-a849-fda1f0656207"],
+
+Cell[CellGroupData[{
 
 Cell[TextData[{
  "For ",
@@ -32519,7 +32604,7 @@ Community Detection, ",
   ButtonData->{
     URL["http://arxiv.org/abs/cond-mat/0603718"], None},
   ButtonNote->"http://arxiv.org/abs/cond-mat/0603718"]
-}], "Text",ExpressionUUID->"5afdd169-7b86-4890-a1ce-918c1587b022"],
+}], "Item",ExpressionUUID->"5afdd169-7b86-4890-a1ce-918c1587b022"],
 
 Cell[TextData[{
  "For ",
@@ -32533,7 +32618,9 @@ with positive and negative links, ",
   ButtonData->{
     URL["http://arxiv.org/abs/0811.2329"], None},
   ButtonNote->"http://arxiv.org/abs/0811.2329"]
-}], "Text",ExpressionUUID->"8a3d0057-7b10-4277-957d-6e73cc2a1b80"]
+}], "Item",ExpressionUUID->"8a3d0057-7b10-4277-957d-6e73cc2a1b80"]
+}, Open  ]]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -32573,15 +32660,21 @@ Cell[TextData[{
  "."
 }], "Item",ExpressionUUID->"fb817a5a-d497-474c-8f05-7a060bba2899"],
 
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"4923a9b6-f1fc-4442-96f4-91e890967dc5"],
+
 Cell[TextData[{
- "Reference: Pascal Pons, Matthieu Latapy: Computing communities in large \
-networks using random walks, ",
+ "Pascal Pons, Matthieu Latapy: Computing communities in large networks using \
+random walks, ",
  ButtonBox["http://arxiv.org/abs/physics/0512106",
   BaseStyle->"Hyperlink",
   ButtonData->{
     URL["http://arxiv.org/abs/physics/0512106"], None},
   ButtonNote->"http://arxiv.org/abs/physics/0512106"]
-}], "Text",ExpressionUUID->"4923a9b6-f1fc-4442-96f4-91e890967dc5"]
+}], "Item",ExpressionUUID->"67519cb8-c5fb-4fb2-88a3-eb6434be4490"]
+}, Open  ]]
 }, Closed]]
 }, Closed]],
 
@@ -42347,8 +42440,8 @@ Cell[BoxData[
   RowBox[{"ExampleData", "[", 
    RowBox[{"{", 
     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EastAfricaEmbassyAttacks\>\""}],
-     "}"}], "]"}]}]], \
-"Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
+     "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
 
 Cell[BoxData[
  RowBox[{"IGTakeSubgraph", "[", 
@@ -43777,7 +43870,7 @@ Cell[TextData[{
  " community was invaluable while developing this package."
 }], "Text",ExpressionUUID->"08e0faaa-2f5e-4d6b-b0c6-4f44d0a98a0e"],
 
-Cell["People who have contributed functionality to IGraph/M:", \
+Cell["People who have contributed to IGraph/M:", \
 "Text",ExpressionUUID->"7c84d6d5-d64f-402a-90b7-1158a6d23b8b"],
 
 Cell[CellGroupData[{
@@ -43788,7 +43881,11 @@ Cell["Szabolcs Horv\[AAcute]t (main author and maintainer)", \
 Cell["\<\
 Henrik Schumacher (help with mesh-graph conversion and proximity graph \
 functions)\
-\>", "Item",ExpressionUUID->"6fe65a77-f56b-400b-8eff-239b9fa0e3c9"]
+\>", "Item",ExpressionUUID->"6fe65a77-f56b-400b-8eff-239b9fa0e3c9"],
+
+Cell["\<\
+Juho Lauri (advice with the implementation of graph colouring functions)\
+\>", "Item",ExpressionUUID->"191fd7ed-1601-40da-b93b-83c898df4e98"]
 }, Open  ]],
 
 Cell[TextData[{
@@ -43803,7 +43900,7 @@ Cell[TextData[{
 }, Open  ]]
 },
 WindowSize->{828, 818},
-WindowMargins->{{429, Automatic}, {Automatic, 93}},
+WindowMargins->{{Automatic, 287}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
