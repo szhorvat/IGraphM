@@ -1695,6 +1695,7 @@ MT[
 (*IGForestQ*)
 
 
+(* K_0 is a forest but not a tree *)
 MT[
   IGForestQ@IGEmptyGraph[#],
   True
@@ -2378,6 +2379,40 @@ MT[
     {VertexList[g], EdgeList[g]}
   ],
   {{1, 2}, {UndirectedEdge[1, 2]}}
+]
+
+
+(* ::Subsection:: *)
+(*LAD*)
+
+
+MT[
+  IGLADSubisomorphicQ[CycleGraph[15], GraphData[{"Arrangement", {5, 2}}]],
+  True
+]
+
+
+MT[
+  IGLADSubisomorphicQ[CycleGraph[15], GraphData[{"Arrangement", {5, 2}}], "Induced" -> True],
+  False
+]
+
+
+MT[
+  (IGLADSubisomorphismCount[#,dgs,"Induced"->True]&/@IGData[{"AllDirectedGraphs",3}])/IGBlissAutomorphismCount/@IGData[{"AllDirectedGraphs",3}],
+  Lookup[IGTriadCensus[dgs], Keys@IGData["MANTriadLabels"]]
+]
+
+
+Module[{bigDirected=RandomGraph[{20,200},DirectedEdges->True], pos, res1, res2},
+  MT[
+    res1=IGMotifs[bigDirected,4];
+    res2=(IGLADSubisomorphismCount[#,bigDirected,"Induced"->True]&/@IGData[{"AllDirectedGraphs",4}])/IGBlissAutomorphismCount/@IGData[{"AllDirectedGraphs",4}];
+    pos=Position[res1,Indeterminate];
+    Delete[res1,pos]==Delete[res2,pos]
+    ,
+    True
+  ]
 ]
 
 
@@ -3294,6 +3329,73 @@ MT[
 ]
 
 
+(* This is a special case where the ideal result is unclear. For now, it is 0. *)
+MT[
+  IGEdgeConnectivity[IGEmptyGraph[1]],
+  0
+]
+
+MT[
+  IGEdgeConnectivity[IGEmptyGraph[0]],
+  0
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGBiconnectedQ*)
+
+
+MT[
+  IGBiconnectedQ[IGEmptyGraph[#]],
+  False
+]& /@ Range[0,3]
+
+
+(* Special case: vertex connectivity is 1 but we consider it biconnected *)
+MT[
+  IGBiconnectedQ[Graph[{1 <-> 2}]],
+  True
+]
+
+
+MT[
+  IGBiconnectedQ[Graph[{1 <-> 2, 2 <-> 3}]],
+  False
+]
+
+
+MT[
+  IGBiconnectedQ[IGCompleteGraph[3]],
+  True
+]
+
+
+MT[
+  IGBiconnectedQ[IGShorthand["1-2-3-4-1,3-5-6-7-3"]],
+  False
+]
+
+
+MT[
+  IGBiconnectedQ[IGShorthand["1-2-3-4-1,3-5-6-7-3,5-4"]],
+  True
+]
+
+
+(* multigraph *)
+MT[
+  IGBiconnectedQ[IGShorthand["1-2-3-4-1,3-5-6-7-3,5-3"]],
+  False
+]
+
+
+(* edge directions are ignored *)
+MT[
+  IGBiconnectedQ[Graph[{1 -> 2, 2 -> 3, 1 -> 3}]],
+  True
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGBiconnectedComponents*)
 
@@ -3349,6 +3451,24 @@ MT[
     # > connCompCount[dgi] &
   ],
   True
+]
+
+
+MT[
+  IGArticulationPoints[IGEmptyGraph[#]],
+  {}
+]& /@ Range[0, 3]
+
+
+MT[
+  IGArticulationPoints[Graph[{1 <-> 2}]],
+  {}
+]
+
+
+MT[
+  IGArticulationPoints[Graph[{1 <-> 2, 2 <-> 3}]],
+  {2}
 ]
 
 
@@ -4328,7 +4448,7 @@ MT[
 (* TODO need to test on 1D, 2D, 3D and mixed dimensional meshes in various embedding dimensions *)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Graph colouring*)
 
 
@@ -4387,7 +4507,21 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
+(*IGKVertexColoring*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGKEdgeColoring*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
 (*IGMinimumVertexColoring*)
 
 
@@ -4401,9 +4535,12 @@ MT[
 
 
 MT[
-  IGMinimumVertexColoring[IGEmptyGraph[]],
-  {}
-]
+  IGMinimumVertexColoring[IGEmptyGraph[#]],
+  ConstantArray[1,#]
+]& /@ Range[0, 4]
+
+
+(* TODO test all heuristics *)
 
 
 (* ::Subsubsection:: *)
@@ -4413,22 +4550,34 @@ MT[
 MT[
   IGMinimumEdgeColoring[IGEmptyGraph[#]],
   {}
-]& /@ Range[4]
+]& /@ Range[0, 4]
+
 
 MT[
   IGMinimumEdgeColoring[CycleGraph[3]],
   {3, 2, 1}
 ]
 
+
+(* Note: {1, 2, 2, 1} and {2, 1, 1, 2} are both valid. *)
 MT[
-  IGMinimumEdgeColoring[CycleGraph[4]],
-  {1, 2, 2, 1}
+  MemberQ[{{2, 1, 1, 2}, {1, 2, 2, 1}}, IGMinimumEdgeColoring[CycleGraph[4]]],
+  True
+]
+
+
+MT[
+  IGVertexColoringQ[LineGraph[IGTriangularLattice[4]], IGMinimumEdgeColoring[IGTriangularLattice[4]]],
+  True
 ]
 
 MT[
-  IGMinimumEdgeColoring[IGTriangularLattice[4]],
-  {2, 1, 3, 1, 6, 5, 4, 2, 3, 2, 4, 1, 2, 1, 3, 4, 1, 2}
+  Max[IGMinimumEdgeColoring[IGTriangularLattice[4]]],
+  6
 ]
+
+
+(* TODO test all heuristics *)
 
 
 (* ::Subsubsection::Closed:: *)
@@ -4447,6 +4596,12 @@ MT[
 ]
 
 
+MT[
+  IGChromaticNumber[IGEmptyGraph[#]],
+  1
+]& /@ Range[3]
+
+
 (* directed edges are ignored *)
 MT[
   IGChromaticNumber[Graph[{1, 2}, {1 -> 2}]],
@@ -4454,14 +4609,14 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGChromaticIndex*)
 
 
 MT[
   IGChromaticIndex[IGEmptyGraph[#]],
   0
-]& /@ Range[4]
+]& /@ Range[0, 4]
 
 MT[
   IGChromaticIndex[IGSquareLattice[{3, 4}]],
@@ -4500,6 +4655,33 @@ MT[
 
 (* ::Subsubsection:: *)
 (*IGCliqueCoverNumber*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGVertexColoringQ*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGPerfectQ*)
+
+
+MT[
+  IGPerfectQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0,2]
+
+
+(* this caused a crash earlier *)
+MT[
+  IGPerfectQ[GraphData[{"Arrangement", {5, 2}}]],
+  True
+]
 
 
 (* TODO *)
@@ -5943,7 +6125,7 @@ MT[
 (* TODO *)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Utility functions*)
 
 
@@ -5997,6 +6179,25 @@ MT[
   True
 ]
 
+
+(* ::Text:: *)
+(*Check for unchanged edge ordering with "All".*)
+
+
+With[{ug = IGUndirectedGraph[#, "All"]},
+  MT[
+    {VertexList[ug], Sort /@ List @@@ EdgeList[ug]},
+    {VertexList[#], Sort /@ List @@@ EdgeList[#]}
+  ]
+]& /@ Join[
+  Flatten@Table[
+    Graph[DirectedEdge @@@ RandomInteger[{1,k}, {m, 2}]],
+    {k, 10, 100, 10},
+    {m, k, 4k, k}
+  ],
+  {dmulti},
+  dlist
+] 
 
 
 (* ::Subsubsection::Closed:: *)
@@ -6326,7 +6527,7 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGTakeSubgraph*)
 
 

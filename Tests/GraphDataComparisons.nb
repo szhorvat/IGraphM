@@ -1,9 +1,10 @@
 Notebook[{
 
 Cell[CellGroupData[{
-Cell["Fuzz and compare with GraphData", "Title",
- CellChangeTimes->{{3.76423137194506*^9, 
-  3.764231375794499*^9}},ExpressionUUID->"d5b7d3f4-c35c-4843-a4c4-\
+Cell["Compare results with GraphData", "Title",
+ CellChangeTimes->{{3.76423137194506*^9, 3.764231375794499*^9}, {
+  3.764660373926461*^9, 
+  3.764660379077874*^9}},ExpressionUUID->"d5b7d3f4-c35c-4843-a4c4-\
 2113c16227fb"],
 
 Cell[BoxData["Quit"], "Input",
@@ -11,19 +12,134 @@ Cell[BoxData["Quit"], "Input",
  CellLabel->
   "In[234]:=",ExpressionUUID->"511db3c4-224e-4abd-b188-c02a0c169ac1"],
 
+Cell[CellGroupData[{
+
+Cell["Deterministic", "Section",
+ CellChangeTimes->{{3.764660398844658*^9, 
+  3.764660400539051*^9}},ExpressionUUID->"89fc5ba5-7674-4ab8-a636-\
+e68cd6e9fd90"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.764660403643203*^9, 3.764660415701833*^9}},
+ CellLabel->"In[6]:=",ExpressionUUID->"683e26a2-f70f-4dec-bf7d-12ec338903d9"],
+
+Cell[TextData[{
+ "All outputs are expected to be ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"{", "}"}], TraditionalForm]],ExpressionUUID->
+  "9cbb1c1b-5851-4e10-9c28-709b7eb75be0"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.764250839338747*^9, 
+  3.764250845767811*^9}},ExpressionUUID->"d6bfbc6b-42de-4b4f-83e8-\
+9e8c64588d0c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Select", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"GraphData", "[", 
+     RowBox[{"1", ";;", "20"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"IGChromaticNumber", "@", 
+       RowBox[{"GraphData", "[", "#", "]"}]}], "=!=", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"#", ",", "\"\<ChromaticNumber\>\""}], "]"}]}], "&"}]}], 
+   "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]], "Input",
+ CellChangeTimes->{{3.764660419623047*^9, 3.764660456905673*^9}, {
+  3.764660563695311*^9, 3.7646605677716837`*^9}, {3.7647388221352262`*^9, 
+  3.764738822168836*^9}, {3.764738870396381*^9, 3.7647388723286324`*^9}, {
+  3.764738937512866*^9, 3.764738957266306*^9}},
+ CellLabel->"In[11]:=",ExpressionUUID->"b40b19fc-93ab-4c3e-a43f-f85a9905786f"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"23.430552`", ",", 
+   RowBox[{"{", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.764660427202128*^9, 3.764660481230886*^9, {3.7646605596313543`*^9, 
+   3.764660573920516*^9}, 3.764738858005229*^9, 3.76473891257415*^9, {
+   3.764738953071843*^9, 3.764738981085637*^9}},
+ CellLabel->
+  "Out[11]=",ExpressionUUID->"b94a2b47-3cbb-444c-96f7-d2d7842e609e"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Select", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"GraphData", "[", 
+     RowBox[{"1", ";;", "8"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"IGChromaticIndex", "@", 
+       RowBox[{"GraphData", "[", "#", "]"}]}], "=!=", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"#", ",", "\"\<EdgeChromaticNumber\>\""}], "]"}]}], "&"}]}], 
+   "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]], "Input",
+ CellChangeTimes->{{3.764660419623047*^9, 3.764660479806376*^9}, {
+   3.7646605319915943`*^9, 3.764660537313716*^9}, {3.764660575730214*^9, 
+   3.764660576885302*^9}, 3.7647388249860573`*^9},
+ CellLabel->"In[8]:=",ExpressionUUID->"2ac6dac4-7bc6-4823-9595-30b818388aaf"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"19.272752`", ",", 
+   RowBox[{"{", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.764660529428965*^9, 3.7646605448543987`*^9}, 
+   3.764660584842812*^9, 3.764738845306843*^9},
+ CellLabel->"Out[8]=",ExpressionUUID->"438bc665-0ec7-4ff2-8878-818e1c88468d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Select", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"GraphData", "[", 
+     RowBox[{"1", ";;", "20"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"IGPerfectQ", "@", 
+       RowBox[{"GraphData", "[", "#", "]"}]}], "=!=", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"#", ",", "\"\<Perfect\>\""}], "]"}]}], "&"}]}], 
+   "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]], "Input",
+ CellChangeTimes->{{3.764738737474393*^9, 3.764738745859859*^9}},
+ CellLabel->"In[7]:=",ExpressionUUID->"153b837a-d5d3-4e8d-9f3c-357638bae4a4"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"30.85683`", ",", 
+   RowBox[{"{", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.764738778067502*^9},
+ CellLabel->"Out[7]=",ExpressionUUID->"8a43dca0-5005-480d-a01d-98f9397f3b5c"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Random", "Section",
+ CellChangeTimes->{{3.764250769472826*^9, 3.7642507698460903`*^9}, {
+  3.7646603886882763`*^9, 
+  3.764660389277363*^9}},ExpressionUUID->"e1bb5213-8ea1-4401-98a5-\
+fcdfda3dcb3b"],
+
 Cell[BoxData[{
  RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}], "\[IndentingNewLine]", 
  RowBox[{"SeedRandom", "[", "7564", "]"}], "\[IndentingNewLine]", 
  RowBox[{"IGSeedRandom", "[", "4657", "]"}]}], "Input",
- CellChangeTimes->{{3.7642313803906307`*^9, 3.764231400562212*^9}},
+ CellChangeTimes->{{3.7642313803906307`*^9, 3.764231400562212*^9}, {
+  3.76466040825288*^9, 3.764660408800667*^9}},
  CellLabel->"In[1]:=",ExpressionUUID->"5cb4f2d9-4663-4161-8e7f-289109f33789"],
-
-Cell[CellGroupData[{
-
-Cell["Tests", "Section",
- CellChangeTimes->{{3.764250769472826*^9, 
-  3.7642507698460903`*^9}},ExpressionUUID->"e1bb5213-8ea1-4401-98a5-\
-fcdfda3dcb3b"],
 
 Cell[TextData[{
  "All outputs are expected to be ",

@@ -18,39 +18,9 @@ Cell[BoxData["Quit"], "Input",
 Cell["Verify that Lint is installed, then load it.", \
 "Text",ExpressionUUID->"2c116019-5039-4b12-8a6a-3989d049772f"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
  RowBox[{"PacletInformation", "[", "\"\<Lint\>\"", "]"}]], "Input",
  CellLabel->"In[1]:=",ExpressionUUID->"f53dbc4e-c3c0-4677-941b-26ed6087dd41"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"\<\"Name\"\>", "\[Rule]", "\<\"Lint\"\>"}], ",", 
-   RowBox[{"\<\"Version\"\>", "\[Rule]", "\<\"0.9\"\>"}], ",", 
-   RowBox[{"\<\"BuildNumber\"\>", "\[Rule]", "\<\"\"\>"}], ",", 
-   RowBox[{"\<\"Qualifier\"\>", "\[Rule]", "\<\"\"\>"}], ",", 
-   RowBox[{"\<\"WolframVersion\"\>", "\[Rule]", "\<\"11.+\"\>"}], ",", 
-   RowBox[{"\<\"SystemID\"\>", "\[Rule]", "All"}], ",", 
-   RowBox[{"\<\"ProductName\"\>", "\[Rule]", "All"}], ",", 
-   RowBox[{"\<\"Description\"\>", "\[Rule]", "\<\"\"\>"}], ",", 
-   RowBox[{"\<\"Category\"\>", "\[Rule]", "\<\"\"\>"}], ",", 
-   RowBox[{"\<\"Creator\"\>", "\[Rule]", "\<\"\"\>"}], ",", 
-   RowBox[{"\<\"Publisher\"\>", "\[Rule]", "\<\"\"\>"}], ",", 
-   RowBox[{"\<\"Support\"\>", "\[Rule]", "\<\"\"\>"}], ",", 
-   RowBox[{"\<\"Internal\"\>", "\[Rule]", "False"}], ",", 
-   RowBox[{"\<\"Updating\"\>", "\[Rule]", "Manual"}], ",", 
-   RowBox[{"\<\"Location\"\>", 
-    "\[Rule]", \
-"\<\"/Users/szhorvat/Library/Mathematica/Paclets/Repository/Lint-0.9\"\>"}], 
-   ",", 
-   RowBox[{"\<\"Context\"\>", "\[Rule]", 
-    RowBox[{"{", "\<\"Lint`\"\>", "}"}]}], ",", 
-   RowBox[{"\<\"Enabled\"\>", "\[Rule]", "True"}], ",", 
-   RowBox[{"\<\"Loading\"\>", "\[Rule]", "Manual"}]}], "}"}]], "Output",
- CellLabel->"Out[1]=",ExpressionUUID->"ca2ff4ff-9f72-497c-94ca-ee45feca2e8b"]
-}, Open  ]],
 
 Cell[BoxData[
  RowBox[{"Needs", "[", "\"\<Lint`\>\"", "]"}]], "Input",
@@ -120,6 +90,28 @@ Cell[BoxData[
     "lints"}], ",", "\[IndentingNewLine]", 
    RowBox[{"Spacings", "\[Rule]", "2"}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"40234b02-f9eb-4ef0-818b-9ffca592d5c5"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Lint Tests.m", \
+"Subsection",ExpressionUUID->"89ef2f35-921d-4471-961c-4cfa9b3f82ad"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]], "Input",
+ CellLabel->"In[26]:=",ExpressionUUID->"e26cbd1c-4b10-4a3c-8289-c32f15260698"],
+
+Cell[BoxData[
+ RowBox[{"Column", "@", 
+  RowBox[{"LintFileReport", "[", 
+   RowBox[{"\"\<Tests.m\>\"", ",", 
+    RowBox[{"LintFile", "[", "\"\<Tests.m\>\"", "]"}], ",", 
+    RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
+     RowBox[{"{", "}"}]}]}], "]"}]}]], "Input",
+ CellLabel->
+  "In[30]:=",ExpressionUUID->"33879b92-fb5b-4ce4-829e-6b177840beff"]
 }, Open  ]]
 }, Open  ]]
 },
@@ -131,7 +123,7 @@ SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
   "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
   "builtin"}},
-FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 11, 2019)",
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
 
