@@ -12257,8 +12257,18 @@ Cell[TextData[{
  " try to select the best algorithm for the given graphs. For graphs without \
 multi-edges, they use igraph\[CloseCurlyQuote]s default algorithm selection. \
 For multigraphs, they use VF2 after internally transforming the multigraphs \
-to edge coloured simple graphs."
+to edge- and vertex-coloured simple graphs."
 }], "Text",ExpressionUUID->"7fafb07c-326b-407b-96e0-04af295bc978"],
+
+Cell[CellGroupData[{
+
+Cell["Basic functions", \
+"Subsection",ExpressionUUID->"eb962161-ebbf-4fd8-addc-d98420b95817"],
+
+Cell[CellGroupData[{
+
+Cell["IGIsomorphicQ", \
+"Subsubsection",ExpressionUUID->"fb15d4e1-53dd-4e95-812d-e12f48dbc489"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -12267,8 +12277,1131 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"?", 
+  "IGGetIsomorphism"}]], \
+"Input",ExpressionUUID->"fa1b4167-70c3-4b74-95a4-a7b1d117523f"],
+
+Cell[TextData[{
+ Cell[BoxData["IGIsomorphicQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "2800038f-dc52-4a5d-941f-dd8a214095f6"],
+ " decides if two graphs are isomorphic."
+}], "Text",ExpressionUUID->"e26f3eb1-8f8d-48a4-8a82-277837a22f42"],
+
+Cell[BoxData[
+ RowBox[{"IGIsomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"IGShorthand", "[", "\"\<a-b-c-a-d\>\"", "]"}], ",", 
+   RowBox[{"IGShorthand", "[", "\"\<1-2,3-4-2-3\>\"", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"6260cda7-874b-4118-9555-f16385f0e054"],
+
+Cell[TextData[{
+ Cell[BoxData["IGIsomorphicQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "f3282667-29bf-4b0a-b2fc-1a77f1c04cdd"],
+ " supports multigraphs."
+}], "Text",ExpressionUUID->"fadd78ab-4b79-426c-80de-2cc2337434e1"],
+
+Cell[BoxData[
+ RowBox[{"IGIsomorphicQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4}, {
+        Null, {{1, 2}, {2, 2}, {2, 1}, {1, 3}, {3, 4}, {4, 2}}}, {
+        ImageSize -> 80, VertexLabels -> {None}, VertexSize -> {Medium}}]]}, 
+      TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJw1kgtIk2EUhr2nQ6WiNNQio4sKqXkprx0nWUSiJZLpFPG6TGU2h4hpmuRA
+ppUTI/Jei8okFGvexo6YDmVNM+elIrOa9wRNk6mUqef3h48D5/vOed/n5beN
+5YUk6Ono6Hhvnq1K3wLeEcUqutw++uREjdY3xvTKmD7kCio9vZXdPjvvdvp6
+lt1FhUlq2TNsPlmjmseKhL5IY79OeCP38QrzmEet3+zavX4F5Fvw9V3KfqE8
+u5drxFZCyJ4O2xLNHO7NjnNQlfRDlamX/dfjc+ilGyyu+zYA+Z5NycLIWfQY
+uiQS/xyECt2zUgPhDDrXKVmpg0MgSfNljTydxo4L37P2vR6BFqr4nPpgR++w
+mubAmfZgAe0FZ9LBJ6QL2lvbPjCUfIGEfGIB+YZx4kApcUE+ceIL4gZJ4vvp
+v7w5dNb3F/8TN4KSF8C2CZzFFpaV43lfKXypMUuUO82gXyBPw7vaDoa23LdF
+1tOoadvIbE/tgJTcUanD7ilsUFlyRPHvIGV/RNtp80k8auV6ZbJYAYsOj7Mu
+WkygbHXXifmpXrCPvN/5x06DFVu4aSq4SxUdqQ8SeocrNAemtAfTaS88Ih3k
+ky6oyQeyyBccJp84Tr7hAXHgB+ICY+LEl8QNNkbNYwp5BpamNmVyNv+LQ30R
+YyBrw1MT7rdVfgtwQ1AWoVzqwQmDWvaZhQXwXKkqFJ0bwLDFH31Cnd/Q9fBT
+cmW9Gq0UhjkazhK88og7ZpcyjA0C7c30yWXICJ0YCogexvTx8O7ivBXI4/ib
+bQjVGB+ljQoy0YK43KTU3WQAPfmVSW4xq9A9E2TuzulBPkufXZeyBsbXl/Va
+o1sRhdVqb4t1MDmSbe107bNsqhJcgy+vQxB3+x527qNpHgTMfAztB29mfwjp
+A5fRDyR/kMH4KyD/0MT4ryU+OMjwHSB+CGf4XSgfmGLyKVdt5wcuTH5JG9Kt
+fGEn3//pMdr8
+         "], {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             1, {-0.6644407471831174, 0.664440747183116}, 2}], 
+             0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             1, {-0.3355592528168825, 0.33555925281688337`}, 2}], 
+             0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{1, 3}, 0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{2, 40, 43, 45, 51, 53, 56, 2},
+             SplineDegree->7], 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{2, 4}, 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{3, 4}, 0.1414213562373094]}}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.1414213562373094], DiskBox[2, 0.1414213562373094], 
+           DiskBox[3, 0.1414213562373094], DiskBox[4, 0.1414213562373094]}}]],
+       
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->80], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4}, {
+        Null, {{1, 2}, {2, 3}, {3, 4}, {4, 1}, {4, 3}, {3, 3}}}, {
+        ImageSize -> 96, VertexLabels -> {None}, VertexSize -> {Medium}}]]}, 
+      TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJw9kH0s1HEcxz0lhFSi4Q/a8rT0hArH505olVBrGUdCmGEnqZmHxOw2oaLZ
+LDtdYWRqybo83HxMGNOdLuehrfR0zlPW7VAeKnGfn37bb5/t8/l+Pu/3620X
+wzsfp6OlpeW1/m9U+lSYVxTT2+32jpUTOdbYFN0vZvqwWXUse4oLE+Xi3HSB
+h9dAD2tzT5HRnMFdn4uVovHejhvAUbnflLBVMPoifBzEbRCw/RHnmEoFh7nl
+4QPzfVC38lXK11KDVFFVWOQnAzPplhwFdx7Uee+TBI1ysM5aunpNuQB79sbu
+c0wegRMTYT0lt37CD++JYf+oEWi8vBQZZLgEgwG+Jmt8OTimCxLdopfh0m3D
+++6GMgjdpstpSF6BXbIgU3duHyzzH8q9LFZh+eyCTmtUKygF4BocsgoOtXrX
+h0/LxJvzyiDNHDf3w2gfnZj7+XQfnzL686SPfow/cx+NP7Rh/AP5x50Mn3W+
+hg/rGf5fxI/+TD4ZlA+ymfyCmjX5/c+Xq9bkizX4ykUomQNhnDTCgN2FzR0s
+z9Djc/CbPbNyZ7AX8y3SdI+Uf4fO7P4Efc4AhuzotCtVzIJ5dqyzpHQQq4w9
+nT7azwJLO7is4ZMM8z2ak/gRM8AaPlNU9m0IK7V9RHr8aXBrGDBKGRrG6lRv
+o9HqKeg++SXT/NkoiqhCPfXRnt6BkPbQhe4An+7iftKBx6SL6iyND7hAvlBI
+PqGAfOMYcYCIuDCbOKGOuLE2/s3UH94sHNL1Lftb1oRSnj/HJnAGWoysDgR4
+i/CD0CS+4+A0sAN5Ct7FdtS3S3hZbD0Fira1jPaUTkzJHRM5m03Cc4klt+jK
+a0zZHd521FQJtlau55Qlvah2fpB5ymICWpa3OsxN9qNzxN2uRUcFVGzgpkqw
+gCq4UB9r6B0s0h4a0x1Io7tYQTqQRrooJx9gRL7QlnzCZ/KN94gD3hIXGhAn
+PCFu/Acjtd2q
+         "], {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           {Arrowheads[0.], ArrowBox[{1, 2}, 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{1, 4}, 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{2, 3}, 0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{3, 8, 11, 13, 19, 21, 24, 3},
+             SplineDegree->7], 0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             3, {0.664440747183117, -0.664440747183117}, 4}], 
+             0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             3, {0.33555925281688137`, -0.33555925281688564`}, 4}], 
+             0.1414213562373094]}}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.1414213562373094], DiskBox[2, 0.1414213562373094], 
+           DiskBox[3, 0.1414213562373094], DiskBox[4, 0.1414213562373094]}}]],
+       
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->96]}], 
+  "]"}]], "Input",ExpressionUUID->"0f6794bb-cd06-482d-bea8-3ed108fd26ec"],
+
+Cell[BoxData[
+ RowBox[{"IGIsomorphicQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4}, {
+        Null, {{1, 2}, {2, 2}, {2, 1}, {1, 3}, {3, 4}, {4, 2}}}, {
+        ImageSize -> 80, VertexLabels -> {None}, VertexSize -> {Medium}}]]}, 
+      TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJw1kgtIk2EUhr2nQ6WiNNQio4sKqXkprx0nWUSiJZLpFPG6TGU2h4hpmuRA
+ppUTI/Jei8okFGvexo6YDmVNM+elIrOa9wRNk6mUqef3h48D5/vOed/n5beN
+5YUk6Ono6Hhvnq1K3wLeEcUqutw++uREjdY3xvTKmD7kCio9vZXdPjvvdvp6
+lt1FhUlq2TNsPlmjmseKhL5IY79OeCP38QrzmEet3+zavX4F5Fvw9V3KfqE8
+u5drxFZCyJ4O2xLNHO7NjnNQlfRDlamX/dfjc+ilGyyu+zYA+Z5NycLIWfQY
+uiQS/xyECt2zUgPhDDrXKVmpg0MgSfNljTydxo4L37P2vR6BFqr4nPpgR++w
+mubAmfZgAe0FZ9LBJ6QL2lvbPjCUfIGEfGIB+YZx4kApcUE+ceIL4gZJ4vvp
+v7w5dNb3F/8TN4KSF8C2CZzFFpaV43lfKXypMUuUO82gXyBPw7vaDoa23LdF
+1tOoadvIbE/tgJTcUanD7ilsUFlyRPHvIGV/RNtp80k8auV6ZbJYAYsOj7Mu
+WkygbHXXifmpXrCPvN/5x06DFVu4aSq4SxUdqQ8SeocrNAemtAfTaS88Ih3k
+ky6oyQeyyBccJp84Tr7hAXHgB+ICY+LEl8QNNkbNYwp5BpamNmVyNv+LQ30R
+YyBrw1MT7rdVfgtwQ1AWoVzqwQmDWvaZhQXwXKkqFJ0bwLDFH31Cnd/Q9fBT
+cmW9Gq0UhjkazhK88og7ZpcyjA0C7c30yWXICJ0YCogexvTx8O7ivBXI4/ib
+bQjVGB+ljQoy0YK43KTU3WQAPfmVSW4xq9A9E2TuzulBPkufXZeyBsbXl/Va
+o1sRhdVqb4t1MDmSbe107bNsqhJcgy+vQxB3+x527qNpHgTMfAztB29mfwjp
+A5fRDyR/kMH4KyD/0MT4ryU+OMjwHSB+CGf4XSgfmGLyKVdt5wcuTH5JG9Kt
+fGEn3//pMdr8
+         "], {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             1, {-0.6644407471831174, 0.664440747183116}, 2}], 
+             0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             1, {-0.3355592528168825, 0.33555925281688337`}, 2}], 
+             0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{1, 3}, 0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{2, 40, 43, 45, 51, 53, 56, 2},
+             SplineDegree->7], 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{2, 4}, 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{3, 4}, 0.1414213562373094]}}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.1414213562373094], DiskBox[2, 0.1414213562373094], 
+           DiskBox[3, 0.1414213562373094], DiskBox[4, 0.1414213562373094]}}]],
+       
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->80], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4}, {
+        Null, {{1, 2}, {2, 3}, {3, 4}, {4, 1}, {4, 3}, {1, 1}}}, {
+        ImageSize -> 96, VertexLabels -> {None}, VertexSize -> {Medium}}]]}, 
+      TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJw1kH0s1HEcxz2UuJCahw1/0JawVAsV7nycoVlC1lJ3zDMTt5OsmWdmtwkV
+ZbPa6QpLZi1Zl6f5mDCmOy7noa3o4ZynbLdD85Ck+/j9tt8+2/f7/bzf79fb
+MV4YkWSgp6fns/f/n/RpsLg8frDf4xM7P3q6pTVuuHv/HJhpYDNQUZaq7C7M
+Env5jAywmT1Vdls2f28Gz0tnBnvuIlfjWSDz0+DsW94MdHdi0JHn3AsaDXry
+a3gjq0PYtPVDLtLTokJVV1YeoEAL+cF8FX8V14o/p4lblGiXu3H7jnoNbY8n
+nHBOn8SAuZsDlUW/UcOZmwiMmcSW2I3oUJMNVAT5m+2KlOiSJU71iNvE2Hsm
+jzxNFBh52JDbnL6FVopQc0/+EG6Knil9rLdx58qaQUdMB6rF4B4Wvo2PI0o6
+bzWOsZn7ylDdPTD7N2gfGP0i0gfGX0v+wOQ75qvLB/b7+TmUHxg+6xIdHzD8
+68QPTD8F1A8w/fHadP0B02+iRtcvNOB7N4lsBSRJ8ihjvz5s62F7R15cgT9+
+S1v3RwexxDrT8FzNL+jNG04x4o5g+NFexyrVMljmJbjKqkaxztTb5avTMrD1
+w6qbZxVY4tWWJopaAvbE5fLqn+P4VN9XekC0CB7NIyzB+ATWZ3BYU/UL0H/p
+e47l6ymU0oQmOkcnegcS2kM30gER6eIp8oEX5IvaXF0OuEa5UEI5oZRy4zRx
+gJS4MI844SVxY2Pyx4Ud4TKcNfSv/lvdinJhINc+ZAnaWbangzhS/CIxS+45
+swh+IUKV8HoXGjmmvKuwWwBV5252l6AXBYXTUleLeXgjs+GXJ35AgRWv87y5
+Ghxs3a+qKwdR6/okJ9h6Dto3D51cmR9G16gHfevOKqj9j5shw1Ka4Ebn2EDv
+YJ320JR0IJN0sZZ8IJN8UUk5gEW50IFywjfKjQ+JA8aIC42JE14RN/4DMTbp
+IA==
+         "], {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{1, 8, 11, 13, 19, 21, 24, 1},
+             SplineDegree->7], 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{1, 2}, 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{1, 4}, 0.1414213562373094]}, 
+           {Arrowheads[0.], ArrowBox[{2, 3}, 0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             3, {0.664440747183117, -0.664440747183117}, 4}], 
+             0.1414213562373094]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             3, {0.33555925281688137`, -0.33555925281688564`}, 4}], 
+             0.1414213562373094]}}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.1414213562373094], DiskBox[2, 0.1414213562373094], 
+           DiskBox[3, 0.1414213562373094], DiskBox[4, 0.1414213562373094]}}]],
+       
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->96]}], 
+  "]"}]], "Input",ExpressionUUID->"f62ea1da-3cc2-47c0-b85a-1975f0468a58"],
+
+Cell["Get a specific mapping between the vertices of the graphs.", \
+"Text",ExpressionUUID->"37ec1704-14fc-48ef-a122-3fe28bc9aa83"],
+
+Cell[BoxData[
+ RowBox[{"IGGetIsomorphism", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4}, {
+        Null, {{1, 2}, {2, 2}, {2, 1}, {1, 3}, {3, 4}, {4, 2}}}, {
+        ImageSize -> 80, PerformanceGoal -> "Quality", VertexLabels -> {None},
+          VertexShapeFunction -> {"Name"}, VertexSize -> {Medium}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation[
+           "VertexID$1", Automatic, Center], {-0.6644407471831174, 
+           0.664440747183116}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation[
+           "VertexID$1", Automatic, Center], {-0.3355592528168825, 
+           0.33555925281688337`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], 
+           DynamicLocation["VertexID$3", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation[
+           "VertexID$2", Automatic, Center], {-0.2698086589769875, 
+           1.1251285630706513`}, {-0.3495649899317138, 
+           1.406385203268681}, {-0.26618708953031345`, 1.586231625136078}, {
+           0.2661870895303107, 1.5862316251360784`}, {0.3495649899317115, 
+           1.4063852032686817`}, {0.2698086589769857, 1.1251285630706518`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}, SplineDegree -> 
+          7], 
+         LineBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$4", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$3", Automatic, Center], 
+           DynamicLocation["VertexID$4", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {-1., 1.0106430996148606`*^-15}, Automatic, {
+           0.2828427124746188, 0.2828427124746188}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {-7.044813998280222*^-16, 1.}, Automatic, {
+           0.2828427124746188, 0.2828427124746188}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {6.049014748177263*^-16, -1.}, Automatic, {
+           0.2828427124746188, 0.2828427124746188}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$3"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["4", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., -1.133107779529596*^-15}, Automatic, {
+           0.2828427124746188, 0.2828427124746188}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$4"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-3.2393066909899035`, 
+         82.2393066909899}, {-53.23930669098991, 48.01663919563945}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->80], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4}, {
+        Null, {{1, 2}, {2, 3}, {3, 4}, {4, 1}, {4, 3}, {3, 3}}}, {
+        ImageSize -> 96, PerformanceGoal -> "Quality", VertexLabels -> {None},
+          VertexShapeFunction -> {"Name"}, VertexSize -> {Medium}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         LineBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], 
+           DynamicLocation["VertexID$4", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$3", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$3", Automatic, Center], {
+           1.1251285630711807`, 0.26980865897674}, {1.4063852032689546`, 
+           0.3495649899313937}, {1.5862316251361879`, 0.266187089530069}, {
+           1.586231625136188, -0.266187089530071}, {
+           1.4063852032689548`, -0.34956498993139573`}, {
+           1.125128563071181, -0.2698086589767423}, 
+           DynamicLocation["VertexID$3", Automatic, Center]}, SplineDegree -> 
+          7], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$3", Automatic, Center], {
+           0.664440747183117, -0.664440747183117}, 
+           DynamicLocation["VertexID$4", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$3", Automatic, Center], {
+           0.33555925281688137`, -0.33555925281688564`}, 
+           DynamicLocation["VertexID$4", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {-1., 1.0106430996148606`*^-15}, Automatic, {
+           0.2828427124746188, 0.2828427124746188}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {-7.044813998280222*^-16, 1.}, Automatic, {
+           0.2828427124746188, 0.2828427124746188}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., -1.133107779529596*^-15}, Automatic, {
+           0.2828427124746188, 0.2828427124746188}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$3"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["4", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {6.049014748177263*^-16, -1.}, Automatic, {
+           0.2828427124746188, 0.2828427124746188}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$4"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-3.2393066909898955`, 
+         96.2393066909899}, {-45.23930669098989, 39.207129737092984`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->96]}], 
+  "]"}]], "Input",ExpressionUUID->"a94fe7c4-bd6f-4b0c-ada6-c31a3c65c619"],
+
+Cell["\<\
+When the graphs are not isomorphic, an empty list is returned.\
+\>", "Text",ExpressionUUID->"9f82ac9c-5373-4869-9c61-7f2ac61977ce"],
+
+Cell[BoxData[
+ RowBox[{"IGGetIsomorphism", "[", 
+  RowBox[{
+   RowBox[{"CycleGraph", "[", "4", "]"}], ",", 
+   RowBox[{"IGCompleteGraph", "[", "4", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"751a9c8c-9ed4-438d-9654-d1ff2ac60ec7"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGSubisomorphicQ", \
+"Subsubsection",ExpressionUUID->"b52f1594-dc89-4971-a258-59af56af6a0b"],
+
+Cell[BoxData[
+ RowBox[{"?", 
   "IGSubisomorphicQ"}]], \
 "Input",ExpressionUUID->"1a022ad3-34cc-4a72-8514-c5a37aba8716"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGGetSubisomorphism"}]], \
+"Input",ExpressionUUID->"17ae2edf-efda-4bfd-958c-a65ba9cf27ae"],
+
+Cell[TextData[{
+ Cell[BoxData["IGSubisomorphicQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "9a3b5731-43b4-4138-9414-2a43a7b045c4"],
+ " decides if a subgraph is part of a larger graph."
+}], "Text",ExpressionUUID->"86d6a2ea-c8d0-4344-9074-30c8d5db725c"],
+
+Cell[TextData[{
+ "A dodecahedral graph does not contain a ",
+ Cell[BoxData[
+  RowBox[{"[", 
+   RowBox[{"1", ",", "2", ",", "3"}], "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "897f0f6e-1a34-4e7e-a3b0-13f8541eeab4"],
+ " symmetric tree."
+}], "Text",ExpressionUUID->"91ca7730-98a6-4dfb-90ca-a0ac64a3c49f"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"target", "=", 
+   RowBox[{"GraphData", "[", "\"\<DodecahedralGraph\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"pattern", "=", 
+   RowBox[{"IGSymmetricTree", "[", 
+    RowBox[{"{", 
+     RowBox[{"1", ",", "2", ",", "3"}], "}"}], "]"}]}], 
+  ";"}]}], "Input",ExpressionUUID->"3f817190-9d69-4882-a166-9cd17638a9a9"],
+
+Cell[BoxData[
+ RowBox[{"IGSubisomorphicQ", "[", 
+  RowBox[{"pattern", ",", "target"}], 
+  "]"}]], "Input",ExpressionUUID->"3e20d859-61e8-4252-827d-74870963c9b8"],
+
+Cell[TextData[{
+ "It does contain a ",
+ Cell[BoxData[
+  RowBox[{"[", 
+   RowBox[{"3", ",", "2", ",", "1"}], "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "03ca1447-8b0d-4d12-a317-4569720fc9dd"],
+ " tree."
+}], "Text",ExpressionUUID->"ebfd8b26-0c98-4811-bc5a-67592868eb08"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pattern", "=", 
+   RowBox[{"IGSymmetricTree", "[", 
+    RowBox[{"{", 
+     RowBox[{"3", ",", "2", ",", "1"}], "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"IGSubisomorphicQ", "[", 
+  RowBox[{"pattern", ",", "target"}], 
+  "]"}]}], "Input",ExpressionUUID->"f7c0b17d-498a-45a4-8df4-aac58b44bb75"],
+
+Cell["Let us retrieve a specific mapping ...", \
+"Text",ExpressionUUID->"7db45268-930c-4469-b188-8d29629fb1b3"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"{", "iso", "}"}], "=", 
+  RowBox[{"IGGetSubisomorphism", "[", 
+   RowBox[{"pattern", ",", "target"}], 
+   "]"}]}]], "Input",ExpressionUUID->"1085a2df-ad76-478b-8ed0-b33b0e03e229"],
+
+Cell["... and highlight it.", \
+"Text",ExpressionUUID->"c67d19c1-e445-4e29-bdcf-d9b8dcc8b3ec"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"target", ",", 
+   RowBox[{"VertexReplace", "[", 
+    RowBox[{"pattern", ",", 
+     RowBox[{"Normal", "[", "iso", "]"}]}], "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<Thick\>\""}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"f45d96a6-f582-4e83-83b4-f7c3ccfa7b01"],
+
+Cell[TextData[{
+ Cell[BoxData["IGSubisomorphicQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "39dcd81d-0baa-4998-8445-10f3018142f1"],
+ " supports multigraphs."
+}], "Text",ExpressionUUID->"452383ea-73fa-458b-a79b-90b9343549e5"],
+
+Cell[BoxData[
+ RowBox[{"IGSubisomorphicQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{"a", "b"}, {Null, {{1, 1}, {1, 2}}}, {
+        ImageSize -> 120, PerformanceGoal -> "Quality", 
+         VertexLabels -> {None}, VertexShapeFunction -> {"Name"}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           1.0884792554677603`, 0.1907835323853024}, {1.2873577330053512`, 
+           0.24717977484589673`}, {1.4145283574798084`, 0.1882226960710236}, {
+           1.4145283574798089`, -0.18822269607102265`}, {
+           1.2873577330053516`, -0.2471797748458961}, {
+           1.0884792554677607`, -0.19078353238530207`}, 
+           DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+          7], 
+         LineBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], 
+           DynamicLocation["VertexID$2", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"a\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"b\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 1.2246467991473532`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$2"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-3.239306690989907, 
+         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->120], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, {{2, 1}, {1, 2}, {2, 3}, {1, 1}}}, {
+        ImageSize -> 180, PerformanceGoal -> "Quality", 
+         VertexLabels -> {None}, VertexShapeFunction -> {"Name"}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation[
+           "VertexID$1", Automatic, 
+            Center], {-0.08847925546776053, -0.19078353238530196`}, \
+{-0.2873577330053514, -0.24717977484589607`}, {-0.41452835747980865`, \
+-0.18822269607102282`}, {-0.41452835747980865`, 
+           0.18822269607102343`}, {-0.2873577330053514, 
+           0.24717977484589673`}, {-0.08847925546776059, 
+           0.19078353238530268`}, 
+           DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+          7], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.4999999999999994, 0.16444074718311658`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.4999999999999998, -0.1644407471831159}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$3", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 3.6739403974420594`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 2.4492935982947064`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {2., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$3"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-0.2393066909899062, 
+         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->180]}], 
+  "]"}]], "Input",ExpressionUUID->"36e9892f-d5d8-46af-b5f6-762217572a66"],
+
+Cell[BoxData[
+ RowBox[{"IGGetSubisomorphism", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{"a", "b"}, {Null, {{1, 1}, {1, 2}}}, {
+        ImageSize -> 120, PerformanceGoal -> "Quality", 
+         VertexLabels -> {None}, VertexShapeFunction -> {"Name"}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           1.0884792554677603`, 0.1907835323853024}, {1.2873577330053512`, 
+           0.24717977484589673`}, {1.4145283574798084`, 0.1882226960710236}, {
+           1.4145283574798089`, -0.18822269607102265`}, {
+           1.2873577330053516`, -0.2471797748458961}, {
+           1.0884792554677607`, -0.19078353238530207`}, 
+           DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+          7], 
+         LineBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], 
+           DynamicLocation["VertexID$2", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"a\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"b\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 1.2246467991473532`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$2"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-3.239306690989907, 
+         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->120], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, {{2, 1}, {1, 2}, {2, 3}, {1, 1}}}, {
+        ImageSize -> 180, PerformanceGoal -> "Quality", 
+         VertexLabels -> {None}, VertexShapeFunction -> {"Name"}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation[
+           "VertexID$1", Automatic, 
+            Center], {-0.08847925546776053, -0.19078353238530196`}, \
+{-0.2873577330053514, -0.24717977484589607`}, {-0.41452835747980865`, \
+-0.18822269607102282`}, {-0.41452835747980865`, 
+           0.18822269607102343`}, {-0.2873577330053514, 
+           0.24717977484589673`}, {-0.08847925546776059, 
+           0.19078353238530268`}, 
+           DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+          7], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.4999999999999994, 0.16444074718311658`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.4999999999999998, -0.1644407471831159}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$3", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 3.6739403974420594`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 2.4492935982947064`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {2., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$3"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-0.2393066909899062, 
+         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->180]}], 
+  "]"}]], "Input",ExpressionUUID->"23075b71-cc93-4754-9b2a-6d568a50c802"],
+
+Cell[BoxData[
+ RowBox[{"IGSubisomorphicQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{"a", "b"}, {Null, {{1, 1}, {1, 2}, {2, 1}}}, {
+        ImageSize -> 120, PerformanceGoal -> "Quality", 
+         VertexLabels -> {None}, VertexShapeFunction -> {"Name"}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           1.0884792554677603`, 0.1907835323853024}, {1.2873577330053512`, 
+           0.24717977484589673`}, {1.4145283574798084`, 0.1882226960710236}, {
+           1.4145283574798089`, -0.18822269607102265`}, {
+           1.2873577330053516`, -0.2471797748458961}, {
+           1.0884792554677607`, -0.19078353238530207`}, 
+           DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+          7], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.5000000000000006, -0.16444074718311627`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.5000000000000001, 0.16444074718311646`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"a\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"b\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 1.2246467991473532`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$2"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-3.239306690989907, 
+         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->120], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, {{2, 1}, {1, 2}, {2, 3}, {1, 1}}}, {
+        ImageSize -> 180, PerformanceGoal -> "Quality", 
+         VertexLabels -> {None}, VertexShapeFunction -> {"Name"}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation[
+           "VertexID$1", Automatic, 
+            Center], {-0.08847925546776053, -0.19078353238530196`}, \
+{-0.2873577330053514, -0.24717977484589607`}, {-0.41452835747980865`, \
+-0.18822269607102282`}, {-0.41452835747980865`, 
+           0.18822269607102343`}, {-0.2873577330053514, 
+           0.24717977484589673`}, {-0.08847925546776059, 
+           0.19078353238530268`}, 
+           DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+          7], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.4999999999999994, 0.16444074718311658`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.4999999999999998, -0.1644407471831159}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$3", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 3.6739403974420594`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 2.4492935982947064`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {2., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$3"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-0.2393066909899062, 
+         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->180]}], 
+  "]"}]], "Input",ExpressionUUID->"5bfe1f15-b013-4336-b955-fe8ff1d49195"],
+
+Cell[BoxData[
+ RowBox[{"IGSubisomorphicQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{"a", "b"}, {Null, {{1, 1}, {1, 2}, {2, 1}, {1, 2}}}, {
+        ImageSize -> 120, PerformanceGoal -> "Quality", 
+         VertexLabels -> {None}, VertexShapeFunction -> {"Name"}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           1.0884792554677603`, 0.1907835323853024}, {1.2873577330053512`, 
+           0.24717977484589673`}, {1.4145283574798084`, 0.1882226960710236}, {
+           1.4145283574798089`, -0.18822269607102265`}, {
+           1.2873577330053516`, -0.2471797748458961}, {
+           1.0884792554677607`, -0.19078353238530207`}, 
+           DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+          7], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.5000000000000006, -0.16444074718311627`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.5000000000000001, 0.16444074718311646`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"a\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"b\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 1.2246467991473532`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$2"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-3.239306690989907, 
+         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->120], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, {{2, 1}, {1, 2}, {2, 3}, {1, 1}}}, {
+        ImageSize -> 180, PerformanceGoal -> "Quality", 
+         VertexLabels -> {None}, VertexShapeFunction -> {"Name"}}]], 
+      Typeset`boxes, Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Directive[
+          Opacity[0.7], 
+          Hue[0.6, 0.7, 0.5]], 
+         BezierCurveBox[{
+           DynamicLocation[
+           "VertexID$1", Automatic, 
+            Center], {-0.08847925546776053, -0.19078353238530196`}, \
+{-0.2873577330053514, -0.24717977484589607`}, {-0.41452835747980865`, \
+-0.18822269607102282`}, {-0.41452835747980865`, 
+           0.18822269607102343`}, {-0.2873577330053514, 
+           0.24717977484589673`}, {-0.08847925546776059, 
+           0.19078353238530268`}, 
+           DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+          7], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.4999999999999994, 0.16444074718311658`}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         BezierCurveBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], {
+           0.4999999999999998, -0.1644407471831159}, 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         LineBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$3", Automatic, Center]}]}, {
+         Directive[
+          Hue[0.6, 0.2, 0.8], 
+          EdgeForm[
+           Directive[
+            GrayLevel[0], 
+            Opacity[0.7]]]], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 3.6739403974420594`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1., 2.4492935982947064`*^-16}, BaseStyle -> 
+           "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {2., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$3"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-0.2393066909899062, 
+         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->180]}], 
+  "]"}]], "Input",ExpressionUUID->"f74ddf62-abfd-4575-83f7-344d70037d5d"]
+}, Closed]]
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -12285,21 +13418,6 @@ Cell[TextData[{
 canonical labelling of directed or undirected vertex coloured graphs."
 }], "Text",ExpressionUUID->"4c1123d4-b2a4-498b-aae2-1b4b9c250745"],
 
-Cell["The algorithm is described in the following paper:", \
-"Text",ExpressionUUID->"d6cf9e3a-554d-430d-b554-9163b5c3e2c9"],
-
-Cell[TextData[{
- "T. Junttila, P. Kaski, Engineering an Efficient Canonical Labeling Tool for \
-Large and Sparse Graphs, 2007 Proceedings of the Ninth Workshop on Algorithm \
-Engineering and Experiments, ",
- ButtonBox["doi:10.1137/1.9781611972870.13",
-  BaseStyle->"Hyperlink",
-  ButtonData->{
-    URL["https://doi.org/10.1137/1.9781611972870.13"], None},
-  ButtonNote->"https://doi.org/10.1137/1.9781611972870.13"],
- "."
-}], "Item",ExpressionUUID->"1152e247-b245-4fe7-b807-027cf517975f"],
-
 Cell[TextData[{
  "Bliss generally outperforms ",
  StyleBox["Mathematica",
@@ -12308,7 +13426,7 @@ Cell[TextData[{
 counting automorphisms) as of ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " 11.3. However, this advantage will only be apparent for large and \
+ " 12.0. However, this advantage will only be apparent for large and \
 difficult graphs. For small ones the overhead of having to copy the graph and \
 convert it to igraph\[CloseCurlyQuote]s internal format is much larger than \
 the actual computation time."
@@ -12451,7 +13569,7 @@ a08da370e34106cd7db479eca7c7375cc"],
 Cell[CellGroupData[{
 
 Cell["Basic examples", \
-"Subsubsection",ExpressionUUID->"d5c95749-df16-4f56-afe2-103a8f398d77"],
+"Subsubsubsection",ExpressionUUID->"d5c95749-df16-4f56-afe2-103a8f398d77"],
 
 Cell["Let us take the cuboctahedral graph from GraphData \[Ellipsis]", \
 "Text",ExpressionUUID->"61c23989-401b-4bdb-b513-90fe38709165"],
@@ -12849,7 +13967,7 @@ Cell[BoxData[
 Cell[CellGroupData[{
 
 Cell["Additional examples", \
-"Subsubsection",ExpressionUUID->"48797576-aea0-45f7-9854-2413c295b9e0"],
+"Subsubsubsection",ExpressionUUID->"48797576-aea0-45f7-9854-2413c295b9e0"],
 
 Cell["\<\
 Let us visualize the vertex equivalence classes induced by a graph\
@@ -12909,7 +14027,25 @@ Cell[BoxData[
          RowBox[{"LineGraph", "[", "g", "]"}]}]}]}]}]}], 
     "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"3e6c7cb2-2610-4017-b238-e8cfb9d64465"]
-}, Closed]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"4d8cbfbc-c567-4121-b9d2-8c24437411fa"],
+
+Cell[TextData[{
+ "T. Junttila, P. Kaski, Engineering an Efficient Canonical Labeling Tool for \
+Large and Sparse Graphs, 2007 Proceedings of the Ninth Workshop on Algorithm \
+Engineering and Experiments, ",
+ ButtonBox["doi:10.1137/1.9781611972870.13",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://doi.org/10.1137/1.9781611972870.13"], None},
+  ButtonNote->"https://doi.org/10.1137/1.9781611972870.13"],
+ "."
+}], "Item",ExpressionUUID->"398aecfb-c521-4414-a866-9211d424a628"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -12940,10 +14076,8 @@ each vertex/edge. The omitted ones are assumed to have colour ",
  "."
 }], "Text",ExpressionUUID->"db518849-c9e8-43b3-bdc2-52032d29413c"],
 
-Cell[CellGroupData[{
-
-Cell["Examples", \
-"Subsubsection",ExpressionUUID->"bc4f59aa-890b-4efe-b60b-11aa21e035ba"],
+Cell["The VF2 algorithm only supports simple graphs.", \
+"Text",ExpressionUUID->"31bea4a5-0484-4e93-9091-bacf72649832"],
 
 Cell[TextData[{
  "The following graph has two automorphisms: ",
@@ -13079,8 +14213,18 @@ Cell[TextData[{
  Cell[BoxData[
  "IGSubisomorphicQ"],ExpressionUUID->"3c2d1cfb-5ba9-4eeb-b390-755eb0f3f4e5"],
  " check multigraph isomorphism in a similar way, based on edge colouring."
-}], "Text",ExpressionUUID->"3849ca25-3497-4786-9380-fbe8814428d5"]
-}, Closed]]
+}], "Text",ExpressionUUID->"3849ca25-3497-4786-9380-fbe8814428d5"],
+
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"cd5a0099-9bf7-4b67-aaf2-fedae88cf1a2"],
+
+Cell["\<\
+L. P. Cordella, P. Foggia, C. Sansone, and M. Vento, IEEE Trans. Pattern \
+Anal. Mach. Intell. 26, 1367 (2004).\
+\>", "Item",ExpressionUUID->"74c8fe2d-653c-453c-928f-5dfab9770aaf"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -13098,21 +14242,8 @@ Cell[TextData[{
 larger graph."
 }], "Text",ExpressionUUID->"dfe84fcf-b5f9-4cd8-a077-1ece9888e9c4"],
 
-Cell["The algorithm is described in the following paper:", \
-"Text",ExpressionUUID->"a13ae21f-d7be-4788-90cf-9e3bef43038c"],
-
-Cell[TextData[{
- "Christine Solnon, ",
- StyleBox["AllDifferent",
-  FontSlant->"Italic"],
- "-based filtering for subgraph isomorphism, Artificial Intelligence 174 \
-(2010), ",
- ButtonBox["doi:10.1016/j.artint.2010.05.002",
-  BaseStyle->"Hyperlink",
-  ButtonData->{
-    URL["https://doi.org/10.1016/j.artint.2010.05.002"], None},
-  ButtonNote->"https://doi.org/10.1016/j.artint.2010.05.002"]
-}], "Item",ExpressionUUID->"e556413d-09f9-472d-9400-7d2df212e521"],
+Cell["LAD only supports simple graphs.", \
+"Text",ExpressionUUID->"b1be5048-511c-4b19-9e14-846d2a45d9cd"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -13388,8 +14519,8 @@ Cell[TextData[Cell[BoxData[
       3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
       CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
        SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-      ImageSizeCache->{{0.31984374999999865`, 
-       65.67234375000002}, {-31.732950000000006`, 26.239005994133603`}}],
+      ImageSizeCache->{{0.31984374999999865`, 65.67234375000002}, {-32.73295, 
+       25.239005994133613`}}],
      MouseAppearanceTag["NetworkGraphics"]],
     AllowKernelInitialization->False,
     UnsavedVariables:>{$CellContext`flag}]],
@@ -13444,7 +14575,26 @@ Cell[BoxData[
      "\[IndentingNewLine]", "1"}], "\[IndentingNewLine]", "]"}]}], "/", 
   RowBox[{
   "IGBlissAutomorphismCount", "[", "motif", 
-   "]"}]}]], "Input",ExpressionUUID->"8550011c-07da-4265-b945-17edca50c7a7"]
+   "]"}]}]], "Input",ExpressionUUID->"8550011c-07da-4265-b945-17edca50c7a7"],
+
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"6060ce8b-9646-4a14-84e5-2888bc8910f7"],
+
+Cell[TextData[{
+ "Christine Solnon, ",
+ StyleBox["AllDifferent",
+  FontSlant->"Italic"],
+ "-based filtering for subgraph isomorphism, Artificial Intelligence 174 \
+(2010), ",
+ ButtonBox["doi:10.1016/j.artint.2010.05.002",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://doi.org/10.1016/j.artint.2010.05.002"], None},
+  ButtonNote->"https://doi.org/10.1016/j.artint.2010.05.002"]
+}], "Item",ExpressionUUID->"e556413d-09f9-472d-9400-7d2df212e521"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -14663,12 +15813,11 @@ Cell[BoxData[
 
 Cell[TextData[{
  "Unlike ",
- Cell[BoxData["IGEdgeConnectivity"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "07493be9-bcb1-4268-ad18-5c7c78efbc29"],
+ Cell[BoxData[
+ "IGEdgeConnectivity"],ExpressionUUID->"07493be9-bcb1-4268-ad18-5c7c78efbc29"],
  ", ",
- Cell[BoxData["IGMinimumCutValue"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGMinimumCutValue"],ExpressionUUID->
   "79a7242c-14aa-4f62-b484-4b4359f1ae74"],
  " takes weights into account."
 }], "Text",ExpressionUUID->"4531e260-f4ef-4d02-9909-710017fd869b"],
@@ -14689,13 +15838,10 @@ Cell[BoxData[
 Cell[TextData[{
  "The minimum cut value of the null graph and singleton graph are returned as \
 ",
- Cell[BoxData["0"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "6cbf6ebc-fb9c-495f-be17-fa6bc610ec5e"],
+ Cell[BoxData["0"],ExpressionUUID->"6cbf6ebc-fb9c-495f-be17-fa6bc610ec5e"],
  " and ",
- Cell[BoxData["\[Infinity]"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "13604236-ddac-4bd6-805b-1c80ac2d5f1b"],
+ Cell[BoxData[
+ "\[Infinity]"],ExpressionUUID->"13604236-ddac-4bd6-805b-1c80ac2d5f1b"],
  ", respectively."
 }], "Text",ExpressionUUID->"544f53b4-2369-4cd0-886a-fec7dd078de8"],
 
@@ -42440,8 +43586,8 @@ Cell[BoxData[
   RowBox[{"ExampleData", "[", 
    RowBox[{"{", 
     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EastAfricaEmbassyAttacks\>\""}],
-     "}"}], 
-   "]"}]}]], "Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
+     "}"}], "]"}]}]], \
+"Input",ExpressionUUID->"802bd7f9-ba47-4151-85ec-df20b2cc53e9"],
 
 Cell[BoxData[
  RowBox[{"IGTakeSubgraph", "[", 
