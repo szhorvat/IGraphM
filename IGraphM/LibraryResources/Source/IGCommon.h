@@ -130,6 +130,9 @@ public:
     const igraph_integer_t *begin() const { return vec.stor_begin; }
     const igraph_integer_t *end() const { return vec.end; }
 
+    igraph_integer_t & operator [] (size_t i) { return begin()[i]; }
+    const igraph_integer_t & operator [] (size_t i) const { return begin()[i]; }
+
     void clear() { igraph_vector_int_clear(&vec); }
     void resize(long newsize) { igraph_vector_int_resize(&vec, newsize); }
 

@@ -108,6 +108,30 @@ class IG {
         }
     }
 
+    struct GraphColors {
+        igIntVector vc1, vc2, ec1, ec2;
+    };
+
+    struct IsoCompat {
+        static igraph_bool_t vertexCompat(
+                    const igraph_t *, const igraph_t *,
+                    const igraph_integer_t v1, const igraph_integer_t v2,
+                    void *arg)
+        {
+            GraphColors *colors = static_cast<GraphColors *>(arg);
+            return colors->vc1[v1] >= colors->vc2[v2];
+        }
+
+        static igraph_bool_t edgeCompat(
+                    const igraph_t *, const igraph_t *,
+                    const igraph_integer_t e1, const igraph_integer_t e2,
+                    void *arg)
+        {
+            GraphColors *colors = static_cast<GraphColors *>(arg);
+            return colors->ec1[e1] >= colors->ec2[e2];
+        }
+    };
+
 public:
     IG() : weighted{false} { empty(); }
 
@@ -577,6 +601,12 @@ public:
         return res;
     }
 
+    bool multiQ() const {
+        igraph_bool_t res;
+        igCheck(igraph_has_multiple(&graph, &res));
+        return res;
+    }
+
     bool connectedQ(bool strong) const {
         igraph_bool_t res;
         igCheck(igraph_is_connected(&graph, &res, strong ? IGRAPH_STRONG : IGRAPH_WEAK));
@@ -921,6 +951,65 @@ public:
         return res;
     }
 
+    mma::RealTensorRef getIsomorphism(IG &ig) {
+        emptyMatchDirectedness(ig);
+
+        igraph_bool_t iso;
+        igVector map;
+
+        if (multiQ() || ig.multiQ()) {
+            IG g1, g2;
+            igIntVector vc1, vc2, ec1, ec2;
+            g1.coloredSimpleGraph(*this, vc1, ec1);
+            g2.coloredSimpleGraph(ig, vc2, ec2);
+
+            igCheck(igraph_isomorphic_vf2(
+                        &g1.graph, &g2.graph,
+                        &vc1.vec, &vc2.vec, &ec1.vec, &ec2.vec,
+                        &iso, &map.vec, nullptr, nullptr, nullptr, nullptr));
+        } else {
+            igCheck(igraph_isomorphic_bliss(&graph, &ig.graph,
+                                    nullptr, nullptr, &iso,
+                                    &map.vec, nullptr, IGRAPH_BLISS_F, nullptr, nullptr));
+        }
+
+        if (iso)
+            return map.makeMTensor();
+        else
+            return mma::makeVector<double>(0);
+    }
+
+    mma::RealTensorRef getSubisomorphism(IG &ig) {
+        emptyMatchDirectedness(ig);
+
+        igraph_bool_t iso;
+        igVector map;
+
+        if (! (simpleQ() && ig.simpleQ())) {
+            IG g1, g2;
+
+            GraphColors graph_colors;
+
+            g1.coloredSimpleGraph(*this, graph_colors.vc1, graph_colors.ec1);
+            g2.coloredSimpleGraph(ig, graph_colors.vc2, graph_colors.ec2);
+
+            igCheck(igraph_subisomorphic_vf2(
+                        &g1.graph, &g2.graph,
+                        nullptr, nullptr, nullptr, nullptr,
+                        &iso, &map.vec, nullptr,
+                        &IsoCompat::vertexCompat, &IsoCompat::edgeCompat, &graph_colors));
+        } else {
+            igCheck(igraph_subisomorphic_vf2(
+                        &graph, &ig.graph, nullptr, nullptr, nullptr, nullptr,
+                        &iso, &map.vec, nullptr, nullptr, nullptr, nullptr));
+        }
+
+        if (iso)
+            return map.makeMTensor();
+        else
+            return mma::makeVector<double>(0);
+    }
+
     mint isoclass() const {
         igraph_integer_t res;
         igCheck(igraph_isoclass(&graph, &res));
@@ -1185,15 +1274,17 @@ public:
             return false;
 
         IG g1, g2;
-        igIntVector vc1, vc2, ec1, ec2;
-        g1.coloredSimpleGraph(*this, vc1, ec1);
-        g2.coloredSimpleGraph(ig, vc2, ec2);
+
+        GraphColors graph_colors;
+
+        g1.coloredSimpleGraph(*this, graph_colors.vc1, graph_colors.ec1);
+        g2.coloredSimpleGraph(ig, graph_colors.vc2, graph_colors.ec2);
 
         igraph_bool_t iso;
         igCheck(igraph_subisomorphic_vf2(
-                    &g1.graph, &g2.graph,
-                    &vc1.vec, &vc2.vec, &ec1.vec, &ec2.vec,
-                    &iso, nullptr, nullptr, nullptr, nullptr, nullptr));
+                    &g1.graph, &g2.graph, nullptr, nullptr, nullptr, nullptr,
+                    &iso, nullptr, nullptr,
+                    &IsoCompat::vertexCompat, &IsoCompat::edgeCompat, &graph_colors));
 
         return iso;
     }

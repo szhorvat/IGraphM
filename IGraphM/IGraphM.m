@@ -299,6 +299,8 @@ template = LTemplate["IGraphM",
 
         LFun["isomorphic", {LExpressionID["IG"]}, True|False],
         LFun["subisomorphic", {LExpressionID["IG"]}, True|False],
+        LFun["getIsomorphism", {LExpressionID["IG"]}, {Real, 1}],
+        LFun["getSubisomorphism", {LExpressionID["IG"]}, {Real, 1}],
         LFun["isoclass", {}, Integer],
 
         LFun["blissCanonicalPermutation", {Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* colour *)}, {Real, 1}],
@@ -315,6 +317,7 @@ template = LTemplate["IGraphM",
         LFun["vf2SubisomorphismCount", {LExpressionID["IG"], {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}, {Integer, 1, "Constant"}}, Integer],
         LFun["vf2IsomorphicMulti", {LExpressionID["IG"]}, True|False],
         LFun["vf2SubisomorphicMulti", {LExpressionID["IG"]}, True|False],
+
         LFun["ladSubisomorphic", {LExpressionID["IG"], True|False (* induced *)}, True|False],
         LFun["ladSubisomorphicColored", LinkObject],
         LFun["ladGetSubisomorphism", {LExpressionID["IG"], True|False (* induced *)}, {Real, 1}],

@@ -85,6 +85,38 @@ igMultigraphSubisomorphicQ[subgraph_, graph_] :=
 *)
 
 
+PackageExport["IGGetIsomorphism"]
+IGGetIsomorphism::usage = "IGGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.";
+
+SyntaxInformation[IGGetIsomorphism] = {"ArgumentsPattern" -> {_, _}};
+IGGetIsomorphism[graph1_?IGNullGraphQ, igraph2_?IGNullGraphQ] := {<||>}
+IGGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ] :=
+    catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], result},
+      result = igIndexVec@check@ig1@"getIsomorphism"[ManagedLibraryExpressionID[ig2]];
+      If[result === {}, Return[{}]];
+      List@AssociationThread[
+        VertexList[graph1],
+        igVertexNames[graph2]@result
+      ]
+    ]
+
+
+PackageExport["IGGetSubisomorphism"]
+IGGetSubisomorphism::usage = "IGGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.";
+
+SyntaxInformation[IGGetSubisomorphism] = {"ArgumentsPattern" -> {_, _}};
+IGGetSubisomorphism[subgraph_?IGNullGraphQ, graph_?igGraphQ] := {<||>}
+IGGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ] :=
+    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
+      result = igIndexVec@check@ig1@"getSubisomorphism"[ManagedLibraryExpressionID[ig2]];
+      If[result === {}, Return[{}]];
+      List@AssociationThread[
+        VertexList[subgraph],
+        igVertexNames[graph]@result
+      ]
+    ]
+
+
 PackageExport["IGIsoclass"]
 IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData to get lists of graphs ordered by isoclass.";
 
