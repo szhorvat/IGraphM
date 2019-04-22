@@ -4,6 +4,9 @@
  * See the file LICENSE.txt for copying permission.
  */
 
+#ifndef IG_FLANN2D_H
+#define IG_FLANN2D_H
+
 #include "nanoflann.hpp"
 #include <LTemplate.h>
 #include <vector>
@@ -243,3 +246,5 @@ public:
     }
 
 };
+
+#endif // IG_FLANN2D_H

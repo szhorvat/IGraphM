@@ -4,8 +4,8 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-#ifndef LEMON_GRAPH_H
-#define LEMON_GRAPH_H
+#ifndef IG_LEMON_GRAPH_H
+#define IG_LEMON_GRAPH_H
 
 #include "IGEmbedding.h"
 
@@ -218,4 +218,4 @@ public:
     }
 };
 
-#endif // LEMON_GRAPH_H
+#endif // IG_LEMON_GRAPH_H

@@ -4,8 +4,8 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-#ifndef EMBEDDING_H
-#define EMBEDDING_H
+#ifndef IG_EMBEDDING_H
+#define IG_EMBEDDING_H
 
 #include "LTemplate.h"
 #include "mlstream.h"
@@ -182,4 +182,4 @@ struct IGEmbedding {
     }
 };
 
-#endif // EMBEDDING_H
+#endif // IG_EMBEDDING_H

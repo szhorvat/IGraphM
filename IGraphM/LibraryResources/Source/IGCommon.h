@@ -4,8 +4,8 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-#ifndef IGCOMMON_H
-#define IGCOMMON_H
+#ifndef IG_COMMON_H
+#define IG_COMMON_H
 
 extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph <= 0.7.1
 #include <igraph/igraph.h>
@@ -381,5 +381,5 @@ inline mma::IntTensorRef packListIntoIntTensor(const igList &list) {
 }
 
 
-#endif // IGCOMMON_H
+#endif // IG_COMMON_H
 
