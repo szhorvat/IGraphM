@@ -2138,6 +2138,13 @@ MT[
 ]
 
 
+(* syntax for generating multiple trees *)
+MT[
+  With[{trees = IGRandomSpanningTree[IGTriangularLattice[5], 6]}, AllTrue[trees, IGTreeQ] && Length[trees] == 6],
+  True
+]
+
+
 (* ::Section::Closed:: *)
 (*Isomorphism*)
 
@@ -2560,6 +2567,33 @@ MT[
 ]& /@ {IGLADFindSubisomorphisms, IGLADGetSubisomorphism, IGLADSubisomorphicQ}
 
 
+MT[
+  IGIsomorphicQ[
+    IGShorthand["1-1-2-3-2", MultiEdges -> True, SelfLoops -> True], 
+    IGShorthand["1-2-3,2-1,3-3", MultiEdges -> True, SelfLoops -> True]
+  ],
+  True
+]
+
+
+MT[
+  IGIsomorphicQ[
+    IGShorthand["1-1-2-3-2", MultiEdges -> True, SelfLoops -> True], 
+    IGShorthand["1-2-3,2-1-1", MultiEdges -> True, SelfLoops -> True]
+  ],
+  False
+]
+
+
+MT[
+  IGIsomorphicQ[
+    IGShorthand["1-1-2-3-2", MultiEdges -> True, SelfLoops -> True], 
+    IGShorthand["1-2-3,2-2-1", MultiEdges -> True, SelfLoops -> True]
+  ],
+  False
+]
+
+
 (* ::Section:: *)
 (*Centralities*)
 
@@ -2722,6 +2756,10 @@ MT[
 MTSection["Clustering coefficients"]
 
 
+(* ::Subsection::Closed:: *)
+(*Global, local, average local*)
+
+
 MT[
   IGGlobalClusteringCoefficient[#] == GlobalClusteringCoefficient[#],
   True
@@ -2780,6 +2818,43 @@ MT[
 MT[
   IGAverageLocalClusteringCoefficient[Graph[{1, 2, 3, 4}, {1 <-> 2, 2 <-> 3, 3 <-> 1, 3 <-> 4}], "ExcludeIsolates" -> True],
   N[7/9]
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Weighted (Barrat's)*)
+
+
+MT[
+  IGWeightedClusteringCoefficient[IGEmptyGraph[]],
+  {},
+  {IGraphM::warning}
+]
+
+
+MT[
+  IGWeightedClusteringCoefficient[IGEmptyGraph[1]],
+  {0.},
+  {IGraphM::warning}
+]
+
+
+MT[
+  IGWeightedClusteringCoefficient[Graph[{1 <-> 2}, EdgeWeight -> {2}]],
+  {0., 0.}
+]
+
+
+MT[
+  IGWeightedClusteringCoefficient[IGCompleteGraph[3, EdgeWeight -> {1, 2, 3}]],
+  {1., 1., 1.}
+]
+
+
+MT[
+  IGWeightedClusteringCoefficient[IGShorthand["1:2:3-1:2:3, 3-4, 4:5:6:7-4:5:6:7", EdgeWeight -> Range[10]]],
+  {1., 1., 0.2777777777777778, 0.5454545454545454, 1., 1., 1.},
+  SameTest -> Equal
 ]
 
 
@@ -2899,6 +2974,48 @@ MT[
 MT[
   IGIndependenceNumber[empty],
   0
+]
+
+
+MT[
+  canon@IGCliques[IGCompleteGraph[3], {3}],
+  {{1, 2, 3}}
+]
+
+
+MT[
+  canon@IGCliques[IGCompleteGraph[3], {2, 3}],
+  canon@{{2, 3}, {1, 2}, {1, 2, 3}, {1, 3}}
+]
+
+
+MT[
+  canon@IGCliques[IGCompleteGraph[3], 3],
+  canon@{{3}, {2}, {2, 3}, {1}, {1, 2}, {1, 2, 3}, {1, 3}}
+]
+
+
+MT[
+  canon@IGCliques[IGCompleteGraph[4], Infinity],
+  canon@{{4}, {3}, {3, 4}, {2}, {2, 3}, {2, 3, 4}, {2, 4}, {1}, {1, 2}, {1, 2, 3}, {1, 2, 3, 4}, {1, 2, 4}, {1, 3}, {1, 3, 4}, {1, 4}}
+]
+
+
+MT[
+  IGCliqueSizeCounts[IGCompleteGraph[#]],
+  Table[Binomial[#,k],{k,1,#}]
+]& /@ Range[0,5]
+
+
+MT[
+  Table[IGCliqueSizeCounts[IGCompleteGraph[#],{j}][[j]],{j,1,#}],
+  Table[Binomial[#,k],{k,1,#}]
+]& /@ Range[0,5]
+
+
+MT[
+  IGCliqueSizeCounts[GraphData["IcosahedralGraph"]],
+  {12, 30, 20}
 ]
 
 
