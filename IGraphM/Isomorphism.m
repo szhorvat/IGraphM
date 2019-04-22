@@ -57,7 +57,7 @@ SyntaxInformation[IGSubisomorphicQ] = {"ArgumentsPattern" -> {_, _}};
 IGSubisomorphicQ[subgraph_?EmptyGraphQ, graph_?igGraphQ] := VertexCount[subgraph] <= VertexCount[graph]
 IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
     catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
-      If[MultigraphQ[subgraph] || MultigraphQ[graph],
+      If[Not@SimpleGraphQ[subgraph] || Not@SimpleGraphQ[graph],
         check@ig1@"vf2SubisomorphicMulti"[ManagedLibraryExpressionID[ig2]],
         check@ig1@"subisomorphic"[ManagedLibraryExpressionID[ig2]]
       ]
