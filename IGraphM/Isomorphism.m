@@ -14,50 +14,75 @@ IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2
 
 SyntaxInformation[IGIsomorphicQ] = {"ArgumentsPattern" -> {_, _}};
 IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
-    catch@If[MultigraphQ[g1] || MultigraphQ[g2],
-      igMultigraphIsomorphicQ[g1, g2]
-      ,
-      Block[{ig1 = igMakeFast[g1], ig2 = igMakeFast[g2]},
+    catch@Block[{ig1 = igMakeFast[g1], ig2 = igMakeFast[g2]},
+      If[MultigraphQ[g1] || MultigraphQ[g2],
+        check@ig1@"vf2IsomorphicMulti"[ManagedLibraryExpressionID[ig2]],
         check@ig1@"isomorphic"[ManagedLibraryExpressionID[ig2]]
       ]
     ]
 
-(* Transform multigraph isomorphism to edge-coloured graph isomorphism. *)
+(*
+igMultigraphVertexEdgeColors[g_] :=
+    Module[{e, v},
+      {v, e} = Lookup[GroupBy[igraphGlobal@"edgeListSortPairs"[IGIndexEdgeList[g]], Apply[SameQ]], {True, False}, {}];
+      {
+        Counts[v[[All, 1]]],
+        Counts[e]
+      }
+    ]
+
 igMultigraphIsomorphicQ[g1_, g2_] :=
-    (* no catch *) Block[{ig1, ig2, ec1, ec2},
+    (* no catch, catch is in wrapping function *)
       VertexCount[g1] == VertexCount[g2] && EdgeCount[g1] == EdgeCount[g2] &&
-      Internal`InheritedBlock[{UndirectedEdge},
-        SetAttributes[UndirectedEdge, Orderless];
-        ec1 = Counts@EdgeList[g1]; ec2 = Counts@EdgeList[g2];
-        ig1 = igMake@Graph@Keys[ec1]; ig2 = igMake@Graph@Keys[ec2];
-        check@ig1@"vf2Isomorphic"[ManagedLibraryExpressionID[ig2], {}, {}, Values[ec1], Values[ec2]]
+        Module[{ig1, ig2, v1, v2, vc1, ec1, vc2, ec2},
+          {vc1, ec1} = igMultigraphVertexEdgeColors[g1];
+          {vc2, ec2} = igMultigraphVertexEdgeColors[g2];
+          v1 = Range@VertexCount[g1];
+          v2 = Range@VertexCount[g2];
+          ig1 = igMake@Graph[v1, Keys[ec1]];
+          ig2 = igMake@Graph[v2, Keys[ec2]];
+          check@ig1@"vf2Isomorphic"[
+            ManagedLibraryExpressionID[ig2],
+            Lookup[vc1, v1, 0], Lookup[vc2, v2, 0],
+            Values[ec1], Values[ec2]
       ]
     ]
+*)
 
 
 PackageExport["IGSubisomorphicQ"]
 IGSubisomorphicQ::usage = "IGSubisomorphicQ[subgraph, graph] tests if subgraph is contained within graph.";
 
 SyntaxInformation[IGSubisomorphicQ] = {"ArgumentsPattern" -> {_, _}};
+IGSubisomorphicQ[subgraph_?EmptyGraphQ, graph_?igGraphQ] := VertexCount[subgraph] <= VertexCount[graph]
 IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
-    catch@If[MultigraphQ[subgraph] || MultigraphQ[graph],
-      igMultigraphSubisomorphicQ[subgraph, graph]
-      ,
-      Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
+    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
+      If[MultigraphQ[subgraph] || MultigraphQ[graph],
+        check@ig1@"vf2SubisomorphicMulti"[ManagedLibraryExpressionID[ig2]],
         check@ig1@"subisomorphic"[ManagedLibraryExpressionID[ig2]]
       ]
     ]
 
-(* Transform multigraph subisomorphism to edge-coloured graph subisomorphism. *)
+(*
+igMultigraphSubisomorphicQ[subgraph_?EmptyGraphQ, graph_] :=
+    VertexCount[subgraph] <= VertexCount[graph]
 igMultigraphSubisomorphicQ[subgraph_, graph_] :=
-    (* no catch *) Block[{ig, igs, ec, ecs},
-      Internal`InheritedBlock[{UndirectedEdge},
-        SetAttributes[UndirectedEdge, Orderless];
-        ec = Counts@EdgeList[graph]; ecs = Counts@EdgeList[subgraph];
-        ig = igMake@Graph@Keys[ec]; igs = igMake@Graph@Keys[ecs];
-        check@ig@"vf2Subisomorphic"[ManagedLibraryExpressionID[igs], {}, {}, Values[ec], Values[ecs]]
+    (* no catch, catch is in wrapping function *)
+    VertexCount[graph] >= VertexCount[subgraph] && EdgeCount[graph] >= EdgeCount[subgraph] &&
+        Module[{ig, igs, v, vs, vc, ec, vcs, ecs},
+          {vc, ec} = igMultigraphVertexEdgeColors[graph];
+          {vcs, ecs} = igMultigraphVertexEdgeColors[subgraph];
+          v = Range@VertexCount[graph];
+          vs = Range@VertexCount[subgraph];
+          ig = igMake@Graph[v, Keys[ec]];
+          igs = igMake@Graph[vs, Keys[ecs]];
+          check@ig@"vf2Subisomorphic"[
+            ManagedLibraryExpressionID[igs],
+            Lookup[vc, v, 0], Lookup[vcs, vs, 0],
+            Values[ec], Values[ecs]
       ]
     ]
+*)
 
 
 PackageExport["IGIsoclass"]
@@ -325,8 +350,10 @@ IGBlissAutomorphismGroup[{graph_?GraphQ, col : OptionsPattern[]}, opt : OptionsP
 
 (***** VF2 *****)
 
-IGraphM::vf2nmg = "VF2 does not support multigraphs. Consider using IGIsomorphicQ.";
-vf2CheckMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::vf2nmg]; throw[$Failed]]
+(* This function has been updated to filter both multi-graphs and graphs with self-loops.
+   The name stays the same, but keep in mind that self-loops are disallowed too. *)
+IGraphM::vf2nmg = "VF2 does not support non-simple graphs. Consider using IGIsomorphicQ.";
+vf2CheckMulti[graph_] := If[Not@SimpleGraphQ[graph], Message[IGraphM::vf2nmg]; throw[$Failed]]
 
 
 PackageExport["IGVF2IsomorphicQ"]

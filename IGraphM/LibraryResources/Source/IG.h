@@ -1145,6 +1145,59 @@ public:
         return res;
     }
 
+    // this function is used in the implementation of others
+    // this is a constructor!
+    void coloredSimpleGraph(const IG &ig, igIntVector &vc, igIntVector &ec) {
+        destroy();
+        igConstructorCheck(igraph_colored_simple_graph(&ig.graph, &graph, &vc.vec, &ec.vec));
+    }
+
+    bool vf2IsomorphicMulti(IG &ig) {
+        emptyMatchDirectedness(ig);
+
+        if (directedQ() != ig.directedQ())
+            throw mma::LibraryError("Cannot compare directed and undirected graphs.");
+
+        if (vertexCount() != ig.vertexCount() || edgeCount() != ig.edgeCount())
+            return false;
+
+        IG g1, g2;
+        igIntVector vc1, vc2, ec1, ec2;
+        g1.coloredSimpleGraph(*this, vc1, ec1);
+        g2.coloredSimpleGraph(ig, vc2, ec2);
+
+        igraph_bool_t iso;
+        igCheck(igraph_isomorphic_vf2(
+                    &g1.graph, &g2.graph,
+                    &vc1.vec, &vc2.vec, &ec1.vec, &ec2.vec,
+                    &iso, nullptr, nullptr, nullptr, nullptr, nullptr));
+
+        return iso;
+    }
+
+    bool vf2SubisomorphicMulti(IG &ig) {
+        emptyMatchDirectedness(ig);
+
+        if (directedQ() != ig.directedQ())
+            throw mma::LibraryError("Cannot compare directed and undirected graphs.");
+
+        if (vertexCount() < ig.vertexCount() || edgeCount() < ig.edgeCount())
+            return false;
+
+        IG g1, g2;
+        igIntVector vc1, vc2, ec1, ec2;
+        g1.coloredSimpleGraph(*this, vc1, ec1);
+        g2.coloredSimpleGraph(ig, vc2, ec2);
+
+        igraph_bool_t iso;
+        igCheck(igraph_subisomorphic_vf2(
+                    &g1.graph, &g2.graph,
+                    &vc1.vec, &vc2.vec, &ec1.vec, &ec2.vec,
+                    &iso, nullptr, nullptr, nullptr, nullptr, nullptr));
+
+        return iso;
+    }
+
     // Isomorphism (LAD)
 
     bool ladSubisomorphic(IG &ig, bool induced) {
