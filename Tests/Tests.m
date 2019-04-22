@@ -648,7 +648,7 @@ Print["Cycle timing: ", First@Timing[IGraphM`PackageScope`igMake /@ cycleTestLis
 MTSection["Creation: deterministic"]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGShorthand*)
 
 
@@ -2152,6 +2152,10 @@ MT[
 MTSection["Isomorphism"]
 
 
+(* ::Subsection::Closed:: *)
+(*General isomorphism tests*)
+
+
 grid = IGSquareLattice[{3,3,3,3}]; (* do not use GridGraph because it may crash in M11.3 *)
 
 
@@ -2265,6 +2269,38 @@ subisomorphismTests /@ {
 };
 
 
+(* ::Subsection::Closed:: *)
+(*IGGetIsomorphism, IGGetSubisomorphism*)
+
+
+MT[
+  IGGetIsomorphism[IGEmptyGraph[], IGEmptyGraph[]],
+  {<||>}
+]
+
+
+MT[
+  IGGetIsomorphism[IGEmptyGraph[], IGEmptyGraph[1]],
+  {}
+]
+
+
+MT[
+  IGGetSubisomorphism[IGEmptyGraph[], IGEmptyGraph[1]],
+  {<||>}
+]
+
+
+MT[
+  IGGetSubisomorphism[IGEmptyGraph[], IGEmptyGraph[]],
+  {<||>}
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Directed graphs*)
+
+
 directedIsomorphismTest[if_] := {
   MT[
     if[dgs, randomize@dgs],
@@ -2311,6 +2347,11 @@ MT[
   217
 ]
 
+
+(* ::Subsection::Closed:: *)
+(*Automorphism groups*)
+
+
 MT[
   IGBlissAutomorphismCount /@ IGData[{"AllDirectedGraphs", 4}],
   GroupOrder@*GraphAutomorphismGroup /@ IGData[{"AllDirectedGraphs", 4}]
@@ -2332,7 +2373,13 @@ MT[
 ]
 
 
-(* Self loop handling *)
+(* ::Subsection::Closed:: *)
+(*Self-loop handling*)
+
+
+(* ::Text:: *)
+(*VF2 does not support self loops.*)
+
 
 MT[
   #[
@@ -2340,7 +2387,7 @@ MT[
       Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3}]
       ],
   False
-]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGVF2IsomorphicQ, IGSubisomorphicQ, IGVF2SubisomorphicQ}
+]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGSubisomorphicQ}
 
 MT[
   #[
@@ -2348,7 +2395,7 @@ MT[
       Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3, 1 <-> 1}]
       ],
   True
-]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGVF2IsomorphicQ, IGSubisomorphicQ, IGVF2SubisomorphicQ}
+]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGSubisomorphicQ}
 
 MT[
   #[
@@ -2356,7 +2403,8 @@ MT[
       Graph[{1, 2, 3}, {1 <-> 2, 2 <-> 3, 2 <-> 2}]
       ],
   False
-]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGVF2IsomorphicQ, IGSubisomorphicQ, IGVF2SubisomorphicQ}
+]& /@ {IGIsomorphicQ, IGBlissIsomorphicQ, IGSubisomorphicQ}
+
 
 
 (* empty graph *)
@@ -2389,7 +2437,7 @@ MT[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*LAD*)
 
 
@@ -2528,6 +2576,10 @@ MT[
 MTSection["Isomorphism: multigraphs"]
 
 
+(* ::Text:: *)
+(*This section deals both with multigraphs and graphs that have self-loops. Several of the algorithms support neither.*)
+
+
 gm1 = EdgeAdd[PathGraph@Range[5], 1 <-> 2];
 gm2 = EdgeAdd[PathGraph@Range[5], 5 <-> 4];
 
@@ -2591,6 +2643,56 @@ MT[
     IGShorthand["1-2-3,2-2-1", MultiEdges -> True, SelfLoops -> True]
   ],
   False
+]
+
+
+MT[
+  IGSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3}]],
+  False
+]
+
+
+MT[
+  IGVF2SubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3}]],
+  $Failed,
+  {IGraphM::vf2nmg}
+]
+
+
+MT[
+  IGLADSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3}]],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3, 2 <-> 2}]],
+  True
+]
+
+
+MT[
+  IGSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3, 2 <-> 2, 2 <-> 2}]],
+  True
+]
+
+
+MT[
+  IGSubisomorphicQ[Graph[{1 <-> 2, 2 <-> 3, 1 <-> 2, 2 <-> 3}], Graph[{1, 2, 3}, {1 <-> 3, 3 <-> 2, 1 <-> 3}]],
+  False
+]
+
+
+MT[
+  IGSubisomorphicQ[Graph[{1 <-> 2, 2 <-> 3, 2 <-> 3}], Graph[{1, 2, 3}, {1 <-> 3, 3 <-> 2, 1 <-> 3}]],
+  True
+]
+
+
+MT[
+  IGSubisomorphicQ[Graph[{1 <-> 2, 2 <-> 3}], Graph[{1, 2, 3}, {1 <-> 3, 3 <-> 2, 1 <-> 3}]],
+  True
 ]
 
 
