@@ -25,6 +25,11 @@ static_assert(sizeof(igraph_integer_t) == 4, "IGraphM assumes igraph_integer_t t
 static_assert(std::is_same<int, igraph_bool_t>::value, "IGraphM assumes igraph_bool_t to be int.");
 // See mlstream extractors, which are defined for integer types of particular widths.
 
+
+/*******************************
+ **** RAII for igraph types ****
+ *******************************/
+
 inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
     static double dummy = 0.0; // work around igraph not liking zero-length vectors will NULL pointers
     igraph_vector_t vec;
@@ -220,7 +225,9 @@ typedef igPtrVector<igraph_vector_t, igraph_vector_destroy> igList;
 typedef igPtrVector<igraph_t, igraph_destroy> igGraphList;
 
 
-// extend mlstream with igraph-specific types
+/****************************************************
+ **** Extend mlstream with igraph-specific types ****
+ ****************************************************/
 
 inline mlStream & operator << (mlStream &ml, const igraph_vector_t &vec) {
     if (! MLPutReal64List(ml.link(), vec.stor_begin, vec.end - vec.stor_begin))
@@ -335,12 +342,42 @@ inline mlStream & operator >> (mlStream &ml, igBoolVector &vec) {
 }
 
 
+/*********************************
+ **** Other utility functions ****
+ *********************************/
+
 // check igraph's error codes and abort if necessary
 inline void igCheck(int err) {
     if (! err) return;
     std::ostringstream msg;
     msg << "igraph returned with error: " << igraph_strerror(err);
     throw mma::LibraryError(msg.str());
+}
+
+
+// packs an igList (usually representing vertex sets) into
+// a single IntTensor for fast transfer
+inline mma::IntTensorRef packListIntoIntTensor(const igList &list) {
+    std::vector<mint> lengths;
+    long list_length = list.length();
+    mint total_length = 0;
+    for (int i=0; i < list_length; ++i) {
+        mint len = igraph_vector_size(static_cast<igraph_vector_t *>(VECTOR(list.list)[i]));
+        total_length += len;
+        total_length += 1;
+        lengths.push_back(len);
+    }
+    total_length += 1;
+    mma::IntTensorRef t = mma::makeVector<mint>(total_length);
+    t[0] = list_length;
+    std::copy(lengths.begin(), lengths.end(), t.begin() + 1);
+    mint *ptr = t.begin() + 1 + list_length;
+    for (int i=0; i < list_length; ++i) {
+        double *b = &VECTOR(*static_cast<igraph_vector_t *>(VECTOR(list.list)[i]))[0];
+        std::copy(b, b+lengths[i], ptr);
+        ptr += lengths[i];
+    }
+    return t;
 }
 
 

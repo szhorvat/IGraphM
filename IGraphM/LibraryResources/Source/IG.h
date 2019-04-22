@@ -56,31 +56,6 @@ class IG {
     // use this to pass weights to igraph functions
     const igraph_vector_t *passWeights() const { return weighted ? &weights.vec : nullptr; }
 
-    // packs an igList (usually representing vertex sets) into
-    // a single IntTensor for fast transfer
-    mma::IntTensorRef packListIntoIntTensor(const igList &list) const {
-        std::vector<mint> lengths;
-        long list_length = list.length();
-        mint total_length = 0;
-        for (int i=0; i < list_length; ++i) {
-            mint len = igraph_vector_size(static_cast<igraph_vector_t *>(VECTOR(list.list)[i]));
-            total_length += len;
-            total_length += 1;
-            lengths.push_back(len);
-        }
-        total_length += 1;
-        mma::IntTensorRef t = mma::makeVector<mint>(total_length);
-        t[0] = list_length;
-        std::copy(lengths.begin(), lengths.end(), t.begin() + 1);
-        mint *ptr = t.begin() + 1 + list_length;
-        for (int i=0; i < list_length; ++i) {
-            double *b = &VECTOR(*static_cast<igraph_vector_t *>(VECTOR(list.list)[i]))[0];
-            std::copy(b, b+lengths[i], ptr);
-            ptr += lengths[i];
-        }
-        return t;
-    }
-
     void computeMembership(const igraph_integer_t n_communities, const igMatrix &merges, igVector &membership) const {
         igraph_integer_t vc = igraph_vcount(&graph);
         igCheck(igraph_community_to_membership(
