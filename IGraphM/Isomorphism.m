@@ -312,6 +312,7 @@ IGBlissGetIsomorphism::usage =
 
 Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "First" };
 SyntaxInformation[IGBlissGetIsomorphism] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
+IGBlissGetIsomorphism[graph1_?IGNullGraphQ, graph2_?IGNullGraphQ] := {<||>}
 IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], result},
       blissCheckMulti /@ {graph1, graph2};
@@ -327,6 +328,9 @@ IGBlissGetIsomorphism[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGr
       blissCheckMulti /@ {graph1, graph2};
       vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, {col1}, "VertexColors"];
       vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, {col2}, "VertexColors"];
+      If[IGNullGraphQ[graph1] && IGNullGraphQ[graph2],
+        Return[{<||>}]
+      ];
       result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol1, vcol2];
       If[result === {}, Return[{}]];
       List@AssociationThread[
