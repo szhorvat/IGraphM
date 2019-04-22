@@ -1250,13 +1250,11 @@ public:
 
     // the input is expected to be a simple graph
     bool selfComplementaryQ() const {
-        igraph_t compl_graph;
-        igCheck(igraph_complementer(&compl_graph, &graph, /* loops = */ false));
+        IG comp;
+        comp.complement(*this);
 
         igraph_bool_t iso;
-        igraph_isomorphic(&graph, &compl_graph, &iso);
-
-        igraph_destroy(&compl_graph);
+        igCheck(igraph_isomorphic(&graph, &comp.graph, &iso));
 
         return iso;
     }
@@ -2866,7 +2864,7 @@ public:
     // this is a constructor!
     void complement(const IG &ig) {
         destroy();
-        igConstructorCheck(igraph_complementer(&graph, &ig.graph, false));
+        igConstructorCheck(igraph_complementer(&graph, &ig.graph, /* loops = */ false));
     }
 
 
