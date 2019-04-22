@@ -670,7 +670,7 @@ IGraphM`Developer`Recompile[] :=
         CreateDirectory[$libraryDirectory]
       ];
       SetDirectory[$sourceDirectory];
-      CompileTemplate[template, {"IGlobal.cpp"},
+      CompileTemplate[template, {"IGlobal.cpp", "IG.cpp"},
         "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
         "TargetDirectory" -> $libraryDirectory,
         Sequence @@ $buildSettings
