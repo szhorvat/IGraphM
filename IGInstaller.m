@@ -5,7 +5,7 @@
 (* :Date: 2018-11-28 *)
 
 (* :Mathematica Version: 10.0 *)
-(* :Copyright: (c) 2018 szhorvat *)
+(* :Copyright: (c) 2019 szhorvat *)
 
 (* This is the official installer script for IGraph/M, located at https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m *)
 

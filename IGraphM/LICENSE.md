@@ -11,7 +11,7 @@ The components of this software are licensed as described below.  As a summary:
 
         The MIT License (MIT)
     
-        Copyright (c) 2018 Szabolcs Horvát <szhorvat@gmail.com>
+        Copyright (c) 2019 Szabolcs Horvát <szhorvat@gmail.com>
     
         Permission is hereby granted, free of charge, to any person obtaining a copy
         of this software and associated documentation files (the "Software"), to deal

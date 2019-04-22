@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2016-06-12 *)
-(* :Copyright: (c) 2018 Szabolcs Horvát *)
+(* :Copyright: (c) 2019 Szabolcs Horvát *)
 
 
 Package["IGraphM`"]
