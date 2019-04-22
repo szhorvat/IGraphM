@@ -595,7 +595,7 @@ SyntaxInformation[IGLADGetSubisomorphism] = {"ArgumentsPattern" -> {{__}, {__}, 
 IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
       result = igIndexVec@check@ig1@"ladGetSubisomorphism"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]];
-      If[result === {}, Return[{}]];
+      If[result === {}, Return@If[IGNullGraphQ[subgraph], {<||>}, {}]];
       List@AssociationThread[
         VertexList[subgraph],
         igVertexNames[graph][result]
@@ -615,7 +615,7 @@ IGLADGetSubisomorphism[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?
             ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"],
             Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub
           ];
-          If[result === {}, Return[{}]];
+          If[result === {}, Return@If[IGNullGraphQ[subgraph], {<||>}, {}]];
           List@AssociationThread[
             VertexList[subgraph],
             igVertexNames[graph][result]
