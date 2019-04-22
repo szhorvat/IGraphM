@@ -669,6 +669,7 @@ IGLADFindSubisomorphisms::usage =
 Options[IGLADFindSubisomorphisms] = { "Induced" -> False };
 SyntaxInformation[IGLADFindSubisomorphisms] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 
+IGLADFindSubisomorphisms[subgraph_?IGNullGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] := {<||>} 
 IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
       result = igIndexVec@check@ig1@"ladFindSubisomorphisms"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"], {}];
@@ -682,6 +683,7 @@ IGLADFindSubisomorphisms[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph
     catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result, vcol, vcolsub, domain},
       vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, {col}, "VertexColors"];
       vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, {colsub}, "VertexColors"];
+      If[IGNullGraphQ[subgraph], Return[{<||>}]]; (* special case: one match for the null pattern for consistency *)
       If[vcol === {} || vcolsub === {},
         If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
         domain = {}

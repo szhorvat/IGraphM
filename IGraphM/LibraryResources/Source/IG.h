@@ -1022,6 +1022,10 @@ public:
     }
 
     mint ladCountSubisomorphisms(IG &ig, bool induced) {
+        // special case: one match for the null pattern for consistency
+        if (ig.vertexCount() == 0)
+            return 1;
+
         igraph_bool_t iso;
         igList list;
         emptyMatchDirectedness(ig);
@@ -1037,6 +1041,14 @@ public:
         ml >> mlCheckArgs(3) >> id >> induced >> domain;
 
         IG &ig = mma::getInstance<IG>(id);
+
+        // special case: one match for the null pattern for consistency
+        if (ig.vertexCount() == 0) {
+            ml.newPacket();
+            ml << 1;
+            return;
+        }
+
         emptyMatchDirectedness(ig);
 
         igList list;
