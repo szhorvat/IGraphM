@@ -234,12 +234,12 @@ mma::RealTensorRef IG::getSubisomorphism(IG &ig) {
         igCheck(igraph_subisomorphic_vf2(
                     &g1.graph, &g2.graph,
                     nullptr, nullptr, nullptr, nullptr,
-                    &iso, &map.vec, nullptr,
+                    &iso, nullptr, &map.vec,
                     &ColorReducedMultigraphIsoCompat::vertexCompat, &ColorReducedMultigraphIsoCompat::edgeCompat, &graph_colors));
     } else {
         igCheck(igraph_subisomorphic_vf2(
                     &graph, &ig.graph, nullptr, nullptr, nullptr, nullptr,
-                    &iso, &map.vec, nullptr, nullptr, nullptr, nullptr));
+                    &iso, nullptr, &map.vec, nullptr, nullptr, nullptr));
     }
 
     if (iso)
