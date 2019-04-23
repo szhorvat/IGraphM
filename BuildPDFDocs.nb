@@ -1,0 +1,135 @@
+Notebook[{
+Cell[BoxData[
+ RowBox[{"Quit", "[", "]"}]], "Input",
+ CellChangeTimes->{{3.764990729809279*^9, 3.7649907306687*^9}},
+ CellLabel->"In[25]:=",ExpressionUUID->"f0bc3e8f-268e-414b-a01f-640c8c2390ea"],
+
+Cell[CellGroupData[{
+
+Cell["Generate PDF documentation", "Section",
+ CellChangeTimes->{{3.764990732090185*^9, 
+  3.764990735992363*^9}},ExpressionUUID->"2470d666-491b-4bf3-98e5-\
+94a2973e0a2d"],
+
+Cell["Run this in Mathematica 12.0 or later.", "Text",
+ CellChangeTimes->{{3.7649929660274143`*^9, 
+  3.764992971229802*^9}},ExpressionUUID->"fdc734ff-0686-4425-8ad6-\
+b504ae577adf"],
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "@", 
+  RowBox[{"NotebookDirectory", "[", "]"}]}]], "Input",
+ CellChangeTimes->{{3.764990320418201*^9, 3.76499032565524*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"0211c683-a34c-476f-82fd-b77b70d6834a"],
+
+Cell[BoxData["$Version"], "Input",
+ CellChangeTimes->{{3.764990328798558*^9, 3.764990329682598*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"4fddb902-7c26-4b5f-b2f0-c7b678939c75"],
+
+Cell[BoxData[
+ RowBox[{"nb", "=", 
+  RowBox[{"NotebookOpen", "@", 
+   RowBox[{
+   "AbsoluteFileName", "[", 
+    "\"\<IGraphM/Documentation/English/Tutorials/IGDocumentation.nb\>\"", 
+    "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.764990331549747*^9, 3.76499040548578*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"62742fa7-8a23-4781-8ca9-8bea337d65a3"],
+
+Cell[BoxData[
+ RowBox[{"Block", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"Information", "=", "Internal`SymbolInformation"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"SetOptions", "[", 
+     RowBox[{"Information", ",", 
+      RowBox[{"LongForm", "\[Rule]", "False"}]}], "]"}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"$Line", "=", "0"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"NotebookEvaluate", "[", 
+     RowBox[{"nb", ",", 
+      RowBox[{"InsertResults", "\[Rule]", "True"}]}], "]"}], ";"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{3.7649916904297237`*^9},
+ CellLabel->"In[4]:=",ExpressionUUID->"ffd5e376-51e7-4a34-b7ac-6bde4d705f2a"],
+
+Cell[BoxData[{
+ RowBox[{"SelectionMove", "[", 
+  RowBox[{"nb", ",", "All", ",", "Notebook"}], "]"}], "\n", 
+ RowBox[{"FrontEndTokenExecute", "[", 
+  RowBox[{"nb", ",", "\"\<SelectionOpenAllGroups\>\""}], "]"}]}], "Input",
+ CellChangeTimes->{{3.764990577113941*^9, 3.7649905987892523`*^9}, {
+  3.764991057645553*^9, 3.764991060225121*^9}, {3.7649911199772053`*^9, 
+  3.764991134605487*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"92d3d163-a939-41e0-b8f5-6ccc23b76a46"],
+
+Cell[BoxData[
+ RowBox[{"NotebookDelete", "@", 
+  RowBox[{"NextCell", "@", 
+   RowBox[{"First", "@", 
+    RowBox[{"Cells", "[", 
+     RowBox[{"nb", ",", 
+      RowBox[{"CellLabel", "\[Rule]", "\"\<In[2]:=\>\""}]}], 
+     "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.764992343741222*^9, 3.7649923464852543`*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"7ada961e-cf73-4e92-85e3-e71b8b808168"],
+
+Cell[BoxData[
+ RowBox[{"Scan", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"\"\<Style\>\"", "/.", 
+         RowBox[{"Developer`CellInformation", "@", 
+          RowBox[{"PreviousCell", "[", "#", "]"}]}]}], ")"}], "===", 
+       "\"\<Text\>\""}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"CurrentValue", "[", 
+        RowBox[{"#", ",", "PageBreakAbove"}], "]"}], "=", "False"}]}], 
+     "\[IndentingNewLine]", "]"}], "&"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Cells", "[", 
+    RowBox[{"nb", ",", 
+     RowBox[{"CellStyle", "\[Rule]", "\"\<Input\>\""}]}], "]"}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellChangeTimes->{{3.7649908919124804`*^9, 3.7649909346885767`*^9}},
+ CellLabel->"In[4]:=",ExpressionUUID->"792be7b9-e1ab-4281-b235-2fa063a2bbbb"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"CurrentValue", "[", 
+   RowBox[{"nb", ",", "ShowCellTags"}], "]"}], "=", "False"}]], "Input",
+ CellChangeTimes->{{3.76499136050252*^9, 3.7649913676107187`*^9}},
+ CellLabel->"In[5]:=",ExpressionUUID->"d94681e3-c55c-4f9e-bb71-8138260b99f3"],
+
+Cell[BoxData[
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<IGDocumentation.pdf\>\"", ",", "nb", ",", 
+   RowBox[{"ImageResolution", "\[Rule]", "450"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.7649913409972773`*^9, 3.7649913548458347`*^9}, {
+  3.764991542138734*^9, 3.764991546343018*^9}},
+ CellLabel->"In[6]:=",ExpressionUUID->"581d0512-dc17-471a-bd67-2e0af6fa739d"],
+
+Cell[BoxData[
+ RowBox[{"NotebookClose", "[", "nb", "]"}]], "Input",
+ CellChangeTimes->{{3.764991497957252*^9, 3.764991501274312*^9}},
+ CellLabel->"In[7]:=",ExpressionUUID->"e04e1539-077e-4fc9-b7cb-bc5165d7d686"],
+
+Cell[BoxData[
+ RowBox[{"SystemOpen", "[", "\"\<IGDocumentation.pdf\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.76499293074282*^9, 3.7649929362362823`*^9}},
+ CellLabel->"In[8]:=",ExpressionUUID->"ad4472c2-5896-491e-b136-c44fb95ccd81"]
+}, Open  ]]
+},
+WindowSize->{808, 755},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->True,
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+
