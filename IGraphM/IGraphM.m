@@ -1055,7 +1055,7 @@ multiEdgesOptionReplace::usage =
 SetAttributes[multiEdgesOptionReplace, HoldAll]
 
 multiEdgesOptionReplace[ov : OptionValue[syms_, opts_, MultiEdges]] :=
-    If[KeyMemberQ[opts, "MultipleEdges"],
+    If[KeyMemberQ[Flatten[opts], "MultipleEdges"],
       Message[IGraphM::depr, "The option name \"MultipleEdges\"", "MultiEdges"];
       OptionValue[
         syms,
