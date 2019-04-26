@@ -14,7 +14,7 @@ IGIsomorphicQ::usage = "IGIsomorphicQ[graph1, graph2] tests if graph1 and graph2
 
 SyntaxInformation[IGIsomorphicQ] = {"ArgumentsPattern" -> {_, _}};
 IGIsomorphicQ[g1_?igGraphQ, g2_?igGraphQ] :=
-    catch@Block[{ig1 = igMakeFast[g1], ig2 = igMakeFast[g2]},
+    catch@Block[{ig1 = igMakeUnweighted[g1], ig2 = igMakeUnweighted[g2]},
       If[MultigraphQ[g1] || MultigraphQ[g2],
         check@ig1@"vf2IsomorphicMulti"[ManagedLibraryExpressionID[ig2]],
         check@ig1@"isomorphic"[ManagedLibraryExpressionID[ig2]]
@@ -56,7 +56,7 @@ IGSubisomorphicQ::usage = "IGSubisomorphicQ[subgraph, graph] tests if subgraph i
 SyntaxInformation[IGSubisomorphicQ] = {"ArgumentsPattern" -> {_, _}};
 IGSubisomorphicQ[subgraph_?EmptyGraphQ, graph_?igGraphQ] := VertexCount[subgraph] <= VertexCount[graph]
 IGSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
-    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
+    catch@Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph]},
       If[Not@SimpleGraphQ[subgraph] || Not@SimpleGraphQ[graph],
         check@ig1@"vf2SubisomorphicMulti"[ManagedLibraryExpressionID[ig2]],
         check@ig1@"subisomorphic"[ManagedLibraryExpressionID[ig2]]
