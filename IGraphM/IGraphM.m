@@ -491,6 +491,7 @@ template = LTemplate["IGraphM",
 
         LFun["articulationPoints", {}, {Real, 1}],
         LFun["biconnectedComponents", {}, {Integer, 1}],
+        LFun["biconnectedEdgeComponents", {}, {Integer, 1}],
         LFun["biconnectedQ", {}, True|False],
         LFun["bridges", {}, {Real, 1}],
         LFun["connectedComponentSizes", {True|False (* strongly connected? *)}, {Real, 1}],

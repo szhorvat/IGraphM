@@ -1983,6 +1983,13 @@ public:
         return packListIntoIntTensor(list);
     }
 
+    mma::IntTensorRef biconnectedEdgeComponents() const {
+        igList list;
+        igraph_integer_t count;
+        igCheck(igraph_biconnected_components(&graph, &count, nullptr, &list.list, nullptr, nullptr));
+        return packListIntoIntTensor(list);
+    }
+
     bool biconnectedQ() const {
         // igraph_biconnected_components does not return isolated vertices, nor does it include them
         // in the number of components. Thus to check if a graph is biconnected, it is not sufficient

@@ -104,12 +104,21 @@ IGArticulationPoints[graph_?igGraphQ] :=
 
 
 PackageExport["IGBiconnectedComponents"]
-IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Size-one components are not returned.";
+IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the vertices of the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Isolated vertices are not returned.";
 
 SyntaxInformation[IGBiconnectedComponents] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedComponents[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igUnpackVertexSet[graph]@check@ig@"biconnectedComponents"[]
+    ]
+
+PackageExport["IGBiconnectedEdgeComponents"]
+IGBiconnectedEdgeComponents::usage = "IGBiconnectedEdgeComponents[graph] returns the edges of the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it.";
+
+SyntaxInformation[IGBiconnectedEdgeComponents] = {"ArgumentsPattern" -> {_}};
+IGBiconnectedEdgeComponents[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      igUnpackEdgeSet[graph]@check@ig@"biconnectedEdgeComponents"[]
     ]
 
 
