@@ -8,8 +8,8 @@
 #define IGLOBAL_H
 
 #include "IGCommon.h"
+#include "IGRNG.h"
 
-#include <random>
 #include <set>
 #include <map>
 #include <functional>
@@ -27,7 +27,8 @@ public:
         igraph_set_error_handler(igErrorHandler);
         igraph_set_warning_handler(igWarningHandler);
         igraph_set_interruption_handler(igInterruptionHandler);
-        igCheck(igraph_rng_seed(igraph_rng_default(), std::random_device()()));
+
+        rngInit();
     }
 
     ~IGlobal() { }
@@ -40,9 +41,13 @@ public:
 
     const char *compilationDate() { return __DATE__; }
 
-    void seedRandom(mint s) {
-        igCheck(igraph_rng_seed(igraph_rng_default(), s));
-    }
+    /* Random number generators */
+
+    void setRandomGenerator(mint id) { rngSet(id); }
+
+    void seedRandom(mint s) { rngSeed(s); }
+
+    const char *randomGeneratorName() { return rngName(); }
 
     /* Functions useful in argument and result checking */
 

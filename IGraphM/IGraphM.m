@@ -139,6 +139,8 @@ template = LTemplate["IGraphM",
       {
         LFun["init", {}, "Void"],
         LFun["seedRandom", {Integer}, "Void"],
+        LFun["randomGeneratorName", {}, "UTF8String"],
+        LFun["setRandomGenerator", {Integer}, "Void"],
         LFun["version", {}, "UTF8String"],
         LFun["compilationDate", {}, "UTF8String"],
 
@@ -670,7 +672,7 @@ IGraphM`Developer`Recompile[] :=
         CreateDirectory[$libraryDirectory]
       ];
       SetDirectory[$sourceDirectory];
-      CompileTemplate[template, {"IGlobal.cpp", "IG.cpp"},
+      CompileTemplate[template, {"IGlobal.cpp", "IG.cpp", "IGRNG.cpp"},
         "ShellCommandFunction" -> Print, "ShellOutputFunction" -> Print,
         "TargetDirectory" -> $libraryDirectory,
         Sequence @@ $buildSettings
@@ -1016,8 +1018,29 @@ IGVersion[] :=
 PackageExport["IGSeedRandom"]
 IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
 
-SyntaxInformation[IGSeedRandom] = {"ArgumentsPattern" -> {_}};
-IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ] := sck@igraphGlobal@"seedRandom"[seed]
+Options[IGSeedRandom] = { Method -> Automatic };
+SyntaxInformation[IGSeedRandom] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+
+igRandomMethods = <|"Mathematica" -> 0, "WolframLanguage" -> 0, "igraph" -> 1|>;
+IGSeedRandom::nogen =
+    "`1` is not a valid random number generator type. Valid types are: " <>
+    StringJoin@Riffle[Keys@DeleteDuplicates[igRandomMethods], ", "] <>
+    ".";
+
+IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[]] :=
+    catch@Module[{},
+      If[OptionValue[Method] =!= Automatic,
+        check@igraphGlobal@"setRandomGenerator"[
+          Lookup[igRandomMethods, OptionValue[Method],
+            Message[IGSeedRandom::nogen, OptionValue[Method]]; throw[$Failed]]
+        ]
+      ];
+      If[igraphGlobal@"randomGeneratorName"[] === "Mathematica",
+        SeedRandom[seed],
+        check@igraphGlobal@"seedRandom"[seed]
+      ]
+    ]
+
 
 
 (***** Backwards compatibility helpers *****)
