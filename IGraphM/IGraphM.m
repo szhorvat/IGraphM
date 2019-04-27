@@ -1017,18 +1017,20 @@ IGVersion[] :=
 
 
 PackageExport["IGSeedRandom"]
-IGSeedRandom::usage = "IGSeedRandom[seed] seeds the random number generator used by igraph.";
+IGSeedRandom::usage =
+    "IGSeedRandom[seed] seeds the current random number generator.\n" <>
+    "IGSeedRandom[Method -> type] sets the current random number generator. Valid types are \"Mathematica\" and \"igraph\".";
 
 Options[IGSeedRandom] = { Method -> Automatic };
 SyntaxInformation[IGSeedRandom] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
-igRandomMethods = <|"Mathematica" -> 0, "WolframLanguage" -> 0, "igraph" -> 1|>;
+igRandomMethods = <|"Mathematica" -> 0, "WolframLanguage" -> 0, "igraph" -> 1, "IGraph" -> 1|>;
 IGSeedRandom::nogen =
     "`1` is not a valid random number generator type. Valid types are: " <>
     StringJoin@Riffle[Keys@DeleteDuplicates[igRandomMethods], ", "] <>
     ".";
 
-IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[]] :=
+IGSeedRandom[seed : (_?Internal`NonNegativeMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[]] :=
     catch@Module[{},
       If[OptionValue[Method] =!= Automatic,
         check@igraphGlobal@"setRandomGenerator"[
@@ -1037,9 +1039,24 @@ IGSeedRandom[seed_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[]] 
         ]
       ];
       If[igraphGlobal@"randomGeneratorName"[] === "Mathematica",
-        SeedRandom[seed],
+        SeedRandom[seed]
+        ,
+        If[seed === Automatic,
+          (* Notes on automatic seed generation for the igraph RNG:
+              - We must get different seeds on subkernels, so we must not rely on the time only, and we must use
+                the full available time resolution for the time component of the seed.
+              - Reduce the dependence on the WL RNG, so that SeedRandom[fixed]; IGSeedRandom[] would not always
+                have the same outcome.
+
+             Hash[] converts AbsoluteTime[] to an integer while using the full time resolution (Round[] wouldn't).
+             Hash[] seems to have a default range of 0..$MaxMachineInteger.
+             BlockRandom[] is used to avoid propagating the WL random state when seeding the igraph RNG.
+             igraph may only use values up to 2^31-1 on Windows (due to long int being 32-bit).
+           *)
+          check@igraphGlobal@"seedRandom"[ Mod[Hash@AbsoluteTime[] - BlockRandom@RandomInteger[Developer`$MaxMachineInteger], 2^31 - 1] ],
         check@igraphGlobal@"seedRandom"[seed]
       ]
+    ]
     ]
 
 
