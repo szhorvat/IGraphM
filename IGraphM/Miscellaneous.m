@@ -158,6 +158,47 @@ IGCactusQ[graph_ /; UndirectedGraphQ[graph] && SimpleGraphQ[graph]] :=
 IGCactusQ[_] := False
 
 
+PackageExport["IGRegularQ"]
+IGRegularQ::usage =
+    "IGRegularQ[graph] tests if graph is regular, i.e. all vertices have the same degree.\n" <>
+    "IGRegularQ[graph, k] tests if graph is k-regular, i.e. all vertices have degree k.";
+SyntaxInformation[IGRegularQ] = {"ArgumentsPattern" -> {_, _.}};
+IGRegularQ[graph_?igGraphQ] :=
+    If[UndirectedGraphQ[graph],
+      Equal @@ VertexDegree[graph],
+      Equal @@ VertexOutDegree[graph] && VertexInDegree[graph] == VertexOutDegree[graph]
+    ]
+IGRegularQ[graph_?EmptyGraphQ, k_Integer?NonNegative] := k == 0 (* required because First@VertexDegree[g] is not usable for the null graph *)
+IGRegularQ[graph_?igGraphQ, k_Integer?NonNegative] :=
+    If[UndirectedGraphQ[graph],
+      With[{vd = VertexDegree[graph]},
+        First[vd] == k && Equal @@ vd
+      ]
+      ,
+      With[{vod = VertexOutDegree[graph], vid = VertexInDegree[graph]},
+        First[vod] == k && Equal @@ vod && vid == vod
+      ]
+    ]
+IGRegularQ[_] := False
+
+
+PackageExport["IGCompleteQ"]
+IGCompleteQ::usage = "IGCompleteQ[graph] tests if all pairs of vertices are connected in graph.";
+
+igCompleteQ[graph_?SimpleGraphQ] :=
+    With[{vc = VertexCount[graph], ec = EdgeCount[graph]},
+      If[UndirectedGraphQ[graph],
+        vc*(vc-1)/2 == ec,
+        vc*(vc-1) == ec
+      ]
+    ]
+igCompleteQ[graph_] := igCompleteQ@SimpleGraph[graph]
+
+SyntaxInformation[IGCompleteQ] = {"ArgumentsPattern" -> {_}};
+IGCompleteQ[graph_?igGraphQ] := igCompleteQ[graph]
+IGCompleteQ[_] := False
+
+
 PackageExport["IGExpressionTree"]
 IGExpressionTree::usage = "IGExpressionTree[expression] constructs a tree graph from an arbitrary Mathematica expression.";
 
