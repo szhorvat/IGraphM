@@ -47,7 +47,7 @@ PackageExport["IGEmbeddingQ"]
 IGEmbeddingQ::usage = "IGEmbeddingQ[embedding] checks if embedding represents a combinatorial embedding of a simple graph.";
 
 SyntaxInformation[IGEmbeddingQ] = {"ArgumentsPattern" -> {_}};
-IGEmbeddingQ[emb_?AssociationQ] :=
+IGEmbeddingQ[emb_Association?AssociationQ] :=
     Quiet[Not@MatchQ[catch@embMake[emb], _LibraryFunctionError|$Failed], IGraphM::invemb]
 IGEmbeddingQ[_] := False
 
