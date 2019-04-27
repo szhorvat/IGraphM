@@ -203,6 +203,24 @@ public:
             igCheck(igraph_simplify(&graph, !multiEdges, !selfLoops, nullptr));
     }
 
+    void coloredSimpleGraph(MLINK link) {
+        mlStream ml{link, "coloredSimpleGraph"};
+
+        mint id;
+        ml >> mlCheckArgs(1) >> id;
+
+        IG &ig = mma::getInstance<IG>(id);
+
+        igIntVector vc, ec;
+
+        destroy();
+        igCheck(igraph_simplify_and_colorize(&ig.graph, &graph, &vc.vec, &ec.vec));
+
+        ml.newPacket();
+        ml << mlHead("List", 2)
+           << vc << ec;
+    }
+
     // Weights
 
     void setWeights(mma::RealTensorRef w) {
@@ -936,10 +954,11 @@ public:
     }
 
     // this function is used in the implementation of others
+    // vc and ec are output arguments
     // this is a constructor!
     void coloredSimpleGraph(const IG &ig, igIntVector &vc, igIntVector &ec) {
         destroy();
-        igConstructorCheck(igraph_colored_simple_graph(&ig.graph, &graph, &vc.vec, &ec.vec));
+        igConstructorCheck(igraph_simplify_and_colorize(&ig.graph, &graph, &vc.vec, &ec.vec));
     }
 
     bool vf2IsomorphicMulti(IG &ig);

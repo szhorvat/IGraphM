@@ -816,3 +816,14 @@ IGSelfComplementaryQ[graph_?igGraphQ] :=
       ]
     ]
 IGSelfComplementaryQ[_] := False
+
+
+PackageExport["IGColoredSimpleGraph"]
+IGColoredSimpleGraph::usage = "IGColoredSimpleGraph[graph] encodes a non-simple graph as an edge- and vertex-colored simple graph, returned as {simpleGraph, \"VertexColors\" -> vcol, \"EdgeColors\" -> ecol} where vertex colors represent self-loop multiplicities and edge colors represent edge multiplicities. The output is suitable for use by isomorphism functions.";
+SyntaxInformation[IGColoredSimpleGraph] = {"ArgumentsPattern" -> {_}};
+IGColoredSimpleGraph[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeUnweighted[graph], new = igMakeEmpty[], vc, ec},
+      {vc, ec} = check@new@"coloredSimpleGraph"[ManagedLibraryExpressionID[ig]];
+      (*igSetVertexProperty[igSetEdgeProperty[igToGraph[new], "EdgeColor", ec], "VertexColor", vc]*)
+      {igToGraph[new], "VertexColors" -> vc, "EdgeColors" -> ec}
+    ]

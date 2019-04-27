@@ -239,6 +239,19 @@ inline mlStream & operator << (mlStream &ml, const igraph_vector_t &vec) {
 inline mlStream & operator << (mlStream &ml, const igVector &vec) { return ml << vec.vec; }
 
 
+inline mlStream & operator << (mlStream &ml, const igraph_vector_int_t &vec) {
+    static_assert(
+            sizeof(int) == sizeof(igraph_integer_t) && sizeof(int) == 4,
+            "igraph_integer_t size not suitable for MLPutInteger32List");
+    if (! MLPutInteger32List(ml.link(), vec.stor_begin, vec.end - vec.stor_begin))
+        ml.error("cannot return integer vector");
+    return ml;
+}
+
+
+inline mlStream & operator << (mlStream &ml, const igIntVector &vec) { return ml << vec.vec; }
+
+
 inline mlStream & operator << (mlStream &ml, const igList &list) {
     long len = list.length();
     if (! MLPutFunction(ml.link(), "List", len))

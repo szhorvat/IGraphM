@@ -328,6 +328,8 @@ template = LTemplate["IGraphM",
         LFun["ladCountSubisomorphisms", {LExpressionID["IG"], True|False (* induced *)}, Integer],
         LFun["ladCountSubisomorphismsColored", LinkObject],
 
+        LFun["coloredSimpleGraph", LinkObject],
+
         (* Functions related to isomorphism *)
 
         LFun["selfComplementaryQ", {}, True|False],
@@ -1054,9 +1056,9 @@ IGSeedRandom[seed : (_?Internal`NonNegativeMachineIntegerQ | Automatic) : Automa
              igraph may only use values up to 2^31-1 on Windows (due to long int being 32-bit).
            *)
           check@igraphGlobal@"seedRandom"[ Mod[Hash@AbsoluteTime[] - BlockRandom@RandomInteger[Developer`$MaxMachineInteger], 2^31 - 1] ],
-        check@igraphGlobal@"seedRandom"[seed]
+          check@igraphGlobal@"seedRandom"[seed]
+        ]
       ]
-    ]
     ]
 
 
