@@ -41,26 +41,32 @@ inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
 
 // RAII for igraph_vector_t
 class igVector {
-    bool moved;
-
 public:
     igraph_vector_t vec;
 
-    igVector() : moved(false) { igraph_vector_init(&vec, 0); }
-    igVector(igVector &&source) noexcept : moved(false) { vec = source.vec; source.moved = true; }
-    igVector(const igraph_vector_t *source) : moved(false) { igraph_vector_copy(&vec, source); }
-    explicit igVector(long len) : moved(false) { igraph_vector_init(&vec, len); }
+    igVector() { igraph_vector_init(&vec, 0); }
+
+    igVector(igVector &&source) noexcept {
+        vec = source.vec;
+        source.vec.stor_begin = nullptr;
+    }
+
+    igVector(const igraph_vector_t *source) { igraph_vector_copy(&vec, source); }
+
+    explicit igVector(long len) { igraph_vector_init(&vec, len); }
 
     igVector(const igVector &igv) : igVector() { igraph_vector_copy(&vec, &igv.vec); }
 
     igVector & operator = (const igVector &igv) {
-        igraph_vector_copy(&vec, &igv.vec);
+        igraph_vector_update(&vec, &igv.vec);
         return *this;
     }
 
-    ~igVector() { if (!moved) igraph_vector_destroy(&vec); }
+    // it is safe to call igraph_vector_destroy on a vector where vec.stor_begin == NULL
+    ~igVector() { igraph_vector_destroy(&vec); }
 
     long length() const { return vec.end - vec.stor_begin; }
+    long size() const { return length(); }
 
     igraph_real_t *begin() { return vec.stor_begin; }
     igraph_real_t *end() { return vec.end; }
@@ -83,36 +89,6 @@ public:
 };
 
 
-// RAII for graph_vector_bool_t
-class igBoolVector {
-
-    // avoid accidental implicit copy
-    igBoolVector(const igBoolVector &) = delete;
-    igBoolVector & operator = (const igBoolVector &) = delete;
-
-public:
-
-    igraph_vector_bool_t vec;
-
-    igBoolVector(long sz) { igraph_vector_bool_init(&vec, sz); }
-    igBoolVector() { igraph_vector_bool_init(&vec, 0); }
-    ~igBoolVector() { igraph_vector_bool_destroy(&vec); }
-
-    long length() const { return vec.end - vec.stor_begin; }
-
-    igraph_bool_t *begin() { return vec.stor_begin; }
-    igraph_bool_t *end() { return vec.end; }
-
-    const igraph_bool_t *begin() const { return vec.stor_begin; }
-    const igraph_bool_t *end() const { return vec.end; }
-
-    void clear() { igraph_vector_bool_clear(&vec); }
-    void resize(long newsize) { igraph_vector_bool_resize(&vec, newsize); }
-
-    mma::IntTensorRef makeMTensor() const { return mma::makeVector<mint>(length(), begin()); }
-};
-
-
 // RAII for igraph_vector_int_t
 // note that igraph_integer_t and mint may not be the same type
 class igIntVector {
@@ -128,6 +104,7 @@ public:
     ~igIntVector() { igraph_vector_int_destroy(&vec); }
 
     long length() const { return vec.end - vec.stor_begin; }
+    long size() const { return length(); }
 
     igraph_integer_t *begin() { return vec.stor_begin; }
     igraph_integer_t *end() { return vec.end; }
@@ -150,8 +127,46 @@ public:
 };
 
 
+// RAII for igraph_vector_bool_t
+class igBoolVector {
+
+    // avoid accidental implicit copy
+    igBoolVector(const igBoolVector &) = delete;
+    igBoolVector & operator = (const igBoolVector &) = delete;
+
+public:
+
+    igraph_vector_bool_t vec;
+
+    explicit igBoolVector(long len) { igraph_vector_bool_init(&vec, len); }
+    igBoolVector() { igraph_vector_bool_init(&vec, 0); }
+    ~igBoolVector() { igraph_vector_bool_destroy(&vec); }
+
+    long length() const { return vec.end - vec.stor_begin; }
+    long size() const { return length(); }
+
+    igraph_bool_t *begin() { return vec.stor_begin; }
+    igraph_bool_t *end() { return vec.end; }
+
+    const igraph_bool_t *begin() const { return vec.stor_begin; }
+    const igraph_bool_t *end() const { return vec.end; }
+
+    void clear() { igraph_vector_bool_clear(&vec); }
+    void resize(long newsize) { igraph_vector_bool_resize(&vec, newsize); }
+
+    mma::IntTensorRef makeMTensor() const { return mma::makeVector<mint>(length(), begin()); }
+};
+
+
 // RAII for igraph_maxtrix_t
-struct igMatrix {
+class igMatrix {
+
+    // avoid accidental implicit copy
+    igMatrix(const igMatrix &) = delete;
+    igMatrix & operator = (const igMatrix &) = delete;
+
+public:
+
     igraph_matrix_t mat;
 
     igMatrix() { igraph_matrix_init(&mat, 0, 0); }
@@ -213,7 +228,8 @@ public:
         list.end = list.stor_begin;
     }
 
-    long length() const { return igraph_vector_ptr_size(&list); }
+    long length() const { return list.end - list.stor_begin; }
+    long size() const { return length(); }
 
     void push(igraph_vector_t *vec) { igraph_vector_ptr_push_back(&list, vec); }
 
@@ -374,7 +390,7 @@ inline void igCheck(int err) {
 }
 
 
-// packs an igList (usually representing vertex sets) into
+// packs an igList (usually representing vertex or edge sets) into
 // a single IntTensor for fast transfer
 inline mma::IntTensorRef packListIntoIntTensor(const igList &list) {
     std::vector<mint> lengths;
@@ -401,4 +417,3 @@ inline mma::IntTensorRef packListIntoIntTensor(const igList &list) {
 
 
 #endif // IG_COMMON_H
-
