@@ -217,6 +217,12 @@ public:
 
     void push(igraph_vector_t *vec) { igraph_vector_ptr_push_back(&list, vec); }
 
+    ElemType **begin() { return reinterpret_cast<ElemType **>(list.stor_begin); }
+    ElemType **end() { return reinterpret_cast<ElemType **>(list.end); }
+
+    const ElemType **begin() const { return reinterpret_cast<const ElemType **>(list.stor_begin); }
+    const ElemType **end() const { return reinterpret_cast<const ElemType **>(list.end); }
+
     const ElemType *operator [] (long i) const { return static_cast<const ElemType *>(list.stor_begin[i]); }
 };
 

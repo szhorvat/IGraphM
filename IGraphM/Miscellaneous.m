@@ -148,6 +148,15 @@ IGTreelikeComponents[graph_?igGraphQ] :=
       igVertexNames[graph]@igIndexVec@check@ig@"treelikeComponents"[]
     ]
 
+PackageExport["IGCactusQ"]
+IGCactusQ::usage = "IGCactusQ[graph] tests if graph is a cactus";
+SyntaxInformation[IGCactusQ] = {"ArgumentsPattern" -> {_}};
+IGCactusQ[graph_ /; UndirectedGraphQ[graph] && SimpleGraphQ[graph]] :=
+    Block[{ig = igMakeUnweighted[graph]},
+      sck@ig@"cactusQ"[]
+    ]
+IGCactusQ[_] := False
+
 
 PackageExport["IGExpressionTree"]
 IGExpressionTree::usage = "IGExpressionTree[expression] constructs a tree graph from an arbitrary Mathematica expression.";
