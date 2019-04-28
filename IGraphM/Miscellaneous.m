@@ -202,6 +202,54 @@ IGCompleteQ[graph_?igGraphQ] := igCompleteQ[graph]
 IGCompleteQ[_] := False
 
 
+PackageExport["IGStronglyRegularQ"]
+IGStronglyRegularQ::usage = "IGStronglyRegularQ[graph] tests if graph is strongly regular.";
+
+igStronglyRegularQ[g_?EmptyGraphQ] := True
+igStronglyRegularQ[g_ /; UndirectedGraphQ[g] && SimpleGraphQ[g]] :=
+    IGRegularQ[g] && (IGCompleteQ[g] ||
+    Module[{vc = VertexCount[g], am = AdjacencyMatrix[g], k = First@VertexDegree[g], lambda, mu},
+      lambda = Dot @@ am[[ First[am["NonzeroPositions"]] ]];
+      mu = k*(k - lambda - 1) / (vc - k - 1);
+      If[
+        IntegerQ[mu]
+        (* The optimization below seems to have minimal effect, thus for the moment it is excluded.
+           Source of the formula: "Strongly regular graphs" by Peter J. Cameron *)
+        (* && IntegerQ[1/2 (vc - 1 + ((vc - 1) (mu - lambda) - 2 k)/ Sqrt[(mu - lambda)^2 + 4 (k - mu)])] *)
+        ,
+        am.am == k IdentityMatrix[vc, SparseArray] + lambda am + mu (ConstantArray[1, {vc, vc}, SparseArray] - IdentityMatrix[vc, SparseArray] - am)
+        ,
+        False
+      ]
+    ])
+
+(* TODO implement for directed graphs including parameters
+   https://homepages.cwi.nl/~aeb/math/dsrg/dsrg.html *)
+IGStronglyRegularQ::dirg = "IGStronglyRegularQ does not support directed graphs and will return False.";
+igStronglyRegularQ[g_?DirectedGraphQ] := (Message[IGStronglyRegularQ::dirg]; False)
+
+IGStronglyRegularQ::nsg  = "IGStronglyRegularQ does not support non-simple graphs and will return False.";
+igStronglyRegularQ[g_] := (Message[IGStronglyRegularQ::nsg]; False)
+
+SyntaxInformation[IGStronglyRegularQ] = {"ArgumentsPattern" -> {_}};
+IGStronglyRegularQ[graph_?igGraphQ] := igStronglyRegularQ[graph]
+IGStronglyRegularQ[_] := False
+
+
+PackageExport["IGStronglyRegularParameters"]
+IGStronglyRegularParameters::usage = "IGStronglyRegularParameters[graph] returns the parameters {v, k, \[Lambda], \[Mu]} of a strongly regular graph. For non-strongly-regular graphs {} is returned.";
+SyntaxInformation[IGStronglyRegularParameters] = {"ArgumentsPattern" -> {_}};
+IGStronglyRegularParameters[g_?EmptyGraphQ] := {VertexCount[g], 0, 0, 0}
+IGStronglyRegularParameters[g_ /; SimpleGraphQ[g] && IGCompleteQ[g]] := {VertexCount[g], VertexCount[g]-1, VertexCount[g]-2, 0}
+IGStronglyRegularParameters[g_?IGStronglyRegularQ] :=
+    Module[{vc = VertexCount[g], am = AdjacencyMatrix[g], k = First@VertexDegree[g], lambda, mu},
+      lambda = Dot @@ am[[ First[am["NonzeroPositions"]] ]];
+      mu = k * (k - lambda - 1) / (vc - k - 1);
+      {vc, k, lambda, mu}
+    ]
+IGStronglyRegularParameters[g_?GraphQ] := {}
+
+
 PackageExport["IGExpressionTree"]
 IGExpressionTree::usage = "IGExpressionTree[expression] constructs a tree graph from an arbitrary Mathematica expression.";
 
