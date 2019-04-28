@@ -6345,6 +6345,72 @@ MT[
 
 
 (* ::Section:: *)
+(*Property testing*)
+
+
+MTSection["Property testing"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGNullGraphQ*)
+
+
+MT[
+  IGNullGraphQ[1], (* False for non-graph *)
+  False
+]
+
+MT[
+  IGNullGraphQ[empty],
+  True
+]
+
+MT[
+  IGNullGraphQ[edgeless],
+  False
+]
+
+MT[
+  IGNullGraphQ[ugi],
+  False
+]
+
+MT[
+  IGNullGraphQ[ugs],
+  False
+]
+
+
+
+(* ::Subsubsection:: *)
+(*IGCactusQ*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGCompleteQ*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGRegularQ*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGStronglyRegularQ and IGStronglyRegularParameters*)
+
+
+(* TODO *)
+
+
+(* ::Section::Closed:: *)
 (*Utility functions*)
 
 
@@ -6417,37 +6483,6 @@ With[{ug = IGUndirectedGraph[#, "All"]},
   {dmulti},
   dlist
 ] 
-
-
-(* ::Subsubsection::Closed:: *)
-(*IGNullGraphQ*)
-
-
-MT[
-  IGNullGraphQ[1], (* False for non-graph *)
-  False
-]
-
-MT[
-  IGNullGraphQ[empty],
-  True
-]
-
-MT[
-  IGNullGraphQ[edgeless],
-  False
-]
-
-MT[
-  IGNullGraphQ[ugi],
-  False
-]
-
-MT[
-  IGNullGraphQ[ugs],
-  False
-]
-
 
 
 (* ::Subsubsection::Closed:: *)
@@ -6746,7 +6781,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGTakeSubgraph*)
 
 
@@ -7023,7 +7058,10 @@ MTSection["Q functions"]
 	IGPlanarQ, IGMaximalPlanarQ, IGOuterplanarQ,
 	IGNullGraphQ,
 	IGTriangleFreeQ,
-	IGPerfectQ
+	IGPerfectQ,
+	IGCactusQ,
+	IGRegularQ, IGStronglyRegularQ,
+	IGCompleteQ
 }	
 
 
