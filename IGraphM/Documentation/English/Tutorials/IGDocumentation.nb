@@ -285,15 +285,13 @@ Cell[BoxData[
 Cell["And try out a few of igraph\[CloseCurlyQuote]s layout algorithms.", \
 "Text",ExpressionUUID->"a7a554c1-f12f-4529-8744-ba1c8d1103c4"],
 
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"IGSeedRandom", "[", "42", "]"}], ";"}], "\[IndentingNewLine]", 
+Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
    RowBox[{"IGLayoutGraphOpt", "[", "acg", "]"}], ",", 
    RowBox[{"IGLayoutKamadaKawai", "[", "acg", "]"}], ",", 
    RowBox[{"IGLayoutFruchtermanReingold", "[", "acg", "]"}]}], 
-  "}"}]}], "Input",ExpressionUUID->"a61d5e41-6428-48c6-9de7-0a91184f6a2f"],
+  "}"}]], "Input",ExpressionUUID->"a61d5e41-6428-48c6-9de7-0a91184f6a2f"],
 
 Cell["Layout functions typically have many options to tune:", \
 "Text",ExpressionUUID->"53510444-62c5-45fe-80af-8a0b2410c6ef"],
@@ -849,7 +847,8 @@ Cell[BoxData[
  RowBox[{"IGChordalRing", "[", 
   RowBox[{"15", ",", 
    RowBox[{"{", 
-    RowBox[{"3", ",", "4", ",", "8"}], "}"}]}], 
+    RowBox[{"3", ",", "4", ",", "8"}], "}"}], ",", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<Business\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"fc72513a-202e-4f23-8217-468994c62c22"],
 
 Cell["Negative offsets are allowed.", \
@@ -1343,7 +1342,7 @@ Cell[BoxData[
    RowBox[{"IGBetheLattice", "[", 
     RowBox[{"5", ",", 
      RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}], ",", 
-     RowBox[{"VertexSize", "\[Rule]", "0.3"}]}], "]"}]}], 
+     RowBox[{"VertexSize", "\[Rule]", "0.4"}]}], "]"}]}], 
   "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"fc084187-5f9d-4e2f-b6d7-523c1ae3c73b"]
 }, Closed]],
@@ -1386,6 +1385,17 @@ Cell[BoxData[
     RowBox[{"1", ",", "1", ",", "2", ",", "2"}], "}"}], ",", 
    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
   "]"}]], "Input",ExpressionUUID->"2a841c78-b5e8-4cf7-8da9-4427bf30c543"],
+
+Cell[TextData[{
+ "Use ",
+ Cell[BoxData[
+ "IGToPrufer"],ExpressionUUID->"82878ab9-e8b5-4c8d-9228-341e6c5e7965"],
+ " to convert a tree back to its Pr\[UDoubleDot]fer sequence."
+}], "Text",ExpressionUUID->"7dec34fa-2974-46a3-bbee-a41cdc77f542"],
+
+Cell[BoxData[
+ RowBox[{"IGToPrufer", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"7f328a9c-c927-49a2-81a1-d38b4737d389"],
 
 Cell["Generate all labelled trees on 4 nodes:", \
 "Text",ExpressionUUID->"507845f5-2738-4ed2-9276-95920c339eec"],
@@ -1614,7 +1624,9 @@ Cell[BoxData[
      RowBox[{"{", 
       RowBox[{"0", ",", "1"}], "}"}], ",", "3"}], "]"}], ",", 
    "\[IndentingNewLine]", 
-   RowBox[{"VertexLabels", "\[Rule]", "None"}]}], "\[IndentingNewLine]", 
+   RowBox[{"VertexLabels", "\[Rule]", "None"}], ",", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<VibrantColor\>\""}]}], 
+  "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"c0db6eef-8d89-4ee8-a878-963f019c9acd"],
 
 Cell[TextData[{
@@ -1693,11 +1705,34 @@ Cell[TextData[{
 }], "Item",ExpressionUUID->"b25bfb9b-a0b6-4e58-bd77-2eb68b772358"]
 }, Open  ]],
 
+Cell["Create an undirected complete graph with loops.", \
+"Text",ExpressionUUID->"089f8544-4470-4f4a-bd44-d04c8e46ea9a"],
+
 Cell[BoxData[
  RowBox[{"IGCompleteGraph", "[", 
   RowBox[{"5", ",", 
    RowBox[{"SelfLoops", "\[Rule]", "True"}]}], 
-  "]"}]], "Input",ExpressionUUID->"49ec547a-517b-40c5-8ec4-f03a8cd90015"]
+  "]"}]], "Input",ExpressionUUID->"49ec547a-517b-40c5-8ec4-f03a8cd90015"],
+
+Cell["Create a directed complete graph with loops.", \
+"Text",ExpressionUUID->"52dd2845-209a-4cd1-8326-c794bce7e7c7"],
+
+Cell[BoxData[
+ RowBox[{"IGCompleteGraph", "[", 
+  RowBox[{"6", ",", 
+   RowBox[{"SelfLoops", "\[Rule]", "True"}], ",", 
+   RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], 
+  "]"}]], "Input",ExpressionUUID->"74dc0a52-31cf-4175-8e51-455e74afcb40"],
+
+Cell["\<\
+Create a list of complete graphs starting with the null graph.\
+\>", "Text",ExpressionUUID->"78d840a6-18e5-40a5-a1d8-d2575ae7adad"],
+
+Cell[BoxData[
+ RowBox[{"IGCompleteGraph", "/@", 
+  RowBox[{"Range", "[", 
+   RowBox[{"0", ",", "3"}], 
+   "]"}]}]], "Input",ExpressionUUID->"57fc0505-b7d8-48b0-8438-0b9af51f8865"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2707,7 +2742,18 @@ not sample them uniformly. If uniform sampling is desired, use ",
  Cell[BoxData[
  "IGTreeGame"],ExpressionUUID->"20195f79-b27e-4bdb-9175-358dfb7b32f9"],
  " instead."
-}], "Text",ExpressionUUID->"5bfabc51-2c00-4263-93a6-998b10c97008"]
+}], "Text",ExpressionUUID->"5bfabc51-2c00-4263-93a6-998b10c97008"],
+
+Cell["Create a directed citation graph.", \
+"Text",ExpressionUUID->"b6ca3525-af9a-4708-9344-9fc39299d1ff"],
+
+Cell[BoxData[
+ RowBox[{"IGGrowingGame", "[", 
+  RowBox[{"20", ",", "2", ",", 
+   RowBox[{"DirectedEdges", "\[Rule]", "True"}], ",", 
+   RowBox[{"\"\<Citation\>\"", "\[Rule]", "True"}], ",", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<Web\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"6ca5415d-5e76-4172-b57e-b8f56402e0cb"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -8772,7 +8818,7 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["IGBiconnectedComponents", \
+Cell["IGBiconnectedComponents and IGBiconnectedEdgeComponents", \
 "Subsubsection",ExpressionUUID->"670f5076-38e8-4ca6-9a26-060ed9396439"],
 
 Cell[BoxData[
@@ -8780,25 +8826,38 @@ Cell[BoxData[
   "IGBiconnectedComponents"}]], \
 "Input",ExpressionUUID->"d0c455ad-b303-4142-95c2-b60748df7c3c"],
 
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGBiconnectedEdgeComponents"}]], \
+"Input",ExpressionUUID->"04c5c6f2-95ce-426a-91c6-254fee08ee19"],
+
 Cell[TextData[{
  Cell[BoxData[
  "IGBiconnectedCompoments"],ExpressionUUID->
   "7b781dcf-d8f7-4f2f-ab03-ca3ef906a9b2"],
- " returns the maximal biconnected components of the graph. Edge directions \
-are ignored. ",
+ " returns the vertices of the maximal biconnected components of the graph. \
+",
+ Cell[BoxData[
+ "IGBiconnectedEdgeComponents"],ExpressionUUID->
+  "520cfb2b-b930-45f1-a29a-a184214c8ef6"],
+ " returns the edges of the components. Edge directions are ignored and \
+isolated vertices are excluded."
+}], "Text",ExpressionUUID->"519afd11-e476-472a-9055-4bc6fd7977ee"],
+
+Cell[TextData[{
  Cell[BoxData[
  "IGBiconnectedComponents"],ExpressionUUID->
-  "dfee4e40-c204-4c50-9f05-0887d0ef75b2"],
+  "5b18a561-c511-4503-a978-5394e5cff921"],
  " is equivalent to ",
  Cell[BoxData[
   RowBox[{"KVertexConnectedComponents", "[", 
    RowBox[{"\[Ellipsis]", ",", "2"}], "]"}]],ExpressionUUID->
-  "e110e002-a1ea-48a8-9e74-01ea258de9a0"],
+  "7b3e9146-803f-455a-881e-cb442e1d58ae"],
  ", except that isolated vertices are not returned as individual components."
-}], "Text",ExpressionUUID->"519afd11-e476-472a-9055-4bc6fd7977ee"],
+}], "Text",ExpressionUUID->"16d8ebe0-f5d4-45c6-856c-462a6c5f8cb2"],
 
 Cell["\<\
-The articulation vertices will be part of more than a single components, thus \
+The articulation vertices will be part of more than a single component, thus \
 the biconnected components are not disjoint subsets of the vertex set.\
 \>", "Text",ExpressionUUID->"47a078fe-8845-4458-b2b3-0b4ae029846f"],
 
@@ -8866,9 +8925,71 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"a60096ae-9467-45b4-8bb1-b9edad07dd8f"],
 
 Cell["\<\
-However, each edge is part of precisely one biconnected components. This is \
-the reason why isolated vertices are excluded.\
+However, each edge is part of precisely one biconnected components.\
 \>", "Text",ExpressionUUID->"d18a4856-7610-43b8-8fc7-f1fffa32d507"],
+
+Cell[BoxData[
+ RowBox[{"IGBiconnectedEdgeComponents", "[", 
+  GraphicsBox[
+   NamespaceBox["NetworkGraphics",
+    DynamicModuleBox[{Typeset`graph = HoldComplete[
+      Graph[{1, 2, 3, 4, 5}, {Null, {{1, 2}, {2, 3}, {1, 3}, {1, 4}}}, {
+       VertexLabels -> {"Name"}, VertexSize -> {Medium}}]]}, 
+     TagBox[GraphicsGroupBox[{
+        {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.2940029186334419`, -0.6035297525078438}, {
+           2.211248247845466, -1.0269675056790861`}}, 0.07833357806433489]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.2940029186334419`, -0.6035297525078438}, {
+           2.2111709478906807`, -0.1799097640846974}}, 
+           0.07833357806433489]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{1.2940029186334419`, -0.6035297525078438}, {
+           0.17990976408469717`, -0.6034512532051322}}, 0.07833357806433489]}, 
+         {Arrowheads[0.], 
+          ArrowBox[{{2.211248247845466, -1.0269675056790861`}, {
+           2.2111709478906807`, -0.1799097640846974}}, 0.07833357806433489]}}, 
+        {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+         0.7]}], {
+          DiskBox[{1.2940029186334419, -0.6035297525078438}, 
+           0.07833357806433489], 
+          InsetBox["1", 
+           Offset[{2, 2}, {1.3723364966977767, -0.525196174443509}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{2.211248247845466, -1.0269675056790861}, 
+           0.07833357806433489], 
+          InsetBox["2", 
+           Offset[{2, 2}, {2.2895818259098006, -0.9486339276147513}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{2.2111709478906807, -0.1799097640846974}, 
+           0.07833357806433489], 
+          InsetBox["3", 
+           Offset[{2, 2}, {2.2895045259550155, -0.1015761860203625}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{0.17990976408469717, -0.6034512532051322}, 
+           0.07833357806433489], 
+          InsetBox["4", 
+           Offset[{2, 2}, {0.25824334214903205, -0.5251176751407973}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}, {
+          DiskBox[{0.17990976408469733, -1.386787033848481}, 
+           0.07833357806433489], 
+          InsetBox["5", 
+           Offset[{2, 2}, {0.2582433421490322, -1.308453455784146}], 
+           ImageScaled[{0, 0}],
+           BaseStyle->"Graphics"]}}}],
+      MouseAppearanceTag["NetworkGraphics"]],
+     AllowKernelInitialization->False]],
+   DefaultBaseStyle->{
+    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+   FormatType->TraditionalForm,
+   FrameTicks->None,
+   ImageSize->{110.4296875, Automatic}], 
+  "]"}]], "Input",ExpressionUUID->"b5f6e78f-addc-49da-b302-e4f6cd14ab5a"],
 
 Cell["\<\
 Thus, visualizing biconnected components is best done by colouring the edges, \
@@ -8876,25 +8997,64 @@ not the vertices.\
 \>", "Text",ExpressionUUID->"74629fd8-6c02-41b6-a19d-2aca698b8b97"],
 
 Cell[BoxData[
- RowBox[{"g", "=", 
-  RowBox[{"IGGiantComponent", "@", 
-   RowBox[{"RandomGraph", "[", 
-    RowBox[{"{", 
-     RowBox[{"20", ",", "25"}], "}"}], 
-    "]"}]}]}]], \
-"Input",ExpressionUUID->"d6072170-dca3-48d5-8e25-981a1dba65d4"],
+ RowBox[{
+  RowBox[{"g", "=", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 
+        18}, {Null, {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {1, 5}, {5, 6}, {6, 7}, {
+         5, 7}, {4, 8}, {8, 9}, {4, 9}, {8, 10}, {10, 11}, {11, 12}, {12, 
+         13}, {10, 13}, {12, 14}, {14, 15}, {12, 15}, {12, 16}, {16, 17}, {12,
+          17}, {11, 18}}}, {
+        GraphLayout -> "SpringEmbedding", VertexLabels -> {None}, VertexSize -> {
+           Rational[1, 3]}}]]}, 
+      TagBox[
+       GraphicsGroupBox[
+        GraphicsComplexBox[{{0., 1.3758489901764286`}, {0.28749933959007956`, 
+         0.4167905888172361}, {1.2508829482516652`, 0.5424967323154759}, {
+         1.7386836303964401`, 1.5395137714896254`}, {0.832811506359397, 
+         2.1449996572167476`}, {0.6057746139226579, 3.2112511157449872`}, {
+         0.08976177000059149, 2.83276630743984}, {2.759205169086871, 
+         1.5099586575073447`}, {2.24477639236166, 2.174584838536472}, {
+         3.75625121903496, 1.4956763255264407`}, {4.720800515872452, 
+         1.116665841510232}, {5.571982137701669, 1.872876424133565}, {
+         4.574640296907598, 2.2309524626845922`}, {6.246531601497821, 
+         2.6899734054137583`}, {5.775740863174883, 2.9947659982812413`}, {
+         6.582867680114843, 1.6598019503167125`}, {6.377933453489726, 
+         1.127886353872904}, {4.918141886720571, 0.}}, {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           LineBox[{{1, 2}, {1, 5}, {2, 3}, {3, 4}, {4, 5}, {4, 8}, {4, 9}, {
+            5, 6}, {5, 7}, {6, 7}, {8, 9}, {8, 10}, {10, 11}, {10, 13}, {11, 
+            12}, {11, 18}, {12, 13}, {12, 14}, {12, 15}, {12, 16}, {12, 17}, {
+            14, 15}, {16, 17}}]}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.09347347276062698], DiskBox[2, 0.09347347276062698], 
+           DiskBox[3, 0.09347347276062698], DiskBox[4, 0.09347347276062698], 
+           DiskBox[5, 0.09347347276062698], DiskBox[6, 0.09347347276062698], 
+           DiskBox[7, 0.09347347276062698], DiskBox[8, 0.09347347276062698], 
+           DiskBox[9, 0.09347347276062698], DiskBox[10, 0.09347347276062698], 
+           DiskBox[11, 0.09347347276062698], DiskBox[12, 0.09347347276062698],
+            DiskBox[13, 0.09347347276062698], 
+           DiskBox[14, 0.09347347276062698], DiskBox[15, 0.09347347276062698],
+            DiskBox[16, 0.09347347276062698], 
+           DiskBox[17, 0.09347347276062698], 
+           DiskBox[18, 0.09347347276062698]}}]],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{265.0625, Automatic}]}], 
+  ";"}]], "Input",ExpressionUUID->"d6072170-dca3-48d5-8e25-981a1dba65d4"],
 
 Cell[BoxData[
- RowBox[{"HighlightGraph", "[", "\[IndentingNewLine]", 
-  RowBox[{"g", ",", "\[IndentingNewLine]", 
-   RowBox[{
-    RowBox[{
-     RowBox[{"EdgeList", "@", 
-      RowBox[{"Subgraph", "[", 
-       RowBox[{"g", ",", "#"}], "]"}]}], "&"}], "/@", 
-    RowBox[{"IGBiconnectedComponents", "[", "g", "]"}]}], ",", 
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"IGBiconnectedEdgeComponents", "[", "g", "]"}], ",", 
    RowBox[{"GraphStyle", "\[Rule]", "\"\<ThickEdge\>\""}]}], 
-  "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"2252b642-c849-4cac-99ef-f83379d89151"]
 }, Closed]],
 
@@ -8951,6 +9111,299 @@ Cell[BoxData[
  RowBox[{"IGMinimumSeparators", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"0fab1c3d-dc4e-49b9-af3b-2ac24556c1bb"],
 
+Cell["Highlight the articulation points of a cactus graph.", \
+"Text",ExpressionUUID->"bcd861de-b70d-4539-8586-f65734b8fd1a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 
+        18}, {Null, {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {1, 5}, {5, 6}, {6, 7}, {
+         5, 7}, {4, 8}, {8, 9}, {4, 9}, {8, 10}, {10, 11}, {11, 12}, {12, 
+         13}, {10, 13}, {12, 14}, {14, 15}, {12, 15}, {12, 16}, {16, 17}, {12,
+          17}, {11, 18}}}, {
+        GraphLayout -> "SpringEmbedding", GraphStyle -> "BoldColor", 
+         VertexLabels -> {
+           Placed[Automatic, Center]}, VertexLabelStyle -> {
+           GrayLevel[1]}, VertexSize -> {
+           Rational[2, 3]}}]], Typeset`boxes, Typeset`boxes$s2d = 
+      GraphicsGroupBox[{{
+         RGBColor[0.91, 0.318, 0.243], 
+         LineBox[{{
+            DynamicLocation["VertexID$1", Automatic, Center], 
+            DynamicLocation["VertexID$2", Automatic, Center]}, {
+            DynamicLocation["VertexID$1", Automatic, Center], 
+            DynamicLocation["VertexID$5", Automatic, Center]}, {
+            DynamicLocation["VertexID$2", Automatic, Center], 
+            DynamicLocation["VertexID$3", Automatic, Center]}, {
+            DynamicLocation["VertexID$3", Automatic, Center], 
+            DynamicLocation["VertexID$4", Automatic, Center]}, {
+            DynamicLocation["VertexID$4", Automatic, Center], 
+            DynamicLocation["VertexID$5", Automatic, Center]}, {
+            DynamicLocation["VertexID$4", Automatic, Center], 
+            DynamicLocation["VertexID$8", Automatic, Center]}, {
+            DynamicLocation["VertexID$4", Automatic, Center], 
+            DynamicLocation["VertexID$9", Automatic, Center]}, {
+            DynamicLocation["VertexID$5", Automatic, Center], 
+            DynamicLocation["VertexID$6", Automatic, Center]}, {
+            DynamicLocation["VertexID$5", Automatic, Center], 
+            DynamicLocation["VertexID$7", Automatic, Center]}, {
+            DynamicLocation["VertexID$6", Automatic, Center], 
+            DynamicLocation["VertexID$7", Automatic, Center]}, {
+            DynamicLocation["VertexID$8", Automatic, Center], 
+            DynamicLocation["VertexID$9", Automatic, Center]}, {
+            DynamicLocation["VertexID$8", Automatic, Center], 
+            DynamicLocation["VertexID$10", Automatic, Center]}, {
+            DynamicLocation["VertexID$10", Automatic, Center], 
+            DynamicLocation["VertexID$11", Automatic, Center]}, {
+            DynamicLocation["VertexID$10", Automatic, Center], 
+            DynamicLocation["VertexID$13", Automatic, Center]}, {
+            DynamicLocation["VertexID$11", Automatic, Center], 
+            DynamicLocation["VertexID$12", Automatic, Center]}, {
+            DynamicLocation["VertexID$11", Automatic, Center], 
+            DynamicLocation["VertexID$18", Automatic, Center]}, {
+            DynamicLocation["VertexID$12", Automatic, Center], 
+            DynamicLocation["VertexID$13", Automatic, Center]}, {
+            DynamicLocation["VertexID$12", Automatic, Center], 
+            DynamicLocation["VertexID$14", Automatic, Center]}, {
+            DynamicLocation["VertexID$12", Automatic, Center], 
+            DynamicLocation["VertexID$15", Automatic, Center]}, {
+            DynamicLocation["VertexID$12", Automatic, Center], 
+            DynamicLocation["VertexID$16", Automatic, Center]}, {
+            DynamicLocation["VertexID$12", Automatic, Center], 
+            DynamicLocation["VertexID$17", Automatic, Center]}, {
+            DynamicLocation["VertexID$14", Automatic, Center], 
+            DynamicLocation["VertexID$15", Automatic, Center]}, {
+            DynamicLocation["VertexID$16", Automatic, Center], 
+            DynamicLocation["VertexID$17", Automatic, Center]}}]}, {
+         Directive[
+          RGBColor[0.34398, 0.49112, 0.89936], 
+          EdgeForm[
+           RGBColor[0.34398, 0.49112, 0.89936]]], 
+         TagBox[{
+           TagBox[
+            DiskBox[{0., 1.3758489901764286`}, 0.18694694552125396`], 
+            "DynamicName", BoxID -> "VertexID$1"], 
+           InsetBox[
+            FormBox[
+             StyleBox["1", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$1", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$1"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{0.28749933959007956`, 0.4167905888172361}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$2"], 
+           InsetBox[
+            FormBox[
+             StyleBox["2", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$2", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$2"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{1.2508829482516652`, 0.5424967323154759}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$3"], 
+           InsetBox[
+            FormBox[
+             StyleBox["3", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$3", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$3"], 
+         TagBox[{
+           TagBox[
+            DiskBox[{1.7386836303964401`, 1.5395137714896254`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$4"], 
+           InsetBox[
+            FormBox[
+             StyleBox["4", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$4", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$4"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{0.832811506359397, 2.1449996572167476`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$5"], 
+           InsetBox[
+            FormBox[
+             StyleBox["5", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$5", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$5"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{0.6057746139226579, 3.2112511157449872`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$6"], 
+           InsetBox[
+            FormBox[
+             StyleBox["6", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$6", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$6"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{0.08976177000059149, 2.83276630743984}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$7"], 
+           InsetBox[
+            FormBox[
+             StyleBox["7", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$7", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$7"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{2.759205169086871, 1.5099586575073447`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$8"], 
+           InsetBox[
+            FormBox[
+             StyleBox["8", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$8", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$8"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{2.24477639236166, 2.174584838536472}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$9"], 
+           InsetBox[
+            FormBox[
+             StyleBox["9", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$9", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$9"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{3.75625121903496, 1.4956763255264407`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$10"], 
+           InsetBox[
+            FormBox[
+             StyleBox["10", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$10", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$10"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{4.720800515872452, 1.116665841510232}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$11"], 
+           InsetBox[
+            FormBox[
+             StyleBox["11", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$11", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$11"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{5.571982137701669, 1.872876424133565}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$12"], 
+           InsetBox[
+            FormBox[
+             StyleBox["12", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$12", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$12"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{4.574640296907598, 2.2309524626845922`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$13"], 
+           InsetBox[
+            FormBox[
+             StyleBox["13", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$13", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$13"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{6.246531601497821, 2.6899734054137583`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$14"], 
+           InsetBox[
+            FormBox[
+             StyleBox["14", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$14", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$14"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{5.775740863174883, 2.9947659982812413`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$15"], 
+           InsetBox[
+            FormBox[
+             StyleBox["15", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$15", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$15"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{6.582867680114843, 1.6598019503167125`}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$16"], 
+           InsetBox[
+            FormBox[
+             StyleBox["16", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$16", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$16"], 
+         TagBox[{
+           TagBox[
+            
+            DiskBox[{6.377933453489726, 1.127886353872904}, 
+             0.18694694552125396`], "DynamicName", BoxID -> "VertexID$17"], 
+           InsetBox[
+            FormBox[
+             StyleBox["17", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$17", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$17"], 
+         TagBox[{
+           TagBox[
+            DiskBox[{4.918141886720571, 0.}, 0.18694694552125396`], 
+            "DynamicName", BoxID -> "VertexID$18"], 
+           InsetBox[
+            FormBox[
+             StyleBox["18", 
+              GrayLevel[1], StripOnInput -> False], TraditionalForm], 
+            DynamicLocation["VertexID$18", None, Center], BaseStyle -> 
+            "Graphics"]}, "DynamicName", BoxID -> 
+          "VertexLabelID$18"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{5.151171875, 302.407421875}, {-80.094875, 
+         74.06449679721376}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{308.55859375, Automatic}]}], 
+  ";"}]], "Input",ExpressionUUID->"7b359740-8bda-496c-8de1-304a2f28b00c"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"IGArticulationPoints", "[", "g", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"5ee15247-2b58-41b4-a52f-7b74d2b2a54c"],
+
 Cell[TextData[{
  "Compute the block-cut tree of a connected graph. The ",
  StyleBox["blocks",
@@ -8967,7 +9420,15 @@ Cell[BoxData[
      RowBox[{"IGBiconnectedComponents", "[", "g", "]"}], ",", 
      RowBox[{"IGArticulationPoints", "[", "g", "]"}]}], "]"}], ",", 
    "\[IndentingNewLine]", 
-   RowBox[{"DirectedEdges", "\[Rule]", "False"}]}], "\[IndentingNewLine]", 
+   RowBox[{"DirectedEdges", "\[Rule]", "False"}], ",", "\[IndentingNewLine]", 
+   
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<ClassicDiagram\>\""}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"VertexSize", "\[Rule]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"3", ",", "1"}], "}"}], "/", "7"}]}], ",", 
+   RowBox[{"VertexLabelStyle", "\[Rule]", "8"}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"debd0b8e-639b-4fb4-9b85-88d9517283bd"]
 }, Closed]],
 
@@ -10586,7 +11047,6 @@ Cell[BoxData[
            PaneBox["2",
             Alignment->Center,
             ImageMargins->2], 2, Automatic, {0.34641016151377535, 0.34641016151377535},
-           
            BaseStyle->"Graphics"], InsetBox[
            PaneBox["3",
             Alignment->Center,
@@ -11922,6 +12382,590 @@ Cell[BoxData[
      RowBox[{"IGVertexProp", "[", "\"\<OriginalVertex\>\"", "]"}]}]}], 
    "]"}]}]], "Input",ExpressionUUID->"dcff093d-e524-477a-9b7c-081ded27c496"]
 }, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Other properties", \
+"Subsection",ExpressionUUID->"39a24b4e-7538-4af4-9114-9b67ec1bfddd"],
+
+Cell[CellGroupData[{
+
+Cell["IGNullGraphQ", \
+"Subsubsection",ExpressionUUID->"94b3384d-993e-4b1b-8612-95ec6d646b7b"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGNullGraphQ"}]], \
+"Input",ExpressionUUID->"96c2a2ae-db4e-4f9a-9471-6972d992e236"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGNullGraphQ"],ExpressionUUID->"01cb4804-59f7-43ee-a997-a3396f3a2f0b"],
+ " returns ",
+ Cell[BoxData[
+ "True"],ExpressionUUID->"7aa3d51c-3e3a-4dad-afe9-f139ca657251"],
+ " only for the null graph, i.e. the graph that has no vertices."
+}], "Text",ExpressionUUID->"0a1115ba-35a9-44d8-bbca-8ca41aa2cd09"],
+
+Cell[BoxData[
+ RowBox[{"IGNullGraphQ", "[", 
+  RowBox[{"IGEmptyGraph", "[", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"17219e13-6874-48a6-bdf5-d25985de6620"],
+
+Cell[TextData[{
+ "For graphs that have vertices, but no edges, it returns ",
+ Cell[BoxData["False"],ExpressionUUID->"0cfa33ba-d9ef-47da-9ac7-fd9c67f31b77"],
+ "."
+}], "Text",ExpressionUUID->"d3dfa32b-3267-4379-86e5-b6dc60c65b8c"],
+
+Cell[BoxData[
+ RowBox[{"IGNullGraphQ", "[", 
+  RowBox[{"IGEmptyGraph", "[", "5", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"2055a25d-4f72-4cbd-aff8-9ba80212bd68"],
+
+Cell[TextData[{
+ "In contrast, the built-in ",
+ Cell[BoxData[
+ "EmptyGraphQ"],ExpressionUUID->"281ac520-73a6-41e8-83e4-b1a64d7bbecb"],
+ " tests if there are no edges:"
+}], "Text",ExpressionUUID->"12dc696b-e1ac-4f50-a9a1-b1df2e7dd12f"],
+
+Cell[BoxData[
+ RowBox[{"EmptyGraphQ", "[", 
+  RowBox[{"IGEmptyGraph", "[", "5", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"eb9c3916-3071-4fb8-ad87-4ecd2b548355"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGCompleteQ", \
+"Subsubsection",ExpressionUUID->"b90bc196-283c-4c9e-848c-f7887184a13f"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCompleteQ"}]], \
+"Input",ExpressionUUID->"755dacf5-70b0-49ce-b4df-8675dd0492d8"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGCompleteQ"],ExpressionUUID->"7dff2205-2f6b-4b4a-b9fd-b9031410b5bc"],
+ " tests if a graph is complete, i.e. if all pairs of vertices are \
+connected."
+}], "Text",ExpressionUUID->"e88b23f0-0ae0-4d63-8f37-f6fed153842b"],
+
+Cell[BoxData[
+ RowBox[{"IGCompleteQ", "@", 
+  RowBox[{
+  "IGCompleteGraph", "[", "10", 
+   "]"}]}]], "Input",ExpressionUUID->"e5ead46c-91da-49cd-8e60-6da685f4dc95"],
+
+Cell[BoxData[
+ RowBox[{"IGCompleteQ", "@", 
+  RowBox[{"IGCompleteGraph", "[", 
+   RowBox[{"5", ",", 
+    RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"142ca21d-8fef-4ee9-90a4-a8a2eb1f1180"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGCompleteQ"],ExpressionUUID->"72ae9053-1f6b-4049-a094-b4fc4cf2215c"],
+ " ignores self-loops and multi-edges."
+}], "Text",ExpressionUUID->"2edd08d9-9dbe-417d-9d1a-20eb7fbb22ab"],
+
+Cell[BoxData[
+ RowBox[{"IGCompleteQ", "[", 
+  GraphicsBox[
+   NamespaceBox["NetworkGraphics",
+    DynamicModuleBox[{Typeset`graph = HoldComplete[
+      Graph[{1, 2, 3, 4}, {
+       Null, {{1, 1}, {1, 2}, {1, 3}, {1, 4}, {2, 2}, {2, 3}, {2, 4}, {3, 
+        3}, {3, 4}, {4, 4}, {1, 2}}}, {
+       GraphLayout -> {
+         "Dimension" -> 2, "VertexLayout" -> "CircularEmbedding"}, 
+        VertexSize -> {Medium}}]]}, 
+     TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJw9VQ9M1WUUBSRDZoKZUFgQ5FLYMhJHSsABDSzDKGK18af0oRKBQchKEEc8
+xZUY6TMGKSgBFSG1nAgETy7jX2M84hUwcJZgAiJEAWrgHzD93fvFxr7t973v
+3nPO7jnXVZcYtt3KwsLi43v/90/+m6DMbF1r85rffPdG91Wc3tpmlO9Qp5Vj
+y6FP47qNGSmF615ob/FV75rngk/G3TunP/rqxcMb0ujcT5lDXZsmyPGu/9yi
+/np6v8T2+Jalk5RgvhA+22mimFcTDebQKdrsnjcQO9FFjfFvOI0NXCO46Ep0
+/b3UrBu5vK/sBu02LdjvPnieGsK8y+z003T9UtL1l3rOU2heUo5h400yLrNO
+njrTS4XFB90qum/RgFuT9eCpLuo7tTpEv+AOOaV7LTG5mMiu+p/I0I47lF87
+FFoYco5cHObXvG0/SxFRNotLYs2+6n5FnXYP9T6K30PVt3xKq4/XpP9F7g+F
+z+FPDR9aBP9xxo8m4beV+WGb8P+A+UPpc5b1gdIvh/WD0ndJpqYvvqbqZ4o6
+xqlg+y9RNgGNqKz39Xlr7TjNBIzeyulshd4hed7q3L+oPr0tdn5gO8IWN7ge
+GRyjh9NjPDqOdOLEQh/3P54eIx/LUEN5/6/QrzsTfyBqlNb2vJJtuNyFAkv/
+KusDV8mzvN12Z1cPSpP8bHtLRqhh46W0R37oRQ2f9C1/x0r+HZ3kd/DkOpTF
+deHJfaiY+2Jmj4aDwhkXShknZTFuDDAPqmJe0DNPKmPeKN1hGplNHCPPeesN
+c4bTaE8MCnw8ZJRqbJ1WBftV4ULRQzvqn71KASGJg4lv1uEB19izh5aN0GDt
+3d11OxuQkNFX5WF/hX7scIzM3taEhKURtd6Lhmm5k9frw5+1YtLjWNrLDkNk
+vPngivErbXCP+rzxxspBKrhPN6kD+/mkVfwdpfw7+pffYSHXoV1cF/nch5K5
+L7oZB9kyLjzJOGmAceMw8yAz84IN86TvmDeij7HPKie1uUCqMzSfTVdoc4O9
+4+yz5DxtrqDzY58Vb9DmDuufZ58ZdNpcQj/MPouM1OYWk7fZZ89t1uYaX3qx
+z7KOanOPam/22ZYizRcw5LPPzOWab5DXxz4zVWm+Qn52qvNoyu9G8R3Mvewz
+db+c36NL3uu5PmKkfhz3xyfSv4XxYY3gi2D8eEfwOzM/5Aq/AOaPUuEfxPog
+RfSZekLTDzOiX8FR9pnSV/yHeM435U/YiT/Fv3hX/Cv5hk3ib8k3+In/Jd/w
+oeQDcX7gGucbJN9QK/lSwPmDi5xvKp/wmOST5BdyOd+gdK6ssXcL7jQb1b03
+55vKR0RLPp6Q+lacbyT5hn7JV8k3PMr5RpJvKJR8bhF+sZLfkm/YJfmu9Ple
+8t8o+mXIflD6Bu7jufbPYJ1V7mWLzioXy0RnlZvvic4qVyNFZ7VXvhCd1V6x
+l5xWud0nOqu9clt0VrkfLjqrvWAje0LtjW9Kpv+Oyv/ZV+2Vatkz6t5NdFbv
+h2RPqfqNovP//WXPKXwZorPCHyQ6q70SLjor/ntEZ6WPk+is9DOlss5K3/8A
+XjRQhw==
+        "], {
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{1, 8, 11, 13, 19, 21, 24, 1},
+            SplineDegree->7], 0.1414213562373094]}, 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{
+            1, {-0.6644407471831174, 0.664440747183116}, 2}], 
+            0.1414213562373094]}, 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{
+            1, {-0.3355592528168825, 0.33555925281688337`}, 2}], 
+            0.1414213562373094]}, 
+          {Arrowheads[0.], ArrowBox[{1, 3}, 0.1414213562373094]}, 
+          {Arrowheads[0.], ArrowBox[{1, 4}, 0.1414213562373094]}, 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{2, 63, 66, 68, 74, 76, 79, 2},
+            SplineDegree->7], 0.1414213562373094]}, 
+          {Arrowheads[0.], ArrowBox[{2, 3}, 0.1414213562373094]}, 
+          {Arrowheads[0.], ArrowBox[{2, 4}, 0.1414213562373094]}, 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{3, 86, 89, 91, 97, 99, 102, 3},
+            SplineDegree->7], 0.1414213562373094]}, 
+          {Arrowheads[0.], ArrowBox[{3, 4}, 0.1414213562373094]}, 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{4, 109, 112, 114, 120, 122, 125, 4},
+            SplineDegree->7], 0.1414213562373094]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+          DiskBox[1, 0.1414213562373094], DiskBox[2, 0.1414213562373094], 
+          DiskBox[3, 0.1414213562373094], DiskBox[4, 0.1414213562373094]}}]],
+      MouseAppearanceTag["NetworkGraphics"]],
+     AllowKernelInitialization->False]],
+   DefaultBaseStyle->{
+    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+   FormatType->TraditionalForm,
+   FrameTicks->None,
+   ImageSize->{87.7109375, Automatic}], 
+  "]"}]], "Input",ExpressionUUID->"48255548-7234-4dac-82a3-eadc1f18e490"],
+
+Cell["Check if each component of a graph is a clique.", \
+"Text",ExpressionUUID->"6fab5b58-1f4c-4939-bcb3-165cc30f5525"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+  "GraphData", "[", "\"\<C3+2P2+K1\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"5593caa6-048a-4c02-bf20-9b4cc95ba3c1"],
+
+Cell[BoxData[
+ RowBox[{"AllTrue", "[", 
+  RowBox[{
+   RowBox[{"ConnectedGraphComponents", "[", "g", "]"}], ",", "IGCompleteQ"}], 
+  "]"}]], "Input",ExpressionUUID->"4bbd7104-2428-4b2a-9bf9-fa944d46c4fc"],
+
+Cell["The null graph is considered complete.", \
+"Text",ExpressionUUID->"4a3f181c-97ad-4fb1-81a9-6c4d5375f5f6"],
+
+Cell[BoxData[
+ RowBox[{"IGCompleteQ", "@", 
+  RowBox[{
+  "IGEmptyGraph", "[", 
+   "]"}]}]], "Input",ExpressionUUID->"ae70ad72-4855-4730-ad5f-5adc2ded841a"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGRegularQ", \
+"Subsubsection",ExpressionUUID->"56ec5293-951c-462e-8510-8c10cae905e3"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGRegularQ"}]], \
+"Input",ExpressionUUID->"d6c64495-df91-47e4-8a7b-bcd1e0b26db5"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGRegularQ"],ExpressionUUID->"47546d96-1d47-4f95-b1fc-8daa66b0e3f6"],
+ " checks if a graph is regular. All vertices of a regular graph have the \
+same degrees. In regular directed graphs, the in- and out-degrees are also \
+equal to each other."
+}], "Text",ExpressionUUID->"dcdceb65-ee8b-4e0d-9754-c1a54fc79316"],
+
+Cell[BoxData[
+ RowBox[{"IGRegularQ", "[", 
+  RowBox[{"IGSquareLattice", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"3", ",", "4"}], "}"}], ",", 
+    RowBox[{"\"\<Periodic\>\"", "\[Rule]", "True"}]}], "]"}], 
+  "]"}]], "Input",ExpressionUUID->"02d681f8-0adf-45ed-b4d8-82fb90e26bba"],
+
+Cell[TextData[{
+ "Check if a graph is ",
+ Cell[BoxData[
+  FormBox["k", TraditionalForm]],ExpressionUUID->
+  "680ce203-810d-4758-8ca5-8d9895f82601"],
+ "-regular for ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"k", "=", "2"}], TraditionalForm]],ExpressionUUID->
+  "6d79e98f-c636-4c6f-85c3-240399ea7895"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"k", "=", "3"}], TraditionalForm]],ExpressionUUID->
+  "3ef6a393-a009-4b40-932f-d38a4b08a0f6"],
+ "."
+}], "Text",ExpressionUUID->"3ecaf6dc-9cdb-44cb-a785-02d7a1cbdb96"],
+
+Cell[BoxData[
+ RowBox[{"IGRegularQ", "[", 
+  RowBox[{
+   RowBox[{"CycleGraph", "[", "10", "]"}], ",", "2"}], 
+  "]"}]], "Input",ExpressionUUID->"2aea3b02-0815-4c44-aef3-18c94c63e3fd"],
+
+Cell[BoxData[
+ RowBox[{"IGRegularQ", "[", 
+  RowBox[{
+   RowBox[{"CycleGraph", "[", "10", "]"}], ",", "3"}], 
+  "]"}]], "Input",ExpressionUUID->"8b50a2ca-0fb0-42f5-8b17-1c9650d02886"],
+
+Cell["The null graph is considered 0-regular.", \
+"Text",ExpressionUUID->"a6241a17-dfbb-47c8-9e33-4857e01ef2a9"],
+
+Cell[BoxData[
+ RowBox[{"IGRegularQ", "[", 
+  RowBox[{"IGEmptyGraph", "[", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"02ea951a-b6b5-4485-b408-298d40bbfb3b"],
+
+Cell["Check if a directed graph is regular.", \
+"Text",ExpressionUUID->"54bfa9cd-dec1-4447-a92d-8b67c70796e1"],
+
+Cell[BoxData[
+ RowBox[{"IGRegularQ", "[", 
+  RowBox[{"CycleGraph", "[", 
+   RowBox[{"5", ",", 
+    RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}], 
+  "]"}]], "Input",ExpressionUUID->"f885fb2f-1cfe-4565-a60c-1b3c6218f180"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGStronglyRegularQ", \
+"Subsubsection",ExpressionUUID->"87927757-b176-4ebf-a862-fab030f1a9cc"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGStronglyRegularQ"}]], \
+"Input",ExpressionUUID->"9e3f0714-176a-4a57-97ed-56f1c5f79707"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGStronglyRegularQ"],ExpressionUUID->"32b68c02-afa7-467e-b286-546b7e11c836"],
+ " checks if a graph is strongly regular. A strongly regular graph is a \
+regular graph where each pair of connected vertices has the same number of \
+common neighbours, ",
+ Cell[BoxData[
+  FormBox["\[Lambda]", TraditionalForm]],ExpressionUUID->
+  "57a74557-00a8-459e-97bb-51a32e97443f"],
+ ", and each pair of unconnected vertices also have the same number of common \
+neighbours, ",
+ Cell[BoxData[
+  FormBox["\[Mu]", TraditionalForm]],ExpressionUUID->
+  "88e9c1f2-f49c-492a-a747-5f8ca9cad07e"],
+ "."
+}], "Text",ExpressionUUID->"cfdf25ff-41f4-48d0-afff-ce035d4313ce"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularQ", "@", 
+  RowBox[{
+  "GraphData", "[", "\"\<ShrikhandeGraph\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"720656d7-8c7b-4581-bb8b-a1a81c4913a8"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularQ", "/@", 
+  RowBox[{"HypercubeGraph", "/@", 
+   RowBox[{"Range", "[", 
+    RowBox[{"2", ",", "4"}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"e28d6fbd-a933-4bfa-89e0-1c80f5fff3a3"],
+
+Cell[TextData[{
+ "Some authors exclude empty and complete graph from the definition, as they \
+satisfy these conditions trivially. ",
+ Cell[BoxData[
+ "IGStronglyRegularQ"],ExpressionUUID->"5d918403-ad0f-4a5d-b110-dd6cd2275347"],
+ " returns ",
+ Cell[BoxData[
+ "True"],ExpressionUUID->"f8c76eea-3f7c-4689-8e00-43a7e98de3de"],
+ " for these."
+}], "Text",ExpressionUUID->"61459f5d-a05c-4a70-9f3c-30b1d9f6fa06"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularQ", "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"IGEmptyGraph", "[", "5", "]"}], ",", 
+    RowBox[{"IGCompleteGraph", "[", "6", "]"}]}], 
+   "}"}]}]], "Input",ExpressionUUID->"9e865d20-7734-47b3-87a2-9b8fedece1cc"],
+
+Cell[TextData[{
+ "It also returns ",
+ Cell[BoxData[
+ "True"],ExpressionUUID->"efddad7f-1752-42af-b027-a8c77c4941bf"],
+ " for graphs on 0..2 vertices."
+}], "Text",ExpressionUUID->"4c8e2601-85a5-465e-8eeb-31b520e045e1"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularQ", "/@", 
+  RowBox[{"IGCompleteGraph", "/@", 
+   RowBox[{"Range", "[", 
+    RowBox[{"0", ",", "2"}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"7abcfa35-7b66-432c-aae6-30e0d0c4acfe"],
+
+Cell[TextData[{
+ "Currently, ",
+ Cell[BoxData[
+ "IGStronglyRegularQ"],ExpressionUUID->"40773cf6-565b-46bc-9860-e4fff1b87ef9"],
+ " returns ",
+ Cell[BoxData["False"],ExpressionUUID->"752a2b6b-900b-4469-919c-1b3f80d578e2"],
+ " for al directed graphs."
+}], "Text",ExpressionUUID->"9b680e4b-90a5-4629-968e-75fb2fd4da58"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularQ", "@", 
+  RowBox[{"Graph", "[", 
+   RowBox[{"{", 
+    RowBox[{"1", "\[Rule]", "2"}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"f509743d-06a1-44dd-81ec-984e077cfa70"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGStronglyRegularParameters", \
+"Subsubsection",ExpressionUUID->"5aa54045-91c8-4831-ba32-08ad699ee008"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGStronglyRegularParameters"}]], \
+"Input",ExpressionUUID->"a7263e5b-2f33-42d2-9c39-ad3adc177664"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGStronglyRegularParameters"],ExpressionUUID->
+  "02397ac9-f3f7-4afa-a71e-5ebba94a046c"],
+ " returns the parameters ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", 
+    RowBox[{"v", ",", "k", ",", "\[Lambda]", ",", "\[Mu]"}], ")"}], 
+   TraditionalForm]],ExpressionUUID->"a99e159e-6da2-45c7-a218-385dd3b58731"],
+ " of a strongly regular graph. ",
+ Cell[BoxData[
+  FormBox["v", TraditionalForm]],ExpressionUUID->
+  "5c66f3df-f671-4f26-a433-13a5c6c5a882"],
+ " is the number of vertices, ",
+ Cell[BoxData[
+  FormBox["k", TraditionalForm]],ExpressionUUID->
+  "18ff404c-02fb-4729-a339-b661a512e6a1"],
+ " the degree of the vertices, ",
+ Cell[BoxData[
+  FormBox["\[Lambda]", TraditionalForm]],ExpressionUUID->
+  "11bf835f-6487-4620-9db9-5c036e33390e"],
+ " the number of common neighbours of connected vertices and ",
+ Cell[BoxData[
+  FormBox["\[Mu]", TraditionalForm]],ExpressionUUID->
+  "57b1dd0a-642a-4311-94c3-4f8e427805db"],
+ " the number of common neighbours of unconnected vertices."
+}], "Text",ExpressionUUID->"8bf7a838-1464-4f17-a880-eaf736c36fd7"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularParameters", "[", 
+  RowBox[{"PetersenGraph", "[", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"9b0a10b3-e0d6-47ae-806c-6ad4752d15a5"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularParameters", "[", 
+  RowBox[{"CycleGraph", "[", "5", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"f6853393-e422-45bf-b684-7b440e9ec821"],
+
+Cell[TextData[{
+ "The parameters of a strongly regular graph satisfy the equation ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"v", "-", "k", "-", "1"}], ")"}], "\[Mu]"}], "\[Equal]", 
+    RowBox[{"k", "(", 
+     RowBox[{"k", "-", "\[Lambda]", "-", "1"}], ")"}]}], TraditionalForm]],
+  ExpressionUUID->"c15f7bce-4057-4edc-9d0c-3bfdb64169ed"],
+ "."
+}], "Text",ExpressionUUID->"96f53f21-b16d-4b6b-a664-9d654d624670"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"{", 
+   RowBox[{"v", ",", "k", ",", "lambda", ",", "mu"}], "}"}], "=", 
+  RowBox[{"IGStronglyRegularParameters", "[", 
+   RowBox[{"GraphData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<Paley\>\"", ",", " ", "101"}], "}"}], "]"}], 
+   "]"}]}]], "Input",ExpressionUUID->"656dd858-818b-4c75-8a10-4f3cde372c23"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"v", "-", "k", "-", "1"}], ")"}], "mu"}], "\[Equal]", 
+  RowBox[{"k", 
+   RowBox[{"(", 
+    RowBox[{"k", "-", "lambda", "-", "1"}], 
+    ")"}]}]}]], \
+"Input",ExpressionUUID->"845e9440-10c2-46b4-8191-2ce95c6b4ace"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  FormBox["\[Lambda]", TraditionalForm]],ExpressionUUID->
+  "2a265bac-ca45-4deb-af31-5848ccf07e46"],
+ " and ",
+ Cell[BoxData[
+  FormBox["\[Mu]", TraditionalForm]],ExpressionUUID->
+  "b5bce8c4-0933-487d-b091-d8580761ba8d"],
+ " are not well-defined for empty and complete graphs, respectively. In these \
+cases, 0 is returned."
+}], "Text",ExpressionUUID->"2154f973-1d51-4ddc-ab27-c5e84675bc09"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularParameters", "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"IGEmptyGraph", "[", "5", "]"}], ",", 
+    RowBox[{"IGCompleteGraph", "[", "6", "]"}]}], 
+   "}"}]}]], "Input",ExpressionUUID->"519777a1-dc16-489b-a2c0-d9a06ee96d6c"],
+
+Cell[TextData[{
+ "For non-strongly-regular graphs, ",
+ Cell[BoxData[
+  RowBox[{"{", "}"}]],ExpressionUUID->
+  "861f77cb-d2fb-4177-b84b-f9c7b8448186"],
+ " is returned."
+}], "Text",ExpressionUUID->"dcbfce58-3309-4761-92cf-896a2b9b1f56"],
+
+Cell[BoxData[
+ RowBox[{"IGStronglyRegularParameters", "[", 
+  RowBox[{"HypercubeGraph", "[", "3", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"7847b97d-13f0-4367-b40a-dbe79622f2e7"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGCactusQ", \
+"Subsubsection",ExpressionUUID->"0c93d54e-c87b-48fa-8c20-b25a7d3f2585"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCactusQ"}]], \
+"Input",ExpressionUUID->"ecfa19a1-dc12-47b3-ad3e-abe1194b5e9b"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGCactusQ"],ExpressionUUID->"15423e50-2d53-4356-960d-9c28e40f9def"],
+ " tests if a graph is a cactus. A cactus graph is a connected undirected \
+simple graph in which any two simple cycles share at most one vertex."
+}], "Text",ExpressionUUID->"8bb1458c-6c32-4529-ad7a-7a2559602ba3"],
+
+Cell[BoxData[
+ RowBox[{"IGCactusQ", "[", 
+  GraphicsBox[
+   NamespaceBox["NetworkGraphics",
+    DynamicModuleBox[{Typeset`graph = HoldComplete[
+      Graph[{4, 14, 18, 3, 17, 1, 5, 10, 9, 7, 16, 13, 8, 12, 15, 11, 6, 2}, {
+       Null, {{6, 18}, {18, 4}, {4, 1}, {1, 7}, {6, 7}, {7, 17}, {17, 10}, {7,
+         10}, {1, 13}, {13, 9}, {1, 9}, {13, 8}, {8, 16}, {16, 14}, {14, 
+        12}, {8, 12}, {14, 2}, {2, 15}, {14, 15}, {14, 11}, {11, 5}, {14, 
+        5}, {16, 3}}}, {
+       FormatType -> TraditionalForm, GraphLayout -> "SpringEmbedding", 
+        ImageSize -> {265.0625, Automatic}, VertexLabels -> {None}, 
+        VertexSize -> {
+          Rational[1, 3]}}]]}, 
+     TagBox[
+      GraphicsGroupBox[
+       GraphicsComplexBox[{{4.790187201481743, 1.809242922417648}, {0., 
+        1.67551962138272}, {1.6688973832840506`, 0.}, {5.0127605437559986`, 
+        2.918094010391539}, {0.3627475470654846, 2.6991090380817857`}, {
+        6.423306373168762, 2.4486540644159898`}, {5.8013841040483705`, 
+        1.5059621473913356`}, {2.8146598764657598`, 1.5086510110981295`}, {
+        4.40007411886745, 0.9753228722163537}, {6.275646181647883, 
+        0.5291674773982216}, {0.8406682445782754, 2.999141676633758}, {
+        1.9965533059737801`, 2.218489543424144}, {3.806680273313481, 
+        1.588746377422435}, {1.0023484739093975`, 1.8672007026421988`}, {
+        0.19204993908974544`, 1.1400685137948297`}, {1.8525356729623894`, 
+        1.11267411249711}, {6.683296142832674, 1.0260781990320202`}, {
+        5.922976873581133, 3.295969370429825}}, {
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          LineBox[{{1, 4}, {1, 7}, {1, 9}, {1, 13}, {2, 14}, {2, 15}, {3, 
+           16}, {4, 18}, {5, 11}, {5, 14}, {6, 7}, {6, 18}, {7, 10}, {7, 
+           17}, {8, 12}, {8, 13}, {8, 16}, {9, 13}, {10, 17}, {11, 14}, {12, 
+           14}, {14, 15}, {14, 16}}]}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+          DiskBox[1, 0.0940490086939858], DiskBox[2, 0.0940490086939858], 
+          DiskBox[3, 0.0940490086939858], DiskBox[4, 0.0940490086939858], 
+          DiskBox[5, 0.0940490086939858], DiskBox[6, 0.0940490086939858], 
+          DiskBox[7, 0.0940490086939858], DiskBox[8, 0.0940490086939858], 
+          DiskBox[9, 0.0940490086939858], DiskBox[10, 0.0940490086939858], 
+          DiskBox[11, 0.0940490086939858], DiskBox[12, 0.0940490086939858], 
+          DiskBox[13, 0.0940490086939858], DiskBox[14, 0.0940490086939858], 
+          DiskBox[15, 0.0940490086939858], DiskBox[16, 0.0940490086939858], 
+          DiskBox[17, 0.0940490086939858], DiskBox[18, 0.0940490086939858]}}]],
+      MouseAppearanceTag["NetworkGraphics"]],
+     AllowKernelInitialization->False]],
+   DefaultBaseStyle->{
+    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+   FormatType->TraditionalForm,
+   FrameTicks->None,
+   ImageSize->{265.0625, Automatic}], 
+  "]"}]], "Input",ExpressionUUID->"1a1a70fa-7783-4faa-9281-8b41a955191f"],
+
+Cell[BoxData[
+ RowBox[{"IGCactusQ", "[", 
+  RowBox[{"GridGraph", "[", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "3"}], "}"}], "]"}], 
+  "]"}]], "Input",ExpressionUUID->"4fb0cc04-a1e4-4a89-8cd3-c875d3bad7b8"],
+
+Cell["\<\
+The null graph is not considered to be a cactus, but the singleton graph is.\
+\>", "Text",ExpressionUUID->"9addc678-8a62-4d3f-b680-1cb17e988841"],
+
+Cell[BoxData[
+ RowBox[{"IGCactusQ", "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"IGEmptyGraph", "[", "0", "]"}], ",", 
+    RowBox[{"IGEmptyGraph", "[", "1", "]"}]}], 
+   "}"}]}]], "Input",ExpressionUUID->"cfd8423a-2b41-42fe-9c23-33f197f49448"],
+
+Cell[TextData[{
+ "Currently, ",
+ Cell[BoxData[
+ "IGCactusQ"],ExpressionUUID->"1e3216e9-f12a-4d8e-af30-c099e3b6abab"],
+ " returns ",
+ Cell[BoxData["False"],ExpressionUUID->"91a4c926-c92f-4749-bf7c-87dd011214bf"],
+ " for all directed graphs."
+}], "Text",ExpressionUUID->"7ce9cc64-2a08-4594-aa5b-c64a96c11526"],
+
+Cell[BoxData[
+ RowBox[{"IGCactusQ", "[", 
+  RowBox[{"Graph", "[", 
+   RowBox[{"{", 
+    RowBox[{"1", "\[Rule]", "2"}], "}"}], "]"}], 
+  "]"}]], "Input",ExpressionUUID->"4ed3aa03-6661-4e79-92af-6348a68a70f9"]
+}, Closed]]
 }, Closed]]
 }, Closed]],
 
@@ -12257,7 +13301,11 @@ Cell[TextData[{
  " try to select the best algorithm for the given graphs. For graphs without \
 multi-edges, they use igraph\[CloseCurlyQuote]s default algorithm selection. \
 For multigraphs, they use VF2 after internally transforming the multigraphs \
-to edge- and vertex-coloured simple graphs."
+to edge- and vertex-coloured simple graphs, in a manner similar to ",
+ Cell[BoxData["IGColoredSimpleGraph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "94fcc2cc-d1bb-42a7-bf03-32fa5a3e7874"],
+ "."
 }], "Text",ExpressionUUID->"7fafb07c-326b-407b-96e0-04af295bc978"],
 
 Cell[CellGroupData[{
@@ -12281,9 +13329,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"fa1b4167-70c3-4b74-95a4-a7b1d117523f"],
 
 Cell[TextData[{
- Cell[BoxData["IGIsomorphicQ"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "2800038f-dc52-4a5d-941f-dd8a214095f6"],
+ Cell[BoxData[
+ "IGIsomorphicQ"],ExpressionUUID->"2800038f-dc52-4a5d-941f-dd8a214095f6"],
  " decides if two graphs are isomorphic."
 }], "Text",ExpressionUUID->"e26f3eb1-8f8d-48a4-8a82-277837a22f42"],
 
@@ -12295,9 +13342,8 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"6260cda7-874b-4118-9555-f16385f0e054"],
 
 Cell[TextData[{
- Cell[BoxData["IGIsomorphicQ"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "f3282667-29bf-4b0a-b2fc-1a77f1c04cdd"],
+ Cell[BoxData[
+ "IGIsomorphicQ"],ExpressionUUID->"f3282667-29bf-4b0a-b2fc-1a77f1c04cdd"],
  " supports multigraphs."
 }], "Text",ExpressionUUID->"fadd78ab-4b79-426c-80de-2cc2337434e1"],
 
@@ -12741,9 +13787,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"17ae2edf-efda-4bfd-958c-a65ba9cf27ae"],
 
 Cell[TextData[{
- Cell[BoxData["IGSubisomorphicQ"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "9a3b5731-43b4-4138-9414-2a43a7b045c4"],
+ Cell[BoxData[
+ "IGSubisomorphicQ"],ExpressionUUID->"9a3b5731-43b4-4138-9414-2a43a7b045c4"],
  " decides if a subgraph is part of a larger graph."
 }], "Text",ExpressionUUID->"86d6a2ea-c8d0-4344-9074-30c8d5db725c"],
 
@@ -12751,8 +13796,7 @@ Cell[TextData[{
  "A dodecahedral graph does not contain a ",
  Cell[BoxData[
   RowBox[{"[", 
-   RowBox[{"1", ",", "2", ",", "3"}], "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+   RowBox[{"1", ",", "2", ",", "3"}], "]"}]],ExpressionUUID->
   "897f0f6e-1a34-4e7e-a3b0-13f8541eeab4"],
  " symmetric tree."
 }], "Text",ExpressionUUID->"91ca7730-98a6-4dfb-90ca-a0ac64a3c49f"],
@@ -12778,8 +13822,7 @@ Cell[TextData[{
  "It does contain a ",
  Cell[BoxData[
   RowBox[{"[", 
-   RowBox[{"3", ",", "2", ",", "1"}], "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+   RowBox[{"3", ",", "2", ",", "1"}], "]"}]],ExpressionUUID->
   "03ca1447-8b0d-4d12-a317-4569720fc9dd"],
  " tree."
 }], "Text",ExpressionUUID->"ebfd8b26-0c98-4811-bc5a-67592868eb08"],
@@ -12818,9 +13861,8 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"f45d96a6-f582-4e83-83b4-f7c3ccfa7b01"],
 
 Cell[TextData[{
- Cell[BoxData["IGSubisomorphicQ"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "39dcd81d-0baa-4998-8445-10f3018142f1"],
+ Cell[BoxData[
+ "IGSubisomorphicQ"],ExpressionUUID->"39dcd81d-0baa-4998-8445-10f3018142f1"],
  " supports multigraphs."
 }], "Text",ExpressionUUID->"452383ea-73fa-458b-a79b-90b9343549e5"],
 
@@ -14242,7 +15284,7 @@ Cell[TextData[{
 larger graph."
 }], "Text",ExpressionUUID->"dfe84fcf-b5f9-4cd8-a077-1ece9888e9c4"],
 
-Cell["LAD only supports simple graphs.", \
+Cell["The LAD algorithm only supports simple graphs.", \
 "Text",ExpressionUUID->"b1be5048-511c-4b19-9e14-846d2a45d9cd"],
 
 Cell[BoxData[
@@ -14576,6 +15618,33 @@ Cell[BoxData[
   RowBox[{
   "IGBlissAutomorphismCount", "[", "motif", 
    "]"}]}]], "Input",ExpressionUUID->"8550011c-07da-4265-b945-17edca50c7a7"],
+
+Cell["Check that a graph is claw-free.", \
+"Text",ExpressionUUID->"ca4147db-aade-4b75-8dd7-2d1912e541dc"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"clawFreeQ", "[", 
+   RowBox[{"graph_", "?", "UndirectedGraphQ"}], "]"}], ":=", 
+  "\[IndentingNewLine]", 
+  RowBox[{"Not", "@", 
+   RowBox[{"IGLADSubisomorphicQ", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"StarGraph", "[", "4", "]"}], ",", " ", 
+     RowBox[{"(*", " ", 
+      RowBox[{"claw", " ", "graph"}], " ", "*)"}], "\[IndentingNewLine]", 
+     "graph", ",", "\[IndentingNewLine]", 
+     RowBox[{"\"\<Induced\>\"", "\[Rule]", "True"}]}], "\[IndentingNewLine]", 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"ac57926f-4c59-4702-b886-111e8bcab47f"],
+
+Cell[BoxData[
+ RowBox[{"clawFreeQ", "/@", 
+  RowBox[{"{", 
+   RowBox[{
+    RowBox[{"GraphData", "[", "\"\<DodecahedralGraph\>\"", "]"}], ",", 
+    RowBox[{"GraphData", "[", "\"\<TruncatedPrismGraph\>\"", "]"}]}], 
+   "}"}]}]], "Input",ExpressionUUID->"3c6a7e94-32bc-44e2-93e5-9fb14953c312"],
 
 Cell[CellGroupData[{
 
@@ -15473,6 +16542,645 @@ Cell[BoxData[
      RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "3"}], "}"}], "]"}], ",", 
    "IGSelfComplementaryQ"}], 
   "]"}]], "Input",ExpressionUUID->"d6759887-f72c-4e54-9da5-48cfe20be01f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGColoredSimpleGraph", \
+"Subsubsection",ExpressionUUID->"a8da82a5-fbfc-46a4-97c6-4942ddde9647"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGColoredSimpleGraph"}]], \
+"Input",ExpressionUUID->"1f0d57bc-a858-4c35-8e24-f54f8c59f248"],
+
+Cell[TextData[{
+ Cell[BoxData["IGColoredSimpleGraph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "3b625818-3469-4c19-8fbd-4a1ac7edd0c4"],
+ " is a helper function that encodes a non-simple graph (i.e a graph with \
+self-loops or multi-edges) into an edge- and vertex-colored simple graph. The \
+coloured simple graph can be used directly as an input to coloured \
+isomorphism checking functions such as ",
+ Cell[BoxData["IGVF2IsomorphicQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8be8598f-f194-47a5-bb83-6d4bcc8ace67"],
+ "."
+}], "Text",ExpressionUUID->"8a18393f-2052-447f-a2c2-b2fac16f800d"],
+
+Cell["\<\
+The vertex colours are computed as the multiplicity of self-loops at each \
+vertex. The edge colours are computed as the multiplicities or non-loop edges.\
+\>", "Text",ExpressionUUID->"5d07c03d-9986-419e-a4f0-0ff75896e9bb"],
+
+Cell[TextData[{
+ "The following graphs are not simple and cannot be used with ",
+ Cell[BoxData["IGVF2IsomorphicQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "3db5f482-1935-4f9d-9c10-d4d2c6b41fc3"],
+ " directly."
+}], "Text",ExpressionUUID->"0418a2be-cf38-457d-a7fa-d0c6e03b6c07"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"g1", ",", "g2", ",", "g3"}], "}"}], "=", 
+   RowBox[{"{", 
+    RowBox[{
+     GraphicsBox[
+      NamespaceBox["NetworkGraphics",
+       DynamicModuleBox[{Typeset`graph = HoldComplete[
+         Graph[{"A", "B", "C", "D"}, {
+          Null, {{1, 2}, {2, 3}, {3, 4}, {4, 3}, {1, 1}, {1, 4}}}, {
+          PerformanceGoal -> "Quality", VertexLabels -> {None}, 
+           VertexShapeFunction -> {"Name"}}]], Typeset`boxes, 
+        Typeset`boxes$s2d = GraphicsGroupBox[{{
+           Directive[
+            Opacity[0.7], 
+            Hue[0.6, 0.7, 0.5]], 
+           BezierCurveBox[{
+             DynamicLocation[
+             "VertexID$1", Automatic, 
+              Center], {-1.125128563071181, -0.26980865897674017`}, \
+{-1.4063852032689548`, -0.34956498993139373`}, {-1.586231625136188, \
+-0.2661870895300691}, {-1.586231625136188, 
+             0.26618708953007086`}, {-1.4063852032689548`, 
+             0.3495649899313956}, {-1.125128563071181, 0.26980865897674217`}, 
+             
+             DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+            7], 
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$2", Automatic, Center]}], 
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$4", Automatic, Center]}], 
+           LineBox[{
+             DynamicLocation["VertexID$2", Automatic, Center], 
+             DynamicLocation["VertexID$3", Automatic, Center]}], 
+           BezierCurveBox[{
+             DynamicLocation["VertexID$3", Automatic, Center], {
+             0.664440747183117, -0.664440747183117}, 
+             DynamicLocation["VertexID$4", Automatic, Center]}], 
+           BezierCurveBox[{
+             DynamicLocation["VertexID$3", Automatic, Center], {
+             0.33555925281688137`, -0.33555925281688564`}, 
+             DynamicLocation["VertexID$4", Automatic, Center]}]}, {
+           Directive[
+            Hue[0.6, 0.2, 0.8], 
+            EdgeForm[
+             Directive[
+              GrayLevel[0], 
+              Opacity[0.7]]]], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["\"A\"", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {-1., 1.0106430996148606`*^-15}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["\"B\"", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {-7.044813998280222*^-16, 1.}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["\"C\"", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {1., -1.133107779529596*^-15}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$3"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["\"D\"", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {6.049014748177263*^-16, -1.}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> 
+            "VertexID$4"]}}], $CellContext`flag}, 
+        TagBox[
+         DynamicBox[GraphComputation`NetworkGraphicsBox[
+          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+           SynchronousUpdating -> False, 
+           TrackedSymbols :> {$CellContext`flag}},
+          
+          ImageSizeCache->{{-1.2393066909899062`, 
+           132.9229004409899}, {-62.23930669098991, 57.31381534020776}}],
+         MouseAppearanceTag["NetworkGraphics"]],
+        AllowKernelInitialization->False,
+        UnsavedVariables:>{$CellContext`flag}]],
+      DefaultBaseStyle->{
+       "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> 
+        Hue[0.8, 1., 0.6]},
+      FormatType->TraditionalForm,
+      FrameTicks->None,
+      ImageSize->{130.68359375, Automatic}], ",", 
+     GraphicsBox[
+      NamespaceBox["NetworkGraphics",
+       DynamicModuleBox[{Typeset`graph = HoldComplete[
+         Graph[{2, 1, 3, 4}, {
+          Null, {{2, 1}, {1, 3}, {3, 4}, {4, 3}, {2, 2}, {4, 2}}}, {
+          PerformanceGoal -> "Quality", VertexLabels -> {None}, 
+           VertexShapeFunction -> {"Name"}}]], Typeset`boxes, 
+        Typeset`boxes$s2d = GraphicsGroupBox[{{
+           Directive[
+            Opacity[0.7], 
+            Hue[0.6, 0.7, 0.5]], 
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$2", Automatic, Center]}], 
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$3", Automatic, Center]}], 
+           BezierCurveBox[{
+             DynamicLocation[
+             "VertexID$2", Automatic, Center], {-0.2698086589769875, 
+             1.1251285630706513`}, {-0.3495649899317138, 
+             1.406385203268681}, {-0.26618708953031345`, 1.586231625136078}, {
+             0.2661870895303107, 1.5862316251360784`}, {0.3495649899317115, 
+             1.4063852032686817`}, {0.2698086589769857, 1.1251285630706518`}, 
+             
+             DynamicLocation["VertexID$2", Automatic, Center]}, SplineDegree -> 
+            7], 
+           LineBox[{
+             DynamicLocation["VertexID$2", Automatic, Center], 
+             DynamicLocation["VertexID$4", Automatic, Center]}], 
+           BezierCurveBox[{
+             DynamicLocation["VertexID$3", Automatic, Center], {
+             0.33555925281688403`, -0.33555925281688403`}, 
+             DynamicLocation["VertexID$4", Automatic, Center]}], 
+           BezierCurveBox[{
+             DynamicLocation["VertexID$3", Automatic, Center], {
+             0.664440747183117, -0.664440747183117}, 
+             DynamicLocation["VertexID$4", Automatic, Center]}]}, {
+           Directive[
+            Hue[0.6, 0.2, 0.8], 
+            EdgeForm[
+             Directive[
+              GrayLevel[0], 
+              Opacity[0.7]]]], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["2", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {-1., 1.0106430996148606`*^-15}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["1", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {-7.044813998280222*^-16, 1.}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["3", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {6.049014748177263*^-16, -1.}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$3"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["4", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {1., -1.133107779529596*^-15}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> 
+            "VertexID$4"]}}], $CellContext`flag}, 
+        TagBox[
+         DynamicBox[GraphComputation`NetworkGraphicsBox[
+          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+           SynchronousUpdating -> False, 
+           TrackedSymbols :> {$CellContext`flag}},
+          
+          ImageSizeCache->{{-3.239306690989906, 
+           112.61795316942276`}, {-74.2393066909899, 70.23497881342917}}],
+         MouseAppearanceTag["NetworkGraphics"]],
+        AllowKernelInitialization->False,
+        UnsavedVariables:>{$CellContext`flag}]],
+      DefaultBaseStyle->{
+       "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> 
+        Hue[0.8, 1., 0.6]},
+      FormatType->TraditionalForm,
+      FrameTicks->None,
+      ImageSize->{110.37864647843287`, Automatic}], ",", 
+     GraphicsBox[
+      NamespaceBox["NetworkGraphics",
+       DynamicModuleBox[{Typeset`graph = HoldComplete[
+         Graph[{"A", "B", "C", "D"}, {
+          Null, {{1, 2}, {2, 3}, {3, 4}, {1, 1}, {1, 4}, {3, 3}}}, {
+          PerformanceGoal -> "Quality", VertexLabels -> {None}, 
+           VertexShapeFunction -> {"Name"}}]], Typeset`boxes, 
+        Typeset`boxes$s2d = GraphicsGroupBox[{{
+           Directive[
+            Opacity[0.7], 
+            Hue[0.6, 0.7, 0.5]], 
+           BezierCurveBox[{
+             DynamicLocation[
+             "VertexID$1", Automatic, 
+              Center], {-1.125128563071181, -0.26980865897674017`}, \
+{-1.4063852032689548`, -0.34956498993139373`}, {-1.586231625136188, \
+-0.2661870895300691}, {-1.586231625136188, 
+             0.26618708953007086`}, {-1.4063852032689548`, 
+             0.3495649899313956}, {-1.125128563071181, 0.26980865897674217`}, 
+             
+             DynamicLocation["VertexID$1", Automatic, Center]}, SplineDegree -> 
+            7], 
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$2", Automatic, Center]}], 
+           LineBox[{
+             DynamicLocation["VertexID$1", Automatic, Center], 
+             DynamicLocation["VertexID$4", Automatic, Center]}], 
+           LineBox[{
+             DynamicLocation["VertexID$2", Automatic, Center], 
+             DynamicLocation["VertexID$3", Automatic, Center]}], 
+           BezierCurveBox[{
+             DynamicLocation["VertexID$3", Automatic, Center], {
+             1.1251285630711807`, 0.26980865897674}, {1.4063852032689546`, 
+             0.3495649899313937}, {1.5862316251361879`, 0.266187089530069}, {
+             1.586231625136188, -0.266187089530071}, {
+             1.4063852032689548`, -0.34956498993139573`}, {
+             1.125128563071181, -0.2698086589767423}, 
+             DynamicLocation["VertexID$3", Automatic, Center]}, SplineDegree -> 
+            7], 
+           LineBox[{
+             DynamicLocation["VertexID$3", Automatic, Center], 
+             DynamicLocation["VertexID$4", Automatic, Center]}]}, {
+           Directive[
+            Hue[0.6, 0.2, 0.8], 
+            EdgeForm[
+             Directive[
+              GrayLevel[0], 
+              Opacity[0.7]]]], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["\"A\"", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {-1., 1.0106430996148606`*^-15}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["\"B\"", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {-7.044813998280222*^-16, 1.}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["\"C\"", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {1., -1.133107779529596*^-15}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> "VertexID$3"], 
+           TagBox[
+            InsetBox[
+             BoxData[
+              FormBox[
+               PaneBox["\"D\"", Alignment -> Center, ImageMargins -> 2], 
+               TraditionalForm]], {6.049014748177263*^-16, -1.}, BaseStyle -> 
+             "Graphics"], "DynamicName", BoxID -> 
+            "VertexID$4"]}}], $CellContext`flag}, 
+        TagBox[
+         DynamicBox[GraphComputation`NetworkGraphicsBox[
+          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+           SynchronousUpdating -> False, 
+           TrackedSymbols :> {$CellContext`flag}},
+          
+          ImageSizeCache->{{-0.2393066909899062, 
+           158.2393066909899}, {-63.23930669098989, 58.28533653037081}}],
+         MouseAppearanceTag["NetworkGraphics"]],
+        AllowKernelInitialization->False,
+        UnsavedVariables:>{$CellContext`flag}]],
+      DefaultBaseStyle->{
+       "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> 
+        Hue[0.8, 1., 0.6]},
+      FormatType->TraditionalForm,
+      FrameTicks->None,
+      ImageSize->{159.69921875, Automatic}]}], "}"}]}], 
+  ";"}]], "Input",ExpressionUUID->"030173ad-6b62-4a20-bd19-9a9b3f5ee848"],
+
+Cell[BoxData[
+ RowBox[{"IGVF2IsomorphicQ", "[", 
+  RowBox[{"g1", ",", "g2"}], 
+  "]"}]], "Input",ExpressionUUID->"8373a2a4-baa3-4436-8ba2-b7f9ed936aac"],
+
+Cell[TextData[{
+ Cell[BoxData["IGColoredSimpleGraph"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "d434f327-77d2-4f4c-9a5e-f6757253893e"],
+ " can encode them as coloured graphs. Its output can be supplied directly to \
+",
+ Cell[BoxData["IGVF2IsomorphicQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "c285d9c7-0f1b-4a69-aa9e-a60a9a4c05c3"],
+ "."
+}], "Text",ExpressionUUID->"f8fe07c9-fb48-44a1-92d1-2ec9e0d961c5"],
+
+Cell[BoxData[
+ RowBox[{"IGColoredSimpleGraph", "[", "g1", 
+  "]"}]], "Input",ExpressionUUID->"91d70f19-6816-455b-80d9-48bc165ca6cb"],
+
+Cell[TextData[{
+ "Now can can determine that ",
+ Cell[BoxData["g1"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "d4e69d89-201f-4d2c-802b-fb678bdf8817"],
+ " is isomorphic to ",
+ Cell[BoxData["g2"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "c909d024-b77d-40f4-832c-0e35c2f5d867"],
+ ", but not to ",
+ Cell[BoxData["g3"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "f76a290c-78f6-43d8-9788-c78bd0d09d1a"],
+ "."
+}], "Text",ExpressionUUID->"c72f17a8-cba6-4f5d-bbb3-a8c643466612"],
+
+Cell[BoxData[
+ RowBox[{"IGVF2IsomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"IGColoredSimpleGraph", "[", "g1", "]"}], ",", 
+   RowBox[{"IGColoredSimpleGraph", "[", "g2", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"01d20403-6fcd-4c6e-a389-24bc29ff56e1"],
+
+Cell[BoxData[
+ RowBox[{"IGVF2IsomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"IGColoredSimpleGraph", "[", "g1", "]"}], ",", 
+   RowBox[{"IGColoredSimpleGraph", "[", "g3", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"a1ad597d-ca9a-4608-b822-86bdd534d14d"],
+
+Cell["\<\
+When searching for subgraphs in multigraphs with this method, be aware that a \
+match occurs only if the edge multiplicities are the same. This sort of \
+matching is useful e.g. in substructure search chemistry, where a double bond \
+must only match another double bond, but not a single one.\
+\>", "Text",ExpressionUUID->"781853e6-779c-48a3-95fa-3094a8e1bf34"],
+
+Cell[BoxData[
+ RowBox[{"IGVF2SubisomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"IGColoredSimpleGraph", "[", 
+    GraphicsBox[
+     NamespaceBox["NetworkGraphics",
+      DynamicModuleBox[{Typeset`graph = HoldComplete[
+        Graph[{1, 2, 3}, {Null, {{1, 2}, {2, 3}}}, {
+         VertexSize -> {Medium}}]]}, 
+       TagBox[
+        GraphicsGroupBox[
+         GraphicsComplexBox[{{0., 3.6739403974420594`*^-16}, {1., 
+          2.4492935982947064`*^-16}, {2., 0.}}, {
+           {Hue[0.6, 0.7, 0.5], Opacity[0.7], LineBox[{{1, 2}, {2, 3}}]}, 
+           {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+            DiskBox[1, 0.1], DiskBox[2, 0.1], DiskBox[3, 0.1]}}]],
+        MouseAppearanceTag["NetworkGraphics"]],
+       AllowKernelInitialization->False]],
+     DefaultBaseStyle->{
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+     FormatType->TraditionalForm,
+     FrameTicks->None], "]"}], ",", 
+   RowBox[{"IGColoredSimpleGraph", "[", 
+    GraphicsBox[
+     NamespaceBox["NetworkGraphics",
+      DynamicModuleBox[{Typeset`graph = HoldComplete[
+        Graph[{1, 2, 3}, {Null, {{1, 2}, {2, 3}, {1, 3}, {1, 2}, {2, 3}}}, {
+         VertexLabels -> {None}, VertexSize -> {0.1}}]]}, 
+       TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJwt0n8s1HEcx/GLZpySftksK9aPNRtSTefHejcUi9muH5zhWJtqSFwz/Vgp
+4xoj0c6vmkmJ4iRU2NX7Ri2byqGLUM7duR+oKMrlNtW9P5/ts8+++/73ej7c
+Tpw9kmjF4XCC/t3/b324wHDx2TQuLP8/48jNrwr3vfAogGM5syCl/2Bv+Vbh
+0pJ1wZmiKYypLSr91jeITVnBvgL/KfS0n5M2v1Rg6Z2htEsfjDjzVWOrTulF
+qZvWeUOMEdseS07/Sn+N+0zGjUl9BnTkjfbzXRHdTbudFN4GDM0QeU9JWvHj
+3FjSvWw9yssXhE5l1bhvsaI3rEuHnFSvH1/kuRChEztaRQ+hbnapySdfA9W+
+aqnqmRIDjcc01hNa4K2PbA+eH8SOukmR0EMHaRErzLx1A8hNVkmupephYMfP
+iZG1CrwZL9n5+J4BdmbH3Wg19GJBmY3LrrdGCF29qWQm4w1ulR9WH9NPQaNA
+6WD9vgs7T175mDE/Ded/1Wz7Y6XH+HfmxmnDEPLz+ruXhydxz1XJq4fvleg8
+I18ZIdOitddqXkL5IPp1CDMLpRpche58YUg/ptRGJQmlajQ3XIuy6XyHdkEe
+BQLZBLZXlfZeeNqDSq9TxdxRFY7dP1q4Jqcbsz5tUJnsVDgsHs98ypehjG8S
+yRTd+CAn1dbEH4eA5K8LcX1yLIv+nphuNwGq2+7Fkdtl2BbheeiFSA1pt0W3
+xLzn6HDK34+r1cBw1N1zPqMtaEreXnk5dhJcV9if/72lCcVLvGzeqA6q+wLm
+3FvqsCZ3MVIQb4Bm7sHXyrQa7BwICfutN4KC9oA2tkcK7QWb2V7htCeI2Z5a
+2hvy2N5XqQdYsR6h1AuesF7N1BN4rKeQesNn1ns/eQDXJPLwmbyAooK8eJMn
+6GGe9pM3qGbenpBHMDOPleQV9n4jry3kGY4zzxyzxTvkMO+O9pY9oJXtoaK9
+oJLtlUB7whW25yLtDbNs73rqATash+0dSy9oYL0E1BOKWE8F9YYS1jubPEDs
+dfIwQl7ApZa8OJAnMDNPIvIGBxrJWyB5BE/m0Y28wg7mNZo8QxTznEXeIYd5
+/wuhYU7e
+          "], {
+           {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              1, {-0.6796738226668951, 0.3924098644778713}, 2}], 
+              0.08660254037844384]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              1, {-0.18635158111754713`, 0.10759013552212354`}, 2}], 
+              0.08660254037844384]}, 
+            {Arrowheads[0.], ArrowBox[{1, 3}, 0.08660254037844384]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              2, {0.6796738226668931, 0.39240986447787535`}, 3}], 
+              0.08660254037844384]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              2, {0.18635158111754296`, 0.10759013552212814`}, 3}], 
+              0.08660254037844384]}}, 
+           {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+            DiskBox[1, 0.08660254037844384], DiskBox[2, 0.08660254037844384], 
+            DiskBox[3, 0.08660254037844384]}}]],
+        MouseAppearanceTag["NetworkGraphics"]],
+       AllowKernelInitialization->False]],
+     DefaultBaseStyle->{
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+     FormatType->TraditionalForm,
+     FrameTicks->None], "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"0cda3baa-a548-463b-8319-93bcbb19eeb8"],
+
+Cell[BoxData[
+ RowBox[{"IGVF2SubisomorphicQ", "[", 
+  RowBox[{
+   RowBox[{"IGColoredSimpleGraph", "[", 
+    GraphicsBox[
+     NamespaceBox["NetworkGraphics",
+      DynamicModuleBox[{Typeset`graph = HoldComplete[
+        Graph[{1, 2, 3}, {Null, {{1, 2}, {2, 3}, {2, 3}}}, {
+         VertexLabels -> {None}, VertexSize -> {Medium}}]]}, 
+       TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGBQBmIQDQNcXfN8LCt32UB4H+zZY0SM1ZZthPIZHGDqCr7F
+Vc3Y8NHe4ESUutDbRfZJJfKKj+U+2SeU7zp+PXG5vbbQgqeH+4D8tcqv52iv
+ts81Nuv68f+TfUPT8SRlj3X2/2N+s9sVfba/YdJ28mTUBnv3NTXbAp5+ts+Y
+kHLUznKj/f0vJ4vfRHyxPxDV/+7Nvo3258+AwBd7hqAdcq2vN9qbGIPAb/sf
+gRC+CrdZj/Dy3/Y7oOr3Bjd7rpf6Y58ANY9lMcuPg71/7C9A7Zt+5mQpO8Nf
++wSoe26+jZeyKfxr7wB178LuB/dkHgL5UP9M4VzYmu7/z14A6l+Y/z8cB/P3
+w/yvAFG/H+Z/BYh5+2H+d4DYtx/m/x0Q9+yH+d8D4t79MP8vgPhnP8z/DyD+
+3Q/z/wsoH+b/FVD1MP8HQM2D+f8A1D6Y/2Hugfkf5l6Y/2H+gfkf5l8APSUY
+Ow==
+          "], {
+           {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+            {Arrowheads[0.], ArrowBox[{1, 2}, 0.1]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              2, {1.499999999999998, 0.16444074718311621`}, 3}], 0.1]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              2, {1.4999999999999984`, -0.1644407471831161}, 3}], 0.1]}}, 
+           {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+            DiskBox[1, 0.1], DiskBox[2, 0.1], DiskBox[3, 0.1]}}]],
+        MouseAppearanceTag["NetworkGraphics"]],
+       AllowKernelInitialization->False]],
+     DefaultBaseStyle->{
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+     FormatType->TraditionalForm,
+     FrameTicks->None], "]"}], ",", 
+   RowBox[{"IGColoredSimpleGraph", "[", 
+    GraphicsBox[
+     NamespaceBox["NetworkGraphics",
+      DynamicModuleBox[{Typeset`graph = HoldComplete[
+        Graph[{1, 2, 3}, {Null, {{1, 2}, {2, 3}, {1, 3}, {1, 2}, {2, 3}}}, {
+         VertexLabels -> {None}, VertexSize -> {0.1}}]]}, 
+       TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJwt0n8s1HEcx/GLZpySftksK9aPNRtSTefHejcUi9muH5zhWJtqSFwz/Vgp
+4xoj0c6vmkmJ4iRU2NX7Ri2byqGLUM7duR+oKMrlNtW9P5/ts8+++/73ej7c
+Tpw9kmjF4XCC/t3/b324wHDx2TQuLP8/48jNrwr3vfAogGM5syCl/2Bv+Vbh
+0pJ1wZmiKYypLSr91jeITVnBvgL/KfS0n5M2v1Rg6Z2htEsfjDjzVWOrTulF
+qZvWeUOMEdseS07/Sn+N+0zGjUl9BnTkjfbzXRHdTbudFN4GDM0QeU9JWvHj
+3FjSvWw9yssXhE5l1bhvsaI3rEuHnFSvH1/kuRChEztaRQ+hbnapySdfA9W+
+aqnqmRIDjcc01hNa4K2PbA+eH8SOukmR0EMHaRErzLx1A8hNVkmupephYMfP
+iZG1CrwZL9n5+J4BdmbH3Wg19GJBmY3LrrdGCF29qWQm4w1ulR9WH9NPQaNA
+6WD9vgs7T175mDE/Ded/1Wz7Y6XH+HfmxmnDEPLz+ruXhydxz1XJq4fvleg8
+I18ZIdOitddqXkL5IPp1CDMLpRpche58YUg/ptRGJQmlajQ3XIuy6XyHdkEe
+BQLZBLZXlfZeeNqDSq9TxdxRFY7dP1q4Jqcbsz5tUJnsVDgsHs98ypehjG8S
+yRTd+CAn1dbEH4eA5K8LcX1yLIv+nphuNwGq2+7Fkdtl2BbheeiFSA1pt0W3
+xLzn6HDK34+r1cBw1N1zPqMtaEreXnk5dhJcV9if/72lCcVLvGzeqA6q+wLm
+3FvqsCZ3MVIQb4Bm7sHXyrQa7BwICfutN4KC9oA2tkcK7QWb2V7htCeI2Z5a
+2hvy2N5XqQdYsR6h1AuesF7N1BN4rKeQesNn1ns/eQDXJPLwmbyAooK8eJMn
+6GGe9pM3qGbenpBHMDOPleQV9n4jry3kGY4zzxyzxTvkMO+O9pY9oJXtoaK9
+oJLtlUB7whW25yLtDbNs73rqATash+0dSy9oYL0E1BOKWE8F9YYS1jubPEDs
+dfIwQl7ApZa8OJAnMDNPIvIGBxrJWyB5BE/m0Y28wg7mNZo8QxTznEXeIYd5
+/wuhYU7e
+          "], {
+           {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              1, {-0.6796738226668951, 0.3924098644778713}, 2}], 
+              0.08660254037844384]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              1, {-0.18635158111754713`, 0.10759013552212354`}, 2}], 
+              0.08660254037844384]}, 
+            {Arrowheads[0.], ArrowBox[{1, 3}, 0.08660254037844384]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              2, {0.6796738226668931, 0.39240986447787535`}, 3}], 
+              0.08660254037844384]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{
+              2, {0.18635158111754296`, 0.10759013552212814`}, 3}], 
+              0.08660254037844384]}}, 
+           {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+            DiskBox[1, 0.08660254037844384], DiskBox[2, 0.08660254037844384], 
+            DiskBox[3, 0.08660254037844384]}}]],
+        MouseAppearanceTag["NetworkGraphics"]],
+       AllowKernelInitialization->False]],
+     DefaultBaseStyle->{
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+     FormatType->TraditionalForm,
+     FrameTicks->None], "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"48facb5f-f71b-4e2a-9f0b-4e621faaa197"],
+
+Cell[TextData[{
+ "Use ",
+ Cell[BoxData["IGSubisomorphicQ"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8bcc145b-3a87-4dcb-b12a-5a0a3ba946e1"],
+ " to match any subgraph."
+}], "Text",ExpressionUUID->"10a1d22a-9171-4656-9b09-afce6cad22ce"],
+
+Cell[BoxData[
+ RowBox[{"IGSubisomorphicQ", "[", 
+  RowBox[{
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, {{1, 2}, {2, 3}}}, {VertexSize -> {Medium}}]]}, 
+      TagBox[
+       GraphicsGroupBox[
+        GraphicsComplexBox[{{0., 3.6739403974420594`*^-16}, {1., 
+         2.4492935982947064`*^-16}, {2., 0.}}, {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], LineBox[{{1, 2}, {2, 3}}]}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.1], DiskBox[2, 0.1], DiskBox[3, 0.1]}}]],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None], ",", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3}, {Null, {{1, 2}, {2, 3}, {1, 3}, {1, 2}, {2, 3}}}, {
+        VertexLabels -> {None}, VertexSize -> {0.1}}]]}, 
+      TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJwt0n8s1HEcx/GLZpySftksK9aPNRtSTefHejcUi9muH5zhWJtqSFwz/Vgp
+4xoj0c6vmkmJ4iRU2NX7Ri2byqGLUM7duR+oKMrlNtW9P5/ts8+++/73ej7c
+Tpw9kmjF4XCC/t3/b324wHDx2TQuLP8/48jNrwr3vfAogGM5syCl/2Bv+Vbh
+0pJ1wZmiKYypLSr91jeITVnBvgL/KfS0n5M2v1Rg6Z2htEsfjDjzVWOrTulF
+qZvWeUOMEdseS07/Sn+N+0zGjUl9BnTkjfbzXRHdTbudFN4GDM0QeU9JWvHj
+3FjSvWw9yssXhE5l1bhvsaI3rEuHnFSvH1/kuRChEztaRQ+hbnapySdfA9W+
+aqnqmRIDjcc01hNa4K2PbA+eH8SOukmR0EMHaRErzLx1A8hNVkmupephYMfP
+iZG1CrwZL9n5+J4BdmbH3Wg19GJBmY3LrrdGCF29qWQm4w1ulR9WH9NPQaNA
+6WD9vgs7T175mDE/Ded/1Wz7Y6XH+HfmxmnDEPLz+ruXhydxz1XJq4fvleg8
+I18ZIdOitddqXkL5IPp1CDMLpRpche58YUg/ptRGJQmlajQ3XIuy6XyHdkEe
+BQLZBLZXlfZeeNqDSq9TxdxRFY7dP1q4Jqcbsz5tUJnsVDgsHs98ypehjG8S
+yRTd+CAn1dbEH4eA5K8LcX1yLIv+nphuNwGq2+7Fkdtl2BbheeiFSA1pt0W3
+xLzn6HDK34+r1cBw1N1zPqMtaEreXnk5dhJcV9if/72lCcVLvGzeqA6q+wLm
+3FvqsCZ3MVIQb4Bm7sHXyrQa7BwICfutN4KC9oA2tkcK7QWb2V7htCeI2Z5a
+2hvy2N5XqQdYsR6h1AuesF7N1BN4rKeQesNn1ns/eQDXJPLwmbyAooK8eJMn
+6GGe9pM3qGbenpBHMDOPleQV9n4jry3kGY4zzxyzxTvkMO+O9pY9oJXtoaK9
+oJLtlUB7whW25yLtDbNs73rqATash+0dSy9oYL0E1BOKWE8F9YYS1jubPEDs
+dfIwQl7ApZa8OJAnMDNPIvIGBxrJWyB5BE/m0Y28wg7mNZo8QxTznEXeIYd5
+/wuhYU7e
+         "], {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             1, {-0.6796738226668951, 0.3924098644778713}, 2}], 
+             0.08660254037844384]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             1, {-0.18635158111754713`, 0.10759013552212354`}, 2}], 
+             0.08660254037844384]}, 
+           {Arrowheads[0.], ArrowBox[{1, 3}, 0.08660254037844384]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             2, {0.6796738226668931, 0.39240986447787535`}, 3}], 
+             0.08660254037844384]}, 
+           {Arrowheads[0.], 
+            ArrowBox[BezierCurveBox[{
+             2, {0.18635158111754296`, 0.10759013552212814`}, 3}], 
+             0.08660254037844384]}}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.08660254037844384], DiskBox[2, 0.08660254037844384], 
+           DiskBox[3, 0.08660254037844384]}}]],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None]}], 
+  "]"}]], "Input",ExpressionUUID->"42922d7b-db97-4dd1-873e-b77a79e1a5b3"]
 }, Closed]]
 }, Closed]]
 }, Closed]],
@@ -43758,54 +45466,6 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
-Cell["IGNullGraphQ", \
-"Subsubsection",ExpressionUUID->"94b3384d-993e-4b1b-8612-95ec6d646b7b"],
-
-Cell[BoxData[
- RowBox[{"?", 
-  "IGNullGraphQ"}]], \
-"Input",ExpressionUUID->"96c2a2ae-db4e-4f9a-9471-6972d992e236"],
-
-Cell[TextData[{
- Cell[BoxData[
- "IGNullGraphQ"],ExpressionUUID->"700f5353-375c-4db1-99b9-ee31e5f19dc1"],
- " returns ",
- Cell[BoxData[
- "True"],ExpressionUUID->"0a5224cd-2d51-41b2-9a67-6685dcef3072"],
- " only for the null graph, i.e. the graph that has no vertices."
-}], "Text",ExpressionUUID->"0a1115ba-35a9-44d8-bbca-8ca41aa2cd09"],
-
-Cell[BoxData[
- RowBox[{"IGNullGraphQ", "[", 
-  RowBox[{"IGEmptyGraph", "[", "]"}], 
-  "]"}]], "Input",ExpressionUUID->"17219e13-6874-48a6-bdf5-d25985de6620"],
-
-Cell[TextData[{
- "For graphs that have vertices, but no edges, it returns ",
- Cell[BoxData["False"],ExpressionUUID->"ab171a4f-451e-4b67-8be7-7fe06e08be9b"],
- "."
-}], "Text",ExpressionUUID->"d3dfa32b-3267-4379-86e5-b6dc60c65b8c"],
-
-Cell[BoxData[
- RowBox[{"IGNullGraphQ", "[", 
-  RowBox[{"IGEmptyGraph", "[", "5", "]"}], 
-  "]"}]], "Input",ExpressionUUID->"2055a25d-4f72-4cbd-aff8-9ba80212bd68"],
-
-Cell[TextData[{
- "In contrast, the built-in ",
- Cell[BoxData[
- "EmptyGraphQ"],ExpressionUUID->"d2f1c8b8-25ab-4df1-b1cb-03c964e6aaa2"],
- " tests if there are no edges:"
-}], "Text",ExpressionUUID->"12dc696b-e1ac-4f50-a9a1-b1df2e7dd12f"],
-
-Cell[BoxData[
- RowBox[{"EmptyGraphQ", "[", 
-  RowBox[{"IGEmptyGraph", "[", "5", "]"}], 
-  "]"}]], "Input",ExpressionUUID->"eb9c3916-3071-4fb8-ad87-4ecd2b548355"]
-}, Closed]],
-
-Cell[CellGroupData[{
-
 Cell["IGPartitionsToMembership and IGMembershipToPartitions", \
 "Subsubsection",ExpressionUUID->"649a4448-61ed-4ae2-94fb-5a6f28edd522"],
 
@@ -44578,7 +46238,6 @@ Cell[BoxData[
             "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$6"], 
          TagBox[{
            TagBox[
-            
             RectangleBox[{1.5653086565863823`, 0.7069135813074301}, {
              1.868271644529426, 1.0098765692504739`}], "DynamicName", BoxID -> 
             "VertexID$7"], 
@@ -44870,29 +46529,188 @@ Cell["IGraph/M system functions", \
 
 Cell[CellGroupData[{
 
-Cell["Seeding the random number generator", \
-"Subsubsection",ExpressionUUID->"a57f4900-93c7-401b-80d8-9460c67af5ff"],
+Cell["The random number generator", \
+"Subsection",ExpressionUUID->"a57f4900-93c7-401b-80d8-9460c67af5ff"],
 
-Cell["\<\
-The igraph C library\[CloseCurlyQuote]s random number generator can be seeded \
-using\
-\>", "Text",ExpressionUUID->"50673cc3-c875-4d13-8a9e-65a77f7faf5d"],
+Cell[TextData[{
+ "IGraph/M makes use of Mathematica\[CloseCurlyQuote]s own random number \
+generator by default, thus functions like ",
+ Cell[BoxData[
+ "SeedRandom"],ExpressionUUID->"45a7cd19-fa3d-4459-b326-030b4a01dc9a"],
+ " and ",
+ Cell[BoxData[
+ "BlockRandom"],ExpressionUUID->"94cee001-bd69-4ca9-874e-d59990180ecf"],
+ " have the expected effect."
+}], "Text",ExpressionUUID->"14fd09c3-2267-429d-9876-c8e989f9225a"],
+
+Cell[BoxData[{
+ RowBox[{"SeedRandom", "[", "137", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"BlockRandom", "@", 
+    RowBox[{"IGErdosRenyiGameGNM", "[", 
+     RowBox[{"6", ",", "9"}], "]"}]}], ",", 
+   RowBox[{"{", "3", "}"}]}], 
+  "]"}]}], "Input",ExpressionUUID->"cbc51bab-e8cc-4de1-af98-e2662a734fb8"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "BlockRandom"],ExpressionUUID->"eb580ea5-e938-48b6-8e30-190c3fcf2e1c"],
+ " is useful for example to get consistent graph layouts without affecting \
+subsequent uses of the random number generator."
+}], "Text",ExpressionUUID->"37c7dc40-f8f7-40c9-b02d-441452e3cdb6"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{"{", 
+     RowBox[{"100", ",", "150"}], "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"IGLayoutFruchtermanReingold", "[", "g", "]"}], ",", 
+   RowBox[{"{", "4", "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.7653419338861647`*^9, 3.765341937224715*^9}, {
+  3.765342034073781*^9, 
+  3.765342090837318*^9}},ExpressionUUID->"1b870761-92dc-4ab9-9535-\
+28c88931aa70"],
 
 Cell[BoxData[
- RowBox[{"IGSeedRandom", "[", "123", 
-  "]"}]], "Input",ExpressionUUID->"ed689825-a2d8-475b-8b83-78af9152c681"],
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"BlockRandom", "[", 
+    RowBox[{
+     RowBox[{"IGLayoutFruchtermanReingold", "[", "g", "]"}], ",", 
+     RowBox[{"RandomSeeding", "\[Rule]", "1234"}]}], "]"}], ",", 
+   RowBox[{"{", "4", "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"ada4761c-b15e-4540-a6ea-9412f3e71ad7"],
 
-Cell["\<\
-Most IGraph/M functions that return a non-deterministic result, such as \
-functions that implement random graph models, use this random number \
-generator.\
-\>", "Text",ExpressionUUID->"5ebd84f8-fd54-4b07-a943-73b2b9936823"]
+Cell[TextData[{
+ "IGraph/M can be configured to either use Mathematica\[CloseCurlyQuote]s \
+built-in generator, or the default generator of the core igraph C library. \
+The default generator of igraph will perform better, but it does not react to \
+",
+ Cell[BoxData[
+ "BlockRandom"],ExpressionUUID->"eb20cfb7-5677-46ef-a0d8-b75d0c1873ff"],
+ " and must be seeded with ",
+ Cell[BoxData[
+ "IGSeedRandom"],ExpressionUUID->"81968b81-f08d-4830-9dcd-e9375656895c"],
+ " (not with ",
+ Cell[BoxData[
+ "SeedRandom"],ExpressionUUID->"9f754d8e-df0d-4cb6-ac59-fc89f7c25084"],
+ ")."
+}], "Text",ExpressionUUID->"b95ee8dc-b3b1-47d4-861b-e9b8a99b61ca"],
+
+Cell[TextData[{
+ "Benchmark ",
+ Cell[BoxData[
+ "IGRandomWalk"],ExpressionUUID->"c2ff9782-6c26-4332-a428-3eaa4b4a55cf"],
+ " when using Mathematica\[CloseCurlyQuote]s random number generator:"
+}], "Text",ExpressionUUID->"cd8c9c4e-8bfb-4a90-a6e9-9a90b6d394b8"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGGiantComponent", "@", 
+    RowBox[{"RandomGraph", "[", 
+     RowBox[{"{", 
+      RowBox[{"1000", ",", "2000"}], "}"}], "]"}]}]}], 
+  ";"}]], "Input",ExpressionUUID->"49fca926-8dad-4e94-94bd-710fa578d678"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGRandomWalk", "[", 
+    RowBox[{"g", ",", "1", ",", "10000000"}], "]"}], ";"}], "//", 
+  "RepeatedTiming"}]], \
+"Input",ExpressionUUID->"4e709357-25f5-451c-852f-60972fbd9e12"],
+
+Cell["Benchmark it with igraph\[CloseCurlyQuote]s default generator:", \
+"Text",ExpressionUUID->"6f59e3e0-02e6-4fff-9b69-1b1ef8b2965a"],
+
+Cell[BoxData[{
+ RowBox[{"IGSeedRandom", "[", 
+  RowBox[{"Method", "\[Rule]", "\"\<igraph\>\""}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGRandomWalk", "[", 
+    RowBox[{"g", ",", "1", ",", "10000000"}], "]"}], ";"}], "//", 
+  "RepeatedTiming"}]}], \
+"Input",ExpressionUUID->"f693d086-a4a1-4c39-b738-c7b92d8d279a"],
+
+Cell["Set the generator back to Mathematica\[CloseCurlyQuote]s:", \
+"Text",ExpressionUUID->"b2d032b2-cc7c-4a3f-bc70-47837105e3b9"],
+
+Cell[BoxData[
+ RowBox[{"IGSeedRandom", "[", 
+  RowBox[{"Method", "\[Rule]", "\"\<Mathematica\>\""}], 
+  "]"}]], "Input",ExpressionUUID->"db8ecc47-db80-4f93-bb32-ab1f59deaf12"],
+
+Cell[CellGroupData[{
+
+Cell["IGSeedRandom", \
+"Subsubsection",ExpressionUUID->"ca8c4e8a-932d-4493-b5ce-c7040d640ecc"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGSeedRandom"}]], \
+"Input",ExpressionUUID->"c9565242-6c35-4db8-9e9c-c79ca53fd2db"],
+
+Cell[TextData[{
+ "Available ",
+ Cell[BoxData[
+ "Method"],ExpressionUUID->"38b881af-f935-499b-a5de-cc01fef487fb"],
+ " option values are:"
+}], "Text",ExpressionUUID->"18c32337-e9d1-4d86-b8fd-289773c27f65"],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ Cell[BoxData[
+ "\"\<Mathematica\>\""],ExpressionUUID->
+  "aae8400f-c8cf-41b1-89bb-a8043c9070b9"],
+ " uses Mathematica\[CloseCurlyQuote]s built-in random number generator. With \
+this choice, functions like ",
+ Cell[BoxData[
+ "SeedRandom"],ExpressionUUID->"ac62ccdf-2dc8-4147-bca6-6d66a7f0b55d"],
+ " and ",
+ Cell[BoxData[
+ "BlockRandom"],ExpressionUUID->"513401d9-7f6a-4e22-9526-d19f0399f6f5"],
+ " will IGraph/M functions as expected. Performance is not as good as with \
+the ",
+ Cell[BoxData[
+ "\"\<igraph\>\""],ExpressionUUID->"54001500-cc59-44c7-869f-f175a39c8525"],
+ " generator"
+}], "Item",ExpressionUUID->"65231bfe-eb24-4b36-a9e8-88a9fad59528"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "\"\<igraph\>\""],ExpressionUUID->"0cce9d42-65f5-4b0f-a941-3d955841c097"],
+ " uses the core igraph C library\[CloseCurlyQuote]s random number generator. \
+",
+ Cell[BoxData[
+ "SeedRandom"],ExpressionUUID->"217a4a1d-c23a-482d-bb7f-6f6200a21d84"],
+ " and ",
+ Cell[BoxData[
+ "BlockRandom"],ExpressionUUID->"0715611b-0876-4f5f-be2c-231ec8d5f8bf"],
+ " have no effect on this generator. Seeding can be done with ",
+ Cell[BoxData[
+ "IGSeedRandom"],ExpressionUUID->"42144836-f2a4-45d4-9165-b32780aca8c6"],
+ ". Performance is better than with the ",
+ Cell[BoxData[
+ "\"\<Mathematica\>\""],ExpressionUUID->
+  "d8249e37-ca86-4641-b3be-820a3bf90145"],
+ " generator."
+}], "Item",ExpressionUUID->"85dfb83c-1f3e-434e-bbd7-536707d6d021"]
+}, Open  ]]
+}, Closed]]
 }, Closed]],
 
 Cell[CellGroupData[{
 
 Cell["Library version", \
-"Subsubsection",ExpressionUUID->"a25f0b41-acc1-445b-ac81-477957e89630"],
+"Subsection",ExpressionUUID->"a25f0b41-acc1-445b-ac81-477957e89630"],
 
 Cell["\<\
 The following symbols and functions can be used to retrieve the IGraph/M \
@@ -44920,7 +46738,7 @@ Cell[BoxData["IGraphM`Information`$Version"], \
 Cell[CellGroupData[{
 
 Cell["Support and troubleshooting", \
-"Subsubsection",ExpressionUUID->"df16ae0c-5de4-41d3-a25b-25be823f5eff"],
+"Subsection",ExpressionUUID->"df16ae0c-5de4-41d3-a25b-25be823f5eff"],
 
 Cell[TextData[{
  "If you find a problem with IGraph/M, please report it through ",
@@ -45045,8 +46863,8 @@ Cell[TextData[{
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{828, 818},
-WindowMargins->{{Automatic, 287}, {Automatic, 0}},
+WindowSize->{857, 818},
+WindowMargins->{{Automatic, 227}, {Automatic, 21}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
