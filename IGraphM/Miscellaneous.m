@@ -155,6 +155,9 @@ IGCactusQ[graph_ /; UndirectedGraphQ[graph] && SimpleGraphQ[graph]] :=
     Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"cactusQ"[]
     ]
+(* Some authors define cactus graphs for the directed case as well. Consider implementing this in the future. *)
+IGCactusQ::dirg = "IGCactusQ does not support directed graphs and will return False.";
+IGCactusQ[_?DirectedGraphQ] := (Message[IGCactusQ::dirg]; False)
 IGCactusQ[_] := False
 
 
