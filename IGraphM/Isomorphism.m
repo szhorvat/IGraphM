@@ -388,7 +388,7 @@ IGBlissAutomorphismGroup[{graph_?GraphQ, col : OptionsPattern[]}, opt : OptionsP
 
 (* This function has been updated to filter both multi-graphs and graphs with self-loops.
    The name stays the same, but keep in mind that self-loops are disallowed too. *)
-IGraphM::vf2nmg = "VF2 does not support non-simple graphs. Consider using IGIsomorphicQ.";
+IGraphM::vf2nmg = "VF2 does not support non-simple graphs. Consider using IGIsomorphicQ or IGColoredSimpleGraph.";
 vf2CheckMulti[graph_] := If[Not@SimpleGraphQ[graph], Message[IGraphM::vf2nmg]; throw[$Failed]]
 
 
