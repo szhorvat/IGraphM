@@ -776,6 +776,26 @@ IGSymmetricQ[graph_?igGraphQ] :=
 IGSymmetricQ[_] = False;
 
 
+PackageExport["IGDistanceTransitiveQ"]
+IGDistanceTransitiveQ::usage = "IGDistanceTransitiveQ[graph] tests if graph is distance-transitive.";
+
+IGDistanceTransitiveQ::nmg = IGVertexTransitiveQ::nmg;
+SyntaxInformation[IGDistanceTransitiveQ] = {"ArgumentsPattern" -> {_}};
+IGDistanceTransitiveQ[graph_?igGraphQ] :=
+    If[MultigraphQ[graph],
+      Message[IGDistanceTransitiveQ::nmg];
+      $Failed
+      ,
+      IGRegularQ[graph] &&
+      With[{dm = IGDistanceMatrix[graph], group = PermutationGroup@IGBlissAutomorphismGroup[graph]},
+        DuplicateFreeQ[
+          Extract[dm, #] & /@ GroupOrbits[group, Tuples[Range@VertexCount[graph], 2]][[All, 1]]
+        ]
+      ]
+    ]
+IGDistanceTransitiveQ[_] = False;
+
+
 (***** Homeomorphism *****)
 
 PackageExport["IGHomeomorphicQ"]
