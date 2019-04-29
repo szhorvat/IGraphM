@@ -148,16 +148,26 @@ IGTreelikeComponents[graph_?igGraphQ] :=
       igVertexNames[graph]@igIndexVec@check@ig@"treelikeComponents"[]
     ]
 
+
+(* Notes on graph types:
+
+   Directed: $Failed because some authors do define directed cacti, and it could be implemented.
+   Self-loops: Ignore them.
+   Multi-edges: Support.
+*)
 PackageExport["IGCactusQ"]
 IGCactusQ::usage = "IGCactusQ[graph] tests if graph is a cactus";
 SyntaxInformation[IGCactusQ] = {"ArgumentsPattern" -> {_}};
-IGCactusQ[graph_ /; UndirectedGraphQ[graph] && SimpleGraphQ[graph]] :=
-    Block[{ig = igMakeUnweighted[graph]},
-      sck@ig@"cactusQ"[]
+IGCactusQ[graph_?UndirectedGraphQ] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+      If[SimpleGraphQ[graph],
+        check@ig@"cactusQ"[],
+        check@ig@"nonSimpleCactusQ"[]
+      ]
     ]
 (* Some authors define cactus graphs for the directed case as well. Consider implementing this in the future. *)
-IGCactusQ::dirg = "IGCactusQ does not support directed graphs and will return False.";
-IGCactusQ[_?DirectedGraphQ] := (Message[IGCactusQ::dirg]; False)
+IGCactusQ::dirg = "IGCactusQ is not implemented for directed graphs.";
+IGCactusQ[_?DirectedGraphQ] := (Message[IGCactusQ::dirg]; $Failed)
 IGCactusQ[_] := False
 
 

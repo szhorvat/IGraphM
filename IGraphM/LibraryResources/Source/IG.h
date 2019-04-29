@@ -2762,7 +2762,6 @@ public:
     }
 
     // The input is expected to be a simple undirected graph
-    // Must check in WL for multigraph / self loop / directed graph
     bool cactusQ() const {
         // The below edge and vertex count checks are valid for simple graphs
 
@@ -2785,6 +2784,8 @@ public:
         igCheck(igraph_biconnected_components(&graph, &count, nullptr, nullptr, &list.list, nullptr));
 
         // TODO avoid creating the induced subgraph; just count its edges
+        // We verify that each bi-connected component is either K_2 or an induced cycle.
+        // Knowing that the component is biconnected, it is sufficient to check that E <= V.
         bool res = true;
         for (const auto ptr : list) {
             igraph_integer_t vcount = igraph_vector_size(ptr);
@@ -2798,6 +2799,44 @@ public:
                 }
                 igraph_destroy(&sg);
             }
+        }
+
+        return res;
+    }
+
+    bool nonSimpleCactusQ() {
+        igraph_simplify(&graph, /* multiple= */ false, /* loops= */ true, nullptr);
+
+        // An upper bound on the number of edges when multi-edges are allowed is E <= 2*(V-1)
+        // The cactus with the most edges is like an a tree with each edge having multiplicity 2.
+        if (edgeCount() > 2*(vertexCount() - 1))
+            return false;
+
+        // A lower bound is E >= V-1
+        // We do not consider the null graph a cactus
+        if (edgeCount() < vertexCount() - 1)
+            return  false;
+
+        // A cactus is connected
+        if (! connectedQ(/* strong= */ false))
+            return false;
+
+        igraph_integer_t count;
+        igList list;
+        igCheck(igraph_biconnected_components(&graph, &count, nullptr, nullptr, &list.list, nullptr));
+
+        // TODO avoid creating the induced subgraph; just count its edges
+        bool res = true;
+        for (const auto ptr : list) {
+            igraph_integer_t vcount = igraph_vector_size(ptr);
+            igraph_t sg;
+            igCheck(igraph_induced_subgraph(&graph, &sg, igraph_vss_vector(ptr), IGRAPH_SUBGRAPH_CREATE_FROM_SCRATCH));
+            if (igraph_ecount(&sg) > vcount) {
+                res = false;
+                igraph_destroy(&sg);
+                break;
+            }
+            igraph_destroy(&sg);
         }
 
         return res;

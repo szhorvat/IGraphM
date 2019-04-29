@@ -266,6 +266,7 @@ template = LTemplate["IGraphM",
         LFun["forestQ", {Integer (* mode *)}, True|False],
         LFun["bipartiteQ", {}, True|False],
         LFun["cactusQ", {}, True|False],
+        LFun["nonSimpleCactusQ", {}, True|False],
 
         (* Centrality *)
 
