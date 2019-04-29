@@ -365,22 +365,25 @@ IGBlissAutomorphismCount[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Option
 
 PackageExport["IGBlissAutomorphismGroup"]
 IGBlissAutomorphismGroup::usage =
-    "IGBlissAutomorphismGroup[graph] returns a set of generators for the automorphism group of graph. It is not guaranteed to be minimal.\n" <>
-    "IGBlissAutomorphismGroup[{graph, colorSpec}] returns a set of generators for the automorphism group of a vertex coloured graph.";
+    "IGBlissAutomorphismGroup[graph] returns the automorphism group of graph.\n" <>
+    "IGBlissAutomorphismGroup[{graph, colorSpec}] returns the automorphism group of a vertex coloured graph.";
+
+toPermGroup = PermutationGroup[PermutationCycles /@ #]&;
 
 Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "First" };
 SyntaxInformation[IGBlissAutomorphismGroup] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
+
 IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
       blissCheckMulti[graph];
-      igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
+      toPermGroup@igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
     ]
 
 IGBlissAutomorphismGroup[{graph_?GraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph], vcol},
       blissCheckMulti[graph];
       vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
-      igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
+      toPermGroup@igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
     ]
 
 
@@ -740,7 +743,7 @@ IGVertexTransitiveQ[graph_?igGraphQ] :=
       ,
       IGRegularQ[graph] &&
       With[{elems = Range@VertexCount[graph]},
-        GroupOrbits[PermutationGroup@IGBlissAutomorphismGroup[graph], elems] === {elems}
+        GroupOrbits[IGBlissAutomorphismGroup[graph], elems] === {elems}
       ]
     ]
 IGVertexTransitiveQ[_] = False;
@@ -787,7 +790,7 @@ IGDistanceTransitiveQ[graph_?igGraphQ] :=
       $Failed
       ,
       IGRegularQ[graph] &&
-      With[{dm = IGDistanceMatrix[graph], group = PermutationGroup@IGBlissAutomorphismGroup[graph]},
+      With[{dm = IGDistanceMatrix[graph], group = IGBlissAutomorphismGroup[graph]},
         DuplicateFreeQ[
           Extract[dm, #] & /@ GroupOrbits[group, Tuples[Range@VertexCount[graph], 2]][[All, 1]]
         ]
