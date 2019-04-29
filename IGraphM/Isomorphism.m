@@ -738,6 +738,7 @@ IGVertexTransitiveQ[graph_?igGraphQ] :=
       Message[IGVertexTransitiveQ::nmg];
       $Failed
       ,
+      IGRegularQ[graph] &&
       With[{elems = Range@VertexCount[graph]},
         GroupOrbits[PermutationGroup@IGBlissAutomorphismGroup[graph], elems] === {elems}
       ]
