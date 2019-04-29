@@ -171,8 +171,8 @@ mma::RealTensorRef IG::getIsomorphism(IG &ig) {
     if (multiQ() || ig.multiQ()) {
         IG g1, g2;
         igIntVector vc1, vc2, ec1, ec2;
-        g1.coloredSimpleGraph(*this, vc1, ec1);
-        g2.coloredSimpleGraph(ig, vc2, ec2);
+        g1.createColoredSimpleGraph(*this, vc1, ec1);
+        g2.createColoredSimpleGraph(ig, vc2, ec2);
 
         igCheck(igraph_isomorphic_vf2(
                     &g1.graph, &g2.graph,
@@ -228,8 +228,8 @@ mma::RealTensorRef IG::getSubisomorphism(IG &ig) {
 
         MultigraphColors graph_colors;
 
-        g1.coloredSimpleGraph(*this, graph_colors.vc1, graph_colors.ec1);
-        g2.coloredSimpleGraph(ig, graph_colors.vc2, graph_colors.ec2);
+        g1.createColoredSimpleGraph(*this, graph_colors.vc1, graph_colors.ec1);
+        g2.createColoredSimpleGraph(ig, graph_colors.vc2, graph_colors.ec2);
 
         igCheck(igraph_subisomorphic_vf2(
                     &g1.graph, &g2.graph,
@@ -332,8 +332,8 @@ bool IG::vf2IsomorphicMulti(IG &ig) {
 
     IG g1, g2;
     igIntVector vc1, vc2, ec1, ec2;
-    g1.coloredSimpleGraph(*this, vc1, ec1);
-    g2.coloredSimpleGraph(ig, vc2, ec2);
+    g1.createColoredSimpleGraph(*this, vc1, ec1);
+    g2.createColoredSimpleGraph(ig, vc2, ec2);
 
     igraph_bool_t iso;
     igCheck(igraph_isomorphic_vf2(
@@ -358,8 +358,8 @@ bool IG::vf2SubisomorphicMulti(IG &ig) {
 
     MultigraphColors graph_colors;
 
-    g1.coloredSimpleGraph(*this, graph_colors.vc1, graph_colors.ec1);
-    g2.coloredSimpleGraph(ig, graph_colors.vc2, graph_colors.ec2);
+    g1.createColoredSimpleGraph(*this, graph_colors.vc1, graph_colors.ec1);
+    g2.createColoredSimpleGraph(ig, graph_colors.vc2, graph_colors.ec2);
 
     igraph_bool_t iso;
     igCheck(igraph_subisomorphic_vf2(

@@ -956,7 +956,7 @@ public:
     // this function is used in the implementation of others
     // vc and ec are output arguments
     // this is a constructor!
-    void coloredSimpleGraph(const IG &ig, igIntVector &vc, igIntVector &ec) {
+    void createColoredSimpleGraph(const IG &ig, igIntVector &vc, igIntVector &ec) {
         destroy();
         igConstructorCheck(igraph_simplify_and_colorize(&ig.graph, &graph, &vc.vec, &ec.vec));
     }
