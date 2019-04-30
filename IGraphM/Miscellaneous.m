@@ -276,14 +276,15 @@ IGIntersectionArray[graph_?igGraphQ] :=
       ]
       ,
       DirectedGraphQ[graph],
-      IGIntersectionArray::dirg; $Failed
+      Message[IGIntersectionArray::dirg]; $Failed
       ,
       True, (* non-simple undirected graph *)
-      IGIntersectionArray::nsg; $Failed
+      Message[IGIntersectionArray::nsg]; $Failed
     ]
 
 
 PackageExport["IGDistanceRegularQ"]
 IGDistanceRegularQ::usage = "IGDistanceRegularQ[graph] tests if graph is distance regular.";
 SyntaxInformation[IGDistanceRegularQ] = {"ArgumentsPattern" -> {_}};
-IGDistanceRegularQ[graph_?igGraphQ] := IGIntersectionArray[graph] =!= {}
+IGDistanceRegularQ[graph_?igGraphQ] := catch[check@IGIntersectionArray[graph] =!= {}]
+IGDistanceRegularQ[_] := False
