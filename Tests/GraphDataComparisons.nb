@@ -200,6 +200,195 @@ Cell[BoxData[
    RowBox[{"{", "}"}]}], "}"}]], "Output",
  CellChangeTimes->{3.765426970400613*^9},
  CellLabel->"Out[6]=",ExpressionUUID->"dce5ddb5-e2f0-4aa7-8e01-207f561c0168"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Exclude", " ", "disconnected", " ", "graphs"}], ",", " ", 
+    RowBox[{"as", " ", "GraphData", " ", "does", " ", 
+     RowBox[{"this", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Select", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Select", "[", 
+      RowBox[{
+       RowBox[{"GraphData", "[", "]"}], ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"GraphData", "[", 
+          RowBox[{"#", ",", "\"\<VertexCount\>\""}], "]"}], "\[LessEqual]", 
+         "1024"}], "&"}]}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"ConnectedGraphQ", "@", 
+          RowBox[{"GraphData", "[", "#", "]"}]}], "&&", 
+         RowBox[{"IGDistanceRegularQ", "@", 
+          RowBox[{"GraphData", "[", "#", "]"}]}]}], ")"}], "=!=", 
+       RowBox[{"GraphData", "[", 
+        RowBox[{"#", ",", "\"\<DistanceRegular\>\""}], "]"}]}], "&"}]}], 
+    "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]}]], "Input",
+ CellChangeTimes->{{3.765602728175605*^9, 3.7656027288969717`*^9}},
+ CellLabel->"In[23]:=",ExpressionUUID->"53f1ff2f-57c6-4f01-8176-21376058c09b"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"46.833965`", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\<\"GeneralizedDodecagon\"\>", ",", 
+       RowBox[{"{", 
+        RowBox[{"2", ",", "1"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\<\"GeneralizedOctagon\"\>", ",", 
+       RowBox[{"{", 
+        RowBox[{"3", ",", "1"}], "}"}]}], "}"}]}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.7656027779500017`*^9},
+ CellLabel->
+  "Out[23]=",ExpressionUUID->"dc0219bd-1760-4746-9231-76375d611dd1"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Exclude", " ", "disconnected", " ", "graphs"}], ",", " ", 
+    RowBox[{"as", " ", "GraphData", " ", "does", " ", 
+     RowBox[{"this", "."}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Select", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"GraphData", "[", 
+      RowBox[{";;", "50"}], "]"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"ConnectedGraphQ", "@", 
+          RowBox[{"GraphData", "[", "#", "]"}]}], "&&", 
+         RowBox[{"IGDistanceTransitiveQ", "@", 
+          RowBox[{"GraphData", "[", "#", "]"}]}]}], ")"}], "=!=", 
+       RowBox[{"GraphData", "[", 
+        RowBox[{"#", ",", "\"\<DistanceTransitive\>\""}], "]"}]}], "&"}]}], 
+    "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]}]], "Input",
+ CellChangeTimes->{{3.765470137378242*^9, 3.7654701883876133`*^9}, {
+  3.765470274362916*^9, 3.7654703009711027`*^9}, {3.765475047883833*^9, 
+  3.765475062134748*^9}},ExpressionUUID->"e2fcfcf4-2dd2-407b-a9ba-\
+0f25a5cb4a6c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"34.053684`", ",", 
+   RowBox[{"{", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.7654701835415*^9, 3.7654702081719418`*^9}, 
+   3.76547026587359*^9, 3.765470298289792*^9, 3.765470335187388*^9},
+ CellLabel->"Out[275]=",ExpressionUUID->"9876aae8-6679-46a7-aaf5-4d26a24bd235"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Select", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"GraphData", "[", 
+     RowBox[{";;", "100"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"IGSymmetricQ", "@", 
+       RowBox[{"GraphData", "[", "#", "]"}]}], "=!=", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"#", ",", "\"\<Symmetric\>\""}], "]"}]}], "&"}]}], 
+   "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]], "Input",
+ CellChangeTimes->{{3.765470343627301*^9, 3.765470352705407*^9}, {
+  3.765470430395975*^9, 3.7654704305028*^9}},
+ CellLabel->
+  "In[281]:=",ExpressionUUID->"acad09d1-d56b-488f-878f-c8879feec84a"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"33.160827`", ",", 
+   RowBox[{"{", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{3.7654703765316267`*^9, 3.76547041523543*^9, 
+  3.7654704646606894`*^9, 3.765470510243168*^9},
+ CellLabel->"Out[281]=",ExpressionUUID->"f71afe29-4e72-424a-abbe-28529f326203"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Select", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"GraphData", "[", 
+     RowBox[{";;", "90"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"IGEdgeTransitiveQ", "@", 
+       RowBox[{"GraphData", "[", "#", "]"}]}], "=!=", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"#", ",", "\"\<EdgeTransitive\>\""}], "]"}]}], "&"}]}], 
+   "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]], "Input",
+ CellChangeTimes->{{3.765470343627301*^9, 3.765470352705407*^9}, {
+   3.765470430395975*^9, 3.7654704305028*^9}, {3.765474315354711*^9, 
+   3.765474321820009*^9}, {3.7654744263391857`*^9, 3.7654744337234592`*^9}, 
+   3.765474563911356*^9, {3.765474624991859*^9, 3.76547467299205*^9}, 
+   3.76547471331426*^9, {3.765474851429439*^9, 3.7654748515802193`*^9}, {
+   3.765474978932749*^9, 3.765474978978459*^9}},
+ CellLabel->
+  "In[313]:=",ExpressionUUID->"87dd02e6-a0ba-4604-8a7d-a9eaf4d7e55b"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"32.244957`", ",", 
+   RowBox[{"{", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.765474423104555*^9, 3.7654744472298183`*^9}, 
+   3.765474579162278*^9, {3.76547464361924*^9, 3.765474669394432*^9}, 
+   3.765474700441584*^9, 3.765474758843391*^9, 3.765474820943852*^9, 
+   3.765474943612384*^9, 3.7654750122211723`*^9},
+ CellLabel->"Out[313]=",ExpressionUUID->"f55872c2-ae17-4cd0-9f6d-7bd9f1635226"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Select", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"GraphData", "[", 
+     RowBox[{";;", "100"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"IGVertexTransitiveQ", "@", 
+       RowBox[{"GraphData", "[", "#", "]"}]}], "=!=", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"#", ",", "\"\<VertexTransitive\>\""}], "]"}]}], "&"}]}], 
+   "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]], "Input",
+ CellChangeTimes->{{3.765470343627301*^9, 3.765470352705407*^9}, {
+   3.765470430395975*^9, 3.7654704305028*^9}, {3.765474329306589*^9, 
+   3.7654743405913267`*^9}, 3.765474437254587*^9, {3.7654744999140882`*^9, 
+   3.765474517131098*^9}, 3.765474680322145*^9, 3.765474722060512*^9, {
+   3.765474853997563*^9, 3.7654748548652897`*^9}},
+ CellLabel->
+  "In[312]:=",ExpressionUUID->"acb87f4c-170e-41db-9a81-000b241eea41"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"23.799911`", ",", 
+   RowBox[{"{", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.7654744593125887`*^9, {3.7654745143889914`*^9, 3.7654745374996023`*^9}, 
+   3.7654747219788094`*^9, 3.765474780319868*^9, 3.765474847631309*^9, 
+   3.765474967466345*^9},
+ CellLabel->"Out[312]=",ExpressionUUID->"5fd9f56a-2f6d-4ba1-9964-43d4c28f1d31"]
 }, Open  ]]
 }, Open  ]],
 
@@ -808,8 +997,8 @@ Cell[BoxData[
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{808, 755},
-WindowMargins->{{426, Automatic}, {Automatic, 106}},
+WindowSize->{720, 855},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"

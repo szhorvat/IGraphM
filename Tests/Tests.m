@@ -2368,7 +2368,7 @@ MT[
 ]
 
 MT[
-  GroupOrder@PermutationGroup@IGBlissAutomorphismGroup[ GraphData["PerkelGraph"] ],
+  GroupOrder@IGBlissAutomorphismGroup[ GraphData["PerkelGraph"] ],
   GraphData["PerkelGraph", "AutomorphismCount"]
 ]
 
@@ -6371,6 +6371,11 @@ MT[
 ]
 
 MT[
+  IGNullGraphQ[IGEmptyGraph[1]],
+  False
+]
+
+MT[
   IGNullGraphQ[ugi],
   False
 ]
@@ -6380,13 +6385,135 @@ MT[
   False
 ]
 
+MT[
+  IGNullGraphQ[dgi],
+  False
+]
+
+MT[
+  IGNullGraphQ[dgs],
+  False
+]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGCactusQ*)
 
 
-(* TODO *)
+(* null graph is not cactus *)
+MT[
+  IGCactusQ[IGEmptyGraph[]],
+  False
+]
+
+(* singleton graph is cactus *)
+MT[
+  IGCactusQ[IGEmptyGraph[1]],
+  True
+]
+
+(* non-connected *)
+MT[
+  IGCactusQ[IGEmptyGraph[2]],
+  False
+]
+
+(* P2 *)
+MT[
+  IGCactusQ[CompleteGraph[2]],
+  True
+]
+
+(* triangle *)
+MT[
+  IGCactusQ[CompleteGraph[3]],
+  True
+]
+
+MT[
+  IGCactusQ[CompleteGraph[4]],
+  False
+]
+
+MT[
+  IGCactusQ[CycleGraph[4]],
+  True
+]
+
+(* with bridge *)
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-4,4-5-6-4"]],
+  True
+]
+
+(* without bridge *)
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-5-6-1"]],
+  True
+]
+
+
+(* ::Text:: *)
+(*Multigraphs*)
+
+
+(* 2-edge *)
+MT[
+  IGCactusQ[IGShorthand["1-2-1", MultiEdges -> True]],
+  True
+]
+
+(* 3-edge *)
+MT[
+  IGCactusQ[IGShorthand["1-2-1-2", MultiEdges -> True]],
+  False
+]
+
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-4-1,4-5-6-4", MultiEdges -> True]],
+  True
+]
+
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-4-1-4,4-5-6-4", MultiEdges -> True]],
+  False
+]
+
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-4-1,4-5-6-4-5", MultiEdges -> True]],
+  False
+]
+
+
+(* ::Text:: *)
+(*Self-loops must be ignored*)
+
+
+MT[
+  IGCactusQ[EdgeAdd[CycleGraph[5], UndirectedEdge[1, 1]]],
+  True
+]
+
+MT[
+  IGCactusQ[Graph[{1 <-> 1}]],
+  True
+]
+
+MT[
+  IGCactusQ[Graph[{1 <-> 1, 1 <-> 1}]],
+  True
+]
+
+
+(* ::Text:: *)
+(*Directed graphs*)
+
+
+MT[
+  IGCactusQ[Graph[{1 -> 2}]],
+  $Failed,
+  {IGCactusQ::dirg}
+]
 
 
 (* ::Subsubsection:: *)
@@ -6405,6 +6532,20 @@ MT[
 
 (* ::Subsubsection:: *)
 (*IGStronglyRegularQ and IGStronglyRegularParameters*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGDistanceRegularQ and IGIntersectionArray*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGDistanceTransitiveQ*)
 
 
 (* TODO *)
@@ -7051,7 +7192,8 @@ MTSection["Q functions"]
 	IGBipartiteQ, 
 	IGChordalQ,
 	IGDirectedAcyclicGraphQ, 
-	IGEdgeTransitiveQ, IGVertexTransitiveQ, IGSymmetricQ,
+	IGEdgeTransitiveQ, IGVertexTransitiveQ, IGSymmetricQ, IGDistanceTransitiveQ,
+	IGRegularQ, IGStronglyRegularQ, IGDistanceRegularQ,
 	IGSelfComplementaryQ,
 	IGEdgeWeightedQ, IGVertexWeightedQ,
 	IGForestQ, IGTreeQ,
@@ -7060,7 +7202,6 @@ MTSection["Q functions"]
 	IGTriangleFreeQ,
 	IGPerfectQ,
 	IGCactusQ,
-	IGRegularQ, IGStronglyRegularQ,
 	IGCompleteQ
 }	
 
