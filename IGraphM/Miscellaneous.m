@@ -235,11 +235,11 @@ igStronglyRegularQ[g_ /; UndirectedGraphQ[g] && SimpleGraphQ[g]] :=
 
 (* TODO implement for directed graphs including parameters
    https://homepages.cwi.nl/~aeb/math/dsrg/dsrg.html *)
-IGStronglyRegularQ::dirg = "IGStronglyRegularQ does not support directed graphs and will return False.";
-igStronglyRegularQ[g_?DirectedGraphQ] := (Message[IGStronglyRegularQ::dirg]; False)
+IGStronglyRegularQ::dirg = "Directed graphs are not supported.";
+igStronglyRegularQ[g_?DirectedGraphQ] := (Message[IGStronglyRegularQ::dirg]; $Failed)
 
-IGStronglyRegularQ::nsg  = "IGStronglyRegularQ does not support non-simple graphs and will return False.";
-igStronglyRegularQ[g_] := (Message[IGStronglyRegularQ::nsg]; False)
+IGStronglyRegularQ::nsg  = "Non-simple graphs are not supported.";
+igStronglyRegularQ[g_] := (Message[IGStronglyRegularQ::nsg]; $Failed)
 
 SyntaxInformation[IGStronglyRegularQ] = {"ArgumentsPattern" -> {_}};
 IGStronglyRegularQ[graph_?igGraphQ] := igStronglyRegularQ[graph]
