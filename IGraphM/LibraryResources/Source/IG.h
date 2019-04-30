@@ -2878,6 +2878,13 @@ public:
 
         return res;
     }
+
+    // The input is expected to be an undirected simple graph
+    // Computes the intersection array {b, c} of an undirected distance regular graph.
+    // If the graph is not distance regular, {} is returned.
+    // Non-connected graphs are not excluded.
+    void intersectionArray(MLINK link) const;
+
 };
 
 #endif // IG_H

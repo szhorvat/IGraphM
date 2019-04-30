@@ -575,7 +575,9 @@ template = LTemplate["IGraphM",
 
         LFun["strahlerNumber", {}, {Integer, 1}],
 
-        LFun["toPrufer", {}, {Integer, 1}]
+        LFun["toPrufer", {}, {Integer, 1}],
+
+        LFun["intersectionArray", LinkObject]
       }
     ],
 

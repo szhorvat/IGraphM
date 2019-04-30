@@ -5,6 +5,7 @@
  */
 
 #include "IG.h"
+#include <algorithm>
 
 /**** Create (basic) ****/
 
@@ -368,4 +369,92 @@ bool IG::vf2SubisomorphicMulti(IG &ig) {
                 &ColorReducedMultigraphIsoCompat::vertexCompat, &ColorReducedMultigraphIsoCompat::edgeCompat, &graph_colors));
 
     return iso;
+}
+
+
+/**** Regularity properties ****/
+
+// The input is expected to be an undirected simple graph
+// Computes the intersection array {b, c} of an undirected distance regular graph.
+// If the graph is not distance regular, {} is returned.
+// Non-connected graphs are not excluded.
+void IG::intersectionArray(MLINK link) const {
+    mlStream ml{link, "intersectionArray"};
+    ml >> mlCheckArgs(0);
+
+    bool distanceRegular = true;
+    size_t vcount = vertexCount();
+
+    // special case: null graph
+    if (vcount == 0) {
+        ml.newPacket();
+        ml << mlHead("List", 2)
+           << mlHead("List", 0) << mlHead("List", 0);
+        return;
+    }
+
+    // get shortest path matrix
+    // TODO refactor code so that the entire matrix does not need to be kept in memory
+    igMatrix dm;
+    igCheck(igraph_shortest_paths(&graph, &dm.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
+
+    // compute graph diameter
+    igraph_real_t diam = 0;
+    for (const auto &el : dm)
+        if (el != IGRAPH_INFINITY && el > diam)
+            diam = el;
+
+    std::vector<mint> bvec(diam+1, -1), cvec(diam+1, -1);
+
+    igraph_adjlist_t al;
+    igCheck(igraph_adjlist_init(&graph, &al, IGRAPH_ALL));
+
+    for (size_t u=0; u < vcount; ++u) {
+        for (size_t v=0; v < vcount; ++v) {
+            igraph_real_t i = dm(v, u);
+            if (i == IGRAPH_INFINITY)
+                continue;
+
+            mint b=0, c=0;
+
+            igraph_vector_int_t *neighbors = igraph_adjlist_get(&al, v);
+            for (igraph_integer_t *ptr = neighbors->stor_begin; ptr != neighbors->end; ++ptr) {
+                if (dm(*ptr, u) == i-1)
+                    c++;
+                if (dm(*ptr, u) == i+1)
+                    b++;
+            }
+
+            if (bvec[i] != b) {
+                if (bvec[i] == -1) {
+                    bvec[i] = b;
+                } else {
+                    distanceRegular = false;
+                    goto end;
+                }
+            }
+
+            if (cvec[i] != c) {
+                if (cvec[i] == -1) {
+                    cvec[i] = c;
+                } else {
+                    distanceRegular = false;
+                    goto end;
+                }
+            }
+        }
+    }
+
+end:
+    igraph_adjlist_destroy(&al);
+
+    ml.newPacket();
+    if (distanceRegular) {
+        bvec.pop_back(); // remove last element
+        cvec.erase(cvec.begin()); // remove first element
+        ml << mlHead("List", 2)
+           << bvec << cvec;
+    } else {
+        ml << mlHead("List", 0);
+    }
 }

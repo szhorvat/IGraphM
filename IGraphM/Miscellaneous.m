@@ -258,3 +258,32 @@ IGStronglyRegularParameters[g_?IGStronglyRegularQ] :=
       {vc, k, lambda, mu}
     ]
 IGStronglyRegularParameters[g_?GraphQ] := {}
+
+
+PackageExport["IGIntersectionArray"]
+IGIntersectionArray::usage = "IGIntersectionArray[graph] computes the intersection array {b, c} of a distance regular graph. For non-distance-regular graphs {} is returned.";
+IGIntersectionArray::dirg = "Directed graphs are not supported.";
+IGIntersectionArray::nsg  = "Non-simple graphs are not supported.";
+SyntaxInformation[IGIntersectionArray] = {"ArgumentsPattern" -> {_}};
+IGIntersectionArray[graph_?igGraphQ] :=
+    Which[
+      UndirectedGraphQ[graph] && SimpleGraphQ[graph],
+      If[IGRegularQ[graph],
+        catch@Block[{ig = igMakeUnweighted[graph]},
+          check@ig@"intersectionArray"[]
+        ],
+        {}
+      ]
+      ,
+      DirectedGraphQ[graph],
+      IGIntersectionArray::dirg; $Failed
+      ,
+      True, (* non-simple undirected graph *)
+      IGIntersectionArray::nsg; $Failed
+    ]
+
+
+PackageExport["IGDistanceRegularQ"]
+IGDistanceRegularQ::usage = "IGDistanceRegularQ[graph] tests if graph is distance regular.";
+SyntaxInformation[IGDistanceRegularQ] = {"ArgumentsPattern" -> {_}};
+IGDistanceRegularQ[graph_?igGraphQ] := IGIntersectionArray[graph] =!= {}

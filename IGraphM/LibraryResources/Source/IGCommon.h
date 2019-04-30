@@ -182,6 +182,9 @@ public:
     const igraph_real_t *begin() const { return mat.data.stor_begin; }
     const igraph_real_t *end() const { return mat.data.end; }
 
+    igraph_real_t & operator () (size_t i, size_t j) { return MATRIX(mat, i, j); }
+    const igraph_real_t & operator () (size_t i, size_t j) const { return MATRIX(mat, i, j); }
+
     void copyFromMTensor(mma::RealMatrixRef t) {
         igraph_vector_t from = igVectorView(t);
         igraph_vector_update(&mat.data, &from);
