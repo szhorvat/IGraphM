@@ -330,10 +330,9 @@ template = LTemplate["IGraphM",
         LFun["ladCountSubisomorphisms", {LExpressionID["IG"], True|False (* induced *)}, Integer],
         LFun["ladCountSubisomorphismsColored", LinkObject],
 
-        LFun["coloredSimpleGraph", LinkObject],
-
         (* Functions related to isomorphism *)
 
+        LFun["coloredSimpleGraph", LinkObject],
         LFun["selfComplementaryQ", {}, True|False],
 
         (* Topological sorting and directed acyclic graphs *)

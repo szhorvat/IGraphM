@@ -126,7 +126,7 @@ void IG::mycielski() {
 }
 
 
-/**** Testing ****/
+/**** Testing properties ****/
 
 bool IG::forestQ(mint mode) const {
     igraph_neimode_t imode;
