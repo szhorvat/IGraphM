@@ -172,15 +172,23 @@ IGDistanceTransitiveQ::usage = "IGDistanceTransitiveQ[graph] tests if graph is d
 
 IGDistanceTransitiveQ::nmg = IGVertexTransitiveQ::nmg;
 SyntaxInformation[IGDistanceTransitiveQ] = {"ArgumentsPattern" -> {_}};
+(* TODO: Do not compute entire distance matrix unless needed. *)
+(* TODO: Implement group orbits in C++ *)
 IGDistanceTransitiveQ[graph_?igGraphQ] :=
     If[MultigraphQ[graph],
       Message[IGDistanceTransitiveQ::nmg];
       $Failed
       ,
-      IGRegularQ[graph] &&
-      With[{dm = IGDistanceMatrix[graph], group = IGBlissAutomorphismGroup[graph]},
+      IGRegularQ[graph] && (* exclude non-regular graphs early, for performance *)
+      Block[{ig = igMakeUnweighted[graph], group, elems}, (* work on a single IG object to avoid translating the graph twice *)
+        (* Warning: PermutationGroup should take Cycles expressions, but GroupOrbits does work with permutation lists *)
+        group = PermutationGroup@igIndexVec@check@ig@"blissAutomorphismGroup"[0, {}];
+        elems = Range@VertexCount[graph];
+        GroupOrbits[group, elems] === {elems} && (* exclude non-vertex-transitive graphs early, for performance *)
+        With[{dm = Round@fixInfNaN@check@ig@"shortestPaths"[{}, {}]}, (* only compute distance matrix if needed *)
         DuplicateFreeQ[
-          Extract[dm, #] & /@ GroupOrbits[group, Tuples[Range@VertexCount[graph], 2]][[All, 1]]
+            Extract[dm, #] & /@ GroupOrbits[group, Tuples[elems, 2]][[All, 1]]
+          ]
         ]
       ]
     ]
