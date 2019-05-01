@@ -587,7 +587,7 @@ template = LTemplate["IGraphM",
         LFun["validQ", {}, True|False],
         LFun["faces", {}, {Integer, 1}],
         LFun["planarQ", {Integer (* number of connected components *)}, True|False],
-        LFun["dualGraph", {}, {Integer, 1}]
+        LFun["dualGraph", {}, {Integer, 2}]
       }
     ],
 

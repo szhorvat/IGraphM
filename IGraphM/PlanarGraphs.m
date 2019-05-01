@@ -204,8 +204,8 @@ IGDualGraph::usage =
 SyntaxInformation[IGDualGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGDualGraph[embedding_?AssociationQ, opt : OptionsPattern[]] :=
     catch@Block[{emb = embMake[embedding]},
-      With[{packed = check@emb@"dualGraph"[]},
-        Graph[Range@First[packed], Partition[1 + Rest[packed], 2], DirectedEdges -> False, opt]
+      With[{edges = 1 + check@emb@"dualGraph"[]},
+        SimpleGraph@Graph[Range@Max[0, edges], edges, DirectedEdges -> False, opt]
       ]
     ]
 IGDualGraph[graph_?igGraphQ, opt : OptionsPattern[]] := catch@IGDualGraph[check@IGPlanarEmbedding[graph], opt]

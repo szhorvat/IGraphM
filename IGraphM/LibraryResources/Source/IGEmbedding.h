@@ -142,44 +142,41 @@ struct IGEmbedding {
         return (vertexCount - edgeCount + faceCount == 2*componentCount);
     }
 
-    mma::IntTensorRef dualGraph() const {
-        auto faceNode = findFaces();
+    mma::IntMatrixRef dualGraph() const {
+        auto faces = findFaces();
 
-        std::vector<std::vector<mint>> nodeFace;
+        // an edge is a pair of vertices
+        typedef std::pair<mint, mint> edge;
 
-        for (mint i=0; i < faceNode.size(); ++i)
-            for (const auto &node : faceNode[i]) {
-                if (node >= nodeFace.size())
-                    nodeFace.resize(node+1);
-                nodeFace[node].push_back(i);
+        // which two faces is an edge incident to?
+        // in other words, which edge of the primal transforms into which edge of the dual?
+        // the mapping we construct results in a multigraph
+        std::map<edge, edge> edgeFace;
+
+        for (mint face=0; face < faces.size(); ++face) {
+            const auto &faceVertices = faces[face];
+            for (mint j=0; j < faceVertices.size(); ++j) {
+                mint s = faceVertices[j];
+                mint t = faceVertices[(j+1) % faceVertices.size()];
+
+                if (s < t)
+                    edgeFace[edge{s,t}].first = face;
+                else
+                    edgeFace[edge{t,s}].second = face;
             }
+        }
 
-        typedef std::pair<mint, mint> arc;
-
-        std::map<arc, mint> conn;
-
-        for (mint i=0; i < faceNode.size(); ++i)
-            for (const auto &node : faceNode[i])
-                for (const auto &face : nodeFace[node])
-                    if (i != face)
-                        conn[arc(std::min(i, face), std::max(i, face))] += 1;
-
-        auto edges =
-                mma::makeVector<mint>(
-                    1 + 2*std::count_if(conn.begin(), conn.end(), [](const std::pair<arc, mint> &p) { return p.second >= 4; })
-                );
-
-        edges[0] = faceNode.size();
+        auto result = mma::makeMatrix<mint>(edgeFace.size(), 2);
         mint i=0;
-        for (const auto &p : conn)
-            if (p.second >= 4) {
-                edges[1 + 2*i    ] = p.first.first;
-                edges[1 + 2*i + 1] = p.first.second;
-                i++;
-            }
+        for (const auto &el : edgeFace) {
+            result(i,0) = el.second.first;
+            result(i,1) = el.second.second;
+            i++;
+        }
 
-        return edges;
+        return result;
     }
+
 };
 
 #endif // IG_EMBEDDING_H
