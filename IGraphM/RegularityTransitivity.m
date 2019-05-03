@@ -129,14 +129,20 @@ IGVertexTransitiveQ::nmg = "Multigraphs are not supported.";
 SyntaxInformation[IGVertexTransitiveQ] = {"ArgumentsPattern" -> {_}};
 IGVertexTransitiveQ[graph_?EmptyGraphQ] = True;
 IGVertexTransitiveQ[graph_?igGraphQ] :=
-    If[MultigraphQ[graph],
+    catch@If[MultigraphQ[graph],
       Message[IGVertexTransitiveQ::nmg];
       $Failed
       ,
       IGRegularQ[graph] &&
+      Block[{ig = igMakeUnweighted[graph]},
+        check@ig@"vertexTransitiveQ"[blissSplittingHeuristics["FirstLargest"]]
+      ]
+      (*
+      (* WL implementation *)
       With[{elems = Range@VertexCount[graph]},
         GroupOrbits[IGBlissAutomorphismGroup[graph], elems] === {elems}
       ]
+      *)
     ]
 IGVertexTransitiveQ[_] = False;
 
@@ -158,10 +164,11 @@ IGEdgeTransitiveQ[_] = False;
 
 
 PackageExport["IGSymmetricQ"]
-IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. it is both vertex transitive and edge transitive.";
+IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. if it is both vertex transitive and edge transitive.";
 
 IGSymmetricQ::nmg = IGVertexTransitiveQ::nmg;
 SyntaxInformation[IGSymmetricQ] = {"ArgumentsPattern" -> {_}};
+(* See TODO for IGEdgeTransitiveQ and potentially compute automorphism group only once. *)
 IGSymmetricQ[graph_?igGraphQ] :=
     If[MultigraphQ[graph],
       Message[IGSymmetricQ::nmg];
@@ -177,24 +184,29 @@ IGDistanceTransitiveQ::usage = "IGDistanceTransitiveQ[graph] tests if graph is d
 
 IGDistanceTransitiveQ::nmg = IGVertexTransitiveQ::nmg;
 SyntaxInformation[IGDistanceTransitiveQ] = {"ArgumentsPattern" -> {_}};
-(* TODO: Do not compute entire distance matrix unless needed. *)
-(* TODO: Implement group orbits in C++ *)
 IGDistanceTransitiveQ[graph_?igGraphQ] :=
-    If[MultigraphQ[graph],
+    catch@If[MultigraphQ[graph],
       Message[IGDistanceTransitiveQ::nmg];
       $Failed
       ,
       IGRegularQ[graph] && (* exclude non-regular graphs early, for performance *)
+      Block[{ig = igMakeUnweighted[graph]},
+        check@ig@"distanceTransitiveQ"[blissSplittingHeuristics["FirstLargest"]]
+      ]
+      (*
+      (* WL implementation *)
+      (* TODO: Do not compute entire distance matrix unless needed. *)
       Block[{ig = igMakeUnweighted[graph], group, elems}, (* work on a single IG object to avoid translating the graph twice *)
         (* Warning: PermutationGroup should take Cycles expressions, but GroupOrbits does work with permutation lists *)
-        group = PermutationGroup@igIndexVec@check@ig@"blissAutomorphismGroup"[0, {}];
+        group = PermutationGroup@igIndexVec@check@ig@"blissAutomorphismGroup"[blissSplittingHeuristics["FirstLargest"], {}];
         elems = Range@VertexCount[graph];
         GroupOrbits[group, elems] === {elems} && (* exclude non-vertex-transitive graphs early, for performance *)
         With[{dm = Round@fixInfNaN@check@ig@"shortestPaths"[{}, {}]}, (* only compute distance matrix if needed *)
-        DuplicateFreeQ[
+          DuplicateFreeQ[
             Extract[dm, #] & /@ GroupOrbits[group, Tuples[elems, 2]][[All, 1]]
           ]
         ]
       ]
+      *)
     ]
 IGDistanceTransitiveQ[_] = False;

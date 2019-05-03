@@ -1078,7 +1078,7 @@ public:
         ml << list.length();
     }
 
-    // Isomorphism-related operations
+    // Isomorphism-related tests
 
     // the input is expected to be a simple graph
     bool selfComplementaryQ() const {
@@ -1090,6 +1090,10 @@ public:
 
         return iso;
     }
+
+    bool vertexTransitiveQ(mint splitting) const;
+
+    bool distanceTransitiveQ(mint splitting) const;
 
     // Topological sorting, directed acylic graphs
 

@@ -458,3 +458,235 @@ end:
         ml << mlHead("List", 0);
     }
 }
+
+
+/**** Transitivity properties ****/
+
+// Used for equivalence class (orbit) computation.
+// Each orbit element points to another one that it is equivalent to, or to itself.
+template<typename T>
+class OrbitElement {
+    T val;
+    OrbitElement *equiv;
+
+    OrbitElement(const OrbitElement &) = delete;
+    OrbitElement & operator = (const OrbitElement &) = delete;
+
+public:
+
+    OrbitElement() { equiv = this; }
+
+    void setValue(const T &newVal) { val = newVal; }
+    T value() const { return val; }
+
+    OrbitElement *getClassElem() {
+        OrbitElement *final = equiv;
+        while (final != final->equiv)
+            final = final->equiv;
+
+        // If updating is needed, do a full second pass and update each node of the chain.
+        if (final != equiv) {
+            OrbitElement *e1 = this;
+            while (e1 != e1->equiv) {
+                OrbitElement *e2 = e1->equiv;
+                e1->equiv = final;
+                e1 = e2;
+            }
+        }
+
+        return equiv;
+    }
+
+    void updateClass(OrbitElement *elem) {
+        OrbitElement *newClass = elem->getClassElem();
+        getClassElem()->equiv = newClass;
+        equiv = newClass;
+    }
+
+};
+
+
+// Orbits of vertices. Used for vertex transitivity.
+class GroupOrbits {
+
+    typedef OrbitElement<mint> Element;
+
+    const mint n;
+    Element *elems;
+
+public:
+
+    GroupOrbits(mint n) : n(n) {
+        elems = new Element[n];
+        for (mint i=0; i < n; ++i)
+            elems[i].setValue(i);
+    }
+
+    ~GroupOrbits() { delete [] elems; }
+
+    template<typename GeneratorArray>
+    void computeOrbits(const GeneratorArray &generators) {
+        for (mint i=0; i < n; ++i) {
+            auto &el = elems[i];
+            for (auto &gen : generators)
+                el.updateClass(&elems[ gen[el.value()] ]);
+        }
+    }
+
+    // How many orbits? Vertex transitive graphs will have one.
+    mint orbitCount() {
+        std::set<mint> repr;
+        for (mint i=0; i < n; ++i) {
+            auto &el = elems[i];
+            repr.insert(el.getClassElem()->value());
+        }
+        return repr.size();
+    }
+};
+
+
+// Orbits of vertex pairs. Used for distance transitivity.
+class GroupPairOrbits {
+
+    typedef std::pair<mint, mint> VertexPair;
+    typedef OrbitElement<VertexPair> Element;
+
+    const mint n;
+    Element *elems;
+
+    // return the index of a pair in the elems array
+    mint pairIndex(VertexPair p) {
+        return n*p.first + p.second;
+    }
+
+public:
+
+    GroupPairOrbits(mint n) : n(n) {
+        elems = new Element[n*n];
+        for (mint i=0; i < n; ++i)
+            for (mint j=0; j < n; ++j) {
+                auto p = VertexPair{i,j};
+                elems[pairIndex(p)].setValue(p);
+            }
+    }
+
+    ~GroupPairOrbits() { delete [] elems; }
+
+    template<typename GeneratorArray>
+    void computeOrbits(const GeneratorArray &generators) {
+        for (mint i=0; i < n*n; ++i) {
+            mma::check_abort();
+            auto &el = elems[i];
+            for (auto &gen : generators) {
+                VertexPair p = {gen[el.value().first], gen[el.value().second]};
+                el.updateClass(&elems[ pairIndex(p) ]);
+            }
+        }
+    }
+
+    std::set<VertexPair> orbitRepresentatives() {
+        std::set<VertexPair> repr;
+        for (mint i=0; i < n*n; ++i) {
+            auto &el = elems[i];
+            repr.insert(el.getClassElem()->value());
+        }
+        return repr;
+    }
+};
+
+
+// The input is expected not to have multi-edges. Self-loops are permissible.
+bool IG::vertexTransitiveQ(mint splitting) const {
+
+    // Handle trivial edge cases
+    // vcount == 2 is not necessarily transitive in the directed case
+    mint vcount = vertexCount();
+    if (vcount <= 1)
+        return true;
+
+    // List of automorphism group generators
+    igList list;
+    igCheck(igraph_automorphism_group(&graph, nullptr, &list.list, blissIntToSplitting(splitting), nullptr));
+
+    mint gcount = list.size();
+    // If there are no non-trivial automorphisms,
+    // and the graph has more than one vertex,
+    // then it is not vertex transitive.
+    if (gcount == 0)
+        return false;
+
+    // copy generators to std::vectors
+    std::vector<std::vector<mint>> generators(gcount);
+    for (mint i=0; i < gcount; ++i)
+        generators[i].assign(igWrap(*list[i]).cbegin(), igWrap(*list[i]).cend());
+
+    GroupOrbits orbits(vcount);
+    orbits.computeOrbits(generators);
+    if (orbits.orbitCount() != 1)
+        return false;
+
+    return true;
+}
+
+
+// The input is expected not to have multi-edges. Self-loops are permissible.
+bool IG::distanceTransitiveQ(mint splitting) const {
+
+    // Handle trivial edge cases
+    // vcount == 2 is not necessarily transitive in the directed case
+    mint vcount = vertexCount();
+    if (vcount <= 1)
+        return true;
+
+    // List of automorphism group generators
+    igList list;
+    igCheck(igraph_automorphism_group(&graph, nullptr, &list.list, blissIntToSplitting(splitting), nullptr));
+
+    // If there are no non-trivial automorphisms,
+    // and the graph has more than one vertex,
+    // then it is not vertex or distance transitive.
+    mint gcount = list.size();
+    if (gcount == 0) // no non-trivial automorphisms
+        return false;
+
+    // massert(vcount == igraph_vector_size(*list.begin()));
+
+    // Copy generators to std::vectors
+    std::vector<std::vector<mint>> generators(gcount);
+    for (mint i=0; i < gcount; ++i)
+        generators[i].assign(igWrap(*list[i]).cbegin(), igWrap(*list[i]).cend());
+
+    {
+        GroupOrbits orbits(vcount);
+        orbits.computeOrbits(generators);
+        if (orbits.orbitCount() != 1)
+            return false;
+    }
+
+    std::set<std::pair<mint,mint>> repr;
+
+    {
+        // Pair orbits calculation requires vcount^2 memory
+        // Keep it in its own block so the memory is released as soon as it is not needed
+        // The distance matrix calculation below also requires vcount^2 memory
+        GroupPairOrbits orbits(vcount);
+        orbits.computeOrbits(generators);
+        repr = orbits.orbitRepresentatives();
+    }
+
+    // TODO: Do not compute *all*-pairs shortest paths as it is not really needed.
+    // Not a high priority because the orbit calculation already takes vcount^2 memory,
+    // and the automorphism group computation usually takes longer than the distance matrix computation.
+    igMatrix dm;
+    igCheck(igraph_shortest_paths(&graph, &dm.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
+
+    std::set<igraph_real_t> ds;
+    for (const auto &el : repr) {
+        igraph_real_t dist = dm(el.first, el.second);
+        if (ds.find(dist) != ds.end())
+            return false;
+        ds.insert(dist);
+    }
+
+    return true;
+}
