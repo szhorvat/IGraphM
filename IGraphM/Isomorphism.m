@@ -218,7 +218,7 @@ amendUsage[IGBlissCanonicalLabeling,
 ];
 
 
-Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "First" };
+Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissCanonicalLabeling] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
@@ -245,7 +245,7 @@ IGBlissCanonicalPermutation::usage =
     "IGBlissCanonicalPermutation[graph] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.\n" <>
     "IGBlissCanonicalPermutation[{graph, colorSpec}] returns the canonical vertex permutation of a vertex coloured graph.";
 
-Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "First" };
+Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissCanonicalPermutation] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
@@ -265,7 +265,7 @@ IGBlissCanonicalGraph::usage =
     "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labelling.\n" <>
     "IGBlissCanonicalGraph[{graph, colorSpec}] returns a canonical graph of a vertex coloured graph, based on the canonical integer labelling. Vertex colours will be stored in the \"Color\" vertex property.";
 
-Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "First" };
+Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissCanonicalGraph] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalGraph[graph_?IGNullGraphQ, opt : OptionsPattern[]] := Graph[{},{}] (* the empty graph has no adjacency matrix *)
 IGBlissCanonicalGraph[graph_?igGraphQ, opt : OptionsPattern[]] :=
@@ -294,7 +294,7 @@ IGBlissIsomorphicQ::usage =
     "IGBlissIsomorphicQ[graph1, graph2] tests if graph1 and graph2 are isomorphic using the Bliss algorithm.\n" <>
     "IGBlissIsomorphicQ[{graph1, colorSpec}, {graph2, colorSpec}] tests if two vertex coloured graphs are isomorphic using the Bliss algorithm.";
 
-Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "First" };
+Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissIsomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2]},
@@ -315,7 +315,7 @@ IGBlissGetIsomorphism::usage =
     "IGBlissGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.\n" <>
     "IGBlissGetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] returns one isomorphism between two vertex colored graphs, if it exists.";
 
-Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "First" };
+Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissGetIsomorphism] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 IGBlissGetIsomorphism[graph1_?IGNullGraphQ, graph2_?IGNullGraphQ] := {<||>}
 IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
@@ -351,7 +351,7 @@ IGBlissAutomorphismCount::usage =
     "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.\n" <>
     "IGBlissAutomorphismCount[{graph, colorSpec}] returns the number of automorphisms of a vertex coloured graph.";
 
-Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "First" };
+Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissAutomorphismCount] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
@@ -375,7 +375,7 @@ IGBlissAutomorphismGroup::usage =
 
 toPermGroup = PermutationGroup[PermutationCycles /@ #]&;
 
-Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "First" };
+Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissAutomorphismGroup] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 
 IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
