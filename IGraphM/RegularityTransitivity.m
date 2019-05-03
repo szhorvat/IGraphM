@@ -33,7 +33,7 @@ IGRegularQ[graph_?igGraphQ, k_Integer?NonNegative] :=
         First[vod] == k && Equal @@ vod && vid == vod
       ]
     ]
-IGRegularQ[_] := False
+IGRegularQ[_] = False
 
 
 PackageExport["IGStronglyRegularQ"]
@@ -67,7 +67,7 @@ igStronglyRegularQ[g_] := (Message[IGStronglyRegularQ::nsg]; $Failed)
 
 SyntaxInformation[IGStronglyRegularQ] = {"ArgumentsPattern" -> {_}};
 IGStronglyRegularQ[graph_?igGraphQ] := igStronglyRegularQ[graph]
-IGStronglyRegularQ[_] := False
+IGStronglyRegularQ[_] = False
 
 
 PackageExport["IGStronglyRegularParameters"]
@@ -84,10 +84,13 @@ IGStronglyRegularParameters[g_?IGStronglyRegularQ] :=
 IGStronglyRegularParameters[g_?GraphQ] := {}
 
 
+(* Check for distance regular graphs *)
+
+IGDistanceRegularQ::dirg = "Directed graphs are not supported.";
+IGDistanceRegularQ::nsg  = "Non-simple graphs are not supported.";
+
 PackageExport["IGIntersectionArray"]
 IGIntersectionArray::usage = "IGIntersectionArray[graph] computes the intersection array {b, c} of a distance regular graph. For non-distance-regular graphs {} is returned.";
-IGIntersectionArray::dirg = "Directed graphs are not supported.";
-IGIntersectionArray::nsg  = "Non-simple graphs are not supported.";
 SyntaxInformation[IGIntersectionArray] = {"ArgumentsPattern" -> {_}};
 IGIntersectionArray[graph_?igGraphQ] :=
     Which[
@@ -100,18 +103,19 @@ IGIntersectionArray[graph_?igGraphQ] :=
       ]
       ,
       DirectedGraphQ[graph],
-      Message[IGIntersectionArray::dirg]; $Failed
+      Message[IGDistanceRegularQ::dirg]; $Failed
       ,
       True, (* non-simple undirected graph *)
-      Message[IGIntersectionArray::nsg]; $Failed
+      Message[IGDistanceRegularQ::nsg]; $Failed
     ]
 
 
 PackageExport["IGDistanceRegularQ"]
 IGDistanceRegularQ::usage = "IGDistanceRegularQ[graph] tests if graph is distance regular.";
 SyntaxInformation[IGDistanceRegularQ] = {"ArgumentsPattern" -> {_}};
+(* Remember that IGIntersectionArray may return $Failed, so we must check[] it. *)
 IGDistanceRegularQ[graph_?igGraphQ] := catch[check@IGIntersectionArray[graph] =!= {}]
-IGDistanceRegularQ[_] := False
+IGDistanceRegularQ[_] = False
 
 
 (************************)
@@ -142,6 +146,7 @@ IGEdgeTransitiveQ::usage = "IGEdgeTransitiveQ[graph] tests if graph is edge tran
 
 IGEdgeTransitiveQ::nmg = IGVertexTransitiveQ::nmg;
 SyntaxInformation[IGEdgeTransitiveQ] = {"ArgumentsPattern" -> {_}};
+(* TODO: Check if it is faster to work with the automorphism group of the graph instead of the line graph. *)
 IGEdgeTransitiveQ[graph_?igGraphQ] :=
     If[MultigraphQ[graph],
       Message[IGEdgeTransitiveQ::nmg];
