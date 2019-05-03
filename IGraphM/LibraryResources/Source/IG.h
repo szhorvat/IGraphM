@@ -60,11 +60,11 @@ class IG {
     igraph_bliss_sh_t blissIntToSplitting(mint sh) const {
         switch (sh) {
         case 0: return IGRAPH_BLISS_F;
-        case 1: return IGRAPH_BLISS_FL;
-        case 2: return IGRAPH_BLISS_FLM;
+        case 1: return IGRAPH_BLISS_FS;
+        case 2: return IGRAPH_BLISS_FL;
         case 3: return IGRAPH_BLISS_FM;
-        case 4: return IGRAPH_BLISS_FS;
-        case 5: return IGRAPH_BLISS_FSM;
+        case 4: return IGRAPH_BLISS_FSM;
+        case 5: return IGRAPH_BLISS_FLM;
         default: throw mma::LibraryError("bliss: Unknown splitting heuristic.");
         }
     }

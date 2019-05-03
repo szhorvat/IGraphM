@@ -193,12 +193,17 @@ blissCheckMulti[graph_] := If[MultigraphQ[graph], Message[IGraphM::blissnmg]; th
 
 defaultBlissColors = {"VertexColors" -> None};
 
-blissSplittingHeuristicsNames = {
-  "First", "FirstSmallest", "FirstLargest",
-  "FirstMaximallyConnected", "FirstSmallestMaximallyConnected", "FirstLargestMaximallyConnected"
-};
-
-blissSplittingHeuristics = AssociationThread[blissSplittingHeuristicsNames, Range@Length[blissSplittingHeuristicsNames] - 1];
+PackageScope["blissSplittingHeuristics"]
+blissSplittingHeuristics::usage = "blissSplittingHeuristics translated Bliss splitting heuristics names to integers.";
+blissSplittingHeuristics =
+    <|
+      "First" -> 0,
+      "FirstSmallest" -> 1,
+      "FirstLargest" -> 2,
+      "FirstMaximallyConnected" -> 3,
+      "FirstSmallestMaximallyConnected" -> 4,
+      "FirstLargestMaximallyConnected" -> 5
+    |>;
 
 
 
@@ -209,7 +214,7 @@ IGBlissCanonicalLabeling::usage =
 
 amendUsage[IGBlissCanonicalLabeling,
   " Available values for the \"SplittingHeuristics\" option: ``. The labelling depends on the splitting heuristics used.",
-  blissSplittingHeuristicsNames
+  Keys[blissSplittingHeuristics]
 ];
 
 
