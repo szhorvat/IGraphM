@@ -250,6 +250,32 @@ typedef igPtrVector<igraph_vector_t, igraph_vector_destroy> igList;
 typedef igPtrVector<igraph_t, igraph_destroy> igGraphList;
 
 
+/* Generic wrapper for existing instances of igraph vector types */
+
+template<typename Vec>
+class igWrapper {
+    Vec &vec;
+
+public:
+    constexpr igWrapper(Vec &vec) : vec(vec) { }
+
+    decltype (Vec::stor_begin) begin() { return vec.stor_begin; }
+    decltype (Vec::end) end() { return vec.end; }
+
+    constexpr const decltype (Vec::stor_begin) begin() const { return vec.stor_begin; }
+    constexpr const decltype (Vec::end) end() const { return vec.end; }
+
+    constexpr const decltype (Vec::stor_begin) cbegin() const { return vec.stor_begin; }
+    constexpr const decltype (Vec::end) cend() const { return vec.end; }
+
+    constexpr size_t size() const { return end() - begin(); }
+};
+
+// returns an igWrapper object, which works with range-based for loops
+template<typename Vec>
+constexpr igWrapper<Vec> igWrap(Vec &vec) { return igWrapper<Vec>(vec); }
+
+
 /****************************************************
  **** Extend mlstream with igraph-specific types ****
  ****************************************************/

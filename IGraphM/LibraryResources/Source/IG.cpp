@@ -418,10 +418,10 @@ void IG::intersectionArray(MLINK link) const {
             mint b=0, c=0;
 
             igraph_vector_int_t *neighbors = igraph_adjlist_get(&al, v);
-            for (igraph_integer_t *ptr = neighbors->stor_begin; ptr != neighbors->end; ++ptr) {
-                if (dm(*ptr, u) == i-1)
+            for (const auto &n : igWrap(*neighbors)) {
+                if (dm(n, u) == i-1)
                     c++;
-                if (dm(*ptr, u) == i+1)
+                if (dm(n, u) == i+1)
                     b++;
             }
 
