@@ -1092,7 +1092,8 @@ public:
     }
 
     bool vertexTransitiveQ(mint splitting) const;
-
+    bool edgeTransitiveQ(mint splitting) const;
+    bool symmetricQ(mint splitting) const;
     bool distanceTransitiveQ(mint splitting) const;
 
     // Topological sorting, directed acylic graphs

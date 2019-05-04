@@ -6,6 +6,7 @@
 
 #include "IG.h"
 #include <algorithm>
+#include <unordered_map>
 
 /**** Create (basic) ****/
 
@@ -545,6 +546,96 @@ public:
 };
 
 
+class GroupEdgeOrbits {
+
+    typedef std::pair<mint, mint> VertexPair;
+    typedef OrbitElement<VertexPair> Element;
+
+    const bool directed;
+    const mint vcount;
+    const mint n;
+    Element *elems;
+
+    // Using std::map<VertexPair, mint> here is slower.
+    // We could use std::unordered_map<VertexPair, mint, CustomHash> with a naive hash combiner,
+    // but that does not gain any noticeable performance.
+    // Instead, we convert each ordered pair into its index in the flattened adjacency matrix
+    // (see pairToInt()) and use that integer for lookup.
+    std::unordered_map<mint, mint> index;
+
+    mint pairToInt(const VertexPair &p) const { return p.first * vcount + p.second; }
+
+    // return the index of a pair in the elems array
+    mint pairIndex(const VertexPair &p) const {
+        return index.at(pairToInt(p));
+    }
+
+public:
+
+    GroupEdgeOrbits(const igraph_t *graph) :
+        directed(igraph_is_directed(graph)),
+        vcount(igraph_vcount(graph)),
+        n(directed ? igraph_ecount(graph) : 2*igraph_ecount(graph))
+    {
+        elems = new Element[n];
+
+        igraph_eit_t eit;
+        igCheck(igraph_eit_create(graph, igraph_ess_all(IGRAPH_EDGEORDER_ID), &eit));
+
+        mint i=0;
+
+        for (IGRAPH_EIT_RESET(eit); ! IGRAPH_EIT_END(eit); IGRAPH_EIT_NEXT(eit)) {
+            igraph_integer_t e = IGRAPH_EIT_GET(eit);
+            elems[i].setValue(VertexPair{IGRAPH_FROM(graph, e), IGRAPH_TO(graph, e)});
+            index.insert({pairToInt(elems[i].value()), i});
+            i++;
+        }
+
+        // for directed, we are done
+        if (directed)
+            goto end;
+
+        // for undirected, also set reverse edges
+        for (IGRAPH_EIT_RESET(eit); ! IGRAPH_EIT_END(eit); IGRAPH_EIT_NEXT(eit)) {
+            igraph_integer_t e = IGRAPH_EIT_GET(eit);
+            elems[i].setValue(VertexPair{IGRAPH_TO(graph, e), IGRAPH_FROM(graph, e)});
+            index.insert({pairToInt(elems[i].value()), i});
+            i++;
+        }
+
+    end:
+        igraph_eit_destroy(&eit);
+    }
+
+    ~GroupEdgeOrbits() { delete [] elems; }
+
+    template<typename GeneratorArray>
+    void computeOrbits(const GeneratorArray &generators) {
+        for (mint i=0; i < n; ++i) {
+            mma::check_abort();
+            auto &el = elems[i];
+            for (auto &gen : generators) {
+                VertexPair p = {gen[el.value().first], gen[el.value().second]};
+                el.updateClass(&elems[ pairIndex(p) ]);
+            }
+        }
+    }
+
+    std::set<VertexPair> orbitRepresentatives() {
+        std::set<VertexPair> repr;
+        for (mint i=0; i < n; ++i) {
+            auto &el = elems[i];
+            repr.insert(el.getClassElem()->value());
+        }
+        return repr;
+    }
+
+    VertexPair getRepresentative(const VertexPair &p) {
+        return elems[pairIndex(p)].getClassElem()->value();
+    }
+};
+
+
 // Orbits of vertex pairs. Used for distance transitivity.
 class GroupPairOrbits {
 
@@ -555,7 +646,7 @@ class GroupPairOrbits {
     Element *elems;
 
     // return the index of a pair in the elems array
-    mint pairIndex(VertexPair p) {
+    mint pairIndex(const VertexPair &p) const {
         return n*p.first + p.second;
     }
 
@@ -626,6 +717,135 @@ bool IG::vertexTransitiveQ(mint splitting) const {
         return false;
 
     return true;
+}
+
+
+// The input is expected not to have multi-edges. Self-loops are permissible.
+bool IG::edgeTransitiveQ(mint splitting) const {
+
+    // Handle trivial edge cases
+    // A graph with no edges or a single edge is always edge transitive
+    if (edgeCount() <= 1)
+        return true;
+
+    // List of automorphism group generators
+    igList list;
+    igCheck(igraph_automorphism_group(&graph, nullptr, &list.list, blissIntToSplitting(splitting), nullptr));
+
+    mint gcount = list.size();
+    // If there are no non-trivial automorphisms,
+    // and the graph has more than one edge,
+    // then it cannot be edge transitive.
+    if (gcount == 0)
+        return false;
+
+    // copy generators to std::vectors
+    std::vector<std::vector<mint>> generators(gcount);
+    for (mint i=0; i < gcount; ++i)
+        generators[i].assign(igWrap(*list[i]).cbegin(), igWrap(*list[i]).cend());
+
+    GroupEdgeOrbits orbits(&graph);
+    orbits.computeOrbits(generators);
+    auto repr = orbits.orbitRepresentatives();
+
+    // More than 2 classes => not edge transitive
+    if (repr.size() > 2)
+        return false;
+
+    // Precisely one class <=> arc transitive
+    if (repr.size() == 1)
+        return true;
+
+    // If we reach here, then repr.size() == 2
+    massert(repr.size() == 2);
+
+    // If graph is not arc transitive but it is directed, then it is not edge transitive
+    if (directedQ())
+        return false;
+
+    // In the undirected case, there may be two classes, the first containing all
+    // connected pairs, and the second containing precisely the reverse of these pairs.
+    // We take the representative of the first class, and check if its reverse is
+    // in the other class. Then the graph is edge transitive.
+    auto edge = *repr.begin();
+    if (orbits.getRepresentative({edge.second, edge.first}) != edge)
+        return true;
+    else
+        return false;
+}
+
+
+// "Symmetric" here means both vertex transitive and edge transitive.
+// This function computes the automorphism group only once.
+// The input is expected not to have multi-edges. Self-loops are permissible.
+bool IG::symmetricQ(mint splitting) const {
+
+    // Handle trivial edge cases
+    // The null graph, singleton graph and single vertex with self-loop are symmetric
+    mint vcount = vertexCount();
+    if (vcount <= 1)
+        return true;
+
+    if (edgeCount() == 0)
+        return true;
+
+    // List of automorphism group generators
+    igList list;
+    igCheck(igraph_automorphism_group(&graph, nullptr, &list.list, blissIntToSplitting(splitting), nullptr));
+
+    mint gcount = list.size();
+    // If there are no non-trivial automorphisms,
+    // and the graph has more than one vertex,
+    // then it cannot be vertex transitive
+    if (gcount == 0)
+        return false;
+
+    // copy generators to std::vectors
+    std::vector<std::vector<mint>> generators(gcount);
+    for (mint i=0; i < gcount; ++i)
+        generators[i].assign(igWrap(*list[i]).cbegin(), igWrap(*list[i]).cend());
+
+    // Check vertex transitivity.
+    {
+        GroupOrbits orbits(vcount);
+        orbits.computeOrbits(generators);
+        if (orbits.orbitCount() != 1)
+            return false;
+    }
+
+    // If the graph is vertex transitive, also check edge transitivity.
+    // Warning: Even if the graph is vertex and edge transitive,
+    // connected vertex pairs may have two orbits (Doyle graph)
+    {
+        GroupEdgeOrbits orbits(&graph);
+        orbits.computeOrbits(generators);
+        auto repr = orbits.orbitRepresentatives();
+
+        // More than 2 classes => not edge transitive
+        if (repr.size() > 2)
+            return false;
+
+        // Precisely one class <=> arc transitive
+        if (repr.size() == 1)
+            return true;
+
+        // If we reach here, then repr.size() == 2
+        massert(repr.size() == 2);
+
+        // If graph is not arc transitive but it is directed, then it is not edge transitive
+        if (directedQ())
+            return false;
+
+        // In the undirected case, there may be two classes, the first containing all
+        // connected pairs, and the second containing precisely the reverse of these pairs.
+        // We take the representative of the first class, and check if its reverse is
+        // in the other class. Then the graph is edge transitive.
+        auto edge = *repr.begin();
+        if (orbits.getRepresentative({edge.second, edge.first}) != edge)
+            return true;
+        else
+            return false;
+    }
 }
 
 

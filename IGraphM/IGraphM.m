@@ -335,6 +335,8 @@ template = LTemplate["IGraphM",
         LFun["coloredSimpleGraph", LinkObject],
         LFun["selfComplementaryQ", {}, True|False],
         LFun["vertexTransitiveQ", {Integer}, True|False],
+        LFun["edgeTransitiveQ", {Integer}, True|False],
+        LFun["symmetricQ", {Integer}, True|False],
         LFun["distanceTransitiveQ", {Integer}, True|False],
 
         (* Topological sorting and directed acyclic graphs *)

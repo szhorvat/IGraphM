@@ -152,13 +152,14 @@ IGEdgeTransitiveQ::usage = "IGEdgeTransitiveQ[graph] tests if graph is edge tran
 
 IGEdgeTransitiveQ::nmg = IGVertexTransitiveQ::nmg;
 SyntaxInformation[IGEdgeTransitiveQ] = {"ArgumentsPattern" -> {_}};
-(* TODO: Check if it is faster to work with the automorphism group of the graph instead of the line graph. *)
 IGEdgeTransitiveQ[graph_?igGraphQ] :=
-    If[MultigraphQ[graph],
+    catch@If[MultigraphQ[graph],
       Message[IGEdgeTransitiveQ::nmg];
       $Failed
       ,
-      IGVertexTransitiveQ@LineGraph[graph]
+      Block[{ig = igMakeUnweighted[graph]},
+        check@ig@"edgeTransitiveQ"[blissSplittingHeuristics["FirstLargest"]]
+      ]
     ]
 IGEdgeTransitiveQ[_] = False;
 
@@ -168,13 +169,15 @@ IGSymmetricQ::usage = "IGSymmetricQ[graph] tests if graph is symmetric, i.e. if 
 
 IGSymmetricQ::nmg = IGVertexTransitiveQ::nmg;
 SyntaxInformation[IGSymmetricQ] = {"ArgumentsPattern" -> {_}};
-(* See TODO for IGEdgeTransitiveQ and potentially compute automorphism group only once. *)
 IGSymmetricQ[graph_?igGraphQ] :=
-    If[MultigraphQ[graph],
+    catch@If[MultigraphQ[graph],
       Message[IGSymmetricQ::nmg];
       $Failed
       ,
-      IGVertexTransitiveQ[graph] && IGEdgeTransitiveQ[graph]
+      IGRegularQ[graph] &&
+      Block[{ig = igMakeUnweighted[graph]},
+        check@ig@"symmetricQ"[blissSplittingHeuristics["FirstLargest"]]
+      ]
     ]
 IGSymmetricQ[_] = False;
 
