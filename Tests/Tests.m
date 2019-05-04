@@ -144,6 +144,17 @@ dbipartite = Graph[
 ];
 
 
+(* These graphs have no non-trivial automorphisms, and therefore asymmetric. *)
+(* Exclude the null and singleton graphs because they are symmetric. *)
+asymmList = {
+  Graph[{1\[UndirectedEdge]2,2\[UndirectedEdge]3,3\[UndirectedEdge]4,2\[UndirectedEdge]4,4\[UndirectedEdge]5,5\[UndirectedEdge]6}],
+  GraphData["FruchtGraph"],
+  GraphData[{6,69}],
+  GraphData[{6,95}],
+  GraphData[{"Tree",{7,7}}]
+};
+
+
 (* ::Section::Closed:: *)
 (*Sanity checks for Mathematica built-ins*)
 
@@ -2145,7 +2156,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Isomorphism*)
 
 
@@ -2348,7 +2359,7 @@ MT[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Automorphism groups*)
 
 
@@ -2371,6 +2382,23 @@ MT[
   GroupOrder@IGBlissAutomorphismGroup[ GraphData["PerkelGraph"] ],
   GraphData["PerkelGraph", "AutomorphismCount"]
 ]
+
+
+MT[
+  IGBlissAutomorphismCount[#],
+  1
+]& /@ asymmList
+
+
+MT[
+  IGBlissAutomorphismCount[IGEmptyGraph[#]],
+  #!
+]& /@ Range[0,5]
+
+MT[
+  IGBlissAutomorphismCount[IGCompleteGraph[#]],
+  #!
+]& /@ Range[2,5]
 
 
 (* ::Subsection::Closed:: *)
@@ -6344,420 +6372,6 @@ MT[
 (* TODO *)
 
 
-(* ::Section:: *)
-(*Property testing*)
-
-
-MTSection["Property testing"]
-
-
-(* ::Subsubsection::Closed:: *)
-(*IGNullGraphQ*)
-
-
-MT[
-  IGNullGraphQ[1], (* False for non-graph *)
-  False
-]
-
-MT[
-  IGNullGraphQ[empty],
-  True
-]
-
-MT[
-  IGNullGraphQ[edgeless],
-  False
-]
-
-MT[
-  IGNullGraphQ[IGEmptyGraph[1]],
-  False
-]
-
-MT[
-  IGNullGraphQ[ugi],
-  False
-]
-
-MT[
-  IGNullGraphQ[ugs],
-  False
-]
-
-MT[
-  IGNullGraphQ[dgi],
-  False
-]
-
-MT[
-  IGNullGraphQ[dgs],
-  False
-]
-
-
-(* ::Subsubsection::Closed:: *)
-(*IGCactusQ*)
-
-
-(* null graph is not cactus *)
-MT[
-  IGCactusQ[IGEmptyGraph[]],
-  False
-]
-
-(* singleton graph is cactus *)
-MT[
-  IGCactusQ[IGEmptyGraph[1]],
-  True
-]
-
-(* non-connected *)
-MT[
-  IGCactusQ[IGEmptyGraph[2]],
-  False
-]
-
-(* P2 *)
-MT[
-  IGCactusQ[CompleteGraph[2]],
-  True
-]
-
-(* triangle *)
-MT[
-  IGCactusQ[CompleteGraph[3]],
-  True
-]
-
-MT[
-  IGCactusQ[CompleteGraph[4]],
-  False
-]
-
-MT[
-  IGCactusQ[CycleGraph[4]],
-  True
-]
-
-(* with bridge *)
-MT[
-  IGCactusQ[IGShorthand["1-2-3-1,1-4,4-5-6-4"]],
-  True
-]
-
-(* without bridge *)
-MT[
-  IGCactusQ[IGShorthand["1-2-3-1,1-5-6-1"]],
-  True
-]
-
-
-(* ::Text:: *)
-(*Multigraphs*)
-
-
-(* 2-edge *)
-MT[
-  IGCactusQ[IGShorthand["1-2-1", MultiEdges -> True]],
-  True
-]
-
-(* 3-edge *)
-MT[
-  IGCactusQ[IGShorthand["1-2-1-2", MultiEdges -> True]],
-  False
-]
-
-MT[
-  IGCactusQ[IGShorthand["1-2-3-1,1-4-1,4-5-6-4", MultiEdges -> True]],
-  True
-]
-
-MT[
-  IGCactusQ[IGShorthand["1-2-3-1,1-4-1-4,4-5-6-4", MultiEdges -> True]],
-  False
-]
-
-MT[
-  IGCactusQ[IGShorthand["1-2-3-1,1-4-1,4-5-6-4-5", MultiEdges -> True]],
-  False
-]
-
-
-(* ::Text:: *)
-(*Self-loops must be ignored*)
-
-
-MT[
-  IGCactusQ[EdgeAdd[CycleGraph[5], UndirectedEdge[1, 1]]],
-  True
-]
-
-MT[
-  IGCactusQ[Graph[{1 <-> 1}]],
-  True
-]
-
-MT[
-  IGCactusQ[Graph[{1 <-> 1, 1 <-> 1}]],
-  True
-]
-
-
-(* ::Text:: *)
-(*Directed graphs*)
-
-
-MT[
-  IGCactusQ[Graph[{1 -> 2}]],
-  $Failed,
-  {IGCactusQ::dirg}
-]
-
-
-(* ::Subsubsection:: *)
-(*IGCompleteQ*)
-
-
-(* TODO *)
-
-
-(* ::Subsubsection:: *)
-(*IGRegularQ*)
-
-
-(* TODO *)
-
-
-(* ::Subsubsection:: *)
-(*IGStronglyRegularQ and IGStronglyRegularParameters*)
-
-
-(* TODO *)
-
-
-(* ::Subsubsection:: *)
-(*IGDistanceRegularQ and IGIntersectionArray*)
-
-
-(* TODO *)
-
-
-(* ::Subsubsection:: *)
-(*IGVertexTransitiveQ*)
-
-
-(* TODO *)
-
-
-MT[
-  IGVertexTransitiveQ[IGEmptyGraph[#]],
-  True
-]& /@ Range[0, 4]
-
-
-MT[
-  IGVertexTransitiveQ[IGCompleteGraph[#]],
-  True
-]& /@ Range[2, 5]
-
-
-MT[
-  IGVertexTransitiveQ[IGSquareLattice[{2, 5}, "Periodic" -> True]],
-  True
-]
-
-
-MT[
-  IGVertexTransitiveQ[IGSquareLattice[{8, 5}, "Periodic" -> True]],
-  True
-]
-
-
-MT[
-  IGVertexTransitiveQ[CycleGraph[5, DirectedEdges -> True]],
-  True
-]
-
-
-MT[
-  IGVertexTransitiveQ[IGShorthand["3->5->2->6->3,5->1->6->4->5,3->1->2->4->3"]],
-  True
-]
-
-
-MT[
-  IGVertexTransitiveQ /@ IGData[{"AllDirectedGraphs", 4}],
-  {True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, True, False, False, False, False, False, False, False, False, True}
-]
-
-
-MT[
-  IGVertexTransitiveQ /@ IGData[{"AllUndirectedGraphs", 4}],
-  {True, False, False, False, False, True, False, False, True, False, True}
-]
-
-
-MT[
-  IGVertexTransitiveQ[IGShorthand["1-2-3"]],
-  False
-]
-
-
-MT[
-  IGVertexTransitiveQ[Graph[{1 <-> 2, 1 <-> 1}]],
-  False
-]
-
-MT[
-  IGVertexTransitiveQ[Graph[{1 <-> 2, 1 <-> 1, 2 <-> 2}]],
-  True
-]
-
-
-MT[
-  IGVertexTransitiveQ[Graph[{1 <-> 2, 1 <-> 2}]],
-  $Failed,
-  {IGVertexTransitiveQ::nmg}
-]
-
-
-(* ::Subsubsection:: *)
-(*IGEdgeTransitiveQ*)
-
-
-(* TODO *)
-
-
-(* TODO compare with vertex transitiviy of line graph, both directed and undirected *)
-
-
-(* ::Subsubsection:: *)
-(*IGSymmetricQ*)
-
-
-(* TODO *)
-
-
-(* ::Subsubsection::Closed:: *)
-(*IGDistanceTransitiveQ*)
-
-
-MT[
-  IGDistanceTransitiveQ[IGEmptyGraph[#]],
-  True
-]& /@ Range[0, 4]
-
-MT[
-  IGDistanceTransitiveQ[IGCompleteGraph[#]],
-  True
-]& /@ Range[2, 4]
-
-
-MT[
-  IGDistanceTransitiveQ[IGShorthand["1-2,3"]],
-  False
-]
-
-
-MT[
-  IGDistanceTransitiveQ[IGShorthand["1-2,3-4"]],
-  True
-]
-
-
-MT[
-  IGDistanceTransitiveQ[IGShorthand["1->2"]],
-  False
-]
-
-
-MT[
-  IGDistanceTransitiveQ[IGShorthand["1->2->3->1"]],
-  True
-]
-
-
-MT[
-  IGDistanceTransitiveQ[IGShorthand["1<->2"]],
-  True
-]
-
-
-MT[
-  IGDistanceTransitiveQ[GraphData["ShrikhandeGraph"]],
-  False
-]
-
-
-MT[
-  IGDistanceTransitiveQ[GraphData[{"Rook", {4, 4}}]],
-  True
-]
-
-
-MT[
-  IGDistanceTransitiveQ[GraphData["IcosahedralGraph"]],
-  True
-]
-
-
-MT[
-  IGDistanceTransitiveQ[GraphData["DodecahedralGraph"]],
-  True
-]
-
-
-MT[
-  IGDistanceTransitiveQ /@ IGData[{"AllUndirectedGraphs", 4}],
-  {True, False, False, False, False, True, False, False, True, False, True}
-]
-
-
-(* oriented octahedral skeleton *)
-MT[
-  IGDistanceTransitiveQ[IGShorthand["3->5->2->6->3,5->1->6->4->5,3->1->2->4->3"]],
-  False
-]
-
-
-MT[
-  IGDistanceTransitiveQ /@ IGData[{"AllDirectedGraphs", 4}],
-  {True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, True}
-]
-
-
-(* https://doi.org/10.1016/0012-365X(80)90155-7 *)
-MT[
-  Module[{n=#,mods},
-    mods=Rest@Union@Mod[Range[n]^2, n];
-    IGDistanceTransitiveQ@RelationGraph[MemberQ[mods, Mod[#1-#2, n]]&, Range[0, n-1]]
-  ],
-  True
-]& /@ {7, 11, 19, 23}
-
-
-(* with self loops *)
-MT[
-  IGDistanceTransitiveQ[Graph[{1 <-> 2, 1 <-> 1}]],
-  False
-]
-
-MT[
-  IGDistanceTransitiveQ[Graph[{1 <-> 2, 1 <-> 1, 2 <-> 2}]],
-  True
-]
-
-
-(* multigraph *)
-MT[
-  IGDistanceTransitiveQ[Graph[{1 <-> 2, 1 <-> 2}]],
-  $Failed,
-  {IGDistanceTransitiveQ::nmg}
-]
-
-
 (* ::Section::Closed:: *)
 (*Utility functions*)
 
@@ -7383,11 +6997,594 @@ MT[
 (* TODO check multigraph handling with and without properties *)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Q functions*)
 
 
 MTSection["Q functions"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGNullGraphQ*)
+
+
+MT[
+  IGNullGraphQ[1], (* False for non-graph *)
+  False
+]
+
+MT[
+  IGNullGraphQ[empty],
+  True
+]
+
+MT[
+  IGNullGraphQ[edgeless],
+  False
+]
+
+MT[
+  IGNullGraphQ[IGEmptyGraph[1]],
+  False
+]
+
+MT[
+  IGNullGraphQ[ugi],
+  False
+]
+
+MT[
+  IGNullGraphQ[ugs],
+  False
+]
+
+MT[
+  IGNullGraphQ[dgi],
+  False
+]
+
+MT[
+  IGNullGraphQ[dgs],
+  False
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGCactusQ*)
+
+
+(* null graph is not cactus *)
+MT[
+  IGCactusQ[IGEmptyGraph[]],
+  False
+]
+
+(* singleton graph is cactus *)
+MT[
+  IGCactusQ[IGEmptyGraph[1]],
+  True
+]
+
+(* non-connected *)
+MT[
+  IGCactusQ[IGEmptyGraph[2]],
+  False
+]
+
+(* P2 *)
+MT[
+  IGCactusQ[CompleteGraph[2]],
+  True
+]
+
+(* triangle *)
+MT[
+  IGCactusQ[CompleteGraph[3]],
+  True
+]
+
+MT[
+  IGCactusQ[CompleteGraph[4]],
+  False
+]
+
+MT[
+  IGCactusQ[CycleGraph[4]],
+  True
+]
+
+(* with bridge *)
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-4,4-5-6-4"]],
+  True
+]
+
+(* without bridge *)
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-5-6-1"]],
+  True
+]
+
+
+(* ::Text:: *)
+(*Multigraphs*)
+
+
+(* 2-edge *)
+MT[
+  IGCactusQ[IGShorthand["1-2-1", MultiEdges -> True]],
+  True
+]
+
+(* 3-edge *)
+MT[
+  IGCactusQ[IGShorthand["1-2-1-2", MultiEdges -> True]],
+  False
+]
+
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-4-1,4-5-6-4", MultiEdges -> True]],
+  True
+]
+
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-4-1-4,4-5-6-4", MultiEdges -> True]],
+  False
+]
+
+MT[
+  IGCactusQ[IGShorthand["1-2-3-1,1-4-1,4-5-6-4-5", MultiEdges -> True]],
+  False
+]
+
+
+(* ::Text:: *)
+(*Self-loops must be ignored*)
+
+
+MT[
+  IGCactusQ[EdgeAdd[CycleGraph[5], UndirectedEdge[1, 1]]],
+  True
+]
+
+MT[
+  IGCactusQ[Graph[{1 <-> 1}]],
+  True
+]
+
+MT[
+  IGCactusQ[Graph[{1 <-> 1, 1 <-> 1}]],
+  True
+]
+
+
+(* ::Text:: *)
+(*Directed graphs*)
+
+
+MT[
+  IGCactusQ[Graph[{1 -> 2}]],
+  $Failed,
+  {IGCactusQ::dirg}
+]
+
+
+(* ::Subsubsection:: *)
+(*IGCompleteQ*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGRegularQ*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection:: *)
+(*IGStronglyRegularQ and IGStronglyRegularParameters*)
+
+
+(* TODO *)
+
+
+MT[
+  IGStronglyRegularParameters[IGEmptyGraph[]],
+  {0, 0, 0, 0}
+]
+
+MT[
+  IGStronglyRegularParameters[IGEmptyGraph[1]],
+  {1, 0, 0, 0}
+]
+
+MT[
+  IGStronglyRegularParameters[IGEmptyGraph[4]],
+  {4, 0, 0, 0}
+]
+
+MT[
+  IGStronglyRegularParameters[CompleteGraph[4]],
+  {4, 3, 2, 0}
+]
+
+
+MT[
+  IGStronglyRegularParameters[GraphData[{"Paley", 13}]],
+  {13, 6, 2, 3}
+]
+
+MT[
+  IGStronglyRegularParameters[PetersenGraph[]],
+  {10, 3, 0, 1}
+]
+
+MT[
+  IGStronglyRegularParameters[GraphData[{"CocktailParty", 7}]],
+  {14, 12, 10, 12}
+]
+
+MT[
+  IGStronglyRegularParameters[GraphData["M22"]],
+  {77, 16, 0, 4}
+]
+
+MT[
+  IGStronglyRegularParameters[HypercubeGraph[2]],
+  {4, 2, 0, 2}
+]
+
+
+MT[
+  IGStronglyRegularParameters[HypercubeGraph[3]],
+  {}
+]
+
+
+MT[
+  IGStronglyRegularParameters[IGSymmetricTree[{3, 2}]],
+  {}
+]
+
+
+(* ::Subsubsection:: *)
+(*IGDistanceRegularQ and IGIntersectionArray*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGVertexTransitiveQ*)
+
+
+MT[
+  IGVertexTransitiveQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0, 4]
+
+
+MT[
+  IGVertexTransitiveQ[IGCompleteGraph[#]],
+  True
+]& /@ Range[2, 5]
+
+
+MT[
+  IGVertexTransitiveQ[IGSquareLattice[{2, 5}, "Periodic" -> True]],
+  True
+]
+
+
+MT[
+  IGVertexTransitiveQ[IGSquareLattice[{8, 5}, "Periodic" -> True]],
+  True
+]
+
+
+MT[
+  IGVertexTransitiveQ[CycleGraph[5, DirectedEdges -> True]],
+  True
+]
+
+
+MT[
+  IGVertexTransitiveQ[IGShorthand["3->5->2->6->3,5->1->6->4->5,3->1->2->4->3"]],
+  True
+]
+
+
+MT[
+  IGVertexTransitiveQ /@ IGData[{"AllDirectedGraphs", 4}],
+  {True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, True, False, False, False, False, False, False, False, False, True}
+]
+
+
+MT[
+  IGVertexTransitiveQ /@ IGData[{"AllUndirectedGraphs", 4}],
+  {True, False, False, False, False, True, False, False, True, False, True}
+]
+
+
+MT[
+  IGVertexTransitiveQ[IGShorthand["1-2-3"]],
+  False
+]
+
+
+MT[
+  IGVertexTransitiveQ[Graph[{1 <-> 2, 1 <-> 1}]],
+  False
+]
+
+MT[
+  IGVertexTransitiveQ[Graph[{1 <-> 2, 1 <-> 1, 2 <-> 2}]],
+  True
+]
+
+
+MT[
+  IGVertexTransitiveQ[Graph[{1 <-> 1, 1 <-> 2, 2 <-> 2}]],
+  True
+]
+
+
+MT[
+  IGVertexTransitiveQ[Graph[{1 <-> 2, 1 <-> 2}]],
+  $Failed,
+  {IGVertexTransitiveQ::nmg}
+]
+
+
+MT[
+  IGVertexTransitiveQ[#],
+  False
+]& /@ asymmList
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGEdgeTransitiveQ*)
+
+
+MT[
+  IGEdgeTransitiveQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0,4]
+
+MT[
+  IGEdgeTransitiveQ[IGCompleteGraph[#]],
+  True
+]& /@ Range[2,5]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1 -> 2}]],
+  True
+]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1, 2, 3}, {1 -> 2}]],
+  True
+]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1, 2, 3}, {1 <-> 2}]],
+  True
+]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1, 2}, {1 <-> 1}]],
+  True
+]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1, 2, 3}, {1 <-> 1, 3 <-> 3}]],
+  True
+]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1 -> 2, 2 -> 3}]],
+  False
+]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1 -> 2, 3 -> 2}]],
+  True
+]
+
+
+MT[
+  IGEdgeTransitiveQ[StarGraph[4, DirectedEdges -> True]],
+  True
+]
+
+
+MT[
+  IGEdgeTransitiveQ[ReverseGraph[StarGraph[4, DirectedEdges -> True]]],
+  True
+]
+
+
+MT[
+  IGEdgeTransitiveQ[IGShorthand["1->2->3,2->4"]],
+  False
+]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1 -> 2, 1 -> 2}]],
+  $Failed,
+  {IGEdgeTransitiveQ::nmg}
+]
+
+
+MT[
+  IGEdgeTransitiveQ[Graph[{1 <-> 2, 1 <-> 2}]],
+  $Failed,
+  {IGEdgeTransitiveQ::nmg}
+]
+
+
+MT[
+  IGEdgeTransitiveQ[#],
+  False
+]& /@ asymmList
+
+
+(* This graph is not edge transitive, but its line graph is vertex transitive. *)
+MT[
+  IGEdgeTransitiveQ@GraphDisjointUnion[CycleGraph[3], StarGraph[4]],
+  False
+]
+
+
+(* ::Subsubsection:: *)
+(*IGSymmetricQ*)
+
+
+(* TODO *)
+
+
+MT[
+  IGSymmetricQ[#],
+  False
+]& /@ asymmList
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGDistanceTransitiveQ*)
+
+
+MT[
+  IGDistanceTransitiveQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0, 4]
+
+MT[
+  IGDistanceTransitiveQ[IGCompleteGraph[#]],
+  True
+]& /@ Range[2, 4]
+
+
+MT[
+  IGDistanceTransitiveQ[IGShorthand["1-2,3"]],
+  False
+]
+
+
+MT[
+  IGDistanceTransitiveQ[IGShorthand["1-2,3-4"]],
+  True
+]
+
+
+MT[
+  IGDistanceTransitiveQ[IGShorthand["1->2"]],
+  False
+]
+
+
+MT[
+  IGDistanceTransitiveQ[IGShorthand["1->2->3->1"]],
+  True
+]
+
+
+MT[
+  IGDistanceTransitiveQ[IGShorthand["1<->2"]],
+  True
+]
+
+
+MT[
+  IGDistanceTransitiveQ[GraphData["ShrikhandeGraph"]],
+  False
+]
+
+
+MT[
+  IGDistanceTransitiveQ[GraphData[{"Rook", {4, 4}}]],
+  True
+]
+
+
+MT[
+  IGDistanceTransitiveQ[GraphData["IcosahedralGraph"]],
+  True
+]
+
+
+MT[
+  IGDistanceTransitiveQ[GraphData["DodecahedralGraph"]],
+  True
+]
+
+
+MT[
+  IGDistanceTransitiveQ /@ IGData[{"AllUndirectedGraphs", 4}],
+  {True, False, False, False, False, True, False, False, True, False, True}
+]
+
+
+MT[
+  IGDistanceTransitiveQ[#],
+  False
+]& /@ asymmList
+
+
+(* oriented octahedral skeleton *)
+MT[
+  IGDistanceTransitiveQ[IGShorthand["3->5->2->6->3,5->1->6->4->5,3->1->2->4->3"]],
+  False
+]
+
+
+MT[
+  IGDistanceTransitiveQ /@ IGData[{"AllDirectedGraphs", 4}],
+  {True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, True}
+]
+
+
+(* https://doi.org/10.1016/0012-365X(80)90155-7 *)
+MT[
+  Module[{n=#,mods},
+    mods=Rest@Union@Mod[Range[n]^2, n];
+    IGDistanceTransitiveQ@RelationGraph[MemberQ[mods, Mod[#1-#2, n]]&, Range[0, n-1]]
+  ],
+  True
+]& /@ {7, 11, 19, 23}
+
+
+(* with self loops *)
+MT[
+  IGDistanceTransitiveQ[Graph[{1 <-> 2, 1 <-> 1}]],
+  False
+]
+
+MT[
+  IGDistanceTransitiveQ[Graph[{1 <-> 2, 1 <-> 1, 2 <-> 2}]],
+  True
+]
+
+
+(* multigraph *)
+MT[
+  IGDistanceTransitiveQ[Graph[{1 <-> 2, 1 <-> 2}]],
+  $Failed,
+  {IGDistanceTransitiveQ::nmg}
+]
+
+
+(* ::Subsection::Closed:: *)
+(*General tests*)
 
 
 (* ::Text:: *)
