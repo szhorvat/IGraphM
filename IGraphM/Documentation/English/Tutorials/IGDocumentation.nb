@@ -14910,7 +14910,8 @@ Cell["Additional examples", \
 
 Cell["\<\
 Let us visualize the vertex equivalence classes induced by a graph\
-\[CloseCurlyQuote]s automorphism group.\
+\[CloseCurlyQuote]s automorphism group. Two vertices are considered \
+equivalent if there is an automorphism that maps one into the other.\
 \>", "Text",ExpressionUUID->"d470fe00-85ef-4480-97b8-65efab62afbc"],
 
 Cell[BoxData[
@@ -15797,7 +15798,69 @@ Cell[BoxData[
   RowBox[{"CycleGraph", "[", 
    RowBox[{"5", ",", 
     RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}], 
-  "]"}]], "Input",ExpressionUUID->"f885fb2f-1cfe-4565-a60c-1b3c6218f180"]
+  "]"}]], "Input",ExpressionUUID->"f885fb2f-1cfe-4565-a60c-1b3c6218f180"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGRegularQ"],ExpressionUUID->"ae76b1b9-7fab-43b6-8c32-42b481d7acb2"],
+ " considers self-loops and multi-edges when computing vertex degrees."
+}], "Text",ExpressionUUID->"24a919f7-3a07-4fb2-aeff-b9aed34b6a25"],
+
+Cell[BoxData[
+ RowBox[{"IGRegularQ", "[", 
+  GraphicsBox[
+   NamespaceBox["NetworkGraphics",
+    DynamicModuleBox[{Typeset`graph = HoldComplete[
+      Graph[{1, 2, 3, 4}, {
+       Null, {{1, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 4}, {2, 3}}}, {
+       VertexLabels -> {None}, VertexSize -> {Medium}}]]}, 
+     TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJw9lAtIk1EUx4dY29TS1NIsfLQoQoiVIqbD8wWFJZamPZeYSU8qsqyMkLI0
+e1gqaGVk5KuSHs4ZPrLytNTcaDUpyrSXD0rzETrNjE1Nd8/tgzEO995z/r/D
++R+v2IMRO61EIlHExG/yn3/S+GZU2b9UsKgfxFHOPgvuaCgWCSxWUywR/j9s
+VPakejugvCF4aeTMOMzcsuj0yp+pKH4XeepmZxnmtssMxwJv47w/j0JaijTo
+XHcjO+tOBdZ0ua3I2afFxQHmXatFtYh9KcEditfo3DtFClWv8N6B9Odvyg1o
+p4opnbHjLX6efl1xtdCAocUpz/urP2DIko1tKvFr7DIVG/PPtaCpcmxviYsW
+63amd3okfsHZyxOcfvtrsOxWYvXTrd9QHzC2x3tAjUx0K57vPPa3u6VWwc9l
+gZZzqKf3y9l74PllVZb8sIbqx7P6wPVNtbfoAxfS/57pBznxdTM+cCX+bsYP
+edSftaw/EEf9C2P9A97fcr2lvxA3HH0ip3QAwrXKhY59BRB7xMOrw90ISQnV
+DU3b74K3Y9732vSJ+KGsJ9f7Phzw8bs4Mm6EvDMNsbJVJTAeZRIHHR6ELt9U
+nU5ZCsEPEivCvw/C8cwd9UHL1PBtSBffu3kIGpUZv3pr1GDQT35D4BBR5X62
+Rw2+PpOfCSQUz7f1u+R01wRauv8sMnm1ys0McZTPutB6RHPZDK1U75ped1Qs
+GoUk0tPct81NcWgUYkhvflrr17ltEzHxZEvzz+4OGwM58XL+xgZLjJxfxO4j
+5xexfMj5PVk95PzFTA9yfn+mFzl/JuNBzt+4zsKLnP8jxZw/h+5zfoHycf5S
+qsf5uR7Oz/Vyfs7D+TlvxYdpmzwn/DeoY/NgGZdZEsGH5uVihuJT33qJEEDz
+5Pm1KNe3XCI00bwV1B68ai2XCi00j5rozP7kJ1JBS/PaNtPO70yojTDK/AbS
+Kw6u0U02wn6a90SPDUFD4baCJ/mhSj9gTlbZCkB+Gc4Ku5bQYyvMIT8xv9kJ
+Vi71ly7srVPwc+7Hx/Tejfx6kvKPkZ9tqH44+b2d9P2gffCC9FfSvigiPgPt
+Ey/if0X7Jo3640f7SEn9k9G+4v01sv7iP7oAjuY=
+        "], {
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{1, 8, 11, 13, 19, 21, 24, 1},
+            SplineDegree->7], 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{1, 2}, 0.1]}, 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{
+            2, {1.4999999999999978`, 0.16444074718311635`}, 3}], 0.1]}, 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{
+            2, {1.499999999999998, -0.16444074718311566`}, 3}], 0.1]}, 
+          {Arrowheads[0.], ArrowBox[{3, 4}, 0.1]}, 
+          {Arrowheads[0.], 
+           ArrowBox[BezierCurveBox[{4, 63, 66, 68, 74, 76, 79, 4},
+            SplineDegree->7], 0.1]}}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+          DiskBox[1, 0.1], DiskBox[2, 0.1], DiskBox[3, 0.1], 
+          DiskBox[4, 0.1]}}]],
+      MouseAppearanceTag["NetworkGraphics"]],
+     AllowKernelInitialization->False]],
+   DefaultBaseStyle->{
+    "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+   FormatType->TraditionalForm,
+   FrameTicks->None,
+   ImageSize->{161.3671875, Automatic}], 
+  "]"}]], "Input",ExpressionUUID->"ab0d4b21-be06-43cc-954a-c09c63bb9173"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -15833,6 +15896,11 @@ Cell[BoxData[
   "GraphData", "[", "\"\<ShrikhandeGraph\>\"", 
    "]"}]}]], "Input",ExpressionUUID->"720656d7-8c7b-4581-bb8b-a1a81c4913a8"],
 
+Cell["\<\
+Hypercube graphs and 3 and higher dimensions are not strongly regular, even \
+though they are regular.\
+\>", "Text",ExpressionUUID->"e12c6012-1e15-4007-9f06-21a619118b12"],
+
 Cell[BoxData[
  RowBox[{"IGStronglyRegularQ", "/@", 
   RowBox[{"HypercubeGraph", "/@", 
@@ -15864,7 +15932,7 @@ Cell[TextData[{
  "It also returns ",
  Cell[BoxData[
  "True"],ExpressionUUID->"a590ca20-cb3f-4c79-b50b-56b2698dcf23"],
- " for graphs on 0..2 vertices."
+ " for graphs on 0, 1 and 2 vertices."
 }], "Text",ExpressionUUID->"4c8e2601-85a5-465e-8eeb-31b520e045e1"],
 
 Cell[BoxData[
@@ -16041,7 +16109,26 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"d2cf8b16-27d3-4afe-98c5-b2842104b828"],
 
 Cell["\<\
-The Shrikhande graphs is the smallest graph that is distance regular, but not \
+A distance regular graph with a diameter of 2 is also strongly regular.\
+\>", "Text",ExpressionUUID->"fd00d508-9a4c-4a2e-9b9e-852ceeb0cfaf"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"GraphData", "[", 
+   RowBox[{"{", 
+    RowBox[{"\"\<Paley\>\"", ",", "13"}], "}"}], 
+   "]"}]}]], "Input",ExpressionUUID->"e4be943e-842d-439f-8f25-18c5ee0ce2b3"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"IGDiameter", "[", "g", "]"}], ",", 
+   RowBox[{"IGDistanceRegularQ", "[", "g", "]"}], ",", 
+   RowBox[{"IGStronglyRegularQ", "[", "g", "]"}]}], 
+  "}"}]], "Input",ExpressionUUID->"d5be6808-9fdc-4457-8e79-970d4109c9d7"],
+
+Cell["\<\
+The Shrikhande graph is the smallest graph that is distance regular, but not \
 distance transitive.\
 \>", "Text",ExpressionUUID->"2a2d5da7-c06e-4ee5-b154-0f433d767ead"],
 
@@ -16056,7 +16143,7 @@ Cell[BoxData[
 
 Cell["\<\
 A disconnected graph is distance regular if its components are distance \
-regular and they are co-spectral. The following graphs are co-spectral.\
+regular and they are co-spectral. The following graphs are co-spectral:\
 \>", "Text",ExpressionUUID->"4642e274-9e40-4f79-8f99-bb7c29e49421"],
 
 Cell[BoxData[
@@ -16079,7 +16166,7 @@ Cell[BoxData[
 "Input",ExpressionUUID->"29f2f219-95dc-4921-bf8e-c09be20afee7"],
 
 Cell["\<\
-The are both distance regular with the same intersection array.\
+They are both distance regular with the same intersection array.\
 \>", "Text",ExpressionUUID->"64d0a8a2-546a-4c9d-86f6-0641f56641cd"],
 
 Cell[BoxData[
@@ -16528,7 +16615,27 @@ Cell[BoxData[
     RowBox[{"\"\<Bouwer\>\"", ",", 
      RowBox[{"{", 
       RowBox[{"2", ",", "4", ",", "15"}], "}"}]}], "}"}], 
-   "]"}]}]], "Input",ExpressionUUID->"d8cc3865-966c-4a2e-b4d8-1193283e93c7"]
+   "]"}]}]], "Input",ExpressionUUID->"d8cc3865-966c-4a2e-b4d8-1193283e93c7"],
+
+Cell["\<\
+Most graphs are edge transitive if their line graphs are vertex transitive. \
+The exceptions are disjoint unions of the 3-star and 3-cycle. These two \
+graphs have the same line graph, but they are not isomorphic.\
+\>", "Text",ExpressionUUID->"1a045257-fe76-4aed-8b7f-1c7b329a888d"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+  "GraphData", "[", "\"\<C3+K1,3\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"169a84f2-2ee1-4c5d-a752-0ef423688434"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"IGEdgeTransitiveQ", "[", "g", "]"}], ",", 
+   RowBox[{"IGVertexTransitiveQ", "@", 
+    RowBox[{"LineGraph", "[", "g", "]"}]}]}], 
+  "}"}]], "Input",ExpressionUUID->"397a384a-7391-4c1a-ba3c-02e1c782886d"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -16548,8 +16655,8 @@ Cell[TextData[{
 this property is distinct from being ",
  StyleBox["arc transitive",
   FontSlant->"Italic"],
- ", which is the definition used for s",
- StyleBox["ymmetric",
+ ", which is the definition used for \[OpenCurlyDoubleQuote]s",
+ StyleBox["ymmetric\[CloseCurlyDoubleQuote]",
   FontSlant->"Italic"],
  " by some authors."
 }], "Text",ExpressionUUID->"dfe4376f-93e1-4dec-901c-009066ee044d"],
@@ -16587,19 +16694,20 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"ea4e6295-fe16-4400-aaf3-56a4ad3e7fb7"],
 
 Cell[TextData[{
- "Sometimes the term ",
+ "Some authors use the term ",
  StyleBox["symmetric graph",
   FontSlant->"Italic"],
- " is used to refer to arc transitive graphs. Arc transitivity can be checked \
-using ",
+ " to refer to arc transitive graphs. Arc transitivity can be checked using \
+",
  Cell[BoxData[
- "DirectedGraph"],ExpressionUUID->"a2f353ff-2f38-4ee0-9d92-448b26a9d9d4"],
- " and ",
- Cell[BoxData[
- "IGEdgeTransitiveQ"],ExpressionUUID->
+  RowBox[{
+   RowBox[{"IGEdgeTransitiveQ", "@", 
+    RowBox[{"DirectedGraph", "[", "#", "]"}]}], "&"}]],ExpressionUUID->
   "87c98bc2-6a8c-4512-8e27-f37f2c439c41"],
- ". The smallest graph that is both vertex and edge transitive, but not arc \
-transitive, is the 27-vertex Doyle graph, also known as the Holt graph."
+ ". All arc-transitive graphs are both vertex- and edge-transitive, but the \
+reverse is not true. The smallest graph that is both vertex- and \
+edge-transitive, but not arc-transitive, is the 27-vertex Doyle graph, also \
+known as the Holt graph."
 }], "Text",ExpressionUUID->"9a0c2f6d-befc-4b69-b840-dc5e281d486f"],
 
 Cell[BoxData[
@@ -16637,8 +16745,8 @@ Cell[TextData[{
  "IGDistanceTransitiveQ"],ExpressionUUID->
   "2f534a7b-f2b6-455a-8b00-2a0cedd5eb98"],
  " checks if a graph is distance transitive. In a distance transitive graph, \
-any ordered pair of vertices can be mapped into any other that are the same \
-distance apart."
+any two ordered pairs of vertices which are the same distance apart can be \
+mapped into each other by some automorphism."
 }], "Text",ExpressionUUID->"16881e2f-ddd9-496a-b2a2-9e4147ff759e"],
 
 Cell["All Platonic graphs are distance transitive.", \
@@ -16658,27 +16766,8 @@ Cell[BoxData[
  RowBox[{"IGDistanceTransitiveQ", "/@", 
   "%"}]], "Input",ExpressionUUID->"9122c2a4-8577-4f91-93d0-23b7febbea85"],
 
-Cell["\<\
-Not every vertex transitive graph is also distance transitive.\
-\>", "Text",ExpressionUUID->"b41c2902-d8f0-4763-aa2a-cbc814077e60"],
-
-Cell[BoxData[
- RowBox[{"g", "=", 
-  RowBox[{"Graph3D", "@", 
-   RowBox[{"IGSquareLattice", "[", 
-    RowBox[{
-     RowBox[{"{", 
-      RowBox[{"2", ",", "6"}], "}"}], ",", 
-     RowBox[{"\"\<Periodic\>\"", "\[Rule]", "True"}]}], 
-    "]"}]}]}]], \
-"Input",ExpressionUUID->"1232530f-8f3d-4b11-9a37-a874bcd63006"],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"IGVertexTransitiveQ", "[", "g", "]"}], ",", 
-   RowBox[{"IGDistanceTransitiveQ", "[", "g", "]"}]}], 
-  "}"}]], "Input",ExpressionUUID->"6a925cc3-2b7b-4da4-98e1-9c6bb1726f5c"],
+Cell["Some graphs are symmetric, but not distance transitive.", \
+"Text",ExpressionUUID->"59affd57-e10c-4ce2-928c-7762c2170888"],
 
 Cell[BoxData[
  RowBox[{"g", "=", 
@@ -16691,9 +16780,6 @@ Cell[BoxData[
         RowBox[{"1", ",", "4"}], "}"}]}], "}"}]}], "}"}], 
    "]"}]}]], "Input",ExpressionUUID->"8f17ad77-f391-491a-9b82-7d2b6ee15eac"],
 
-Cell["Some graphs are symmetric, but not distance transitive.", \
-"Text",ExpressionUUID->"59affd57-e10c-4ce2-928c-7762c2170888"],
-
 Cell[BoxData[
  RowBox[{"{", 
   RowBox[{
@@ -16703,7 +16789,8 @@ Cell[BoxData[
 
 Cell[TextData[{
  Cell[BoxData[
- "IGDistanceRegularQ"],ExpressionUUID->"92d5b1b5-7935-4acc-af76-61bc10bfc00b"],
+ "IGDistanceTransitiveQ"],ExpressionUUID->
+  "92d5b1b5-7935-4acc-af76-61bc10bfc00b"],
  " does not exclude non-connected graphs."
 }], "Text",ExpressionUUID->"a51d71ed-a285-4ae8-90ca-5f1dcaa25a02"],
 
@@ -16748,8 +16835,8 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"1ec6bc03-716d-4384-b460-1445349008d4"],
 
 Cell[TextData[{
- Cell[BoxData["IGDistanceTransitiveQ"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGDistanceTransitiveQ"],ExpressionUUID->
   "77da63f0-6b04-463c-88c3-ae02b9c0c4d2"],
  " works with directed graphs."
 }], "Text",ExpressionUUID->"02238804-fce1-455b-9815-540b3681e13d"],
@@ -16759,7 +16846,7 @@ Cell[BoxData[
   RowBox[{"With", "[", 
    RowBox[{
     RowBox[{"{", 
-     RowBox[{"n", "=", "7"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"n", "=", "11"}], "}"}], ",", "\[IndentingNewLine]", 
     RowBox[{"RelationGraph", "[", 
      RowBox[{
       RowBox[{
@@ -16777,91 +16864,51 @@ Cell[BoxData[
            RowBox[{"#1", "-", "#2"}], ",", "n"}], "]"}]}], "]"}], "&"}], ",", 
       
       RowBox[{
-       RowBox[{"Range", "[", "n", "]"}], "-", "1"}], ",", 
-      "\[IndentingNewLine]", 
-      RowBox[{"EdgeShapeFunction", "\[Rule]", "\"\<CurvedEdge\>\""}]}], 
-     "]"}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
- CellChangeTimes->{{3.765900043410363*^9, 
-  3.765900084693531*^9}},ExpressionUUID->"1c5662fe-aa70-444f-9917-\
-91ff4e6a21af"],
+       RowBox[{"Range", "[", "n", "]"}], "-", "1"}]}], "]"}]}], 
+   "\[IndentingNewLine]", 
+   "]"}]}]], "Input",ExpressionUUID->"1c5662fe-aa70-444f-9917-91ff4e6a21af"],
 
 Cell[BoxData[
  RowBox[{"IGDistanceTransitiveQ", "[", "g", 
   "]"}]], "Input",ExpressionUUID->"263153ee-3966-478a-8ca0-6ec216302cf7"],
 
+Cell["\<\
+The following directed graph is vertex transitive, but not distance \
+transitive.\
+\>", "Text",ExpressionUUID->"ff41e03d-9f52-4999-93fb-147fe0cfad87"],
+
 Cell[BoxData[
  RowBox[{"IGDistanceTransitiveQ", "[", 
-  Graphics3DBox[
+  GraphicsBox[
    NamespaceBox["NetworkGraphics",
     DynamicModuleBox[{Typeset`graph = HoldComplete[
       Graph[{1, 2, 3, 4, 5, 
        6}, {{{1, 2}, {2, 3}, {3, 4}, {4, 1}, {2, 5}, {5, 4}, {4, 6}, {6, 2}, {
         1, 5}, {5, 3}, {3, 6}, {6, 1}}, Null}, {
-       GraphLayout -> {"Dimension" -> 3}, VertexLabels -> {"Name"}}]]}, 
-     TagBox[GraphicsGroup3DBox[{
-        {Hue[0.6, 0.2, 0.8], Arrowheads[Medium], 
-         Arrow3DBox[TubeBox[CompressedData["
-1:eJxTTMoPSmVmYGDgAWImIAaxd50WT4td/MyeAQr2Kv4/cevZG/v8c1PmRQHF
-+dckT9uYdhsuj0u9wKxLWgsWf7Of8+2KwAG/p/Y7mKfflvR6itOc10IXLj8C
-iousmfSDN/CrfWbtg0Ne2bdxqsdlPi5zOk3ia54Cxfunh+xWfvHGfrtrrza7
-z1ec6mH2GGnKh+X4P7XvXndzRz7QfFzm4AoHXOpxmU+qv3CpJ9VeXO7HpR5X
-vAAAdpb/Ug==
-          "]], 0.035361306733042885`]}, 
-        {Hue[
-         0.6, 0.6, 1], {
-          SphereBox[{0.7074419969561554, 0., 0.9031804967608462}, 
-           0.035361306733042885`], 
-          Text3DBox["1", {0.7463394343625026, 0., 
-           0.9420779341671933}, {-1, -1},
-           BaseStyle->"Graphics"]}, {
-          SphereBox[{0.7074406716623808, 0.42814292608699217`, 0.}, 
-           0.035361306733042885`], 
-          Text3DBox["2", {0.7463381090687279, 0.42814292608699217`, 
-           0.03889743740634717}, {-1, -1},
-           BaseStyle->"Graphics"]}, {
-          SphereBox[{0.7075056206673173, 1.3322887143974684`, 
-           0.42842358618687243`}, 0.035361306733042885`], 
-          Text3DBox["3", {0.7464030580736644, 1.3322887143974684`, 
-           0.4673210235932196}, {-1, -1},
-           BaseStyle->"Graphics"]}, {
-          SphereBox[{0.7075068883074361, 0.903337350730668, 
-           1.3310615254634806`}, 0.035361306733042885`], 
-          Text3DBox["4", {0.7464043257137832, 0.903337350730668, 
-           1.3699589628698279`}, {-1, -1},
-           BaseStyle->"Graphics"]}, {
-          SphereBox[{1.4149476692924772`, 0.6658630684612095, 
-           0.665295533072018}, 0.035361306733042885`], 
-          Text3DBox["5", {1.4538451066988245`, 0.6658630684612095, 
-           0.7041929704783653}, {-1, -1},
-           BaseStyle->"Graphics"]}, {
-          SphereBox[{0., 0.6659452135147943, 0.6653364763601116}, 
-           0.035361306733042885`], 
-          Text3DBox["6", {0.03889743740634717, 0.6659452135147943, 
-           0.7042339137664587}, {-1, -1},
-           BaseStyle->"Graphics"]}}}],
+       FormatType -> TraditionalForm, GraphLayout -> {"Dimension" -> 2}, 
+        ImageSize -> {115.8717385589066, 117.}, VertexLabels -> {None}, 
+        VertexSize -> {Medium}}]]}, 
+     TagBox[
+      GraphicsGroupBox[
+       GraphicsComplexBox[{{0.34976171058064925`, 1.2255319568291356`}, {
+        1.413995414613136, 0.6201844019202133}, {1.064535728718509, 
+        0.006106020172212401}, {0., 0.6106768958732157}, {
+        0.35786617576683977`, 0.}, {1.0558009715504355`, 
+        1.2310610454021789`}}, {
+         {Hue[0.6, 0.7, 0.5], Opacity[0.7], Arrowheads[Medium], 
+          ArrowBox[{{1, 2}, {1, 5}, {2, 3}, {2, 5}, {3, 4}, {3, 6}, {4, 1}, {
+           4, 6}, {5, 3}, {5, 4}, {6, 1}, {6, 2}}, 0.07060609101566313]}, 
+         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+          DiskBox[1, 0.07060609101566313], DiskBox[2, 0.07060609101566313], 
+          DiskBox[3, 0.07060609101566313], DiskBox[4, 0.07060609101566313], 
+          DiskBox[5, 0.07060609101566313], DiskBox[6, 0.07060609101566313]}}]],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False]],
-   Boxed->False,
    DefaultBaseStyle->{
     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
    FormatType->TraditionalForm,
-   ImageSize->{115.8717385589066, 117.},
-   Lighting->Dynamic[
-     FEPrivate`If[
-      FEPrivate`SameQ[FEPrivate`$OperatingSystem, "Windows"], {{"Directional", 
-        GrayLevel[0.7], 
-        ImageScaled[{1, 1, 0}]}, {"Point", 
-        GrayLevel[0.9], 
-        ImageScaled[{0, 0, 3.5}], {0, 0, 0.07}}}, {{"Directional", 
-        GrayLevel[0.7], 
-        ImageScaled[{1, 1, 0}]}, {"Point", 
-        GrayLevel[0.9], 
-        ImageScaled[{0, 0, 0}], {0, 0, 0.07}}}]],
-   ViewAngle->0.34413090750988373`,
-   ViewCenter->{{0.5, 0.5, 0.5}, {0.5269427286105737, 0.514714133636879}},
-   ViewPoint->{1.7863484811569765`, -1.7707956334577453`, 2.2634579581682415`},
-   ViewVertical->{0.07645004651275655, 0.20068114832952683`, 
-    0.9766690673372121}], 
+   FrameTicks->None,
+   ImageSize->{83.6022073089066, 83.}], 
   "]"}]], "Input",ExpressionUUID->"7ca86726-daa2-4eab-bd02-588814cdacc1"]
 }, Closed]]
 }, Closed]],
@@ -36902,8 +36949,8 @@ Cell[BoxData[
    RowBox[{"IGKVertexColoring", "[", 
     RowBox[{"g", ",", "5", ",", 
      RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]}], "]"}], ",", 
-   "5"}], 
-  "]"}]], "Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
+   "5"}], "]"}]], \
+"Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
 
 Cell["\<\
 Forcing colours in the appropriate way reduces the computation time \
@@ -38025,6 +38072,7 @@ Cell[BoxData[{
           AspectRatio->1,
           DefaultBaseStyle->"ColorSwatchGraphics",
           Frame->True,
+          
           FrameStyle->RGBColor[
            0.5333333333333334, 0.4, 0.33333333333333337`, 1.],
           FrameTicks->None,
@@ -42252,8 +42300,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EurovisionVotes\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
 
 Cell[BoxData[
  RowBox[{"IGVertexStrength", "[", "g", 
@@ -46237,8 +46285,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
@@ -46912,6 +46960,7 @@ Cell[BoxData[
             "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$6"], 
          TagBox[{
            TagBox[
+            
             RectangleBox[{1.5653086565863823`, 0.7069135813074301}, {
              1.868271644529426, 1.0098765692504739`}], "DynamicName", BoxID -> 
             "VertexID$7"], 
@@ -47537,8 +47586,8 @@ Cell[TextData[{
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{891, 855},
-WindowMargins->{{269, Automatic}, {Automatic, 0}},
+WindowSize->{776, 767},
+WindowMargins->{{Automatic, 188}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
