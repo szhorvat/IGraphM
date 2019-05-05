@@ -21,11 +21,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.110.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.111.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.3.110.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.3.111.paclet"]
 ```
 
 IGraph/M requires Mathematica 10.0.2 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
@@ -55,7 +55,7 @@ For additional details about functions, or for paper references for the methods 
 
 ## Contributions
 
-**Update: Help wanted with editing documentation and writing unit tests! Only basic Mathematica knowledge is required for this.** 
+**Update: Help wanted with editing documentation and writing unit tests! Only basic Mathematica knowledge is required for this.**
 
 Contributions to IGraph/M are very welcome!  Mathematica programmers of all levels of expertise can contribute.
 
@@ -67,9 +67,9 @@ In order of increasing difficulty, help is needed with the following tasks:
  - Implement new functions in pure Wolfram Language code.
  - Expose more igraph library functions to IGraph/M (C++ knowledge required)
  - Implement entirely new functions in C++.
- 
+
 If you are interested in contributing, send me an email for guidance. Evaluate the following in Mathematica to get my email address:
-                                                                      
+
     Uncompress["1:eJxTTMoPChZiYGAorsrILypLLHFIz03MzNFLzs8FAG/xCOI="]
 
 C++ programmers should look at [Development.md](Development.md) for additional information.
@@ -104,12 +104,12 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
     It may be possible to run IGraph/M on other platforms, however, it will be necessary to compile it from source.
 
     If you see this error on a supported platform, please file a bug report and include the output of ``IGraphM`Developer`GetInfo[]``.
-    
-  * **`The function IGlobal_get_collection was not loaded from the file ...` or similar error appears on Linux** 
-  
+
+  * **`The function IGlobal_get_collection was not loaded from the file ...` or similar error appears on Linux**
+
     Check that you are using a Linux distribution with glibc 2.14 or later. This is the minimum requirement. If your Linux distribution does have the required glibc version, then please open a new issue.
 
-### Known issues and workarounds   
+### Known issues and workarounds
 
    * `Graph[Graph[...], ...]` is returned
 
@@ -124,10 +124,10 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
    * LAD functions may crash with certain inputs.  [This is a bug in the igraph C core.](https://github.com/szhorvat/IGraphM/issues/1)
 
    * `IGDocumentation[]` may not work with Mathematica 11.1 on Linux.  Please enter `IGraphM/IGDocumentation` in the Documentation Center address bar to access it (or simply search for `igraph` in the Documentation Center).
-   
+
    * `IGZeroDiagonal` will crash with non-square sparse matrices in Mathematica 11.1 and earlier. This is a bug in those versions of Mathematica.
-   
-   * When loading IGraph/M in Mathematica 10.0 on recent versions of macOS (e.g. Mojave), the front end might crash. This is a problem specific to Mathematica 10.0, and, as far as I am aware, does not occur with newer versions. If this problem affects you, load IGraph/M as ``Block[{Print}, Needs["IGraphM`"]]``. 
+
+   * When loading IGraph/M in Mathematica 10.0 on recent versions of macOS (e.g. Mojave), the front end might crash. This is a problem specific to Mathematica 10.0, and, as far as I am aware, does not occur with newer versions. If this problem affects you, load IGraph/M as ``Block[{Print}, Needs["IGraphM`"]]``.
 
    * See also https://github.com/szhorvat/IGraphM/issues
 
@@ -147,20 +147,22 @@ New functions in this release:
  - Lattice generation: `IGLatticeMesh`, `IGTriangularLattice`.
  - Proximity graphs: `IGDelaunayGraph`, `IGGabrielGraph`, `IGRelativeNeighborhoodGraph`, `IGLuneBetaSkeleton`, `IGCircleBetaSkeleton`.
  - Centralization: `IGDegreeCentralization`, `IGBetweennessCentralization`, `IGClosenessCentralization`, `IGEigenvectorCentralization`.
- - Planar graphs: `IGPlanarQ`, `IGMaximalPlanarQ`, `IGOuterplanarQ`, `IGKuratowskiEdges`, `IGFaces`, `IGDualGraph`, `IGEmbeddingQ`, `IGPlanarEmbedding`, `IGOuterplanarEmbedding`, `IGCoordinatesToEmbedding`, `IGEmbeddingToCoordinates`, `IGLayoutPlanar`, `IGLayoutTutte`. 
+ - Planar graphs: `IGPlanarQ`, `IGMaximalPlanarQ`, `IGOuterplanarQ`, `IGKuratowskiEdges`, `IGFaces`, `IGDualGraph`, `IGEmbeddingQ`, `IGPlanarEmbedding`, `IGOuterplanarEmbedding`, `IGCoordinatesToEmbedding`, `IGEmbeddingToCoordinates`, `IGLayoutPlanar`, `IGLayoutTutte`.
  - Spanning trees and other tree-related functionality: `IGSpanningTree`, `IGRandomSpanningTree`, `IGSpanningTreeCount`, `IGUnfoldTree`, `IGTreeQ`, `IGForestQ`, `IGTreelikeComponents`, `IGTreeGame`, `IGStrahlerNumber`.
  - Matching functions: `IGMaximumMatching`, `IGMatchingNumber`.
  - Dominance: `IGDominatorTree`, `IGImmediateDominators`
  - Maximum flow: `IGMaximumFlowValue`, `IGMaximumFlowMatrix`.
- - Isomorphism: `IGGetIsomorphism`, `IGGetSubisomorphism` (they work with multigraphs).
+ - Isomorphism: `IGGetIsomorphism` and `IGGetSubisomorphism` (they work with multigraphs), `IGColoredSimpleGraph` (for transforming multigraph isomorphism to coloured graph isomorphism).
+ - Transitivity: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGDistanceTransitiveQ`.
+ - Regular graphs: `IGRegularQ`, `IGStronglyRegularQ`, `IGStronglyRegularParameters`, `IGDistanceRegularQ`, `IGIntersectonArray`.
  - A framework for easy property transformations and graph styling: `IGVertexProp`, `IGEdgeProp`, `IGEdgeVertexProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
  - Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
  - Matrix functions: `IGZeroDiagonal`, `IGTakeUpper`, `IGTakeLower`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGJointDegreeMatrix`
  - Added `IGIndexEdgeList` for retrieving the edge list of a graph in terms of vertex indices. This function is very fast and returns a packed array. It facilitates the efficient implementation of graph processing functions in pure Mathematica code, or interfacing with C libraries.
- - Other new functions: `IGGomoryHuTree`, `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGTriangleFreeQ`, `IGSelfComplementaryQ`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGBipartiteProjections`, `IGNeighborhoodSize`, `IGCoreness`, `IGVoronoiCells`, `IGMinimalSeparators`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGMycielskian`, `IGSmoothen`, `IGHomeomorphicQ`,`IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTakeSubgraph`, `IGGiantComponent`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`, `IGExpressionTree`.
- 
+ - Other new functions: `IGGomoryHuTree`, `IGTriangleFreeQ`, `IGSelfComplementaryQ`, `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`, `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGBipartiteProjections`, `IGNeighborhoodSize`, `IGCoreness`, `IGVoronoiCells`, `IGMinimalSeparators`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGMycielskian`, `IGSmoothen`, `IGHomeomorphicQ`,`IGNullGraphQ`, `IGSimpleGraph`, `IGShorthand`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGOrientTree`, `IGTakeSubgraph`, `IGGiantComponent`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`, `IGExpressionTree`, `IGCactusQ`.
+
 Updates to existing functions:
- 
+
  - Community detection: Several functions support the `"ClusterCount"` option now; added `IGCommunitiesFluid`.
  - `IGRewireEdges` now supports rewiring only the start or endpoint of directed edges (instead of both).
  - `IGBipartiteQ` now supports checking that a given partitioning is valid for a bipartite graph.
@@ -173,19 +175,19 @@ Updates to existing functions:
  - `IGBetweenness(Estimate)` and `IGEdgeBetweenness(Estimate)` now have the `Normalized` option.
  - `IGRandomWalk` now supports edge weights and the `EdgeWeights` option. Use `EdgeWeights -> None` to ignore weights, and thus restore the previous behaviour.
  - Clustering coefficient functions now support the `"ExcludeIsolates"` option.
- 
+
 Incompatible changes from IGraph/M 0.3:
- 
+
  - A flat namespace structure is used. Functions from ``IGraphM`Utilities` `` have been moved to ``IGraphM` ``.
  - Renamed `"MultipleEdges"` option to `MultiEdges` for convenient typing and auto-completion.
  - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
- - Removed graphlet functions due to [a long-time unresolved bug in the igraph C core](https://github.com/igraph/igraph/issues/869).   
+ - Removed graphlet functions due to [a long-time unresolved bug in the igraph C core](https://github.com/igraph/igraph/issues/869).
 
-Other changes:    
-    
+Other changes:
+
  - Improved compatibility with Mathematica 11.2 and 11.3; handling of `TwoWayRule` as an edge specification.
  - Bug fixes, performance improvements, documentation updates, and general polish.
- 
+
 Notes:
 
  - IGraph/M 0.4 will be the last version of IGraph/M to support Mathematica 10.0. Starting with IGraph/M 0.5, it will only work [with versions of Mathematica that are still supported by Wolfram Research](http://support.wolfram.com/kb/22107).
@@ -208,7 +210,7 @@ Notes:
 This is a bugfix release with several minor fixes.  Important changes to be aware of:
 
  - VF2 isomorphism functions now work when *both* vertex and edge colours are specified at the same time.
- - `IGBlissCanonicalGraph` is now suitable for filtering isomorphic duplicates. Its output may be different form previous releases.
+ - `IGBlissCanonicalGraph` is now suitable for filtering isomorphic duplicates. Its output may be different from previous releases.
 
 ##### v0.2.1
 
@@ -233,11 +235,7 @@ A number of other small bugs were also fixed.
 
 ## License
 
-The IGraph/M source code is released under the MIT license.
-
-igraph (and consequently the IGraph/M binary packages) can be distributed under the terms of the [GPLv2](http://opensource.org/licenses/GPL-2.0).
-
-See [LICENSE.md](IGraphM/LICENSE.md) for details.
+IGraph/M is licensed under the [GNU GPLv2](http://opensource.org/licenses/GPL-2.0). See [LICENSE.txt](IGraphM/LICENSE.txt) for details.
 
  [ltemplate]: https://github.com/szhorvat/LTemplate/
  [main]: http://szhorvat.net/mathematica/IGraphM
