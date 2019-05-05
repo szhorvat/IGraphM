@@ -3891,7 +3891,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{7.105427357601002*^-15, 
-         87.984375}, {-50.99999999999999, 45.98437500000001}}],
+         88.984375}, {-50.984374999999986`, 47.}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -4626,8 +4626,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{8.881784197001252*^-16, 242.40234375}, {-9., 
-         2.542968750000046}}],
+        ImageSizeCache->{{-8.881784197001252*^-16, 
+         243.40234375000006`}, {-8.590587797619094, 3.}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -4754,8 +4754,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{8.881784197001252*^-16, 142.54296875}, {-32., 
-         26.367303670092085`}}],
+        ImageSizeCache->{{-8.881784197001252*^-16, 
+         143.54296875000003`}, {-31.66431907604958, 27.}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -5138,8 +5138,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{8.515798609067184, 
-         334.19513889093275`}, {-66.4842013909328, 67.54963362661194}}],
+        ImageSizeCache->{{8.544773500396525, 
+         335.1661639996034}, {-65.98642274421071, 68.40253781668729}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -6449,7 +6449,8 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
+       ImageSizeCache->{{-8.881784197001252*^-16, 
+        105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -6615,7 +6616,8 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
+       ImageSizeCache->{{-8.881784197001252*^-16, 
+        105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -6688,7 +6690,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
+        ImageSizeCache->{{-8.881784197001252*^-16, 
+         105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -6794,7 +6797,8 @@ Cell[BoxData[
          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
           SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-         ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
+         ImageSizeCache->{{-8.881784197001252*^-16, 
+          105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
         MouseAppearanceTag["NetworkGraphics"]],
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
@@ -6865,7 +6869,9 @@ Cell[BoxData[
           CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
-          ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
+          
+          ImageSizeCache->{{-8.881784197001252*^-16, 
+           105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -9385,8 +9391,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{5.151171875, 302.407421875}, {-80.094875, 
-         74.06449679721376}}],
+        ImageSizeCache->{{5.171171875000001, 
+         303.3874218749999}, {-79.57842975180941, 75.07567499999999}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -10233,8 +10239,8 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{8.881784197001252*^-16, 112.30859375}, {-57., 
-        50.60184121296189}}],
+       ImageSizeCache->{{-8.881784197001252*^-16, 
+        113.30859374999999`}, {-56.46786661674632, 52.}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -10371,8 +10377,8 @@ Cell[BoxData[
          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
           SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-         ImageSizeCache->{{8.881784197001252*^-16, 112.30859375}, {-57., 
-          50.60184121296189}}],
+         ImageSizeCache->{{-8.881784197001252*^-16, 
+          113.30859374999999`}, {-56.46786661674632, 52.}}],
         MouseAppearanceTag["NetworkGraphics"]],
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
@@ -10948,8 +10954,8 @@ Cell[BoxData[
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
           
-          ImageSizeCache->{{-3.552713678800501*^-15, 
-           202.70703124999997`}, {-49.99999999999999, 43.99229348765167}}],
+          ImageSizeCache->{{1.7763568394002505`*^-15, 
+           203.70703124999997`}, {-49.1894268244027, 45.}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -11047,6 +11053,7 @@ Cell[BoxData[
            PaneBox["2",
             Alignment->Center,
             ImageMargins->2], 2, Automatic, {0.34641016151377535, 0.34641016151377535},
+           
            BaseStyle->"Graphics"], InsetBox[
            PaneBox["3",
             Alignment->Center,
@@ -11198,8 +11205,8 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{-2.4704955170583816`, 
-        60.70096426705837}, {-35.47049551705838, 30.239306690989906`}}],
+       ImageSizeCache->{{-2.2393066909899026`, 
+        61.469775440989906`}, {-35.87414326870588, 30.239306690989906`}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -11376,8 +11383,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{1.2870533573515353`, 
-         68.28339839138042}, {-85.76860300404743, 79.9572857511464}}],
+        ImageSizeCache->{{1.3055533573515412`, 
+         69.26489839138041}, {-86.35711616124844, 81.75090300404743}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -11581,7 +11588,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-1.2393066909899053`, 
-         151.00322796249637`}, {-62.089165462496354`, 56.04196177040285}}],
+         152.04387624015516`}, {-61.7423982206588, 57.12981374015516}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -11713,8 +11720,8 @@ Cell[BoxData[{
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{1.2870533573515353`, 
-         68.28339839138042}, {-85.76860300404743, 79.9572857511464}}],
+        ImageSizeCache->{{1.3055533573515412`, 
+         69.26489839138041}, {-86.35711616124844, 81.75090300404743}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -11894,8 +11901,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{0., 153.17187500000003`}, {-35.00000000000001, 
-         29.031049355431144`}}],
+        ImageSizeCache->{{8.881784197001252*^-16, 
+         154.171875}, {-34.34557376433083, 29.999999999999993`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -12024,8 +12031,7 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{0., 138.47265625}, {-45.999999999999986`, 
-         39.741381939048665`}}],
+        ImageSizeCache->{{0., 139.47265625}, {-45.26088067042984, 41.}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -12257,8 +12263,8 @@ Cell[BoxData[
          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
           SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-         ImageSizeCache->{{0.07132812500000174, 253.49507812500005`}, {-51., 
-          44.562711080888874`}}],
+         ImageSizeCache->{{0.09132812500000043, 
+          254.47507812499998`}, {-49.86465451343253, 46.}}],
         MouseAppearanceTag["NetworkGraphics"]],
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
@@ -13508,8 +13514,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-3.2393066909899035`, 
-         82.2393066909899}, {-53.23930669098991, 48.01663919563945}}],
+        ImageSizeCache->{{-3.2393066909899106`, 
+         83.23930669098992}, {-53.23930669098991, 49.2393066909899}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13600,8 +13606,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-3.2393066909898955`, 
-         96.2393066909899}, {-45.23930669098989, 39.207129737092984`}}],
+        ImageSizeCache->{{-3.2393066909899026`, 
+         97.2393066909899}, {-45.02784366389407, 40.2393066909899}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13773,7 +13779,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         121.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13849,7 +13855,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-0.2393066909899062, 
-         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+         183.2393066909899}, {-23.239306690989906`, 19.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13914,7 +13920,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         121.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13990,7 +13996,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-0.2393066909899062, 
-         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+         183.2393066909899}, {-23.239306690989906`, 19.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -14060,7 +14066,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         121.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -14136,7 +14142,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-0.2393066909899062, 
-         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+         183.2393066909899}, {-23.239306690989906`, 19.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -14209,7 +14215,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         121.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -14285,7 +14291,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-0.2393066909899062, 
-         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+         183.2393066909899}, {-23.239306690989906`, 19.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -15457,8 +15463,8 @@ Cell[TextData[Cell[BoxData[
       3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
       CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
        SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-      ImageSizeCache->{{0.31984374999999865`, 
-       65.67234375000002}, {-31.732950000000006`, 26.239005994133603`}}],
+      ImageSizeCache->{{0.33984374999999734`, 
+       66.65234375}, {-32.10636633120584, 26.713750000000005`}}],
      MouseAppearanceTag["NetworkGraphics"]],
     AllowKernelInitialization->False,
     UnsavedVariables:>{$CellContext`flag}]],
@@ -15750,8 +15756,14 @@ Cell[BoxData[{
          RowBox[{"{", 
           RowBox[{"4", ",", " ", "4"}], "}"}]}], "}"}], "]"}], ",", 
       RowBox[{"GraphData", "[", "\"\<ShrikhandeGraph\>\"", "]"}], ",", 
-      RowBox[{"GraphData", "[", "\"\<HoltGraph\>\"", "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+      RowBox[{"GraphData", "[", "\"\<HoltGraph\>\"", "]"}], ",", 
+      RowBox[{"GraphData", "[", "\"\<Tutte12Cage\>\"", "]"}], ",", 
+      RowBox[{"GraphData", "[", 
+       RowBox[{"{", 
+        RowBox[{"\"\<Paulus\>\"", ",", 
+         RowBox[{"{", 
+          RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -15772,7 +15784,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -15789,7 +15801,7 @@ Cell[BoxData[{
         RowBox[{
          RowBox[{"Show", "[", 
           RowBox[{"#", ",", 
-           RowBox[{"ImageSize", "\[Rule]", "60"}]}], "]"}], "&"}], "/@", 
+           RowBox[{"ImageSize", "\[Rule]", "50"}]}], "]"}], "&"}], "/@", 
         "graphs"}], ",", 
        RowBox[{"Keys", "[", "functions", "]"}]}], "}"}]}], ",", 
     "\[IndentingNewLine]", 
@@ -15798,8 +15810,7 @@ Cell[BoxData[{
   RowBox[{
    RowBox[{"Style", "[", 
     RowBox[{"#", ",", "\"\<Text\>\""}], "]"}], 
-   "&"}]}], "\[IndentingNewLine]"}], \
-"Input",ExpressionUUID->"a4eb5acb-e644-486d-9187-6864618eac5e"],
+   "&"}]}]}], "Input",ExpressionUUID->"a4eb5acb-e644-486d-9187-6864618eac5e"],
 
 Cell[CellGroupData[{
 
@@ -16593,194 +16604,8 @@ Cell[BoxData[
         ImageScaled[{0, 0, 0}], {0, 0, 0.07}}}]],
    ViewPoint->{1.6054375543825434`, -0.9097573583241039, -2.8363553740589955`},
    ViewVertical->{
-    0.9870603011882955, -0.146593327504995, -0.12371554044216537`},
-   ImageCache->GraphicsData["CompressedBitmap", "\<\
-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
-Bl1i/grh2yEo72d4Wr+jn9d8JL+NeYP2sGOkGDoem08JkQItGJ/3CVlRjanj
-DKRv9h778CXNN//8TlBe7soUVKS3D7/i3Hr5p7ixp1/Xe/sX/cPfIW73veex
-DZ2Dbk/+/PvA8HNolbCye2paWgjYD57oHxKbq84gS1j7vLiv3BhPoaiG969j
-2t4WBShfTz0WMjB6ckckVT0sQ+dPaGs76MtKyi9Z7xeRjrbAUv8M+GPVovKG
-25vahu+eITHYCcaee/Th528ljX1DlU29t/S3X7wtHXr2Z0rzjds+PSP3j937
-Hdok0fXPJJHKYa+J/xhMDkmkchLyuVISTz9P245qyJrNZ7KPns68u+E4vm+0
-ZX5P5dezdO2PzCcXk0WWHvK/loG2wCPPQOCfFzIb1zUO3LcnMtjBiuou0sCT
-d/yeez8r6zsGDEM//1Z+57f3RdWtNwN6bz048+Qv6Btj/3M4+WZMaGsjY7sC
-n9jY2ArxGcUMIkc9WdP102ejJrMtMY/DMeUEYDKznNx98A4egXGI8c0+712w
-qvvhm11itc67RKEj9Nz7jXvzl//Iajt6DT13f6m4+9t7cte9p5HG7kHHu6/+
-2NX54PVyAlVtpVKpQIiwXGbv7KFPJvDjKQLDBBuczbxRE9joGxZfKlBfR2M5
-SNynz968x35pVc+r78Qa/QUKVywUadtaGwceCZr7hipa+u9XwU8Nq/TLBENz
-n/uj3/5z+Nbzd0gCB+tLmom782JAXF1GkcQdyR/njxryi5NnPYSl2jZ0Rewr
-IGzEaBfQZb02zbcen2BKJDG65pu04efvS9tHHqmMnQM1w8/elN568Ta5aeB2
-kr6lq1Rcdd1G03xrTlKeEAl+2FLraZ+QhPpsqnxPEUdrWhTBRkWOysgk+g5k
-aQ/3BRgVmQEcEirXNvQ/P1rMFwXy5FU57Xf/4Hbdeyavae/T9Nx/WTHy6j25
-tuOWf/etR2ce/gHtaBv54zMypxY56oGdaZnrGZRBjE6hoC0wE0vE7iID8bna
-bJp8GVPVtnDUZOZ+s2+fotzYP9vb27SXYrJU7y8abv5mq2psvcgUKjKbbz7h
-Dj57K6ntGNB03HqsufXyPaXr/ovIuo4bjkNPX+3q/endSgq/blJWlhDb+0cS
-dCqcDiKLpaZV9slw9kWPTCKVEFmq2Sxpy6JRk5m+d+/eCjjzhVOYcsyTTZ8+
-c+ZSOJm4t13d0OtSQGclqJuHyL0/vZEYe4aVxu5h3dCTv4Q9j14n6a8Pud55
-+avd0It364RVI9PDwsim7VvELOmB+JxZSFkJhrT8zGbnzgp4Jrk5xbKJeEb1
-4lEz+RDC4yqvD720buoZMTkwRDPmp1KqNzYMPTnOkpaFyPVttJ6Hb2AFfCav
-buuvvvHoN9Hg07/TmgYe+jT2DB+Ffe/X1T1PkXNIFnDOge245cblsFZFx4PS
-B9u/WHfBO0wfk17sX8jTmbY8wfNPQN7swZXbztz2T5XF7ziFXzBz2dfY5v8M
-xMvP88YXrKkffn1AoNQGMCSqvLbhV7DW/CrXtfWoWwcfKwafv6c0DjwMaL15
-7/TD139/1377jwWZRDWsNR5AFSzic2jyPV4hSeYCOOjiEdyYQuAjezymvXRg
-r1aINHO3nEp/55DWC7kxXkCu1Gd3DwZW7lht64cdQwIqtHmz/cqKuoe22sae
-CzS+OMXQeZc7+OSduKZ7UNPUN6IZfv43q/3Oqyjd9Rvnbzx+sWvgKbQS1olp
-jr6O2EJ6QGIW40x0KslMIBaXL1+NMcCFrQ2JaTAdKQEz+8Ruzb4A6HTGABRR
-B0EJ3bBfboOgYA3Ueia1/ZtKY/8ZMluQWFbbRe168EZS13O7XN/WW9nz8LWw
-99EfyYb2oQuDP708OvIC2iDU9CEnVrB01/FHFy/vBGz3H9ubQ54zwj86SwwH
-k/kcVfcK84lMy9r0QxLkJfwbzVSy78Oh8ycIyroPvY/RvymrH/wjrWXgsVdD
-79Cx27CKGAdewaZPtoSLDrA+bbH99KXAa/HZoKgEBaTllDlzVlMCojOJqQTR
-ZI3mp5XmA05K2HQiHrrM+xNNifJ/gSDaWwii/AmnSi3vInKY+iVBCRRT1YvE
-+OzkglGbmEt27rNThMbmR2cUCZGJrDKnT9m6YofT70cia6DwWpANIPTC3yBJ
-jOF1vKG5W9fcf1tiuH4zkCNUfEnka8G6M1yJJbPIUSlkK19fX9NO9vbjpy/o
-I5OL3NLIUiwLM1n6uQ1Ho4fO5Ay+Dan6/Wlcx1+0EP2b6XvDRpAv4Yps0XcN
-Nx4nVTd1VjX335NWdwyF8SSqdWRhFer7wI4EWtEzQ+IIMxiyTtNO2OmT5zxq
-olIou7LgrB2kkyYtnz113ubth6Nal9uF92HRduIEGxubb2raH8bUdfRrGvvu
-lFW19IbxZOp1dDAUtuVNistiLL+KB4tj2M6Yn5NnkBqOsMupZdVYLow5eDQz
-gFVwOMrQ0q0w9t2R1HaORJQo9RsYMiNCxZYOkkk89c6QuHy0BVI/S2Remb6h
-ibT4HBbiM4FWYr+YiFiajaH9XlBDz7DUeOOBqKZzGAZXb2TJGyb8M75FIOx1
-fgyNB9M1HRPYsGEHzyskMSM2oxgO0xCoJbBAaPWVuvm2f033kLyu645U29oX
-TxOqt1CFOjRYYvZ5zt07+kpSHlAl7BTO8v12DhW+YSn+aYVijGXad1lfomry
-ru0elmnbhqTq5r7kYpF6C1Nai+51YTuJu865+cYk5ADdx3bvbI86nFcHRGXY
-pRAF2JvGdhOsVgtVzReNvSMC3fUhUUVjTzINRlKlOhSJ7QQvJ7DLiCmYwmOH
-nM7BSqEMjsvfnJwrwDabsBLNagVdXHNR19EvUDX2iSqMPfAstVt4ytrJZooz
-p1hYx0zMYSMHOUwHUZA3EeZ08WppSFzBfIqkGTw0djrOCjmL565p7mWV1fVJ
-xfrmFHJJ5Q4CT4W6cmyPDT3Gcy2VMo2jasaBlNJyCm7OHKKzR2h+eCIJsXuw
-Q4T7DlCXpmTzLpRVt1Dlhi6huKoljcCS78mlidA3jJkcsvZKhQufhfhcluk4
-zryN2/dy3X0iw+GaGlm3BRaLnRS1WhiWSj6nqGmjSfWdshJVfQaJV7aHwJCh
-VOxIbWYes/w7ryCwmoltKX61/8gp5eWghFPxcHELUjjsZJzVfN/QvB+VdR1E
-kbq9VKhpSiNwFAhy1rRp00xnoaLyihUno1OL0BZ2/PPgnsMOOu/QxF1JeVzM
-geEOAORcfAbpSFXnSC6cNJbyVQ15BSzlkWyacM6ny5ebNOfy1ajUi6ZDUNjh
-VQ/70xeVV4ITlycThNg7x4ETdlazw5NZB6u77hRwFUahoLKJSOIq7TPJPOsl
-S9aaThEeOXHGIyQFOwOCHSVDyBGnnK6Q/cJTZ7NYVaAMwtkBKhJKDhjabmfz
-KhoEPFVjQR5DcTy9UGS9ZO1a0z7vF3BFnpNBFqMtkM1ZTps1a1bBKVf/OJ/Q
-ZNg+h0BWjrMH1Cl4gnCPtuVuOl1WL2DK6wvgRMY+hya2Xrt1N/aoVrOoVCrX
-PzIdKyJxS7/esUdw1s3PLQT2BDtA3w/odTqy/bIbzmMz6aJqAUNaX5BJk9hn
-0mTIJjtyAxwKZnPWHQp8vfN8Vt+mkwmJ63f+IHLzDjsankzCzonhTqHXyVNs
-HRxspYaelAJ2paCwRJubXiTU2V+MhewiNNDZnHuQfYQKOuub6elwJQNTZNxZ
-9Dpx8vr16w+kksRvLsWwocvEITi/+AtyK/oFukT5JX1/sBq7+xx4PETtbm9y
-SIZj/hB6ctNbjP4/gMQz2bdNYEegTQErv3WB9voI4WTlV+SWn64I/lznkDUy
-6q4JiKmcX384SHLsmpHkmH9/4w/RrdiJ0v/z/z/gPvgf62mn4Q==\
-\>"]], "]"}]], "Input",ExpressionUUID->"fc568f25-eecc-4f44-8e4a-4b0dd2acf790"],
+    0.9870603011882955, -0.146593327504995, -0.12371554044216537`}], 
+  "]"}]], "Input",ExpressionUUID->"fc568f25-eecc-4f44-8e4a-4b0dd2acf790"],
 
 Cell[BoxData[
  RowBox[{"IGEdgeTransitiveQ", "[", 
@@ -17594,7 +17419,6 @@ Cell[BoxData[
            BezierCurveBox[{
              DynamicLocation[
              "VertexID$1", Automatic, 
-              
               Center], {-1.125128563071181, -0.26980865897674017`}, \
 {-1.4063852032689548`, -0.34956498993139373`}, {-1.586231625136188, \
 -0.2661870895300691}, {-1.586231625136188, 
@@ -17663,7 +17487,7 @@ Cell[BoxData[
            TrackedSymbols :> {$CellContext`flag}},
           
           ImageSizeCache->{{-1.2393066909899062`, 
-           132.9229004409899}, {-62.23930669098991, 57.31381534020776}}],
+           133.9229004409899}, {-62.692587228701356`, 57.239306690989906`}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -17754,7 +17578,7 @@ Cell[BoxData[
            TrackedSymbols :> {$CellContext`flag}},
           
           ImageSizeCache->{{-3.239306690989906, 
-           112.61795316942276`}, {-74.2393066909899, 70.23497881342917}}],
+           113.61795316942279`}, {-75.2393066909899, 71.2393066909899}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -17778,7 +17602,6 @@ Cell[BoxData[
            BezierCurveBox[{
              DynamicLocation[
              "VertexID$1", Automatic, 
-              
               Center], {-1.125128563071181, -0.26980865897674017`}, \
 {-1.4063852032689548`, -0.34956498993139373`}, {-1.586231625136188, \
 -0.2661870895300691}, {-1.586231625136188, 
@@ -17851,7 +17674,7 @@ Cell[BoxData[
            TrackedSymbols :> {$CellContext`flag}},
           
           ImageSizeCache->{{-0.2393066909899062, 
-           158.2393066909899}, {-63.23930669098989, 58.28533653037081}}],
+           159.2393066909899}, {-63.89054448662851, 58.2393066909899}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -18722,8 +18545,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{0., 216.1484375}, {-55.99999999999999, 
-         51.03424322090206}}],
+        ImageSizeCache->{{-8.881784197001252*^-16, 
+         217.14843749999997`}, {-56.25038591343047, 50.99999999999999}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -35683,7 +35506,7 @@ Cell["\<\
 Create galleries of the various graph layouts available in IGraph/M.\
 \>", "Text",ExpressionUUID->"30340fbd-b78f-46ad-b245-997faf612922"],
 
-Cell["Visualizing a tree graph.", \
+Cell["Visualise a tree graph with all layouts.", \
 "Text",ExpressionUUID->"714095a0-cbd9-4a7b-bcb4-883c611dc0bb"],
 
 Cell[BoxData[{
@@ -35714,7 +35537,7 @@ Cell[BoxData[{
  RowBox[{"Multicolumn", "[", "layouts", 
   "]"}]}], "Input",ExpressionUUID->"4e70cc31-6a3d-4679-a3da-196bc2735f76"],
 
-Cell["Visualizing a polyhedral graph.", \
+Cell["Visualise a polyhedral graph with all layouts.", \
 "Text",ExpressionUUID->"83955cd5-0f8f-4ddd-9845-8bdaf5429ba0"],
 
 Cell[BoxData[{
@@ -36023,8 +35846,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<FamilyGathering\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"a7274fd0-d3b7-4535-89af-142e888a8bd1"],
 
 Cell[BoxData[
  RowBox[{
@@ -37213,8 +37036,8 @@ Cell[BoxData[
    RowBox[{"IGKVertexColoring", "[", 
     RowBox[{"g", ",", "5", ",", 
      RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]}], "]"}], ",", 
-   "5"}], "]"}]], \
-"Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
+   "5"}], 
+  "]"}]], "Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
 
 Cell["\<\
 Forcing colours in the appropriate way reduces the computation time \
@@ -38336,7 +38159,6 @@ Cell[BoxData[{
           AspectRatio->1,
           DefaultBaseStyle->"ColorSwatchGraphics",
           Frame->True,
-          
           FrameStyle->RGBColor[
            0.5333333333333334, 0.4, 0.33333333333333337`, 1.],
           FrameTicks->None,
@@ -42564,8 +42386,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EurovisionVotes\>\""}], "}"}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
 
 Cell[BoxData[
  RowBox[{"IGVertexStrength", "[", "g", 
@@ -46549,8 +46371,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
@@ -47224,7 +47046,6 @@ Cell[BoxData[
             "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$6"], 
          TagBox[{
            TagBox[
-            
             RectangleBox[{1.5653086565863823`, 0.7069135813074301}, {
              1.868271644529426, 1.0098765692504739`}], "DynamicName", BoxID -> 
             "VertexID$7"], 
@@ -47567,8 +47388,8 @@ Cell[BoxData[
   RowBox[{
    RowBox[{"BlockRandom", "[", 
     RowBox[{
-     RowBox[{"IGLayoutFruchtermanReingold", "[", "g", "]"}], ",", 
-     RowBox[{"RandomSeeding", "\[Rule]", "1234"}]}], "]"}], ",", 
+     RowBox[{"SeedRandom", "[", "1234", "]"}], ";", 
+     RowBox[{"IGLayoutFruchtermanReingold", "[", "g", "]"}]}], "]"}], ",", 
    RowBox[{"{", "4", "}"}]}], 
   "]"}]], "Input",ExpressionUUID->"ada4761c-b15e-4540-a6ea-9412f3e71ad7"],
 
@@ -47896,7 +47717,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (May 1, 2019)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -47917,7 +47738,7 @@ StyleDefinitions->Notebook[{
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> "12.0 for Mac OS X x86 (64-bit) (April 8, 2019)", 
+  FrontEndVersion -> "12.1 for Mac OS X x86 (64-bit) (May 1, 2019)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
