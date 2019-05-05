@@ -25,6 +25,11 @@ sameGraphQ[g1_, g2_] :=
     ]
 
 
+(* RelationGraph[] is not available in 10.0 *)
+relationGraph[f_, list_, opt : OptionsPattern[]]:=
+    AdjacencyGraph[list, Boole@Outer[f, list, list, 1], opt]
+
+
 (* ::Subsubsection::Closed:: *)
 (*samePropGraphQ*)
 
@@ -7169,11 +7174,87 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGCompleteQ*)
 
 
-(* TODO *)
+MT[
+  IGCompleteQ[IGEmptyGraph[]],
+  True
+]
+
+
+MT[
+  IGCompleteQ[IGEmptyGraph[1]],
+  True
+]
+
+
+MT[
+  IGCompleteQ[IGEmptyGraph[2]],
+  False
+]
+
+
+MT[
+  IGCompleteQ[CompleteGraph[#]],
+  True
+]& /@ Range[2,5]
+
+
+MT[
+  IGCompleteQ[Graph[{1 <-> 1}]],
+  True
+]
+
+
+MT[
+  IGCompleteQ[Graph[{1 -> 1}]],
+  True
+]
+
+
+MT[
+  IGCompleteQ[Graph[{1 -> 2}]],
+  False
+]
+
+
+MT[
+  IGCompleteQ[Graph[{1 -> 2, 2 -> 1}]],
+  True
+]
+
+
+MT[
+  IGCompleteQ[Graph[{1 -> 2, 2 -> 1, 1 -> 1}]],
+  True
+]
+
+
+MT[
+  IGCompleteQ[Graph[{1 -> 2, 2 -> 1, 1 -> 1, 2 -> 1}]],
+  True
+]
+
+
+MT[
+  IGCompleteQ[Graph[{1 -> 2, 1 -> 2}]],
+  False
+]
+
+
+MT[
+  IGCompleteQ[CompleteGraph[4, DirectedEdges -> True]],
+  True
+]
+
+
+MT[
+  IGCompleteQ[Graph[{1 -> 2, 1 <-> 2}]],
+  False,
+  {IGraphM::mixed}
+]
 
 
 (* ::Subsubsection:: *)
@@ -7454,6 +7535,29 @@ MT[
 
 
 MT[
+  IGSymmetricQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0,3]
+
+MT[
+  IGSymmetricQ[IGCompleteGraph[#]],
+  True
+]& /@ Range[2,5]
+
+
+MT[
+  IGSymmetricQ[GraphData["DoyleGraph"]],
+  True
+]
+
+
+MT[
+  IGSymmetricQ[GraphData["ShrikhandeGraph"]],
+  True
+]
+
+
+MT[
   IGSymmetricQ[#],
   False
 ]& /@ asymmList
@@ -7557,7 +7661,7 @@ MT[
 MT[
   Module[{n=#,mods},
     mods=Rest@Union@Mod[Range[n]^2, n];
-    IGDistanceTransitiveQ@RelationGraph[MemberQ[mods, Mod[#1-#2, n]]&, Range[0, n-1]]
+    IGDistanceTransitiveQ@relationGraph[MemberQ[mods, Mod[#1-#2, n]]&, Range[0, n-1]]
   ],
   True
 ]& /@ {7, 11, 19, 23}
