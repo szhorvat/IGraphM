@@ -2,7 +2,7 @@ Notebook[{
 Cell[BoxData[
  RowBox[{"Quit", "[", "]"}]], "Input",
  CellChangeTimes->{{3.764990729809279*^9, 3.7649907306687*^9}},
- CellLabel->"In[25]:=",ExpressionUUID->"f0bc3e8f-268e-414b-a01f-640c8c2390ea"],
+ CellLabel->"In[9]:=",ExpressionUUID->"f0bc3e8f-268e-414b-a01f-640c8c2390ea"],
 
 Cell[CellGroupData[{
 
@@ -16,15 +16,15 @@ Cell["Run this in Mathematica 12.0 or later.", "Text",
   3.764992971229802*^9}},ExpressionUUID->"fdc734ff-0686-4425-8ad6-\
 b504ae577adf"],
 
+Cell[BoxData["$Version"], "Input",
+ CellChangeTimes->{{3.764990328798558*^9, 3.764990329682598*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"4fddb902-7c26-4b5f-b2f0-c7b678939c75"],
+
 Cell[BoxData[
  RowBox[{"SetDirectory", "@", 
   RowBox[{"NotebookDirectory", "[", "]"}]}]], "Input",
  CellChangeTimes->{{3.764990320418201*^9, 3.76499032565524*^9}},
  CellLabel->"In[1]:=",ExpressionUUID->"0211c683-a34c-476f-82fd-b77b70d6834a"],
-
-Cell[BoxData["$Version"], "Input",
- CellChangeTimes->{{3.764990328798558*^9, 3.764990329682598*^9}},
- CellLabel->"In[2]:=",ExpressionUUID->"4fddb902-7c26-4b5f-b2f0-c7b678939c75"],
 
 Cell[BoxData[
  RowBox[{"nb", "=", 
@@ -35,6 +35,14 @@ Cell[BoxData[
     "]"}]}]}]], "Input",
  CellChangeTimes->{{3.764990331549747*^9, 3.76499040548578*^9}},
  CellLabel->"In[3]:=",ExpressionUUID->"62742fa7-8a23-4781-8ca9-8bea337d65a3"],
+
+Cell["\<\
+Ensure that Information boxes are printed in the old style, even in \
+Mathematica 12.0+.\
+\>", "Text",
+ CellChangeTimes->{{3.766070383460309*^9, 
+  3.766070396260013*^9}},ExpressionUUID->"13db37aa-ec00-41a6-b88e-\
+6810c64e0730"],
 
 Cell[BoxData[
  RowBox[{"Block", "[", 
@@ -55,6 +63,11 @@ Cell[BoxData[
  CellChangeTimes->{3.7649916904297237`*^9},
  CellLabel->"In[4]:=",ExpressionUUID->"ffd5e376-51e7-4a34-b7ac-6bde4d705f2a"],
 
+Cell["Open all sections.", "Text",
+ CellChangeTimes->{{3.766070400429679*^9, 
+  3.766070402310788*^9}},ExpressionUUID->"8b47d1db-a39e-4a7e-bc2d-\
+f5493b602ec3"],
+
 Cell[BoxData[{
  RowBox[{"SelectionMove", "[", 
   RowBox[{"nb", ",", "All", ",", "Notebook"}], "]"}], "\n", 
@@ -64,6 +77,11 @@ Cell[BoxData[{
   3.764991057645553*^9, 3.764991060225121*^9}, {3.7649911199772053`*^9, 
   3.764991134605487*^9}},
  CellLabel->"In[1]:=",ExpressionUUID->"92d3d163-a939-41e0-b8f5-6ccc23b76a46"],
+
+Cell["Delete list of all IGraph/M symbols.", "Text",
+ CellChangeTimes->{{3.766070406601098*^9, 
+  3.766070424554109*^9}},ExpressionUUID->"f0a0947c-51f4-4ea5-b979-\
+1fa15661772d"],
 
 Cell[BoxData[
  RowBox[{"NotebookDelete", "@", 
@@ -76,6 +94,27 @@ Cell[BoxData[
  CellChangeTimes->{{3.764992343741222*^9, 3.7649923464852543`*^9}},
  CellLabel->"In[3]:=",ExpressionUUID->"7ada961e-cf73-4e92-85e3-e71b8b808168"],
 
+Cell[TextData[{
+ "Select ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"PageBreakBelow", "\[Rule]", "False"}], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "3374aadc-7312-4e87-a3e3-df3e7d76af21"],
+ " on Text cells followed by Input cells. We must do it this way, and not set \
+",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"PageBreakAbove", "\[Rule]", "False"}], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "89609800-bd2b-44b4-a564-0436bb5d473d"],
+ " on Input cells preceded by Text cells. If we did that, some of the outputs \
+would be faded due to modified input cells."
+}], "Text",
+ CellChangeTimes->{{3.766070428430016*^9, 
+  3.766070486831792*^9}},ExpressionUUID->"5eecdd9d-13f4-4419-b25f-\
+65907eb75188"],
+
 Cell[BoxData[
  RowBox[{"Scan", "[", "\[IndentingNewLine]", 
   RowBox[{
@@ -83,21 +122,28 @@ Cell[BoxData[
     RowBox[{"If", "[", 
      RowBox[{
       RowBox[{
-       RowBox[{"(", 
+       RowBox[{"Quiet", "[", 
         RowBox[{"\"\<Style\>\"", "/.", 
          RowBox[{"Developer`CellInformation", "@", 
-          RowBox[{"PreviousCell", "[", "#", "]"}]}]}], ")"}], "===", 
-       "\"\<Text\>\""}], ",", "\[IndentingNewLine]", 
+          RowBox[{"NextCell", "[", "#", "]"}]}]}], "]"}], "===", 
+       "\"\<Input\>\""}], ",", "\[IndentingNewLine]", 
       RowBox[{
        RowBox[{"CurrentValue", "[", 
-        RowBox[{"#", ",", "PageBreakAbove"}], "]"}], "=", "False"}]}], 
+        RowBox[{"#", ",", "PageBreakBelow"}], "]"}], "=", "False"}]}], 
      "\[IndentingNewLine]", "]"}], "&"}], ",", "\[IndentingNewLine]", 
    RowBox[{"Cells", "[", 
     RowBox[{"nb", ",", 
-     RowBox[{"CellStyle", "\[Rule]", "\"\<Input\>\""}]}], "]"}]}], 
+     RowBox[{"CellStyle", "\[Rule]", "\"\<Text\>\""}]}], "]"}]}], 
   "\[IndentingNewLine]", "]"}]], "Input",
- CellChangeTimes->{{3.7649908919124804`*^9, 3.7649909346885767`*^9}},
+ CellChangeTimes->{{3.7649908919124804`*^9, 3.7649909346885767`*^9}, {
+  3.766068862830669*^9, 3.7660688854142733`*^9}, {3.766069407781562*^9, 
+  3.766069411948389*^9}},
  CellLabel->"In[4]:=",ExpressionUUID->"792be7b9-e1ab-4281-b235-2fa063a2bbbb"],
+
+Cell["Hide cell tags.", "Text",
+ CellChangeTimes->{{3.766070491142112*^9, 
+  3.766070494072329*^9}},ExpressionUUID->"d858a26c-b647-4a7f-9549-\
+172072855cb3"],
 
 Cell[BoxData[
  RowBox[{
@@ -105,6 +151,11 @@ Cell[BoxData[
    RowBox[{"nb", ",", "ShowCellTags"}], "]"}], "=", "False"}]], "Input",
  CellChangeTimes->{{3.76499136050252*^9, 3.7649913676107187`*^9}},
  CellLabel->"In[5]:=",ExpressionUUID->"d94681e3-c55c-4f9e-bb71-8138260b99f3"],
+
+Cell["Create PDF.", "Text",
+ CellChangeTimes->{{3.766070496490641*^9, 
+  3.766070498126829*^9}},ExpressionUUID->"dc47c899-cd83-4624-abad-\
+423405dc945e"],
 
 Cell[BoxData[
  RowBox[{"Export", "[", 
@@ -114,10 +165,23 @@ Cell[BoxData[
   3.764991542138734*^9, 3.764991546343018*^9}},
  CellLabel->"In[6]:=",ExpressionUUID->"581d0512-dc17-471a-bd67-2e0af6fa739d"],
 
+Cell["Close notebook without saving.", "Text",
+ CellChangeTimes->{{3.766070500028552*^9, 
+  3.7660705031408157`*^9}},ExpressionUUID->"ddc34994-36b4-45c1-9c87-\
+923b07a191ba"],
+
 Cell[BoxData[
  RowBox[{"NotebookClose", "[", "nb", "]"}]], "Input",
  CellChangeTimes->{{3.764991497957252*^9, 3.764991501274312*^9}},
  CellLabel->"In[7]:=",ExpressionUUID->"e04e1539-077e-4fc9-b7cb-bc5165d7d686"],
+
+Cell["\<\
+Open PDF and manually verify that it is correct. Occasionally, Mathematica \
+produces invalid PDFs.\
+\>", "Text",
+ CellChangeTimes->{{3.76607050480709*^9, 
+  3.7660705230928793`*^9}},ExpressionUUID->"3ebbc003-be90-4e17-a01b-\
+087115d638c9"],
 
 Cell[BoxData[
  RowBox[{"SystemOpen", "[", "\"\<IGDocumentation.pdf\>\"", "]"}]], "Input",
