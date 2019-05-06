@@ -15,6 +15,14 @@ If[{$VersionNumber, $ReleaseNumber} < {10.0, 2},
   Abort[]
 ]
 
+(* On the Raspberry Pi, we generally support only the latest version of the Wolfram Engine. *)
+If[$SystemID === "Linux-ARM",
+  If[{$VersionNumber, $ReleaseNumber} < {11.3, 0},
+    Print["On the Raspberry Pi, IGraph/M requires the Wolfram Engine 11.3.0 or later. You are currently running the Wolfram Engine ", $Version];
+    Abort[]
+  ]
+]
+
 (* We set up a package context to avoid Global` pollution and conflicts with any existing Global` symbols. *)
 BeginPackage["IGInstaller`"]
 Begin["`Private`"]
@@ -51,7 +59,9 @@ Module[{res},
     Print["The latest version is already installed."],
     _,
     Print["Installing IGraph/M is complete: ", res, "."];
-    Print["It can now be loaded using the command Get[\"IGraphM`\"]."]
+    Print["It can now be loaded using the command Get[\"IGraphM`\"]."];
+    (* On some systems, there may be problems unloading the library. *)
+    If[MemberQ[$Packages, "IGraphM`"], Print["An older version of IGraph/M was already loaded. It is recommended to restart the Mathematica kernel before loading the new version."]]
   ]
 ]
 
