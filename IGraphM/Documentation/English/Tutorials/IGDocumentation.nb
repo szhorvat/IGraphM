@@ -93,9 +93,11 @@ Cell[TextData[{
 experiment!"
 }], "Text",ExpressionUUID->"ebfd4b26-386f-4053-9151-6da87d9a61bc"],
 
-Cell["\<\
-The documentation is currently incomplete. Contributions are welcome!\
-\>", "Text",ExpressionUUID->"05dcc844-82fe-4ecf-898a-ac36ece21ff6"],
+Cell[TextData[{
+ "The documentation is currently incomplete. ",
+ StyleBox["Contributions are welcome!",
+  FontSlant->"Italic"]
+}], "Text",ExpressionUUID->"05dcc844-82fe-4ecf-898a-ac36ece21ff6"],
 
 Cell[CellGroupData[{
 
@@ -259,7 +261,7 @@ Cell[TextData[{
  "Notice that ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " 11.3 does not include functionality to compute weighted betweenness. The \
+ " 12.0 does not include functionality to compute weighted betweenness. The \
 built-in function ",
  Cell[BoxData[
   RowBox[{"BetweennessCentrality", "[", "]"}]],ExpressionUUID->
@@ -3891,7 +3893,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{7.105427357601002*^-15, 
-         88.984375}, {-50.984374999999986`, 47.}}],
+         87.984375}, {-50.99999999999999, 45.98437500000001}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -4626,8 +4628,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-8.881784197001252*^-16, 
-         243.40234375000006`}, {-8.590587797619094, 3.}}],
+        ImageSizeCache->{{8.881784197001252*^-16, 242.40234375}, {-9., 
+         2.542968750000046}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -4754,8 +4756,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-8.881784197001252*^-16, 
-         143.54296875000003`}, {-31.66431907604958, 27.}}],
+        ImageSizeCache->{{8.881784197001252*^-16, 142.54296875}, {-32., 
+         26.367303670092085`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -5138,8 +5140,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{8.544773500396525, 
-         335.1661639996034}, {-65.98642274421071, 68.40253781668729}}],
+        ImageSizeCache->{{8.515798609067184, 
+         334.19513889093275`}, {-66.4842013909328, 67.54963362661194}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -6449,8 +6451,7 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{-8.881784197001252*^-16, 
-        105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
+       ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -6616,8 +6617,7 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{-8.881784197001252*^-16, 
-        105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
+       ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -6690,8 +6690,7 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-8.881784197001252*^-16, 
-         105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
+        ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -6797,8 +6796,7 @@ Cell[BoxData[
          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
           SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-         ImageSizeCache->{{-8.881784197001252*^-16, 
-          105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
+         ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
         MouseAppearanceTag["NetworkGraphics"]],
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
@@ -6869,9 +6867,7 @@ Cell[BoxData[
           CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
-          
-          ImageSizeCache->{{-8.881784197001252*^-16, 
-           105.08203125}, {-31.669441002496303`, 26.999999999999996`}}],
+          ImageSizeCache->{{0., 104.08203125}, {-32., 26.252228197079965`}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -9391,8 +9387,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{5.171171875000001, 
-         303.3874218749999}, {-79.57842975180941, 75.07567499999999}}],
+        ImageSizeCache->{{5.151171875, 302.407421875}, {-80.094875, 
+         74.06449679721376}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -10239,8 +10235,8 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{-8.881784197001252*^-16, 
-        113.30859374999999`}, {-56.46786661674632, 52.}}],
+       ImageSizeCache->{{8.881784197001252*^-16, 112.30859375}, {-57., 
+        50.60184121296189}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -10377,8 +10373,8 @@ Cell[BoxData[
          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
           SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-         ImageSizeCache->{{-8.881784197001252*^-16, 
-          113.30859374999999`}, {-56.46786661674632, 52.}}],
+         ImageSizeCache->{{8.881784197001252*^-16, 112.30859375}, {-57., 
+          50.60184121296189}}],
         MouseAppearanceTag["NetworkGraphics"]],
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
@@ -10954,8 +10950,8 @@ Cell[BoxData[
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
           
-          ImageSizeCache->{{1.7763568394002505`*^-15, 
-           203.70703124999997`}, {-49.1894268244027, 45.}}],
+          ImageSizeCache->{{-3.552713678800501*^-15, 
+           202.70703124999997`}, {-49.99999999999999, 43.99229348765167}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -11053,7 +11049,6 @@ Cell[BoxData[
            PaneBox["2",
             Alignment->Center,
             ImageMargins->2], 2, Automatic, {0.34641016151377535, 0.34641016151377535},
-           
            BaseStyle->"Graphics"], InsetBox[
            PaneBox["3",
             Alignment->Center,
@@ -11205,8 +11200,8 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{-2.2393066909899026`, 
-        61.469775440989906`}, {-35.87414326870588, 30.239306690989906`}}],
+       ImageSizeCache->{{-2.4704955170583816`, 
+        60.70096426705837}, {-35.47049551705838, 30.239306690989906`}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -11383,8 +11378,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{1.3055533573515412`, 
-         69.26489839138041}, {-86.35711616124844, 81.75090300404743}}],
+        ImageSizeCache->{{1.2870533573515353`, 
+         68.28339839138042}, {-85.76860300404743, 79.9572857511464}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -11588,7 +11583,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-1.2393066909899053`, 
-         152.04387624015516`}, {-61.7423982206588, 57.12981374015516}}],
+         151.00322796249637`}, {-62.089165462496354`, 56.04196177040285}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -11720,8 +11715,8 @@ Cell[BoxData[{
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{1.3055533573515412`, 
-         69.26489839138041}, {-86.35711616124844, 81.75090300404743}}],
+        ImageSizeCache->{{1.2870533573515353`, 
+         68.28339839138042}, {-85.76860300404743, 79.9572857511464}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -11901,8 +11896,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{8.881784197001252*^-16, 
-         154.171875}, {-34.34557376433083, 29.999999999999993`}}],
+        ImageSizeCache->{{0., 153.17187500000003`}, {-35.00000000000001, 
+         29.031049355431144`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -12031,7 +12026,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{0., 139.47265625}, {-45.26088067042984, 41.}}],
+        ImageSizeCache->{{0., 138.47265625}, {-45.999999999999986`, 
+         39.741381939048665`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -12263,8 +12259,8 @@ Cell[BoxData[
          3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
          CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
           SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-         ImageSizeCache->{{0.09132812500000043, 
-          254.47507812499998`}, {-49.86465451343253, 46.}}],
+         ImageSizeCache->{{0.07132812500000174, 253.49507812500005`}, {-51., 
+          44.562711080888874`}}],
         MouseAppearanceTag["NetworkGraphics"]],
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
@@ -13514,8 +13510,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-3.2393066909899106`, 
-         83.23930669098992}, {-53.23930669098991, 49.2393066909899}}],
+        ImageSizeCache->{{-3.2393066909899035`, 
+         82.2393066909899}, {-53.23930669098991, 48.01663919563945}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13606,8 +13602,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-3.2393066909899026`, 
-         97.2393066909899}, {-45.02784366389407, 40.2393066909899}}],
+        ImageSizeCache->{{-3.2393066909898955`, 
+         96.2393066909899}, {-45.23930669098989, 39.207129737092984`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13779,7 +13775,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         121.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13855,7 +13851,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-0.2393066909899062, 
-         183.2393066909899}, {-23.239306690989906`, 19.239306690989906`}}],
+         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13920,7 +13916,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         121.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13996,7 +13992,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-0.2393066909899062, 
-         183.2393066909899}, {-23.239306690989906`, 19.239306690989906`}}],
+         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -14066,7 +14062,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         121.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -14142,7 +14138,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-0.2393066909899062, 
-         183.2393066909899}, {-23.239306690989906`, 19.239306690989906`}}],
+         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -14215,7 +14211,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         121.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -14291,7 +14287,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-0.2393066909899062, 
-         183.2393066909899}, {-23.239306690989906`, 19.239306690989906`}}],
+         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -15463,8 +15459,8 @@ Cell[TextData[Cell[BoxData[
       3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
       CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
        SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-      ImageSizeCache->{{0.33984374999999734`, 
-       66.65234375}, {-32.10636633120584, 26.713750000000005`}}],
+      ImageSizeCache->{{0.31984374999999865`, 
+       65.67234375000002}, {-31.732950000000006`, 26.239005994133603`}}],
      MouseAppearanceTag["NetworkGraphics"]],
     AllowKernelInitialization->False,
     UnsavedVariables:>{$CellContext`flag}]],
@@ -15763,7 +15759,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -15784,7 +15780,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -17487,7 +17483,7 @@ Cell[BoxData[
            TrackedSymbols :> {$CellContext`flag}},
           
           ImageSizeCache->{{-1.2393066909899062`, 
-           133.9229004409899}, {-62.692587228701356`, 57.239306690989906`}}],
+           132.9229004409899}, {-62.23930669098991, 57.31381534020776}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -17578,7 +17574,7 @@ Cell[BoxData[
            TrackedSymbols :> {$CellContext`flag}},
           
           ImageSizeCache->{{-3.239306690989906, 
-           113.61795316942279`}, {-75.2393066909899, 71.2393066909899}}],
+           112.61795316942276`}, {-74.2393066909899, 70.23497881342917}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -17674,7 +17670,7 @@ Cell[BoxData[
            TrackedSymbols :> {$CellContext`flag}},
           
           ImageSizeCache->{{-0.2393066909899062, 
-           159.2393066909899}, {-63.89054448662851, 58.2393066909899}}],
+           158.2393066909899}, {-63.23930669098989, 58.28533653037081}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -18545,8 +18541,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-8.881784197001252*^-16, 
-         217.14843749999997`}, {-56.25038591343047, 50.99999999999999}}],
+        ImageSizeCache->{{0., 216.1484375}, {-55.99999999999999, 
+         51.03424322090206}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -45264,7 +45260,7 @@ Cell[TextData[{
  "As of ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " 11.3, the built-in ",
+ " 12.0, the built-in ",
  Cell[BoxData[
  "Export"],ExpressionUUID->"84251994-5727-4b54-b0f1-f4de95b0f5d2"],
  " function produces non-standard GraphML files that cannot be read by some \
@@ -47341,8 +47337,11 @@ Cell["The random number generator", \
 "Subsection",ExpressionUUID->"a57f4900-93c7-401b-80d8-9460c67af5ff"],
 
 Cell[TextData[{
- "IGraph/M makes use of Mathematica\[CloseCurlyQuote]s own random number \
-generator by default, thus functions like ",
+ "IGraph/M makes use of ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ "\[CloseCurlyQuote]s own random number generator by default, thus functions \
+like ",
  Cell[BoxData[
  "SeedRandom"],ExpressionUUID->"45a7cd19-fa3d-4459-b326-030b4a01dc9a"],
  " and ",
@@ -47394,10 +47393,12 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"ada4761c-b15e-4540-a6ea-9412f3e71ad7"],
 
 Cell[TextData[{
- "IGraph/M can be configured to either use Mathematica\[CloseCurlyQuote]s \
-built-in generator, or the default generator of the core igraph C library. \
-The default generator of igraph will perform better, but it does not react to \
-",
+ "IGraph/M can be configured to either use ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ "\[CloseCurlyQuote]s built-in generator, or the default generator of the \
+core igraph C library. The default generator of igraph will perform better, \
+but it does not react to ",
  Cell[BoxData[
  "BlockRandom"],ExpressionUUID->"eb20cfb7-5677-46ef-a0d8-b75d0c1873ff"],
  " and must be seeded with ",
@@ -47413,7 +47414,10 @@ Cell[TextData[{
  "Benchmark ",
  Cell[BoxData[
  "IGRandomWalk"],ExpressionUUID->"c2ff9782-6c26-4332-a428-3eaa4b4a55cf"],
- " when using Mathematica\[CloseCurlyQuote]s random number generator:"
+ " when using ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ "\[CloseCurlyQuote]s random number generator:"
 }], "Text",ExpressionUUID->"cd8c9c4e-8bfb-4a90-a6e9-9a90b6d394b8"],
 
 Cell[BoxData[
@@ -47447,8 +47451,12 @@ Cell[BoxData[{
   "RepeatedTiming"}]}], \
 "Input",ExpressionUUID->"f693d086-a4a1-4c39-b738-c7b92d8d279a"],
 
-Cell["Set the generator back to Mathematica\[CloseCurlyQuote]s:", \
-"Text",ExpressionUUID->"b2d032b2-cc7c-4a3f-bc70-47837105e3b9"],
+Cell[TextData[{
+ "Set the generator back to ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ "\[CloseCurlyQuote]s:"
+}], "Text",ExpressionUUID->"b2d032b2-cc7c-4a3f-bc70-47837105e3b9"],
 
 Cell[BoxData[
  RowBox[{"IGSeedRandom", "[", 
@@ -47717,7 +47725,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (May 1, 2019)",
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -47738,7 +47746,7 @@ StyleDefinitions->Notebook[{
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> "12.1 for Mac OS X x86 (64-bit) (May 1, 2019)", 
+  FrontEndVersion -> "12.0 for Mac OS X x86 (64-bit) (April 8, 2019)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
