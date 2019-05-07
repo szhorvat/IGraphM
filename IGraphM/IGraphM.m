@@ -698,6 +698,7 @@ igraphGlobal::usage =
 
 LoadIGraphM[] :=
     Module[{deps},
+      Clear[igraphGlobal];
       deps = FileNameJoin[{$libraryDirectory, "dependencies.m"}];
       Check[
         If[FileExistsQ[deps], Get[deps]],
