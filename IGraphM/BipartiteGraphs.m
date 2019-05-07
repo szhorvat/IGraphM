@@ -99,7 +99,7 @@ IGBipartiteIncidenceMatrix::empty   = "One of the graph partitions is empty.";
 SyntaxInformation[IGBipartiteIncidenceMatrix] = {"ArgumentsPattern" -> {_, _.}};
 
 IGBipartiteIncidenceMatrix[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph], parts, posIndex, ind},
+    catch@Block[{ig = igMakeFast[graph], parts, posIndex},
       parts = ig@"bipartitePartitions"[];
       If[MatchQ[parts, _LibraryFunctionError],
         Message[IGBipartiteIncidenceMatrix::nbipart];

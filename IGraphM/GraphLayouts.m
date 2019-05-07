@@ -289,7 +289,7 @@ Options[IGLayoutReingoldTilford] = {
 SyntaxInformation[IGLayoutReingoldTilford] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilford, Graph]};
 
 IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilford,Graph}]] :=
-    catch@Block[{ig = igMakeFast[graph], roots, directed},
+    catch@Block[{ig = igMakeFast[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> chooseRoots[graph]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         Composition[
@@ -308,7 +308,7 @@ Options[IGLayoutReingoldTilfordCircular] = { "RootVertices" -> Automatic, "Rotat
 SyntaxInformation[IGLayoutReingoldTilfordCircular] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilfordCircular, Graph]};
 
 IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilfordCircular,Graph}]] :=
-    catch@Block[{ig = igMakeFast[graph], roots, directed},
+    catch@Block[{ig = igMakeFast[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> chooseRoots[graph]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, False]

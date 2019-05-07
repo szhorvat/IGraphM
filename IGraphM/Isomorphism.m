@@ -715,12 +715,12 @@ Options[IGLADSubisomorphismCount] = { "Induced" -> False };
 SyntaxInformation[IGLADSubisomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 
 IGLADSubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
+    Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
       sck@ig1@"ladCountSubisomorphisms"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]]
     ]
 
 IGLADSubisomorphismCount[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result, vcol, vcolsub, domain},
+    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], vcol, vcolsub, domain},
       vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, {col}, "VertexColors"];
       vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, {colsub}, "VertexColors"];
       If[vcol === {} || vcolsub === {},

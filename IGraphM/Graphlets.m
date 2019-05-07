@@ -47,6 +47,6 @@ IGGraphletProject::usage =
 
 SyntaxInformation[IGGraphletProject] = {"ArgumentsPattern" -> {_, _, _.}};
 IGGraphletProject[graph_?igGraphQ, cliques : {__List}, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
-    catch@Block[{ig = igMake[graph], clq},
+    catch@Block[{ig = igMake[graph]},
       check@ig@"graphletProject"[Map[vss[graph], cliques, {2}], niter]
     ]
