@@ -68,7 +68,8 @@ RunProcess[{"git", "archive", "--format", "tar", "-o", $gitArch, "HEAD:IGraphM"}
 ExtractArchive[$gitArch, $appTarget]
 DeleteFile[$gitArch]
 
-Run["git archive HEAD LICENSE.txt -o " <> FileNameJoin[{$appTarget, "LICENSE.txt"}] ]
+(* Include license file. *)
+CopyFile["LICENSE.txt", FileNameJoin[{$appTarget, "LICENSE.txt"}]]
 
 SetDirectory[$appTarget]
 
