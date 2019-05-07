@@ -235,7 +235,7 @@ A number of other small bugs were also fixed.
 
 ## License
 
-IGraph/M is licensed under the [GNU GPLv2](http://opensource.org/licenses/GPL-2.0). See [LICENSE.txt](IGraphM/LICENSE.txt) for details.
+IGraph/M is licensed under the [GNU GPLv2](http://opensource.org/licenses/GPL-2.0). See [LICENSE.txt](LICENSE.txt) for details.
 
  [ltemplate]: https://github.com/szhorvat/LTemplate/
  [main]: http://szhorvat.net/mathematica/IGraphM
