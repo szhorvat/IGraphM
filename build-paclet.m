@@ -68,6 +68,7 @@ RunProcess[{"git", "archive", "--format", "tar", "-o", $gitArch, "HEAD:IGraphM"}
 ExtractArchive[$gitArch, $appTarget]
 DeleteFile[$gitArch]
 
+Run["git archive HEAD LICENSE.txt -o " <> FileNameJoin[{$appTarget, "LICENSE.txt"}] ]
 
 SetDirectory[$appTarget]
 
@@ -253,13 +254,15 @@ MRun[
   "11.1"
 ]
 
+(* Warning: Run this in 11.2 only. This puts the index where 11.2 looks for it.
+   11.3+ produces incompatible indexes that break search in 11.2. *)
 Print["Indexing for 11.2+ ..."]
 MRun[
   MCode[
     Needs["DocumentationSearch`"];
     DocumentationSearch`CreateDocumentationIndex[Directory[], Directory[], "TextSearchIndex", "UseWolframLanguageData" -> False];
   ],
-  "11.3"
+  "11.2"
 ]
 ResetDirectory[] (* .. *)
 
