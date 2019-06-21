@@ -30,3 +30,12 @@ SetAttributes[
   Evaluate@Flatten[Names /@ {"IGraphM`*", "IGraphM`Information`*", "IGraphM`Developer`*"}],
   {Protected, ReadProtected}
 ]
+
+(* Show welcome message by returning it from the Needs/Get call *)
+Column@{
+  "IGraph/M " <> IGraphM`IGraphM`PackagePrivate`$packageVersion,
+  If[$Notebooks,
+    "Evaluate \!\(\*ButtonBox[\"IGDocumentation[]\",BaseStyle->\"Link\",ButtonData->\"paclet:IGraphM\"]\) to get started.",
+    "Evaluate IGDocumentation[] to get started."
+  ]
+}
