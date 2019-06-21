@@ -78,7 +78,7 @@ IGVoronoiCells[g_?igGraphQ, centers_List, opt : OptionsPattern[]] :=
         With[{min = Min[#]}, tiebreaker@Position[#, min]]& /@ dmat
       ];
       GroupBy[
-        Transpose[{Extract[vlist, idx], vlist}],
+        Transpose[{Extract[clist, idx], vlist}],
         First -> Last
       ]
     ]
