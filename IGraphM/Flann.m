@@ -23,7 +23,15 @@ unpack[packed_] :=
 PackageScope["makeFlann"]
 makeFlann::usage = "makeFlann[]";
 makeFlann[pts_] :=
-    With[{flann = Make["IGFlann2D"]},
+    With[
+      {
+        flann = Switch[
+          Dimensions[pts],
+          {_, 2}, Make["IGFlann2D"],
+          {_, 3}, Make["IGFlann3D"],
+          _, Message[IGraphM::flanndim]; throw[$Failed]
+        ]
+      },
       flann@"setPoints"[pts];
       flann
     ]
@@ -32,3 +40,6 @@ makeFlann[pts_] :=
 PackageScope["flannQueryMultiple"]
 flannQueryMultiple::usage = "flannQueryMultiple[]";
 flannQueryMultiple[flann_, centres_, dists_] := unpack[flann@"queryMultiple"[centres, dists]]
+
+
+IGraphM::flanndim = "Geometric nearest neighbor computations are only supported in 2 or 3 dimensions.";

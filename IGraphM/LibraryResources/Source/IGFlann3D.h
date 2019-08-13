@@ -4,8 +4,8 @@
  * See the file LICENSE.txt for copying permission.
  */
 
-#ifndef IG_FLANN2D_H
-#define IG_FLANN2D_H
+#ifndef IG_FLANN3D_H
+#define IG_FLANN3D_H
 
 #include "nanoflann.hpp"
 #include "IGFlannCommon.h"
@@ -15,12 +15,12 @@
 using namespace nanoflann;
 
 
-class IGFlann2D {
+class IGFlann3D {
 
     typedef KDTreeSingleIndexAdaptor<
             L2_Simple_Adaptor<double, PointSet>,
             PointSet,
-            2 /* dim */
+            3 /* dim */
         > kdtree_t;
 
     PointSet *ps = nullptr;
@@ -33,17 +33,17 @@ class IGFlann2D {
 
 public:
 
-    ~IGFlann2D() { clear(); }
+    ~IGFlann3D() { clear(); }
 
     // must be called immediately after creating object
     void setPoints(mma::RealMatrixRef pts) {
-        if (pts.cols() != 2)
-            throw mma::LibraryError("setPoints: input must be two-dimensional");
+        if (pts.cols() != 3)
+            throw mma::LibraryError("setPoints: input must be three-dimensional");
 
         clear();
 
         ps = new PointSet(pts); // this will clone pts, so it is safe to pass pts as "Constant"
-        kdtree = new kdtree_t(2, *ps, KDTreeSingleIndexAdaptorParams(10));
+        kdtree = new kdtree_t(3, *ps, KDTreeSingleIndexAdaptorParams(10));
 
         kdtree->buildIndex();
     }
@@ -51,8 +51,8 @@ public:
 
     // returns indices of points within distance d of pt
     mma::IntTensorRef query(mma::RealTensorRef pt, double d) {
-        if (pt.size() != 2)
-            throw mma::LibraryError("query: query point must be two-dimensional");
+        if (pt.size() != 3)
+            throw mma::LibraryError("query: query point must be three-dimensional");
         if (d <= 0)
             throw mma::LibraryError("query: query distance must be positive");
 
@@ -71,8 +71,8 @@ public:
 
     // like query(), but for multiple query points and distances
     mma::IntTensorRef queryMultiple(mma::RealMatrixRef pts, mma::RealTensorRef dists) {
-        if (pts.cols() != 2)
-            throw mma::LibraryError("queryMultiple: query points must be two-dimensional");
+        if (pts.cols() != 3)
+            throw mma::LibraryError("queryMultiple: query points must be three-dimensional");
         if (pts.rows() != dists.size())
             throw mma::LibraryError("queryMultiple: there must be the same number of query distances as query points");
 
@@ -109,8 +109,8 @@ public:
     mma::IntTensorRef neighborCounts(mma::RealMatrixRef pts, mma::RealTensorRef dists) {
         mint n = dists.size();
 
-        if (pts.cols() != 2)
-            throw mma::LibraryError("neighborCounts: query points must be two-dimensional");
+        if (pts.cols() != 3)
+            throw mma::LibraryError("neighborCounts: query points must be three-dimensional");
         if (pts.rows() != n)
             throw mma::LibraryError("neighborCounts: there must be the same number of query distances as query points");
 
@@ -139,10 +139,10 @@ public:
     mma::IntTensorRef intersectionCounts(mma::RealMatrixRef centres1, mma::RealMatrixRef centres2, mma::RealTensorRef dists) {
         mint n = dists.size();
 
-        if (centres1.cols() != 2)
-            throw mma::LibraryError("intersectionCounts: query points must be two-dimensional");
-        if (centres2.cols() != 2)
-            throw mma::LibraryError("intersectionCounts: query points must be two-dimensional");
+        if (centres1.cols() != 3)
+            throw mma::LibraryError("intersectionCounts: query points must be three-dimensional");
+        if (centres2.cols() != 3)
+            throw mma::LibraryError("intersectionCounts: query points must be three-dimensional");
         if (centres1.rows() != n || centres2.rows() != n)
             throw mma::LibraryError("intersectionCounts: there must be the same number of query distances as query points");
 
@@ -164,7 +164,8 @@ public:
             for (const auto &el : ret_matches) {
                 double pd2 =
                       sqr(ps->kdtree_get_pt(el.first, 0) - centres2(i, 0)) +
-                      sqr(ps->kdtree_get_pt(el.first, 1) - centres2(i, 1));
+                      sqr(ps->kdtree_get_pt(el.first, 1) - centres2(i, 1)) +
+                      sqr(ps->kdtree_get_pt(el.first, 2) - centres2(i, 2));
                 if (pd2 < d*d)
                     count++;
             }
@@ -180,10 +181,10 @@ public:
     mma::IntTensorRef unionCounts(mma::RealMatrixRef centres1, mma::RealMatrixRef centres2, mma::RealTensorRef dists) {
         mint n = dists.size();
 
-        if (centres1.cols() != 2)
-            throw mma::LibraryError("unionCounts: query points must be two-dimensional");
-        if (centres2.cols() != 2)
-            throw mma::LibraryError("unionCounts: query points must be two-dimensional");
+        if (centres1.cols() != 3)
+            throw mma::LibraryError("unionCounts: query points must be three-dimensional");
+        if (centres2.cols() != 3)
+            throw mma::LibraryError("unionCounts: query points must be three-dimensional");
         if (centres1.rows() != n || centres2.rows() != n)
             throw mma::LibraryError("unionCounts: there must be the same number of query distances as query points");
 
@@ -210,7 +211,8 @@ public:
             for (const auto &el : ret_matches) {
                 double pd2 =
                       sqr(ps->kdtree_get_pt(el.first, 0) - centres2(i, 0)) +
-                      sqr(ps->kdtree_get_pt(el.first, 1) - centres2(i, 1));
+                      sqr(ps->kdtree_get_pt(el.first, 1) - centres2(i, 1)) +
+                      sqr(ps->kdtree_get_pt(el.first, 2) - centres2(i, 2));
                 if (pd2 < d*d)
                     count--;
             }
@@ -223,4 +225,4 @@ public:
 
 };
 
-#endif // IG_FLANN2D_H
+#endif // IG_FLANN3D_H

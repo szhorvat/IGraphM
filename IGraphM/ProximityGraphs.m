@@ -122,7 +122,7 @@ delaunayEdges3D[points_] :=
 SyntaxInformation[IGDelaunayGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph, Graph3D]};
 IGDelaunayGraph[{}, opt : OptionsPattern[Graph]] := IGEmptyGraph[0, opt]
 IGDelaunayGraph[points_?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[{Graph, Graph3D}]] :=
-    catch@Switch[Last@Dimensions[points],
+    catch@Switch[Last@Dimensions[points], (* points is known to be a matrix, so we know that Length@Dimensions[points] == 2 *)
       1,   Graph[Range@Length[points], delaunayEdges1D[points], DirectedEdges -> False, opt, VertexCoordinates -> ArrayPad[points, {{0, 0}, {0, 1}}]],
       2,   Graph[Range@Length[points], delaunayEdges2D[points], DirectedEdges -> False, opt, VertexCoordinates -> points],
       3, Graph3D[Range@Length[points], delaunayEdges3D[points], DirectedEdges -> False, opt, VertexCoordinates -> points],
@@ -143,8 +143,9 @@ IGDelaunayGraph[points_?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[{Graph, Gr
    - For beta = 2, the lune-based beta skeleton coincides with the relative neighborhood graph
  *)
 
-IGraphM::bsdim  = "Beta skeleton computation is only supported in 2 dimensions.";
-IGraphM::bsdupl = "Duplicate points must be removed before beta skeleton computations."
+IGraphM::bsdim2 = "Beta skeleton computation is only supported in 2 dimensions for beta < 1 or circle-based beta skeletons.";
+IGraphM::bsdim3 = "Beta skeleton computation is only supported in 2 or 3 dimensions.";
+IGraphM::bsdupl = "Duplicate points must be removed before beta skeleton computations.";
 
 (*
 betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
@@ -173,21 +174,29 @@ betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
 *)
 
 betaSkeletonEdgeSuperset[pts_, beta_ /; beta >= 1] :=
-    Module[{edges, edgeLengths, p, q},
-      If[Not@MatchQ[Dimensions[pts], {_,2}],
-        Message[IGraphM::bsdim];
+    Module[{edges, edgeLengths, p, q, dim},
+      Switch[Dimensions[pts],
+        {_, 2},
+        edges = check@delaunayEdges2D[pts];
+        dim = 2;
+        ,
+        {_, 3},
+        edges = check@delaunayEdges3D[pts];
+        dim = 3;
+        ,
+        _,
+        Message[IGraphM::bsdim3];
         throw[$Failed]
       ];
-      edges = check@delaunayEdges2D[pts];
       {p, q} = pts[[#]]& /@ Transpose[edges];
-      edgeLengths = Sqrt@Dot[Subtract[p, q]^2, ConstantArray[1., 2]];
+      edgeLengths = Sqrt@Dot[Subtract[p, q]^2, ConstantArray[1., dim]];
       {edges, edgeLengths, p, q}
     ]
 
 betaSkeletonEdgeSuperset[pts_, beta_ /; beta < 1] :=
     Module[{edges, edgeLengths, p, q},
       If[Not@MatchQ[Dimensions[pts], {_,2}],
-        Message[IGraphM::bsdim];
+        Message[IGraphM::bsdim2];
         throw[$Failed]
       ];
       edges = Subsets[Range@Length[pts], {2}];
@@ -221,8 +230,6 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
 *)
 igLuneBetaSkeletonEdges[pts_, beta_] :=
     Module[{flann, edges, edgeLengths, p, q, r, centres1, centres2, dists},
-      flann = makeFlann[pts];
-
       {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
 
       r = 0.5 beta;
@@ -231,6 +238,7 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
       centres2 = q + (r-1) (q-p);
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
+      flann = makeFlann[pts];
       Pick[
         edges,
         flann@"intersectionCounts"[centres1, centres2, dists],
@@ -266,7 +274,10 @@ igCircleBetaSkeletonEdges[pts_, beta_] :=
 *)
 igCircleBetaSkeletonEdges[pts_, beta_] :=
     Module[{flann, edges, edgeLengths, p, q, r, centres1, centres2, dists},
-      flann = makeFlann[pts];
+      If[Not@MatchQ[Dimensions[pts], {_, 2}],
+        Message[IGraphM::bsdim2];
+        throw[$Failed]
+      ];
 
       {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
 
@@ -278,6 +289,7 @@ igCircleBetaSkeletonEdges[pts_, beta_] :=
       ];
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
+      flann = makeFlann[pts];
       Pick[
         edges,
         flann@"unionCounts"[centres1, centres2, dists],
@@ -305,11 +317,10 @@ igGabrielGraphEdges[pts_] :=
 *)
 igGabrielGraphEdges[pts_] :=
     Module[{flann, edges, edgeLengths, p, q, dists},
-      flann = makeFlann[pts];
-
       {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 1];
       dists = 0.5 edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
+      flann = makeFlann[pts];
       Pick[
         edges,
         flann@"neighborCounts"[(p+q)/2, dists],
@@ -320,7 +331,10 @@ igGabrielGraphEdges[pts_] :=
 (* 0 < beta < 1, both lune and circle *)
 igBetaSkeletonEdges0[pts_, beta_] :=
     Module[{flann, edges, edgeLengths, p, q, r, centres1, centres2, dists},
-      flann = makeFlann[pts];
+      If[Not@MatchQ[Dimensions[pts], {_, 2}],
+        Message[IGraphM::bsdim2];
+        throw[$Failed]
+      ];
 
       {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, beta];
 
@@ -332,6 +346,7 @@ igBetaSkeletonEdges0[pts_, beta_] :=
       ];
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
+      flann = makeFlann[pts];
       Pick[
         edges,
         flann@"intersectionCounts"[centres1, centres2, dists],

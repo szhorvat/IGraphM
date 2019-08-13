@@ -626,6 +626,25 @@ template = LTemplate["IGraphM",
            {Real, 1, "Constant"} (* distances *)},
           {Integer, 1}]
       }
+    ],
+
+    LClass["IGFlann3D",
+      {
+        LFun["setPoints", {{Real, 2, "Constant"}}, "Void"],
+        LFun["query", {{Real, 1, "Constant"} (* centre *), Real (* distance *)}, {Integer, 1}],
+        LFun["queryMultiple", {{Real, 2, "Constant"} (* centres *), {Real, 1, "Constant"} (* distances *)}, {Integer, 1}],
+        LFun["neighborCounts", {{Real, 2, "Constant"} (* centres *), {Real, 1, "Constant"}}, {Integer, 1}],
+        LFun["intersectionCounts",
+          {{Real, 2, "Constant"} (* centres1 *),
+           {Real, 2, "Constant"} (* centres2 *),
+           {Real, 1, "Constant"} (* distances *)},
+          {Integer, 1}],
+        LFun["unionCounts",
+          {{Real, 2, "Constant"} (* centres1 *),
+           {Real, 2, "Constant"} (* centres2 *),
+           {Real, 1, "Constant"} (* distances *)},
+          {Integer, 1}]
+      }
     ]
   }
 ];
