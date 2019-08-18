@@ -126,7 +126,11 @@ IGToPrufer[graph_?igGraphQ] :=
 
 
 PackageExport["IGCompleteGraph"]
-IGCompleteGraph::usage = "IGCompleteGraph[n] returns a complete graph on n vertices.";
+IGCompleteGraph::usage =
+    "IGCompleteGraph[n] returns a complete graph on n vertices.\n" <>
+    "IGCompleteGraph[vertices] returns a complete graph on the given vertices.";
+
+IGCompleteGraph::dupl = "The given vertex list must not contain duplicates.";
 
 Options[IGCompleteGraph] = {
   DirectedEdges -> False, SelfLoops -> False,
@@ -138,16 +142,38 @@ IGCompleteGraph[m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IG
       check@ig@"completeGraph"[m, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
       applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraph[ig]
     ]
+IGCompleteGraph[verts_List, opt : OptionsPattern[{IGCompleteGraph, Graph}]] :=
+    catch@Block[{ig = igMakeEmpty[]},
+      If[Not@DuplicateFreeQ[verts],
+        Message[IGCompleteGraph::dupl];
+        throw[$Failed]
+      ];
+      check@ig@"completeGraph"[Length[verts], OptionValue[DirectedEdges], OptionValue[SelfLoops]];
+      applyGraphOpt[GraphLayout -> OptionValue[GraphLayout], opt]@igToGraphWithNames[ig, verts]
+    ]
 
 
 PackageExport["IGCompleteAcyclicGraph"]
-IGCompleteAcyclicGraph::usage = "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.";
+IGCompleteAcyclicGraph::usage =
+    "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.\n" <>
+    "IGCompleteAcyclicGraph[vertices] returns a complete acyclic directed graph on the given vertices.";
+
+IGCompleteAcyclicGraph::dupl = IGCompleteGraph::dupl;
 
 SyntaxInformation[IGCompleteAcyclicGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGCompleteAcyclicGraph[m_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMakeEmpty[]},
       check@ig@"completeCitationGraph"[m, True];
       applyGraphOpt[opt]@igToGraph[ig]
+    ]
+IGCompleteAcyclicGraph[verts_List, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = igMakeEmpty[]},
+      If[Not@DuplicateFreeQ[verts],
+        Message[IGCompleteAcyclicGraph::dupl];
+        throw[$Failed]
+      ];
+      check@ig@"completeCitationGraph"[Length[verts], True];
+      applyGraphOpt[opt]@igToGraphWithNames[ig, Reverse[verts]]
     ]
 
 
