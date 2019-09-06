@@ -100,11 +100,11 @@ Options[IGAdjacencyGraph] = { DirectedEdges -> Automatic };
 SyntaxInformation[IGAdjacencyGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGAdjacencyGraph, Graph]};
 (* Fall back to AdjacencyGraph if the input is a matrix. *)
 IGAdjacencyGraph[am_?MatrixQ, opt : OptionsPattern[]] :=
-    With[{graph = AdjacencyGraph[am, opt, OptionValue[DirectedEdges]]},
+    With[{graph = AdjacencyGraph[am, opt, DirectedEdges -> OptionValue[DirectedEdges]]},
       If[GraphQ[graph], graph, $Failed]
     ]
 IGAdjacencyGraph[vertices_, am_?MatrixQ, opt : OptionsPattern[]] :=
-    With[{graph = AdjacencyGraph[vertices, am, opt, OptionValue[DirectedEdges]]},
+    With[{graph = AdjacencyGraph[vertices, am, opt, DirectedEdges -> OptionValue[DirectedEdges]]},
       If[GraphQ[graph], graph, $Failed]
     ]
 (* The main purpose of this function is to handle adjacency lists stored as associations. *)
