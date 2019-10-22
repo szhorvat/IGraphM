@@ -249,3 +249,12 @@ If[$VersionNumber >= 12.1,
         expr
       ]
 ]
+
+(* In M12.1 and later, custom graph properties are stored in the AnnotationRules option, not in the Properties option.
+   PropOptName is defined  to be the correct property-holding option name in each version. *)
+PackageScope["PropOptName"]
+PropOptName::usage = "PropOptName is AnnotationRules in M >= 12.1 and Properties in M < 12.0.";
+If[$VersionNumber >= 12.1,
+  PropOptName = AnnotationRules,
+  PropOptName = Properties
+]

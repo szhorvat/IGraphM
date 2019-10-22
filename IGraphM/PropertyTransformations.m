@@ -211,7 +211,11 @@ IGEdgeMap[fun_, spec_][g_] := IGEdgeMap[fun, spec, g]
 
 (***** Retrieve available edge and vertex property names *****)
 
-hasCustomProp[g_] := OptionValue[Options[g, Properties], Properties] =!= {}
+(* In 12.1 and later, custom Graph properties are stored as AnnotationRules, not as Properties *)
+If[$VersionNumber >= 12.1,
+  hasCustomPropQ[g_] := OptionValue[Options[g, AnnotationRules], AnnotationRules] =!= {},
+  hasCustomPropQ[g_] := OptionValue[Options[g, Properties], Properties] =!= {}
+]
 
 PackageExport["IGVertexPropertyList"]
 IGVertexPropertyList::usage = "IGVertexPropertyList[graph] returns the list of available vertex properties in graph.";
@@ -225,7 +229,7 @@ standardVertexProperties = {
 
 SyntaxInformation[IGVertexPropertyList] = {"ArgumentsPattern" -> {_}};
 IGVertexPropertyList[g_?IGNullGraphQ] = {};
-IGVertexPropertyList[g_ /; GraphQ[g] && hasCustomProp[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, VertexList[g]}]]
+IGVertexPropertyList[g_ /; GraphQ[g] && hasCustomPropQ[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, VertexList[g]}]]
 IGVertexPropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardVertexProperties]
 
 PackageExport["IGEdgePropertyList"]
@@ -238,5 +242,5 @@ standardEdgeProperties = {
 
 SyntaxInformation[IGEdgePropertyList] = {"ArgumentsPattern" -> {_}};
 IGEdgePropertyList[g_?EmptyGraphQ] = {};
-IGEdgePropertyList[g_ /; GraphQ[g] && hasCustomProp[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, EdgeList[g]}]]
+IGEdgePropertyList[g_ /; GraphQ[g] && hasCustomPropQ[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, EdgeList[g]}]]
 IGEdgePropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardEdgeProperties]

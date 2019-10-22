@@ -379,7 +379,7 @@ IGTakeSubgraph::usage =
 keepCases[l1_, l2_] := Pick[l1, Lookup[AssociationThread[l2, ConstantArray[1, Length[l2]]], l1, 0], 1]
 
 allPropNames = {
-  Properties,
+  PropOptName,
   VertexWeight, VertexCapacity, VertexCoordinates,
   VertexSize, VertexShape, VertexShapeFunction, VertexStyle, VertexLabels, VertexLabelStyle,
   EdgeWeight, EdgeCapacity, EdgeCost,
@@ -419,10 +419,10 @@ IGTakeSubgraph[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
         elist = keepCases[EdgeList[g], sgEdgeList];
 
         (* Handle custom properties *)
-        prop = If[KeyExistsQ[options, Properties],
-          Properties ->
+        prop = If[KeyExistsQ[options, PropOptName],
+          PropOptName ->
               Normal@KeyTake[
-                options[Properties],
+                options[PropOptName],
                 Join[VertexList[sg], elist, {"DefaultEdgeProperties", "DefaultVertexProperties", "GraphProperties"}]
               ]
           ,
@@ -462,4 +462,4 @@ IGTakeSubgraph[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
           ],
           opt] (* apply user options *)
       ]
-    ]
+
