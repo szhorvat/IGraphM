@@ -39,8 +39,7 @@ IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given gr
 
 SyntaxInformation[IGSameGraphQ] = {"ArgumentsPattern" -> {_, _}};
 IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
-    Internal`InheritedBlock[{UndirectedEdge},
-      SetAttributes[UndirectedEdge, Orderless];
+    canonicalEdgeBlock[
       Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
     ]
 IGSameGraphQ[_, _] := False (* return False when at least one argument is not a graph *)
@@ -400,9 +399,7 @@ IGTakeSubgraph[g_?GraphQ, edges_List, opt : OptionsPattern[]] :=
     ]
 
 IGTakeSubgraph[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
-    Internal`InheritedBlock[{UndirectedEdge}, (* ensure that a <-> b compares equal to b <-> a *)
-      SetAttributes[UndirectedEdge, Orderless];
-      Module[{options, prop, vindex, eindex, sgEdgeList, vlist, elist, handleList, handleRule},
+      canonicalEdgeBlock@Module[{options, prop, vindex, eindex, sgEdgeList, vlist, elist, handleList, handleRule},
         sgEdgeList = DeleteDuplicates@EdgeList[sg];
 
         (* Check that sg is contained within g (ignores edge multiplicities). *)

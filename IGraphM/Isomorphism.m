@@ -165,10 +165,9 @@ parseEdgeColors[_][None] := {}
 parseEdgeColors[g_][col_?intVecQ] := (If[EdgeCount[g] != Length[col], Message[IGraphM::ecolcnt]; throw[$Failed]]; col)
 parseEdgeColors[g_][col_?AssociationQ] :=
     Block[{TwoWayRule = UndirectedEdge},
-      Internal`InheritedBlock[{UndirectedEdge},
-        SetAttributes[UndirectedEdge, Orderless];
+      canonicalEdgeBlock[
         colorCheckEdges[g, col];
-        Lookup[KeyMap[Identity, col] (* allow Orderless to do its job *), EdgeList[g], 0]
+        Lookup[KeyMap[Identity, col] (* allow UndirectedEdges to evaluate/canonicalize *), EdgeList[g], 0]
       ]
     ]
 parseEdgeColors[g_][prop : (_Symbol | _String)] :=

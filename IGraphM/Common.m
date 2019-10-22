@@ -227,3 +227,25 @@ If[$VersionNumber < 12.0,
   circularEmbedding = "CircularEmbedding",
   circularEmbedding = {"CircularEmbedding", "OptimalOrder" -> False}
 ]
+
+
+PackageScope["canonicalEdgeBlock"]
+canonicalEdgeBlock::usage = "canonicalEdgeBlock[expr] evaluates expression while making sure that all UndirectedEdge expressions inside are ordered canonically.";
+SetAttributes[canonicalEdgeBlock, HoldAllComplete]
+
+(* In M12.1 and later, UndirectedEdge can have 3 arguments, so we cannot canonicalize simply with Orderless. *)
+(* TODO  The workaround /; Not@OrderedQ[{a, b}] is 10x slower than Orderless! *)
+If[$VersionNumber >= 12.1,
+  canonicalEdgeBlock[expr_] :=
+      Internal`InheritedBlock[{UndirectedEdge},
+        Unprotect[UndirectedEdge];
+        UndirectedEdge[a_, b_, rest___] /; Not@OrderedQ[{a, b}] := UndirectedEdge[b, a, rest];
+        expr
+      ]
+  ,
+  canonicalEdgeBlock[expr_] :=
+      Internal`InheritedBlock[{UndirectedEdge},
+        SetAttributes[UndirectedEdge, Orderless];
+        expr
+      ]
+]

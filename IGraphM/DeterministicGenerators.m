@@ -360,8 +360,7 @@ IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
         {1}
       ];
       edges = Catenate[Tuples /@ edgeSeq];
-      Internal`InheritedBlock[{UndirectedEdge},
-        SetAttributes[UndirectedEdge, Orderless];
+      canonicalEdgeBlock[
         If[Not@TrueQ@OptionValue[SelfLoops],
           edges = DeleteCases[edges, _[x_, x_]];
         ];
