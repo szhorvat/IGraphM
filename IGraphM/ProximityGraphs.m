@@ -238,11 +238,18 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
       centres2 = q + (r-1) (q-p);
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
+      (*
+         Ideally, we would pick those edges where there are precisely two points within the region.
+         These two points would be the endpoints of the edge. However, due to numerical precision issues,
+         in extreme cases one of these two points won't be picked up by nanoflann.
+         Therefore we pick not 2, but <= 2.
+         Note: UnitStep[0] == 1, so we subtract 3 to get <= 2.
+      *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        flann@"intersectionCounts"[centres1, centres2, dists],
-        2
+        UnitStep[flann@"intersectionCounts"[centres1, centres2, dists] - 3],
+        0
       ]
     ]
 
@@ -289,11 +296,18 @@ igCircleBetaSkeletonEdges[pts_, beta_] :=
       ];
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
+      (*
+         Ideally, we would pick those edges where there are precisely two points within the region.
+         These two points would be the endpoints of the edge. However, due to numerical precision issues,
+         in extreme cases one of these two points won't be picked up by nanoflann.
+         Therefore we pick not 2, but <= 2.
+         Note: UnitStep[0] == 1, so we subtract 3 to get <= 2.
+      *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        flann@"unionCounts"[centres1, centres2, dists],
-        2
+        UnitStep[flann@"unionCounts"[centres1, centres2, dists] - 3],
+        0
       ]
     ]
 
@@ -320,11 +334,18 @@ igGabrielGraphEdges[pts_] :=
       {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 1];
       dists = 0.5 edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
+      (*
+         Ideally, we would pick those edges where there are precisely two points within the region.
+         These two points would be the endpoints of the edge. However, due to numerical precision issues,
+         in extreme cases one of these two points won't be picked up by nanoflann.
+         Therefore we pick not 2, but <= 2.
+         Note: UnitStep[0] == 1, so we subtract 3 to get <= 2.
+      *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        flann@"neighborCounts"[(p+q)/2, dists],
-        2
+        UnitStep[flann@"neighborCounts"[(p+q)/2, dists] - 3],
+        0
       ]
     ]
 
@@ -346,11 +367,18 @@ igBetaSkeletonEdges0[pts_, beta_] :=
       ];
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
+      (*
+         Ideally, we would pick those edges where there are precisely two points within the region.
+         These two points would be the endpoints of the edge. However, due to numerical precision issues,
+         in extreme cases one of these two points won't be picked up by nanoflann.
+         Therefore we pick not 2, but <= 2.
+         Note: UnitStep[0] == 1, so we subtract 3 to get <= 2.
+      *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        flann@"intersectionCounts"[centres1, centres2, dists],
-        2
+        UnitStep[flann@"intersectionCounts"[centres1, centres2, dists] - 3],
+        0
       ]
     ]
 
