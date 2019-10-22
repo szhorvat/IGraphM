@@ -343,7 +343,7 @@ Options[IGShorthand] = {
 SyntaxInformation[IGShorthand] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGShorthand, Graph]};
 IGShorthand[s_String, opt : OptionsPattern[{IGShorthand, Graph}]] :=
     Module[{comp, seq, edgeSeq, eh, edges, vertices},
-      comp = StringSplit[s, ","];
+      comp = StringSplit[s, ","|"\n"];
       seq = StringSplit[#, (x : "<" | "") ~~ ("-" ..) ~~ (y : "" | ">") :> sep[x <> y]] & /@ comp;
       seq = Replace[{__sep, mid___, __sep} :> {mid}] /@ seq;
       seq = Map[shSplitGroup, seq, {2}];
