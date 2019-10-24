@@ -205,7 +205,7 @@ class igPtrVector {
 
     void destroy_items() {
         for (void **ptr = list.stor_begin; ptr < list.end; ++ptr)
-            DestroyElem(reinterpret_cast<ElemType *>(*ptr));
+                DestroyElem(reinterpret_cast<ElemType *>(*ptr));
     }
 
 public:
@@ -327,18 +327,24 @@ inline mlStream & operator << (mlStream &ml, const igMatrix &mat) {
 
 
 inline mlStream & operator >> (mlStream &ml, igList &list) {
-    list.clear();
     int len;
     if (! MLTestHead(ml.link(), "List", &len))
         ml.error("List of lists expected");
-    igraph_vector_ptr_resize(&list.list, len);
+    list.clear();
+    igraph_vector_ptr_resize(&list.list, len); // TODO check success
     for (int i=0; i < len; ++i) {
         igraph_vector_t *vec = static_cast<igraph_vector_t *>(igraph_malloc(sizeof(igraph_vector_t)));
         double *data;
         int listlen;
-        if (! MLGetReal64List(ml.link(), &data, &listlen))
+        if (! MLGetReal64List(ml.link(), &data, &listlen)) {
+            // restore the pointer vector to a consistent state so that its destructor won't fail
+            igraph_free(vec);
+            list.list.end = list.list.stor_begin + i;
+
+            // raise error
             ml.error("Real64List expected in list of lists");
-        igraph_vector_init(vec, listlen);
+        }
+        igraph_vector_init(vec, listlen); // TODO check success
         std::copy(data, data+listlen, vec->stor_begin);
         MLReleaseReal64List(ml.link(), data, listlen);
         VECTOR(list.list)[i] = vec;
