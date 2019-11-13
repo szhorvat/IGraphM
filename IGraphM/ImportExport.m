@@ -37,7 +37,7 @@ addCompletion[IGExportString, {0, $IGExportFormats}]
 
 PackageExport["IGExport"]
 IGExport::usage =
-    "IGExport[file, graph] exports graph to file in a format inferred from the file name.\n" <>
+    "IGExport[file, graph] exports graph to file in a format inferred from the file extension.\n" <>
     "IGExport[file, graph, format] exports graph to file in the given format. See $IGExportFormats for supported formats.";
 
 SyntaxInformation[IGExport] = {"ArgumentsPattern" -> {_, _, _.}};
@@ -57,7 +57,7 @@ addCompletion[IGExport, {3, 0, $IGExportFormats}]
 (* Converting to an exportable format, with properties *)
 
 properties::usage =
-    "properties[vertex, association] is a wrapped used to associate properties with a vertex when exporting GraphML." <>
+    "properties[vertex, association] is a wrapper used to associate properties with a vertex when exporting GraphML.\n" <>
     "properties[{v1, v2}, association] is used to associate properties with an edge when exporting GraphML.";
 
 $ignoredEdgeProperties = {EdgeShapeFunction, EdgeStyle, EdgeLabelStyle};
