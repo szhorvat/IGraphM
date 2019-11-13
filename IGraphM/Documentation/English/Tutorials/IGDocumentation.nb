@@ -261,8 +261,8 @@ Cell[TextData[{
  "Notice that ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " 12.0 does not include functionality to compute weighted betweenness. The \
-built-in function ",
+ " 12.0 does not include functionality to compute weighted vertex \
+betweenness. The built-in function ",
  Cell[BoxData[
   RowBox[{"BetweennessCentrality", "[", "]"}]],ExpressionUUID->
   "a6a0f821-5954-4dd0-b8a2-29d180645105"],
@@ -1734,7 +1734,20 @@ Cell[BoxData[
  RowBox[{"IGCompleteGraph", "/@", 
   RowBox[{"Range", "[", 
    RowBox[{"0", ",", "3"}], 
-   "]"}]}]], "Input",ExpressionUUID->"57fc0505-b7d8-48b0-8438-0b9af51f8865"]
+   "]"}]}]], "Input",ExpressionUUID->"57fc0505-b7d8-48b0-8438-0b9af51f8865"],
+
+Cell["Create a complete graph on the given vertices.", \
+"Text",ExpressionUUID->"fb53e5ea-ab1b-4bc1-a371-8c52d27ce152"],
+
+Cell[BoxData[
+ RowBox[{"IGCompleteGraph", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<a\>\"", ",", "\"\<b\>\"", ",", "\"\<c\>\"", ",", "\"\<d\>\""}], 
+    "}"}], ",", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<DiagramBlue\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"e4abeddc-3767-49d5-89dd-f574055979d0"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1747,9 +1760,26 @@ Cell[BoxData[
   "IGCompleteAcyclicGraph"}]], \
 "Input",ExpressionUUID->"56d39c8f-3c51-47fa-8363-e6028886dc73"],
 
+Cell["Create a complete acyclic directed graph on 5 vertices.", \
+"Text",ExpressionUUID->"bad32956-2d9f-463f-9a3f-4b40b7431a69"],
+
 Cell[BoxData[
- RowBox[{"IGCompleteAcyclicGraph", "[", "6", 
-  "]"}]], "Input",ExpressionUUID->"fb876ed2-8239-4061-9252-62e768d8e2a5"]
+ RowBox[{"IGCompleteAcyclicGraph", "[", "5", 
+  "]"}]], "Input",ExpressionUUID->"fb876ed2-8239-4061-9252-62e768d8e2a5"],
+
+Cell["\<\
+Create a complete acyclic graph on the given vertices. The directed edges \
+always run from vertices that appear earlier in the list to those that appear \
+later.\
+\>", "Text",ExpressionUUID->"cd72ae20-53c0-4f52-82e0-7c2bf6427aff"],
+
+Cell[BoxData[
+ RowBox[{"IGCompleteAcyclicGraph", "[", 
+  RowBox[{
+   RowBox[{"CharacterRange", "[", 
+    RowBox[{"\"\<a\>\"", ",", "\"\<f\>\""}], "]"}], ",", 
+   RowBox[{"GraphStyle", "\[Rule]", "\"\<DiagramGold\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"9336662e-2a58-468a-90fa-b5bff700ee8e"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -1762,11 +1792,146 @@ Cell[BoxData[
   "IGKautzGraph"}]], \
 "Input",ExpressionUUID->"8463d590-cfe6-4f03-bec7-ba7a373a42e0"],
 
+Cell[TextData[{
+ "The vertices of the Kautz graph ",
+ Cell[BoxData[
+  FormBox[
+   SubsuperscriptBox["K", "m", "n"], TraditionalForm]],ExpressionUUID->
+  "e1552909-5d12-4b4f-833a-9fd4dbcd57e2"],
+ " are strings of length ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"n", "+", "1"}], TraditionalForm]],ExpressionUUID->
+  "96537821-e499-4544-94c7-c85da3fe1b2c"],
+ ", composed of ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"m", "+", "1"}], TraditionalForm]],ExpressionUUID->
+  "bcf6f21c-b754-4a96-93cb-2d66e1f60fcd"],
+ " distinct symbols, with the restriction that two adjacent symbols in the \
+string may not be the same. A vertex ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["s", "1"], 
+    SubscriptBox["s", "2"], 
+    SubscriptBox["\[Ellipsis]s", "n"], 
+    SubscriptBox["s", 
+     RowBox[{"n", "+", "1"}]]}], TraditionalForm]],ExpressionUUID->
+  "0f7c28ff-6a84-4179-bf7e-2e2cd137dbfb"],
+ " connects to all other vertices of the form ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["s", "2"], 
+    SubscriptBox["\[Ellipsis]s", 
+     RowBox[{"n", "+", "1"}]], "x"}], TraditionalForm]],ExpressionUUID->
+  "ad336e81-ed8f-48d4-afd4-77e51e2a0cc2"],
+ ", where ",
+ Cell[BoxData[
+  FormBox["x", TraditionalForm]],ExpressionUUID->
+  "152a256f-4fd2-42ac-9562-da0790a5aea3"],
+ " can be any symbol distinct from ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["s", 
+    RowBox[{"n", "+", "1"}]], TraditionalForm]],ExpressionUUID->
+  "8481b2fa-ddc9-41fe-8136-0cb93130ade7"],
+ "."
+}], "Text",ExpressionUUID->"4afa4a64-3f91-405a-81b4-505558d2d350"],
+
+Cell[TextData[{
+ "The Kautz graph ",
+ Cell[BoxData[
+  FormBox[
+   SubsuperscriptBox["K", "m", "n"], TraditionalForm]],ExpressionUUID->
+  "4e214108-2bf7-4b66-9817-0dbcb9caec71"],
+ " has ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", "+", "1"}], ")"}], " ", 
+    SuperscriptBox["m", "n"]}], TraditionalForm]],ExpressionUUID->
+  "f1e2d41f-2cd8-4e0c-817b-4c7619d44ae5"],
+ " vertices, with each vertex having in-degree and out-degree ",
+ Cell[BoxData[
+  FormBox["m", TraditionalForm]],ExpressionUUID->
+  "9114a08c-ea5e-4757-be49-94a1aca08544"],
+ ". Therefore, it has ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"m", "+", "1"}], ")"}], " ", 
+    SuperscriptBox["m", 
+     RowBox[{"n", "+", "1"}]]}], TraditionalForm]],ExpressionUUID->
+  "b3c5627c-9b93-41a4-8b1d-12ce93ff4a5b"],
+ " edges."
+}], "Text",ExpressionUUID->"8c3a6ea4-c846-44fd-aab0-44257f77d0a0"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"VertexCount", "@", 
+   RowBox[{"IGKautzGraph", "[", 
+    RowBox[{"3", ",", "2"}], "]"}]}], "\[Equal]", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"3", "+", "1"}], ")"}], "*", 
+   RowBox[{
+   "3", "^", 
+    "2"}]}]}]], \
+"Input",ExpressionUUID->"c80c0399-7fb6-41dc-8e28-231ef319e002"],
+
+Cell[BoxData[
+ RowBox[{"VertexOutDegree", "@", 
+  RowBox[{"IGKautzGraph", "[", 
+   RowBox[{"3", ",", "2"}], 
+   "]"}]}]], "Input",ExpressionUUID->"b65e530d-1b36-4ed8-b431-2684d485c2f5"],
+
+Cell[TextData[{
+ "The line graph of Kautz graph ",
+ Cell[BoxData[
+  FormBox[
+   SubsuperscriptBox["K", "m", "n"], TraditionalForm]],ExpressionUUID->
+  "dd192bf3-77a5-4aed-a14c-3975ec5286d0"],
+ " is ",
+ Cell[BoxData[
+  FormBox[
+   SubsuperscriptBox["K", "m", 
+    RowBox[{"n", "+", "1"}]], TraditionalForm]],ExpressionUUID->
+  "ccc04663-360d-4c18-b372-1f22d79c1d43"],
+ "."
+}], "Text",ExpressionUUID->"91f3bb0d-bd4b-45fc-8ed1-152ba0f479f2"],
+
+Cell[BoxData[
+ RowBox[{"IGIsomorphicQ", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"LineGraph", "@", 
+    RowBox[{"IGKautzGraph", "[", 
+     RowBox[{"2", ",", "2"}], "]"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"IGKautzGraph", "[", 
+    RowBox[{"2", ",", "3"}], "]"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"8f27095b-c6e9-48fd-a769-5dba936b7dbc"],
+
+Cell[TextData[{
+ "Visualize the Kautz graph ",
+ Cell[BoxData[
+  FormBox[
+   SubsuperscriptBox["K", "2", "3"], TraditionalForm]],ExpressionUUID->
+  "7df81b0d-f0d9-4526-a8dc-2e3266e833c7"],
+ " on 3 characters with string length 4 in three dimensions."
+}], "Text",ExpressionUUID->"5633ed6b-768a-4abf-a389-f6e6fa631b52"],
+
 Cell[BoxData[
  RowBox[{"Graph3D", "@", 
   RowBox[{"IGKautzGraph", "[", 
-   RowBox[{"2", ",", "2"}], 
+   RowBox[{"2", ",", "3"}], 
    "]"}]}]], "Input",ExpressionUUID->"da8cfbf2-03c1-4ca7-a0a7-7c1aa8253be5"],
+
+Cell["\<\
+Label the vertices of the Kautz graph on 3 characters with string length 2.\
+\>", "Text",ExpressionUUID->"0c6c52ec-6ba4-4d80-9905-4f9271a48b87"],
 
 Cell[BoxData[{
  RowBox[{
@@ -3060,12 +3225,126 @@ score. The algorithm starts with ",
 proportional to their fitness scores (for directed graphs, a starting vertex \
 is selected based on its out-fitness and an end vertex based on its \
 in-fitness).  If they are not yet connected, an edge is inserted between \
-them. The procedure is repeated until the number of edges reached ",
+them. The procedure is repeated until the number of edges reaches ",
  Cell[BoxData[
   FormBox["m", TraditionalForm]],ExpressionUUID->
   "a76c1392-3a3b-4da8-8aa2-75bc56895965"],
  "."
 }], "Text",ExpressionUUID->"ff0aa66a-6567-4415-b0d0-c517b900216a"],
+
+Cell["\<\
+The expected degree of each vertex is proportional to its fitness score. This \
+is exactly true when self-loops and multi-edges are allowed, and \
+approximately true otherwise.\
+\>", "Text",ExpressionUUID->"5f9e50c5-ca91-453c-ae73-08a39905acb3"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGStaticFitnessGame"],ExpressionUUID->
+  "1af8e54f-7ab8-4508-a7fa-8b8233b54de4"],
+ " approximates the Chung\[Dash]Lu model in which each edge ",
+ Cell[BoxData[
+  RowBox[{"i", "\[UndirectedEdge]", "j"}]],ExpressionUUID->
+  "799585f7-6a7e-4922-a262-fd501040006e"],
+ " is present independently, with probability"
+}], "Text",ExpressionUUID->"62c3a68c-b362-4645-ae7f-bab3ec86bff6"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{
+    SubscriptBox["p", 
+     RowBox[{"i", "\[InvisibleComma]", "j"}]], "=", 
+    TagBox[GridBox[{
+       {"\[Piecewise]", GridBox[{
+          {
+           FractionBox[
+            RowBox[{
+             SubscriptBox["f", "i"], 
+             SubscriptBox["f", "j"]}], 
+            RowBox[{"2", "m"}]], 
+           RowBox[{
+            RowBox[{"if", " ", "i"}], "\[NotEqual]", "j"}]},
+          {
+           FractionBox[
+            RowBox[{
+             SubscriptBox["f", "i"], 
+             SubscriptBox["f", "j"]}], 
+            RowBox[{"4", "m"}]], 
+           RowBox[{
+            RowBox[{"if", " ", "i"}], "=", "j"}]}
+         },
+         AllowedDimensions->{2, Automatic},
+         Editable->True,
+         GridBoxAlignment->{
+          "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, 
+           "Rows" -> {{1.}}, "RowsIndexed" -> {}},
+         GridBoxSpacings->{"Columns" -> {
+             Offset[0.27999999999999997`], {
+              Offset[0.84]}, 
+             Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+             Offset[0.2], {
+              Offset[0.4]}, 
+             Offset[0.2]}, "RowsIndexed" -> {}},
+         Selectable->True]}
+      },
+      GridBoxAlignment->{
+       "Columns" -> {{Left}}, "ColumnsIndexed" -> {}, "Rows" -> {{Baseline}}, 
+        "RowsIndexed" -> {}},
+      GridBoxItemSize->{
+       "Columns" -> {{Automatic}}, "ColumnsIndexed" -> {}, "Rows" -> {{1.}}, 
+        "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.35]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}}],
+     "Piecewise",
+     DeleteWithContents->True,
+     Editable->False,
+     SelectWithContents->True,
+     Selectable->False,
+     StripWrapperBoxes->True]}], ","}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"e04dea0d-f741-4e43-84bf-517c210210f0"],
+
+Cell[TextData[{
+ "where ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"m", "=", 
+    RowBox[{
+     FractionBox["1", "2"], 
+     RowBox[{
+      SubscriptBox["\[Sum]", "k"], 
+      SubscriptBox["f", "k"]}]}]}], TraditionalForm]],ExpressionUUID->
+  "8a444d12-0fbd-4659-b7b0-c86768a6d17f"],
+ "."
+}], "Text",ExpressionUUID->"d6fe71a9-a89b-4a33-9942-ddcfd181827f"],
+
+Cell[TextData[{
+ "Unlike the Chung\[Dash]Lu algorithm, which would require ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"O", "(", 
+    SuperscriptBox["m", "2"], ")"}], TraditionalForm]],ExpressionUUID->
+  "20d4d4f8-e96b-41c8-ab5c-9e4b8fd076b9"],
+ " computation steps, ",
+ Cell[BoxData[
+ "IGStaticFitnessGame"],ExpressionUUID->
+  "439510ab-dfc1-4b53-93d3-a8ac92b0ef84"],
+ " runs in ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"O", "(", "m", ")"}], TraditionalForm]],ExpressionUUID->
+  "9119f1d0-f013-4c61-a5a1-f353f9344e83"],
+ " time."
+}], "Text",ExpressionUUID->"8939ed8c-75d6-48ea-ad49-41114232b0cd"],
 
 Cell["The available options are:", \
 "Text",ExpressionUUID->"6365a0e1-fba3-444a-80b7-23bd7bdeb67d"],
@@ -3087,11 +3366,32 @@ Cell[TextData[{
 }], "Item",ExpressionUUID->"b4055413-d59c-4e2f-9d27-043ab919cb17"]
 }, Open  ]],
 
-Cell[BoxData[
+Cell["\<\
+Create an undirected graph with four high-degree nodes and 40 low-degree ones.\
+\>", "Text",ExpressionUUID->"bf2ab2ec-5d26-4ccd-a94c-912b3d7e7a84"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"weights", "=", 
+   RowBox[{"Join", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"10", ",", "10", ",", "10", ",", "10"}], "}"}], ",", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"1", ",", "40"}], "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
  RowBox[{"IGStaticFitnessGame", "[", 
-  RowBox[{"30", ",", 
-   RowBox[{"Range", "[", "10", "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"bafeddfb-99fe-4900-9d6a-91ed9fc82cec"],
+  RowBox[{
+   RowBox[{
+    RowBox[{"Total", "[", "weights", "]"}], "/", "2"}], ",", "weights"}], 
+  "]"}]}], "Input",ExpressionUUID->"bafeddfb-99fe-4900-9d6a-91ed9fc82cec"],
+
+Cell[BoxData[
+ RowBox[{"VertexDegree", "[", "%", 
+  "]"}]], "Input",ExpressionUUID->"d84b0a5b-c416-43c0-ae34-2354aa7cd9e3"],
+
+Cell["Create a directed graph.", \
+"Text",ExpressionUUID->"76e882cd-99e2-4612-9efc-2e05d6333b9c"],
 
 Cell[BoxData[
  RowBox[{"IGStaticFitnessGame", "[", 
@@ -3100,7 +3400,59 @@ Cell[BoxData[
    RowBox[{"Range", "[", 
     RowBox[{"10", ",", "1", ",", 
      RowBox[{"-", "1"}]}], "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"751a8b4e-195b-46f5-b0a0-23b3cb404800"]
+  "]"}]], "Input",ExpressionUUID->"751a8b4e-195b-46f5-b0a0-23b3cb404800"],
+
+Cell["\<\
+When self-loops and multi-edges are allowed, the expected degree of each \
+vertex is proportional to its fitness score.\
+\>", "Text",ExpressionUUID->"7fc2b2a5-f35c-4b14-bb2e-d56afcc34211"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"degrees", "=", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "3", ",", "2", ",", "2", ",", "2", ",", "1", ",", "1"}],
+     "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Table", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"VertexDegree", "@", 
+      RowBox[{"IGStaticFitnessGame", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Total", "[", "degrees", "]"}], "/", "2"}], ",", "degrees", 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{"SelfLoops", "\[Rule]", "True"}], ",", 
+        RowBox[{"MultiEdges", "\[Rule]", "True"}]}], "\[IndentingNewLine]", 
+       "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "1000", "}"}]}], "\[IndentingNewLine]", "]"}], "//", "N"}], 
+  "//", "Mean"}]}], \
+"Input",ExpressionUUID->"ecdf41ce-23db-4442-b857-332e5c2ffe77"],
+
+Cell["\<\
+When generating simple graphs, this holds only approximately.\
+\>", "Text",ExpressionUUID->"28521753-07a6-4a4c-8392-ba6c4795150b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"degrees", "=", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "3", ",", "2", ",", "2", ",", "2", ",", "1", ",", "1"}],
+     "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"Table", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"VertexDegree", "@", 
+      RowBox[{"IGStaticFitnessGame", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"Total", "[", "degrees", "]"}], "/", "2"}], ",", "degrees"}],
+        "\[IndentingNewLine]", "]"}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"{", "1000", "}"}]}], "\[IndentingNewLine]", "]"}], "//", "N"}], 
+  "//", "Mean"}]}], \
+"Input",ExpressionUUID->"e8f4be5b-da6e-492a-9b76-50461f6c8eca"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -3113,12 +3465,15 @@ Cell[BoxData[
   "IGStaticPowerLawGame"}]], \
 "Input",ExpressionUUID->"93a34807-8ff6-49d7-9e68-0d99fb822fc7"],
 
-Cell["\<\
-This game generates a directed or undirected random graph where the degrees \
-of vertices follow power-law distributions with prescribed exponents. For \
+Cell[TextData[{
+ Cell[BoxData[
+ "IGStaticPowerLawGame"],ExpressionUUID->
+  "c0a258bb-345d-408c-952b-4ea0008003ab"],
+ " generates a directed or undirected random graph where the degrees of \
+vertices follow power-law distributions with prescribed exponents. For \
 directed graphs, the exponents of the in- and out-degree distributions may be \
-specified separately.\
-\>", "Text",ExpressionUUID->"ef87fa4a-7f50-4242-9ce8-f1a5575268ed"],
+specified separately."
+}], "Text",ExpressionUUID->"ef87fa4a-7f50-4242-9ce8-f1a5575268ed"],
 
 Cell[TextData[{
  "This function is equivalent to ",
@@ -3163,7 +3518,7 @@ the finite size effects by default by assuming that the fitness of vertex ",
   "2ae9672d-2060-475b-98b3-bd99a25ad4f1"],
  " is a constant chosen appropriately to ensure that the maximum degree is \
 less than the square root of the number of edges times the average degree; \
-see the paper of Chung and Lu, and Cho et al for more details."
+see the paper of Chung and Lu, and Cho et al. for more details."
 }], "Text",ExpressionUUID->"6ec6b7d7-2b2b-4011-af1a-8d5cf37c7a41"],
 
 Cell["The available options are:", \
@@ -3193,25 +3548,28 @@ Cell[TextData[{
 }], "Item",ExpressionUUID->"a6d9489d-7b89-4032-8a20-93eab0cd330d"]
 }, Open  ]],
 
+Cell["\<\
+Create a graph with a power-law degree distribution of exponent 2.5.\
+\>", "Text",ExpressionUUID->"0bc720ff-cb49-4e19-9c19-fe6d536c6ded"],
+
 Cell[BoxData[
  RowBox[{
   RowBox[{"g", "=", 
    RowBox[{"IGStaticPowerLawGame", "[", 
-    RowBox[{"10000", ",", "50000", ",", "2.5"}], "]"}]}], ";"}]], "Input",
- CellChangeTimes->{{3.6699919850348997`*^9, 3.669992053563077*^9}, {
-  3.669992864621148*^9, 
-  3.669992919615209*^9}},ExpressionUUID->"d2bdeb2f-94ec-4700-9160-\
-aa237efb6acc"],
+    RowBox[{"100000", ",", "200000", ",", "2.5"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"d2bdeb2f-94ec-4700-9160-aa237efb6acc"],
 
 Cell[BoxData[
  RowBox[{"Histogram", "[", 
   RowBox[{
    RowBox[{"VertexDegree", "[", "g", "]"}], ",", "\"\<Log\>\"", ",", 
    RowBox[{"{", 
-    RowBox[{"\"\<Log\>\"", ",", "\"\<PDF\>\""}], "}"}]}], "]"}]], "Input",
- CellChangeTimes->{{3.669992880230853*^9, 
-  3.6699928916499653`*^9}},ExpressionUUID->"e99ef1ed-58cb-47c7-8aff-\
-6264811703ea"],
+    RowBox[{"\"\<Log\>\"", ",", "\"\<PDF\>\""}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"e99ef1ed-58cb-47c7-8aff-6264811703ea"],
+
+Cell["\<\
+Create a directed graph with power-law in- and out-degree distributions.\
+\>", "Text",ExpressionUUID->"9432dbaa-d177-4437-9efd-46ca57013bf0"],
 
 Cell[BoxData[
  RowBox[{"IGStaticPowerLawGame", "[", 
@@ -3237,7 +3595,7 @@ sequences. Annals of Combinatorics 6, 125-145, 2002.\
 
 Cell["\<\
 Cho YS, Kim JS, Park J, Kahng B, Kim D: Percolation transitions in scale-free \
-networks under the Achlioptas process. Phys Rev Lett 103:135702, 2009.\
+networks under the Achlioptas process. Phys. Rev. Lett. 103:135702, 2009.\
 \>", "Item",ExpressionUUID->"59d6f99c-3442-42b3-92a6-f302582ce9c2"]
 }, Open  ]]
 }, Open  ]]
@@ -5503,6 +5861,46 @@ Cell[BoxData[
   RowBox[{"g", ",", "%"}], 
   "]"}]], "Input",ExpressionUUID->"3d601f0c-905b-4672-be0e-14df311089ac"],
 
+Cell["\<\
+Visualize the betweenness of a periodic grid with slightly randomized edge \
+weights.\
+\>", "Text",ExpressionUUID->"edf960be-bfc5-4b64-b48f-079a4009e505"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"n", "=", "40"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"IGSquareLattice", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"n", ",", "n"}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"\"\<Periodic\>\"", "\[Rule]", "True"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"VertexCoordinates", "\[Rule]", 
+     RowBox[{"Tuples", "[", 
+      RowBox[{
+       RowBox[{"Range", "[", "n", "]"}], ",", 
+       RowBox[{"{", "2", "}"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
+    RowBox[{"EdgeWeight", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"_", "\[RuleDelayed]", 
+       RowBox[{"RandomReal", "[", 
+        RowBox[{"{", 
+         RowBox[{".99", ",", "1.01"}], "}"}], "]"}]}], "}"}]}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"EdgeShapeFunction", "\[Rule]", "None"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"VertexSize", "\[Rule]", "1"}]}], "\[IndentingNewLine]", "]"}], "//", 
+  RowBox[{"IGVertexMap", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "\"\<BlueGreenYellow\>\"", "]"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"VertexStyle", "\[Rule]", 
+     RowBox[{"Rescale", "@*", "IGBetweenness"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]}], "Input",ExpressionUUID->"bb707168-8739-4e3b-8ff3-bf243fd0ac5c"],
+
 Cell[TextData[StyleBox["Possible issues:",
  FontWeight->
   "Bold"]], "Text",ExpressionUUID->"54e4d936-9e61-45b6-be2d-cb6727789b57"],
@@ -7553,7 +7951,8 @@ Cell[TextData[{
    RowBox[{"graph", ",", " ", "centers"}], "]"}]],ExpressionUUID->
   "97850f51-32ec-4fe5-831a-d11e2b1d136e"],
  " partitions a graph\[CloseCurlyQuote]s vertices into groups based on which \
-given centre node they are the closest to."
+given centre vertex they are the closest to. Edge weights are considered for \
+the distance calculations."
 }], "Text",ExpressionUUID->"4dde33e5-6114-4d40-9cf9-04fc0d62ce60"],
 
 Cell["Available options:", \
@@ -18594,6 +18993,11 @@ Cell[CellGroupData[{
 Cell["Cohesive blocks", \
 "Subsection",ExpressionUUID->"749612d1-1d4e-45fd-aa81-f377d962e463"],
 
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGCohesiveBlocks"}]], \
+"Input",ExpressionUUID->"3576fd08-efa2-47da-81a1-06093f1e63a1"],
+
 Cell[TextData[{
  "The following examples are based on the ones ",
  ButtonBox["in the R/igraph documentation",
@@ -18604,13 +19008,14 @@ Cell[TextData[{
  "."
 }], "Text",ExpressionUUID->"35c28e10-0ecf-4124-b128-24bfba50255a"],
 
-Cell["\<\
-This is the network from the Moody-White paper:
+Cell["This is the network from the Moody-White paper:", \
+"Text",ExpressionUUID->"1e4c02e1-254a-4808-a67a-a64d5c6b06db"],
 
+Cell["\<\
 J. Moody and D. R. White. Structural cohesion and embeddedness: A \
 hierarchical concept of social groups. American Sociological Review, \
 68(1):103\[Dash]127, Feb 2003.\
-\>", "Text",ExpressionUUID->"1e4c02e1-254a-4808-a67a-a64d5c6b06db"],
+\>", "Item",ExpressionUUID->"d5cc0943-a833-42f4-9e03-78eac2ce4477"],
 
 Cell[BoxData[
  RowBox[{
@@ -19076,6 +19481,72 @@ Cell[BoxData[
         "]"}]}], "]"}], "&"}], ",", 
     RowBox[{"VertexLabels", "\[Rule]", "VertexList"}]}], 
    "]"}]}]], "Input",ExpressionUUID->"3bbe4e66-3e58-4d39-86d9-011ce1277555"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Graphlet decomposition", \
+"Subsection",ExpressionUUID->"c2668b93-46c3-4f32-82f3-af25df3d1862"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGGraphlets"}]], \
+"Input",ExpressionUUID->"3fe5d9e9-bd67-40b8-8a25-a24f8881abd5"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGGraphletBasis"}]], \
+"Input",ExpressionUUID->"313a2dbb-1088-40ae-ba11-6c95c3dd9ee4"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGGraphletProject"}]], \
+"Input",ExpressionUUID->"e3d0db0d-8e8f-4cc8-b65c-a86084172a17"],
+
+Cell["TODO TODO TODO", "Text",
+ FontWeight->"Bold",
+ FontColor->RGBColor[
+  1, 0, 0],ExpressionUUID->"3d3df40a-81e1-4c28-bb15-dfae3c02073d"],
+
+Cell["\<\
+Graphlet decomposition in igraph works for graphs with integer edge weights.\
+\>", "Text",ExpressionUUID->"88450c29-09d4-4e99-a174-d26cd5150aae"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"IGShorthand", "[", 
+   RowBox[{
+   "\"\<A,B,D,E,C, A-B-C-A, C-E-D-B, D-C, E-B\>\"", ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"EdgeWeight", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+      "2", ",", "3", ",", "2", ",", "4", ",", "4", ",", "1", ",", "4", ",", 
+       "1"}], "}"}]}], ",", "\[IndentingNewLine]", 
+    RowBox[{"EdgeLabels", "\[Rule]", "\"\<EdgeWeight\>\""}], ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"VertexShapeFunction", "\[Rule]", "\"\<Name\>\""}], ",", 
+    RowBox[{"PerformanceGoal", "\[Rule]", "\"\<Quality\>\""}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"GraphLayout", "\[Rule]", "\"\<CircularEmbedding\>\""}]}], 
+   "\[IndentingNewLine]", 
+   "]"}]}]], "Input",ExpressionUUID->"7e0872b9-a5c5-420e-acfd-973bf5e91a98"],
+
+Cell[BoxData[
+ RowBox[{"basis", "=", 
+  RowBox[{
+  "IGGraphletBasis", "[", "g", 
+   "]"}]}]], "Input",ExpressionUUID->"4a90ab7e-c62b-4f4b-bf82-71245bdb248b"],
+
+Cell[BoxData[
+ RowBox[{"IGGraphletProject", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"Keys", "[", "basis", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"ffe91814-90e7-44a7-9377-d3801244e951"],
+
+Cell[BoxData[
+ RowBox[{"IGGraphlets", "[", "g", 
+  "]"}]], "Input",ExpressionUUID->"7ecea603-1c38-490f-82c9-d3439e5933d7"]
 }, Closed]]
 }, Closed]],
 
@@ -37032,8 +37503,8 @@ Cell[BoxData[
    RowBox[{"IGKVertexColoring", "[", 
     RowBox[{"g", ",", "5", ",", 
      RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]}], "]"}], ",", 
-   "5"}], 
-  "]"}]], "Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
+   "5"}], "]"}]], \
+"Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
 
 Cell["\<\
 Forcing colours in the appropriate way reduces the computation time \
@@ -38155,6 +38626,7 @@ Cell[BoxData[{
           AspectRatio->1,
           DefaultBaseStyle->"ColorSwatchGraphics",
           Frame->True,
+          
           FrameStyle->RGBColor[
            0.5333333333333334, 0.4, 0.33333333333333337`, 1.],
           FrameTicks->None,
@@ -40933,7 +41405,67 @@ FontColor->RGBColor[1, 0, 0]]\)\>\"", ",", "#"}], "]"}], "&"}], "/@",
         RowBox[{"{", 
          RowBox[{"mesh", ",", "exits"}], "}"}], ",", "MeshCellCentroid"}], 
        "]"}]}], "}"}]}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"e18d006d-23f5-4bbf-92da-6238c5e6f005"]
+  "]"}]], "Input",ExpressionUUID->"e18d006d-23f5-4bbf-92da-6238c5e6f005"],
+
+Cell["\<\
+Create a Moir\[EAcute] pattern by superimposing two rotated hexagonal \
+lattices.\
+\>", "Text",ExpressionUUID->"ddd0ae43-1280-4b02-843d-b94ddbc48cd7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"m", "=", 
+   RowBox[{"IGLatticeMesh", "[", 
+    RowBox[{"\"\<Hexagonal\>\"", ",", 
+     RowBox[{"Polygon", "@", 
+      RowBox[{"CirclePoints", "[", 
+       RowBox[{"12.", ",", "6"}], "]"}]}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Show", "@", 
+    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"MeshRegion", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"TransformedRegion", "[", 
+         RowBox[{"m", ",", 
+          RowBox[{"RotationTransform", "[", "angle", "]"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"MeshCellStyle", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"2", "\[Rule]", "None"}], ",", 
+           RowBox[{"1", "\[Rule]", 
+            RowBox[{"AbsoluteThickness", "[", "1.5", "]"}]}]}], "}"}]}], ",", 
+        
+        RowBox[{"PlotRange", "\[Rule]", 
+         RowBox[{"13", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}]}]}]}], 
+       "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{"angle", ",", 
+        RowBox[{"{", 
+         RowBox[{"0", ",", "a"}], "}"}]}], "}"}]}], "\[IndentingNewLine]", 
+     "]"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"a", ",", "0.15"}], "}"}], ",", "0", ",", "0.3"}], "}"}]}], 
+  "\[IndentingNewLine]", "]"}]}], "Input",
+ CellChangeTimes->{{3.773199059717511*^9, 3.773199095853949*^9}, {
+  3.773199178725452*^9, 3.773199179513999*^9}, {3.773199230406508*^9, 
+  3.77319923067334*^9}, {3.773199318156931*^9, 3.773199319811491*^9}, {
+  3.7731994321614523`*^9, 3.77319943643303*^9}, {3.7732004779881077`*^9, 
+  3.7732005821364717`*^9}, {3.773226560437365*^9, 3.773226566368998*^9}},
+ CellTags->
+  "DeleteOutput",ExpressionUUID->"214a9d58-e302-493f-a1f4-784f3427fb89"]
 }, Closed]]
 }, Closed]],
 
@@ -41329,6 +41861,277 @@ Cell[TextData[{
  Cell[BoxData[
   FormBox[
    RowBox[{"\[Beta]", "\[GreaterEqual]", "1"}], TraditionalForm]],
+  ExpressionUUID->"fe6ba0ba-5f91-4cb6-9d9b-e2aeb4564faa"],
+ ", the definition generalizes to higher dimensions too. ",
+ Cell[BoxData[
+ "IGLuneBetaSkeleton"],ExpressionUUID->"e131e73d-c553-41f6-be91-44d638c604d1"],
+ " supports 2D and 3D point sets."
+}], "Text",ExpressionUUID->"f5b54f6d-d337-40c6-9b10-24c04b07f8d6"],
+
+Cell[TextData[Cell[BoxData[
+ Graphics3DBox[{
+   {RGBColor[1., 0.340007, 0.129994], Opacity[0.3], SphereBox[{0, 0, 0}, 1], 
+    SphereBox[{1, 0, 0}, 1]}, 
+   {Thickness[Large], Line3DBox[{{0, 0, 0}, {1, 0, 0}}], 
+    {PointSize[
+      NCache[
+       Rational[1, 30], 0.03333333333333333]], 
+     Point3DBox[{{0, 0, 0}, {1, 0, 0}}]}}, {Text3DBox[
+     FormBox["\<\"A\"\>", StandardForm], {0, 0, 0}, {2, 2}], Text3DBox[
+     FormBox["\<\"B\"\>", StandardForm], {1, 0, 0}, {-2, 2}]}, 
+   {EdgeForm[{Thickness[0.005], Dashing[{0.01, 0.03}], CapForm["Butt"]}], 
+    FaceForm[None, None], 
+    Polygon3DBox[
+     NCache[{{Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 30] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 30] Pi]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 15] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 15] Pi]}, {
+       Rational[1, 2], 
+        Rational[1, 2] (3 (Rational[5, 8] + Rational[1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2], (Rational[1, 8] 3^Rational[1, 2]) (-1 + 
+         5^Rational[1, 2])}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[2, 15] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[2, 15] Pi]}, {
+       Rational[1, 2], Rational[3, 4], Rational[1, 4] 3^Rational[1, 2]}, {
+       Rational[
+        1, 2], (Rational[1, 8] 3^Rational[1, 2]) (1 + 5^Rational[1, 2]), 
+        Rational[
+         1, 2] (3 (Rational[5, 8] + Rational[-1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[7, 30] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[7, 30] Pi]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[7, 30] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[7, 30] Pi]}, {
+       Rational[1, 2], 
+        Rational[
+         1, 2] (3 (Rational[5, 8] + Rational[-1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2], (Rational[1, 8] 3^Rational[1, 2]) (1 + 
+         5^Rational[1, 2])}, {
+       Rational[1, 2], Rational[1, 4] 3^Rational[1, 2], Rational[3, 4]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[2, 15] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[2, 15] Pi]}, {
+       Rational[
+        1, 2], (Rational[1, 8] 3^Rational[1, 2]) (-1 + 5^Rational[1, 2]), 
+        Rational[1, 2] (3 (Rational[5, 8] + Rational[1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 15] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 15] Pi]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 30] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 30] Pi]}, {
+       Rational[1, 2], 0, Rational[1, 2] 3^Rational[1, 2]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 30] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 30] Pi]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 15] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 15] Pi]}, {
+       Rational[
+        1, 2], (Rational[1, 8] 3^Rational[1, 2]) (1 - 5^Rational[1, 2]), 
+        Rational[1, 2] (3 (Rational[5, 8] + Rational[1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[2, 15] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[2, 15] Pi]}, {
+       Rational[1, 2], Rational[-1, 4] 3^Rational[1, 2], Rational[3, 4]}, {
+       Rational[1, 2], 
+        Rational[-1, 2] (
+          3 (Rational[5, 8] + Rational[-1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2], (Rational[1, 8] 3^Rational[1, 2]) (1 + 
+         5^Rational[1, 2])}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[7, 30] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[7, 30] Pi]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[7, 30] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[7, 30] Pi]}, {
+       Rational[
+        1, 2], (Rational[1, 8] 3^Rational[1, 2]) (-1 - 5^Rational[1, 2]), 
+        Rational[
+         1, 2] (3 (Rational[5, 8] + Rational[-1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2]}, {
+       Rational[1, 2], Rational[-3, 4], Rational[1, 4] 3^Rational[1, 2]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[2, 15] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[2, 15] Pi]}, {
+       Rational[1, 2], 
+        Rational[-1, 2] (
+          3 (Rational[5, 8] + Rational[1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2], (Rational[1, 8] 3^Rational[1, 2]) (-1 + 
+         5^Rational[1, 2])}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 15] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 15] Pi]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 30] Pi], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 30] Pi]}, {
+       Rational[1, 2], Rational[-1, 2] 3^Rational[1, 2], 0}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 30] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 30] Pi]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 15] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 15] Pi]}, {
+       Rational[1, 2], 
+        Rational[-1, 2] (
+          3 (Rational[5, 8] + Rational[1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2], (Rational[1, 8] 3^Rational[1, 2]) (1 - 5^
+         Rational[1, 2])}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[2, 15] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[2, 15] Pi]}, {
+       Rational[1, 2], Rational[-3, 4], Rational[-1, 4] 3^Rational[1, 2]}, {
+       Rational[
+        1, 2], (Rational[1, 8] 3^Rational[1, 2]) (-1 - 5^Rational[1, 2]), 
+        Rational[-1, 2] (
+          3 (Rational[5, 8] + Rational[-1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[7, 30] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[7, 30] Pi]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[7, 30] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[7, 30] Pi]}, {
+       Rational[1, 2], 
+        Rational[-1, 2] (
+          3 (Rational[5, 8] + Rational[-1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2], (Rational[1, 8] 3^Rational[1, 2]) (-1 - 5^
+         Rational[1, 2])}, {
+       Rational[1, 2], Rational[-1, 4] 3^Rational[1, 2], Rational[-3, 4]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[2, 15] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[2, 15] Pi]}, {
+       Rational[
+        1, 2], (Rational[1, 8] 3^Rational[1, 2]) (1 - 5^Rational[1, 2]), 
+        Rational[-1, 2] (
+          3 (Rational[5, 8] + Rational[1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 15] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 15] Pi]}, {
+       Rational[1, 2], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 30] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 30] Pi]}, {
+       Rational[1, 2], 0, Rational[-1, 2] 3^Rational[1, 2]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 30] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 30] Pi]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 15] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 15] Pi]}, {
+       Rational[
+        1, 2], (Rational[1, 8] 3^Rational[1, 2]) (-1 + 5^Rational[1, 2]), 
+        Rational[-1, 2] (
+          3 (Rational[5, 8] + Rational[1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[2, 15] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[2, 15] Pi]}, {
+       Rational[1, 2], Rational[1, 4] 3^Rational[1, 2], Rational[-3, 4]}, {
+       Rational[1, 2], 
+        Rational[
+         1, 2] (3 (Rational[5, 8] + Rational[-1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2], (Rational[1, 8] 3^Rational[1, 2]) (-1 - 5^
+         Rational[1, 2])}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[7, 30] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[7, 30] Pi]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[7, 30] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[7, 30] Pi]}, {
+       Rational[
+        1, 2], (Rational[1, 8] 3^Rational[1, 2]) (1 + 5^Rational[1, 2]), 
+        Rational[-1, 2] (
+          3 (Rational[5, 8] + Rational[-1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2]}, {
+       Rational[1, 2], Rational[3, 4], Rational[-1, 4] 3^Rational[1, 2]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[2, 15] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[2, 15] Pi]}, {
+       Rational[1, 2], 
+        Rational[1, 2] (3 (Rational[5, 8] + Rational[1, 8] 5^Rational[1, 2]))^
+         Rational[1, 2], (Rational[1, 8] 3^Rational[1, 2]) (1 - 5^
+         Rational[1, 2])}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 15] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 15] Pi]}, {
+       Rational[1, 2], (Rational[1, 2] 3^Rational[1, 2]) 
+        Cos[Rational[1, 30] Pi], (Rational[-1, 2] 3^Rational[1, 2]) 
+        Sin[Rational[1, 30] Pi]}, {
+       Rational[1, 2], Rational[1, 2] 3^Rational[1, 2], 0}}, {{0.5, 
+       0.8612812260087741, 0.09052430460833644}, {0.5, 0.8471006708862739, 
+       0.18005680599195537`}, {0.5, 0.823639103546332, 0.2676165673298175}, {
+       0.5, 0.7911535738303732, 0.3522442655536469}, {0.5, 0.75, 
+       0.4330127018922193}, {0.5, 0.7006292692220367, 0.5090369604551271}, {
+       0.5, 0.6435822975543765, 0.5794841035564564}, {0.5, 0.5794841035564564,
+        0.6435822975543765}, {0.5, 0.5090369604551271, 0.7006292692220367}, {
+       0.5, 0.4330127018922193, 0.75}, {0.5, 0.3522442655536469, 
+       0.7911535738303732}, {0.5, 0.2676165673298175, 0.823639103546332}, {
+       0.5, 0.18005680599195537`, 0.8471006708862739}, {0.5, 
+       0.09052430460833644, 0.8612812260087741}, {
+       0.5, 0, 0.8660254037844386}, {0.5, -0.09052430460833644, 
+       0.8612812260087741}, {0.5, -0.18005680599195537`, 0.8471006708862739}, 
+       {0.5, -0.2676165673298175, 0.823639103546332}, {
+       0.5, -0.3522442655536469, 0.7911535738303732}, {
+       0.5, -0.4330127018922193, 0.75}, {0.5, -0.5090369604551271, 
+       0.7006292692220367}, {0.5, -0.5794841035564564, 0.6435822975543765}, {
+       0.5, -0.6435822975543765, 0.5794841035564564}, {
+       0.5, -0.7006292692220367, 0.5090369604551271}, {0.5, -0.75, 
+       0.4330127018922193}, {0.5, -0.7911535738303732, 0.3522442655536469}, {
+       0.5, -0.823639103546332, 0.2676165673298175}, {
+       0.5, -0.8471006708862739, 0.18005680599195537`}, {
+       0.5, -0.8612812260087741, 0.09052430460833644}, {
+       0.5, -0.8660254037844386, 0}, {
+       0.5, -0.8612812260087741, -0.09052430460833644}, {
+       0.5, -0.8471006708862739, -0.18005680599195537`}, {
+       0.5, -0.823639103546332, -0.2676165673298175}, {
+       0.5, -0.7911535738303732, -0.3522442655536469}, {
+       0.5, -0.75, -0.4330127018922193}, {
+       0.5, -0.7006292692220367, -0.5090369604551271}, {
+       0.5, -0.6435822975543765, -0.5794841035564564}, {
+       0.5, -0.5794841035564564, -0.6435822975543765}, {
+       0.5, -0.5090369604551271, -0.7006292692220367}, {
+       0.5, -0.4330127018922193, -0.75}, {
+       0.5, -0.3522442655536469, -0.7911535738303732}, {
+       0.5, -0.2676165673298175, -0.823639103546332}, {
+       0.5, -0.18005680599195537`, -0.8471006708862739}, {
+       0.5, -0.09052430460833644, -0.8612812260087741}, {
+       0.5, 0, -0.8660254037844386}, {0.5, 
+       0.09052430460833644, -0.8612812260087741}, {0.5, 
+       0.18005680599195537`, -0.8471006708862739}, {0.5, 
+       0.2676165673298175, -0.823639103546332}, {0.5, 
+       0.3522442655536469, -0.7911535738303732}, {0.5, 
+       0.4330127018922193, -0.75}, {0.5, 
+       0.5090369604551271, -0.7006292692220367}, {0.5, 
+       0.5794841035564564, -0.6435822975543765}, {0.5, 
+       0.6435822975543765, -0.5794841035564564}, {0.5, 
+       0.7006292692220367, -0.5090369604551271}, {0.5, 
+       0.75, -0.4330127018922193}, {0.5, 
+       0.7911535738303732, -0.3522442655536469}, {0.5, 
+       0.823639103546332, -0.2676165673298175}, {0.5, 
+       0.8471006708862739, -0.18005680599195537`}, {0.5, 
+       0.8612812260087741, -0.09052430460833644}, {
+       0.5, 0.8660254037844386, 0}}]]}},
+  ImageSize->200,
+  Lighting->"Neutral",
+  ViewPoint->{0.8, -3.2, 1.2000000000000002`}]],
+ CellChangeTimes->{{3.774684296293968*^9, 
+  3.774684311271196*^9}},ExpressionUUID->"05ceaf1c-6f33-45b9-8cfa-\
+d5c529859411"]], \
+"Text",ExpressionUUID->"87eb3aae-a928-47fc-9420-37914e38b06b"],
+
+Cell[TextData[{
+ "For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "\[GreaterEqual]", "1"}], TraditionalForm]],
   ExpressionUUID->"1c0bb965-bb69-48ec-a8e5-261ef13c4907"],
  ", the \[Beta] skeleton is a subgraph of the Delaunay graph, thus its edges \
 do not cross. For ",
@@ -41609,7 +42412,34 @@ Cell[BoxData[
      RowBox[{"PlotLabel", "\[Rule]", "#"}]}], "]"}], "&"}], "/@", 
   RowBox[{"{", 
    RowBox[{"0.8", ",", "1", ",", "2", ",", "5"}], 
-   "}"}]}]], "Input",ExpressionUUID->"da295c5d-08e7-4f08-8cfe-5bf926413460"]
+   "}"}]}]], "Input",ExpressionUUID->"da295c5d-08e7-4f08-8cfe-5bf926413460"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGLuneBetaSkeleton"],ExpressionUUID->"530a10f5-9661-4f4d-b530-f0f53daaeec7"],
+ " works in 3D for ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "\[GreaterEqual]", "1"}], TraditionalForm]],
+  ExpressionUUID->"4c386a3b-2aca-4916-a810-121bd2d8f858"],
+ "."
+}], "Text",ExpressionUUID->"0f0ac713-6569-45ac-b817-edacf8dc526e"],
+
+Cell[BoxData[
+ RowBox[{"IGLuneBetaSkeleton", "[", 
+  RowBox[{
+   RowBox[{"RandomPoint", "[", 
+    RowBox[{
+     RowBox[{"Ball", "[", "]"}], ",", "20"}], "]"}], ",", "1.5"}], 
+  "]"}]], "Input",ExpressionUUID->"18659220-72d5-443d-9210-add34eb4248f"],
+
+Cell[BoxData[
+ RowBox[{"IGLuneBetaSkeleton", "[", 
+  RowBox[{
+   RowBox[{"RandomPoint", "[", 
+    RowBox[{
+     RowBox[{"Ball", "[", "]"}], ",", "20"}], "]"}], ",", "0.5"}], 
+  "]"}]], "Input",ExpressionUUID->"60238501-3931-4991-bc40-bc210327497b"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -42040,7 +42870,18 @@ Cell[BoxData[
  RowBox[{"MeshRegion", "[", 
   RowBox[{"pts", ",", 
    RowBox[{"Polygon", "[", "faces", "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"d9a7a3c5-b4ae-4fd3-a025-d709f35b01d7"]
+  "]"}]], "Input",ExpressionUUID->"d9a7a3c5-b4ae-4fd3-a025-d709f35b01d7"],
+
+Cell["Compute a Gabriel graph in 3D.", \
+"Text",ExpressionUUID->"9e7595dd-0434-42ff-811b-c181b123f138"],
+
+Cell[BoxData[
+ RowBox[{"IGGabrielGraph", "@", 
+  RowBox[{"RandomVariate", "[", 
+   RowBox[{
+    RowBox[{"MultinormalDistribution", "@", 
+     RowBox[{"IdentityMatrix", "[", "3", "]"}]}], ",", "100"}], 
+   "]"}]}]], "Input",ExpressionUUID->"28a9ec0e-2953-4ead-9755-1586c69acf3f"]
 }, Closed]]
 }, Closed]]
 }, Closed]],
@@ -42382,8 +43223,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EurovisionVotes\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
 
 Cell[BoxData[
  RowBox[{"IGVertexStrength", "[", "g", 
@@ -45228,25 +46069,226 @@ Cell[CellGroupData[{
 Cell["Import and export", \
 "Section",ExpressionUUID->"6b9020ef-f404-441e-bbc5-4d72cffdd136"],
 
+Cell["\<\
+IGraph/M provides importers and exporters for certain graph formats.\
+\>", "Text",ExpressionUUID->"a6f22f3a-286b-4325-b582-64605b4bc71e"],
+
+Cell[CellGroupData[{
+
+Cell["Importing", \
+"Subsection",ExpressionUUID->"2476a9bb-9415-43fc-97ce-67fe1b331889"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGImport"}]], \
+"Input",ExpressionUUID->"373a5e0d-7c9d-40ec-8853-9711b49e423c"],
+
 Cell[TextData[{
- "IGraph/M provides exporters for certain graph formats. Exporting is done \
-using ",
+ "Importing is done using ",
  Cell[BoxData[
- "IGExport"],ExpressionUUID->"01170ebb-e60e-4e79-b362-b3680486c75d"],
+ "IGImport"],ExpressionUUID->"d88dd59c-af7b-4944-a44b-48b235733458"],
  " and ",
  Cell[BoxData[
- "IGExportString"],ExpressionUUID->"2899fac3-58f3-475b-82b2-82df826bca33"],
+ "IGImportString"],ExpressionUUID->"9a21cdc1-725e-41e4-9104-d51cda39e464"],
  ", which work analogously to the built-in ",
  Cell[BoxData[
- "Export"],ExpressionUUID->"25c0afeb-5580-438f-9240-3358f779a65c"],
+ "Import"],ExpressionUUID->"f7b9e33b-9dcb-4e5a-a644-9bf0e90c948c"],
  " and ",
  Cell[BoxData[
- "ExportString"],ExpressionUUID->"dcf13fc9-de21-487d-bf62-cfe241827082"],
+ "ImportString"],ExpressionUUID->"894a08e8-9556-46e2-8da1-bb200a0814bd"],
  ". The supported export formats are listed in ",
  Cell[BoxData[
- "$IGExportFormats"],ExpressionUUID->"4a59d1fe-a672-4816-bff8-92562be93f9b"],
+ "$IGImportFormats"],ExpressionUUID->"6089c336-f84e-40cb-9dcd-bdd16c6a3ba8"],
  ":"
-}], "Text",ExpressionUUID->"a6f22f3a-286b-4325-b582-64605b4bc71e"],
+}], "Text",ExpressionUUID->"f584a3de-6e90-4b84-8bb0-64ba23989607"],
+
+Cell[BoxData["$IGImportFormats"], \
+"Input",ExpressionUUID->"a2d86c7c-6959-49c1-a011-5e68a36989b4"],
+
+Cell[CellGroupData[{
+
+Cell["Nauty", \
+"Subsubsection",ExpressionUUID->"729fce94-9b4c-4fe1-9f43-b3d3bf10f6e5"],
+
+Cell[TextData[{
+ "The Graph6, Sparse6 and Digraph6 formats are used by the ",
+ StyleBox["gtools", "Program"],
+ " suite included with ",
+ StyleBox["nauty", "Program"],
+ ". IGraph/M refers to this family of formats collectively as the \
+\[OpenCurlyDoubleQuote]Nauty formats\[CloseCurlyDoubleQuote]. ",
+ StyleBox["gtools", "Program"],
+ " includes many command line programs for generating, transforming and \
+filtering graphs. For more information about ",
+ StyleBox["gtools", "Program"],
+ ", see ",
+ ButtonBox["http://pallini.di.uniroma1.it/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://pallini.di.uniroma1.it/"], None},
+  ButtonNote->"http://pallini.di.uniroma1.it/"]
+}], "Text",ExpressionUUID->"fbe238f7-de92-4b7d-ab47-901f202412e0"],
+
+Cell[TextData[{
+ "The formal description of these formats is available on the home page of \
+Brendan McKay at ",
+ ButtonBox["https://users.cecs.anu.edu.au/~bdm/data/formats.html",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://users.cecs.anu.edu.au/~bdm/data/formats.html"], None},
+  ButtonNote->"https://users.cecs.anu.edu.au/~bdm/data/formats.html"],
+ "."
+}], "Text",ExpressionUUID->"de36d0b1-9ede-4900-9331-ed13db30f42a"],
+
+Cell[TextData[{
+ "As of version 12.0, ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " has built-in support for Graph6 and Sparse6, but not Digraph6. IGraph/M \
+provides Digraph6, a unified interface to all three formats, as well as \
+significantly better performance."
+}], "Text",ExpressionUUID->"5ec51406-5e5e-46b5-95e9-5634841a4ba0"],
+
+Cell[TextData[{
+ "To convert a single string to a graph, use ",
+ Cell[BoxData[
+ "IGFromGraph6"],ExpressionUUID->"a1906cbd-b6ee-406f-9b71-dea17a61ae6a"],
+ "."
+}], "Text",ExpressionUUID->"88e9dbd8-8407-49fd-bf35-baa40966a540"],
+
+Cell[BoxData[
+ RowBox[{"IGFromNauty", "[", "\"\<JR_IK?@?I?_\>\"", 
+  "]"}]], "Input",ExpressionUUID->"fcc25c4b-1855-4343-9bd1-b92cd7e6a72b"],
+
+Cell[TextData[{
+ "The purpose of ",
+ Cell[BoxData[
+ "IGImport"],ExpressionUUID->"fd6036bf-a25e-496f-a82f-a489526c3de5"],
+ " and ",
+ Cell[BoxData[
+ "IGImportString"],ExpressionUUID->"ce087a67-4e9a-47e8-9e52-a4026768cb8d"],
+ " is to read lists containing several graphs."
+}], "Text",ExpressionUUID->"5b6b013f-654d-4a90-8d16-246ae3ec67e1"],
+
+Cell[BoxData[
+ RowBox[{"IGImportString", "[", 
+  RowBox[{
+  "\"\<\nG]kq]K\nG]dq\\\\S\nG]Ku]W\nG[|akk\nGS\\\\unO\nG~`HW{\>\"", ",", 
+   "\"\<Graph6\>\""}], 
+  "]"}]], "Input",ExpressionUUID->"f00ad2f7-c9fa-4a0b-9c23-d9c1350c8f67"],
+
+Cell[TextData[{
+ "The following examples assume that the ",
+ StyleBox["gtools", "Program"],
+ " programs are in a directory that is on the operating system\
+\[CloseCurlyQuote]s PATH environment variable. If necessary, specify the full \
+path to each program."
+}], "Text",ExpressionUUID->"6403a000-0143-4832-a590-0eaf5fdca8a5"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"StringFreeQ", "[", 
+     RowBox[{
+      RowBox[{"Environment", "[", "\"\<PATH\>\"", "]"}], ",", 
+      "\"\</opt/local/bin\>\""}], "]"}], ",", 
+    RowBox[{"SetEnvironment", "[", 
+     RowBox[{"\"\<PATH\>\"", "\[Rule]", 
+      RowBox[{
+       RowBox[{"Environment", "[", "\"\<PATH\>\"", "]"}], "<>", 
+       "\"\<:/opt/local/bin\>\""}]}], "]"}]}], "\[IndentingNewLine]", "]"}], 
+  ";"}]], "Input",
+ CellTags->
+  "DeleteCell",ExpressionUUID->"4f9ee458-5eef-4571-974a-55a465fdd9a2"],
+
+Cell["Generate all non-isomorphic undirected graphs on 4 vertices.", \
+"Text",ExpressionUUID->"8c770046-5c33-40b0-8093-bf466d08dffa"],
+
+Cell[BoxData[
+ RowBox[{"IGImport", "[", 
+  RowBox[{"\"\<!geng 4\>\"", ",", "\"\<Nauty\>\""}], 
+  "]"}]], "Input",ExpressionUUID->"42063e76-ff78-449e-83db-f51229016f41"],
+
+Cell["Generate all non-isomorphic directed graphs on 3 vertices.", \
+"Text",ExpressionUUID->"8a24090b-5eac-4711-9524-cfe61bd592f8"],
+
+Cell[BoxData[
+ RowBox[{"IGImport", "[", 
+  RowBox[{"\"\<!geng 3 | directg\>\"", ",", "\"\<Graph6\>\"", ",", 
+   RowBox[{"GraphLayout", "\[Rule]", "\"\<CircularEmbedding\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"8e6434ae-151a-4ac8-bafb-7667ddb10314"],
+
+Cell[TextData[{
+ "Find all non-isomorphic cactus graphs on 5 vertices. A cactus on ",
+ Cell[BoxData[
+  FormBox["V", TraditionalForm]],ExpressionUUID->
+  "ae0d6ea0-3351-4428-8b3d-fd1bfc2e1d6d"],
+ " vertices has between ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"V", "-", "1"}], TraditionalForm]],ExpressionUUID->
+  "211e8da9-bcc3-454a-aa9b-5e88acf4abe3"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"3", " ", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"V", "-", "1"}], ")"}], "/", "2"}]}], TraditionalForm]],
+  ExpressionUUID->"0360130e-6b36-49ad-8479-9ca8f31cc793"],
+ " edges. Thus we instruct the ",
+ StyleBox["geng", "Program"],
+ " program to only generate connected graphs with an edge count in this range."
+}], "Text",ExpressionUUID->"595a18a7-42f8-474f-9549-c1d359c3f9f6"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"IGImport", "[", 
+    RowBox[{"\"\<!geng -c 5 4:6\>\"", ",", "\"\<Graph6\>\"", ",", 
+     RowBox[{"GraphStyle", "\[Rule]", "\"\<Minimal\>\""}]}], "]"}], ",", 
+   "\[IndentingNewLine]", "IGCactusQ"}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"98439335-de07-41d6-bfe2-9edd478f3844"],
+
+Cell["Generate all strongly connected tournaments on 5 vertices.", \
+"Text",ExpressionUUID->"ceff9333-01d9-4c51-b02c-0c82c197b9a0"],
+
+Cell[BoxData[
+ RowBox[{"IGImport", "[", 
+  RowBox[{"\"\<!gentourng -c 5 -z\>\"", ",", "\"\<Graph6\>\""}], 
+  "]"}]], "Input",ExpressionUUID->"3abc12eb-8174-4e76-9d36-23e5d75da8aa"]
+}, Closed]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Exporting", \
+"Subsection",ExpressionUUID->"16385529-88e0-44c1-8ae8-44de6bcd9aa6"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGExport"}]], \
+"Input",ExpressionUUID->"c7fbebb4-949e-4dfe-9f74-a2c93c83583a"],
+
+Cell[TextData[{
+ "Exporting is done using ",
+ Cell[BoxData[
+ "IGExport"],ExpressionUUID->"27278cc8-2011-4bbd-92f8-a96b54b78f39"],
+ " and ",
+ Cell[BoxData[
+ "IGExportString"],ExpressionUUID->"85c93822-3a70-492a-9844-59a47c3c41e9"],
+ ", which work analogously to the built-in ",
+ Cell[BoxData[
+ "Export"],ExpressionUUID->"bebc161e-a882-4bce-93a6-dcf39b6fe061"],
+ " and ",
+ Cell[BoxData[
+ "ExportString"],ExpressionUUID->"df7e86da-a13d-44ce-964b-fc0b811dc16f"],
+ ". The supported export formats are listed in ",
+ Cell[BoxData[
+ "$IGExportFormats"],ExpressionUUID->"d01a22aa-1412-4c72-9b5d-f0a01648dfe3"],
+ ":"
+}], "Text",ExpressionUUID->"1ff01476-5262-4e40-8aa0-574b44524b66"],
 
 Cell[BoxData["$IGExportFormats"], \
 "Input",ExpressionUUID->"1fa19489-a270-4f1f-b5fa-4c5a36d3a3c5"],
@@ -45287,6 +46329,7 @@ Cell[BoxData[
    "avoid", " ", "showing", " ", "more", " ", "than", " ", "15", " ", 
     "lines"}], " ", 
    "*)"}]}]], "Input",ExpressionUUID->"9127ab6f-c4f0-4e4c-8086-bbb412a1b452"]
+}, Closed]]
 }, Closed]]
 }, Closed]],
 
@@ -47042,6 +48085,7 @@ Cell[BoxData[
             "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$6"], 
          TagBox[{
            TagBox[
+            
             RectangleBox[{1.5653086565863823`, 0.7069135813074301}, {
              1.868271644529426, 1.0098765692504739`}], "DynamicName", BoxID -> 
             "VertexID$7"], 
@@ -47627,12 +48671,9 @@ Cell[TextData[{
 }], "Text",ExpressionUUID->"c56c79b9-e91e-4b6c-9f34-c157c5386ef3"],
 
 Cell[TextData[{
- "IGraph/M was developed with the ",
- StyleBox["Mathematica",
-  FontSlant->"Italic"],
- " plugin for IntelliJ IDEA by Patrick Scheibe. Without the help of this IDE, \
-it would have been difficult to manage the complexity of this package. \
-Website: ",
+ "IGraph/M was developed with the Wolfram Language Plugin for IntelliJ IDEA \
+by Patrick Scheibe. Without the help of this IDE, it would have been \
+difficult to manage the complexity of this package. Website: ",
  ButtonBox["http://wlplugin.halirutan.de/",
   BaseStyle->"Hyperlink",
   ButtonData->{
@@ -47680,7 +48721,7 @@ Cell[TextData[{
 }, Open  ]]
 },
 WindowSize->{776, 767},
-WindowMargins->{{Automatic, 188}, {Automatic, 0}},
+WindowMargins->{{319, Automatic}, {0, Automatic}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
