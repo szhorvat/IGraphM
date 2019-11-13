@@ -205,3 +205,71 @@ ExportGraphML[file_, g_?GraphQ] :=
         $Failed
       ]
     ]
+
+
+(***** IGImport *****)
+
+PackageExport["$IGImportFormats"]
+$IGImportFormats::usage = "$IGImportFormats is a list of import formats supported by IGImport.";
+
+$IGImportFormats = {"Graph6"};
+
+
+IGImport::format   = "`` is not a recognized IGImport format.";
+IGImport::infer    = "Cannot infer format of \"``\".";
+
+
+PackageExport["IGImport"]
+IGImport::usage =
+    "IGImport[file] imports the graphs stored in file, inferring the format from the file extension.\n" <>
+    "IGImport[file, format] imports assuming the given file format. See $IGImportFormats for supported formats.";
+
+SyntaxInformation[IGImport] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGImport[stream_, format_, opt : OptionsPattern[]] :=
+    Switch[ToLowerCase[format],
+      "graph6"|"digraph6"|"sparse6"|"nauty", ImportNauty[stream, opt],
+      _, Message[IGImport::format, format]; $Failed
+    ]
+IGImport[stream_, opt : OptionsPattern[]] :=
+    Switch[ToLowerCase@FileExtension[stream],
+      "g6"|"d6"|"s6", IGImport[stream, "Graph6", opt],
+      _, Message[IGImport::infer, stream]; $Failed
+    ]
+addCompletion[IGImport, {3, $IGImportFormats}]
+
+
+PackageExport["IGImportString"]
+IGImportString::usage =
+    "IGImportString[string, format] imports the graphs stored in string assuming the given format.";
+
+SyntaxInformation[IGImportString] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGImportString[string_?StringQ, format_, opt : OptionsPattern[]] :=
+    Switch[ToLowerCase[format],
+      "nauty"|"graph6"|"digraph6"|"sparse6", ImportStringNauty[string, opt],
+      _, Message[IGImport::format, format]; $Failed
+    ]
+addCompletion[IGImportString, {0, $IGImportFormats}]
+
+
+ImportNauty[stream_, opt___] := fromNautyList[opt]@ReadList[stream, String]
+ImportStringNauty[string_, opt___] := fromNautyList[opt]@StringSplit[string]
+
+(* StringDelete is not available in M10.0 so we use StringTrim instead. *)
+(* TODO: Do not simply ignore header. Check that subsequent graphs are of the indicated type. *)
+stripG6Header[string_] :=
+    StringTrim[string, StartOfString ~~ (">>graph6<<" | ">>digraph6<<" | ">>sparse6<<")]
+
+fromNautyList[opt___][{}] := {}
+fromNautyList[][list_] := IGFromNauty /@ MapAt[stripG6Header, list, {1}]
+fromNautyList[opt___][list_] := IGFromNauty[#, opt]& /@ MapAt[stripG6Header, list, {1}]
+
+
+(***** Graph6 / Nauty *****)
+
+PackageExport["IGFromNauty"]
+IGFromNauty::usage = "IGFromNauty[string] interprets a Graph6, Digraph6 or Sparse6 string representation of a graph.";
+SyntaxInformation[IGFromNauty] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGFromNauty[str_String, opt : OptionsPattern[Graph]] :=
+    catch@With[{data = check@igraphGlobal@"fromNauty"[str]},
+      Graph[Range[data[[2]]], Partition[1 + data[[3;;]], 2], DirectedEdges -> (data[[1]] =!= 0), opt]
+    ]

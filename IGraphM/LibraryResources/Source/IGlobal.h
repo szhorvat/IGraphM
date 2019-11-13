@@ -434,6 +434,9 @@ public:
         return mma::makeVector<mint>(result.size(), result.data());
     }
 
+
+    mma::IntTensorRef fromNauty(const char *str);
+
 };
 
 #endif // IGLOBAL_H

@@ -177,7 +177,9 @@ template = LTemplate["IGraphM",
 
         (* used in igWeightedAdjacencyGraph *)
         LFun["upperPos", {{Integer, 2, "Constant"}, True|False (* diagonal *)}, {Integer, 1}],
-        LFun["nondiagPos", {{Integer, 2, "Constant"}}, {Integer, 1}]
+        LFun["nondiagPos", {{Integer, 2, "Constant"}}, {Integer, 1}],
+
+        LFun["fromNauty", {"UTF8String"}, {Integer, 1}]
       }
     ],
 
