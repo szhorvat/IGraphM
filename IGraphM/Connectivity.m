@@ -249,13 +249,10 @@ IGGomoryHuTree[graph_?GraphQ, opt : OptionsPattern[]] :=
     ]
 
 
-(* Removed due to bug in graph core https://github.com/igraph/igraph/issues/1102 *)
-(*
 PackageExport["IGFindCuts"]
 IGFindCuts::usage =
-    "IGFindCuts[graph, s, t] finds all edge cuts in a directed graph that disconnect s and t.\n" <>
+    "IGFindCuts[graph, s, t] finds all minimal edge cuts in a directed graph that disconnect s and t.\n" <>
     "IGFindCuts[graph, s, t, \"Minimum\"] restricts the result to minimum cuts.";
-*)
 
 SyntaxInformation[IGFindCuts] = {"ArgumentsPattern" -> {_, _, _, _.}};
 IGFindCuts[graph_?EmptyGraphQ, s_, t_] := {}
