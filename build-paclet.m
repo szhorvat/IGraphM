@@ -223,14 +223,15 @@ With[{taggingRules = taggingRules},
     MCode[
       RewriteNotebook[
         NBSetOptions[TaggingRules -> taggingRules] /*
-            NBSetOptions[Saveable -> False] /*
-            NBRemoveChangeTimes /*
-            NBResetWindow /*
-            NBDisableSpellCheck /*
-            NBDeleteOutputByTag /*
-            NBDeleteCellTags["DeleteOutput"] /*
-            NBRemoveOptions[{PrivateNotebookOptions, Visible, ShowCellTags}] /*
-            NBSetOptions[StyleDefinitions -> NBImport["Stylesheet.nb"]]
+        NBSetOptions[Saveable -> False] /*
+        NBRemoveChangeTimes /*
+        NBResetWindow /*
+        NBDisableSpellCheck /*
+        NBDeleteCellByTag /*
+        NBDeleteOutputByTag /*
+        NBDeleteCellTags["DeleteOutput"] /*
+        NBRemoveOptions[{PrivateNotebookOptions, Visible, ShowCellTags}] /*
+        NBSetOptions[StyleDefinitions -> NBImport["Stylesheet.nb"]]
       ]["IGDocumentation.nb"];
     ],
     "10.0" (* write notebooks with 10.0 to avoid InsufficientVersionWarning *)
