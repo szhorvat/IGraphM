@@ -17,12 +17,20 @@ tolEq[a_, b_, tol_ : 1*^-8 ] := Max@Abs[a-b] < tol
 
 takeNonDiag[mat_] := IGraphM`IGTakeUpper[mat] ~Join~ IGraphM`IGTakeLower[mat]
 
-
-sameGraphQ[g1_, g2_] :=
-    Block[{UndirectedEdge},
-      SetAttributes[UndirectedEdge, Orderless];
-      Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
-    ]
+(* In M12.1 and later, UndirectedEdge can have 3 arguments, so we cannot canonicalize simply with Orderless. *)
+If[$VersionNumber >= 12.1,
+  sameGraphQ[g1_, g2_] :=
+      Block[{UndirectedEdge},
+        UndirectedEdge[a_, b_, rest___] /; Not@OrderedQ[{a, b}] := UndirectedEdge[b, a, rest];
+        Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
+      ]
+  ,
+  sameGraphQ[g1_, g2_] :=
+      Block[{UndirectedEdge},
+        SetAttributes[UndirectedEdge, Orderless];
+        Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
+      ]
+]
 
 
 (* RelationGraph[] is not available in 10.0 *)
@@ -392,7 +400,7 @@ MTSection["Basic"]
 
 t = First@AbsoluteTiming[
   MT[
-    <<IGraphM`,
+    Print@Get["IGraphM`"],
     Null
   ]
 ];
@@ -417,7 +425,7 @@ nameFromUsage[symname_] :=
     ]
 
 MT[
-  AllTrue[Complement[Names["IGraphM`*"], {"IGraphM", "$IGExportFormats", "MultiEdges"}], nameFromUsage[#] === # &],
+  AllTrue[Complement[Names["IGraphM`*"], {"IGraphM", "MultiEdges", "$IGExportFormats", "$IGImportFormats"}], nameFromUsage[#] === # &],
   True
 ]
 
@@ -1182,7 +1190,7 @@ MT[
     Graph[{1,2,3,4},{}]
   ],
   True
-]& /{ "SimpleNoMultiple", "Simple" }
+]& /@ { "SimpleNoMultiple", "Simple" }
 
 MT[
   IGIsomorphicQ[
@@ -1190,15 +1198,15 @@ MT[
     Graph[{1,2,3,4},{1<->2}]
   ],
   True
-]& /{ "SimpleNoMultiple", "Simple" }
+]& /@ { "SimpleNoMultiple", "Simple" }
 
 MT[
   IGIsomorphicQ[
     IGDegreeSequenceGame[{2,2,2,2}, Method -> #],
-    Graph[{1,2,3,4},{1<->2}]
+    CycleGraph[4]
   ],
   True
-]& /{ "SimpleNoMultiple", "Simple", "VigerLatapy" }
+]& /@ { "SimpleNoMultiple", "VigerLatapy" }
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1892,6 +1900,20 @@ MT[
 ]& /@ Table[IGTreeGame[k], {k, 3, 10}]
 
 
+MT[
+  IGFromPrufer /@ Tuples[Range[4], {2}],
+  Graph /@ {{1\[UndirectedEdge]2,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]3,1\[UndirectedEdge]2,2\[UndirectedEdge]4},{1\[UndirectedEdge]2,1\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]2,1\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]3,1\[UndirectedEdge]2,1\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]3,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]4,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]4,3\[UndirectedEdge]4}},
+  SameTest -> (And @@ MapThread[IGSameGraphQ, {#1, #2}]&)
+]
+
+
+MT[
+  IGFromPrufer@{5,18,14,19,16,14,9,20,8,17,17,10,14,4,4,9,16,3},
+  Graph@{4\[UndirectedEdge]19,4\[UndirectedEdge]14,5\[UndirectedEdge]14,10\[UndirectedEdge]14,6\[UndirectedEdge]19,4\[UndirectedEdge]9,9\[UndirectedEdge]16,3\[UndirectedEdge]16,3\[UndirectedEdge]20,13\[UndirectedEdge]20,1\[UndirectedEdge]5,7\[UndirectedEdge]16,10\[UndirectedEdge]17,8\[UndirectedEdge]17,11\[UndirectedEdge]14,8\[UndirectedEdge]15,17\[UndirectedEdge]18,2\[UndirectedEdge]18,9\[UndirectedEdge]12},
+  SameTest -> IGSameGraphQ
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGToPrufer*)
 
@@ -2285,7 +2307,7 @@ subisomorphismTests /@ {
 };
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*IGGetIsomorphism, IGGetSubisomorphism*)
 
 
@@ -3866,7 +3888,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Shortest paths*)
 
 
@@ -4163,7 +4185,7 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGDiameter*)
 
 
@@ -4179,8 +4201,9 @@ MT[
 
 MT[
   IGDiameter[#],
-  GraphDiameter[#]
-]& /{ugs, ugi, dgs, dgi, wugs, wugi, wdgs, wdgi, umulti, dmulti}
+  GraphDiameter[#],
+  SameTest -> Equal
+]& /@ {ugs, ugi, dgs, dgi, wugs, wugi, wdgs, wdgi, umulti, dmulti}
 
 
 (* ::Subsubsection::Closed:: *)
@@ -5383,7 +5406,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Property operations*)
 
 
@@ -5456,6 +5479,30 @@ MT[
 MT[
   IGVertexProp["Foo"][ Graph[{Property[1, "Foo" -> 37]}, {1<->2}] ],
   {37, Missing["Nonexistent"]}
+]
+
+
+(* ::Subsection:: *)
+(*Listing properties*)
+
+
+proppedGraph = Graph[
+	{Property[1,"Name"->"Foo"],Property[2,VertexCapacity->123],3},
+	{Property[1<->2,"Bar"->44],2<->3},
+	EdgeWeight->{1.23,2.34},
+	Properties->{1->{"Type"->"xxx"}}
+]
+
+
+MT[
+	Sort@IGVertexPropertyList[proppedGraph],
+	{"Name","Type",VertexCapacity,VertexCoordinates,VertexShape,VertexShapeFunction,VertexSize,VertexStyle}
+]
+
+
+MT[
+	Sort@IGEdgePropertyList[proppedGraph],
+	{"Bar",EdgeShapeFunction,EdgeStyle,EdgeWeight}
 ]
 
 
@@ -7308,7 +7355,7 @@ MT[
 ]
 
 MT[
-  IGStronglyRegularParameters[GraphData["M22"]],
+  IGStronglyRegularParameters[GraphData["M22Graph"]],
   {77, 16, 0, 4}
 ]
 
