@@ -181,6 +181,10 @@ PackageScope["positiveVecQ"]
 positiveVecQ::usage = "positiveVecQ[vec]";
 positiveVecQ = VectorQ[#, Positive]&; (* NOT fast *)
 
+PackageScope["nonNegVecQ"]
+nonNegVecQ::usage = "nonNegVecQ[vec]";
+nonNegVecQ = VectorQ[#, NonNegative]&; (* NOT fast *)
+
 PackageScope["emptyArrayQ"]
 emptyArrayQ::usage = "emptyArrayQ[arr]";
 emptyArrayQ[arr_] := MemberQ[Dimensions[arr], 0]

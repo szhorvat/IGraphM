@@ -241,9 +241,12 @@ SyntaxInformation[IGStaticFitnessGame] = {
 };
 IGStaticFitnessGame[
   m_?Internal`NonNegativeMachineIntegerQ,
-  inFitness_?nonNegIntVecQ, outFitness : _?nonNegIntVecQ : {}, opt : OptionsPattern[{IGStaticFitnessGame, Graph}]] :=
+  inFitness_?nonNegVecQ, outFitness : _?nonNegVecQ : {}, opt : OptionsPattern[{IGStaticFitnessGame, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"staticFitnessGame"[m, Normal[inFitness], Normal[outFitness], OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges]];
+      check@ig@"staticFitnessGame"[
+        m, Normal[inFitness], Normal[outFitness],
+        OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges]
+      ];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 
