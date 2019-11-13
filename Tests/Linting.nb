@@ -13,7 +13,7 @@ Cell["Start in a fresh kernel.", \
 "Text",ExpressionUUID->"3d97f1de-fceb-4eb5-adb9-ef31e9337ab0"],
 
 Cell[BoxData["Quit"], "Input",
- CellLabel->"In[31]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
+ CellLabel->"In[20]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
 
 Cell["Verify that Lint is installed, then load it.", \
 "Text",ExpressionUUID->"2c116019-5039-4b12-8a6a-3989d049772f"],
@@ -39,14 +39,15 @@ Cell[BoxData[
  CellLabel->"In[3]:=",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
 
 Cell[BoxData[
- RowBox[{"files", "=", 
-  RowBox[{"FileNames", "[", 
-   RowBox[{"\"\<*.m\>\"", ",", 
-    RowBox[{"FileNameJoin", "[", 
-     RowBox[{"{", 
-      RowBox[{"\"\<..\>\"", ",", "\"\<IGraphM\>\""}], "}"}], "]"}]}], 
-   "]"}]}]], "Input",
- CellLabel->"In[5]:=",ExpressionUUID->"94f5c87e-9e49-4612-9a4d-1269df8f9fe6"],
+ RowBox[{
+  RowBox[{"files", "=", 
+   RowBox[{"FileNames", "[", 
+    RowBox[{"\"\<*.m\>\"", ",", 
+     RowBox[{"FileNameJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{"\"\<..\>\"", ",", "\"\<IGraphM\>\""}], "}"}], "]"}]}], 
+    "]"}]}], ";"}]], "Input",
+ CellLabel->"In[4]:=",ExpressionUUID->"94f5c87e-9e49-4612-9a4d-1269df8f9fe6"],
 
 Cell[BoxData[
  RowBox[{
@@ -63,33 +64,24 @@ Cell[BoxData[
       RowBox[{"_", ",", 
        RowBox[{"{", "}"}]}], "}"}]}], "\[IndentingNewLine]", "]"}]}], 
   ";"}]], "Input",
- CellLabel->"In[18]:=",ExpressionUUID->"ebdeac1e-f09b-4b9a-8a51-62432ab80743"],
+ CellLabel->"In[5]:=",ExpressionUUID->"ebdeac1e-f09b-4b9a-8a51-62432ab80743"],
 
 Cell[BoxData[
  RowBox[{"Column", "[", "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{
     RowBox[{
-     RowBox[{"Column", "[", 
-      RowBox[{"{", "\[IndentingNewLine]", 
-       RowBox[{
-        RowBox[{"Style", "[", 
-         RowBox[{
-          RowBox[{"FileNameTake", "[", "#1", "]"}], ",", "Brown", ",", 
-          "Bold"}], "]"}], ",", " ", 
-        RowBox[{"(*", " ", 
-         RowBox[{"the", " ", "label"}], " ", "*)"}], "\[IndentingNewLine]", 
-        RowBox[{"Column", "@", 
-         RowBox[{"LintFileReport", "[", 
-          RowBox[{"#1", ",", "#2", ",", "\[IndentingNewLine]", 
-           RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
-            RowBox[{"{", "}"}]}], ",", 
-           RowBox[{"\"\<TagExclusions\>\"", "\[Rule]", 
-            RowBox[{"{", "\"\<SuspiciousAlternativesPattern\>\"", "}"}]}]}], 
-          "]"}]}]}], "\[IndentingNewLine]", "}"}], "]"}], "&"}], "@@@", 
-    "lints"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"LintFileReport", "[", 
+      RowBox[{"#1", ",", "#2", ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
+        RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<TagExclusions\>\"", "\[Rule]", 
+        RowBox[{"{", "\"\<SuspiciousAlternativesPattern\>\"", "}"}]}]}], 
+      "\[IndentingNewLine]", "]"}], "&"}], "@@@", "lints"}], ",", 
+   "\[IndentingNewLine]", 
    RowBox[{"Spacings", "\[Rule]", "2"}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"40234b02-f9eb-4ef0-818b-9ffca592d5c5"]
+  "]"}]], "Input",
+ CellLabel->"In[6]:=",ExpressionUUID->"40234b02-f9eb-4ef0-818b-9ffca592d5c5"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -101,23 +93,26 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"SetDirectory", "@", 
    RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}]], "Input",
- CellLabel->"In[26]:=",ExpressionUUID->"e26cbd1c-4b10-4a3c-8289-c32f15260698"],
+ CellLabel->"In[7]:=",ExpressionUUID->"e26cbd1c-4b10-4a3c-8289-c32f15260698"],
 
 Cell[BoxData[
- RowBox[{"Column", "@", 
-  RowBox[{"LintFileReport", "[", 
-   RowBox[{"\"\<Tests.m\>\"", ",", 
-    RowBox[{"LintFile", "[", "\"\<Tests.m\>\"", "]"}], ",", 
-    RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
-     RowBox[{"{", "}"}]}]}], "]"}]}]], "Input",
- CellLabel->
-  "In[30]:=",ExpressionUUID->"33879b92-fb5b-4ce4-829e-6b177840beff"]
+ RowBox[{"LintFileReport", "[", 
+  RowBox[{"\"\<Tests.m\>\"", ",", 
+   RowBox[{"LintFile", "[", "\"\<Tests.m\>\"", "]"}], ",", 
+   RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
+    RowBox[{"{", "}"}]}]}], "]"}]], "Input",
+ CellLabel->"In[8]:=",ExpressionUUID->"33879b92-fb5b-4ce4-829e-6b177840beff"]
 }, Open  ]]
 }, Open  ]]
 },
-WindowSize->{747, 835},
-WindowMargins->{{111, Automatic}, {0, Automatic}},
+WindowSize->{1211, 759},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
+TaggingRules->{
+ "SEUploaderLastUpdateCheck" -> 3.766254953638397`16.32848470505581*^9, 
+  "SEUploaderVersion" -> {
+   "Version" -> 130, "Changes" -> {"Fixed SE Uploader to use https"}}, 
+  "DevTools" -> {"MenuMethod" -> "Cell"}, "TryRealOnly" -> False},
 TrackCellChangeTimes->False,
 SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 

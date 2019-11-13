@@ -12,7 +12,7 @@ Cell["Restart the kernel before evaluating this notebook.", \
 "Text",ExpressionUUID->"ab995c80-1261-4e9b-a0aa-7e0daf7cbc81"],
 
 Cell[BoxData["Quit"], "Input",
- CellLabel->"In[18]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
+ CellLabel->"In[9]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
 
 Cell[BoxData[{
  RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]", 
@@ -53,19 +53,20 @@ Cell["Check that the name of symbols matches their usage message.", \
 "Text",ExpressionUUID->"ecc0c256-e8de-4b32-8072-72ef92f9bcd4"],
 
 Cell[BoxData[
- RowBox[{"Select", "[", 
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{"Complement", "[", 
     RowBox[{
      RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
      RowBox[{"{", 
       RowBox[{
-      "\"\<IGraphM\>\"", ",", "\"\<$IGExportFormats\>\"", ",", 
-       "\"\<MultiEdges\>\""}], "}"}]}], "]"}], ",", 
+      "\"\<IGraphM\>\"", ",", "\"\<MultiEdges\>\"", ",", 
+       "\"\<$IGExportFormats\>\"", ",", "\"\<$IGImportFormats\>\""}], "}"}]}],
+     "]"}], ",", 
    RowBox[{
     RowBox[{
      RowBox[{"nameFromUsage", "[", "#1", "]"}], " ", "=!=", " ", "#1"}], " ", 
-    "&"}]}], "]"}]], "Input",
+    "&"}]}], "\[IndentingNewLine]", "]"}]], "Input",
  CellLabel->"In[9]:=",ExpressionUUID->"e9f037f3-af55-4a72-b3a2-69ad01a4255f"],
 
 Cell["Check that all symbols have SyntaxInformation set.", \
@@ -79,26 +80,28 @@ Cell[BoxData[
      RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{"non", "-", 
+        RowBox[{"functions", " ", "do", " ", "not", " ", "need", " ", 
+         RowBox[{"SyntaxInformation", ":"}]}]}], " ", "*)"}], 
+      "\[IndentingNewLine]", 
       RowBox[{
       "\"\<MultiEdges\>\"", ",", "\"\<IGClusterData\>\"", ",", 
        "\"\<IGraphM\>\"", ",", "\"\<$IGExportFormats\>\"", ",", 
+       "\"\<$IGImportFormats\>\"", ",", "\[IndentingNewLine]", 
        RowBox[{"(*", " ", 
-        RowBox[{"non", "-", 
-         RowBox[{
-         "functions", " ", "do", " ", "not", " ", "need", " ", 
-          "SyntaxInformation"}]}], " ", "*)"}], "\[IndentingNewLine]", 
-       "\"\<IGDirectedTree\>\"", ",", "\"\<IGMinSeparators\>\"", ",", 
-       "\"\<IGTake\>\""}], " ", 
-      RowBox[{"(*", " ", 
-       RowBox[{
-       "deprecated", " ", "names", " ", "do", " ", "not", " ", "need", " ", 
-        "SyntaxInformation"}], " ", "*)"}], "\[IndentingNewLine]", "}"}]}], 
-    "\[IndentingNewLine]", "]"}], ",", 
+        RowBox[{
+        "deprecated", " ", "names", " ", "do", " ", "not", " ", "need", " ", 
+         RowBox[{"SyntaxInformation", ":"}]}], " ", "*)"}], 
+       "\[IndentingNewLine]", "\"\<IGDirectedTree\>\"", ",", 
+       "\"\<IGMinSeparators\>\"", ",", "\"\<IGTake\>\""}], 
+      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], ",", 
+   "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{
      RowBox[{"ToExpression", "[", 
       RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
-     RowBox[{"{", "}"}]}], "&"}]}], "]"}]], "Input",
+     RowBox[{"{", "}"}]}], "&"}]}], "\[IndentingNewLine]", "]"}]], "Input",
  CellLabel->"In[10]:=",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
 
 Cell["\<\
@@ -126,15 +129,20 @@ Cell[BoxData[
  CellLabel->
   "In[11]:=",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
-WindowSize->{1025, 768},
-WindowMargins->{{111, Automatic}, {-14, Automatic}},
+WindowSize->{907, 792},
+WindowMargins->{{111, Automatic}, {31, Automatic}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
+TaggingRules->{
+ "SEUploaderLastUpdateCheck" -> 3.766254953638397`16.32848470505581*^9, 
+  "SEUploaderVersion" -> {
+   "Version" -> 130, "Changes" -> {"Fixed SE Uploader to use https"}}, 
+  "DevTools" -> {"MenuMethod" -> "Cell"}, "TryRealOnly" -> False},
 TrackCellChangeTimes->False,
 SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
   "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
   "builtin"}},
-FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 11, 2019)",
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
 StyleDefinitions->"Default.nb"
 ]
 
