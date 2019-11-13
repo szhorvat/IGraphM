@@ -5,48 +5,52 @@
 (* :Date: 2018-10-24 *)
 (* :Copyright: (c) 2019 Szabolcs Horvát *)
 
-(* LOADING IS CURRENTLY DISABLED
-   due to bug igraph core https://github.com/igraph/igraph/issues/869 *)
-(*
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
-*)
+
 
 (*********************)
 (***** Graphlets *****)
 (*********************)
 
 PackageExport["IGGraphlets"]
-IGGraphlets::usage =
-    "IGGraphlets[graph]\n" <>
-    "IGGraphlets[graph, nIterations]";
+IGGraphlets::usage = "IGGraphlets[graph]"; (* TODO *)
 
+Options[IGGraphlets] = { MaxIterations -> 1000 };
 SyntaxInformation[IGGraphlets] = {"ArgumentsPattern" -> {_, _.}};
-IGGraphlets[graph_?igGraphQ, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
+IGGraphlets[graph_?igGraphQ, OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph], basis, mu},
-      {basis, mu} = check@ig@"graphlets"[niter];
-      {igVertexNames[graph] /@ igIndexVec[basis], mu}
+      {basis, mu} = check@ig@"graphlets"[OptionValue[MaxIterations]];
+      AssociationThread[
+        igVertexNames[graph] /@ igIndexVec[basis],
+        mu
+      ]
     ]
 
 
 PackageExport["IGGraphletBasis"]
-IGGraphletBasis::usage = "IGGraphletBasis[graph]";
+IGGraphletBasis::usage = "IGGraphletBasis[graph]"; (* TODO *)
 
 SyntaxInformation[IGGraphletBasis] = {"ArgumentsPattern" -> {_}};
 IGGraphletBasis[graph_?igGraphQ] :=
     catch@Block[{ig = igMake[graph], basis, thresholds},
       {basis, thresholds} = check@ig@"graphletBasis"[];
-      {igVertexNames[graph] /@ igIndexVec[basis], thresholds}
+      AssociationThread[
+        igVertexNames[graph] /@ igIndexVec[basis],
+        thresholds
+      ]
     ]
 
 
 PackageExport["IGGraphletProject"]
-IGGraphletProject::usage =
-    "IGGraphletProject[graph, cliques]\n" <>
-    "IGGraphletProject[graph, cliques, nIterations]";
+IGGraphletProject::usage = "IGGraphletProject[graph, cliques]"; (* TODO *)
 
+Options[IGGraphletProject] = { MaxIterations -> 1000 };
 SyntaxInformation[IGGraphletProject] = {"ArgumentsPattern" -> {_, _, _.}};
-IGGraphletProject[graph_?igGraphQ, cliques : {__List}, niter : _?Internal`PositiveMachineIntegerQ : 1000] :=
+IGGraphletProject[graph_?igGraphQ, cliques : {__List}, OptionsPattern[]] :=
     catch@Block[{ig = igMake[graph]},
-      check@ig@"graphletProject"[Map[vss[graph], cliques, {2}], niter]
+      AssociationThread[
+        cliques,
+        check@ig@"graphletProject"[vss[graph] /@ cliques, OptionValue[MaxIterations]]
+      ]
     ]
