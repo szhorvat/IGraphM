@@ -34,48 +34,84 @@ IGTriadCensus[graph_?igGraphQ] :=
 
 
 PackageExport["IGMotifs"]
-IGMotifs::usage = "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.";
+IGMotifs::usage =
+    "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.\n" <>
+    "IGMotifs[graph, motifSize, cutProbabilities] terminates the search with the given probability at each level of the ESU tree.";
 
 Options[IGMotifs] = { DirectedEdges -> Automatic };
-SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
       Switch[OptionValue[DirectedEdges],
         True, ig@"makeDirected"[],
         False, ig@"makeUndirected"[]
       ];
-      Round@Developer`FromPackedArray@check@ig@"motifs"[size, ConstantArray[0, size]
-      ]
+      Round@Developer`FromPackedArray@check@ig@"motifs"[size, ConstantArray[0, size]]
+    ]
+IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      Switch[OptionValue[DirectedEdges],
+        True, ig@"makeDirected"[],
+        False, ig@"makeUndirected"[]
+      ];
+      Round@Developer`FromPackedArray@check@ig@"motifs"[size, cutprob]
     ]
 
 
 PackageExport["IGMotifsTotalCount"]
-IGMotifsTotalCount::usage = "IGMotifsTotalCount[graph, motifSize] returns the total count of motifs (connected subgraphs) of the given size in the graph.";
+IGMotifsTotalCount::usage =
+    "IGMotifsTotalCount[graph, motifSize] returns the total count of motifs (weakly connected subgraphs) of the given size in the graph.\n" <>
+    "IGMotifsTotalCount[graph, motifSize, cutProbabilities] terminates the search with the given probability at each level of the ESU tree.";
 
-Options[IGMotifsTotalCount] = { DirectedEdges -> Automatic };
-SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
-IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
+SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _, _.}};
+IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMakeFast[graph]},
-      Switch[OptionValue[DirectedEdges],
-        True, ig@"makeDirected"[],
-        False, ig@"makeUndirected"[]
-      ];
       sck@ig@"motifsNo"[size, ConstantArray[0, size]]
+    ]
+IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"motifsNo"[size, cutprob]
     ]
 
 
-PackageExport["IGMotifsEstimateTotalCount"]
-IGMotifsEstimateTotalCount::usage = "IGMotifsEstimateTotalCount[graph, motifSize, sampleSize] estimates the total count of motifs (connected subgraphs) of the given size in graph, based on a sample of the given size.";
+PackageExport["IGMotifsTotalCountEstimate"]
+IGMotifsTotalCountEstimate::usage =
+    "IGMotifsTotalCountEstimate[graph, motifSize, sampleSize] estimates the total count of motifs (weakly connected subgraphs) of the given size in graph, based on a vertex sample of the given size.\n" <>
+    "IGMotifsTotalCountEstimate[graph, motifSize, vertices] uses the specified vertices as the sample.\n" <>
+    "IGMotifsTotalCountEstimate[graph, motifSize, sample, cutProbabilities] terminates the search with the given probability at each level of the ESU tree.";
 
-Options[IGMotifsEstimateTotalCount] = { DirectedEdges -> Automatic };
-SyntaxInformation[IGMotifsEstimateTotalCount] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
-IGMotifsEstimateTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
+SyntaxInformation[IGMotifsTotalCountEstimate] = {"ArgumentsPattern" -> {_, _, _, _.}};
+IGMotifsTotalCountEstimate[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
     Block[{ig = igMakeFast[graph]},
+      sck@ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize]
+    ]
+IGMotifsTotalCountEstimate[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"motifsEstimate"[size, cutprob, sampleSize]
+    ]
+IGMotifsTotalCountEstimate[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, vs_List] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      check@ig@"motifsEstimateVerts"[size, ConstantArray[0, size], vss[graph][vs]]
+    ]
+IGMotifsTotalCountEstimate[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, vs_List, cutprob_?nonNegVecQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
+      check@ig@"motifsEstimateVerts"[size, cutprob, vss[graph][vs]]
+    ]
+
+PackageExport["IGMotifsVertexParticipation"]
+Options[IGMotifsVertexParticipation] = { DirectedEdges -> Automatic };
+SyntaxInformation[IGMotifsVertexParticipation] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+IGMotifsVertexParticipation::usage = "IGMotifsVertexParticipation[graph, motifSize] counts the number of times each vertex occurs in each motif.";
+IGMotifsVertexParticipation[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
+    catch@Block[{ig = igMakeFast[graph]},
       Switch[OptionValue[DirectedEdges],
         True, ig@"makeDirected"[],
         False, ig@"makeUndirected"[]
       ];
-      sck@ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize]
+      AssociationThread[
+        VertexList[graph],
+        Round@Developer`FromPackedArray@check@ig@"motifsParticipation"[size, ConstantArray[0, size]]
+      ]
     ]
 
 

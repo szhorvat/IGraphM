@@ -353,6 +353,8 @@ template = LTemplate["IGraphM",
         LFun["motifs", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, {Real, 1}],
         LFun["motifsNo", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, Integer],
         LFun["motifsEstimate", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *), Integer (* sample_size *)}, Integer],
+        LFun["motifsEstimateVerts", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *), {Real, 1, "Constant"} (* vertex indices *)}, Integer],
+        LFun["motifsParticipation", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, {Real, 2}],
 
         LFun["triangles", {}, {Integer, 1}],
         LFun["countAdjacentTriangles", {{Real, 1, "Constant"}}, {Real, 1}],

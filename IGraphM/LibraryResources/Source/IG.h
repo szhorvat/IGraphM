@@ -243,7 +243,7 @@ public:
 
     bool weightedQ() const { return weighted; }
 
-    // Directedness
+    // Change directedness
 
     void makeDirected() {
         igraph_to_directed(&graph, IGRAPH_TO_DIRECTED_MUTUAL);
@@ -1137,6 +1137,88 @@ public:
         return vec.makeMTensor();
     }
 
+    mma::RealMatrixRef motifsParticipation(mint size, mma::RealTensorRef cut_prob) const {
+        igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
+
+        struct {
+            static igraph_bool_t handler(const igraph_t *, igraph_vector_t *vids, int isoclass, void *data) {
+                mma::RealMatrixRef *mat = static_cast<mma::RealMatrixRef *>(data);
+                long len = igraph_vector_size(vids);
+                for (int i=0; i < len; ++i)
+                    (*mat)(VECTOR(*vids)[i], isoclass) += 1;
+                return false;
+            }
+
+            static int isoclass_count(bool directed, int vcount) {
+                switch (vcount) {
+                case 3: return directed ? 16 : 4;
+                case 4: return directed ? 218 : 11;
+                default:
+                    /* We are relying on igraph_motifs_randesu_callback() reporting an error below
+                       if a wrong motif size argument was passed in. */
+                    return 1;
+                }
+            }
+        } motif_counter;
+
+        bool dir = directedQ();
+
+        mma::RealMatrixRef mat = mma::makeMatrix<double>(vertexCount(), motif_counter.isoclass_count(dir, size));
+        for (auto &el : mat) el = 0;
+
+        LTGuard<mma::RealTensorRef> guard(mat); // automatically free 'mat' upon premature exit from the function
+
+        igCheck(igraph_motifs_randesu_callback(&graph, size, &ig_cut_prob, &(motif_counter.handler), &mat));
+
+        for (mint i=0; i < mat.rows(); ++i)
+            switch (size) {
+            case 3:
+                if (dir) {
+                    mat(i,0) = IGRAPH_NAN;
+                    mat(i,1) = IGRAPH_NAN;
+                    mat(i,3) = IGRAPH_NAN;
+                } else {
+                    mat(i,0) = IGRAPH_NAN;
+                    mat(i,1) = IGRAPH_NAN;
+                }
+                break;
+            case 4:
+                if (dir) {
+                    mat(i,0) = IGRAPH_NAN;
+                    mat(i,1) = IGRAPH_NAN;
+                    mat(i,2) = IGRAPH_NAN;
+                    mat(i,4) = IGRAPH_NAN;
+                    mat(i,5) = IGRAPH_NAN;
+                    mat(i,6) = IGRAPH_NAN;
+                    mat(i,9) = IGRAPH_NAN;
+                    mat(i,10) = IGRAPH_NAN;
+                    mat(i,11) = IGRAPH_NAN;
+                    mat(i,15) = IGRAPH_NAN;
+                    mat(i,22) = IGRAPH_NAN;
+                    mat(i,23) = IGRAPH_NAN;
+                    mat(i,27) = IGRAPH_NAN;
+                    mat(i,28) = IGRAPH_NAN;
+                    mat(i,33) = IGRAPH_NAN;
+                    mat(i,34) = IGRAPH_NAN;
+                    mat(i,39) = IGRAPH_NAN;
+                    mat(i,62) = IGRAPH_NAN;
+                    mat(i,120) = IGRAPH_NAN;
+                } else {
+                    mat(i,0) = IGRAPH_NAN;
+                    mat(i,1) = IGRAPH_NAN;
+                    mat(i,2) = IGRAPH_NAN;
+                    mat(i,3) = IGRAPH_NAN;
+                    mat(i,5) = IGRAPH_NAN;
+                }
+                break;
+            default:
+                massert("motifsParticipation: this line should never be reached");
+            }
+
+        guard.deactivate();
+        return mat;
+    }
+
     mint motifsNo(mint size, mma::RealTensorRef cut_prob) const {
         igraph_integer_t res;
         igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
@@ -1148,6 +1230,14 @@ public:
         igraph_integer_t res;
         igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
         igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, sample_size, nullptr));
+        return res;
+    }
+
+    mint motifsEstimateVerts(mint size, mma::RealTensorRef cut_prob, mma::RealTensorRef vs) const {
+        igraph_integer_t res;
+        igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
+        igraph_vector_t ig_vs = igVectorView(vs);
+        igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, 0, &ig_vs));
         return res;
     }
 

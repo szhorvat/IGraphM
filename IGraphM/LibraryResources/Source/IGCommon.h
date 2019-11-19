@@ -276,6 +276,28 @@ template<typename Vec>
 constexpr igWrapper<Vec> igWrap(Vec &vec) { return igWrapper<Vec>(vec); }
 
 
+/********************************************
+ **** RAII for LTemplate data structures ****
+ ********************************************/
+
+// A guard class to automatically free an LTemplate / LibraryLink data structure
+template<typename Tensor>
+class LTGuard {
+    Tensor &t;
+
+    bool active = true;
+
+public:
+    LTGuard(Tensor &t) : t(t) { }
+    ~LTGuard() { if (active) t.free(); }
+
+    Tensor &tensor() { return t; }
+
+    void activate() { active = true; }
+    void deactivate() { active = false; }
+};
+
+
 /****************************************************
  **** Extend mlstream with igraph-specific types ****
  ****************************************************/
