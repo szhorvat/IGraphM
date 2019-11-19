@@ -5612,8 +5612,9 @@ Weighted graphs are supported by all betweenness functions in IGraph/M.\
 \>", "Text",ExpressionUUID->"006a0b44-6aca-4f39-a078-cf950f46812b"],
 
 Cell[TextData[{
- "The betweenness of a graph vertex is, roughly speaking, the number of \
-shortest paths passing through it. More formally, the betweenness of node ",
+ "The betweenness of a vertex or edge is, roughly speaking, the number of \
+shortest paths passing through it. More formally, the betweenness of vertex \
+",
  Cell[BoxData[
   FormBox["i", TraditionalForm]],ExpressionUUID->
   "e67b8ee7-9f9b-4b20-8c49-89f34f1173c0"],
@@ -5638,7 +5639,7 @@ shortest paths passing through it. More formally, the betweenness of node ",
    SubscriptBox["g", 
     RowBox[{"s", "\[InvisibleComma]", "t"}]], TraditionalForm]],
   ExpressionUUID->"0436d80b-fd18-4ff5-808b-55a7939b30be"],
- " is the number of shortest paths (geodesics) between vertices ",
+ " is the total number of shortest paths (geodesics) between vertices ",
  Cell[BoxData[
   FormBox["s", TraditionalForm]],ExpressionUUID->
   "99d8c460-025b-440d-b5b3-1eb1bc2c7d17"],
@@ -5742,7 +5743,7 @@ Cell[TextData[{
  " and ",
  Cell[BoxData[
  "\"\<Precise\>\""],ExpressionUUID->"6350dbe5-e5aa-4d6f-958d-3244f6abeae6"],
- " methods."
+ " methods:"
 }], "Text",ExpressionUUID->"6260dd84-738b-4ada-8159-9cdf2fcf79fe"],
 
 Cell[BoxData[
@@ -6119,8 +6120,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"67f144a3-d2ef-4989-a1ac-7357c576152f"],
 
 Cell["\<\
-The normalized closeness centrality of a vertex is the inverse average to \
-other vertices.\
+The normalized closeness centrality of a vertex is the inverse average \
+shortest path length to other vertices.\
 \>", "Text",ExpressionUUID->"61a4163f-7dd5-4a80-8725-00bc4cf4aac3"],
 
 Cell["Weighted graphs are supported.", \
@@ -6135,8 +6136,12 @@ Cell[TextData[{
   "e3ece11a-9b94-4159-ad1d-4986b461aef7"],
  " will normalize values by the number of vertices minus one. Effectively, \
 this computes closeness as the reciprocal of the average distance to all \
-other nodes, rather than the sum of distances to all other nodes. The default \
-is ",
+other nodes. ",
+ Cell[BoxData[
+  RowBox[{"Normalized", "\[Rule]", "False"}]],ExpressionUUID->
+  "e0830e76-ec30-4efe-9914-b2cfbb7ef8f7"],
+ " uses the sum (instead of the average) of distances to all other nodes. The \
+default is ",
  Cell[BoxData["False"],ExpressionUUID->"d3fb079f-1e23-430c-82f1-6f855986c0ba"],
  " for consistency with igraph interfaces in other languages."
 }], "Item",ExpressionUUID->"a65bd670-ca50-4684-8556-f9588330dc51"],
@@ -6147,10 +6152,10 @@ Cell[TextData[{
   FontSlant->"Italic"],
  "\[CloseCurlyQuote]s in that when there is no path connecting two vertices, \
 the total number of vertices is used as their distance (a number larger than \
-any other distance). ",
+any other distance in an unweighted graph). ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " computes closeness per-component."
+ " computes closeness separately within each connected component."
 }], "Text",ExpressionUUID->"fd56731a-980a-422d-a8a3-56103c602016"],
 
 Cell["\<\
@@ -6416,20 +6421,24 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"IGFeedbackArcSet", "[", "]"}]],ExpressionUUID->
   "60f55667-64cc-4910-bd0a-32b98e3732d3"],
- " returns a set of edges the removal of which makes the graph acyclic. "
+ " returns a set of directed edges (also called ",
+ StyleBox["arcs",
+  FontSlant->"Italic"],
+ ") the removal of which makes the graph acyclic. "
 }], "Text",ExpressionUUID->"c44fd843-b9b1-4eb9-a667-0c2087bbdfcd"],
 
 Cell[TextData[{
  "With ",
  Cell[BoxData[
-  RowBox[{"\"\<Exact\>\"", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"Method", "\[Rule]", "\"\<IntegerProgramming\>\""}]],ExpressionUUID->
   "963a007c-9da4-400a-8317-a15b075114bb"],
- ", it finds a minimal feedback arc set. With ",
+ ", it finds an exact minimal feedback arc set through integer programming \
+using the triangle inequality formulation. With ",
  Cell[BoxData[
-  RowBox[{"\"\<Exact\>\"", "\[Rule]", "False"}]],ExpressionUUID->
+  RowBox[{"Method", "\[Rule]", "\"\<EadesLinSmyth\>\""}]],ExpressionUUID->
   "55aa3869-5fe4-4d43-9683-328027c723f4"],
- ", it finds a feedback arc set (not necessarily minimal) using the heuristic \
-of Eades, Lin and Smyth (1993)."
+ ", it finds a feedback arc set (not necessarily minimal) using the fast \
+heuristic of Eades, Lin and Smyth (1993)."
 }], "Text",ExpressionUUID->"e736b259-03b9-4d4b-b53b-6577ce81d5c9"],
 
 Cell["The following directed graph is not acyclic.", \
@@ -6498,7 +6507,24 @@ Cell[BoxData[
        RowBox[{"[", 
         RowBox[{"perm", ",", "perm"}], "]"}], "]"}]}], "}"}]}]}], 
   "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"de29d4b1-c062-41c0-a5b0-6c13e2e52e5e"]
+  "]"}]], "Input",ExpressionUUID->"de29d4b1-c062-41c0-a5b0-6c13e2e52e5e"],
+
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"64c0ce46-4e79-4135-84ef-45061de545fb"],
+
+Cell[TextData[{
+ "P. Eades, X. Lin, and W. F. Smyth, A fast and effective heuristic for the \
+feedback arc set problem, ",
+ StyleBox["Inf. Process. Lett.",
+  FontSlant->"Italic"],
+ " ",
+ StyleBox["47",
+  FontWeight->"Bold"],
+ ", 319 (1993)."
+}], "Item",ExpressionUUID->"dee6fa16-c98d-41d6-9d82-36cc783aca06"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -13234,47 +13260,196 @@ Cell[CellGroupData[{
 Cell["Motifs", \
 "Subsection",ExpressionUUID->"e46915c2-1f47-4c99-8a40-dcbc10b4018b"],
 
+Cell[TextData[{
+ "IGraph/M\[CloseCurlyQuote]s motif-related functions count the number of \
+times each possible connectivity pattern of ",
+ Cell[BoxData[
+  FormBox["k", TraditionalForm]],ExpressionUUID->
+  "8ba24839-fda1-46e1-b1c8-e549780bbc25"],
+ " vertices (i.e. induced subgraph of size ",
+ Cell[BoxData[
+  FormBox["k", TraditionalForm]],ExpressionUUID->
+  "90f887ab-c0d7-453c-8012-b2d6091ee151"],
+ ") occurs in a graph. The patterns are called ",
+ StyleBox["motifs",
+  FontSlant->"Italic"],
+ ". As of IGraph/M 0.4, only size 3 and 4 motifs are supported, and only \
+(weakly) connected subgraphs are considered."
+}], "Text",ExpressionUUID->"068ec60a-c024-4b6b-85ab-85c984d9c169"],
+
+Cell[TextData[{
+ "To count larger induced subgraphs, see ",
+ Cell[BoxData["IGLADSubisomorphismCount"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "0d52436e-8367-4097-92dd-87c542c18d15"],
+ ". To identify where a subgraph occurs, see ",
+ Cell[BoxData["IGLADFindSubisomorphisms"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "2e63e4a4-44bd-4109-87a0-57f104a52f1f"],
+ "."
+}], "Text",ExpressionUUID->"13d68aa6-5f58-4cc4-995c-2810b90189ac"],
+
+Cell[TextData[{
+ "To count non-connected size-3 subgraphs, use ",
+ Cell[BoxData[
+ "IGTriadCensus"],ExpressionUUID->"b56cf645-a4d0-4753-a8db-60e6db54f99f"],
+ "."
+}], "Text",ExpressionUUID->"d0dc5c9e-8c01-43c2-949b-cc9c25eb6644"],
+
+Cell[TextData[{
+ "igraph\[CloseCurlyQuote]s motif functions use the RAND-ESU algorithm, which \
+is able to uniformly sample a random subset of motifs (connected subgraphs), \
+and can thus estimate motif counts even in very large graphs. See the \
+description of ",
+ Cell[BoxData["IGMotifs"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "0e5b4e25-d7bf-4150-98c8-3e4d502960c7"],
+ " for an example."
+}], "Text",ExpressionUUID->"0b60f95a-2ad3-414d-8689-480fdf113c0e"],
+
+Cell[CellGroupData[{
+
+Cell["References", \
+"Subsubsubsection",ExpressionUUID->"22343e06-618b-476e-88a4-19cb69fb670c"],
+
+Cell[TextData[{
+ "S. Wernicke, ",
+ StyleBox["Efficient Detection of Network Motifs",
+  FontSlant->"Italic"],
+ ", IEEE/ACM Trans. Comput. Biol. Bioinforma. ",
+ StyleBox["3",
+  FontWeight->"Bold"],
+ ", 347 (2006)."
+}], "Item",ExpressionUUID->"170960ca-e6b4-4ecd-badb-892a4acc489c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["IGMotifs", \
+"Subsubsection",ExpressionUUID->"d88c5668-4534-4e18-8944-3a5ab55bee66"],
+
 Cell[BoxData[
  RowBox[{"?", 
   "IGMotifs"}]], \
 "Input",ExpressionUUID->"ee299216-bf38-4ebb-b5ab-57e01033adc6"],
 
 Cell[TextData[{
- Cell[BoxData[
- "IGMotifs"],ExpressionUUID->"5b891d8c-3e1a-4a3d-8e66-a56975c92f7d"],
- " counts connected induced subgraphs. As of IGraph/M 0.4, only size 3 and 4 \
-motifs are supported directly. See ",
- Cell[BoxData[
- "IGLADSubisomorphismCount"],ExpressionUUID->
-  "2f8fbd7d-31cd-4da4-8274-df4b6653adfe"],
- " to count larger induced subgraphs and ",
- Cell[BoxData[
- "IGLADFindSubisomorphisms"],ExpressionUUID->
-  "b40ba473-f177-40d4-a0f6-9d75e1c03154"],
- " to find where a certain motif occurs in a graph."
-}], "Text",ExpressionUUID->"a5bd6538-94e9-4217-8764-7cefa5ba0b7e"],
+ Cell[BoxData["IGMotifs"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "22f1a443-5f83-4322-9c42-38cf85672579"],
+ " counts how many times each motif (i.e. induced subgraph) of the given size \
+occurs in the graph. For subgraphs that are not weakly connected, ",
+ Cell[BoxData["Indeterminate"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "56ada3d9-d50b-4cad-875e-e369e0c8d2bd"],
+ " is returned."
+}], "Text",ExpressionUUID->"f1882474-7873-4c88-bee9-43212f25ed65"],
+
+Cell["Available options are:", \
+"Text",ExpressionUUID->"5543924f-12c9-409f-acc2-34aec0c02466"],
 
 Cell[TextData[{
- "Motif counts are returned ordered by their ",
  Cell[BoxData[
- "IGIsoclass"],ExpressionUUID->"d2b816a2-c089-4c2b-9c80-963e47b8b3cd"],
- ". ",
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "50abc0ea-7750-4dec-b7d6-537a184d50f0"],
+ " treats the graph as undirected and ",
  Cell[BoxData[
- "Indeterminate"],ExpressionUUID->"34eacf64-5860-4e69-8337-37de27854a26"],
- " is returned for non-connected subgraphs."
-}], "Text",ExpressionUUID->"5855e762-ac06-449c-bf4b-52c88ee5a839"],
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "95ae3248-330e-4afc-a11e-17fb5b5eadec"],
+ " treats the graph as directed. The default is ",
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "9b7b8f09-5703-4623-bd88-9841c7f40e8a"],
+ ", which respects the directedness of the graph."
+}], "Item",ExpressionUUID->"44e89ff4-da84-4037-9833-6902594fdccd"],
 
 Cell[TextData[{
- "To count non-connected size-3 subgraphs, use ",
- Cell[BoxData[
- "IGTriadCensus"],ExpressionUUID->"0dc9c2f6-8ad6-4870-ac28-3623ec004f5c"],
+ "Motifs are returned by their ",
+ Cell[BoxData["IGIsoclass"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "7f3efc58-d3f8-4188-8362-025ae5fb6660"],
+ ", i.e. the same order as listed in ",
+ Cell[BoxData["IGData"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "13117ddc-e71f-4489-9332-9d70ed4db95f"],
  "."
-}], "Text",ExpressionUUID->"d0dc5c9e-8c01-43c2-949b-cc9c25eb6644"],
+}], "Text",ExpressionUUID->"a18ff9ab-42d7-4f09-a567-f2c0e5920e19"],
+
+Cell[BoxData[
+ RowBox[{"mot3", "=", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"Graph", "[", 
+     RowBox[{"#", ",", 
+      RowBox[{"ImageSize", "\[Rule]", "36"}], ",", 
+      RowBox[{"VertexSize", "\[Rule]", "0.1"}]}], "]"}], "&"}], "/@", 
+   RowBox[{"IGData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "3"}], "}"}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"0fd524e3-4ac1-4cf3-8d2a-c77acf8324c5"],
+
+Cell[TextData[{
+ "Let us count size-3 motifs in the following graph, and summarize them a \
+table. For non-weakly-connected subgraphs, ",
+ Cell[BoxData["Indeterminate"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "1fab1b76-f1fc-4c3c-91ed-ccd4c7bdcc56"],
+ " is returned."
+}], "Text",ExpressionUUID->"b11a0a11-35d0-4e33-98f5-84eb05e16eaa"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"RandomGraph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"10", ",", "40"}], "}"}], ",", 
+    RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"08e8eeb3-d008-455d-8e40-ab1e9b252085"],
+
+Cell[BoxData[
+ RowBox[{"Grid", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"mot3", ",", 
+      RowBox[{"IGMotifs", "[", 
+       RowBox[{"g", ",", "3"}], "]"}]}], "}"}], "\[Transpose]"}], ",", 
+   RowBox[{"Frame", "\[Rule]", "All"}]}], 
+  "]"}]], "Input",ExpressionUUID->"396eaff2-9b41-48c8-82c2-1fa61ac2aed6"],
+
+Cell[TextData[{
+ "Empty graphs are treated as undirected by default. To treat them as \
+directed, use ",
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "806e5c2c-13f6-47bd-9ef6-68b1a081955f"],
+ ". The result will be different as the number of non-isomorphic graphs on ",
+ Cell[BoxData[
+  FormBox["k", TraditionalForm]],ExpressionUUID->
+  "cb575b45-4650-4e77-9589-4fb8c537b4ce"],
+ " vertices is not the same in the directed and undirected cases."
+}], "Text",ExpressionUUID->"fe5d6188-6730-4488-80ea-7c04c3fd3e67"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"IGMotifs", "[", 
+    RowBox[{
+     RowBox[{"IGEmptyGraph", "[", "5", "]"}], ",", "3", ",", 
+     RowBox[{"DirectedEdges", "\[Rule]", "#"}]}], "]"}], "&"}], "/@", 
+  RowBox[{"{", 
+   RowBox[{"Automatic", ",", "True", ",", "False"}], 
+   "}"}]}]], "Input",ExpressionUUID->"c56de6bf-e3ca-42e2-b7c5-3bd956a9d5b2"],
 
 Cell[CellGroupData[{
 
-Cell["Example", \
-"Subsubsection",ExpressionUUID->"70d3bc8d-c1aa-447b-9438-75fa06b512f6"],
+Cell["Example: metabolic network", \
+"Subsubsubsection",ExpressionUUID->"9841d08b-ec84-4cb0-9011-a7bbb65a53e3"],
 
 Cell[TextData[{
  "Let us find the size-4 motifs that stand out in the ",
@@ -13349,6 +13524,435 @@ draw these subgraphs in a clearer way:\
 Cell[BoxData[
  RowBox[{"IGLayoutDavidsonHarel", "/@", 
   "%"}]], "Input",ExpressionUUID->"f40f9042-75ff-42d6-8a08-23aa6fe180dc"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Estimating motif counts in large graphs", \
+"Subsubsubsection",ExpressionUUID->"3e1d73a3-50ee-4971-b165-cfbddd02f3fb"],
+
+Cell[TextData[{
+ Cell[BoxData["IGMotifs"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "417be3cc-aca8-4ac5-a18c-8cd999bc86c7"],
+ " uses the RAND-ESU algorithm which can uniformly sample a random subset of \
+motifs, and thus estimate motif counts even in very large graphs. To enable \
+random sampling, set a cutoff probability ",
+ Cell[BoxData[
+  RowBox[{"cutoff", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     SubscriptBox["p", "1"], ",", 
+     SubscriptBox["p", "2"], ",", "\[Ellipsis]", ",", 
+     SubscriptBox["p", "n"]}], "}"}]}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "7df2ac18-b6f1-4729-b4b8-989f12ec2c09"],
+ " for stopping the search at each level of the ESU tree. The length of the \
+cutoff probability vector, ",
+ Cell[BoxData["n"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8e4b7e03-c5be-4e3f-a378-af862b0d09dd"],
+ ", must be the same as the motif size. The number of sampled motifs is, on \
+average, a fraction ",
+ Cell[BoxData[
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"1", "-", 
+     SubscriptBox["p", "1"]}], ")"}], "\[Times]", 
+   RowBox[{"(", 
+    RowBox[{"1", "-", 
+     SubscriptBox["p", "2"]}], ")"}], "\[Times]", "\[Ellipsis]", "\[Times]", 
+   RowBox[{"(", 
+    RowBox[{"1", "-", 
+     SubscriptBox["p", "n"]}], ")"}]}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "aaffd83c-5022-4fbe-bc6d-7c8cd1cc39a7"],
+ " of the total number."
+}], "Text",ExpressionUUID->"532746f5-7add-4faa-9106-fbfaf8229819"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"bigG", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<WorldWideWeb\>\""}], "}"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"VertexCount", "[", "bigG", "]"}], ",", 
+   RowBox[{"EdgeCount", "[", "bigG", "]"}]}], 
+  "}"}]}], "Input",ExpressionUUID->"f6c66013-0003-405b-9ee1-656143aff3f4"],
+
+Cell[TextData[{
+ "Sample a fraction ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SuperscriptBox["0.1", "3"], "=", "0.001"}], TraditionalForm]],
+  ExpressionUUID->"3df1746f-56c2-4d31-988e-45df7d77fda7"],
+ " of all motifs."
+}], "Text",ExpressionUUID->"bb9a74d1-8a0d-4924-ae82-a1017223cda9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGMotifs", "[", 
+   RowBox[{"bigG", ",", "3", ",", 
+    RowBox[{"1", "-", 
+     RowBox[{"0.1", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1", ",", "1"}], "}"}]}]}]}], "]"}], "//", 
+  "AbsoluteTiming"}]], \
+"Input",ExpressionUUID->"99f7367e-b663-4d3c-b298-6636704ad129"],
+
+Cell[TextData[{
+ "Sample 12.5% of motifs, i.e. a fraction of ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["0.5", "3"], TraditionalForm]],ExpressionUUID->
+  "2e3ff057-2a35-4118-b5ed-29883dd2351e"],
+ "."
+}], "Text",ExpressionUUID->"655c781f-a19a-4611-b22a-59fe159b738a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGMotifs", "[", 
+   RowBox[{"bigG", ",", "3", ",", 
+    RowBox[{"1", "-", 
+     RowBox[{"0.5", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1", ",", "1"}], "}"}]}]}]}], "]"}], "//", 
+  "AbsoluteTiming"}]], \
+"Input",ExpressionUUID->"0ce7ee18-e5c2-46b8-895b-8b09a9892d3d"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGMotifsVertexParticipation", \
+"Subsubsection",ExpressionUUID->"d432039e-5a20-4684-a26c-afb4f21ecf60"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMotifsVertexParticipation"}]], \
+"Input",ExpressionUUID->"e4f42fc8-f070-4d6c-b1ab-cedd9dd64676"],
+
+Cell[TextData[{
+ Cell[BoxData["IGMotifsVertexParticipation"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "96d6eb3c-4d58-4f2d-9e88-508d98a1c883"],
+ " counts how many times each vertex participates in each motif. For each \
+vertex, the result is returned in the same format as with ",
+ Cell[BoxData["IGMotifs"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "12db6a63-9a0f-4763-90e5-fbadc4ee4b9b"],
+ "."
+}], "Text",ExpressionUUID->"b04adf10-07f4-4ed6-89bd-f474ea9cf7e0"],
+
+Cell["Available options are:", \
+"Text",ExpressionUUID->"5e418c99-c8ca-48d7-b50a-8515aae3d59e"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "fa7f4493-85cc-40eb-b9a2-aa077c781851"],
+ " treats the graph as undirected and ",
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8c0d5928-3365-4cd8-8830-acb5db672124"],
+ " treats the graph as directed. The default is ",
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "674bd6b3-09a1-4aa6-9b90-181140569c47"],
+ ", which respects the directedness of the graph."
+}], "Item",ExpressionUUID->"579021ac-6703-4b49-a2eb-ffc5de90d469"],
+
+Cell["\<\
+Count how many times each vertex appears in each 3-motif in a directed graph.\
+\
+\>", "Text",ExpressionUUID->"8b1bb2e1-1ad7-4ebe-9d2f-fa31ad963207"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{"A", "B", "C", "D", "E", "F"}, {
+         SparseArray[
+         Automatic, {6, 6}, 0, {
+          1, {{0, 2, 6, 8, 10, 12, 13}, {{4}, {5}, {1}, {3}, {5}, {6}, {2}, {
+            6}, {2}, {5}, {4}, {6}, {1}}}, Pattern}], Null}, {
+        GraphStyle -> "BasicBlack", ImageSize -> {170.88671875, Automatic}, 
+         VertexShapeFunction -> {"Name"}}]], Typeset`boxes, 
+      Typeset`boxes$s2d = GraphicsGroupBox[{{
+         Arrowheads[Medium], 
+         Directive[
+          GrayLevel[0], 
+          Opacity[0.7]], 
+         ArrowBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], 
+           DynamicLocation["VertexID$4", Automatic, Center]}], 
+         ArrowBox[{
+           DynamicLocation["VertexID$1", Automatic, Center], 
+           DynamicLocation["VertexID$5", Automatic, Center]}], 
+         ArrowBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$1", Automatic, Center]}], 
+         ArrowBox[
+          BezierCurveBox[{
+            DynamicLocation["VertexID$2", Automatic, Center], {
+            1.8565416187101347`, 0.27770154806882896`}, 
+            DynamicLocation["VertexID$3", Automatic, Center]}]], 
+         ArrowBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$5", Automatic, Center]}], 
+         ArrowBox[{
+           DynamicLocation["VertexID$2", Automatic, Center], 
+           DynamicLocation["VertexID$6", Automatic, Center]}], 
+         ArrowBox[
+          BezierCurveBox[{
+            DynamicLocation["VertexID$3", Automatic, Center], {
+            1.8897505332278919`, -0.11686070191761325`}, 
+            DynamicLocation["VertexID$2", Automatic, Center]}]], 
+         ArrowBox[{
+           DynamicLocation["VertexID$3", Automatic, Center], 
+           DynamicLocation["VertexID$6", Automatic, Center]}], 
+         ArrowBox[{
+           DynamicLocation["VertexID$4", Automatic, Center], 
+           DynamicLocation["VertexID$2", Automatic, Center]}], 
+         ArrowBox[
+          BezierCurveBox[{
+            DynamicLocation["VertexID$4", Automatic, Center], {
+            0.2790676742574243, 0.2436166626263496}, 
+            DynamicLocation["VertexID$5", Automatic, Center]}]], 
+         ArrowBox[
+          BezierCurveBox[{
+            DynamicLocation["VertexID$5", Automatic, Center], {
+            0.3691919666304214, 0.030416063193837932`}, 
+            DynamicLocation["VertexID$4", Automatic, Center]}]], 
+         ArrowBox[{
+           DynamicLocation["VertexID$5", Automatic, Center], 
+           DynamicLocation["VertexID$6", Automatic, Center]}], 
+         ArrowBox[{
+           DynamicLocation["VertexID$6", Automatic, Center], 
+           DynamicLocation["VertexID$1", Automatic, Center]}]}, {
+         GrayLevel[0], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"A\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0.5941784171976565, 0.9253973650040548}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> "VertexID$1"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"B\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1.2732913308019425`, 0.02993276249477783}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> "VertexID$2"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"C\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {2.4730008211360825`, 0.13090808365643866`}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> "VertexID$3"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"D\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0., 0.}, BaseStyle -> "Graphics"], 
+          "DynamicName", BoxID -> "VertexID$4"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"E\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {0.6482596408878456, 0.2740327258201875}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> "VertexID$5"], 
+         TagBox[
+          InsetBox[
+           BoxData[
+            FormBox[
+             PaneBox["\"F\"", Alignment -> Center, ImageMargins -> 2], 
+             TraditionalForm]], {1.633667975091004, 0.7775134384172717}, 
+           BaseStyle -> "Graphics"], "DynamicName", BoxID -> 
+          "VertexID$6"]}}], $CellContext`flag}, 
+      TagBox[
+       DynamicBox[GraphComputation`NetworkGraphicsBox[
+        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
+        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
+         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
+        
+        ImageSizeCache->{{-1.783867125933817, 
+         171.67058587593377`}, {-44.783867125933796`, 37.23930669098989}}],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False,
+      UnsavedVariables:>{$CellContext`flag}]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{170.88671875, Automatic}]}], 
+  ";"}]], "Input",ExpressionUUID->"5e0dec1f-5b0e-4467-ab6a-7fb74900adec"],
+
+Cell[BoxData[
+ RowBox[{"mot", "=", 
+  RowBox[{"IGMotifsVertexParticipation", "[", 
+   RowBox[{"g", ",", "3"}], 
+   "]"}]}]], "Input",ExpressionUUID->"bba527a9-3a79-4dfc-9482-1de0155ed316"],
+
+Cell["\<\
+The sum of the participation counts in 3-motifs is 3 times the total motif \
+counts of the graph.\
+\>", "Text",ExpressionUUID->"b8ec1e33-8ffe-4ddf-b613-0c9692a6d7b0"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Total", "[", "mot", "]"}], "===", 
+  RowBox[{"3", 
+   RowBox[{"IGMotifs", "[", 
+    RowBox[{"g", ",", "3"}], 
+    "]"}]}]}]], "Input",ExpressionUUID->"d9200c34-27d9-498a-afd0-01bde60115df"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGMotifsTotalCount and IGMotifsTotalCountEstimate", \
+"Subsubsection",ExpressionUUID->"a15851a1-3aca-42a7-a89c-ebcee9fdfa87"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMotifsTotalCount"}]], \
+"Input",ExpressionUUID->"7d9e9392-b799-4988-aa66-bfe78774d992"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGMotifsTotalCountEstimate"}]], \
+"Input",ExpressionUUID->"673f4a52-3405-4472-94e6-b3a33278d4e1"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGMotifsTotalCount", "[", 
+   RowBox[{"graph", ",", "motifSize"}], "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "829f0da5-66dc-4ef8-8413-2c1ad81cce83"],
+ " counts the number of weakly connected subgraphs of the given size in a \
+graph."
+}], "Text",ExpressionUUID->"5d685ce6-c09d-42cc-807e-707ade58c580"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGMotifsTotalCountEstimate", "[", 
+   RowBox[{"graph", ",", "motifSize", ",", "sampleSize"}], "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "bc8943c0-c775-40b4-baae-1abc086f6405"],
+ " estimates the total number of motifs by taking a random subset of vertices \
+of the specified size, and counting motifs in which these vertices \
+participate. The total number is estimated as ",
+ Cell[BoxData[
+  RowBox[{"motifCount", "\[Times]", 
+   RowBox[{"vertexCount", "/", "sampleSize"}]}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8dbb8091-3f48-4596-89f1-49ad709e41fc"],
+ ". ",
+ Cell[BoxData[
+  RowBox[{"IGMotifsTotalCountEstimate", "[", 
+   RowBox[{"graph", ",", "motifSize", ",", "vertices"}], "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "4fc1f38c-ad9a-4bb1-a1f3-1ec86d30fa63"],
+ " uses the specified vertices as the sample."
+}], "Text",ExpressionUUID->"ed25437e-dacc-4758-84d1-a13a1496f1ee"],
+
+Cell["Let us create a graph.", \
+"Text",ExpressionUUID->"ef4e9456-ffcd-4e65-a870-14d0292ef61d"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{"{", 
+     RowBox[{"20", ",", "50"}], "}"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"de0e96aa-accf-4799-b017-69d8ef3bc960"],
+
+Cell["The number of size-4 subgraphs it has is:", \
+"Text",ExpressionUUID->"4df33c32-5e91-4bc9-ace0-7ad70da73de6"],
+
+Cell[BoxData[
+ RowBox[{"Binomial", "[", 
+  RowBox[{
+   RowBox[{"VertexCount", "[", "g", "]"}], ",", "4"}], 
+  "]"}]], "Input",ExpressionUUID->"bec4cd3f-e715-4992-bbf1-21427dbcbf37"],
+
+Cell["However, only a small fraction of these is connected:", \
+"Text",ExpressionUUID->"353e9a47-ca6a-4795-9767-0254db29f7ea"],
+
+Cell[BoxData[
+ RowBox[{"IGMotifsTotalCount", "[", 
+  RowBox[{"g", ",", "4"}], 
+  "]"}]], "Input",ExpressionUUID->"a8346295-3535-4cb1-a8d0-8f3665d69a7a"],
+
+Cell[TextData[{
+ Cell[BoxData["IGMotifsTotalCount"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "46a19898-8958-4ecb-8ff7-6126f03307a6"],
+ " is effectively equivalent to (but much faster than) the following:"
+}], "Text",ExpressionUUID->"8e6447ce-9112-4f54-b009-beb6bb0ae8df"],
+
+Cell[BoxData[
+ RowBox[{"Count", "[", 
+  RowBox[{
+   RowBox[{"Subsets", "[", 
+    RowBox[{
+     RowBox[{"VertexList", "[", "g", "]"}], ",", 
+     RowBox[{"{", "4", "}"}]}], "]"}], ",", 
+   RowBox[{"subset_", "/;", 
+    RowBox[{"WeaklyConnectedGraphQ", "@", 
+     RowBox[{"Subgraph", "[", 
+      RowBox[{"g", ",", "subset"}], "]"}]}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"dd3f1c07-20a7-432a-813a-8e6c63ec666b"],
+
+Cell["\<\
+Estimate the count of connected subgraphs by subsampling: at each level of \
+the ESU tree, continue only with probability 0.9.\
+\>", "Text",ExpressionUUID->"b275943e-c6dd-42bc-90a6-a83585728415"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGMotifsTotalCount", "[", 
+   RowBox[{"g", ",", "4", ",", 
+    RowBox[{"1", "-", 
+     RowBox[{"0.9", 
+      RowBox[{"{", 
+       RowBox[{"1", ",", "1", ",", "1", ",", "1"}], "}"}]}]}]}], "]"}], "/", 
+  RowBox[{
+  "0.9", "^", 
+   "4"}]}]], "Input",ExpressionUUID->"8906c45b-ad7a-4bdf-9f93-7f853e64794d"],
+
+Cell["\<\
+Estimate the count of connected subgraphs by considering a random subset of \
+15 vertices (out of a total of 20).\
+\>", "Text",ExpressionUUID->"bf608f8e-c212-4702-914f-e2a80ae73f34"],
+
+Cell[BoxData[
+ RowBox[{"IGMotifsTotalCountEstimate", "[", 
+  RowBox[{"g", ",", "4", ",", "15"}], 
+  "]"}]], "Input",ExpressionUUID->"23faac15-1735-43f3-852d-96f78224e298"],
+
+Cell["Use the first 15 vertices tot estimate the count.", \
+"Text",ExpressionUUID->"aa5f8675-a678-4f25-be7f-c1b9a402b582"],
+
+Cell[BoxData[
+ RowBox[{"IGMotifsTotalCountEstimate", "[", 
+  RowBox[{"g", ",", "4", ",", 
+   RowBox[{"Range", "[", "15", "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"2b686610-c004-4c4b-8ede-4e0f1bf53549"]
 }, Closed]]
 }, Closed]],
 
@@ -16158,7 +16762,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -16179,7 +16783,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -37503,8 +38107,8 @@ Cell[BoxData[
    RowBox[{"IGKVertexColoring", "[", 
     RowBox[{"g", ",", "5", ",", 
      RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]}], "]"}], ",", 
-   "5"}], "]"}]], \
-"Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
+   "5"}], 
+  "]"}]], "Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
 
 Cell["\<\
 Forcing colours in the appropriate way reduces the computation time \
@@ -38626,7 +39230,6 @@ Cell[BoxData[{
           AspectRatio->1,
           DefaultBaseStyle->"ColorSwatchGraphics",
           Frame->True,
-          
           FrameStyle->RGBColor[
            0.5333333333333334, 0.4, 0.33333333333333337`, 1.],
           FrameTicks->None,
@@ -42077,8 +42680,8 @@ Cell[TextData[Cell[BoxData[
        0.5, 0.18005680599195537`, 0.8471006708862739}, {0.5, 
        0.09052430460833644, 0.8612812260087741}, {
        0.5, 0, 0.8660254037844386}, {0.5, -0.09052430460833644, 
-       0.8612812260087741}, {0.5, -0.18005680599195537`, 0.8471006708862739}, 
-       {0.5, -0.2676165673298175, 0.823639103546332}, {
+       0.8612812260087741}, {0.5, -0.18005680599195537`, 
+       0.8471006708862739}, {0.5, -0.2676165673298175, 0.823639103546332}, {
        0.5, -0.3522442655536469, 0.7911535738303732}, {
        0.5, -0.4330127018922193, 0.75}, {0.5, -0.5090369604551271, 
        0.7006292692220367}, {0.5, -0.5794841035564564, 0.6435822975543765}, {
@@ -46107,7 +46710,7 @@ Cell[BoxData["$IGImportFormats"], \
 
 Cell[CellGroupData[{
 
-Cell["Nauty", \
+Cell["Nauty / Graph6", \
 "Subsubsection",ExpressionUUID->"729fce94-9b4c-4fe1-9f43-b3d3bf10f6e5"],
 
 Cell[TextData[{
@@ -46152,7 +46755,7 @@ significantly better performance."
 Cell[TextData[{
  "To convert a single string to a graph, use ",
  Cell[BoxData[
- "IGFromGraph6"],ExpressionUUID->"a1906cbd-b6ee-406f-9b71-dea17a61ae6a"],
+ "IGFromNauty"],ExpressionUUID->"a1906cbd-b6ee-406f-9b71-dea17a61ae6a"],
  "."
 }], "Text",ExpressionUUID->"88e9dbd8-8407-49fd-bf35-baa40966a540"],
 
@@ -46258,8 +46861,8 @@ Cell[BoxData[
  RowBox[{"IGImport", "[", 
   RowBox[{"\"\<!gentourng -c 5 -z\>\"", ",", "\"\<Graph6\>\""}], 
   "]"}]], "Input",ExpressionUUID->"3abc12eb-8174-4e76-9d36-23e5d75da8aa"]
-}, Closed]]
-}, Closed]],
+}, Open  ]]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -46331,7 +46934,7 @@ Cell[BoxData[
    "*)"}]}]], "Input",ExpressionUUID->"9127ab6f-c4f0-4e4c-8086-bbb412a1b452"]
 }, Closed]]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -48229,7 +48832,7 @@ list small directed graphs ordered based on their ",
  Cell[BoxData[
   RowBox[{"IGIsoclass", "[", "]"}]],ExpressionUUID->
   "bd5c53d5-819d-4373-b97a-7a8d2789e76e"],
- ", i.e. the same order motif counting functions use."
+ ", i.e. the same order that motif counting functions use."
 }], "Text",ExpressionUUID->"f00ae9d6-a09b-410c-ba6a-b152d6ffca37"],
 
 Cell[BoxData[
@@ -48251,10 +48854,15 @@ Cell[BoxData[
      RowBox[{"\"\<AllDirectedGraphs\>\"", ",", "3"}], "}"}], "]"}], "//", 
    RowBox[{"Map", "[", 
     RowBox[{
-     RowBox[{"Graph", "[", 
-      RowBox[{"#", ",", 
-       RowBox[{"ImageSize", "\[Rule]", "Tiny"}]}], "]"}], "&"}], "]"}]}], "//",
-   "Row"}]], "Input",ExpressionUUID->"54926f58-5648-41af-afbe-49c5b0bd0bc2"],
+     RowBox[{"Framed", "@", 
+      RowBox[{"Labeled", "[", 
+       RowBox[{
+        RowBox[{"Graph", "[", 
+         RowBox[{"#", ",", 
+          RowBox[{"ImageSize", "\[Rule]", "50"}]}], "]"}], ",", 
+        RowBox[{"IGIsoclass", "[", "#", "]"}]}], "]"}]}], "&"}], "]"}]}], "//",
+   "Multicolumn"}]], \
+"Input",ExpressionUUID->"54926f58-5648-41af-afbe-49c5b0bd0bc2"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -48311,7 +48919,7 @@ Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998."
 Cell[BoxData[
  RowBox[{"?", 
   "IGGraphAtlas"}]], \
-"Input",ExpressionUUID->"3c3c570e-c56a-4d51-8444-efc5af719005"],
+"Input",ExpressionUUID->"bb1684d6-4615-4792-bce6-853092e2bbcf"],
 
 Cell[BoxData[
  RowBox[{"IGGraphAtlas", "[", "341", 
@@ -48720,8 +49328,8 @@ Cell[TextData[{
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{776, 767},
-WindowMargins->{{319, Automatic}, {0, Automatic}},
+WindowSize->{880, 767},
+WindowMargins->{{277, Automatic}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
@@ -48762,6 +49370,11 @@ PrintingOptions->{"FacingPages"->True,
 "PrintingMargins"->{{28.346457, 28.346457}, {72.00000078000001, \
 72.00000078000001}}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
+TaggingRules->{
+ "SEUploaderLastUpdateCheck" -> 3.766254953638397`16.32848470505581*^9, 
+  "SEUploaderVersion" -> {
+   "Version" -> 130, "Changes" -> {"Fixed SE Uploader to use https"}}, 
+  "DevTools" -> {"MenuMethod" -> "Cell"}, "TryRealOnly" -> False},
 CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
