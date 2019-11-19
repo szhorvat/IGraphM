@@ -12978,13 +12978,14 @@ XjRQhw==
    ImageSize->{87.7109375, Automatic}], 
   "]"}]], "Input",ExpressionUUID->"48255548-7234-4dac-82a3-eadc1f18e490"],
 
-Cell["Check if each component of a graph is a clique.", \
+Cell["Check if each connected component of a graph is a clique.", \
 "Text",ExpressionUUID->"6fab5b58-1f4c-4939-bcb3-165cc30f5525"],
 
 Cell[BoxData[
  RowBox[{"g", "=", 
-  RowBox[{
-  "GraphData", "[", "\"\<C3+2P2+K1\>\"", 
+  RowBox[{"GraphData", "[", 
+   RowBox[{"{", 
+    RowBox[{"8", ",", "911"}], "}"}], 
    "]"}]}]], "Input",ExpressionUUID->"5593caa6-048a-4c02-bf20-9b4cc95ba3c1"],
 
 Cell[BoxData[
@@ -13279,12 +13280,12 @@ times each possible connectivity pattern of ",
 
 Cell[TextData[{
  "To count larger induced subgraphs, see ",
- Cell[BoxData["IGLADSubisomorphismCount"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGLADSubisomorphismCount"],ExpressionUUID->
   "0d52436e-8367-4097-92dd-87c542c18d15"],
  ". To identify where a subgraph occurs, see ",
- Cell[BoxData["IGLADFindSubisomorphisms"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGLADFindSubisomorphisms"],ExpressionUUID->
   "2e63e4a4-44bd-4109-87a0-57f104a52f1f"],
  "."
 }], "Text",ExpressionUUID->"13d68aa6-5f58-4cc4-995c-2810b90189ac"],
@@ -13301,9 +13302,8 @@ Cell[TextData[{
 is able to uniformly sample a random subset of motifs (connected subgraphs), \
 and can thus estimate motif counts even in very large graphs. See the \
 description of ",
- Cell[BoxData["IGMotifs"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "0e5b4e25-d7bf-4150-98c8-3e4d502960c7"],
+ Cell[BoxData[
+ "IGMotifs"],ExpressionUUID->"0e5b4e25-d7bf-4150-98c8-3e4d502960c7"],
  " for an example."
 }], "Text",ExpressionUUID->"0b60f95a-2ad3-414d-8689-480fdf113c0e"],
 
@@ -13334,14 +13334,12 @@ Cell[BoxData[
 "Input",ExpressionUUID->"ee299216-bf38-4ebb-b5ab-57e01033adc6"],
 
 Cell[TextData[{
- Cell[BoxData["IGMotifs"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "22f1a443-5f83-4322-9c42-38cf85672579"],
+ Cell[BoxData[
+ "IGMotifs"],ExpressionUUID->"22f1a443-5f83-4322-9c42-38cf85672579"],
  " counts how many times each motif (i.e. induced subgraph) of the given size \
 occurs in the graph. For subgraphs that are not weakly connected, ",
- Cell[BoxData["Indeterminate"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "56ada3d9-d50b-4cad-875e-e369e0c8d2bd"],
+ Cell[BoxData[
+ "Indeterminate"],ExpressionUUID->"56ada3d9-d50b-4cad-875e-e369e0c8d2bd"],
  " is returned."
 }], "Text",ExpressionUUID->"f1882474-7873-4c88-bee9-43212f25ed65"],
 
@@ -13350,31 +13348,26 @@ Cell["Available options are:", \
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],ExpressionUUID->
   "50abc0ea-7750-4dec-b7d6-537a184d50f0"],
  " treats the graph as undirected and ",
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "95ae3248-330e-4afc-a11e-17fb5b5eadec"],
  " treats the graph as directed. The default is ",
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],ExpressionUUID->
   "9b7b8f09-5703-4623-bd88-9841c7f40e8a"],
  ", which respects the directedness of the graph."
 }], "Item",ExpressionUUID->"44e89ff4-da84-4037-9833-6902594fdccd"],
 
 Cell[TextData[{
  "Motifs are returned by their ",
- Cell[BoxData["IGIsoclass"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "7f3efc58-d3f8-4188-8362-025ae5fb6660"],
+ Cell[BoxData[
+ "IGIsoclass"],ExpressionUUID->"7f3efc58-d3f8-4188-8362-025ae5fb6660"],
  ", i.e. the same order as listed in ",
- Cell[BoxData["IGData"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "13117ddc-e71f-4489-9332-9d70ed4db95f"],
+ Cell[BoxData[
+ "IGData"],ExpressionUUID->"13117ddc-e71f-4489-9332-9d70ed4db95f"],
  "."
 }], "Text",ExpressionUUID->"a18ff9ab-42d7-4f09-a567-f2c0e5920e19"],
 
@@ -13395,9 +13388,8 @@ Cell[BoxData[
 Cell[TextData[{
  "Let us count size-3 motifs in the following graph, and summarize them a \
 table. For non-weakly-connected subgraphs, ",
- Cell[BoxData["Indeterminate"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "1fab1b76-f1fc-4c3c-91ed-ccd4c7bdcc56"],
+ Cell[BoxData[
+ "Indeterminate"],ExpressionUUID->"1fab1b76-f1fc-4c3c-91ed-ccd4c7bdcc56"],
  " is returned."
 }], "Text",ExpressionUUID->"b11a0a11-35d0-4e33-98f5-84eb05e16eaa"],
 
@@ -13425,8 +13417,7 @@ Cell[TextData[{
  "Empty graphs are treated as undirected by default. To treat them as \
 directed, use ",
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "806e5c2c-13f6-47bd-9ef6-68b1a081955f"],
  ". The result will be different as the number of non-isomorphic graphs on ",
  Cell[BoxData[
@@ -13532,9 +13523,8 @@ Cell["Estimating motif counts in large graphs", \
 "Subsubsubsection",ExpressionUUID->"3e1d73a3-50ee-4971-b165-cfbddd02f3fb"],
 
 Cell[TextData[{
- Cell[BoxData["IGMotifs"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "417be3cc-aca8-4ac5-a18c-8cd999bc86c7"],
+ Cell[BoxData[
+ "IGMotifs"],ExpressionUUID->"417be3cc-aca8-4ac5-a18c-8cd999bc86c7"],
  " uses the RAND-ESU algorithm which can uniformly sample a random subset of \
 motifs, and thus estimate motif counts even in very large graphs. To enable \
 random sampling, set a cutoff probability ",
@@ -13544,14 +13534,11 @@ random sampling, set a cutoff probability ",
     RowBox[{
      SubscriptBox["p", "1"], ",", 
      SubscriptBox["p", "2"], ",", "\[Ellipsis]", ",", 
-     SubscriptBox["p", "n"]}], "}"}]}]],
-  FormatType->"StandardForm",ExpressionUUID->
+     SubscriptBox["p", "n"]}], "}"}]}]],ExpressionUUID->
   "7df2ac18-b6f1-4729-b4b8-989f12ec2c09"],
  " for stopping the search at each level of the ESU tree. The length of the \
 cutoff probability vector, ",
- Cell[BoxData["n"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "8e4b7e03-c5be-4e3f-a378-af862b0d09dd"],
+ Cell[BoxData["n"],ExpressionUUID->"8e4b7e03-c5be-4e3f-a378-af862b0d09dd"],
  ", must be the same as the motif size. The number of sampled motifs is, on \
 average, a fraction ",
  Cell[BoxData[
@@ -13564,8 +13551,7 @@ average, a fraction ",
      SubscriptBox["p", "2"]}], ")"}], "\[Times]", "\[Ellipsis]", "\[Times]", 
    RowBox[{"(", 
     RowBox[{"1", "-", 
-     SubscriptBox["p", "n"]}], ")"}]}]],
-  FormatType->"StandardForm",ExpressionUUID->
+     SubscriptBox["p", "n"]}], ")"}]}]],ExpressionUUID->
   "aaffd83c-5022-4fbe-bc6d-7c8cd1cc39a7"],
  " of the total number."
 }], "Text",ExpressionUUID->"532746f5-7add-4faa-9106-fbfaf8229819"],
@@ -13637,14 +13623,13 @@ Cell[BoxData[
 "Input",ExpressionUUID->"e4f42fc8-f070-4d6c-b1ab-cedd9dd64676"],
 
 Cell[TextData[{
- Cell[BoxData["IGMotifsVertexParticipation"],
-  FormatType->"StandardForm",ExpressionUUID->
+ Cell[BoxData[
+ "IGMotifsVertexParticipation"],ExpressionUUID->
   "96d6eb3c-4d58-4f2d-9e88-508d98a1c883"],
  " counts how many times each vertex participates in each motif. For each \
 vertex, the result is returned in the same format as with ",
- Cell[BoxData["IGMotifs"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "12db6a63-9a0f-4763-90e5-fbadc4ee4b9b"],
+ Cell[BoxData[
+ "IGMotifs"],ExpressionUUID->"12db6a63-9a0f-4763-90e5-fbadc4ee4b9b"],
  "."
 }], "Text",ExpressionUUID->"b04adf10-07f4-4ed6-89bd-f474ea9cf7e0"],
 
@@ -13653,18 +13638,15 @@ Cell["Available options are:", \
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],ExpressionUUID->
   "fa7f4493-85cc-40eb-b9a2-aa077c781851"],
  " treats the graph as undirected and ",
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
   "8c0d5928-3365-4cd8-8830-acb5db672124"],
  " treats the graph as directed. The default is ",
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "Automatic"}]],ExpressionUUID->
   "674bd6b3-09a1-4aa6-9b90-181140569c47"],
  ", which respects the directedness of the graph."
 }], "Item",ExpressionUUID->"579021ac-6703-4b49-a2eb-ffc5de90d469"],
@@ -13789,8 +13771,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-1.783867125933817, 
-         171.67058587593377`}, {-44.783867125933796`, 37.23930669098989}}],
+        ImageSizeCache->{{-1.7838671259338312`, 
+         171.67058587593382`}, {-44.78386712593381, 37.239306690989906`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -13840,8 +13822,7 @@ Cell[BoxData[
 Cell[TextData[{
  Cell[BoxData[
   RowBox[{"IGMotifsTotalCount", "[", 
-   RowBox[{"graph", ",", "motifSize"}], "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
+   RowBox[{"graph", ",", "motifSize"}], "]"}]],ExpressionUUID->
   "829f0da5-66dc-4ef8-8413-2c1ad81cce83"],
  " counts the number of weakly connected subgraphs of the given size in a \
 graph."
@@ -13851,22 +13832,19 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"IGMotifsTotalCountEstimate", "[", 
    RowBox[{"graph", ",", "motifSize", ",", "sampleSize"}], "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
-  "bc8943c0-c775-40b4-baae-1abc086f6405"],
+  ExpressionUUID->"bc8943c0-c775-40b4-baae-1abc086f6405"],
  " estimates the total number of motifs by taking a random subset of vertices \
 of the specified size, and counting motifs in which these vertices \
 participate. The total number is estimated as ",
  Cell[BoxData[
   RowBox[{"motifCount", "\[Times]", 
-   RowBox[{"vertexCount", "/", "sampleSize"}]}]],
-  FormatType->"StandardForm",ExpressionUUID->
+   RowBox[{"vertexCount", "/", "sampleSize"}]}]],ExpressionUUID->
   "8dbb8091-3f48-4596-89f1-49ad709e41fc"],
  ". ",
  Cell[BoxData[
   RowBox[{"IGMotifsTotalCountEstimate", "[", 
    RowBox[{"graph", ",", "motifSize", ",", "vertices"}], "]"}]],
-  FormatType->"StandardForm",ExpressionUUID->
-  "4fc1f38c-ad9a-4bb1-a1f3-1ec86d30fa63"],
+  ExpressionUUID->"4fc1f38c-ad9a-4bb1-a1f3-1ec86d30fa63"],
  " uses the specified vertices as the sample."
 }], "Text",ExpressionUUID->"ed25437e-dacc-4758-84d1-a13a1496f1ee"],
 
@@ -13899,9 +13877,8 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"a8346295-3535-4cb1-a8d0-8f3665d69a7a"],
 
 Cell[TextData[{
- Cell[BoxData["IGMotifsTotalCount"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "46a19898-8958-4ecb-8ff7-6126f03307a6"],
+ Cell[BoxData[
+ "IGMotifsTotalCount"],ExpressionUUID->"46a19898-8958-4ecb-8ff7-6126f03307a6"],
  " is effectively equivalent to (but much faster than) the following:"
 }], "Text",ExpressionUUID->"8e6447ce-9112-4f54-b009-beb6bb0ae8df"],
 
@@ -16762,7 +16739,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -16783,7 +16760,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -17603,8 +17580,195 @@ Cell[BoxData[
         ImageScaled[{0, 0, 0}], {0, 0, 0.07}}}]],
    ViewPoint->{1.6054375543825434`, -0.9097573583241039, -2.8363553740589955`},
    ViewVertical->{
-    0.9870603011882955, -0.146593327504995, -0.12371554044216537`}], 
-  "]"}]], "Input",ExpressionUUID->"fc568f25-eecc-4f44-8e4a-4b0dd2acf790"],
+    0.9870603011882955, -0.146593327504995, -0.12371554044216537`},
+   ImageCache->GraphicsData["CompressedBitmap", "\<\
+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
+H/0fRsabAw==\
+\>"]], "]"}]], "Input",ExpressionUUID->"fc568f25-eecc-4f44-8e4a-4b0dd2acf790"],
 
 Cell[BoxData[
  RowBox[{"IGEdgeTransitiveQ", "[", 
@@ -17710,10 +17874,45 @@ graphs have the same line graph, but they are not isomorphic.\
 \>", "Text",ExpressionUUID->"1a045257-fe76-4aed-8b7f-1c7b329a888d"],
 
 Cell[BoxData[
- RowBox[{"g", "=", 
-  RowBox[{
-  "GraphData", "[", "\"\<C3+K1,3\>\"", 
-   "]"}]}]], "Input",ExpressionUUID->"169a84f2-2ee1-4c5d-a752-0ef423688434"],
+ RowBox[{
+  RowBox[{"g", "=", 
+   GraphicsBox[
+    NamespaceBox["NetworkGraphics",
+     DynamicModuleBox[{Typeset`graph = HoldComplete[
+       Graph[{1, 2, 3, 4, 5, 6, 7}, {Null, 
+         SparseArray[
+         Automatic, {7, 7}, 0, {
+          1, {{0, 2, 3, 4, 5, 7, 9, 12}, {{5}, {6}, {7}, {7}, {7}, {1}, {6}, {
+            1}, {5}, {2}, {3}, {4}}}, Pattern}]}, {
+        FormatType -> TraditionalForm, GraphLayout -> {"Dimension" -> 2}, 
+         VertexCoordinates -> {{
+            Rational[5, 2], Rational[-1, 2] 3^Rational[-1, 2]}, {1, 0}, {
+            Rational[-1, 2], Rational[1, 2] 3^Rational[1, 2]}, {
+            Rational[-1, 2], Rational[-1, 2] 3^Rational[1, 2]}, {
+           2, 3^Rational[-1, 2]}, {
+            Rational[3, 2], Rational[-1, 2] 3^Rational[-1, 2]}, {0, 0}}, 
+         VertexSize -> {0.3}}]]}, 
+      TagBox[
+       GraphicsGroupBox[
+        GraphicsComplexBox[{{2.5, -0.2886751345948129}, {1., 0.}, {-0.5, 
+         0.8660254037844386}, {-0.5, -0.8660254037844386}, {2., 
+         0.5773502691896258}, {1.5, -0.2886751345948129}, {0., 0.}}, {
+          {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+           LineBox[{{1, 5}, {1, 6}, {2, 7}, {3, 7}, {4, 7}, {5, 6}}]}, 
+          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+           DiskBox[1, 0.08660254037844385], DiskBox[2, 0.08660254037844385], 
+           DiskBox[3, 0.08660254037844385], DiskBox[4, 0.08660254037844385], 
+           DiskBox[5, 0.08660254037844385], DiskBox[6, 0.08660254037844385], 
+           DiskBox[7, 0.08660254037844385]}}]],
+       MouseAppearanceTag["NetworkGraphics"]],
+      AllowKernelInitialization->False]],
+    DefaultBaseStyle->{
+     "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+    
+    FormatType->TraditionalForm,
+    FrameTicks->None,
+    ImageSize->{86.19140625, Automatic}]}], 
+  ";"}]], "Input",ExpressionUUID->"169a84f2-2ee1-4c5d-a752-0ef423688434"],
 
 Cell[BoxData[
  RowBox[{"{", 
@@ -38107,8 +38306,8 @@ Cell[BoxData[
    RowBox[{"IGKVertexColoring", "[", 
     RowBox[{"g", ",", "5", ",", 
      RowBox[{"\"\<ForcedColoring\>\"", "\[Rule]", "None"}]}], "]"}], ",", 
-   "5"}], 
-  "]"}]], "Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
+   "5"}], "]"}]], \
+"Input",ExpressionUUID->"3f1c852a-3edc-4809-996f-d3926698a473"],
 
 Cell["\<\
 Forcing colours in the appropriate way reduces the computation time \
@@ -39230,6 +39429,7 @@ Cell[BoxData[{
           AspectRatio->1,
           DefaultBaseStyle->"ColorSwatchGraphics",
           Frame->True,
+          
           FrameStyle->RGBColor[
            0.5333333333333334, 0.4, 0.33333333333333337`, 1.],
           FrameTicks->None,
@@ -43826,8 +44026,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<EurovisionVotes\>\""}], "}"}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"cb90548d-9078-492d-85ed-69bd4342677f"],
 
 Cell[BoxData[
  RowBox[{"IGVertexStrength", "[", "g", 
@@ -46861,8 +47061,8 @@ Cell[BoxData[
  RowBox[{"IGImport", "[", 
   RowBox[{"\"\<!gentourng -c 5 -z\>\"", ",", "\"\<Graph6\>\""}], 
   "]"}]], "Input",ExpressionUUID->"3abc12eb-8174-4e76-9d36-23e5d75da8aa"]
-}, Open  ]]
-}, Open  ]],
+}, Closed]]
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -46934,7 +47134,7 @@ Cell[BoxData[
    "*)"}]}]], "Input",ExpressionUUID->"9127ab6f-c4f0-4e4c-8086-bbb412a1b452"]
 }, Closed]]
 }, Closed]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -48013,8 +48213,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
