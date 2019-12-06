@@ -37,6 +37,9 @@ void igErrorHandler(const char *reason, const char *file, int line, int /* igrap
 
 /***** Read Graph6, Digraph6 and Sparse6 *****/
 
+// MAXBYTE conflicts with winnt.h on Windows
+#undef MAXBYTE
+
 constexpr int BIAS6 = 63;
 constexpr int SMALLN = 62;
 constexpr int MAXBYTE = 126;
