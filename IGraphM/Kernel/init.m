@@ -9,6 +9,13 @@ If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
   Abort[]
 ]
 
+(* Special version check on the Raspberry Pi. *)
+(* The Wolfram Engine is free on the Raspberry Pi. We only support the latest release at any time. *)
+If[$SystemID === "Linux-ARM" && $VersionNumber < 12.0,
+  Print["On the Raspberry Pi, IGraph/M only supports the Wolfram Engine version 12.0 or later.  Aborting."];
+  Abort[]
+]
+
 
 Unprotect["IGraphM`*", "IGraphM`Developer`*", "IGraphM`Information`*"];
 
