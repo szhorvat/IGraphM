@@ -131,6 +131,9 @@ IGClusterData /: MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (Standard
       {
         BoxForm`SummaryItem[{"Community sizes: ", Short[Length /@ asc@"Communities", 0.35]}],
         BoxForm`SummaryItem[{"Modularity: ", If[KeyExistsQ[asc, "Modularity"], Max@asc@"Modularity", "unknown"]}],
+        If[KeyExistsQ[asc, "Quality"],
+          BoxForm`SummaryItem[{"Quality: ", asc@"Quality"}]
+        ],
         BoxForm`SummaryItem[{"Hierarchical: ", hierarchicalQ[asc]}],
         BoxForm`SummaryItem[{"Algorithm: ", asc@"Algorithm"}]
       },
@@ -339,6 +342,33 @@ IGCommunitiesMultilevel[graph_?igGraphQ] :=
         "Modularity" -> modularity,
         "MultilevelCommunities" -> (communitiesFromMembership[graph, #]&) /@ memberships,
         "Algorithm" -> "Multilevel"
+      |>
+    ]
+
+
+PackageExport["IGCommunitiesLeiden"]
+IGCommunitiesLeiden::usage = "IGCommunitiesLeiden[graph] finds communities using the Leiden method.";
+
+Options[IGCommunitiesLeiden] = {
+  "Resolution" -> 1,
+  "Beta" -> 0.01,
+  VertexWeight -> "NormalizedStrength"
+};
+
+leidenMethods = <| "NormalizedStrength" -> 1, "Constant" -> 2, "VertexWeight" -> 3, VertexWeight -> 3 |>;
+
+SyntaxInformation[IGCommunitiesLeiden] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGCommunitiesLeiden[graph_?igGraphQ, OptionsPattern[]] :=
+    catch@Module[{ig = igMakeFastWeighted[graph], membership, quality},
+      {membership, quality} = check@ig@"communityLeiden"[
+        N@OptionValue["Resolution"], N@OptionValue["Beta"],
+        Lookup[leidenMethods, OptionValue[VertexWeight], 0],
+        If[OptionValue[VertexWeight] === "VertexWeight", igVertexWeights[graph], {}]
+      ];
+      igClusterData[graph]@<|
+        "Communities" -> communitiesFromMembership[graph, membership],
+        "Quality" -> quality,
+        "Algorithm" -> "Leiden"
       |>
     ]
 

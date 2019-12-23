@@ -25,7 +25,7 @@ class IG {
     igVector weights;
     bool weighted;
 
-    void empty() { igraph_empty(&graph, 0, false); }
+    void empty() { igraph_empty(&graph, 0, false); }   
 
     void igConstructorCheck(int err) {
         if (! err) return;
@@ -2316,6 +2316,60 @@ public:
 
         ml.newPacket();
         ml << mlHead("List", 3) << modularity << membership << memberships;
+    }
+
+    void communityLeiden(MLINK link) const {
+        mlStream ml{link, "communityLeiden"};
+
+        igraph_real_t resolution, beta;
+        mint method;
+
+        igVector vertexWeight;
+        igraph_vector_t *vertex_weight_ptr = &vertexWeight.vec;
+
+        ml >> mlCheckArgs(4) >> resolution >> beta >> method >> vertexWeight;
+
+        switch (method) {
+        case 1: /* degree/strength */
+            if (weightedQ()) {
+                igraph_strength(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true, passWeights());
+                double total_edge_weight = 0.0;
+                for (const auto &w : weights)
+                    total_edge_weight += w;
+                resolution = 0.5*resolution / total_edge_weight;
+            }
+            else
+            {
+                igraph_degree(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true);
+                resolution = 0.5*resolution / edgeCount();
+            }
+            break;
+
+        case 2: /* constant */
+            vertex_weight_ptr = nullptr;
+            break;
+
+        case 3:
+            if (vertexWeight.size() != vertexCount())
+                throw mma::LibraryError("The length of the vertex weight vector must be the same as the number of vertices.");
+            break;
+
+        default:
+            throw mma::LibraryError("communityLeiden: Invalid vertex weight computation method.");
+        }
+
+        igVector membership;
+        igraph_integer_t nb_clusters;
+        igraph_real_t quality;
+
+        igCheck(igraph_community_leiden(
+                    &graph, passWeights(), vertex_weight_ptr,
+                    resolution, beta,
+                    false, &membership.vec,
+                    &nb_clusters, &quality));
+
+        ml.newPacket();
+        ml << mlHead("List", 2) << membership << quality;
     }
 
     void communityLabelPropagation(MLINK link) const {
