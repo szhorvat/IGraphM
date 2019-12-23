@@ -113,6 +113,10 @@ Follow the installation guide of LEMON: http://lemon.cs.elte.hu/trac/lemon/wiki/
 
 When running `cmake`, use the option `-DCMAKE_INSTALL_PREFIX:PATH=$HOME/local` to set the correct installation location.
 
+An example command that also disables unneeded dependencies is 
+
+    cmake -DCMAKE_INSTALL_PREFIX=$HOME/local -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=True -DLEMON_ENABLE_GLPK=False -DLEMON_ENABLE_COIN=False -DLEMON_ENABLE_ILOG=False -DLEMON_ENABLE_SOPLEX=False ..
+
 When finished compiling, install it with `make install`.
 
 
