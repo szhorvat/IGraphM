@@ -14,6 +14,9 @@ Cell["Restart the kernel before evaluating this notebook.", \
 Cell[BoxData["Quit"], "Input",
  CellLabel->"In[9]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
 
+Cell[BoxData["$Version"], \
+"Input",ExpressionUUID->"a127ee06-90b7-4b5a-bec2-b48a708a3b5d"],
+
 Cell[BoxData[{
  RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]", 
  RowBox[{"<<", "MicroTest`"}]}], "Input",
