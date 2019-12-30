@@ -25,6 +25,11 @@ If[$SystemID === "Linux-ARM",
 
 (* We set up a package context to avoid Global` pollution and conflicts with any existing Global` symbols. *)
 BeginPackage["IGInstaller`"]
+
+(* In M12.1, several PacletManager symbols have modes into the System context. We can no longer refer to these symbols
+   by their full context without breaking compatibility, therefore we load PacletManager` here. *)
+Needs["PacletManager`"]
+
 Begin["`Private`"]
 
 check[$Failed] := Throw[$Failed]
@@ -45,12 +50,12 @@ updateIGraphM[] :=
       ,
       Throw[$Failed]
     ];
-    If[FileExistsQ[target], PacletManager`PacletInstall[target], $Failed]
+    If[FileExistsQ[target], PacletInstall[target], $Failed]
   ]
 
-Print["The currently installed versions of IGraph/M are: ", PacletManager`PacletFind["IGraphM"]]
-Module[{res},
-  res = Check[updateIGraphM[], $latest, {PacletManager`PacletInstall::samevers}];
+Print["The currently installed versions of IGraph/M are: ", PacletFind["IGraphM"]]
+Module[{res, loadCommand},
+  res = Check[updateIGraphM[], $latest, {PacletInstall::samevers}];
   Switch[res,
     $Failed,
     Print["Installation failed. Please install IGraph/M manually. ", Hyperlink["https://github.com/szhorvat/IGraphM#installation"]]
@@ -59,9 +64,34 @@ Module[{res},
     Print["The latest version is already installed."],
     _,
     Print["Installing IGraph/M is complete: ", res, "."];
-    Print["It can now be loaded using the command Get[\"IGraphM`\"]."];
-    (* On some systems, there may be problems unloading the library. *)
-    If[MemberQ[$Packages, "IGraphM`"], Print["An older version of IGraph/M was already loaded. It is recommended to restart the Mathematica kernel before loading the new version."]]
+    loadCommand =
+        If[$Notebooks,
+          Button[
+            Defer[Get["IGraphM`"]],
+            FrontEndExecute[{
+              FrontEnd`SelectionMove[FrontEnd`EvaluationCell[], After, CellGroup],
+              FrontEnd`NotebookWrite[FrontEnd`EvaluationNotebook[], #, All],
+              FrontEnd`SelectionEvaluateCreateCell[FrontEnd`EvaluationNotebook[]]
+            }] &,
+            Evaluator -> None,
+            Appearance -> None,
+            BaseStyle -> "Link"
+          ]
+          ,
+          "<< IGraphM`"
+        ];
+    Print[
+      "It can now be loaded using the command ",
+      loadCommand,
+      (* On some systems, there may be problems unloading the library. *)
+      If[MemberQ[$Packages, "IGraphM`"],
+        Unevaluated@Sequence[
+          Style["\nWarning: ", Bold],
+          "An older version of IGraph/M was already loaded.\nIt is recommended to restart the Mathematica kernel before loading the new version."
+        ],
+        Unevaluated@Sequence[]
+      ]
+    ];
   ]
 ]
 
