@@ -1,0 +1,208 @@
+Notebook[{
+Cell[BoxData["Quit"], "Input",
+ CellLabel->"In[17]:=",ExpressionUUID->"2ce0132d-f759-4652-9bfe-fb38df847db9"],
+
+Cell[CellGroupData[{
+
+Cell["Evaluate documentation notebook", \
+"Section",ExpressionUUID->"7989af1b-249b-460a-9c14-ee41b8311844"],
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "@", 
+  RowBox[{"NotebookDirectory", "[", "]"}]}]], "Input",
+ CellLabel->"In[1]:=",ExpressionUUID->"9c94864c-0cf3-4be2-a8dd-295ef7d50427"],
+
+Cell[BoxData[
+ RowBox[{"nb", "=", 
+  RowBox[{"NotebookOpen", "@", 
+   RowBox[{
+   "AbsoluteFileName", "[", 
+    "\"\<../IGraphM/Documentation/English/Tutorials/IGDocumentation.nb\>\"", 
+    "]"}]}]}]], "Input",
+ CellLabel->"In[2]:=",ExpressionUUID->"150df776-303c-4fe5-be33-74abbc45301e"],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{"nb", "=", 
+   RowBox[{"First", "@", 
+    RowBox[{"Select", "[", 
+     RowBox[{
+      RowBox[{"Notebooks", "[", "]"}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"CurrentValue", "[", 
+         RowBox[{"#", ",", "WindowTitle"}], "]"}], "===", 
+        "\"\<IGraph/M Documentation\>\""}], "&"}]}], "]"}]}]}], " ", 
+  "*)"}]], "Input",ExpressionUUID->"1139c20f-b8b9-4134-a870-d2757011a12a"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"CurrentValue", "[", 
+    RowBox[{"nb", ",", "WindowSize"}], "]"}], "=", 
+   RowBox[{"{", 
+    RowBox[{"938", ",", "800"}], "}"}]}], ";"}]], "Input",
+ CellLabel->"In[3]:=",ExpressionUUID->"b0963778-2162-484c-8b43-a442d4d68967"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"NotebookEvaluate", "[", 
+   RowBox[{"nb", ",", 
+    RowBox[{"InsertResults", "\[Rule]", "True"}]}], "]"}], 
+  ";"}]], "Input",ExpressionUUID->"433eabf6-6290-4f0d-a9f7-f6edec62f633"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Generate and post-process Markdown", \
+"Section",ExpressionUUID->"889acdce-d865-48de-9e08-2356d62129a2"],
+
+Cell[TextData[{
+ "Required M2MD: ",
+ ButtonBox["https://github.com/kubaPod/M2MD/",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://github.com/kubaPod/M2MD/"], None},
+  ButtonNote->"https://github.com/kubaPod/M2MD/"]
+}], "Text",ExpressionUUID->"96f21e21-d241-4c30-8188-5abd2119cb18"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", "\"\<M2MD`\>\"", "]"}]], "Input",
+ CellLabel->"In[5]:=",ExpressionUUID->"25705a75-8962-4535-bb6e-6cd01373eb53"],
+
+Cell[BoxData[
+ RowBox[{"DeleteDirectory", "[", 
+  RowBox[{
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<img\>\""}], "}"}], 
+    "]"}], ",", 
+   RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
+  "]"}]], "Input",ExpressionUUID->"57c715b6-e0ad-4b51-bdf9-cbbcc2c1ca8f"],
+
+Cell[BoxData[
+ RowBox[{"MDExport", "[", 
+  RowBox[{"\"\<igraphm.md\>\"", ",", "nb"}], "]"}]], "Input",
+ CellLabel->"In[6]:=",ExpressionUUID->"7590c8c8-488d-4306-a379-b7411b5a7fe9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "replacements", " ", "from", " ", "Greek", " ", "FullForm", " ", "names", 
+    " ", "to", " ", "Unicode"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"greekRepl", "=", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"StringJoin", "[", 
+         RowBox[{"\"\<\\\\[\>\"", ",", 
+          RowBox[{"System`Private`LookupNameByCode", "@", 
+           RowBox[{"ToCharacterCode", "[", "#", "]"}]}], ",", "\"\<]\>\""}], 
+         "]"}], "\[Rule]", "#"}], "&"}], "/@", "\[IndentingNewLine]", 
+      RowBox[{"Join", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"CharacterRange", "[", 
+         RowBox[{"\"\<\[Alpha]\>\"", ",", "\"\<\[Omega]\>\""}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"CharacterRange", "[", 
+          RowBox[{"\"\<\[CapitalAlpha]\>\"", ",", "\"\<\[CapitalOmega]\>\""}],
+           "]"}], "//", 
+         RowBox[{"DeleteCases", "[", "\"\<\:03a2\>\"", "]"}]}]}], " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{"exclude", " ", "capital", " ", "final", " ", "sigma"}], " ", 
+        "*)"}], "\[IndentingNewLine]", "]"}]}]}], ";"}], 
+   "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "replace", " ", "FullForm", " ", "names", " ", "by", " ", "proper", " ", 
+     "Unicode"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"Export", "[", "\[IndentingNewLine]", 
+    RowBox[{"\"\<igraphm.md\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{"StringReplace", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Import", "[", 
+        RowBox[{"\"\<igraphm.md\>\"", ",", "\"\<Text\>\"", ",", 
+         RowBox[{"CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], "]"}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"Join", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{"(*", " ", 
+           RowBox[{
+            RowBox[{"remove", " ", "subtitle"}], " ", "\[LongDash]", " ", 
+            RowBox[{
+             RowBox[{"we", " ", "re"}], "-", 
+             RowBox[{
+             "add", " ", "it", " ", "as", " ", "metadata", " ", "with", " ", 
+              "Pandoc"}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+           "\"\<** the [igraph](http://igraph.org/) interface for \
+*Mathematica***\\n\\n\>\"", "\[Rule]", "\"\<\>\""}], ",", 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+             RowBox[{"fix", " ", "non"}], "-", 
+             RowBox[{"standard", " ", "doc", " ", "link"}]}], " ", "*)"}], 
+           "\[IndentingNewLine]", 
+           RowBox[{
+           "\"\<https://reference.wolfram.com/language/IGraphM\>\"", 
+            "\[Rule]", "\"\<#\>\""}], ",", "\[IndentingNewLine]", 
+           "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+            "fix", " ", "other", " ", "common", " ", "named", " ", 
+             "characters"}], " ", "*)"}], "\[IndentingNewLine]", 
+           RowBox[{
+           "\"\<\\\\[Infinity]\>\"", "\[Rule]", "\"\<\[Infinity]\>\""}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"\"\<\\\\[LeftAssociation]\>\"", "\[Rule]", "\"\<<|\>\""}],
+            ",", "\[IndentingNewLine]", 
+           RowBox[{
+           "\"\<\\\\[RightAssociation]\>\"", "\[Rule]", "\"\<|>\>\""}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{
+           "\"\<\\\\[Ellipsis]\>\"", "\[Rule]", "\"\<\[Ellipsis]\>\""}]}], 
+          "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+         "greekRepl"}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]",
+       "]"}], ",", "\[IndentingNewLine]", "\"\<Text\>\"", ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], 
+    "\[IndentingNewLine]", 
+    "]"}]}]}]], "Input",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Build final webpage", \
+"Section",ExpressionUUID->"1696ced4-9c16-4256-bde1-41a91d56d53b"],
+
+Cell["Optimize PNGs (size reduction):", \
+"Text",ExpressionUUID->"6b05b7cd-c6ba-439f-8165-c9bc4d10b279"],
+
+Cell[BoxData[
+ RowBox[{"Run", "[", "\"\<./optimg.sh\>\"", "]"}]], "Input",
+ CellLabel->"In[10]:=",ExpressionUUID->"4b5b631a-3f23-42c9-ac16-7b2700aa649d"],
+
+Cell["Convert Markdown to HTML with Pandoc:", \
+"Text",ExpressionUUID->"ff4d0f37-c6a7-42f6-bde5-2a7a1800fa41"],
+
+Cell[BoxData[
+ RowBox[{"Run", "[", "\"\<./gendoc.sh\>\"", "]"}]], "Input",
+ CellLabel->
+  "In[11]:=",ExpressionUUID->"17a86769-10cc-48d3-9677-5acd0f70e385"]
+}, Open  ]]
+},
+WindowSize->{948, 847},
+WindowMargins->{{135, Automatic}, {66, Automatic}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TrackCellChangeTimes->False,
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+
