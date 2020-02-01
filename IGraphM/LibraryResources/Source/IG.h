@@ -16,10 +16,6 @@
 
 class IG;
 
-// TODO this is a hack, should patch igraph to expose this interface
-typedef int(*igraph_i_maximal_clique_func_t)(const igraph_vector_t*, void*, igraph_bool_t*);
-extern "C" int igraph_i_maximal_cliques(const igraph_t *graph, igraph_i_maximal_clique_func_t func, void* data);
-
 class IG {
     igraph_t graph;
     igVector weights;
@@ -3033,6 +3029,27 @@ public:
     // If the graph is not distance regular, {} is returned.
     // Non-connected graphs are not excluded.
     void intersectionArray(MLINK link) const;
+
+    void sirProcess(MLINK link) const {
+        mlStream ml{link, "sirProcess"};
+
+        double beta, gamma;
+        igraph_integer_t n;
+
+        ml >> mlCheckArgs(3) >> beta >> gamma >> n;
+
+        igPtrVector<igraph_sir_t, igraph_sir_destroy> sirList;
+
+        igCheck(igraph_sir(&graph, beta, gamma, n, &sirList.list));
+
+        ml.newPacket();
+
+        ml << mlHead("List", sirList.size());
+        for (const auto &sir : sirList) {
+            ml << mlHead("List", 4);
+            ml << sir->times << sir->no_i << sir->no_r << sir->no_s;
+        }
+    }
 
 };
 
