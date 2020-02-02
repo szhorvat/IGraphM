@@ -3,16 +3,16 @@
 -- Adds links from sub-headings to the parent heading.
 -- Based on https://groups.google.com/d/msg/pandoc-discuss/YA20DfSuQdY/fLZkC4P7AQAJ
 -- Assumes that each heading has a unique ID.
--- Requires Pandoc 2.9 or later.
+-- Requires Pandoc 2.8 or later to ensure that headings are traversed in order.
 
 local headings = {{}, {}, {}, {}, {}} -- initialize to store multiple levels
 local parents = {}
 local current_chapter = nil
 
--- Collects headings of level 'chapter_level' into 'headings'
+-- Collects headings of 'chapter_level' into 'headings'
 local function collect_headings (chapter_level)
   return function (head)
-    if head.level == chapter_level then
+    if head.level <= chapter_level then
       local id = head.identifier
       current_chapter = {
         chapter = id,
@@ -58,7 +58,7 @@ end
 -- Must be run after 'collect_headings'
 local function insert_toc (chapter_level)
   return function (head)
-    if head.level == chapter_level then
+    if head.level <= chapter_level then
       local id = head.identifier
       if headings[chapter_level][id] then
         local toc = build_toc(

@@ -403,22 +403,20 @@ table {
     display: inline;
 }
 
-p.subtitle {
-    font-weight: bold;
-}
+/* ===========================================================================
+   Headings
+   =========================================================================== */
 
 h1.title {
     font-size: 41px;
     margin: 0px 0;
 }
 
-h1.title > img {
-    vertical-align: -6px;
+p.subtitle {
+    font-weight: bold;
 }
 
-p > img {
-    vertical-align: -3px;
-}
+/* bullet types for each ToC level */
 
 div.local-toc-1 > ul > li {
     list-style-type: circle;
@@ -428,7 +426,8 @@ div.local-toc-2 > ul > li {
     list-style-type: square;
 } 
 
-/* Hide up-arrows in ToC */
+/* hide up-arrows in ToC */
+
 #TOC a > span:last-child {
     display: none;
 }
@@ -437,6 +436,25 @@ div.local-toc-2 > ul > li {
     float: right;
     color: black;
 }
+
+
+/* Other */
+
+h1.title > img {
+    vertical-align: -6px;
+}
+
+p > img {
+    vertical-align: -3px;
+}
+
+kbd {
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    font-size: 0.8em;
+    padding: 1px;
+}
+
 
 /* Github css */
 
