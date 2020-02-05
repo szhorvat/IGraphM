@@ -440,8 +440,12 @@ div.local-toc-2 > ul > li {
 
 /* Other */
 
-h1.title > img {
+h1.title img {
     vertical-align: -6px;
+}
+
+h1.title a {
+    color: inherit;
 }
 
 p > img {
@@ -453,6 +457,10 @@ kbd {
     border: 1px solid #b4b4b4;
     font-size: 0.8em;
     padding: 1px;
+}
+
+div.sourceCode {
+    margin: 1em 0 0.5em 0;
 }
 
 
@@ -494,7 +502,7 @@ a {
 body {
     background-color: #fff;
     padding: 30px;
-    margin: 15px;
+    margin: 15px 0;
     font-size: 14px;
     line-height: 1.6
 }
@@ -559,7 +567,7 @@ h6 {
 }
 
 p, blockquote, table, pre {
-    margin: 10px 0
+    margin: 8px 0 10px 0;
 }
 
 /* not too large spacing in option lists */
@@ -653,7 +661,7 @@ dl dd>:last-child {
 
 blockquote {
     border-left: 4px solid #DDD;
-    padding: 0 15px;
+    padding: 0 0 0 7px;
     color: #777
 }
 
@@ -708,7 +716,12 @@ code, tt {
     color: #333
 }
 
-pre>code {
+/* Allow inline code to wrap as usual */
+p > code {
+    white-space: normal;
+}
+
+pre > code {
     margin: 0;
     padding: 0;
     white-space: pre;
