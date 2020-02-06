@@ -208,7 +208,7 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
 
         int i=0, j=0;
 
-        if (n == 0) goto d6done;
+        if (n <= 1) goto d6done;
 
         while (true) {
             char byte = *p++ - BIAS6;
@@ -251,7 +251,7 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
 
         int i=0, j=1;
 
-        if (n == 0) goto g6done;
+        if (n <= 1) goto g6done;
 
         while (true) {
             char byte = *p++ - BIAS6;
