@@ -5,8 +5,6 @@
  */
 
 #include "IGlobal.h"
-#include <cstring>
-
 
 int igInterruptionHandler(void *) {
     if (mma::libData->AbortQ()) {
@@ -45,6 +43,7 @@ constexpr int SMALLN = 62;
 constexpr int MAXBYTE = 126;
 constexpr int SMALLISHN = 258047;
 
+/* From gtools.c in nauty: */
 /* Get size of graph out of graph6, digraph6 or sparse6 string. */
 int graphsize(const char *s) {
     const char *p;
@@ -93,7 +92,18 @@ int graphsize(const char *s) {
 
 
 mma::IntTensorRef IGlobal::fromNauty(const char *str) {
-    size_t len = strlen(str);
+    size_t len;
+    {
+        // scan for illegal characters and determine string length
+        const char *p = str;
+        if (*p == ':' || *p == ';' || *p == '&')
+            p++;
+        while (*p >= BIAS6 && *p <= MAXBYTE)
+            p++;
+        if (*p != '\0')
+            throw mma::LibraryError("Illegal character in Graph6, Digraph6 or Sparse6 line.");
+        len = p-str;
+    }
 
     // The result is returned as an integer vector with the following elements:
     // 1st value: directed?
@@ -101,62 +111,86 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
     // Rest: edges as vertex pairs
     std::vector<mint> result;
 
-    if (*str == ':')
+    if (*str == ':') // non-incremental sparse6:
     {
-        throw mma::LibraryError("Sparse6 is not yet implemented.");
-
         str++; // skip ':' character
         int n = graphsize(str);
 
         result.push_back(0); // undirected
-        result.push_back(n); // vertex count
+        result.push_back(n); // vertex count       
 
-        int k = std::ceil(std::log2(n-1));
+        int k; // no. of bits needed to represent n-1
+        if (n > 1) {
+            k  = sizeof(int);
+            while (!( (n-1) & (1 << (k-1)) ))
+                k--;
+        } else {
+            k = 1;
+        }
 
         mint vertex = 0;
 
         const char *p = str + SIZELEN(n);
 
-        char val = *p - BIAS6;
-        char offset = 6; // bits still unread in the current value
+        char val;    // current value
+        char offset; // bits still unread in the current value
 
-        bool b = val & (1 << (offset-1));
+        if (n == 0) goto s6done;
 
-        offset -= 1;
-        if (offset == 0) {
-            val = *p++ - BIAS6;
-            offset = 6;
-        }
+#define S6_GETCHAR() \
+    if (*p == '\0') goto s6done; \
+    val = *p++ - BIAS6; \
+    offset = 6;
 
-        int x = 0;
-        int remaining = k; // bits to still read
-        while (remaining > 0) {
-            if (remaining > offset) {
-                x = x << offset;
-                x += val & ((1 << offset) - 1);
-                remaining -= offset;
-                val = *p++ - BIAS6;
-                offset = 6;
-            } else {
-                x = x << remaining;
-                x += (val >> (offset - remaining)) & ((1 << remaining) - 1);
-                offset -= remaining;
+        offset = 0;
+        while (true) {
+            if (offset == 0) {
+                S6_GETCHAR();
             }
+
+            bool b = val & (1 << (offset-1));
+
+            offset -= 1;
+            if (offset == 0) {
+                S6_GETCHAR();
+            }
+
+            int x = 0;
+            int remaining = k; // bits to still read to complete x
+            while (remaining > 0) {
+                if (remaining > offset) {
+                    x = x << offset;
+                    x += val & ((1 << offset) - 1);
+                    remaining -= offset;
+                    S6_GETCHAR();
+                } else {
+                    x = x << remaining;
+                    x += (val >> (offset - remaining)) & ((1 << remaining) - 1);
+                    offset -= remaining;
+                    remaining = 0;
+                }
+            }
+
+            if (b) vertex++;
+            if (x > vertex) {
+                vertex = x;
+            } else if (vertex < n) {
+                result.push_back(x);
+                result.push_back(vertex);
+            }
+
         }
 
-        if (b) vertex++;
-        if (x > vertex) {
-            vertex = x;
-        } else {
-            result.push_back(x);
-            result.push_back(vertex);
-        }
+#undef S6_GETCHAR
+
+    s6done:
+        return mma::makeVector<mint>(result.size(), result.data());
     }
-    else if (*str == ';')
+    else if (*str == ';') // incremental sparse6:
     {
         throw mma::LibraryError("Incremental Sparse6 is not implemented.");
     }
-    else if (*str == '&')
+    else if (*str == '&') // digraph6:
     {
         str++; // skip '&' character
         int n = graphsize(str);
@@ -173,6 +207,9 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
         const char *p = str + SIZELEN(n);
 
         int i=0, j=0;
+
+        if (n == 0) goto d6done;
+
         while (true) {
             char byte = *p++ - BIAS6;
             for (int k=0; k < 6; ++k) {
@@ -190,14 +227,14 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
                 byte <<= 1;
             }
         }
-    d6done:
 
+    d6done:
         return mma::makeVector<mint>(result.size(), result.data());
     }
-    else if (*str < BIAS6 || *str > MAXBYTE) {
+    else if (*str < BIAS6 || *str > MAXBYTE) { // invalid character for graph6 data
         throw mma::LibraryError("Invalid Graph6 data.");
     }
-    else
+    else // graph6:
     {
         int n = graphsize(str);
 
@@ -213,6 +250,8 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
         const char *p = str + SIZELEN(n);
 
         int i=0, j=1;
+
+        if (n == 0) goto g6done;
 
         while (true) {
             char byte = *p++ - BIAS6;
@@ -231,8 +270,8 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
                 byte <<= 1;
             }
         }
-    g6done:
 
+    g6done:
         return mma::makeVector<mint>(result.size(), result.data());
     }
 }
