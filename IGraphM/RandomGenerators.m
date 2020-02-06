@@ -67,11 +67,11 @@ IGStochasticBlockModelGame[ratesMatrix_?SquareMatrixQ, blockSizes_?nonNegIntVecQ
 
 PackageExport["IGForestFireGame"]
 IGForestFireGame::usage =
-    "IGForestFireGame[n, fwprob]\n" <>
-    "IGForestFireGame[n, fwprob, bwfactor]\n" <>
-    "IGForestFireGame[n, fwprob, bwfactor, nambassadors]";
+    "IGForestFireGame[n, pForward] generates a graph on n vertices from the forest fire model.\n" <>
+    "IGForestFireGame[n, pForward, rBackward] specifies the backward to forward burning probability ratio (default: 1).\n" <>
+    "IGForestFireGame[n, pForward, rBackward, nAmbassadors] also specifies the number of ambassador nodes in each step (default: 1).";
 
-Options[IGForestFireGame] = { DirectedEdges -> False };
+Options[IGForestFireGame] = { DirectedEdges -> True };
 SyntaxInformation[IGForestFireGame] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}, "OptionNames" -> optNames[IGForestFireGame, Graph]};
 IGForestFireGame[n_?Internal`PositiveMachineIntegerQ, fwprob_?NonNegative, bwratio : _?NonNegative : 1, nambs : _?Internal`NonNegativeIntegerQ : 1, opt : OptionsPattern[{IGForestFireGame, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
