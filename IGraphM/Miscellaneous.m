@@ -19,6 +19,10 @@ PackageExport["IGDirectedAcyclicGraphQ"]
 IGDirectedAcyclicGraphQ::usage = "IGDirectedAcyclicGraphQ[graph] tests if graph is directed and acyclic.";
 
 SyntaxInformation[IGDirectedAcyclicGraphQ] = {"ArgumentsPattern" -> {_}};
+(* Edgeless graphs are considered both directed and undirected by Mathematica,
+   but are transferred as undirected to igraph. Therefore dagQ() would return
+   False. We catch these early and return True. *)
+IGDirectedAcyclicGraphQ[g_?EmptyGraphQ] := True
 IGDirectedAcyclicGraphQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"dagQ"[]]
 IGDirectedAcyclicGraphQ[_] := False
 
@@ -29,6 +33,8 @@ IGTopologicalOrdering::usage =
     "Note that the values returned are vertex indices, not vertex names.";
 
 SyntaxInformation[IGTopologicalOrdering] = {"ArgumentsPattern" -> {_}};
+(* Catch edgeless graphs early. See comment for IGDirectedAcyclicGraphQ[] *)
+IGTopologicalOrdering[graph_?EmptyGraphQ] := Range@VertexCount[graph]
 IGTopologicalOrdering[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
       igIndexVec@check@ig@"topologicalSorting"[]
