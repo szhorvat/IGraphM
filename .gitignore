@@ -10,6 +10,7 @@ release
 *.lock
 IGraphM/LibraryResources/Source/.vscode
 WebDocumentation/img/*
+WebDocumentation/img2/*
 WebDocumentation/igraphm0.md
 WebDocumentation/igraphm.md
 WebDocumentation/index.html
