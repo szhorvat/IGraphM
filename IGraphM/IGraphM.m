@@ -1003,9 +1003,9 @@ PackageScope["igSubgraph"]
 igSubgraph::usage = "igSubgraph[graph, spec]";
 Which[
   (* In M12.0 and later Subgraph preserves properties, which makes it slow.
-     We disable this when not needed, for performance. *)
+     We disable this when not needed, for better performance. *)
   $VersionNumber >= 12.0,
-  igSubgraph[args___] := Subgraph[args, Properties -> None] (* TODO verify in M12.0 final *)
+  igSubgraph[args___] := Subgraph[args, Properties -> None]
   ,
   $VersionNumber >= 11.2,
   igSubgraph = Subgraph
@@ -1030,7 +1030,7 @@ IGDocumentation[] :=
         Documentation`HelpLookupPacletURI["paclet:IGraphM"]
       ];
       ,
-      Print["Built-in documentation is only available when running with a Front End.\nSee the online version at http://szhorvat.net/mathematica/IGraphM"]
+      Print["Built-in documentation is only available when running with a Front End.\nSee the online version at http://szhorvat.net/mathematica/IGDocumentation"]
     ]
 
 
