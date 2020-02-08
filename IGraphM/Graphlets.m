@@ -14,7 +14,7 @@ igContextSetup[igPackagePrivateSymbol]
 (*********************)
 
 PackageExport["IGGraphlets"]
-IGGraphlets::usage = "IGGraphlets[graph]"; (* TODO *)
+IGGraphlets::usage = "IGGraphlets[graph] decomposes a weighted graph into a sum of cliques."; (* TODO *)
 
 Options[IGGraphlets] = { MaxIterations -> 1000 };
 SyntaxInformation[IGGraphlets] = {"ArgumentsPattern" -> {_, _.}};
@@ -29,7 +29,7 @@ IGGraphlets[graph_?igGraphQ, OptionsPattern[]] :=
 
 
 PackageExport["IGGraphletBasis"]
-IGGraphletBasis::usage = "IGGraphletBasis[graph]"; (* TODO *)
+IGGraphletBasis::usage = "IGGraphletBasis[graph] computes a candidate clique basis."; (* TODO *)
 
 SyntaxInformation[IGGraphletBasis] = {"ArgumentsPattern" -> {_}};
 IGGraphletBasis[graph_?igGraphQ] :=
@@ -43,7 +43,7 @@ IGGraphletBasis[graph_?igGraphQ] :=
 
 
 PackageExport["IGGraphletProject"]
-IGGraphletProject::usage = "IGGraphletProject[graph, cliques]"; (* TODO *)
+IGGraphletProject::usage = "IGGraphletProject[graph, cliques] projects a weighted graph onto the given clique basis."; (* TODO *)
 
 Options[IGGraphletProject] = { MaxIterations -> 1000 };
 SyntaxInformation[IGGraphletProject] = {"ArgumentsPattern" -> {_, _, _.}};
