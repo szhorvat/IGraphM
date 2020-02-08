@@ -1173,6 +1173,132 @@ MT[
 ]
 
 
+(* ::Subsubsection::Closed:: *)
+(*IGFromNauty*)
+
+
+(* ::Text:: *)
+(*Graph6*)
+
+
+MT[
+  IGFromNauty["?"],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["@"],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["A?"],
+  Graph[{1, 2}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["A_"],
+  Graph[{1 <-> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["EEz_"],
+  Graph[{1, 2, 3, 4, 5, 6}, {1 <-> 4, 2 <-> 4, 1 <-> 5, 2 <-> 5, 3 <-> 5, 1 <-> 6, 2 <-> 6, 3 <-> 6}],
+  SameTest -> IGSameGraphQ
+]
+
+
+(* ::Text:: *)
+(*Sparse6*)
+
+
+MT[
+  IGFromNauty[":?"],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty[":@"],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty[":A"],
+  Graph[{1, 2}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty[":An"],
+  Graph[{1 <-> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty[":Ek@_Q_Q"],
+  Graph[{1, 2, 3, 4, 5, 6}, {1 <-> 4, 2 <-> 4, 1 <-> 5, 2 <-> 5, 3 <-> 5, 1 <-> 6, 2 <-> 6, 3 <-> 6}],
+  SameTest -> IGSameGraphQ
+]
+
+
+(* ::Text:: *)
+(*Digraph6*)
+
+
+MT[
+  IGFromNauty["&?"],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["&@?"],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["&A?"],
+  Graph[{1, 2}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["&AO"],
+  Graph[{1 -> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["&AW"],
+  Graph[{1 -> 2, 2 -> 1}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGFromNauty["&COx_"],
+  Graph[{1 -> 2, 2 -> 3, 2 -> 4, 3 -> 1, 3 -> 4, 4 -> 1}],
+  SameTest -> IGSameGraphQ
+]
+
+
+(* ::Text:: *)
+(*Bad input*)
+
+
+MT[
+  IGFromNauty["xx"],
+  $Failed,
+  {IGraphM::error}
+]
+
+
 (* ::Section::Closed:: *)
 (*Creation: random*)
 
@@ -1576,6 +1702,78 @@ MTSection["Acyclic graphs"]
 
 
 (* ::Subsubsection::Closed:: *)
+(*IGTopologicalOrdering*)
+
+
+(* check that reordering the adjacency matrix makes it upper triangular *)
+MT[
+  Module[{g = DirectedGraph[RandomGraph[{10,20}],"Acyclic"],ord,am},
+    g = IGReorderVertices[RandomSample@VertexList[g],g];
+    ord = IGTopologicalOrdering[g];
+    am = AdjacencyMatrix[g];
+    Union@Flatten@LowerTriangularize@Normal[am[[ord,ord]]]
+  ],
+  {0}
+]
+
+
+(* check that it does not error on edgeless graph; any permutation is a valid answer *)
+MT[
+  Sort@IGTopologicalOrdering@IGEmptyGraph[5],
+  Range[5]
+]
+
+
+(* behaviour with non-acylic graph *)
+MT[
+  IGTopologicalOrdering[CycleGraph[3, DirectedEdges -> True]],
+  {},
+  {IGraphM::warning}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGDirectedAcyclicGraph*)
+
+
+MT[
+  IGDirectedAcyclicGraphQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0,2]
+
+
+MT[
+  IGDirectedAcyclicGraphQ[Graph[{1 -> 2}]],
+  True
+]
+
+
+MT[
+  IGDirectedAcyclicGraphQ[CycleGraph[2, DirectedEdges -> True]],
+  False
+]
+
+MT[
+  IGDirectedAcyclicGraphQ[CycleGraph[3, DirectedEdges -> True]],
+  False
+]
+
+
+(* multi-edge *)
+MT[
+  IGDirectedAcyclicGraphQ[Graph[{1 -> 2, 1 -> 2}]],
+  True
+]
+
+
+(* self-loop *)
+MT[
+  IGDirectedAcyclicGraphQ[Graph[{1 -> 2, 1 -> 1}]],
+  False
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*IGFeedbackArcSet*)
 
 
@@ -1619,7 +1817,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Trees*)
 
 
@@ -1715,8 +1913,12 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGForestQ*)
+
+
+(* ::Text:: *)
+(*Undirected forests*)
 
 
 (* K_0 is a forest but not a tree *)
@@ -1738,7 +1940,68 @@ MT[
 ]
 
 
-(* TODO *)
+MT[
+  IGForestQ[IGShorthand["1-2-3-2,4-5", MultiEdges -> True]],
+  False
+]
+
+
+MT[
+  IGForestQ[IGShorthand["1-2-3-3,4-5", MultiEdges -> True, SelfLoops -> True]],
+  False
+]
+
+
+MT[
+  IGForestQ[IGShorthand["1,2,3"]],
+  True
+]
+
+
+MT[
+  IGForestQ[IGShorthand["1-2-3-1,4"]],
+  False
+]
+
+
+(* ::Text:: *)
+(*Directed forests*)
+
+
+MT[
+  IGForestQ[IGShorthand["1->2->3"], "Out"],
+  True
+]
+
+
+MT[
+  IGForestQ[IGShorthand["1->2->3"], "In"],
+  True
+]
+
+
+MT[
+  IGForestQ[IGShorthand["1->2->3,2->4"], "In"],
+  False
+]
+
+
+MT[
+  IGForestQ[IGShorthand["1->2->3,2->4,5<-6<-7,6<-8"], "Out"],
+  False
+]
+
+
+MT[
+  IGForestQ[IGShorthand["1->2->3,2->4,5<-6<-7,6<-8"], "In"],
+  False
+]
+
+
+MT[
+  IGForestQ[IGShorthand["1->2->3,2->4,5<-6<-7,6<-8"], "All"],
+  True
+]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -2335,6 +2598,9 @@ MT[
 ]
 
 
+(* TODO *)
+
+
 (* ::Subsection::Closed:: *)
 (*Directed graphs*)
 
@@ -2751,7 +3017,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Centralities*)
 
 
@@ -5506,7 +5772,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Matrix functions*)
 
 
@@ -6161,6 +6427,39 @@ MT[
     Graph[{"a"->"b", "b"->"a", "b"->"b"}]
   ],
   True
+]
+
+
+MT[
+  IGWeightedAdjacencyGraph[{{0, 1, 2}, {1, 5, 0}, {2, 0, 1}}],
+  Graph[{1 <-> 2, 1 <-> 3, 2 <-> 2, 3 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGWeightedAdjacencyGraph[{{0, 1, 2}, {1, 5, 0}, {2, 0, 1}}, 1],
+  Graph[{1, 2, 3}, {1 <-> 1, 1 <-> 3, 2 <-> 2, 2 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGWeightedAdjacencyGraph[{{0, 1, 2}, {1, 5, 0}, {2, 0, 1}}, Infinity],
+  Graph[{1 <-> 1, 1 <-> 2, 1 <-> 3, 2 <-> 2, 2 <-> 3, 3 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGWeightedAdjacencyGraph[{{0, 1, 0}, {2, 5, 0}, {3, 0, 1}}],
+  Graph[{1 -> 2, 2 -> 1, 2 -> 2, 3 -> 1, 3 -> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+(* With DirectedEdges \[Rule] False, only the upper triangular part of the matrix is considered. *)
+MT[
+  IGWeightedAdjacencyGraph[{{0, 1, 0}, {2, 5, 0}, {3, 0, 1}}, DirectedEdges -> False],
+  Graph[{1 <-> 2, 2 <-> 2, 3 <-> 3}],
+  SameTest -> IGSameGraphQ
 ]
 
 
@@ -7021,11 +7320,30 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Import/Export*)
 
 
 MTSection["Import/Export"]
+
+
+(* ::Subsection:: *)
+(*Import*)
+
+
+(* ::Subsubsection:: *)
+(*Nauty*)
+
+
+(* TODO *)
+
+
+(* ::Subsection:: *)
+(*Export*)
+
+
+(* ::Subsubsection:: *)
+(*GraphML*)
 
 
 MT[
