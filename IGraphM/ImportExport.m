@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2019 Szabolcs Horvát *)
+(* :Copyright: (c) 2020 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
@@ -251,8 +251,8 @@ IGImportString[string_?StringQ, format_, opt : OptionsPattern[]] :=
 addCompletion[IGImportString, {0, $IGImportFormats}]
 
 
-ImportNauty[stream_, opt___] := fromNautyList[opt]@ReadList[stream, String]
-ImportStringNauty[string_, opt___] := fromNautyList[opt]@StringSplit[string]
+ImportNauty[stream_, opt___] := catch@fromNautyList[opt]@check@ReadList[stream, String]
+ImportStringNauty[string_, opt___] := fromNautyList[opt]@StringSplit[string, "\n"]
 
 (* StringDelete is not available in M10.0 so we use StringTrim instead. *)
 (* TODO: Do not simply ignore header. Check that subsequent graphs are of the indicated type. *)
