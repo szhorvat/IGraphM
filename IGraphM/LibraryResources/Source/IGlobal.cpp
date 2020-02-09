@@ -5,6 +5,7 @@
  */
 
 #include "IGlobal.h"
+#include <cstring>
 
 int igInterruptionHandler(void *) {
     if (mma::libData->AbortQ()) {
