@@ -94,20 +94,29 @@ Cell[BoxData[
  CellChangeTimes->{{3.764992343741222*^9, 3.7649923464852543`*^9}},
  CellLabel->"In[3]:=",ExpressionUUID->"7ada961e-cf73-4e92-85e3-e71b8b808168"],
 
+Cell["Delete setup cells.", "Text",
+ CellChangeTimes->{{3.790193067874372*^9, 
+  3.790193078158207*^9}},ExpressionUUID->"b4b1a815-9da8-4d70-9da7-\
+4861329b7077"],
+
+Cell[BoxData[
+ RowBox[{"Cells", "[", 
+  RowBox[{"nb", ",", 
+   RowBox[{"CellTags", "\[Rule]", "\"\<DeleteCell\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"1abededc-6efe-458f-8f8c-77dd5b04dd01"],
+
 Cell[TextData[{
  "Select ",
  Cell[BoxData[
   FormBox[
    RowBox[{"PageBreakBelow", "\[Rule]", "False"}], TraditionalForm]],
-  FormatType->"TraditionalForm",ExpressionUUID->
-  "3374aadc-7312-4e87-a3e3-df3e7d76af21"],
+  ExpressionUUID->"3374aadc-7312-4e87-a3e3-df3e7d76af21"],
  " on Text cells followed by Input cells. We must do it this way, and not set \
 ",
  Cell[BoxData[
   FormBox[
    RowBox[{"PageBreakAbove", "\[Rule]", "False"}], TraditionalForm]],
-  FormatType->"TraditionalForm",ExpressionUUID->
-  "89609800-bd2b-44b4-a564-0436bb5d473d"],
+  ExpressionUUID->"89609800-bd2b-44b4-a564-0436bb5d473d"],
  " on Input cells preceded by Text cells. If we did that, some of the outputs \
 would be faded due to modified input cells."
 }], "Text",
