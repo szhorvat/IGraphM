@@ -21,11 +21,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.112.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.113.paclet` was downloaded into the directory `~/Downloads`, evaluate
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.3.112.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.3.113.paclet"]
 ```
 
 IGraph/M requires Mathematica 10.0.2 or later.  Binaries are included for Windows 64-bit, OS X 10.9 or later, Linux x86_64 and Raspbian (Linux ARM on Raspberry Pi).  For other operating systems the package must be compiled from source (see [Development.md](Development.md) for guidance).
@@ -138,7 +138,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
 New functions in this release:
 
- - Deterministic graph generators: `IGKautzGraph`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGToPrufer`, `IGKaryTree`, `IGSymmetricTree`, `IGBetheLattice`, `IGTriangularLattice`, `IGMycielskian`, `IGExpressionTree`, `IGShorthand`.
+ - Deterministic graph generators: `IGKautzGraph`, `IGCompleteGraph`, `IGCompleteAcyclicGraph`, `IGDeBruijnGraph`, `IGChordalRing`, `IGEmptyGraph`, `IGRealizeDegreeSequence`, `IGFromPrufer`, `IGToPrufer`, `IGKaryTree`, `IGSymmetricTree`, `IGBetheLattice`, `IGTriangularLattice`, `IGMycielskian`, `IGExpressionTree`, `IGShorthand`, `IGFromNauty`.
  - Random graph generators: `IGWattsStrogatzGame`, `IGCallawayTraitsGame`, `IGEstablishmentGame`, `IGTreeGame`, `IGErdosRenyiGameGNM`, `IGErdosRenyiGameGNP`.
  - Weighted graph functions: `IGWeightedSimpleGraph`, `IGWeightedUndirectedGraph`, `IGWeightedVertexDelete`, `IGWeightedSubgraph`, `IGUnweighted`, `IGDistanceWeighted`, `IGWeightedAdjacencyGraph`, `IGVertexWeightedQ`, `IGEdgeWeightedQ`, `IGVertexStrength`, `IGVertexInStrength`, `IGVertexOutStrength`.
  - Graph colouring functions: `IGVertexColoring`, `IGEdgeColoring`, `IGKVertexColoring`, `IGKEdgeColoring`, `IGMinimumVertexColoring`, `IGMinimumEdgeColoring`, `IGChromaticNumber`, `IGChromaticIndex`, `IGVertexColoringQ`.
@@ -156,12 +156,13 @@ New functions in this release:
  - Transitivity: `IGVertexTransitiveQ`, `IGEdgeTransitiveQ`, `IGSymmetricQ`, `IGDistanceTransitiveQ`.
  - Regular graphs: `IGRegularQ`, `IGStronglyRegularQ`, `IGStronglyRegularParameters`, `IGDistanceRegularQ`, `IGIntersectonArray`.
  - A framework for easy property transformations and graph styling: `IGVertexProp`, `IGEdgeProp`, `IGEdgeVertexProp`, `IGVertexMap`, `IGEdgeMap`, `IGVertexPropertyList`, `IGEdgePropertyList`.
+ - Import function: `IGImport`, `IGImportString`, `$IGImportFormats`; support for importing Graph6, Digraph6 and Sparse6.
  - Export functions: `IGExport`, `IGExportString`, `$IGExportFormats`; support for exporting standards-compliant GraphML that can be read by other igraph interfaces (R, Python).
  - Matrix functions: `IGZeroDiagonal`, `IGTakeUpper`, `IGTakeLower`, `IGAdjacencyMatrixPlot`, `IGKirchhoffMatrix`, `IGJointDegreeMatrix`
  - Added `IGIndexEdgeList` for retrieving the edge list of a graph in terms of vertex indices. This function is very fast and returns a packed array. It facilitates the efficient implementation of graph processing functions in pure Mathematica code, or interfacing with C libraries.
  - Bipartite graphs: `IGBipartiteIncidenceMatrix`, `IGBipartiteIncidenceGraph`, `IGBipartiteProjections`
  - Random walks:  `IGRandomEdgeWalk`, `IGRandomEdgeIndexWalk`
- - Connectivity: `IGGiantComponent`, `IGMinimalSeparators`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGGomoryHuTree`
+ - Connectivity: `IGGiantComponent`, `IGMinimalSeparators`, `IGMinimumEdgeCuts`, `IGMinimalEdgeCuts`, `IGBridges`, `IGConnectedComponentSizes`, `IGWeaklyConnectedComponentSizes`, `IGGomoryHuTree`
  - Other testing functions: `IGTriangleFreeQ`, `IGSelfComplementaryQ`,  `IGCactusQ`,`IGNullGraphQ`, `IGHomeomorphicQ`.
  - Other new functions: `IGNeighborhoodSize`, `IGCoreness`, `IGVoronoiCells`, `IGSmoothen`, `IGSimpleGraph`, `IGPartitionsToMembership`, `IGMembershipToPartitions`, `IGSinkVertexList`, `IGSourceVertexList`, `IGIsolatedVertexList`, `IGReorderVertices`, `IGTakeSubgraph`, `IGDisjointUnion`, `IGAdjacencyList`, `IGAdjacencyGraph`.
 
@@ -185,8 +186,7 @@ Incompatible changes from IGraph/M 0.3:
  - A flat namespace structure is used. Functions from ``IGraphM`Utilities` `` have been moved to ``IGraphM` ``.
  - Renamed `"MultipleEdges"` option to `MultiEdges` for convenient typing and auto-completion.
  - Renamed `IGMinSeparators` to `IGMinimumSeparators`.
- - Renamed `IGMakeLattice` to `IGSquareLattice`. The name `IGMakeLattice` works, but it is deprecated. 
- - Removed graphlet functions due to [a long-time unresolved bug in the igraph C core](https://github.com/igraph/igraph/issues/869).
+ - Renamed `IGMakeLattice` to `IGSquareLattice`. The name `IGMakeLattice` works, but it is deprecated.
 
 Other changes:
 
