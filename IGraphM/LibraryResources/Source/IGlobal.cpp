@@ -115,6 +115,8 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
     if (*str == ':') // non-incremental sparse6:
     {
         str++; // skip ':' character
+        if (*str == '\0')
+            throw mma::LibraryError("Truncated Sparse6 line.");
         int n = graphsize(str);
 
         result.push_back(0); // undirected
