@@ -460,7 +460,7 @@ kbd {
 }
 
 div.sourceCode {
-    margin: 1em 0 0.5em 0;
+    margin: 1em 0 0.6em 0;
 }
 
 
@@ -662,7 +662,7 @@ dl dd>:last-child {
 blockquote {
     border-left: 4px solid #DDD;
     padding: 0 0 0 7px;
-    color: #777
+    color: inherit;
 }
 
 blockquote>:first-child {

@@ -145,26 +145,6 @@ Cell[BoxData[{
  CellLabel->"In[10]:=",ExpressionUUID->"57c715b6-e0ad-4b51-bdf9-cbbcc2c1ca8f"],
 
 Cell[BoxData[
- RowBox[{"MDExport", "//", "Options"}]], "Input",
- CellLabel->"In[12]:=",ExpressionUUID->"7a08850e-4121-473b-9644-734fa78daef8"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"{", 
-   RowBox[{
-    RowBox[{"\"\<ImagesExportURL\>\"", "\[Rule]", "Automatic"}], ",", 
-    RowBox[{"\"\<ImagesFetchURL\>\"", "\[Rule]", "\"\<Relative\>\""}], ",", 
-    RowBox[{"\"\<IgnoredStyles\>\"", "\[Rule]", "None"}], ",", 
-    RowBox[{"\"\<ImageNameFunction\>\"", "\[Rule]", "Automatic"}], ",", 
-    RowBox[{"\"\<BoxesToStringType\>\"", "\[Rule]", "\"\<PlainText\>\""}], 
-    ",", 
-    RowBox[{"\"\<OverwriteImages\>\"", "\[Rule]", "True"}], ",", 
-    RowBox[{"\"\<CellStyleRules\>\"", "\[Rule]", "Automatic"}], ",", 
-    RowBox[{"\"\<MDElementTemplates\>\"", "\[Rule]", "Automatic"}]}], "}"}], 
-  " "}]], "Input",
- CellLabel->"In[13]:=",ExpressionUUID->"b1ab5480-28a7-490d-aba1-a05103332b3e"],
-
-Cell[BoxData[
  RowBox[{
   RowBox[{"MDExport", "[", 
    RowBox[{"\"\<igraphm0.md\>\"", ",", "nb", ",", "\[IndentingNewLine]", 
@@ -255,14 +235,25 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
           RowBox[{
            RowBox[{"(", 
             RowBox[{"StartOfLine", "~~", "\"\<# \>\"", "~~", 
-             RowBox[{"(", 
+             RowBox[{"Shortest", "[", 
               RowBox[{"title", ":", 
                RowBox[{"(", 
-                RowBox[{"__", "~~", "\"\< IGraph/M\>\""}], ")"}]}], ")"}], "~~",
+                RowBox[{"__", "~~", "\"\< IGraph/M\>\""}], ")"}]}], "]"}], "~~",
               "EndOfLine"}], ")"}], "\[RuleDelayed]", 
            RowBox[{
            "\"\<# [\>\"", "<>", "title", "<>", 
             "\"\<](http://szhorvat.net/mathematica/IGraphM)\>\""}]}], ",", 
+          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"(*", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"(", 
+              RowBox[{"StartOfLine", "~~", 
+               RowBox[{"image", ":", 
+                RowBox[{"Shortest", "[", 
+                 RowBox[{"\"\<![\>\"", "~~", "__", "~~", "\"\<png)\>\""}], 
+                 "]"}]}], "~~", "EndOfLine"}], ")"}], "\[RuleDelayed]", 
+             RowBox[{"\"\<> \>\"", "<>", "image"}]}], ","}], "*)"}], 
           "\[IndentingNewLine]", "\[IndentingNewLine]", 
           RowBox[{"(*", " ", 
            RowBox[{
@@ -300,9 +291,8 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
      "]"}], "<>", "footer"}], ",", "\[IndentingNewLine]", "\"\<Text\>\"", ",",
     "\[IndentingNewLine]", 
    RowBox[{"CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], 
-  "\[IndentingNewLine]", "]"}]}], "Input",
- CellLabel->
-  "In[16]:=",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
+  "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
 }, Open  ]]
 }, Open  ]],
 
@@ -316,8 +306,8 @@ Cell["Rescale and optimize images.", \
 
 Cell[BoxData[
  RowBox[{"(*", 
-  RowBox[{"Run", "[", "\"\<./optimg.sh\>\"", "]"}], 
-  "*)"}]], "Input",ExpressionUUID->"4b5b631a-3f23-42c9-ac16-7b2700aa649d"],
+  RowBox[{"Run", "[", "\"\<./optimg.sh\>\"", "]"}], "*)"}]], "Input",
+ CellLabel->"In[18]:=",ExpressionUUID->"4b5b631a-3f23-42c9-ac16-7b2700aa649d"],
 
 Cell[BoxData[
  RowBox[{"CopyDirectory", "[", 
@@ -359,7 +349,7 @@ Cell[BoxData[{
    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
   "]"}], "\[IndentingNewLine]", 
  RowBox[{"CreateDirectory", "[", "\"\<IGDocumentation\>\"", "]"}]}], "Input",
- CellLabel->"In[30]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
+ CellLabel->"In[24]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
 
 Cell[BoxData[{
  RowBox[{"CopyDirectory", "[", 
@@ -371,7 +361,7 @@ Cell[BoxData[{
   RowBox[{"\"\<igmdoc.css\>\"", ",", "\"\<IGDocumentation/igmdoc.css\>\""}], 
   "]"}]}], "Input",
  CellLabel->
-  "In[33]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
+  "In[27]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
 }, Open  ]]
 },
 WindowSize->{948, 847},

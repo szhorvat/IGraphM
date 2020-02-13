@@ -1,8 +1,8 @@
 Notebook[{
-Cell[BoxData[
- RowBox[{"Quit", "[", "]"}]], "Input",
- CellChangeTimes->{{3.764990729809279*^9, 3.7649907306687*^9}},
- CellLabel->"In[9]:=",ExpressionUUID->"f0bc3e8f-268e-414b-a01f-640c8c2390ea"],
+Cell[BoxData["Quit"], "Input",
+ CellChangeTimes->{{3.764990729809279*^9, 3.7649907306687*^9}, {
+  3.7906219225056963`*^9, 
+  3.7906219226195*^9}},ExpressionUUID->"f0bc3e8f-268e-414b-a01f-640c8c2390ea"],
 
 Cell[CellGroupData[{
 
@@ -100,10 +100,13 @@ Cell["Delete setup cells.", "Text",
 4861329b7077"],
 
 Cell[BoxData[
- RowBox[{"Cells", "[", 
-  RowBox[{"nb", ",", 
-   RowBox[{"CellTags", "\[Rule]", "\"\<DeleteCell\>\""}]}], 
-  "]"}]], "Input",ExpressionUUID->"1abededc-6efe-458f-8f8c-77dd5b04dd01"],
+ RowBox[{"NotebookDelete", "@", 
+  RowBox[{"Cells", "[", 
+   RowBox[{"nb", ",", 
+    RowBox[{"CellTags", "\[Rule]", "\"\<DeleteCell\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.790268853802835*^9, 
+  3.790268854265957*^9}},ExpressionUUID->"1abededc-6efe-458f-8f8c-\
+77dd5b04dd01"],
 
 Cell[TextData[{
  "Select ",
@@ -166,13 +169,16 @@ Cell["Create PDF.", "Text",
   3.766070498126829*^9}},ExpressionUUID->"dc47c899-cd83-4624-abad-\
 423405dc945e"],
 
-Cell[BoxData[
+Cell[BoxData[{
+ RowBox[{"SetDirectory", "@", 
+  RowBox[{"NotebookDirectory", "[", "]"}]}], "\[IndentingNewLine]", 
  RowBox[{"Export", "[", 
   RowBox[{"\"\<IGDocumentation.pdf\>\"", ",", "nb", ",", 
-   RowBox[{"ImageResolution", "\[Rule]", "450"}]}], "]"}]], "Input",
+   RowBox[{"ImageResolution", "\[Rule]", "450"}]}], "]"}]}], "Input",
  CellChangeTimes->{{3.7649913409972773`*^9, 3.7649913548458347`*^9}, {
-  3.764991542138734*^9, 3.764991546343018*^9}},
- CellLabel->"In[6]:=",ExpressionUUID->"581d0512-dc17-471a-bd67-2e0af6fa739d"],
+  3.764991542138734*^9, 3.764991546343018*^9}, {3.7902343719797297`*^9, 
+  3.790234377630802*^9}},ExpressionUUID->"581d0512-dc17-471a-bd67-\
+2e0af6fa739d"],
 
 Cell["Close notebook without saving.", "Text",
  CellChangeTimes->{{3.766070500028552*^9, 
@@ -202,7 +208,8 @@ WindowSize->{808, 755},
 WindowMargins->{{4, Automatic}, {Automatic, 4}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->True,
-FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
-StyleDefinitions->"Default.nb"
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (February 11, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"80af44fa-5568-485b-8cc9-e0a40b960f61"
 ]
 
