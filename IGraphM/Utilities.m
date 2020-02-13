@@ -463,3 +463,29 @@ IGTakeSubgraph[g_?GraphQ, sg_?GraphQ, opt : OptionsPattern[]] :=
           opt] (* apply user options *)
       ]
 
+
+(***** Repeated trials for random generation *****)
+
+PackageExport["IGTryUntil"]
+IGTryUntil::usage =
+    "IGTryUntil[cond][expr] repeatedly evaluates expr until cond[expr] is True.\n" <>
+    "IGTryUntil[cond, max][expr] evaluates expr at most max times and returns $Failed if cond[expr] was never True.";
+SyntaxInformation[IGTryUntil] = {"ArgumentsPattern" -> {_, _.}};
+
+IGTryUntil[cond_] :=
+    Function[expr,
+      Module[{res},
+        While@Not@cond[res = expr];
+        res
+      ],
+      {HoldFirst}
+    ]
+
+IGTryUntil[cond_, max_] :=
+    Function[expr,
+      Module[{res},
+        Do[If[cond[res = expr], Return[res, Module]], {max}];
+        $Failed
+      ],
+      {HoldFirst}
+    ]
