@@ -2392,10 +2392,14 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"{", 
       RowBox[{"p", ",", 
-       RowBox[{"Boole", "@", 
-        RowBox[{"ConnectedGraphQ", "@", 
-         RowBox[{"IGErdosRenyiGameGNP", "[", 
-          RowBox[{"n", ",", "p"}], "]"}]}]}]}], "}"}], ",", 
+       RowBox[{"Mean", "@", 
+        RowBox[{"Boole", "@", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"ConnectedGraphQ", "@", 
+            RowBox[{"IGErdosRenyiGameGNP", "[", 
+             RowBox[{"n", ",", "p"}], "]"}]}], ",", 
+           RowBox[{"{", "50", "}"}]}], "]"}]}]}]}], "}"}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{"{", 
       RowBox[{"p", ",", "0", ",", "0.05", ",", "0.0005"}], "}"}]}], 
@@ -2406,9 +2410,8 @@ Cell[BoxData[{
       RowBox[{"{", 
        RowBox[{
         RowBox[{"Log", "[", "n", "]"}], "/", "n"}], "}"}], ",", "None"}], 
-     "}"}]}]}], "\[IndentingNewLine]", "]"}]}], "Input",
- CellChangeTimes->{{3.73278882963556*^9, 
-  3.73278908136868*^9}},ExpressionUUID->"46d8993b-98c7-4cad-b227-163c9ba44365"]
+     "}"}]}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"46d8993b-98c7-4cad-b227-163c9ba44365"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2849,7 +2852,11 @@ Cell[BoxData[
     "with", " ", "an", " ", "explicit", " ", 
     RowBox[{"seed", "."}]}], " ", "*)"}], "\[IndentingNewLine]", 
   RowBox[{
-   RowBox[{"SeedRandom", "[", "137", "]"}], ";"}], " "}]], "Input",
+   RowBox[{
+    RowBox[{"SeedRandom", "[", "137", "]"}], ";"}], " ", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"$Line", "-=", "1"}], ";"}]}]}]], "Input",
  CellTags->
   "DeleteCell",ExpressionUUID->"ed1c76e5-06e1-4ff0-a645-de778e482ce3"],
 
@@ -3873,10 +3880,7 @@ Cell[BoxData[
       RowBox[{"IGForestFireGame", "[", 
        RowBox[{"2000", ",", "0.4", ",", "r", ",", "2", ",", 
         RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}]}], ",", 
-     "\[IndentingNewLine]", 
-     RowBox[{"{", 
-      RowBox[{"\"\<Log\>\"", ",", "Automatic"}], "}"}], ",", 
-     "\[IndentingNewLine]", 
+     "\[IndentingNewLine]", "\"\<Log\>\"", ",", 
      RowBox[{"{", 
       RowBox[{"\"\<Log\>\"", ",", "\"\<SurvivalCount\>\""}], "}"}], ",", 
      "\[IndentingNewLine]", 
@@ -6585,8 +6589,9 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"Normalized", "\[Rule]", "True"}]],ExpressionUUID->
   "49a0892b-6fac-4833-b393-bad2260716c8"],
- ", the result is normalized by dividing it by the highest value it can \
-achieve for a graph of the same directedness on the same number of vertices."
+ ", the result is normalized by dividing by the highest possible \
+centralization score of any graph of the same directedness on the same number \
+of vertices."
 }], "Text",ExpressionUUID->"211d33bc-9971-4727-a7f6-88a163c8c646"],
 
 Cell[BoxData[
@@ -6606,12 +6611,156 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"bd172159-e568-412a-909f-fd4079b3cc9d"],
 
 Cell[BoxData[
- RowBox[{"IGDegreeCentralization", "[", "g", 
+ RowBox[{"IGDegreeCentralization", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"SelfLoops", "\[Rule]", "False"}]}], 
   "]"}]], "Input",ExpressionUUID->"42ba5f1b-0237-4f17-83e9-3b93e3f2b21d"],
 
 Cell[BoxData[
  RowBox[{"IGEigenvectorCentralization", "[", "g", 
-  "]"}]], "Input",ExpressionUUID->"217fae85-80ed-40a4-8549-22bb873b5e1c"]
+  "]"}]], "Input",ExpressionUUID->"217fae85-80ed-40a4-8549-22bb873b5e1c"],
+
+Cell[TextData[{
+ "For most centrality types, the highest centralization is achieved by the ",
+ Cell[BoxData[
+ "StarGraph"],ExpressionUUID->"ad258442-b2e4-435d-b6a7-52acfac64ea4"],
+ "."
+}], "Text",ExpressionUUID->"6b1f9672-61f1-4e5c-b938-c05d3e67f5ad"],
+
+Cell[BoxData[
+ RowBox[{"IGBetweennessCentralization", "@", 
+  RowBox[{
+  "StarGraph", "[", "5", 
+   "]"}]}]], "Input",ExpressionUUID->"cd84d9bc-0e63-479f-b12c-7b173ea28469"],
+
+Cell[TextData[{
+ "In the case of the degree centralization, the highest possible \
+centralization score depends on whether self-loops are allowed. This is \
+controlled by the ",
+ Cell[BoxData[
+ "SelfLoops"],ExpressionUUID->"d4695f26-a152-4eb1-a207-c77431ad5958"],
+ " option of ",
+ Cell[BoxData[
+ "IGDegreeCentralization"],ExpressionUUID->
+  "f200e566-1963-42e6-9422-a553718cbbcb"],
+ ". The default is ",
+ Cell[BoxData[
+  RowBox[{"SelfLoops", "\[Rule]", "True"}]],ExpressionUUID->
+  "43ac6202-349c-4627-808f-b9ae1822d748"],
+ "."
+}], "Text",ExpressionUUID->"ae7d83e9-1611-4c0f-ac38-70f7e8dc4368"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"IGDegreeCentralization", "[", 
+    GraphicsBox[
+     NamespaceBox["NetworkGraphics",
+      DynamicModuleBox[{Typeset`graph = HoldComplete[
+        Graph[{1, 2, 3, 4, 5, 6}, {Null, 
+          SparseArray[
+          Automatic, {6, 6}, 0, {
+           1, {{0, 5, 6, 7, 8, 9, 10}, {{2}, {3}, {4}, {5}, {6}, {1}, {1}, {
+             1}, {1}, {1}}}, Pattern}]}, {
+         GraphLayout -> "StarEmbedding", VertexSize -> {Medium}}]]}, 
+       TagBox[
+        GraphicsGroupBox[
+         GraphicsComplexBox[{{0., 
+          0.}, {-0.5877852522924727, -0.8090169943749468}, {
+          0.5877852522924737, -0.8090169943749481}, {0.9510565162951533, 
+          0.30901699437494634`}, {-7.044813998280222*^-16, 
+          1.}, {-0.9510565162951538, 0.30901699437494945`}}, {
+           {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+            LineBox[{{1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}}]}, 
+           {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+            DiskBox[1, 0.09999999999999992], DiskBox[2, 0.09999999999999992], 
+            DiskBox[3, 0.09999999999999992], DiskBox[4, 0.09999999999999992], 
+            DiskBox[5, 0.09999999999999992], 
+            DiskBox[6, 0.09999999999999992]}}]],
+        MouseAppearanceTag["NetworkGraphics"]],
+       AllowKernelInitialization->False]],
+     DefaultBaseStyle->{
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+     FormatType->TraditionalForm,
+     FrameTicks->None], "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"IGDegreeCentralization", "[", 
+    RowBox[{
+     GraphicsBox[
+      NamespaceBox["NetworkGraphics",
+       DynamicModuleBox[{Typeset`graph = HoldComplete[
+         Graph[{1, 2, 3, 4, 5, 6}, {Null, 
+           SparseArray[
+           Automatic, {6, 6}, 0, {
+            1, {{0, 5, 6, 7, 8, 9, 10}, {{2}, {3}, {4}, {5}, {6}, {1}, {1}, {
+              1}, {1}, {1}}}, Pattern}]}, {
+          GraphLayout -> "StarEmbedding", VertexSize -> {Medium}}]]}, 
+        TagBox[
+         GraphicsGroupBox[
+          GraphicsComplexBox[{{0., 
+           0.}, {-0.5877852522924727, -0.8090169943749468}, {
+           0.5877852522924737, -0.8090169943749481}, {0.9510565162951533, 
+           0.30901699437494634`}, {-7.044813998280222*^-16, 
+           1.}, {-0.9510565162951538, 0.30901699437494945`}}, {
+            {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+             LineBox[{{1, 2}, {1, 3}, {1, 4}, {1, 5}, {1, 6}}]}, 
+            {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+             DiskBox[1, 0.09999999999999992], DiskBox[2, 0.09999999999999992],
+              DiskBox[3, 0.09999999999999992], 
+             DiskBox[4, 0.09999999999999992], DiskBox[5, 0.09999999999999992],
+              DiskBox[6, 0.09999999999999992]}}]],
+         MouseAppearanceTag["NetworkGraphics"]],
+        AllowKernelInitialization->False]],
+      DefaultBaseStyle->{
+       "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> 
+        Hue[0.8, 1., 0.6]},
+      FormatType->TraditionalForm,
+      FrameTicks->None], ",", 
+     RowBox[{"SelfLoops", "\[Rule]", "False"}]}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"IGDegreeCentralization", "[", 
+    GraphicsBox[
+     NamespaceBox["NetworkGraphics",
+      DynamicModuleBox[{Typeset`graph = HoldComplete[
+        Graph[{1, 2, 3, 4, 5, 6}, {
+         Null, SparseArray[
+          Automatic, {6, 6}, 0, {
+           1, {{0, 6, 6, 6, 6, 6, 6}, {{2}, {3}, {4}, {5}, {6}, {1}}}, {1, 1, 
+            1, 1, 1, 1}}]}, {
+         GraphLayout -> "StarEmbedding", VertexSize -> {Medium}}]]}, 
+       TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
+1:eJxTTMoPSmViYGCQBWIQjQ6iokpZlM8/2r/oy/TZ5Y9f7k+G8O3XQfl/Q1yE
++fLf2du81Dd/f+yyfW3sjTUbE0/ugej+YM8YCpbfXwKVf1ChpPHsxcn95Tb1
+HwKnn97feOlB+9cbZ/Yr7Hm0LFLv3P6UP/JMP6Qv7D9h75wTLXZh//+y2SsX
+fr64X8q8vUPrwIX9QsknHQ49urz/1fRH2tP4Lu6/d3J64/nrV/dL8F5Wvf7v
+wv4nV4uzOQ9e33+oOMO5ZuKF/Tm8LTbSvTf3H2XObzg15fx+56We83Zo394f
+8OK0h33i2f0ZVx1LDPvu7GfruD3Hd86p/SrJwgLfl9/dHxQRcFMo/vh+JrD7
+7+13Arv/8P6Id+u+Zty5tz9n0ftj317s369Zue+3+pt7++3Ztx0+KLJjf4RE
+csSeuff2fwj7l2YfsWE/i6K8zdvPd/ez3VSYZPh54X4fe9/F+77c2X/j/4Qm
+ubuN+yvqpU9Yrby9X2JWSOV15V77BN4/agqyt/b/WdGU/vXRAvvVQVx/y+Ju
+7J8zo33S4v/L7YMcvNiEaq/tF/kuc7Ahbo39RO7rf/91XtnP4bKX99X1tfZX
+riV/fT3t0n4OqDwAsSn4lw==
+          "], {
+           {Hue[0.6, 0.7, 0.5], Opacity[0.7], 
+            {Arrowheads[0.], ArrowBox[{1, 2}, 0.09999999999999992]}, 
+            {Arrowheads[0.], ArrowBox[{1, 3}, 0.09999999999999992]}, 
+            {Arrowheads[0.], ArrowBox[{1, 4}, 0.09999999999999992]}, 
+            {Arrowheads[0.], ArrowBox[{1, 5}, 0.09999999999999992]}, 
+            {Arrowheads[0.], ArrowBox[{1, 6}, 0.09999999999999992]}, 
+            {Arrowheads[0.], 
+             ArrowBox[BezierCurveBox[{1, 10, 13, 15, 21, 23, 26, 1},
+              SplineDegree->7], 0.09999999999999992]}}, 
+           {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
+            DiskBox[1, 0.09999999999999992], DiskBox[2, 0.09999999999999992], 
+            DiskBox[3, 0.09999999999999992], DiskBox[4, 0.09999999999999992], 
+            DiskBox[5, 0.09999999999999992], 
+            DiskBox[6, 0.09999999999999992]}}]],
+        MouseAppearanceTag["NetworkGraphics"]],
+       AllowKernelInitialization->False]],
+     DefaultBaseStyle->{
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+     FormatType->TraditionalForm,
+     FrameTicks->None], "]"}]}], 
+  "}"}]], "Input",ExpressionUUID->"c6b449ba-8cf5-4be6-be9b-36e414b31108"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -17342,7 +17491,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -17363,7 +17512,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -37270,8 +37419,8 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{"Multicolumn", "[", "layouts", 
   "]"}]}], "Input",ExpressionUUID->"3c460ad1-bedc-423a-b0e6-52d45efc22f4"]
-}, Closed]]
-}, Closed]],
+}, Open  ]]
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -40970,7 +41119,110 @@ Cell[BoxData[
    RowBox[{"Normal", "@", 
     RowBox[{"Total", "[", 
      RowBox[{"td", "[", "\"\<PathComponents\>\"", "]"}], "]"}]}]}], "//", 
-  "Short"}]], "Input",ExpressionUUID->"9a4537b5-8717-4acb-abad-ebcbe88ae421"]
+  "Short"}]], "Input",ExpressionUUID->"9a4537b5-8717-4acb-abad-ebcbe88ae421"],
+
+Cell["\<\
+In the next example, we compare epidemic spreading on a periodic grid, i.e. a \
+network that only has spatially local connections, with a rewired version of \
+the same network which also includes long range links. We rewire 5% of links \
+while ensuring that the graph stays connected.\
+\>", "Text",ExpressionUUID->"08e82ff3-60ed-4c0a-aa1c-d444c612f09b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g1", "=", 
+   RowBox[{"IGSquareLattice", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"30", ",", "30"}], "}"}], ",", 
+     RowBox[{"\"\<Periodic\>\"", "\[Rule]", "True"}]}], "]"}]}], 
+  ";"}], "\n", 
+ RowBox[{
+  RowBox[{"g2", "=", 
+   RowBox[{
+    RowBox[{"IGTryUntil", "[", "IGConnectedQ", "]"}], "[", 
+    RowBox[{"IGRewireEdges", "[", 
+     RowBox[{"g1", ",", "0.05"}], "]"}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.790618781232785*^9, 3.790618782101542*^9}, 
+   3.790619794869104*^9},ExpressionUUID->"3468152d-031c-4c2f-a378-\
+6012094785f2"],
+
+Cell["Generate 1000 simulations for each network.", \
+"Text",ExpressionUUID->"cba88440-c7eb-4256-9b88-af0b7948aab0"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"r1", "=", 
+   RowBox[{"IGSIRProcess", "[", 
+    RowBox[{"g1", ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}], ",", "1000"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"r2", "=", 
+   RowBox[{"IGSIRProcess", "[", 
+    RowBox[{"g2", ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}], ",", "1000"}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.790618810675172*^9, 3.790618836795781*^9}, {
+  3.790618877300055*^9, 3.7906188783151073`*^9}, {3.790619810575077*^9, 
+  3.790619814255632*^9}, {3.79061994357511*^9, 
+  3.7906199524773083`*^9}},ExpressionUUID->"7291aee0-0d27-4157-a764-\
+db0723cf368a"],
+
+Cell["Plot the histogram of the total duration of the epidemic.", \
+"Text",ExpressionUUID->"b07dd4f1-f1ab-4dda-8639-ad408a4bea45"],
+
+Cell[BoxData[
+ RowBox[{"Histogram", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"r1", "[", "\"\<LastTimes\>\"", "]"}], ",", 
+     RowBox[{"r2", "[", "\"\<LastTimes\>\"", "]"}]}], "}"}], ",", 
+   RowBox[{"ChartLegends", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<grid\>\"", ",", "\"\<rewired\>\""}], "}"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"57b21fb0-6e61-43f5-aa70-a1ee42412693"],
+
+Cell["\<\
+Plot the fraction of recovered nodes at the end of the epidemic.\
+\>", "Text",ExpressionUUID->"78c9bb3f-83e9-40ea-abb3-2a4acc9680ba"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"tmax", "=", 
+   RowBox[{"Max", "[", 
+    RowBox[{
+     RowBox[{"r1", "[", "\"\<LastTimes\>\"", "]"}], ",", 
+     RowBox[{"r2", "[", "\"\<LastTimes\>\"", "]"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Histogram", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"r1", "[", 
+         RowBox[{"\"\<PathComponent\>\"", ",", "3"}], "]"}], "[", 
+        RowBox[{"\"\<SliceData\>\"", ",", "tmax"}], "]"}], "/", 
+       RowBox[{"VertexCount", "[", "g1", "]"}]}], ",", "\[IndentingNewLine]", 
+      
+      RowBox[{
+       RowBox[{
+        RowBox[{"r2", "[", 
+         RowBox[{"\"\<PathComponent\>\"", ",", "3"}], "]"}], "[", 
+        RowBox[{"\"\<SliceData\>\"", ",", "tmax"}], "]"}], "/", 
+       RowBox[{"VertexCount", "[", "g2", "]"}]}]}], "}"}], "//", "Quiet"}], 
+   ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0.02"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"ChartLegends", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<grid\>\"", ",", "\"\<rewired\>\""}], "}"}]}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"e0d081e1-ba65-4347-b40f-6c4cb97dad1a"]
 }, Closed]]
 }, Closed]]
 }, Closed]],
@@ -42288,18 +42540,21 @@ Cell[TextData[{
  " is the number of vertices."
 }], "Text",ExpressionUUID->"09971e00-749a-4f87-ada0-b29457e4f17e"],
 
-Cell[BoxData[{
- RowBox[{"While", "[", 
-  RowBox[{"Not", "@", 
-   RowBox[{"IGPlanarQ", "[", 
-    RowBox[{"g", "=", 
-     RowBox[{"RandomGraph", "[", 
-      RowBox[{
-       RowBox[{"{", 
-        RowBox[{"10", ",", "20"}], "}"}], ",", 
-       RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], "]"}]}], 
-    "]"}]}], "]"}], "\[IndentingNewLine]", "g"}], \
-"Input",ExpressionUUID->"5803efdf-aef0-4eda-9b90-c9175363948e"],
+Cell["\<\
+Create a random planar graph and lay it out without edge crossings.\
+\>", "Text",ExpressionUUID->"1e3f942e-c939-41c8-b55f-7231cc2a2353"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+   RowBox[{"IGTryUntil", "[", "IGPlanarQ", "]"}], "@", 
+   RowBox[{"RandomGraph", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"10", ",", "20"}], "}"}], ",", 
+     RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"180d3417-d89e-4796-a4bb-3bee06cbcb2f"],
 
 Cell[BoxData[
  RowBox[{"IGLayoutPlanar", "[", "g", 
@@ -48030,7 +48285,7 @@ Cell[TextData[{
 path to each program."
 }], "Text",ExpressionUUID->"6403a000-0143-4832-a590-0eaf5fdca8a5"],
 
-Cell[BoxData[
+Cell[BoxData[{
  RowBox[{
   RowBox[{"If", "[", 
    RowBox[{
@@ -48043,7 +48298,9 @@ Cell[BoxData[
       RowBox[{
        RowBox[{"Environment", "[", "\"\<PATH\>\"", "]"}], "<>", 
        "\"\<:/opt/local/bin\>\""}]}], "]"}]}], "\[IndentingNewLine]", "]"}], 
-  ";"}]], "Input",
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$Line", "-=", "1"}], ";"}]}], "Input",
  CellTags->
   "DeleteCell",ExpressionUUID->"4f9ee458-5eef-4571-974a-55a465fdd9a2"],
 
@@ -49537,7 +49794,8 @@ Cell[BoxData[{
       RowBox[{
        RowBox[{"Flatten", "@", 
         RowBox[{"IGBipartitePartitions", "[", "g", "]"}]}], ",", "g"}], 
-      "]"}]}], "}"}]}]}]}], \
+      "]"}]}], 
+    "}"}]}]}]}], \
 "Input",ExpressionUUID->"ab06e8f7-fdd8-4d9e-b0dc-7bdb9ece7992"],
 
 Cell["Order the vertices of a graph by increasing degree.", \
@@ -50070,6 +50328,88 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"IGAdjacencyGraph", "[", "%", 
   "]"}]], "Input",ExpressionUUID->"8cec51c3-1705-4382-b278-bc47c0d08e5c"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGTryUntil", \
+"Subsubsection",ExpressionUUID->"efa65be0-88e6-4b73-b5a7-640b83d6be3c"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGTryUntil"}]], \
+"Input",ExpressionUUID->"f618f185-61a1-4192-9d03-043050a24081"],
+
+Cell[TextData[{
+ Cell[BoxData[
+ "IGTryUntil"],ExpressionUUID->"bc0ad9bf-98c4-4f0a-9519-60c12570762b"],
+ " repeatedly evaluates an expression until the result of the evaluation \
+satisfies a condition."
+}], "Text",ExpressionUUID->"ff2d657c-a8df-44eb-9f34-7f2aa0a2a8f3"],
+
+Cell["\<\
+Create a power-law distributed degree sequence and build a corresponding \
+connected graph.\
+\>", "Text",ExpressionUUID->"9895458e-d3e6-4688-b6c1-8de8c917f7ba"],
+
+Cell[BoxData[
+ RowBox[{"ds", "=", 
+  RowBox[{
+   RowBox[{"IGTryUntil", "[", "IGGraphicalQ", "]"}], "@", 
+   RowBox[{"RandomVariate", "[", 
+    RowBox[{
+     RowBox[{"ZipfDistribution", "[", "1", "]"}], ",", "100"}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"99e1b86d-2cf4-41b5-82d6-e1485afb02aa"],
+
+Cell[BoxData[
+ RowBox[{"IGDegreeSequenceGame", "[", 
+  RowBox[{"ds", ",", 
+   RowBox[{"Method", "\[Rule]", "\"\<VigerLatapy\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"a1b3fff3-8fa5-4e15-9bae-8df772e85f4f"],
+
+Cell["\<\
+Generate a random tree (a connected graph) with a given degree sequence using \
+the configuration model:\
+\>", "Text",ExpressionUUID->"c5b4409d-7b6d-4501-87f9-898abbc77733"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ds", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "3", ",", "3", ",", "3", ",", "3", ",", "3", ",", "3", ",", "2", ",", "2",
+      ",", "2", ",", "2", ",", "2", ",", "2", ",", "1", ",", "1", ",", "1", 
+     ",", "1", ",", "1", ",", "1", ",", "1", ",", "1"}], "}"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"IGTryUntil", "[", "IGConnectedQ", "]"}], "@", 
+  RowBox[{"IGDegreeSequenceGame", "[", 
+   RowBox[{"ds", ",", 
+    RowBox[{"Method", "\[Rule]", "\"\<ConfigurationModelSimple\>\""}]}], 
+   "]"}]}]}], "Input",ExpressionUUID->"5c07fc49-ec3d-4ce6-a155-1512de6251b2"],
+
+Cell[TextData[{
+ "Some result will occur very infrequently or not at all, so it is useful to \
+limit the number of trials. The following attempts to generate a random \
+non-connected cubic graph on 50 vertices, and simply return ",
+ Cell[BoxData[
+ "$Failed"],ExpressionUUID->"2db02d4f-0fd2-4718-b1c2-bad387bbdc19"],
+ " if it does not succeed after 100 tries."
+}], "Text",ExpressionUUID->"c692b6f0-de06-4142-bf3b-382e6c6e5cc9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"IGTryUntil", "[", 
+   RowBox[{
+    RowBox[{"Not", "@*", "IGConnectedQ"}], ",", "100"}], "]"}], "[", 
+  "\[IndentingNewLine]", 
+  RowBox[{"IGDegreeSequenceGame", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ConstantArray", "[", 
+     RowBox[{"3", ",", "50"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"Method", "\[Rule]", "\"\<ConfigurationModelSimple\>\""}]}], 
+   "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"3aed9553-b0ec-4bf0-a84a-52fc32140d77"]
 }, Closed]]
 }, Closed]]
 }, Closed]],
@@ -50637,8 +50977,8 @@ Cell[TextData[{
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{938, 800},
-WindowMargins->{{363, Automatic}, {Automatic, 54}},
+WindowSize->{938, 855},
+WindowMargins->{{693, Automatic}, {Automatic, -169}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
