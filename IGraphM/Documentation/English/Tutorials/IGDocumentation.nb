@@ -17491,7 +17491,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -17512,7 +17512,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -37419,8 +37419,8 @@ Cell[BoxData[{
   ";"}], "\[IndentingNewLine]", 
  RowBox[{"Multicolumn", "[", "layouts", 
   "]"}]}], "Input",ExpressionUUID->"3c460ad1-bedc-423a-b0e6-52d45efc22f4"]
-}, Open  ]]
-}, Open  ]],
+}, Closed]]
+}, Closed]],
 
 Cell[CellGroupData[{
 
