@@ -1,4 +1,4 @@
-[![Join the chat at https://gitter.im/IGraphM/Lobby](https://badges.gitter.im/IGraphM/Lobby.svg)](https://gitter.im/IGraphM/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Discourse topics](https://img.shields.io/discourse/topics?color=limegreen&server=https%3A%2F%2Figraph.discourse.group)](https://igraph.discourse.group)
 [![GitHub (pre-)release](https://img.shields.io/github/release/szhorvat/IGraphM/all.svg)](https://github.com/szhorvat/IGraphM/releases)
 [![GitHub All Releases](https://img.shields.io/github/downloads/szhorvat/IGraphM/total.svg)](https://github.com/szhorvat/IGraphM/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/szhorvat/IGraphM#contributions)
