@@ -116,15 +116,23 @@ Cell[TextData[{
 }], "Text",ExpressionUUID->"96f21e21-d241-4c30-8188-5abd2119cb18"],
 
 Cell[BoxData[{
+ RowBox[{
+  RowBox[{"Unprotect", "[", "$ImageResolution", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"$ImageResolution", "=", "72"}], ";"}]}], "Input",
+ CellLabel->"In[8]:=",ExpressionUUID->"e930c2e5-1774-40f8-b50f-cfb9a085b547"],
+
+Cell[BoxData[{
  RowBox[{"Get", "[", "\"\<M2MD`\>\"", "]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"M2MD`Private`parseData", "[", 
    RowBox[{"StyleBox", "[", 
     RowBox[{"code_", ",", "\"\<Program\>\""}], "]"}], "]"}], ":=", 
   RowBox[{"\"\<`\>\"", "<>", "code", "<>", "\"\<`\>\""}]}]}], "Input",
- CellLabel->"In[8]:=",ExpressionUUID->"25705a75-8962-4535-bb6e-6cd01373eb53"],
+ CellLabel->"In[10]:=",ExpressionUUID->"25705a75-8962-4535-bb6e-6cd01373eb53"],
 
-Cell[BoxData[{
+Cell[BoxData[
  RowBox[{"DeleteDirectory", "[", 
   RowBox[{
    RowBox[{"FileNameJoin", "[", 
@@ -133,16 +141,7 @@ Cell[BoxData[{
       RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<img\>\""}], "}"}], 
     "]"}], ",", 
    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
-  "]"}], "\[IndentingNewLine]", 
- RowBox[{"DeleteDirectory", "[", 
-  RowBox[{
-   RowBox[{"FileNameJoin", "[", 
-    RowBox[{"{", 
-     RowBox[{
-      RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<img2\>\""}], "}"}], 
-    "]"}], ",", 
-   RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}]}], "Input",
- CellLabel->"In[10]:=",ExpressionUUID->"57c715b6-e0ad-4b51-bdf9-cbbcc2c1ca8f"],
+  "]"}]], "Input",ExpressionUUID->"57c715b6-e0ad-4b51-bdf9-cbbcc2c1ca8f"],
 
 Cell[BoxData[
  RowBox[{
@@ -291,9 +290,56 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
      "]"}], "<>", "footer"}], ",", "\[IndentingNewLine]", "\"\<Text\>\"", ",",
     "\[IndentingNewLine]", 
    RowBox[{"CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], 
-  "\[IndentingNewLine]", 
-  "]"}]}], "Input",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
+  "\[IndentingNewLine]", "]"}]}], "Input",
+ CellLabel->
+  "In[15]:=",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
 }, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Create syntax highlighting file for pandoc", \
+"Section",ExpressionUUID->"80f05a66-f09f-46e9-8e8c-fb329b965634"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}], ";"}]], "Input",
+ CellLabel->"In[18]:=",ExpressionUUID->"d204c740-3273-4eab-be4d-bb7e014d5940"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"template", "=", 
+   RowBox[{"FileTemplate", "[", 
+    RowBox[{"\"\<mathematica.xml.template\>\"", ",", 
+     RowBox[{"Delimiters", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<%%\>\"", ",", "\"\<%%\>\"", ",", "\"\<<%\>\"", ",", 
+        "\"\<%>\>\""}], "}"}]}]}], "]"}]}], ";"}]}], "Input",
+ CellLabel->"In[19]:=",ExpressionUUID->"91d76193-2d1f-457b-9913-318b8dc0e526"],
+
+Cell[BoxData[
+ RowBox[{"Export", "[", "\[IndentingNewLine]", 
+  RowBox[{"\"\<mathematica.xml\>\"", ",", "\[IndentingNewLine]", 
+   RowBox[{"template", "[", "\[IndentingNewLine]", 
+    RowBox[{"<|", 
+     RowBox[{"\"\<commands\>\"", "\[Rule]", 
+      RowBox[{"StringRiffle", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+          "\"\<      <item>\>\"", "<>", "#", "<>", "\"\<</item>\>\""}], "&"}],
+          "/@", 
+         RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}]}], ",", 
+        "\"\<\\n\>\""}], "]"}]}], "|>"}], "\[IndentingNewLine]", "]"}], ",", 
+   "\[IndentingNewLine]", "\"\<String\>\""}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellLabel->
+  "In[21]:=",ExpressionUUID->"2b13b2c6-3fdc-4b61-a162-1cda541ee93d"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -301,26 +347,30 @@ Cell[CellGroupData[{
 Cell["Build final webpage", \
 "Section",ExpressionUUID->"1696ced4-9c16-4256-bde1-41a91d56d53b"],
 
-Cell["Rescale and optimize images.", \
+Cell["Add tools to the OS\[CloseCurlyQuote]s PATH.", \
+"Text",ExpressionUUID->"83df7d1e-3ef2-4d2f-9a31-e735b078dab2"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"If", "[", 
+   RowBox[{
+    RowBox[{"StringFreeQ", "[", 
+     RowBox[{
+      RowBox[{"Environment", "[", "\"\<PATH\>\"", "]"}], ",", 
+      "\"\</opt/local/bin\>\""}], "]"}], ",", 
+    RowBox[{"SetEnvironment", "[", 
+     RowBox[{"\"\<PATH\>\"", "\[Rule]", 
+      RowBox[{
+       RowBox[{"Environment", "[", "\"\<PATH\>\"", "]"}], "<>", 
+       "\"\<:/opt/local/bin\>\""}]}], "]"}]}], "\[IndentingNewLine]", "]"}], 
+  ";"}]], "Input",ExpressionUUID->"c573f3bc-09a0-4ba9-a664-cf9cdb71f9d5"],
+
+Cell["Optimize images.", \
 "Text",ExpressionUUID->"6b05b7cd-c6ba-439f-8165-c9bc4d10b279"],
 
 Cell[BoxData[
- RowBox[{"(*", 
-  RowBox[{"Run", "[", "\"\<./optimg.sh\>\"", "]"}], "*)"}]], "Input",
- CellLabel->"In[18]:=",ExpressionUUID->"4b5b631a-3f23-42c9-ac16-7b2700aa649d"],
-
-Cell[BoxData[
- RowBox[{"CopyDirectory", "[", 
-  RowBox[{"\"\<img\>\"", ",", "\"\<img2\>\""}], "]"}]], "Input",
- CellLabel->"In[19]:=",ExpressionUUID->"ec0a083f-5105-45e6-af04-79b70da60571"],
-
-Cell[BoxData[
- RowBox[{"Run", "[", "\"\<./procimg.sh\>\"", "]"}]], "Input",
- CellLabel->"In[20]:=",ExpressionUUID->"421ec403-4790-4e03-a406-c1c4405cbb58"],
-
-Cell[BoxData[
  RowBox[{"Run", "[", "\"\<./optimg.sh\>\"", "]"}]], "Input",
- CellLabel->"In[21]:=",ExpressionUUID->"fe0c1c5e-a7df-4e51-8a71-9cc9e56fde43"],
+ CellLabel->"In[24]:=",ExpressionUUID->"fe0c1c5e-a7df-4e51-8a71-9cc9e56fde43"],
 
 Cell["\<\
 Convert Markdown to HTML with Pandoc. Pandoc 2.8 or later is required.\
@@ -328,14 +378,14 @@ Convert Markdown to HTML with Pandoc. Pandoc 2.8 or later is required.\
 
 Cell[BoxData[
  RowBox[{"Run", "[", "\"\<./gendoc.sh\>\"", "]"}]], "Input",
- CellLabel->"In[22]:=",ExpressionUUID->"17a86769-10cc-48d3-9677-5acd0f70e385"],
+ CellLabel->"In[25]:=",ExpressionUUID->"17a86769-10cc-48d3-9677-5acd0f70e385"],
 
 Cell["View page.", \
 "Text",ExpressionUUID->"7e1fca15-046e-4609-9ea5-d9f1687ab65a"],
 
 Cell[BoxData[
  RowBox[{"SystemOpen", "[", "\"\<index.html\>\"", "]"}]], "Input",
- CellLabel->"In[23]:=",ExpressionUUID->"8778a7fd-01a2-4b66-95e1-127490f94aaf"],
+ CellLabel->"In[26]:=",ExpressionUUID->"8778a7fd-01a2-4b66-95e1-127490f94aaf"],
 
 Cell["Copy files into place.", \
 "Text",ExpressionUUID->"21fd180d-c22c-4a1a-bd9f-366a371d77e5"],
@@ -349,7 +399,7 @@ Cell[BoxData[{
    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
   "]"}], "\[IndentingNewLine]", 
  RowBox[{"CreateDirectory", "[", "\"\<IGDocumentation\>\"", "]"}]}], "Input",
- CellLabel->"In[24]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
+ CellLabel->"In[27]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
 
 Cell[BoxData[{
  RowBox[{"CopyDirectory", "[", 
@@ -361,15 +411,15 @@ Cell[BoxData[{
   RowBox[{"\"\<igmdoc.css\>\"", ",", "\"\<IGDocumentation/igmdoc.css\>\""}], 
   "]"}]}], "Input",
  CellLabel->
-  "In[27]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
+  "In[30]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
 }, Open  ]]
 },
 WindowSize->{948, 847},
 WindowMargins->{{Automatic, 358}, {Automatic, 11}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (February 4, 2020)",
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (February 26, 2020)",
 StyleDefinitions->"Default.nb",
-ExpressionUUID->"68c53b13-7309-4b42-9532-9a06f9daa91f"
+ExpressionUUID->"7fe29730-3b01-4e49-bc76-1b51ab284617"
 ]
 
