@@ -481,7 +481,11 @@ IGTryUntil[cond_] :=
       {HoldFirst}
     ]
 
-IGTryUntil[cond_, max_] :=
+(* Do[] supports Infinity in recent versions, but not in 10.0.
+   We handle this case separately. *)
+IGTryUntil[cond_, Infinity] := IGTryUntil[cond]
+
+IGTryUntil[cond_, max_?Internal`RealValuedNumericQ] :=
     Function[expr,
       Module[{res},
         Do[If[cond[res = expr], Return[res, Module]], {max}];
