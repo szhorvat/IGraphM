@@ -149,7 +149,7 @@ IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_List | 
 
 
 PackageExport["IGAveragePathLength"]
-IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of all-pair unweighted shortest path lengths of the graph. Vertex pairs between which there is no path are excluded.";
+IGAveragePathLength::usage = "IGAveragePathLength[graph] returns the average of all-pair shortest path lengths of the graph. Vertex pairs between which there is no path are excluded.";
 
 igAveragePathLengthMethods = <|
   "Unweighted" -> 0,
@@ -165,6 +165,11 @@ SyntaxInformation[IGAveragePathLength] = {"ArgumentsPattern" -> {_, OptionsPatte
 amendUsage[IGAveragePathLength, "Available Method options: <*Keys[igAveragePathLengthMethods]*>."]
 IGAveragePathLength[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], method = OptionValue[Method]},
+      (* Automatic method selection:
+          - non-weighted graph: "Unweighted"
+          - weighted graph with non-negative weights: "Dijkstra"
+          - otherwise (i.e. negative weights): "Johnson"
+       *)
       If[method === Automatic,
         method = Which[
           Not@IGEdgeWeightedQ[graph], "Unweighted",
@@ -172,9 +177,40 @@ IGAveragePathLength[graph_?igGraphQ, opt : OptionsPattern[]] :=
           True, "Johnson"
         ]
       ];
-      check@ig@"averagePathLengthWeighted"[ Lookup[igAveragePathLengthMethods, method, Message[IGAveragePathLength::bdmtd, method]; throw[$Failed]] ]
+      check@ig@"averagePathLengthWeighted"[
+        Lookup[igAveragePathLengthMethods, method, Message[IGAveragePathLength::bdmtd, method]; throw[$Failed]]
+      ]
     ]
 
+
+(***** Efficiency measures *****)
+
+PackageExport["IGGlobalEfficiency"]
+
+IGGlobalEfficiency::usage = "IGGlobalEfficiency[graph] computes the global efficiency of a graph.";
+SyntaxInformation[IGGlobalEfficiency] = {"ArgumentsPattern" -> {_}};
+IGGlobalEfficiency[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      check@ig@"globalEfficiency"[]
+    ]
+
+
+PackageExport["IGLocalEfficiency"]
+IGLocalEfficiency::usage = "IGLocalEfficiency[graph] computes the local efficiency of a graph.";
+SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_}};
+IGLocalEfficiency[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      check@ig@"localEfficiency"[]
+    ]
+
+
+PackageExport["IGAverageLocalEfficiency"]
+IGAverageLocalEfficiency::usage = "IGAverageLocalEfficiency[graph] computes the average local efficiency of a graph.";
+SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_}};
+IGAverageLocalEfficiency[graph_?igGraphQ] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      check@ig@"averageLocalEfficiency"[]
+    ]
 
 (***** Graph diameter *****)
 
@@ -213,6 +249,9 @@ IGDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
 igDiameterUnweighted[graph_, bycomp_] :=
     catch@Block[{ig = igMakeFast[graph], diam},
       diam = check@ig@"diameter"[bycomp];
+      (* igraph returns the number of vertices for non-connected graphs.
+         We translate this to Infinity, which is the only reasonable result.
+         TODO https://github.com/igraph/igraph/issues/1345 *)
       If[diam == VertexCount[graph], Infinity, diam]
     ]
 

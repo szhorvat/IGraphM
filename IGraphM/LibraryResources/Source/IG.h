@@ -1424,7 +1424,13 @@ public:
 
     double averagePathLength() const {
         double res;
-        igCheck(igraph_average_path_length(&graph, &res, true, true));
+        igCheck(igraph_average_path_length(&graph, &res, /* directed */ true, /* unconnected */ true));
+        return res;
+    }
+
+    double averagePathLengthDijkstra() const {
+        double res;
+        igCheck(igraph_average_path_length_dijkstra(&graph, &res, passWeights(), /* directed */ true, /* unconnected */ true));
         return res;
     }
 
@@ -1437,6 +1443,8 @@ public:
          */
         if (method == 0 || ! weightedQ())
             return averagePathLength();
+        if (method == 1)
+            return averagePathLengthDijkstra();
         if (method < 0 || method > 3)
             throw mma::LibraryError("averagePathLengthWeighted: Unknown method.");
 
@@ -1449,9 +1457,11 @@ public:
             mma::check_abort();
 
             switch (method) {
+            /*
             case 1:
                 igCheck(igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights(), IGRAPH_OUT));
                 break;
+            */
             case 2:
                 igCheck(igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights(), IGRAPH_OUT));
                 break;
@@ -1468,6 +1478,24 @@ public:
         }
 
         return sum/cnt;
+    }
+
+    double globalEfficiency() const {
+        igraph_real_t res;
+        igCheck(igraph_global_efficiency(&graph, &res, passWeights(), true));
+        return res;
+    }
+
+    mma::RealTensorRef localEfficiency() const {
+        igVector vec;
+        igCheck(igraph_local_efficiency(&graph, &vec.vec, passWeights(), true));
+        return vec.makeMTensor();
+    }
+
+    double averageLocalEfficiency() const {
+        igraph_real_t res;
+        igCheck(igraph_average_local_efficiency(&graph, &res, passWeights(), true));
+        return res;
     }
 
     mint girth() const {

@@ -366,8 +366,11 @@ template = LTemplate["IGraphM",
         LFun["shortestPathCounts2", {{Integer, 1, "Constant"}}, {Real, 1}],
         LFun["neighborhoodSize", {{Real, 1, "Constant"}, Integer, Integer}, {Real, 1}],
         LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
-        LFun["averagePathLength", {}, Real], (* TODO; not currently in use; averagePathLengthWeighted() will call averagePathLength() in C code when needed *)
+        (* LFun["averagePathLength", {}, Real], *) (* currently not in use; averagePathLengthWeighted() will call averagePathLength() in C code when needed *)
         LFun["averagePathLengthWeighted", {Integer}, Real],
+        LFun["globalEfficiency", {}, Real],
+        LFun["localEfficiency", {}, {Real, 1}],
+        LFun["averageLocalEfficiency", {}, Real],
         LFun["girth", {}, Real],
         LFun["radius", {}, Real],
         LFun["eccentricity", {{Real, 1, "Constant"}}, {Real, 1}],
