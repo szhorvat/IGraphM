@@ -1424,13 +1424,13 @@ public:
 
     double averagePathLength() const {
         double res;
-        igCheck(igraph_average_path_length(&graph, &res, /* directed */ true, /* unconnected */ true));
+        igCheck(igraph_average_path_length(&graph, &res, nullptr, /* directed */ true, /* unconnected */ true));
         return res;
     }
 
     double averagePathLengthDijkstra() const {
         double res;
-        igCheck(igraph_average_path_length_dijkstra(&graph, &res, passWeights(), /* directed */ true, /* unconnected */ true));
+        igCheck(igraph_average_path_length_dijkstra(&graph, &res, nullptr, passWeights(), /* directed */ true, /* unconnected */ true));
         return res;
     }
 
