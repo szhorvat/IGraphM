@@ -473,4 +473,14 @@ inline mma::IntTensorRef packListIntoIntTensor(const igList &list) {
 }
 
 
+inline igraph_neimode_t igNeighborMode(mint mode, const char *context) {
+    switch (mode) {
+    case 1: return IGRAPH_OUT;
+    case 2: return IGRAPH_IN;
+    case 3: return IGRAPH_ALL;
+    default: throw mma::LibraryError(std::string("Invalid neighbour mode for ") + context + ".");
+    }
+}
+
+
 #endif // IG_COMMON_H

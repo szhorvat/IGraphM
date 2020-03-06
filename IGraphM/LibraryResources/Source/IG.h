@@ -481,18 +481,7 @@ public:
 
     bool treeQ(mint mode) const {
         igraph_bool_t res;
-        igraph_neimode_t imode;
-        switch (mode) {
-        case 1:
-            imode = IGRAPH_OUT; break;
-        case 2:
-            imode = IGRAPH_IN; break;
-        case 3:
-            imode = IGRAPH_ALL; break;
-        default:
-            throw mma::LibraryError("treeQ: invalid mode");
-        }
-        igCheck(igraph_is_tree(&graph, &res, nullptr, imode));
+        igCheck(igraph_is_tree(&graph, &res, nullptr, igNeighborMode(mode, "treeQ")));
         return res;
     }
 
@@ -711,21 +700,7 @@ public:
 
     double degreeCentralization(mint mode, bool loops, bool normalized) const {
         igraph_real_t result;
-        igraph_neimode_t imode;
-        switch (mode) {
-        case 1:
-            imode = IGRAPH_OUT;
-            break;
-        case 2:
-            imode = IGRAPH_IN;
-            break;
-        case 3:
-            imode = IGRAPH_ALL;
-            break;
-        default:
-            throw mma::LibraryError("Invalid mode for degree centralization.");
-        }
-        igCheck(igraph_centralization_degree(&graph, nullptr, imode, loops, &result, nullptr, normalized));
+        igCheck(igraph_centralization_degree(&graph, nullptr, igNeighborMode(mode, "degree centralization"), loops, &result, nullptr, normalized));
         return result;
     }
 

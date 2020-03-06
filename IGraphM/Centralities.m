@@ -216,12 +216,11 @@ IGDegreeCentralization::usage =
     "IGDegreeCentralization[graph] computes the graph level centralization based on degree centralities.\n" <>
     "IGDegreeCentralization[graph, mode] uses the given mode, \"In\", \"Out\", or \"All\" to compute degrees in directed graphs.";
 
-igDegreeCentralizationMethods = <|"Out" -> 1, "In" -> 2, "All" -> 3 |>;
 Options[IGDegreeCentralization] = { Normalized -> True, SelfLoops -> True };
 SyntaxInformation[IGDegreeCentralization] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGDegreeCentralization[graph_?igGraphQ, mode : _String : "All", opt : OptionsPattern[]] :=
     Block[{ig = igMakeFast[graph]},
-      sck@ig@"degreeCentralization"[Lookup[igDegreeCentralizationMethods, mode, 0], OptionValue[SelfLoops], OptionValue[Normalized]]
+      sck@ig@"degreeCentralization"[encodeNeighborMode[mode], OptionValue[SelfLoops], OptionValue[Normalized]]
     ]
 addCompletion[IGDegreeCentralization, {0, {"In", "Out", "All"}}]
 

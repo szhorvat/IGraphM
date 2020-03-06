@@ -262,3 +262,8 @@ If[$VersionNumber >= 12.1,
   PropOptName = AnnotationRules,
   PropOptName = Properties
 ]
+
+
+PackageScope["encodeNeighborMode"]
+encodeNeighborMode::usage = "encodeNeighborMode[mode] translates Out, In, All to 1, 2, 3.";
+encodeNeighborMode[mode_] := Lookup[<|"Out" -> 1, "In" ->2, "All" -> 3, All -> 3|>, mode, -1]

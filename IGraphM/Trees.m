@@ -24,7 +24,7 @@ IGTreeQ::usage =
 
 SyntaxInformation[IGTreeQ] = {"ArgumentsPattern" -> {_, _.}};
 IGTreeQ[graph_?igGraphQ, mode_ : "Out"] :=
-    Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[Lookup[<|"Out" -> 1, "In" -> 2, "All" -> 3|>, mode, -1]]]
+    Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[encodeNeighborMode[mode]]]
 IGTreeQ[_, _ : "Out"] := False
 addCompletion[IGTreeQ, {0, {"In", "Out", "All"}}]
 
@@ -38,7 +38,7 @@ IGForestQ::usage =
 
 SyntaxInformation[IGForestQ] = {"ArgumentsPattern" -> {_, _.}};
 IGForestQ[graph_?igGraphQ, mode_ : "Out"] :=
-    Block[{ig = igMakeFast[graph]}, sck@ig@"forestQ"[Lookup[<|"Out" -> 1, "In" -> 2, "All" -> 3|>, mode, -1]]]
+    Block[{ig = igMakeFast[graph]}, sck@ig@"forestQ"[encodeNeighborMode[mode]]]
 IGForestQ[_, _ : "Out"] := False
 addCompletion[IGForestQ, {0, {"In", "Out", "All"}}]
 
