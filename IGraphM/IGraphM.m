@@ -289,11 +289,11 @@ template = LTemplate["IGraphM",
 
         (* Centralization *)
 
-        LFun["degreeCentralization", {Integer, True|False, True|False}, Real],
-        LFun["betweennessCentralization", {True|False, True|False}, Real],
-        LFun["closenessCentralization", {True|False}, Real],
-        LFun["eigenvectorCentralization", {True|False, True|False}, Real],
-        LFun["centralization", {{Real, 1, "Constant"}, Real, True|False}, Real],
+        LFun["degreeCentralization", {Integer (* mode *), True|False (* loops *), True|False (* normalized *)}, Real],
+        LFun["betweennessCentralization", {True|False (* nobigint *), True|False (* normalized *)}, Real],
+        LFun["closenessCentralization", {True|False (* normalized *)}, Real],
+        LFun["eigenvectorCentralization", {True|False (* scale *), True|False (* normalized *)}, Real],
+        LFun["centralization", {{Real, 1, "Constant"} (* centrality scores *), Real (* theor. max *), True|False (* normalized *)}, Real],
 
         (* Randomize *)
 
@@ -336,15 +336,15 @@ template = LTemplate["IGraphM",
 
         LFun["coloredSimpleGraph", LinkObject],
         LFun["selfComplementaryQ", {}, True|False],
-        LFun["vertexTransitiveQ", {Integer}, True|False],
-        LFun["edgeTransitiveQ", {Integer}, True|False],
-        LFun["symmetricQ", {Integer}, True|False],
-        LFun["distanceTransitiveQ", {Integer}, True|False],
+        LFun["vertexTransitiveQ", {Integer (* splitting heuristics *)}, True|False],
+        LFun["edgeTransitiveQ", {Integer (* splitting heuristics *)}, True|False],
+        LFun["symmetricQ", {Integer (* splitting heuristics *)}, True|False],
+        LFun["distanceTransitiveQ", {Integer (* splitting heuristics *)}, True|False],
 
         (* Topological sorting and directed acyclic graphs *)
 
         LFun["topologicalSorting", {}, {Real, 1}],
-        LFun["feedbackArcSet", {True|False}, {Real, 1}],
+        LFun["feedbackArcSet", {True|False (* exact? *)}, {Real, 1}],
 
         (* Motifs and subgraph counts *)
 
@@ -357,20 +357,20 @@ template = LTemplate["IGraphM",
         LFun["motifsParticipation", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, {Real, 2}],
 
         LFun["triangles", {}, {Integer, 1}],
-        LFun["countAdjacentTriangles", {{Real, 1, "Constant"}}, {Real, 1}],
+        LFun["countAdjacentTriangles", {{Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
         (* Shortest paths *)
 
         LFun["shortestPaths", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathCounts", {}, {Real, 1}],
-        LFun["shortestPathCounts2", {{Integer, 1, "Constant"}}, {Real, 1}],
-        LFun["neighborhoodSize", {{Real, 1, "Constant"}, Integer, Integer}, {Real, 1}],
+        LFun["shortestPathCounts2", {{Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["neighborhoodSize", {{Real, 1, "Constant"} (* vertices *), Integer (* mindist *), Integer (* maxdist *)}, {Real, 1}],
         LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
         (* LFun["averagePathLength", {}, Real], *) (* currently not in use; averagePathLengthWeighted() will call averagePathLength() in C code when needed *)
         LFun["averagePathLengthWeighted", {Integer}, Real],
         LFun["globalEfficiency", {}, Real],
-        LFun["localEfficiency", {}, {Real, 1}],
-        LFun["averageLocalEfficiency", {}, Real],
+        LFun["localEfficiency", {True|False (* directed *), Integer (* mode *)}, {Real, 1}],
+        LFun["averageLocalEfficiency", {True|False (* directed *), Integer (* mode *)}, Real],
         LFun["girth", {}, Real],
         LFun["radius", {}, Real],
         LFun["eccentricity", {{Real, 1, "Constant"}}, {Real, 1}],
@@ -386,12 +386,12 @@ template = LTemplate["IGraphM",
 
         (* Cliques *)
 
-        LFun["cliques", {Integer, Integer}, {Integer, 1}],
-        LFun["cliqueDistribution", {Integer, Integer}, {Real, 1}],
-        LFun["maximalCliques", {Integer, Integer}, {Integer, 1}],
+        LFun["cliques", {Integer (* min *), Integer (* max *)}, {Integer, 1}],
+        LFun["cliqueDistribution", {Integer (* min *), Integer (* max *)}, {Real, 1}],
+        LFun["maximalCliques", {Integer (* min *), Integer (* max *)}, {Integer, 1}],
         LFun["largestCliques", {}, {Integer, 1}],
-        LFun["maximalCliquesCount", {Integer, Integer}, Integer],
-        LFun["maximalCliqueDistribution", {Integer, Integer}, {Real, 1}],
+        LFun["maximalCliquesCount", {Integer (* min *), Integer (* max *)}, Integer],
+        LFun["maximalCliqueDistribution", {Integer (* min *), Integer (* max *)}, {Real, 1}],
         LFun["cliqueNumber", {}, Integer],
         LFun["cliquesWeighted", {Integer (* min_weight *), Integer (* max_weight *), {Real, 1, "Constant"} (* vertex_weights *), True|False (* maximal *)}, {Integer, 1}],
         LFun["largestCliquesWeighted", {{Real, 1, "Constant"} (* vertex_weights *)}, {Integer, 1}],
@@ -399,7 +399,7 @@ template = LTemplate["IGraphM",
 
         (* Independent vertex sets *)
 
-        LFun["independentVertexSets", {Integer, Integer}, {Integer, 1}],
+        LFun["independentVertexSets", {Integer (* min *), Integer (* max *)}, {Integer, 1}],
         LFun["largestIndependentVertexSets", {}, {Integer, 1}],
         LFun["maximalIndependentVertexSets", {}, {Integer, 1}],
         LFun["independenceNumber", {}, Integer],
@@ -457,7 +457,7 @@ template = LTemplate["IGraphM",
           {Real, 2}
         ],
 
-        LFun["layoutMDS", {{Real, 2, "Constant"}, Integer}, {Real, 2}],
+        (* LFun["layoutMDS", {{Real, 2, "Constant"}, Integer}, {Real, 2}], *)
 
         LFun["layoutReingoldTilford", {{Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
         LFun["layoutReingoldTilfordCircular", {{Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
@@ -476,11 +476,11 @@ template = LTemplate["IGraphM",
 
         (* Similarity *)
 
-        LFun["similarityCocitation", {{Real, 1, "Constant"}}, {Real, 2}],
-        LFun["similarityBibcoupling", {{Real, 1, "Constant"}}, {Real, 2}],
-        LFun["similarityJaccard", {{Real, 1, "Constant"}, True|False (* self loops *)}, {Real, 2}],
-        LFun["similarityDice", {{Real, 1, "Constant"}, True|False (* self loops *)}, {Real, 2}],
-        LFun["similarityInverseLogWeighted", {{Real, 1, "Constant"}}, {Real, 2}],
+        LFun["similarityCocitation", {{Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
+        LFun["similarityBibcoupling", {{Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
+        LFun["similarityJaccard", {{Real, 1, "Constant"} (* vertices *), True|False (* self loops *)}, {Real, 2}],
+        LFun["similarityDice", {{Real, 1, "Constant"} (* vertices *), True|False (* self loops *)}, {Real, 2}],
+        LFun["similarityInverseLogWeighted", {{Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
 
         (* Chordal graphs *)
 
@@ -518,7 +518,7 @@ template = LTemplate["IGraphM",
 
         (* Community detection *)
 
-        LFun["modularity", {{Real, 1, "Constant"}}, Real],
+        LFun["modularity", {{Real, 1, "Constant"} (* membership *)}, Real],
         LFun["communityEdgeBetweenness", LinkObject],
         LFun["communityWalktrap", LinkObject],
         LFun["communityFastGreedy", LinkObject],
@@ -562,8 +562,8 @@ template = LTemplate["IGraphM",
         LFun["contractVertices", {{Real, 1, "Constant"}}, "Void"],
 
         (* Random walk *)
-        LFun["randomWalk", {Integer, Integer}, {Real, 1}],
-        LFun["randomEdgeWalk", {Integer, Integer}, {Real, 1}],
+        LFun["randomWalk", {Integer (* start vertex *), Integer (* steps *)}, {Real, 1}],
+        LFun["randomEdgeWalk", {Integer (* start vertex *), Integer (* steps *)}, {Real, 1}],
 
         (* Spanning tree *)
         LFun["spanningTree", {}, {Real, 1}],
@@ -580,7 +580,7 @@ template = LTemplate["IGraphM",
 
         LFun["smoothen", {LExpressionID["IG"]}, {Integer, 1}],
 
-        LFun["coordinatesToEmbedding", {{Real, 2, "Constant"}}, {Integer, 1}],
+        LFun["coordinatesToEmbedding", {{Real, 2, "Constant"} (* coordinate list *)}, {Integer, 1}],
 
         LFun["perfectQ", {}, True|False],
 
