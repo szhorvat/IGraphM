@@ -210,7 +210,7 @@ template = LTemplate["IGraphM",
 
         (* Weights *)
 
-        LFun["setWeights", {{Real, 1, "Constant"}}, "Void"],
+        LFun["setWeights", {{Real, 1, "Constant"} (* weights *)}, "Void"],
         LFun["getWeights", {}, {Real, 1}],
         LFun["clearWeights", {}, "Void"],
         LFun["weightedQ", {}, True|False],

@@ -196,21 +196,28 @@ IGGlobalEfficiency[graph_?igGraphQ] :=
 
 
 PackageExport["IGLocalEfficiency"]
-IGLocalEfficiency::usage = "IGLocalEfficiency[graph] computes the local efficiency of a graph.";
-SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_}};
-IGLocalEfficiency[graph_?igGraphQ] :=
+IGLocalEfficiency::usage =
+    "IGLocalEfficiency[graph] computes the local efficiency of a graph.\n" <>
+    "IGLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood.";
+Options[IGLocalEfficiency] = { DirectedEdges -> True };
+SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+IGLocalEfficiency[graph_?igGraphQ, mode_ : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      check@ig@"localEfficiency"[]
+      check@ig@"localEfficiency"[OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]
 
 
 PackageExport["IGAverageLocalEfficiency"]
-IGAverageLocalEfficiency::usage = "IGAverageLocalEfficiency[graph] computes the average local efficiency of a graph.";
-SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_}};
-IGAverageLocalEfficiency[graph_?igGraphQ] :=
+IGAverageLocalEfficiency::usage =
+    "IGAverageLocalEfficiency[graph] computes the average local efficiency of a graph.\n" <>
+    "IGAverageLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood.";
+SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+Options[IGAverageLocalEfficiency] = { DirectedEdges -> True };
+IGAverageLocalEfficiency[graph_?igGraphQ, mode_ : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      check@ig@"averageLocalEfficiency"[]
+      check@ig@"averageLocalEfficiency"[OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]
+
 
 (***** Graph diameter *****)
 

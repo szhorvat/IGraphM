@@ -1461,15 +1461,15 @@ public:
         return res;
     }
 
-    mma::RealTensorRef localEfficiency() const {
+    mma::RealTensorRef localEfficiency(bool directed, mint mode) const {
         igVector vec;
-        igCheck(igraph_local_efficiency(&graph, &vec.vec, passWeights(), true));
+        igCheck(igraph_local_efficiency(&graph, &vec.vec, passWeights(), directed, igNeighborMode(mode, "local efficiency")));
         return vec.makeMTensor();
     }
 
-    double averageLocalEfficiency() const {
+    double averageLocalEfficiency(bool directed, mint mode) const {
         igraph_real_t res;
-        igCheck(igraph_average_local_efficiency(&graph, &res, passWeights(), true));
+        igCheck(igraph_average_local_efficiency(&graph, &res, passWeights(), directed, igNeighborMode(mode, "average local efficiency")));
         return res;
     }
 
