@@ -15,9 +15,9 @@ igContextSetup[igPackagePrivateSymbol]
 
 PackageExport["IGDistanceMatrix"]
 IGDistanceMatrix::usage =
-    "IGDistanceMatrix[graph] computes the shortest path length between each vertex pair in graph.\n" <>
-    "IGDistanceMatrix[graph, fromVertices] computes the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
-    "IGDistanceMatrix[graph, fromVertices, toVertices] computes the shortest path lengths between the given vertices in graph.";
+    "IGDistanceMatrix[graph] gives the shortest path length between each vertex pair in graph.\n" <>
+    "IGDistanceMatrix[graph, fromVertices] gives the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
+    "IGDistanceMatrix[graph, fromVertices, toVertices] gives the shortest path lengths between the given vertices in graph.";
 
 Options[IGDistanceMatrix] = {Method -> Automatic};
 igDistanceMatrixMethods = <|
@@ -77,8 +77,8 @@ igDistanceMatrixJohnson[graph_, from_, to_] :=
 
 PackageExport["IGDistanceCounts"]
 IGDistanceCounts::usage =
-    "IGDistanceCounts[graph] computes a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k. In undirected graphs, each path is counted only along one traversal direction.\n" <>
-    "IGDistanceCounts[graph, fromVertices] computes a histogram of unweighted shortest path lengths from the given vertices to all others.";
+    "IGDistanceCounts[graph] gives a histogram of unweighted shortest path lengths between all vertex pairs. The kth element of the result is the count of shortest paths of length k. In undirected graphs, each path is counted only along one traversal direction.\n" <>
+    "IGDistanceCounts[graph, fromVertices] gives a histogram of unweighted shortest path lengths from the given vertices to all others.";
 
 SyntaxInformation[IGDistanceCounts] = {"ArgumentsPattern" -> {_, _.}};
 IGDistanceCounts[graph_?igGraphQ] :=
@@ -125,9 +125,9 @@ IGNeighborhoodSize[graph_?igGraphQ, v_, ord : _?ordQ : {1}] :=
 
 PackageExport["IGDistanceHistogram"]
 IGDistanceHistogram::usage =
-    "IGDistanceHistogram[graph, binsize] computes a histogram of weighted all-pair shortest path lengths in graph with the given bin size. In the case of undirected graphs, path lengths are double counted.\n" <>
-    "IGDistanceHistogram[graph, binsize, from] computes a histogram of weighted shortest path lengths in graph for the given starting vertices and bin size.\n" <>
-    "IGDistanceHistogram[graph, binsize, from, to] computes a histogram of weighted shortest path lengths in graph for the given starting and ending vertices and bin size.";
+    "IGDistanceHistogram[graph, binsize] gives a histogram of weighted all-pair shortest path lengths in graph with the given bin size. In the case of undirected graphs, path lengths are double counted.\n" <>
+    "IGDistanceHistogram[graph, binsize, from] gives a histogram of weighted shortest path lengths in graph for the given starting vertices and bin size.\n" <>
+    "IGDistanceHistogram[graph, binsize, from, to] gives a histogram of weighted shortest path lengths in graph for the given starting and ending vertices and bin size.";
 
 Options[IGDistanceHistogram] = { Method -> "Dijkstra" };
 SyntaxInformation[IGDistanceHistogram] = {"ArgumentsPattern" -> {_, _, _., _., OptionsPattern[]}};
@@ -187,7 +187,7 @@ IGAveragePathLength[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 PackageExport["IGGlobalEfficiency"]
 
-IGGlobalEfficiency::usage = "IGGlobalEfficiency[graph] computes the global efficiency of a graph.";
+IGGlobalEfficiency::usage = "IGGlobalEfficiency[graph] gives the global efficiency of graph.";
 SyntaxInformation[IGGlobalEfficiency] = {"ArgumentsPattern" -> {_}};
 IGGlobalEfficiency[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
@@ -226,7 +226,7 @@ addCompletion[IGAverageLocalEfficiency, {0, {"Out", "In", "All"}}]
 (***** Graph diameter *****)
 
 PackageExport["IGDiameter"]
-IGDiameter::usage = "IGDiameter[graph] computes the diameter of graph.";
+IGDiameter::usage = "IGDiameter[graph] gives the diameter of graph.";
 
 Options[IGDiameter] = { Method -> Automatic, "ByComponents" -> False };
 

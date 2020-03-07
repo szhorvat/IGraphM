@@ -61,7 +61,7 @@ IGBipartitePartitions[graph_?igGraphQ, vertex_] :=
 
 PackageExport["IGBipartiteProjections"]
 IGBipartiteProjections::usage =
-    "IGBipartiteProjections[graph] returns both bipartite projections of graph. Multiplicities are returned as edge weights. Edge directions are ignored.\n" <>
+    "IGBipartiteProjections[graph] gives both bipartite projections of graph. Multiplicities are returned as edge weights. Edge directions are ignored.\n" <>
     "IGBipartiteProjections[graph, {vertices1, vertices2}] returns both bipartite projections according to the specified partitioning.";
 
 IGBipartiteProjections::bdpart = "`1` is not a valid partitioning of the vertices `2`.";
@@ -86,7 +86,7 @@ IGBipartiteProjections[graph_?igGraphQ] := IGBipartiteProjections[graph, IGBipar
 
 PackageExport["IGBipartiteIncidenceMatrix"]
 IGBipartiteIncidenceMatrix::usage =
-    "IGBipartiteIncidenceMatrix[graph] returns the incidence matrix of a bipartite graph.\n" <>
+    "IGBipartiteIncidenceMatrix[graph] gives the incidence matrix of a bipartite graph.\n" <>
     "IGBipartiteIncidenceMatrix[graph, {vertices1, vertices2}] uses the provided vertex partitioning.";
 
 undirectedAdjacencyMatrix[g_?DirectedGraphQ] := With[{am = AdjacencyMatrix[g]}, am + Transpose[am]]

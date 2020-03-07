@@ -23,7 +23,7 @@ IGZeroDiagonal[mat_?MatrixQ] :=
 
 PackageExport["IGKirchhoffMatrix"]
 IGKirchhoffMatrix::usage =
-    "IGKirchhoffMatrix[graph] returns the Kirchhoff matrix, also known as Laplacian matrix of graph.\n" <>
+    "IGKirchhoffMatrix[graph] gives the Kirchhoff matrix, also known as Laplacian matrix of graph.\n" <>
     "IGKirchhoffMatrix[graph, \"In\"] will place the in-degrees on the diagonal instead of the out-degrees.";
 
 (* The built-in KirchhoffMatrix gives incorrect results for directed graphs. It uses the total degree
@@ -47,9 +47,9 @@ addCompletion[IGKirchhoffMatrix, {0, {"In", "Out"}}]
 
 PackageExport["IGJointDegreeMatrix"]
 IGJointDegreeMatrix::usage =
-    "IGJointDegreeMatrix[graph] returns the joint degree matrix of graph. Element i,j of the matrix contains the number of edges connecting degree-i and degree-j vertices.\n" <>
-    "IGJointDegreeMatrix[graph, d] returns the d by d joint degree matrix of graph, up to degree d.\n" <>
-    "IGJointDegreeMatrix[graph, {dOut, dIn}] returns the dOut by dIn joint degree matrix of graph."
+    "IGJointDegreeMatrix[graph] gives the joint degree matrix of graph. Element i,j of the matrix contains the number of edges connecting degree-i and degree-j vertices.\n" <>
+    "IGJointDegreeMatrix[graph, d] gives the d by d joint degree matrix of graph, up to degree d.\n" <>
+    "IGJointDegreeMatrix[graph, {dOut, dIn}] gives the dOut by dIn joint degree matrix of graph."
 
 Options[IGJointDegreeMatrix] = { Normalized -> False };
 SyntaxInformation[IGJointDegreeMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};

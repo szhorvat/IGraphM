@@ -17,7 +17,7 @@ PackageImport["TetGenLink`"]
 
 
 PackageExport["IGDelaunayGraph"]
-IGDelaunayGraph::usage = "IGDelaunayGraph[points] computes the Delaunay graph of the given points.";
+IGDelaunayGraph::usage = "IGDelaunayGraph[points] gives the Delaunay graph of the given points.";
 
 IGDelaunayGraph::dim  = "Delaunay graph computation is currently only supported in 2 and 3 dimensions.";
 IGDelaunayGraph::dupl = "Remove any duplicate points before the Delaunay graph computation.";
@@ -384,7 +384,7 @@ igBetaSkeletonEdges0[pts_, beta_] :=
 
 
 PackageExport["IGLuneBetaSkeleton"]
-IGLuneBetaSkeleton::usage = "IGLuneBetaSkeleton[points, beta] computes the lune-based beta skeleton of the given points.";
+IGLuneBetaSkeleton::usage = "IGLuneBetaSkeleton[points, beta] gives the lune-based beta skeleton of the given points.";
 
 (* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
 igLuneBetaSkeleton[pts_, beta_, opt___] :=
@@ -406,7 +406,7 @@ IGLuneBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumericQ,
 
 
 PackageExport["IGCircleBetaSkeleton"]
-IGCircleBetaSkeleton::usage = "IGCircleBetaSkeleton[points, beta] computes the circle-based beta skeleton of the given points.";
+IGCircleBetaSkeleton::usage = "IGCircleBetaSkeleton[points, beta] gives the circle-based beta skeleton of the given points.";
 
 (* Note: pts is numericized with N[] to avoid crash in M10.0.2.  M10.3 does not crash. *)
 igCircleBetaSkeleton[pts_, beta_, opt___] :=
@@ -428,7 +428,7 @@ IGCircleBetaSkeleton[pts : {} | _?(MatrixQ[#, NumericQ]&), beta_?positiveNumeric
 
 
 PackageExport["IGRelativeNeighborhoodGraph"]
-IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] computes the relative neighbourhood graph of the given points.";
+IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] gives the relative neighbourhood graph of the given points.";
 
 SyntaxInformation[IGRelativeNeighborhoodGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGRelativeNeighborhoodGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
@@ -436,7 +436,7 @@ IGRelativeNeighborhoodGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsP
 
 
 PackageExport["IGGabrielGraph"]
-IGGabrielGraph::usage = "IGGabrielGraph[points] computes the Gabriel graph of the given points.";
+IGGabrielGraph::usage = "IGGabrielGraph[points] gives the Gabriel graph of the given points.";
 
 SyntaxInformation[IGGabrielGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=

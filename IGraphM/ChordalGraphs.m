@@ -32,7 +32,7 @@ IGMaximumCardinalitySearch[graph_?igGraphQ] :=
     ]
 
 PackageExport["IGChordalCompletion"]
-IGChordalCompletion::usage = "IGChordalCompletion[graph] returns a set of edges that, when added to graph, make it chordal. The edge-set this function returns is usually not minimal.";
+IGChordalCompletion::usage = "IGChordalCompletion[graph] gives a set of edges that, when added to graph, make it chordal. The edge-set this function returns is usually not minimal.";
 
 SyntaxInformation[IGChordalCompletion] = {"ArgumentsPattern" -> {_}};
 IGChordalCompletion[graph_?igGraphQ] :=

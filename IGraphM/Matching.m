@@ -14,7 +14,7 @@ igContextSetup[igPackagePrivateSymbol]
 
 
 PackageExport["IGMaximumMatching"]
-IGMaximumMatching::usage = "IGMaximumMatching[graph] finds a maximum matching of graph. Edge weights are ignored.";
+IGMaximumMatching::usage = "IGMaximumMatching[graph] gives a maximum matching of graph. Edge weights are ignored.";
 SyntaxInformation[IGMaximumMatching] = {"ArgumentsPattern" -> {_}};
 IGMaximumMatching[graph_?igGraphQ] :=
     catch@Block[{lg = lgMake[graph]},
@@ -23,7 +23,7 @@ IGMaximumMatching[graph_?igGraphQ] :=
 
 
 PackageExport["IGMatchingNumber"]
-IGMatchingNumber::usage = "IGMatchingNumber[graph] returns the matching number of graph.";
+IGMatchingNumber::usage = "IGMatchingNumber[graph] gives the matching number of graph.";
 SyntaxInformation[IGMatchingNumber] = {"ArgumentsPattern" -> {_}};
 IGMatchingNumber[graph_?igGraphQ] :=
     Block[{lg = lgMake[graph]},

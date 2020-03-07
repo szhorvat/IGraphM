@@ -213,7 +213,7 @@ IGConstraintScore[graph_?igGraphQ] :=
 
 PackageExport["IGDegreeCentralization"]
 IGDegreeCentralization::usage =
-    "IGDegreeCentralization[graph] computes the graph level centralization based on degree centralities.\n" <>
+    "IGDegreeCentralization[graph] gives the graph level centralization based on degree centralities.\n" <>
     "IGDegreeCentralization[graph, mode] uses the given mode, \"In\", \"Out\", or \"All\" to compute degrees in directed graphs.";
 
 Options[IGDegreeCentralization] = { Normalized -> True, SelfLoops -> True };
@@ -226,7 +226,7 @@ addCompletion[IGDegreeCentralization, {0, {"In", "Out", "All"}}]
 
 
 PackageExport["IGBetweennessCentralization"]
-IGBetweennessCentralization::usage = "IGBetweennessCentralization[graph] computes the graph level centralization based on betweenness.";
+IGBetweennessCentralization::usage = "IGBetweennessCentralization[graph] gives the graph level centralization based on betweenness.";
 
 IGBetweennessCentralization::bdmtd = IGBetweenness::bdmtd;
 Options[IGBetweennessCentralization] = { Normalized -> True, Method -> "Precise" };
@@ -241,7 +241,7 @@ IGBetweennessCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 PackageExport["IGClosenessCentralization"]
-IGClosenessCentralization::usage = "IGClosenessCentralization[graph] computes the graph level centralization based on closeness.";
+IGClosenessCentralization::usage = "IGClosenessCentralization[graph] gives the graph level centralization based on closeness.";
 
 Options[IGClosenessCentralization] = { Normalized -> True };
 SyntaxInformation[IGClosenessCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -252,7 +252,7 @@ IGClosenessCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 PackageExport["IGEigenvectorCentralization"]
-IGEigenvectorCentralization::usage = "IGEigenvectorCentralization[graph] computes the graph level centralization based on eigenvector centralities.";
+IGEigenvectorCentralization::usage = "IGEigenvectorCentralization[graph] gives the graph level centralization based on eigenvector centralities.";
 
 Options[IGEigenvectorCentralization] = { Normalized -> True, Scaled -> True };
 SyntaxInformation[IGEigenvectorCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};

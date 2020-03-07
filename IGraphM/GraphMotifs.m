@@ -35,7 +35,7 @@ IGTriadCensus[graph_?igGraphQ] :=
 
 PackageExport["IGMotifs"]
 IGMotifs::usage =
-    "IGMotifs[graph, motifSize] returns the motif distribution of graph. See IGIsoclass and IGData for motif ordering.\n" <>
+    "IGMotifs[graph, motifSize] gives the motif distribution of graph. See IGIsoclass and IGData for motif ordering.\n" <>
     "IGMotifs[graph, motifSize, cutProbabilities] terminates the search with the given probability at each level of the ESU tree.";
 
 Options[IGMotifs] = { DirectedEdges -> Automatic };
@@ -60,7 +60,7 @@ IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ, 
 
 PackageExport["IGMotifsTotalCount"]
 IGMotifsTotalCount::usage =
-    "IGMotifsTotalCount[graph, motifSize] returns the total count of motifs (weakly connected subgraphs) of the given size in the graph.\n" <>
+    "IGMotifsTotalCount[graph, motifSize] gives the total count of motifs (weakly connected subgraphs) of the given size in the graph.\n" <>
     "IGMotifsTotalCount[graph, motifSize, cutProbabilities] terminates the search with the given probability at each level of the ESU tree.";
 
 SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _, _.}};
@@ -143,7 +143,7 @@ IGAdjacentTriangleCount[graph_?igGraphQ, v_] := catch@First@igAdjacentTriangleCo
 
 
 PackageExport["IGTriangleFreeQ"]
-IGTriangleFreeQ::usage = "IGTriangleFreeQ[graph] checks if graph is triangle-free.";
+IGTriangleFreeQ::usage = "IGTriangleFreeQ[graph] tests if graph is triangle-free.";
 
 SyntaxInformation[IGTriangleFreeQ] = {"ArgumentsPattern" -> {_}};
 IGTriangleFreeQ[graph_?igGraphQ] :=

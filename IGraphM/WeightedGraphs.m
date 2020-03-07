@@ -332,8 +332,8 @@ IGWeightedSubgraph[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
 
 PackageExport["IGVertexStrength"]
 IGVertexStrength::usage =
-    "IGVertexStrength[graph] returns the sum of edge weights for edges connecting to each vertex in graph.\n" <>
-        "IGVertexStrength[graph, v] returns the sum of edge weights for edges connecting to vertex v in graph.";
+    "IGVertexStrength[graph] gives the sum of edge weights for edges connecting to each vertex in graph.\n" <>
+    "IGVertexStrength[graph, v] gives the sum of edge weights for edges connecting to vertex v in graph.";
 
 SyntaxInformation[IGVertexStrength] = {"ArgumentsPattern" -> {_, _.}};
 IGVertexStrength[g_?IGNullGraphQ] := {}
@@ -357,8 +357,8 @@ IGVertexStrength[g_?igGraphQ, v_] :=
 
 PackageExport["IGVertexInStrength"]
 IGVertexInStrength::usage =
-    "IGVertexInStrength[graph] returns the sum of edge weights for the incoming edges of each vertex in graph.\n" <>
-        "IGVertexInStrength[graph, v] returns the sum of edge weights for incoming edges of vertex v in graph.";
+    "IGVertexInStrength[graph] gives the sum of edge weights for the incoming edges of each vertex in graph.\n" <>
+    "IGVertexInStrength[graph, v] gives the sum of edge weights for incoming edges of vertex v in graph.";
 
 SyntaxInformation[IGVertexInStrength] = {"ArgumentsPattern" -> {_, _.}};
 IGVertexInStrength[g_?IGNullGraphQ] := {}
@@ -382,8 +382,8 @@ IGVertexInStrength[g_?igGraphQ, v_] :=
 
 PackageExport["IGVertexOutStrength"]
 IGVertexOutStrength::usage =
-    "IGVertexOutStrength[graph] returns the sum of edge weights for the outgoing edges of each vertex in graph.\n" <>
-        "IGVertexOutStrength[graph, v] returns the sum of edge weights for outgoing edges of vertex v in graph.";
+    "IGVertexOutStrength[graph] gives the sum of edge weights for the outgoing edges of each vertex in graph.\n" <>
+    "IGVertexOutStrength[graph, v] gives the sum of edge weights for outgoing edges of vertex v in graph.";
 
 SyntaxInformation[IGVertexOutStrength] = {"ArgumentsPattern" -> {_, _.}};
 IGVertexOutStrength[g_?IGNullGraphQ] := {}

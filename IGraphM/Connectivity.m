@@ -52,7 +52,7 @@ IGMinSeparators[graph_] := (Message[IGMinSeparators::deprec]; IGMinimumSeparator
 
 
 PackageExport["IGMinimumSeparators"]
-IGMinimumSeparators::usage = "IGMinimumSeparators[graph] returns all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph. Edge directions are ignored.";
+IGMinimumSeparators::usage = "IGMinimumSeparators[graph] gives all separator vertex sets of minimum size. A vertex set is a separator if its removal disconnects the graph. Edge directions are ignored.";
 
 SyntaxInformation[IGMinimumSeparators] = {"ArgumentsPattern" -> {_}};
 IGMinimumSeparators[graph_?igGraphQ] :=
@@ -62,7 +62,7 @@ IGMinimumSeparators[graph_?igGraphQ] :=
 
 
 PackageExport["IGMinimalSeparators"]
-IGMinimalSeparators::usage = "IGMinimalSeparators[graph] returns all minimal separator vertex sets. A vertex set is a separator if its removal disconnects the graph. Edge directions are ignored."
+IGMinimalSeparators::usage = "IGMinimalSeparators[graph] gives all minimal separator vertex sets. A vertex set is a separator if its removal disconnects the graph. Edge directions are ignored."
 
 SyntaxInformation[IGMinimalSeparators] = {"ArgumentsPattern" -> {_}};
 IGMinimalSeparators[graph_?igGraphQ] :=
@@ -94,7 +94,7 @@ IGMinimalVertexSeparatorQ[graph_?igGraphQ, vs_List] :=
 (***** Connected components *****)
 
 PackageExport["IGArticulationPoints"]
-IGArticulationPoints::usage = "IGArticulationPoints[graph] finds the articulation points of graph. A vertex is an articulation point if its removal increases the number of (weakly) connected components in the graph.";
+IGArticulationPoints::usage = "IGArticulationPoints[graph] gives the articulation points of graph. A vertex is an articulation point if its removal increases the number of (weakly) connected components in the graph.";
 
 SyntaxInformation[IGArticulationPoints] = {"ArgumentsPattern" -> {_}};
 IGArticulationPoints[graph_?igGraphQ] :=
@@ -104,7 +104,7 @@ IGArticulationPoints[graph_?igGraphQ] :=
 
 
 PackageExport["IGBiconnectedComponents"]
-IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] returns the vertices of the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Isolated vertices are not returned.";
+IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] gives the vertices of the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it. Isolated vertices are not returned.";
 
 SyntaxInformation[IGBiconnectedComponents] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedComponents[graph_?igGraphQ] :=
@@ -113,7 +113,7 @@ IGBiconnectedComponents[graph_?igGraphQ] :=
     ]
 
 PackageExport["IGBiconnectedEdgeComponents"]
-IGBiconnectedEdgeComponents::usage = "IGBiconnectedEdgeComponents[graph] returns the edges of the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it.";
+IGBiconnectedEdgeComponents::usage = "IGBiconnectedEdgeComponents[graph] gives the edges of the maximal biconnected subgraphs of graph. A graph is biconnected if the removal of any single vertex does not disconnect it.";
 
 SyntaxInformation[IGBiconnectedEdgeComponents] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedEdgeComponents[graph_?igGraphQ] :=
@@ -123,7 +123,7 @@ IGBiconnectedEdgeComponents[graph_?igGraphQ] :=
 
 
 PackageExport["IGBridges"]
-IGBridges::usage = "IGBridges[graph] finds the bridges of graph. A bridge is an edge whose removal increases the number of (weakly) connected components in the graph.";
+IGBridges::usage = "IGBridges[graph] gives the bridges of graph. A bridge is an edge whose removal increases the number of (weakly) connected components in the graph.";
 
 SyntaxInformation[IGBridges] = {"ArgumentsPattern" -> {_}};
 IGBridges[graph_?igGraphQ] :=
@@ -133,7 +133,7 @@ IGBridges[graph_?igGraphQ] :=
 
 
 PackageExport["IGConnectedComponentSizes"]
-IGConnectedComponentSizes::usage = "IGConnectedComponentSizes[graph] returns the sizes of graph's connected components in decreasing order.";
+IGConnectedComponentSizes::usage = "IGConnectedComponentSizes[graph] gives the sizes of graph's connected components in decreasing order.";
 
 SyntaxInformation[IGConnectedComponentSizes] = {"ArgumentsPattern" -> {_}};
 IGConnectedComponentSizes[graph_?igGraphQ] :=
@@ -143,7 +143,7 @@ IGConnectedComponentSizes[graph_?igGraphQ] :=
 
 
 PackageExport["IGWeaklyConnectedComponentSizes"]
-IGWeaklyConnectedComponentSizes::usage = "IGWeaklyConnectedComponentSizes[graph] returns the sizes of graph's weakly connected components in decreasing order.";
+IGWeaklyConnectedComponentSizes::usage = "IGWeaklyConnectedComponentSizes[graph] gives the sizes of graph's weakly connected components in decreasing order.";
 
 SyntaxInformation[IGWeaklyConnectedComponentSizes] = {"ArgumentsPattern" -> {_}};
 IGWeaklyConnectedComponentSizes[graph_?igGraphQ] :=
@@ -156,8 +156,8 @@ IGWeaklyConnectedComponentSizes[graph_?igGraphQ] :=
 
 PackageExport["IGVertexConnectivity"]
 IGVertexConnectivity::usage =
-    "IGVertexConnectivity[graph] returns the smallest number of vertices whose deletion disconnects graph.\n" <>
-    "IGVertexConnectivity[graph, s, t] returns the smallest number of vertices whose deletion disconnects vertices s and t in graph.";
+    "IGVertexConnectivity[graph] gives the smallest number of vertices whose deletion disconnects graph.\n" <>
+    "IGVertexConnectivity[graph, s, t] gives the smallest number of vertices whose deletion disconnects vertices s and t in graph.";
 
 SyntaxInformation[IGVertexConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
 
@@ -174,8 +174,8 @@ IGVertexConnectivity[graph_?igGraphQ, s_, t_] :=
 
 PackageExport["IGEdgeConnectivity"]
 IGEdgeConnectivity::usage =
-    "IGEdgeConnectivity[graph] returns the smallest number of edges whose deletion disconnects graph.\n" <>
-    "IGEdgeConnectivity[graph, s, t] returns the smallest number of edges whose deletion disconnects vertices s and t in graph.";
+    "IGEdgeConnectivity[graph] gives the smallest number of edges whose deletion disconnects graph.\n" <>
+    "IGEdgeConnectivity[graph, s, t] gives the smallest number of edges whose deletion disconnects vertices s and t in graph.";
 
 SyntaxInformation[IGEdgeConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
 
@@ -191,7 +191,7 @@ IGEdgeConnectivity[graph_?igGraphQ, s_, t_] :=
 
 
 PackageExport["IGCohesiveBlocks"]
-IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph] computes the cohesive block structure of a simple undirected graph.";
+IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph] gives the cohesive block structure of a simple undirected graph.";
 
 IGCohesiveBlocks::badarg = "The input must be a simple undirected graph.";
 SyntaxInformation[IGCohesiveBlocks] = {"ArgumentsPattern" -> {_}};
@@ -207,8 +207,8 @@ IGCohesiveBlocks[graph_?igGraphQ] :=
 
 PackageExport["IGMinimumCutValue"]
 IGMinimumCutValue::usage =
-    "IGMinimumCutValue[graph] finds the smallest sum of weights corresponding to an edge cut in graph.\n" <>
-    "IGMinimumCutValue[graph, s, t] finds the smallest sum of weights corresponding to an s-t edge cut in graph.";
+    "IGMinimumCutValue[graph] gives the smallest sum of weights corresponding to an edge cut in graph.\n" <>
+    "IGMinimumCutValue[graph, s, t] gives the smallest sum of weights corresponding to an s-t edge cut in graph.";
 
 SyntaxInformation[IGMinimumCutValue] = {"ArgumentsPattern" -> {_, _., _.}};
 IGMinimumCutValue[graph_?igGraphQ] :=
@@ -223,8 +223,8 @@ IGMinimumCutValue[graph_?igGraphQ, s_, t_] :=
 
 PackageExport["IGMinimumCut"]
 IGMinimumCut::usage =
-    "IGMinimumCut[graph] finds a minimum edge cut in a weighted graph.\n" <>
-    "IGMinimumCut[graph, s, t] finds a minimum s-t edge cut in a weighted graph.";
+    "IGMinimumCut[graph] gives a minimum edge cut in a weighted graph.\n" <>
+    "IGMinimumCut[graph, s, t] gives a minimum s-t edge cut in a weighted graph.";
 
 SyntaxInformation[IGMinimumCut] = {"ArgumentsPattern" -> {_, _., _.}};
 IGMinimumCut[graph_?igGraphQ] :=
@@ -238,7 +238,7 @@ IGMinimumCut[graph_?igGraphQ, s_, t_] :=
 
 
 PackageExport["IGGomoryHuTree"]
-IGGomoryHuTree::usage = "IGGomoryHuTree[graph] returns the Gomory–Hu tree of a graph.";
+IGGomoryHuTree::usage = "IGGomoryHuTree[graph] gives the Gomory–Hu tree of a graph.";
 
 (* Note: edge ordering is critical *)
 SyntaxInformation[IGGomoryHuTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
@@ -251,7 +251,7 @@ IGGomoryHuTree[graph_?GraphQ, opt : OptionsPattern[]] :=
 
 PackageExport["IGMinimumEdgeCuts"]
 IGMinimumEdgeCuts::usage =
-    "IGMinimumEdgeCuts[graph, s, t] finds all minimum edge cuts that disconnect s and t in a directed graph.";
+    "IGMinimumEdgeCuts[graph, s, t] gives all minimum edge cuts that disconnect s and t in a directed graph.";
 
 SyntaxInformation[IGMinimumEdgeCuts] = {"ArgumentsPattern" -> {_, _, _}};
 IGMinimumEdgeCuts[graph_?EmptyGraphQ, s_, t_] := {}
@@ -263,7 +263,7 @@ IGMinimumEdgeCuts[graph_?igGraphQ, s_, t_] :=
 
 PackageExport["IGMinimumEdgeCuts"]
 IGMinimalEdgeCuts::usage =
-    "IGMinimalEdgeCuts[graph, s, t] finds all minimal edge cuts that disconnect s and t in a directed graph.";
+    "IGMinimalEdgeCuts[graph, s, t] gives all minimal edge cuts that disconnect s and t in a directed graph.";
 
 SyntaxInformation[IGMinimalEdgeCuts] = {"ArgumentsPattern" -> {_, _, _}};
 IGMinimalEdgeCuts[graph_?EmptyGraphQ, s_, t_] := {}
@@ -282,7 +282,7 @@ edgeCapacities[graph_] :=
 
 
 PackageExport["IGMaximumFlowMatrix"]
-IGMaximumFlowMatrix::usage = "IGMaximumFlowMatrix[graph, s, t] returns the flow matrix of a maximum flow from s to t.";
+IGMaximumFlowMatrix::usage = "IGMaximumFlowMatrix[graph, s, t] gives the flow matrix of a maximum flow from s to t.";
 
 SyntaxInformation[IGMaximumFlowMatrix] = {"ArgumentsPattern" -> {_, _, _}};
 IGMaximumFlowMatrix[graph_?igGraphQ, s_, t_] :=
@@ -307,7 +307,7 @@ IGMaximumFlowMatrix[graph_?igGraphQ, s_, t_] :=
 
 
 PackageExport["IGMaximumFlowValue"]
-IGMaximumFlowValue::usage = "IGMaximumFlowValue[graph, s, t] returns the value of the maximum flow from s to t.";
+IGMaximumFlowValue::usage = "IGMaximumFlowValue[graph, s, t] gives the value of the maximum flow from s to t.";
 
 SyntaxInformation[IGMaximumFlowValue] = {"ArgumentsPattern" -> {_, _, _}};
 IGMaximumFlowValue[graph_?igGraphQ, s_, t_] :=
@@ -319,7 +319,7 @@ IGMaximumFlowValue[graph_?igGraphQ, s_, t_] :=
 (***** Other functions *****)
 
 PackageExport["IGGiantComponent"]
-IGGiantComponent::usage = "IGGiantComponent[graph] returns the largest weakly connected component of graph.";
+IGGiantComponent::usage = "IGGiantComponent[graph] gives the largest weakly connected component of graph.";
 
 SyntaxInformation[IGGiantComponent] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGGiantComponent[g_?IGNullGraphQ, opt : OptionsPattern[Graph]] := Graph[g, opt]
@@ -329,21 +329,21 @@ IGGiantComponent[g_?GraphQ, opt : OptionsPattern[Graph]] :=
 
 
 PackageExport["IGSourceVertexList"]
-IGSourceVertexList::usage = "IGSourceVertexList[graph] returns the list of vertices with no incoming connections.";
+IGSourceVertexList::usage = "IGSourceVertexList[graph] gives the list of vertices with no incoming connections.";
 
 SyntaxInformation[IGSourceVertexList] = {"ArgumentsPattern" -> {_}};
 IGSourceVertexList[g_?GraphQ] := Pick[VertexList[g], VertexInDegree[g], 0]
 
 
 PackageExport["IGSinkVertexList"]
-IGSinkVertexList::usage = "IGSinkVertexList[graph] returns the list of vertices with no outgoing connections.";
+IGSinkVertexList::usage = "IGSinkVertexList[graph] gives the list of vertices with no outgoing connections.";
 
 SyntaxInformation[IGSinkVertexList] = {"ArgumentsPattern" -> {_}};
 IGSinkVertexList[g_?GraphQ] := Pick[VertexList[g], VertexOutDegree[g], 0]
 
 
 PackageExport["IGIsolatedVertexList"]
-IGIsolatedVertexList::usage = "IGIsolatedVertexList[graph] returns the list of isolated vertices.";
+IGIsolatedVertexList::usage = "IGIsolatedVertexList[graph] gives the list of isolated vertices.";
 
 SyntaxInformation[IGIsolatedVertexList] = {"ArgumentsPattern" -> {_}};
 IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree[g], 0]

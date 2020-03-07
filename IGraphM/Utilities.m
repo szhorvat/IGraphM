@@ -16,7 +16,7 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Fast structure retrieval *****)
 
 PackageExport["IGIndexEdgeList"]
-IGIndexEdgeList::usage = "IGIndexEdgeList[graph] returns the edge list of graph in terms of vertex indices, as a packed array.";
+IGIndexEdgeList::usage = "IGIndexEdgeList[graph] gives the edge list of graph in terms of vertex indices, as a packed array.";
 
 SyntaxInformation[IGIndexEdgeList] = {"ArgumentsPattern" -> {_}};
 IGIndexEdgeList[graph_?EmptyGraphQ] := {}
@@ -49,8 +49,8 @@ IGSameGraphQ[_, _] := False (* return False when at least one argument is not a 
 
 PackageExport["IGAdjacencyList"]
 IGAdjacencyList::usage =
-    "IGAdjacencyList[graph] returns the adjacency list of graph as an association.\n" <>
-    "IGAdjacencyList[graph, \"In\"] returns the adjacency list of the reverse of a directed graph.\n" <>
+    "IGAdjacencyList[graph] gives the adjacency list of graph as an association.\n" <>
+    "IGAdjacencyList[graph, \"In\"] gives the adjacency list of the reverse of a directed graph.\n" <>
     "IGAdjacencyList[graph, \"All\"] considers both incoming and outgoing edges.";
 
 igAdjacencyListSimple[vl_, am_] :=
@@ -301,7 +301,7 @@ IGMembershipToPartitions[elements_][membership_] := IGMembershipToPartitions[ele
 (***** Graph combination *****)
 
 PackageExport["IGDisjointUnion"]
-IGDisjointUnion::usage = "IGDisjointUnion[{g1, g2, \[Ellipsis]}] computes a disjoint union of the graphs. Each vertex of the result will be a pair consisting of the index of the graph originally containing it and the original name of the vertex.";
+IGDisjointUnion::usage = "IGDisjointUnion[{g1, g2, \[Ellipsis]}] gives a disjoint union of the graphs. Each vertex of the result will be a pair consisting of the index of the graph originally containing it and the original name of the vertex.";
 
 IGDisjointUnion::mixed = "IGDisjointUnion does not support mixed graphs.";
 SyntaxInformation[IGDisjointUnion] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGDisjointUnion, Graph]};

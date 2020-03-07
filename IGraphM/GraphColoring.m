@@ -14,7 +14,7 @@ igContextSetup[igPackagePrivateSymbol]
 
 
 PackageExport["IGVertexColoring"]
-IGVertexColoring::usage = "IGVertexColoring[graph] returns a vertex colouring of graph.";
+IGVertexColoring::usage = "IGVertexColoring[graph] gives a vertex colouring of graph.";
 
 SyntaxInformation[IGVertexColoring] = {"ArgumentsPattern" -> {_}};
 IGVertexColoring[graph_?igGraphQ] :=
@@ -24,7 +24,7 @@ IGVertexColoring[graph_?igGraphQ] :=
 
 
 PackageExport["IGEdgeColoring"]
-IGEdgeColoring::usage = "IGEdgeColoring[graph] returns an edge colouring of graph.";
+IGEdgeColoring::usage = "IGEdgeColoring[graph] gives an edge colouring of graph.";
 
 SyntaxInformation[IGEdgeColoring] = {"ArgumentsPattern" -> {_}};
 IGEdgeColoring[graph_?igGraphQ] := IGVertexColoring@LineGraph@IGUndirectedGraph[graph, "All"]
@@ -170,7 +170,7 @@ IGKEdgeColoring[graph_?igGraphQ, k_Integer?Positive, opt : OptionsPattern[]] :=
 
 
 PackageExport["IGMinimumVertexColoring"]
-IGMinimumVertexColoring::usage = "IGMinimumVertexColoring[graph] finds a minimum vertex colouring of graph.";
+IGMinimumVertexColoring::usage = "IGMinimumVertexColoring[graph] gives a minimum vertex colouring of graph.";
 
 Options[IGMinimumVertexColoring] = { "ForcedColoring" -> Automatic }
 SyntaxInformation[IGMinimumVertexColoring] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -187,7 +187,7 @@ IGMinimumVertexColoring[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 PackageExport["IGMinimumEdgeColoring"]
-IGMinimumEdgeColoring::usage = "IGMinimumEdgeColoring[graph] finds a minimum edge colouring of graph.";
+IGMinimumEdgeColoring::usage = "IGMinimumEdgeColoring[graph] gives a minimum edge colouring of graph.";
 
 Options[IGMinimumEdgeColoring] = { "ForcedColoring" -> "LargestClique" };
 SyntaxInformation[IGMinimumEdgeColoring] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -199,7 +199,7 @@ IGMinimumEdgeColoring[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 
 PackageExport["IGChromaticNumber"]
-IGChromaticNumber::usage = "IGChromaticNumber[graph] returns the chromatic number of graph.";
+IGChromaticNumber::usage = "IGChromaticNumber[graph] gives the chromatic number of graph.";
 
 SyntaxInformation[IGChromaticNumber] = {"ArgumentsPattern" -> {_}};
 IGChromaticNumber[graph_?igGraphQ] :=
@@ -207,7 +207,7 @@ IGChromaticNumber[graph_?igGraphQ] :=
 
 
 PackageExport["IGChromaticIndex"]
-IGChromaticIndex::usage = "IGChromaticIndex[graph] returns the chromatic index of graph.";
+IGChromaticIndex::usage = "IGChromaticIndex[graph] gives the chromatic index of graph.";
 
 SyntaxInformation[IGChromaticIndex] = {"ArgumentsPattern" -> {_}};
 IGChromaticIndex[graph_?igGraphQ] :=
@@ -215,7 +215,7 @@ IGChromaticIndex[graph_?igGraphQ] :=
 
 
 PackageExport["IGVertexColoringQ"]
-IGVertexColoringQ::usage = "IGVertexColoringQ[graph, coloring] checks whether neighbouring vertices all have differing colours.";
+IGVertexColoringQ::usage = "IGVertexColoringQ[graph, coloring] tests whether neighbouring vertices all have differing colours.";
 
 SyntaxInformation[IGVertexColoringQ] = {"ArgumentsPattern" -> {_, _}};
 IGVertexColoringQ[graph_?igGraphQ, col_List] /; VertexCount[graph] == Length[col] :=
@@ -236,7 +236,7 @@ expr : IGVertexColoringQ[graph_?igGraphQ, asc_?AssociationQ] :=
 
 
 PackageExport["IGCliqueCover"]
-IGCliqueCover::usage = "IGCliqueCover[graph] finds a minimum clique cover of graph, i.e. a partitioning of its vertices into a smallest number of cliques.";
+IGCliqueCover::usage = "IGCliqueCover[graph] gives a minimum clique cover of graph, i.e. a partitioning of its vertices into a smallest number of cliques.";
 
 Options[IGCliqueCover] = { Method -> "Minimum" };
 SyntaxInformation[IGCliqueCover] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -259,7 +259,7 @@ IGCliqueCover[graph_?igGraphQ, OptionsPattern[]] :=
 
 
 PackageExport["IGCliqueCoverNumber"]
-IGCliqueCoverNumber::usage = "IGCliqueCoverNumber[graphs] finds the clique vertex cover number of graph.";
+IGCliqueCoverNumber::usage = "IGCliqueCoverNumber[graphs] gives the clique vertex cover number of graph.";
 
 SyntaxInformation[IGCliqueCoverNumber] = {"ArgumentsPattern" -> {_}};
 IGCliqueCoverNumber[graph_?igGraphQ] :=

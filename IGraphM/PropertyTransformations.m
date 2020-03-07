@@ -226,7 +226,7 @@ If[$VersionNumber >= 12.1,
 ]
 
 PackageExport["IGVertexPropertyList"]
-IGVertexPropertyList::usage = "IGVertexPropertyList[graph] returns the list of available vertex properties in graph.";
+IGVertexPropertyList::usage = "IGVertexPropertyList[graph] gives the list of available vertex properties in graph.";
 
 standardVertexProperties = {
   VertexCoordinates,
@@ -241,7 +241,7 @@ IGVertexPropertyList[g_ /; GraphQ[g] && hasCustomPropQ[g]] := Sort@DeleteDuplica
 IGVertexPropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardVertexProperties]
 
 PackageExport["IGEdgePropertyList"]
-IGEdgePropertyList::usage = "IGEdgePropertyList[graph] returns the list of available edge properties in graph.";
+IGEdgePropertyList::usage = "IGEdgePropertyList[graph] gives the list of available edge properties in graph.";
 
 standardEdgeProperties = {
   EdgeStyle, EdgeShapeFunction, EdgeLabels, EdgeLabelStyle,

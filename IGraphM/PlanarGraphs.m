@@ -44,7 +44,7 @@ igFromEmbedding[emb_] :=
 
 
 PackageExport["IGEmbeddingQ"]
-IGEmbeddingQ::usage = "IGEmbeddingQ[embedding] checks if embedding represents a combinatorial embedding of a simple graph.";
+IGEmbeddingQ::usage = "IGEmbeddingQ[embedding] tests if embedding represents a combinatorial embedding of a simple graph.";
 
 SyntaxInformation[IGEmbeddingQ] = {"ArgumentsPattern" -> {_}};
 IGEmbeddingQ[emb_Association?AssociationQ] :=
@@ -54,8 +54,8 @@ IGEmbeddingQ[_] := False
 
 PackageExport["IGPlanarQ"]
 IGPlanarQ::usage =
-    "IGPlanarQ[graph] checks if graph is planar.\n" <>
-    "IGPlanarQ[embedding] checks if a combinatorial embedding is planar.";
+    "IGPlanarQ[graph] tests if graph is planar.\n" <>
+    "IGPlanarQ[embedding] tests if a combinatorial embedding is planar.";
 
 SyntaxInformation[IGPlanarQ] = {"ArgumentsPattern" -> {_}};
 IGPlanarQ[graph_?EmptyGraphQ] := True
@@ -74,7 +74,7 @@ IGPlanarQ[_] := False
 
 
 PackageExport["IGMaximalPlanarQ"]
-IGMaximalPlanarQ::usage = "IGMaximalPlanarQ[graph] checks if graph is maximal planar.";
+IGMaximalPlanarQ::usage = "IGMaximalPlanarQ[graph] tests if graph is maximal planar.";
 
 SyntaxInformation[IGMaximalPlanarQ] = {"ArgumentsPattern" -> {_}};
 IGMaximalPlanarQ[graph_?igGraphQ] /; IGPlanarQ[graph] :=
@@ -89,8 +89,8 @@ IGMaximalPlanarQ[_] := False
 
 PackageExport["IGOuterplanarQ"]
 IGOuterplanarQ::usage =
-    "IGOuterplanarQ[graph] checks if graph is outerplanar.\n" <>
-    "IGOuterplanarQ[embedding] checks if a combinatorial embedding is outerplanar.";
+    "IGOuterplanarQ[graph] tests if graph is outerplanar.\n" <>
+    "IGOuterplanarQ[embedding] tests if a combinatorial embedding is outerplanar.";
 
 outerplanarVertex::usage = "outerplanarVertex is used in the implementation of IGOuterplanarQ";
 
@@ -122,7 +122,7 @@ IGOuterplanarQ[_] := False
 
 
 PackageExport["IGOuterplanarEmbedding"]
-IGOuterplanarEmbedding::usage = "IGOuterplanarEmbedding[graph] returns an outerplanar combinatorial embedding of a graph.";
+IGOuterplanarEmbedding::usage = "IGOuterplanarEmbedding[graph] gives an outerplanar combinatorial embedding of a graph.";
 
 IGOuterplanarEmbedding::nopl = "The graph is not outer-planar.";
 SyntaxInformation[IGOuterplanarEmbedding] = {"ArgumentsPattern" -> {_}};
@@ -138,7 +138,7 @@ IGOuterplanarEmbedding[graph_?igGraphQ] :=
 
 
 PackageExport["IGKuratowskiEdges"]
-IGKuratowskiEdges::usage = "IGKuratowskiEdges[graph] finds the edges belonging to a Kuratowski subgraph.";
+IGKuratowskiEdges::usage = "IGKuratowskiEdges[graph] gives the edges belonging to a Kuratowski subgraph.";
 
 SyntaxInformation[IGKuratowskiEdges] = {"ArgumentsPattern" -> {_}};
 IGKuratowskiEdges[graph_?EmptyGraphQ] := {}
@@ -149,7 +149,7 @@ IGKuratowskiEdges[graph_?igGraphQ] :=
 
 
 PackageExport["IGPlanarEmbedding"]
-IGPlanarEmbedding::usage = "IGPlanarEmbedding[graph] returns a planar combinatorial embedding of a graph.";
+IGPlanarEmbedding::usage = "IGPlanarEmbedding[graph] gives a planar combinatorial embedding of a graph.";
 
 (* TODO: The current implementation ignores edge multiplicities.
  * Investigate whether this can be improved. *)
@@ -161,7 +161,7 @@ IGPlanarEmbedding[graph_?igGraphQ] :=
 
 
 PackageExport["IGEmbeddingToCoordinates"]
-IGEmbeddingToCoordinates::usage = "IGEmbeddingToCoordinates[embedding] computes the coordinates of a planar drawing based on the given combinatorial embedding.";
+IGEmbeddingToCoordinates::usage = "IGEmbeddingToCoordinates[embedding] gives the coordinates of a planar drawing based on the given combinatorial embedding.";
 
 SyntaxInformation[IGEmbeddingToCoordinates] = {"ArgumentsPattern" -> {_}};
 IGEmbeddingToCoordinates[emb_] :=
@@ -172,7 +172,7 @@ IGEmbeddingToCoordinates[emb_] :=
 
 PackageExport["IGCoordinatesToEmbedding"]
 IGCoordinatesToEmbedding::usage =
-    "IGCoordinatesToEmbedding[graph] computes a combinatorial embedding based on the vertex coordinates of graph.\n" <>
+    "IGCoordinatesToEmbedding[graph] gives a combinatorial embedding based on the vertex coordinates of graph.\n" <>
     "IGCoordinatesToEmbedding[graph, coordinates] uses the given coordinates instead of the VertexCoordinates property.";
 
 SyntaxInformation[IGCoordinatesToEmbedding] = {"ArgumentsPattern" -> {_, _.}};
@@ -185,8 +185,8 @@ IGCoordinatesToEmbedding[graph_?igGraphQ] := IGCoordinatesToEmbedding[graph, Gra
 
 PackageExport["IGFaces"]
 IGFaces::usage =
-    "IGFaces[graph] returns the faces of a planar graph.\n" <>
-    "IGFaces[embedding] returns the faces that correspond to a combinatorial embedding.";
+    "IGFaces[graph] gives the faces of a planar graph.\n" <>
+    "IGFaces[embedding] gives the faces that correspond to a combinatorial embedding.";
 
 SyntaxInformation[IGFaces] = {"ArgumentsPattern" -> {_, _.}};
 IGFaces[embedding_?AssociationQ] :=
@@ -198,8 +198,8 @@ IGFaces[graph_?igGraphQ] := catch@IGFaces@check@IGPlanarEmbedding[graph]
 
 PackageExport["IGDualGraph"]
 IGDualGraph::usage =
-    "IGDualGraph[graph] returns the dual graph of a planar graph.\n" <>
-    "IGDualGraph[embedding] returns the dual graph corresponding to a specific embedding of a graph. The embedding does not need to be planar.";
+    "IGDualGraph[graph] gives the dual graph of a planar graph.\n" <>
+    "IGDualGraph[embedding] gives the dual graph corresponding to a specific embedding of a graph. The embedding does not need to be planar.";
 
 SyntaxInformation[IGDualGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGDualGraph[embedding_?AssociationQ, opt : OptionsPattern[]] :=

@@ -46,7 +46,7 @@ addCompletion[IGForestQ, {0, {"In", "Out", "All"}}]
 (***** Spanning trees *****)
 
 PackageExport["IGSpanningTree"]
-IGSpanningTree::usage = "IGSpanningTree[graph] returns a minimum spanning tree of graph. Edge directions are ignored. Edge weights are taken into account and are preserved in the tree.";
+IGSpanningTree::usage = "IGSpanningTree[graph] gives a minimum spanning tree of graph. Edge directions are ignored. Edge weights are taken into account and are preserved in the tree.";
 
 SyntaxInformation[IGSpanningTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
@@ -64,9 +64,9 @@ IGSpanningTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
 
 PackageExport["IGRandomSpanningTree"]
 IGRandomSpanningTree::usage =
-    "IGRandomSpanningTree[graph] returns a random spanning tree of graph. All spanning trees are generated with equal probability.\n" <>
-    "IGRandomSpanningTree[{graph, vertex}] returns a random spanning tree of the graph component containing vertex.\n" <>
-    "IGRandomSpanningTree[spec, n] returns a list of n random spanning trees.";
+    "IGRandomSpanningTree[graph] gives a random spanning tree of graph. All spanning trees are generated with equal probability.\n" <>
+    "IGRandomSpanningTree[{graph, vertex}] gives a random spanning tree of the graph component containing vertex.\n" <>
+    "IGRandomSpanningTree[spec, n] gives a list of n random spanning trees.";
 
 (* IGRandomSpanning tree has the n argument so that we can generate multiple spanning trees without
  * having to generate a new ig object (expensive) each time. *)
@@ -103,8 +103,8 @@ IGRandomSpanningTree[{graph_?igGraphQ, v_}, n_?Internal`NonNegativeIntegerQ, opt
 
 PackageExport["IGSpanningTreeCount"]
 IGSpanningTreeCount::usage =
-    "IGSpanningTreeCount[graph] returns the number of spanning trees of graph.\n" <>
-    "IGSpanningTreeCount[graph, vertex] returns the number of spanning trees rooted in vertex for a directed graph.";
+    "IGSpanningTreeCount[graph] gives the number of spanning trees of graph.\n" <>
+    "IGSpanningTreeCount[graph, vertex] gives the number of spanning trees rooted in vertex for a directed graph.";
 
 (* Notes:
  * The null graph has no spanning trees.
@@ -143,7 +143,7 @@ IGUnfoldTree[graph_?GraphQ, roots_List, opt : OptionsPattern[{IGUnfoldTree, Grap
 
 
 PackageExport["IGStrahlerNumber"]
-IGStrahlerNumber::usage = "IGStrahlerNumber[tree] computes the Horton–Strahler number of each vertex in a directed out-tree.";
+IGStrahlerNumber::usage = "IGStrahlerNumber[tree] gives the Horton–Strahler number of each vertex in a directed out-tree.";
 SyntaxInformation[IGStrahlerNumber] = {"ArgumentsPattern" -> {_}};
 IGStrahlerNumber[g_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[g]},

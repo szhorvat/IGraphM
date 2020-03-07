@@ -86,7 +86,7 @@ igMultigraphSubisomorphicQ[subgraph_, graph_] :=
 
 
 PackageExport["IGGetIsomorphism"]
-IGGetIsomorphism::usage = "IGGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.";
+IGGetIsomorphism::usage = "IGGetIsomorphism[graph1, graph2] gives one isomorphism between graph1 and graph2, if it exists.";
 
 SyntaxInformation[IGGetIsomorphism] = {"ArgumentsPattern" -> {_, _}};
 IGGetIsomorphism[graph1_?IGNullGraphQ, igraph2_?IGNullGraphQ] := {<||>}
@@ -102,7 +102,7 @@ IGGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ] :=
 
 
 PackageExport["IGGetSubisomorphism"]
-IGGetSubisomorphism::usage = "IGGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.";
+IGGetSubisomorphism::usage = "IGGetSubisomorphism[subgraph, graph] gives one subisomorphism from subgraph to graph, if it exists.";
 
 SyntaxInformation[IGGetSubisomorphism] = {"ArgumentsPattern" -> {_, _}};
 IGGetSubisomorphism[subgraph_?IGNullGraphQ, graph_?igGraphQ] := {<||>}
@@ -118,7 +118,7 @@ IGGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ] :=
 
 
 PackageExport["IGIsoclass"]
-IGIsoclass::usage = "IGIsoclass[graph] returns the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData to get lists of graphs ordered by isoclass.";
+IGIsoclass::usage = "IGIsoclass[graph] gives the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData to get lists of graphs ordered by isoclass.";
 
 SyntaxInformation[IGIsoclass] = {"ArgumentsPattern" -> {_}};
 IGIsoclass[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"isoclass"[]]
@@ -208,8 +208,8 @@ blissSplittingHeuristics =
 
 PackageExport["IGBlissCanonicalLabeling"]
 IGBlissCanonicalLabeling::usage =
-    "IGBlissCanonicalLabeling[graph] computes a canonical integer labelling of the graph vertices. Using this labelling brings representations of isomorphic graphs to the same form.\n" <>
-    "IGBlissCanonicalLabeling[{graph, colorSpec}] computes a canonical integer labelling for the vertices of a vertex coloured graph.";
+    "IGBlissCanonicalLabeling[graph] gives a canonical integer labelling of the graph vertices. Using this labelling brings representations of isomorphic graphs to the same form.\n" <>
+    "IGBlissCanonicalLabeling[{graph, colorSpec}] gives a canonical integer labelling for the vertices of a vertex coloured graph.";
 
 amendUsage[IGBlissCanonicalLabeling,
   " Available values for the \"SplittingHeuristics\" option: ``. The labelling depends on the splitting heuristics used.",
@@ -241,8 +241,8 @@ IGBlissCanonicalLabeling[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Option
 
 PackageExport["IGBlissCanonicalPermutation"]
 IGBlissCanonicalPermutation::usage =
-    "IGBlissCanonicalPermutation[graph] returns a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.\n" <>
-    "IGBlissCanonicalPermutation[{graph, colorSpec}] returns the canonical vertex permutation of a vertex coloured graph.";
+    "IGBlissCanonicalPermutation[graph] gives a permutation that, when applied to the adjacency matrices of isomorphic graphs, brings them to the same form.\n" <>
+    "IGBlissCanonicalPermutation[{graph, colorSpec}] gives the canonical vertex permutation of a vertex coloured graph.";
 
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissCanonicalPermutation] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
@@ -261,8 +261,8 @@ IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Opt
 
 PackageExport["IGBlissCanonicalGraph"]
 IGBlissCanonicalGraph::usage =
-    "IGBlissCanonicalGraph[graph] returns a canonical graph of graph, based on the canonical integer labelling.\n" <>
-    "IGBlissCanonicalGraph[{graph, colorSpec}] returns a canonical graph of a vertex coloured graph, based on the canonical integer labelling. Vertex colours will be stored in the \"Color\" vertex property.";
+    "IGBlissCanonicalGraph[graph] gives a canonical graph of graph, based on the canonical integer labelling.\n" <>
+    "IGBlissCanonicalGraph[{graph, colorSpec}] gives a canonical graph of a vertex coloured graph, based on the canonical integer labelling. Vertex colours will be stored in the \"Color\" vertex property.";
 
 Options[IGBlissCanonicalGraph] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissCanonicalGraph] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
@@ -311,8 +311,8 @@ IGBlissIsomorphicQ[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGraph
 
 PackageExport["IGBlissGetIsomorphism"]
 IGBlissGetIsomorphism::usage =
-    "IGBlissGetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.\n" <>
-    "IGBlissGetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] returns one isomorphism between two vertex colored graphs, if it exists.";
+    "IGBlissGetIsomorphism[graph1, graph2] gives one isomorphism between graph1 and graph2, if it exists.\n" <>
+    "IGBlissGetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] gives one isomorphism between two vertex colored graphs, if it exists.";
 
 Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissGetIsomorphism] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
@@ -347,8 +347,8 @@ IGBlissGetIsomorphism[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGr
 
 PackageExport["IGBlissAutomorphismCount"]
 IGBlissAutomorphismCount::usage =
-    "IGBlissAutomorphismCount[graph] returns the number of automorphisms of graph.\n" <>
-    "IGBlissAutomorphismCount[{graph, colorSpec}] returns the number of automorphisms of a vertex coloured graph.";
+    "IGBlissAutomorphismCount[graph] gives the number of automorphisms of graph.\n" <>
+    "IGBlissAutomorphismCount[{graph, colorSpec}] gives the number of automorphisms of a vertex coloured graph.";
 
 Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissAutomorphismCount] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
@@ -369,8 +369,8 @@ IGBlissAutomorphismCount[{graph_?igGraphQ, col : OptionsPattern[]}, opt : Option
 
 PackageExport["IGBlissAutomorphismGroup"]
 IGBlissAutomorphismGroup::usage =
-    "IGBlissAutomorphismGroup[graph] returns the automorphism group of graph.\n" <>
-    "IGBlissAutomorphismGroup[{graph, colorSpec}] returns the automorphism group of a vertex coloured graph.";
+    "IGBlissAutomorphismGroup[graph] gives the automorphism group of graph.\n" <>
+    "IGBlissAutomorphismGroup[{graph, colorSpec}] gives the automorphism group of a vertex coloured graph.";
 
 toPermGroup = PermutationGroup[PermutationCycles /@ #]&;
 
@@ -425,10 +425,10 @@ IGVF2IsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ] :=
 
 PackageExport["IGVF2FindIsomorphisms"]
 IGVF2FindIsomorphisms::usage =
-    "IGVF2FindIsomorphisms[graph1, graph2] finds all isomorphisms between graph1 and graph2 using the VF2 algorithm.\n" <>
-    "IGVF2FindIsomorphisms[graph1, graph2, n] finds at most n isomorphisms between graph1 and graph2.\n" <>
-    "IGVF2FindIsomorphisms[{graph1, colorSpec}, {graph2, colorSpec}] finds all isomorphisms between vertex or edge coloured graphs graph1 and graph2.\n" <>
-    "IGVF2FindIsomorphisms[{graph1, colorSpec}, {graph2, colorSpec}, n] finds at most n isomorphisms between vertex or edge coloured graphs graph1 and graph2.";
+    "IGVF2FindIsomorphisms[graph1, graph2] gives all isomorphisms between graph1 and graph2 using the VF2 algorithm.\n" <>
+    "IGVF2FindIsomorphisms[graph1, graph2, n] gives at most n isomorphisms between graph1 and graph2.\n" <>
+    "IGVF2FindIsomorphisms[{graph1, colorSpec}, {graph2, colorSpec}] gives all isomorphisms between vertex or edge coloured graphs graph1 and graph2.\n" <>
+    "IGVF2FindIsomorphisms[{graph1, colorSpec}, {graph2, colorSpec}, n] gives at most n isomorphisms between vertex or edge coloured graphs graph1 and graph2.";
 
 SyntaxInformation[IGVF2FindIsomorphisms] = {"ArgumentsPattern" -> {{__}, {__}, _.}};
 
@@ -460,8 +460,8 @@ IGVF2FindIsomorphisms[graph1_?igGraphQ, graph2_?igGraphQ, max : (_?Internal`Posi
 
 
 PackageExport["IGVF2GetIsomorphism"]
-IGVF2GetIsomorphism::usage = "IGVF2GetIsomorphism[graph1, graph2] returns one isomorphism between graph1 and graph2, if it exists.\n" <>
-    "IGVF2GetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] returns one isomorphism between two vertex or edge colored graphs, if it exists.";
+IGVF2GetIsomorphism::usage = "IGVF2GetIsomorphism[graph1, graph2] gives one isomorphism between graph1 and graph2, if it exists.\n" <>
+    "IGVF2GetIsomorphism[{graph1, colorSpec}, {graph2, colorSpec}] gives one isomorphism between two vertex or edge colored graphs, if it exists.";
 
 SyntaxInformation[IGVF2GetIsomorphism] = {"ArgumentsPattern" -> {{__}, {__}}};
 
@@ -497,10 +497,10 @@ IGVF2SubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ] :=
 
 PackageExport["IGVF2FindSubisomorphisms"]
 IGVF2FindSubisomorphisms::usage =
-    "IGVF2FindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph using the VF2 algorithm.\n" <>
-    "IGVF2FindSubisomorphisms[subgraph, graph, n] finds at most n subisomorphisms from subgraph to graph.\n" <>
-    "IGVF2FindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] finds all subisomorphisms from vertex or edge coloured subgraph to graph.\n" <>
-    "IGVF2FindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}, n] finds at most n subisomorphisms from vertex or edge coloured subgraph to graph.";
+    "IGVF2FindSubisomorphisms[subgraph, graph] gives all subisomorphisms from subgraph to graph using the VF2 algorithm.\n" <>
+    "IGVF2FindSubisomorphisms[subgraph, graph, n] gives at most n subisomorphisms from subgraph to graph.\n" <>
+    "IGVF2FindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] gives all subisomorphisms from vertex or edge coloured subgraph to graph.\n" <>
+    "IGVF2FindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}, n] gives at most n subisomorphisms from vertex or edge coloured subgraph to graph.";
 
 SyntaxInformation[IGVF2FindSubisomorphisms] = {"ArgumentsPattern" -> {{__}, {__}, _.}};
 
@@ -532,8 +532,8 @@ IGVF2FindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, max : (_?Internal`
 
 
 PackageExport["IGVF2GetSubisomorphism"]
-IGVF2GetSubisomorphism::usage = "IGVF2GetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.\n" <>
-    "IGVF2GetSubisomorphism[{subgraph, colorSpec}, {graph, colorSpec}] returns one subisomorphism from a vertex or edge coloured subgraph to graph, if it exists.";
+IGVF2GetSubisomorphism::usage = "IGVF2GetSubisomorphism[subgraph, graph] gives one subisomorphism from subgraph to graph, if it exists.\n" <>
+    "IGVF2GetSubisomorphism[{subgraph, colorSpec}, {graph, colorSpec}] gives one subisomorphism from a vertex or edge coloured subgraph to graph, if it exists.";
 
 SyntaxInformation[IGVF2GetSubisomorphism] = {"ArgumentsPattern" -> {{__}, {__}}};
 
@@ -545,8 +545,8 @@ IGVF2GetSubisomorphism[cg1: {subgraph_?igGraphQ, opt1 : OptionsPattern[]}, cg2: 
 
 PackageExport["IGVF2IsomorphismCount"]
 IGVF2IsomorphismCount::usage =
-    "IGVF2IsomorphismCount[graph1, graph2] returns the number of isomorphisms between graph1 and graph2.\n" <>
-    "IGVF2IsomorphismCount[{graph1, colorSpec}, {graph2, colorSpec}] returns the number of isomorphisms between vertex or edge coloured graphs graph1 and graph2. Note that this is not the same as simply counting the automorphisms of one graph if their colourings differ.";
+    "IGVF2IsomorphismCount[graph1, graph2] gives the number of isomorphisms between graph1 and graph2.\n" <>
+    "IGVF2IsomorphismCount[{graph1, colorSpec}, {graph2, colorSpec}] gives the number of isomorphisms between vertex or edge coloured graphs graph1 and graph2. Note that this is not the same as simply counting the automorphisms of one graph if their colourings differ.";
 
 SyntaxInformation[IGVF2IsomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}}};
 
@@ -569,8 +569,8 @@ IGVF2IsomorphismCount[graph1_?igGraphQ, graph2_?igGraphQ] :=
 
 PackageExport["IGVF2SubisomorphismCount"]
 IGVF2SubisomorphismCount::usage =
-    "IGVF2SubisomorphismCount[subgraph, graph] returns the number of mappings from subgraph to graph.\n" <>
-    "IGVF2SubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] returns the number of mappings from vertex or edge coloured subgraph to graph.";
+    "IGVF2SubisomorphismCount[subgraph, graph] gives the number of mappings from subgraph to graph.\n" <>
+    "IGVF2SubisomorphismCount[{subgraph, colorSpec}, {graph, colorSpec}] gives the number of mappings from vertex or edge coloured subgraph to graph.";
 
 SyntaxInformation[IGVF2SubisomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}}};
 
@@ -629,8 +629,8 @@ IGLADSubisomorphicQ[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igG
 
 PackageExport["IGLADGetSubisomorphism"]
 IGLADGetSubisomorphism::usage =
-    "IGLADGetSubisomorphism[subgraph, graph] returns one subisomorphism from subgraph to graph, if it exists.\n" <>
-    "IGLADGetSubisomorphism[{subgraph, colorSpec}, {graph, colorSpec}] returns one subisomorphism from a vertex coloured subgraph to graph.";
+    "IGLADGetSubisomorphism[subgraph, graph] gives one subisomorphism from subgraph to graph, if it exists.\n" <>
+    "IGLADGetSubisomorphism[{subgraph, colorSpec}, {graph, colorSpec}] gives one subisomorphism from a vertex coloured subgraph to graph.";
 
 Options[IGLADGetSubisomorphism] = { "Induced" -> False };
 SyntaxInformation[IGLADGetSubisomorphism] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
@@ -670,8 +670,8 @@ IGLADGetSubisomorphism[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?
 
 PackageExport["IGLADFindSubisomorphisms"]
 IGLADFindSubisomorphisms::usage =
-    "IGLADFindSubisomorphisms[subgraph, graph] finds all subisomorphisms from subgraph to graph.\n" <>
-    "IGLADFindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] finds all subisomorphisms from a vertex coloured subgraph to graph.";
+    "IGLADFindSubisomorphisms[subgraph, graph] gives all subisomorphisms from subgraph to graph.\n" <>
+    "IGLADFindSubisomorphisms[{subgraph, colorSpec}, {graph, colorSpec}] gives all subisomorphisms from a vertex coloured subgraph to graph.";
 
 Options[IGLADFindSubisomorphisms] = { "Induced" -> False };
 SyntaxInformation[IGLADFindSubisomorphisms] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};

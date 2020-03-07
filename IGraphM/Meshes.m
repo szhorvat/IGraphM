@@ -112,8 +112,8 @@ checkDimension[dim_, d_, sym_] :=
 
 PackageExport["IGMeshCellAdjacencyGraph"]
 IGMeshCellAdjacencyGraph::usage =
-    "IGMeshCellAdjacencyGraph[mesh, d] returns the connectivity structure of d-dimensional cells in mesh as a graph.\n" <>
-    "IGMeshCellAdjacencyGraph[mesh, d1, d2] returns the connectivity structure of d1 and d2 dimensional cells in mesh as a bipartite graph.";
+    "IGMeshCellAdjacencyGraph[mesh, d] gives the connectivity structure of d-dimensional cells in mesh as a graph.\n" <>
+    "IGMeshCellAdjacencyGraph[mesh, d1, d2] gives the connectivity structure of d1 and d2 dimensional cells in mesh as a bipartite graph.";
 
 IGMeshCellAdjacencyGraph::bddim = "The requested dimension, `1`, is greater than the dimension of the mesh, `2`.";
 
@@ -164,8 +164,8 @@ IGMeshCellAdjacencyGraph[mesh_?meshQ, d_?Internal`NonNegativeIntegerQ, opt : Opt
 
 PackageExport["IGMeshCellAdjacencyMatrix"]
 IGMeshCellAdjacencyMatrix::usage =
-    "IGMeshCellAdjacencyMatrix[mesh, d] returns the adjacency matrix of d-dimensional cells in mesh.\n" <>
-    "IGMeshCellAdjacencyMatrix[mesh, d1, d2] returns the incidence matrix of d1- and d2-dimensional cells in mesh.";
+    "IGMeshCellAdjacencyMatrix[mesh, d] gives the adjacency matrix of d-dimensional cells in mesh.\n" <>
+    "IGMeshCellAdjacencyMatrix[mesh, d1, d2] gives the incidence matrix of d1- and d2-dimensional cells in mesh.";
 
 IGMeshCellAdjacencyMatrix::bddim = IGMeshCellAdjacencyGraph::bddim;
 SyntaxInformation[IGMeshCellAdjacencyMatrix] = {"ArgumentsPattern" -> {_, _, _.}};
@@ -185,7 +185,7 @@ IGLatticeMesh::usage =
     "IGLatticeMesh[type] creates a mesh of the lattice of the specified type.\n" <>
     "IGLatticeMesh[type, {m, n}] creates a lattice of n by m unit cells.\n" <>
     "IGLatticeMesh[type, region] creates a lattice from the points that fall within region.\n" <>
-    "IGLatticeMesh[] returns a list of available lattice types.";
+    "IGLatticeMesh[] gives a list of available lattice types.";
 
 $igLatticeData := $igLatticeData = zimport@FileNameJoin[{$packageDirectory, "IGLatticeData.mz"}];
 $igLatticeUnits := $igLatticeUnits = $igLatticeData["UnitCells"];

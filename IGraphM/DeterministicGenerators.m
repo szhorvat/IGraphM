@@ -17,8 +17,8 @@ PackageImport["IGraphM`LTemplate`"]
 
 PackageExport["IGEmptyGraph"]
 IGEmptyGraph::usage =
-    "IGEmptyGraph[] returns a graph with no edges or vertices.\n" <>
-    "IGEmptyGraph[n] returns a graph with no edges and n vertices.";
+    "IGEmptyGraph[] gives a graph with no edges or vertices.\n" <>
+    "IGEmptyGraph[n] gives a graph with no edges and n vertices.";
 
 SyntaxInformation[IGEmptyGraph] = {"ArgumentsPattern" -> {_., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGEmptyGraph[n : _?Internal`NonNegativeIntegerQ : 0, opt : OptionsPattern[Graph]] := Graph[Range[n], {}, opt]
@@ -44,8 +44,8 @@ IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?
 
 PackageExport["IGRealizeDegreeSequence"]
 IGRealizeDegreeSequence::usage =
-    "IGRealizeDegreeSequence[degseq] returns an undirected graph having the given degree sequence.\n" <>
-    "IGRealizeDegreeSequence[outdegseq, indegseq] returns a directed graph having the given out- and in-degree sequences.\n";
+    "IGRealizeDegreeSequence[degseq] gives an undirected graph having the given degree sequence.\n" <>
+    "IGRealizeDegreeSequence[outdegseq, indegseq] gives a directed graph having the given out- and in-degree sequences.\n";
 
 Options[IGRealizeDegreeSequence] = { Method -> "SmallestFirst" };
 igRealizeDegreeSequenceMethods = <|"SmallestFirst" -> 0, "LargestFirst" -> 1, "Index" -> 2|>;
@@ -65,8 +65,8 @@ IGRealizeDegreeSequence[outdeg_?intVecQ, indeg_?intVecQ, opt : OptionsPattern[{I
 
 PackageExport["IGKaryTree"]
 IGKaryTree::usage =
-    "IGKaryTree[n] returns a binary tree with n vertices.\n" <>
-    "IGKaryTree[n, k] returns a k-ary tree with n vertices.";
+    "IGKaryTree[n] gives a binary tree with n vertices.\n" <>
+    "IGKaryTree[n, k] gives a k-ary tree with n vertices.";
 
 Options[IGKaryTree] = {
   DirectedEdges -> False
@@ -80,7 +80,7 @@ IGKaryTree[m_?Internal`NonNegativeMachineIntegerQ, n : _?Internal`PositiveMachin
 
 
 PackageExport["IGSymmetricTree"]
-IGSymmetricTree::usage = "IGSymmetricTree[{k1, k2, \[Ellipsis]}] returns a tree where vertices in the (i+1)st layer have k_i children.";
+IGSymmetricTree::usage = "IGSymmetricTree[{k1, k2, \[Ellipsis]}] gives a tree where vertices in the (i+1)st layer have k_i children.";
 
 Options[IGSymmetricTree] = { GraphLayout -> "RadialEmbedding" };
 SyntaxInformation[IGSymmetricTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSymmetricTree, Graph]};
@@ -96,8 +96,8 @@ IGSymmetricTree[splits_?posIntVecQ, opt : OptionsPattern[{IGSymmetricTree, Graph
 
 PackageExport["IGBetheLattice"]
 IGBetheLattice::usage =
-    "IGBetheLattice[n] returns the first n layers of a Bethe lattice with coordination number 3.\n" <>
-    "IGBetheLattice[n, k] returns the first n layers of a Bethe lattice with coordination number k.";
+    "IGBetheLattice[n] gives the first n layers of a Bethe lattice with coordination number 3.\n" <>
+    "IGBetheLattice[n, k] gives the first n layers of a Bethe lattice with coordination number k.";
 
 SyntaxInformation[IGBetheLattice] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGBetheLattice, Graph]};
 IGBetheLattice[n_?Internal`PositiveMachineIntegerQ, k : (i_Integer /; i > 1) : 3, opt : OptionsPattern[]] :=
@@ -116,7 +116,7 @@ IGFromPrufer[vec_?intVecQ, opt : OptionsPattern[Graph]] :=
 
 
 PackageExport["IGToPrufer"]
-IGToPrufer::usage = "IGToPrufer[tree] returns the Prüfer sequence of a tree.";
+IGToPrufer::usage = "IGToPrufer[tree] gives the Prüfer sequence of a tree.";
 
 SyntaxInformation[IGToPrufer] = {"ArgumentsPattern" -> {_}};
 IGToPrufer[graph_?igGraphQ] :=
@@ -127,8 +127,8 @@ IGToPrufer[graph_?igGraphQ] :=
 
 PackageExport["IGCompleteGraph"]
 IGCompleteGraph::usage =
-    "IGCompleteGraph[n] returns a complete graph on n vertices.\n" <>
-    "IGCompleteGraph[vertices] returns a complete graph on the given vertices.";
+    "IGCompleteGraph[n] gives a complete graph on n vertices.\n" <>
+    "IGCompleteGraph[vertices] gives a complete graph on the given vertices.";
 
 IGCompleteGraph::dupl = "The given vertex list must not contain duplicates.";
 
@@ -155,8 +155,8 @@ IGCompleteGraph[verts_List, opt : OptionsPattern[{IGCompleteGraph, Graph}]] :=
 
 PackageExport["IGCompleteAcyclicGraph"]
 IGCompleteAcyclicGraph::usage =
-    "IGCompleteAcyclicGraph[n] returns a complete acyclic directed graph on n vertices.\n" <>
-    "IGCompleteAcyclicGraph[vertices] returns a complete acyclic directed graph on the given vertices.";
+    "IGCompleteAcyclicGraph[n] gives a complete acyclic directed graph on n vertices.\n" <>
+    "IGCompleteAcyclicGraph[vertices] gives a complete acyclic directed graph on the given vertices.";
 
 IGCompleteAcyclicGraph::dupl = IGCompleteGraph::dupl;
 
@@ -178,7 +178,7 @@ IGCompleteAcyclicGraph[verts_List, opt : OptionsPattern[Graph]] :=
 
 
 PackageExport["IGKautzGraph"]
-IGKautzGraph::usage = "IGKautzGraph[m, n] returns a Kautz graph on m+1 characters with string length n+1.";
+IGKautzGraph::usage = "IGKautzGraph[m, n] gives a Kautz graph on m+1 characters with string length n+1.";
 
 SyntaxInformation[IGKautzGraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGKautzGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
@@ -189,7 +189,7 @@ IGKautzGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMach
 
 
 PackageExport["IGDeBruijnGraph"]
-IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] returns a De Bruijn graph on m characters and string length n.";
+IGDeBruijnGraph::usage = "IGDeBruijnGraph[m, n] gives a De Bruijn graph on m characters and string length n.";
 
 SyntaxInformation[IGDeBruijnGraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGDeBruijnGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]] :=
@@ -200,7 +200,7 @@ IGDeBruijnGraph[m_?Internal`NonNegativeMachineIntegerQ, n_?Internal`NonNegativeM
 
 
 PackageExport["IGChordalRing"]
-IGChordalRing::usage = "IGChordalRing[n, w] returns an extended chordal ring on n vertices, based on the vector or matrix w.";
+IGChordalRing::usage = "IGChordalRing[n, w] gives an extended chordal ring on n vertices, based on the vector or matrix w.";
 
 Options[IGChordalRing] = {
   GraphLayout -> circularEmbedding,
@@ -225,7 +225,7 @@ IGChordalRing[n_?Developer`MachineIntegerQ, w_?intMatQ, opt : OptionsPattern[{IG
 
 PackageExport["IGGraphAtlas"]
 IGGraphAtlas::usage =
-    "IGGraphAtlas[n] returns graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
+    "IGGraphAtlas[n] gives graph number n from An Atlas of Graphs by Ronald C. Read and Robin J. Wilson, Oxford University Press, 1998. " <>
     "This function is provided for convenience; if you are looking for a specific named graph, use the builtin GraphData function.";
 
 SyntaxInformation[IGGraphAtlas] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGGraphAtlas, Graph]};
