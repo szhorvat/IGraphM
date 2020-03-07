@@ -1282,6 +1282,25 @@ public:
         return res.makeMTensor();
     }
 
+    mma::RealTensorRef averageNeighborDegree(mma::RealTensorRef vs, mint neiMode, mint degMode) const {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        const char *context = "average neighbor degree";
+
+        igCheck(igraph_avg_nearest_neighbor_degree(&graph, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), igNeighborMode(neiMode, context), igNeighborMode(degMode, context), &res.vec, nullptr, passWeights()));
+
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef averageDegreeConnectivity(mint neiMode, mint degMode) const {
+        igVector res;
+        const char *context = "average neighbor connectivity";
+
+        igCheck(igraph_avg_nearest_neighbor_degree(&graph, igraph_vss_all(), igNeighborMode(neiMode, context), igNeighborMode(degMode, context), nullptr, &res.vec, passWeights()));
+
+        return res.makeMTensor();
+    }
+
     mma::RealTensorRef shortestPathCounts() const {
         igVector res;
         double unconnected;
@@ -1461,9 +1480,10 @@ public:
         return res;
     }
 
-    mma::RealTensorRef localEfficiency(bool directed, mint mode) const {
+    mma::RealTensorRef localEfficiency(mma::RealTensorRef vs, bool directed, mint mode) const {
         igVector vec;
-        igCheck(igraph_local_efficiency(&graph, &vec.vec, passWeights(), directed, igNeighborMode(mode, "local efficiency")));
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_local_efficiency(&graph, &vec.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), passWeights(), directed, igNeighborMode(mode, "local efficiency")));
         return vec.makeMTensor();
     }
 

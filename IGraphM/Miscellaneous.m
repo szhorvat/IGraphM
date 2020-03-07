@@ -192,3 +192,31 @@ igCompleteQ[graph_] := igCompleteQ@SimpleGraph[graph]
 SyntaxInformation[IGCompleteQ] = {"ArgumentsPattern" -> {_}};
 IGCompleteQ[graph_?igGraphQ] := igCompleteQ[graph]
 IGCompleteQ[_] := False
+
+
+PackageExport["IGAverageNeighborDegree"]
+IGAverageNeighborDegree::usage =
+    "IGAverageNeighborDegree[graph] gives the average neighbour degree of the vertices of graph.\n" <>
+    "IGAverageNeighborDegree[graph, {vertex1, vertex2, \[Ellipsis]}] gives the average neighbour degree of the specified vertices.\n" <>
+    "IGAverageNeighborDegree[graph, All, mode] uses the given mode, \"In\", \"Out\" or \"All\", to find neighbours and degrees in directed graphs. The default is \"Out\".\n" <>
+    "IGAverageNeighborDegree[graph, All, degreeMode, neighborMode] uses different modes for finding neighbours and degrees.";
+SyntaxInformation[IGAverageNeighborDegree] = {"ArgumentsPattern" -> {_, _., _.}};
+IGAverageNeighborDegree[graph_?igGraphQ, {}, degMode_, neiMode_] := {}
+IGAverageNeighborDegree[graph_?igGraphQ, vs : (_List | All) : All, degMode_ : "Out", neiMode_ : Automatic] :=
+    catch@Module[{ig = igMakeFastWeighted[graph], nMode = If[neiMode === Automatic, degMode, neiMode]},
+      check@ig@"averageNeighborDegree"[vss[graph][vs], encodeNeighborMode[nMode], encodeNeighborMode[degMode]]
+    ]
+addCompletion[IGAverageNeighborDegree, {0, 0, {"In", "Out", "All"}, {"In", "Out", "All"}}]
+
+
+PackageExport["IGAverageDegreeConnectivity"]
+IGAverageDegreeConnectivity::usage =
+    "IGAverageDegreeConnectivity[graph] gives the average neighbour degree for vertices of degree k=1, 2, \[Ellipsis]\n" <>
+    "IGAverageDegreeConnectivity[graph, mode] uses the given mode, \"In\", \"Out\" or \"All\", to find neighbours and degrees in directed graphs. The default is \"Out\".\n" <>
+    "IGAverageDegreeConnectivity[graph, degreeMode, neighborMode] uses different modes for finding neighbours and degrees.";
+SyntaxInformation[IGAverageDegreeConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
+IGAverageDegreeConnectivity[graph_?igGraphQ, degMode_ : "Out", neiMode_ : Automatic] :=
+    catch@Block[{ig = igMakeFastWeighted[graph], nMode =If[neiMode === Automatic, degMode, neiMode] },
+      check@ig@"averageDegreeConnectivity"[encodeNeighborMode[nMode], encodeNeighborMode[degMode]]
+    ]
+addCompletion[IGAverageDegreeConnectivity, {0, {"In", "Out", "All"}, {"In", "Out", "All"}}]
