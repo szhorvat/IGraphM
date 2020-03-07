@@ -369,7 +369,7 @@ template = LTemplate["IGraphM",
         (* LFun["averagePathLength", {}, Real], *) (* currently not in use; averagePathLengthWeighted() will call averagePathLength() in C code when needed *)
         LFun["averagePathLengthWeighted", {Integer}, Real],
         LFun["globalEfficiency", {}, Real],
-        LFun["localEfficiency", {True|False (* directed *), Integer (* mode *)}, {Real, 1}],
+        LFun["localEfficiency", {{Real, 1, "Constant"} (* vertices *), True|False (* directed *), Integer (* mode *)}, {Real, 1}],
         LFun["averageLocalEfficiency", {True|False (* directed *), Integer (* mode *)}, Real],
         LFun["girth", {}, Real],
         LFun["radius", {}, Real],

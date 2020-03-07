@@ -197,19 +197,22 @@ IGGlobalEfficiency[graph_?igGraphQ] :=
 
 PackageExport["IGLocalEfficiency"]
 IGLocalEfficiency::usage =
-    "IGLocalEfficiency[graph] computes the local efficiency of a graph.\n" <>
-    "IGLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood.";
+    "IGLocalEfficiency[graph] gives the local efficiency around each vertex of graph.\n" <>
+    "IGLocalEfficiency[graph, {vertex1, vertex2, \[Ellipsis]}] gives the local efficiency around the given vertices.\n" <>
+    "IGLocalEfficiency[graph, All, \"Out\"] uses outgoing edges to define the neighbourhood.";
 Options[IGLocalEfficiency] = { DirectedEdges -> True };
-SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
-IGLocalEfficiency[graph_?igGraphQ, mode_ : "All", OptionsPattern[]] :=
+SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}};
+IGLocalEfficiency[graph_?igGraphQ, {}, mode_, OptionsPattern[]] := {}
+IGLocalEfficiency[graph_?igGraphQ, vs : (_List | All) : All, mode_ : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      check@ig@"localEfficiency"[OptionValue[DirectedEdges], encodeNeighborMode[mode]]
+      check@ig@"localEfficiency"[vss[graph][vs], OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]
+addCompletion[IGLocalEfficiency, {0, 0, {"Out", "In", "All"}}]
 
 
 PackageExport["IGAverageLocalEfficiency"]
 IGAverageLocalEfficiency::usage =
-    "IGAverageLocalEfficiency[graph] computes the average local efficiency of a graph.\n" <>
+    "IGAverageLocalEfficiency[graph] gives the average local efficiency of graph.\n" <>
     "IGAverageLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood.";
 SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 Options[IGAverageLocalEfficiency] = { DirectedEdges -> True };
@@ -217,6 +220,7 @@ IGAverageLocalEfficiency[graph_?igGraphQ, mode_ : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       check@ig@"averageLocalEfficiency"[OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]
+addCompletion[IGAverageLocalEfficiency, {0, {"Out", "In", "All"}}]
 
 
 (***** Graph diameter *****)
