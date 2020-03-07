@@ -1218,10 +1218,10 @@ public:
         return vec.makeMTensor();
     }
 
-    mma::RealTensorRef countAdjacentTriangles(mma::RealTensorRef t) const {
-        igraph_vector_t vsvec = igVectorView(t);
+    mma::RealTensorRef countAdjacentTriangles(mma::RealTensorRef vs) const {
+        igraph_vector_t vsvec = igVectorView(vs);
         igVector res;
-        igCheck(igraph_adjacent_triangles(&graph, &res.vec, t.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
+        igCheck(igraph_adjacent_triangles(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
         return res.makeMTensor();
     }
 
