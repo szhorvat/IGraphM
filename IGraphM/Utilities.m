@@ -335,7 +335,7 @@ IGDisjointUnion::usage = "IGDisjointUnion[{g1, g2, \[Ellipsis]}] gives a disjoin
 
 IGDisjointUnion::mixed = "IGDisjointUnion does not support mixed graphs.";
 SyntaxInformation[IGDisjointUnion] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGDisjointUnion, Graph]};
-IGDisjointUnion[{} | <||>, opt : OptionsPattern[]] := Graph[{}, {}, opt]
+IGDisjointUnion[{ } | <| |>, opt : OptionsPattern[]] := Graph[{}, {}, opt]
 IGDisjointUnion[glist : {__?UndirectedGraphQ}, opt : OptionsPattern[]] :=
     igDisjointUnion[Range@Length[glist], glist, False, {opt}]
 IGDisjointUnion[glist : {__?DirectedGraphQ}, opt : OptionsPattern[]] :=
