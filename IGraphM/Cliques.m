@@ -4,7 +4,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2019 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
@@ -224,4 +224,3 @@ IGIndependenceNumber::usage = "IGIndependenceNumber[graph] gives the independenc
 
 SyntaxInformation[IGIndependenceNumber] = {"ArgumentsPattern" -> {_}};
 IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"independenceNumber"[]]
-

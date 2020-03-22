@@ -8,7 +8,7 @@
 
 (* :Package Version: %%version%% *)
 (* :Mathematica Version: %%mathversion%% *)
-(* :Copyright: (c) 2019 Szabolcs Horvát *)
+(* :Copyright: (c) 2015-2020 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://szhorvat.net/mathematica/IGraphM  *)
 

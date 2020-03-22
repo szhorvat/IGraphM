@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2016-06-12 *)
-(* :Copyright: (c) 2019 Szabolcs Horvát *)
+(* :Copyright: (c) 2016-2020 Szabolcs Horvát *)
 
 
 Package["IGraphM`"]
@@ -218,12 +218,14 @@ If[$VersionNumber >= 10.1,
   keyValueMap[f_, asc_] := f @@@ Normal[asc]
 ]
 
+
 PackageScope["connectedGraphComponents"]
 connectedGraphComponents::usage = "connectedGraphComponents[graph]";
 If[$VersionNumber >= 10.4,
   connectedGraphComponents = WeaklyConnectedGraphComponents,
   connectedGraphComponents[g_] := Subgraph[g, #]& /@ WeaklyConnectedComponents[g]
 ]
+
 
 PackageScope["circularEmbedding"]
 circularEmbedding::usage = "circularEmbedding is a GraphLayout.";
@@ -253,6 +255,7 @@ If[$VersionNumber >= 12.1,
         expr
       ]
 ]
+
 
 (* In M12.1 and later, custom graph properties are stored in the AnnotationRules option, not in the Properties option.
    PropOptName is defined  to be the correct property-holding option name in each version. *)

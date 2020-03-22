@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-23 *)
-(* :Copyright: (c) 2019 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 igContextSetup[igPackagePrivateSymbol]
