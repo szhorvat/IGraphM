@@ -225,7 +225,8 @@ PackageExport["IGDirectedTree"]
 IGDirectedTree::usage = "IGDirectedTree[] is deprecated. Use IGOrientTree[] instead.";
 IGDirectedTree::deprec = "IGDirectedTree is deprecated and will be removed from future versions of IGraph/M. Use IGOrientTree instead.";
 
-IGDirectedTree[tree_, root_, rest___] := IGOrientTree[tree, root, rest] (* TODO: remove eventually *)
+IGDirectedTree[tree_, root_, rest___] :=
+    (Message[IGDirectedTree::deprec]; IGOrientTree[tree, root, rest]) (* TODO: remove eventually *)
 
 
 PackageExport["IGOrientTree"]
