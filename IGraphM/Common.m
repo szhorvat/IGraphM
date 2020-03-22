@@ -237,7 +237,7 @@ If[$VersionNumber < 12.0,
 
 PackageScope["canonicalEdgeBlock"]
 canonicalEdgeBlock::usage = "canonicalEdgeBlock[expr] evaluates expression while making sure that all UndirectedEdge expressions inside are ordered canonically.";
-SetAttributes[canonicalEdgeBlock, HoldAllComplete]
+SetAttributes[canonicalEdgeBlock, HoldAll]
 
 (* In M12.1 and later, UndirectedEdge can have 3 arguments, so we cannot canonicalize simply with Orderless. *)
 (* TODO  The workaround /; Not@OrderedQ[{a, b}] is 10x slower than Orderless! *)
