@@ -53,7 +53,7 @@ class IG {
     /* Isomorphism helpers */
 
     // translate integer to Bliss splitting heuristic enum value
-    igraph_bliss_sh_t blissIntToSplitting(mint sh) const {
+    static igraph_bliss_sh_t blissIntToSplitting(mint sh) {
         switch (sh) {
         case 0: return IGRAPH_BLISS_F;
         case 1: return IGRAPH_BLISS_FS;
@@ -66,7 +66,7 @@ class IG {
     }
 
     // changes ig1 to have the directedness of ig2
-    void matchDirectedness(IG &ig1, const IG &ig2) {
+    static void matchDirectedness(IG &ig1, const IG &ig2) {
         if (ig2.directedQ())
             igCheck(igraph_to_directed(&ig1.graph, IGRAPH_TO_DIRECTED_ARBITRARY));
         else
@@ -299,8 +299,8 @@ public:
         igMatrix mat;
         mat.copyFromMTensor(tmat);
         igraph_integer_t n = 0;
-        for (igraph_integer_t *i = sizes.begin(); i != sizes.end(); ++i)
-            n += *i;
+        for (const auto &el : sizes)
+            n += el;
         destroy();
         igConstructorCheck(igraph_sbm_game(&graph, n, &mat.mat, &sizes.vec, directed, loops));
     }
@@ -341,11 +341,11 @@ public:
                                &graph, n, radius, periodic,
                                &x.vec, &y.vec));
 
-        const int len = x.length();
+        const mint len = x.length();
         mma::RealMatrixRef coord = mma::makeMatrix<double>(len, 2);
         auto xp = x.begin();
         auto yp = y.begin();
-        for (int i=0; i < len; ++i) {
+        for (mint i=0; i < len; ++i) {
             coord(i, 0) = *xp++;
             coord(i, 1) = *yp++;
         }
@@ -442,7 +442,7 @@ public:
     mma::RealTensorRef edgeList() const {
         igVector vec;
         igCheck(igraph_get_edgelist(&graph, &vec.vec, false));
-        mma::RealTensorRef res = mma::makeMatrix<double>(vec.length() / 2, 2);
+        mma::RealMatrixRef res = mma::makeMatrix<double>(vec.length() / 2, 2);
         std::copy(vec.begin(), vec.end(), res.begin());
         return res;
     }
@@ -498,7 +498,9 @@ public:
     mma::RealTensorRef betweenness(bool nobigint, bool normalized, mma::RealTensorRef vs) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
-        igCheck(igraph_betweenness(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, passWeights(), nobigint));
+        igCheck(igraph_betweenness(
+                &graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
+                true, passWeights(), nobigint));
         auto t = res.makeMTensor();
         if (normalized) {
             double vcount = vertexCount();
@@ -537,7 +539,9 @@ public:
     mma::RealTensorRef closeness(bool normalized, mma::RealTensorRef vs) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
-        igCheck(igraph_closeness(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, passWeights(), normalized));
+        igCheck(igraph_closeness(
+                &graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
+                IGRAPH_OUT, passWeights(), normalized));
         return res.makeMTensor();
     }
 
@@ -562,7 +566,7 @@ public:
             algo = IGRAPH_PAGERANK_ALGO_PRPACK;
             options = nullptr;
             break;
-        default: throw mma::LibraryError("Uknown PageRank method.");
+        default: throw mma::LibraryError("Unknown PageRank method.");
         }
 
         igVector vector;
@@ -724,7 +728,7 @@ public:
         return result;
     }
 
-    double centralization(mma::RealTensorRef vec, double tmax, bool normalized) const {
+    static double centralization(mma::RealTensorRef vec, double tmax, bool normalized) {
         igraph_vector_t scores = igVectorView(vec);
         return igraph_centralization(&scores, tmax, normalized);
     }
@@ -1113,7 +1117,7 @@ public:
 
         struct {
             static igraph_bool_t handler(const igraph_t *, igraph_vector_t *vids, int isoclass, void *data) {
-                mma::RealMatrixRef *mat = static_cast<mma::RealMatrixRef *>(data);
+                auto *mat = static_cast<mma::RealMatrixRef *>(data);
                 long len = igraph_vector_size(vids);
                 for (int i=0; i < len; ++i)
                     (*mat)(VECTOR(*vids)[i], isoclass) += 1;
@@ -1762,24 +1766,30 @@ public:
         return mat.makeMTensor();
     }
 
+    /*
     mma::RealTensorRef layoutMDS(mma::RealMatrixRef dist, mint dim) const {
         igMatrix dmat, mat;
         dmat.copyFromMTensor(dist);
         igCheck(igraph_layout_mds(&graph, &mat.mat, dist.cols() == 0 ? nullptr : &dmat.mat, dim, nullptr));
         return mat.makeMTensor();
     }
+     */
 
     mma::RealTensorRef layoutReingoldTilford(mma::RealTensorRef roots, bool directed) const {
         igMatrix mat;
         igraph_vector_t rootvec = igVectorView(roots);
-        igCheck(igraph_layout_reingold_tilford(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? nullptr : &rootvec, nullptr));
+        igCheck(igraph_layout_reingold_tilford(
+                &graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL,
+                roots.length() == 0 ? nullptr : &rootvec, nullptr));
         return mat.makeMTensor();
     }
 
     mma::RealTensorRef layoutReingoldTilfordCircular(mma::RealTensorRef roots, bool directed) const {
         igMatrix mat;
         igraph_vector_t rootvec = igVectorView(roots);
-        igCheck(igraph_layout_reingold_tilford_circular(&graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL, roots.length() == 0 ? nullptr : &rootvec, nullptr));
+        igCheck(igraph_layout_reingold_tilford_circular(
+                &graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL,
+                roots.length() == 0 ? nullptr : &rootvec, nullptr));
         return mat.makeMTensor();
     }
 
@@ -3037,8 +3047,7 @@ public:
         auto res = mma::makeVector<mint>(postorder.length());
         std::fill(res.begin(), res.end(), 1);
 
-        for (long i=0; i < postorder.length(); ++i) {
-            long c = postorder[i];
+        for (long c : postorder) {
             long p = parent[c];
             if (res[p] <= res[c])
                 res[p] = res[c] + 1;
@@ -3077,4 +3086,3 @@ public:
 };
 
 #endif // IG_H
-
