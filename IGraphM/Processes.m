@@ -12,7 +12,13 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Processes on graphs *****)
 (*******************************)
 
-bundleSIR[{time_, i_, r_, s_}] := TimeSeries[Transpose[{s,i,r}], {time}]
+bundleSIR[{time_, i_, r_, s_}] :=
+    TimeSeries[
+      N@Transpose[{s,i,r}], {time}, (* convert to Real with N[] for better performance *)
+      ValueDimensions -> 3,
+      (* 0th order interpolation, uses the value at the last available data point *)
+      ResamplingMethod -> {"Interpolation", "HoldFrom" -> Left}
+    ]
 
 PackageExport["IGSIRProcess"]
 IGSIRProcess::usage =
@@ -25,11 +31,11 @@ IGSIRProcess[graph_?igGraphQ, {beta_?NonNegative, gamma_?NonNegative}, n_?Intern
       TemporalData[
         bundleSIR /@ result,
         (* Descriptive names for the three components: *)
-        MetaInformation -> {"ComponentNames" -> {"S", "I", "R"}},
-        (* 0th order interpolation effectively uses the value at the last available data point,
-           which is conceptually correct because the values no longer change after the end of the simulation *)
-        ResamplingMethod -> {"Interpolation", InterpolationOrder -> 0}
+        MetaInformation -> {"ComponentNames" -> {"S", "I", "R"}}
       ]
     ]
 IGSIRProcess[graph_?igGraphQ, {beta_?NonNegative, gamma_?NonNegative}] :=
-    TimeSeries@IGSIRProcess[graph, {beta, gamma}, 1]
+    TimeSeries[
+      IGSIRProcess[graph, {beta, gamma}, 1],
+      ResamplingMethod -> {"Interpolation", "HoldFrom" -> Left}
+    ]
