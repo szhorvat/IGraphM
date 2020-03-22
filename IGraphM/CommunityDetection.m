@@ -178,8 +178,8 @@ communitiesToMembershipChecked[elems_, communities_] :=
 
 PackageExport["IGModularity"]
 IGModularity::usage =
-    "IGModularity[graph, {{v11, v12, \[Ellipsis]}, {v21, v22, \[Ellipsis]}, \[Ellipsis]}] computes the modularity of graph based on the given partitioning of the vertex list into communities.\n" <>
-    "IGModularity[graph, clusterdata] computes the modularity of graph based on the community structure represented as an IGClusterData object.";
+    "IGModularity[graph, {{v11, v12, \[Ellipsis]}, {v21, v22, \[Ellipsis]}, \[Ellipsis]}] gives the modularity the specified partitioning of graph's vertices into communities. Edge directions are ignored.\n" <>
+    "IGModularity[graph, clusterdata] uses the partitioning specified by an IGClusterData object.";
 
 SyntaxInformation[IGModularity] = {"ArgumentsPattern" -> {_, _}};
 IGModularity[graph_?igGraphQ, clusters_?igClusterDataQ] := IGModularity[graph, clusters["Communities"]]

@@ -268,5 +268,5 @@ If[$VersionNumber >= 12.1,
 
 
 PackageScope["encodeNeighborMode"]
-encodeNeighborMode::usage = "encodeNeighborMode[mode] translates Out, In, All to 1, 2, 3.";
+encodeNeighborMode::usage = "encodeNeighborMode[mode] translates Out, In, All to 1, 2, 3. To be used with the igNeighborMode() C++ function.";
 encodeNeighborMode[mode_] := Lookup[<|"Out" -> 1, "In" ->2, "All" -> 3 (*, All -> 3 *)|>, mode, -1]

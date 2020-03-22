@@ -23,7 +23,7 @@ IGUnweighted[g_?GraphQ] := g
      IGUnweighted[g_?IGEdgeWeightedQ] := Graph[ VertexList[g], EdgeList[g], FilterRules[Options[g], Except[EdgeWeight]] ]
 
    This implementation is slightly faster if the graph has a large number of properties, such as
-   ExampleData[{"NetworkGraph", "CondensedMatterCollaborations"}]. However, it is noticeable slower for weighted graphs with
+   ExampleData[{"NetworkGraph", "CondensedMatterCollaborations"}]. However, it is noticeably slower for weighted graphs with
    packed weight vectors and no other properties.
 *)
 
