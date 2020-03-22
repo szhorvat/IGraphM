@@ -45,6 +45,35 @@ IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
 IGSameGraphQ[_, _] := False (* return False when at least one argument is not a graph *)
 
 
+PackageExport["IGCompleteQ"]
+IGCompleteQ::usage = "IGCompleteQ[graph] tests if all pairs of vertices are connected in graph.";
+
+igCompleteQ[graph_?SimpleGraphQ] :=
+    With[{vc = VertexCount[graph], ec = EdgeCount[graph]},
+      If[UndirectedGraphQ[graph],
+        vc*(vc-1)/2 == ec,
+        vc*(vc-1) == ec
+      ]
+    ]
+igCompleteQ[graph_] := igCompleteQ@SimpleGraph[graph]
+
+SyntaxInformation[IGCompleteQ] = {"ArgumentsPattern" -> {_}};
+IGCompleteQ[graph_?igGraphQ] := igCompleteQ[graph]
+IGCompleteQ[_] := False
+
+
+PackageExport["IGAdjacentVerticesQ"]
+IGAdjacentVerticesQ::usage = "IGAdjacentVerticesQ[graph, {u, v}] tests if vertex v is adjacent to vertex u in graph.";
+
+SyntaxInformation[IGAdjacentVerticesQ] = {"ArgumentsPattern" -> {_, _}};
+If[$VersionNumber >= 12.1,
+  (* only for 12.1 and later: *)
+  IGAdjacentVerticesQ[g_?EdgeTaggedGraphQ, {u_, v_}] := Length@EdgeTags[g, {u, v}] > 0 (* EdgeTags will return Null for untagged edges *)
+]
+(* for all versions, both before and after 12.1: *)
+IGAdjacentVerticesQ[g_?GraphQ, {u_, v_}] := EdgeQ[g, UndirectedEdge[u, v]] || EdgeQ[g, DirectedEdge[u, v]]
+
+
 (***** Adjacency list representation (also used for embeddings) *****)
 
 PackageExport["IGAdjacencyList"]

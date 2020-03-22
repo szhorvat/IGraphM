@@ -177,23 +177,6 @@ IGCactusQ[_?DirectedGraphQ] := (Message[IGCactusQ::dirg]; $Failed)
 IGCactusQ[_] := False
 
 
-PackageExport["IGCompleteQ"]
-IGCompleteQ::usage = "IGCompleteQ[graph] tests if all pairs of vertices are connected in graph.";
-
-igCompleteQ[graph_?SimpleGraphQ] :=
-    With[{vc = VertexCount[graph], ec = EdgeCount[graph]},
-      If[UndirectedGraphQ[graph],
-        vc*(vc-1)/2 == ec,
-        vc*(vc-1) == ec
-      ]
-    ]
-igCompleteQ[graph_] := igCompleteQ@SimpleGraph[graph]
-
-SyntaxInformation[IGCompleteQ] = {"ArgumentsPattern" -> {_}};
-IGCompleteQ[graph_?igGraphQ] := igCompleteQ[graph]
-IGCompleteQ[_] := False
-
-
 PackageExport["IGAverageNeighborDegree"]
 IGAverageNeighborDegree::usage =
     "IGAverageNeighborDegree[graph] gives the average neighbour degree of the vertices of graph.\n" <>
