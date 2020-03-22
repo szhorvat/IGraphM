@@ -202,8 +202,8 @@ IGLocalEfficiency::usage =
     "IGLocalEfficiency[graph, All, \"Out\"] uses outgoing edges to define the neighbourhood.";
 Options[IGLocalEfficiency] = { DirectedEdges -> True };
 SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}};
-IGLocalEfficiency[graph_?igGraphQ, {}, mode_, OptionsPattern[]] := {}
-IGLocalEfficiency[graph_?igGraphQ, vs : (_List | All) : All, mode_ : "All", OptionsPattern[]] :=
+IGLocalEfficiency[graph_?igGraphQ, {}, mode_String, OptionsPattern[]] := {}
+IGLocalEfficiency[graph_?igGraphQ, vs : (_List | All) : All, mode_String : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       check@ig@"localEfficiency"[vss[graph][vs], OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]
@@ -216,7 +216,7 @@ IGAverageLocalEfficiency::usage =
     "IGAverageLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood.";
 SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 Options[IGAverageLocalEfficiency] = { DirectedEdges -> True };
-IGAverageLocalEfficiency[graph_?igGraphQ, mode_ : "All", OptionsPattern[]] :=
+IGAverageLocalEfficiency[graph_?igGraphQ, mode_String : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       check@ig@"averageLocalEfficiency"[OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]

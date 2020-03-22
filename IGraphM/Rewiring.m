@@ -37,10 +37,10 @@ IGRewireEdges::usage =
 
 Options[IGRewireEdges] = { SelfLoops -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated" };
 SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewireEdges, Graph]};
-IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : All|"All"|"In"|"Out" : All, opt : OptionsPattern[{IGRewireEdges, Graph}]] :=
+IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : "All"|"In"|"Out" : "All", opt : OptionsPattern[{IGRewireEdges, Graph}]] :=
     catch@Block[{ig = igMakeFast[g]},
       Switch[mode,
-        All|"All",
+        "All",
         check@ig@"rewireEdges"[p, OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges]]
         ,
         "In",

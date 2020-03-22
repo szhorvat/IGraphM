@@ -23,7 +23,7 @@ IGTreeQ::usage =
     "IGTreeQ[graph, \"All\"] ignores edge directions during the test.";
 
 SyntaxInformation[IGTreeQ] = {"ArgumentsPattern" -> {_, _.}};
-IGTreeQ[graph_?igGraphQ, mode_ : "Out"] :=
+IGTreeQ[graph_?igGraphQ, mode_String : "Out"] :=
     Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[encodeNeighborMode[mode]]]
 IGTreeQ[_, _ : "Out"] := False
 addCompletion[IGTreeQ, {0, {"In", "Out", "All"}}]
@@ -37,7 +37,7 @@ IGForestQ::usage =
     "IGForestQ[graph, \"All\"] ignores edge directions during the test.";
 
 SyntaxInformation[IGForestQ] = {"ArgumentsPattern" -> {_, _.}};
-IGForestQ[graph_?igGraphQ, mode_ : "Out"] :=
+IGForestQ[graph_?igGraphQ, mode_String : "Out"] :=
     Block[{ig = igMakeFast[graph]}, sck@ig@"forestQ"[encodeNeighborMode[mode]]]
 IGForestQ[_, _ : "Out"] := False
 addCompletion[IGForestQ, {0, {"In", "Out", "All"}}]

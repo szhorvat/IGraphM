@@ -100,7 +100,7 @@ IGCoreness::usage =
 
 corenessModes = <|"In" -> -1, "Out" -> 1, "All" -> 0|>;
 SyntaxInformation[IGCoreness] = {"ArgumentsPattern" -> {_, _.}};
-expr : IGCoreness[graph_?igGraphQ, mode_ : "All"] :=
+expr : IGCoreness[graph_?igGraphQ, mode_String : "All"] :=
     catch@Block[{ig = igMakeFast[graph]},
       Round@check@ig@"coreness"[Lookup[corenessModes, mode, Message[IGCoreness::inv, HoldForm@OutputForm[expr], mode, "parameter"]; throw[$Failed]]]
     ]
