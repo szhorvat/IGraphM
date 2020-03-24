@@ -3,6 +3,21 @@
 (* Reminder: Avoid mentioning any non-System` symbols in this file,
    otherwise they will be created in Global` when the package is loaded. *)
 
+(* TODO!
+   In M12.1.0, the FE will hang if Needs["IGraphM`"] is evaluated within a certain amount of time
+   after kernel startup. The hung FE can be recovered by killing the kernel.
+
+   Here we use the workaround of delaying package loading with a Pause[] if kernel startup
+   happened recently.
+
+   What we know so far about the hang:
+     - It is not caused by addCompletion[]
+     - Disabling SyntaxInformation using (Unprotect[SyntaxInformation]; SyntaxInformation = dummy) avoids the hang.
+ *)
+If[$VersionNumber == 12.1 && SessionTime[] < 3,
+  Pause[1]
+]
+
 (* Mathematica version check *)
 If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
   Print["IGraph/M requires Mathematica 10.0.2 or later.  Aborting."];
