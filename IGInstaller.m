@@ -5,11 +5,11 @@
 (* :Date: 2018-11-28 *)
 
 (* :Mathematica Version: 10.0 *)
-(* :Copyright: (c) 2019 szhorvat *)
+(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
 
 (* This is the official installer script for IGraph/M, located at https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m *)
 
-If[{$VersionNumber, $ReleaseNumber} < {10.0, 2},
+If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
   (* Note: This is a bit sloppy as the $Version of 10.0.1 is also shown as 10.0, with no release number. *)
   Print["IGraph/M requires Mathematica 10.0.2 or later. You are current running Mathematica ", $Version];
   Abort[]
@@ -17,8 +17,8 @@ If[{$VersionNumber, $ReleaseNumber} < {10.0, 2},
 
 (* On the Raspberry Pi, we generally support only the latest version of the Wolfram Engine. *)
 If[$SystemID === "Linux-ARM",
-  If[{$VersionNumber, $ReleaseNumber} < {11.3, 0},
-    Print["On the Raspberry Pi, IGraph/M requires the Wolfram Engine 11.3.0 or later. You are currently running the Wolfram Engine ", $Version];
+  If[Not@OrderedQ[{12.0, 0}, {$VersionNumber, $ReleaseNumber}],
+    Print["On the Raspberry Pi, IGraph/M requires the Wolfram Engine 12.0 or later. You are currently running the Wolfram Engine ", $Version];
     Abort[]
   ]
 ]
@@ -26,7 +26,7 @@ If[$SystemID === "Linux-ARM",
 (* We set up a package context to avoid Global` pollution and conflicts with any existing Global` symbols. *)
 BeginPackage["IGInstaller`"]
 
-(* In M12.1, several PacletManager symbols have modes into the System context. We can no longer refer to these symbols
+(* In M12.1, several PacletManager symbols have moved into the System context. We can no longer refer to these symbols
    by their full context without breaking compatibility, therefore we load PacletManager` here. *)
 Needs["PacletManager`"]
 
@@ -53,12 +53,15 @@ updateIGraphM[] :=
     If[FileExistsQ[target], PacletInstall[target], $Failed]
   ]
 
-Print["The currently installed versions of IGraph/M are: ", PacletFind["IGraphM"]]
+Print["The currently installed versions of IGraph/M are: ", #["Version"]& /@ PacletFind["IGraphM"]]
 Module[{res, loadCommand},
   res = Check[updateIGraphM[], $latest, {PacletInstall::samevers}];
   Switch[res,
     $Failed,
-    Print["Installation failed. Please install IGraph/M manually. ", Hyperlink["https://github.com/szhorvat/IGraphM#installation"]]
+    Print[
+      "Installation failed. Please install IGraph/M manually. ",
+      If[$Notebooks, Hyperlink, Identity]["https://github.com/szhorvat/IGraphM#installation"]
+    ]
     ,
     $latest,
     Print["The latest version is already installed."],
