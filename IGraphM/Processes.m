@@ -35,7 +35,7 @@ IGSIRProcess[graph_?igGraphQ, {beta_?NonNegative, gamma_?NonNegative}, n_?Intern
       ]
     ]
 IGSIRProcess[graph_?igGraphQ, {beta_?NonNegative, gamma_?NonNegative}] :=
-    TimeSeries[
-      IGSIRProcess[graph, {beta, gamma}, 1],
+    catch@TimeSeries[
+      check@IGSIRProcess[graph, {beta, gamma}, 1],
       ResamplingMethod -> {"Interpolation", "HoldFrom" -> Left}
     ]
