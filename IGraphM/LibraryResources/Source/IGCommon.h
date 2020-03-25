@@ -205,6 +205,7 @@ class igPtrVector {
 
     void destroy_items() {
         for (void **ptr = list.stor_begin; ptr < list.end; ++ptr)
+            if (*ptr)
                 DestroyElem(reinterpret_cast<ElemType *>(*ptr));
     }
 
