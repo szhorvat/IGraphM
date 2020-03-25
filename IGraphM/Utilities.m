@@ -72,9 +72,12 @@ PackageExport["IGAdjacentVerticesQ"]
 IGAdjacentVerticesQ::usage = "IGAdjacentVerticesQ[graph, {u, v}] tests if vertex v is adjacent to vertex u in graph.";
 
 SyntaxInformation[IGAdjacentVerticesQ] = {"ArgumentsPattern" -> {_, _}};
+(* In v12.1+, EdgeQ requires the tag to match in edges.
+   Therefore, EdgeQ cannot be used to determine if two vertices are adjacent. *)
 If[$VersionNumber >= 12.1,
-  (* only for 12.1 and later: *)
-  IGAdjacentVerticesQ[g_?EdgeTaggedGraphQ, {u_, v_}] := Length@EdgeTags[g, {u, v}] > 0 (* EdgeTags will return Null for untagged edges *)
+  (* EdgeTags will return Null for untagged edges in an otherwise edge-tagged graph.
+     Therefore it is sufficient to check Length@EdgeTags[...]. *)
+  IGAdjacentVerticesQ[g_?EdgeTaggedGraphQ, {u_, v_}] := VertexQ[g, u] && VertexQ[g, v] && Length@EdgeTags[g, {u, v}] > 0
 ]
 (* for all versions, both before and after 12.1: *)
 IGAdjacentVerticesQ[g_?GraphQ, {u_, v_}] := EdgeQ[g, UndirectedEdge[u, v]] || EdgeQ[g, DirectedEdge[u, v]]
