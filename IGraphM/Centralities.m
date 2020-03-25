@@ -167,7 +167,7 @@ IGPersonalizedPageRank[graph_?GraphQ, reset_?VectorQ, damping : _?positiveNumeri
 
 
 PackageExport["IGEigenvectorCentrality"]
-IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph] return the eigenvector centrality of each vertex.";
+IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph] gives the eigenvector centrality of each vertex.";
 
 Options[IGEigenvectorCentrality] = { DirectedEdges -> True, "Normalized" -> True };
 SyntaxInformation[IGEigenvectorCentrality] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -178,7 +178,7 @@ IGEigenvectorCentrality[graph_?GraphQ, opt : OptionsPattern[]] :=
 
 
 PackageExport["IGHubScore"]
-IGHubScore::usage = "IGHubScore[graph] returns Kleinberg's hub score for each vertex.";
+IGHubScore::usage = "IGHubScore[graph] gives Kleinberg's hub score for each vertex.";
 
 Options[IGHubScore] = { "Normalized" -> True };
 SyntaxInformation[IGHubScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
@@ -189,7 +189,7 @@ IGHubScore[graph_?GraphQ, opt : OptionsPattern[]] :=
 
 
 PackageExport["IGAuthorityScore"]
-IGAuthorityScore::usage = "IGAuthorityScore[graph] returns Kleinberg's authority score for each vertex.";
+IGAuthorityScore::usage = "IGAuthorityScore[graph] gives Kleinberg's authority score for each vertex.";
 
 Options[IGAuthorityScore] = { "Normalized" -> True };
 SyntaxInformation[IGAuthorityScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
