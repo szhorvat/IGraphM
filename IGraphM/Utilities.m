@@ -38,9 +38,15 @@ PackageExport["IGSameGraphQ"]
 IGSameGraphQ::usage = "IGSameGraphQ[graph1, graph2] returns True if the given graphs have the same vertices and edges. Graph properties or edge and vertex orderings are not taken into account.";
 
 SyntaxInformation[IGSameGraphQ] = {"ArgumentsPattern" -> {_, _}};
+(* We do not use canonicalEdgeBlock because we must discard the 3rd argument of UndirectedEdge/DirectedEdge anyway,
+   and setting Orderless on UndirectedEdge will be faster. *)
 IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
-    canonicalEdgeBlock[
-      Sort@VertexList[g1] === Sort@VertexList[g2] && Sort@EdgeList[g1] === Sort@EdgeList[g2]
+    Sort@VertexList[g1] === Sort@VertexList[g2] &&
+    With[{el1 = EdgeList[g1][[All, {1,2}]], el2 = EdgeList[g2][[All, {1,2}]]},
+      Internal`InheritedBlock[{UndirectedEdge},
+        SetAttributes[UndirectedEdge, Orderless];
+        Sort[el1] === Sort[el2]
+      ]
     ]
 IGSameGraphQ[_, _] := False (* return False when at least one argument is not a graph *)
 
