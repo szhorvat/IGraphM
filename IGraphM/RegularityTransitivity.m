@@ -34,6 +34,7 @@ IGRegularQ[graph_?igGraphQ, k_Integer?NonNegative] :=
       ]
     ]
 IGRegularQ[_] = False
+IGRegularQ[_, k_Integer?NonNegative] = False
 
 
 PackageExport["IGStronglyRegularQ"]
