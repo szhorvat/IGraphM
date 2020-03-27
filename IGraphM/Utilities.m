@@ -532,3 +532,29 @@ IGTryUntil[cond_, max_?Internal`RealValuedNumericQ] :=
       ],
       {HoldFirst}
     ]
+
+
+(***** Vertex properties as associations *****)
+
+PackageExport["IGVertexAssociate"]
+IGVertexAssociate::usage =
+    "IGVertexAssociate[fun][graph] associates the result of fun[graph] with the vertices of graph.\n" <>
+    "IGVertexAssociate[fun][graph, vertices] associates the result of fun[graph, vertices] with vertices.";
+IGVertexAssociate::ilen = "Applying `1` to the graph was expected to give a list of length `2`.";
+SyntaxInformation[IGVertexAssociate] = {"ArgumentsPattern" -> {_}};
+IGVertexAssociate[fun_][graph_?GraphQ] :=
+    catch@With[{res = fun[graph]},
+      If[ListQ[res] && Length[res] == VertexCount[graph],
+        AssociationThread[VertexList[graph], res]
+        ,
+        Message[IGVertexAssociate::ilen, fun, VertexCount[graph]]; throw[$Failed]
+      ]
+    ]
+IGVertexAssociate[fun_][graph_?GraphQ, vs_List] :=
+    catch@With[{res = fun[graph, vs]},
+      If[ListQ[res] && Length[res] == Length[vs],
+        AssociationThread[vs, res]
+        ,
+        Message[IGVertexAssociate::ilen, fun[#, vs]&, Length[vs]]; throw[$Failed]
+      ]
+    ]
