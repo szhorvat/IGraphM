@@ -801,7 +801,7 @@ Cell[TextData[{
  Cell[BoxData[
   FormBox[
    RowBox[{"w", "\[LeftDoubleBracket]", 
-    TemplateBox[{"i", "p"},
+    TemplateBox[{"i","p"},
      "Mod"], "\[RightDoubleBracket]"}], TraditionalForm]],ExpressionUUID->
   "0f82c30b-9c7e-40e3-b4fb-af9920f5b4ae"],
  " steps ahead counter-clockwise on the ring."
@@ -8634,10 +8634,9 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"g", "=", 
    RowBox[{
-    TemplateBox[{"\"dodecahedral graph\"", 
-      RowBox[{"Entity", "[", 
-        RowBox[{"\"Graph\"", ",", "\"DodecahedralGraph\""}], "]"}], 
-      "\"Entity[\\\"Graph\\\", \\\"DodecahedralGraph\\\"]\"", "\"graph\""},
+    TemplateBox[{"\"dodecahedral graph\"",RowBox[{"Entity", "[", 
+        RowBox[{"\"Graph\"", ",", "\"DodecahedralGraph\""}], "]"}],
+      "\"Entity[\\\"Graph\\\", \\\"DodecahedralGraph\\\"]\"","\"graph\""},
      "Entity"], "[", "\"\<Graph\>\"", "]"}]}], ";"}]], "Input",
  CellChangeTimes->{{3.70385392413232*^9, 
   3.703853924811719*^9}},ExpressionUUID->"c1db7b73-7e71-4d78-9aeb-\
@@ -17903,7 +17902,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -17924,7 +17923,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -47098,10 +47097,9 @@ Cell[BoxData[
    RowBox[{"<|", 
     RowBox[{
      RowBox[{
-      TemplateBox[{"\"male\"", 
-        RowBox[{"Entity", "[", 
-          RowBox[{"\"Gender\"", ",", "\"Male\""}], "]"}], 
-        "\"Entity[\\\"Gender\\\", \\\"Male\\\"]\"", "\"gender\""},
+      TemplateBox[{"\"male\"",RowBox[{"Entity", "[", 
+          RowBox[{"\"Gender\"", ",", "\"Male\""}], "]"}],
+        "\"Entity[\\\"Gender\\\", \\\"Male\\\"]\"","\"gender\""},
        "Entity"], "\[Rule]", 
       InterpretationBox[
        ButtonBox[
@@ -47147,10 +47145,9 @@ Cell[BoxData[
        Editable->False,
        Selectable->False]}], ",", 
      RowBox[{
-      TemplateBox[{"\"female\"", 
-        RowBox[{"Entity", "[", 
-          RowBox[{"\"Gender\"", ",", "\"Female\""}], "]"}], 
-        "\"Entity[\\\"Gender\\\", \\\"Female\\\"]\"", "\"gender\""},
+      TemplateBox[{"\"female\"",RowBox[{"Entity", "[", 
+          RowBox[{"\"Gender\"", ",", "\"Female\""}], "]"}],
+        "\"Entity[\\\"Gender\\\", \\\"Female\\\"]\"","\"gender\""},
        "Entity"], "\[Rule]", 
       InterpretationBox[
        ButtonBox[
@@ -49963,6 +49960,83 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGAdjacentVerticesQ", \
+"Subsubsection",ExpressionUUID->"29e5da86-0834-4284-b6c6-b470fbddf218"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGAdjacentVerticesQ"}]], \
+"Input",ExpressionUUID->"60eb2654-ef8c-46ab-bc7f-7ed775097eb2"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGAdjacentVerticesQ", "[", 
+   RowBox[{"graph", ",", 
+    RowBox[{"{", 
+     RowBox[{"u", ",", "v"}], "}"}]}], "]"}]],
+  FormatType->"StandardForm",ExpressionUUID->
+  "68957f53-9003-49dd-9c2d-4897b833421d"],
+ " tests if there is an edge from ",
+ Cell[BoxData["u"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "0aeb45f1-bd5b-461c-a414-00cb297c2dc3"],
+ " to ",
+ Cell[BoxData["v"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "b1abbca4-166a-4a68-9e77-280e9dc76cb6"],
+ "."
+}], "Text",ExpressionUUID->"1db18897-8aea-4178-9adf-f9bae42d125e"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{"CycleGraph", "[", 
+   RowBox[{"6", ",", 
+    RowBox[{"DirectedEdges", "\[Rule]", "True"}], ",", 
+    RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"bdda9092-0223-4051-92d7-af485fa937a0"],
+
+Cell[BoxData[
+ RowBox[{"IGAdjacentVerticesQ", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"f941967c-2c7b-423d-b919-e492c0719814"],
+
+Cell["Edge directions are taken into account:", \
+"Text",ExpressionUUID->"e627824b-9972-4027-8365-bc429f845fd3"],
+
+Cell[BoxData[
+ RowBox[{"IGAdjacentVerticesQ", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"{", 
+    RowBox[{"2", ",", "1"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"22790fd5-f04f-4a82-a547-4703a3d4d297"],
+
+Cell["The following vertices are not adjacent:", \
+"Text",ExpressionUUID->"506dc5b1-8b7d-4f80-bb37-7c49ca52b2fc"],
+
+Cell[BoxData[
+ RowBox[{"IGAdjacentVerticesQ", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", "3"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"d09e2a28-db9b-49a1-9768-64f9c35904a8"],
+
+Cell["\<\
+Vertices that are not part of the graph are allowed. They are considered not \
+to be adjacent:\
+\>", "Text",ExpressionUUID->"6d42c996-059d-4d78-9031-ff00457ef10b"],
+
+Cell[BoxData[
+ RowBox[{"IGAdjacentVerticesQ", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"{", 
+    RowBox[{"\"\<x\>\"", ",", "2"}], "}"}]}], 
+  "]"}]], "Input",ExpressionUUID->"a49ae813-0d48-48ea-8902-4f85888a5f58"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["IGPartitionsToMembership and IGMembershipToPartitions", \
 "Subsubsection",ExpressionUUID->"649a4448-61ed-4ae2-94fb-5a6f28edd522"],
 
@@ -51027,24 +51101,18 @@ Cell[BoxData[
 
 Cell["\<\
 Create a power-law distributed degree sequence and build a corresponding \
-connected graph:\
+graph:\
 \>", "Text",ExpressionUUID->"9895458e-d3e6-4688-b6c1-8de8c917f7ba"],
 
 Cell[BoxData[
- RowBox[{"ds", "=", 
+ RowBox[{"IGRealizeDegreeSequence", "[", "\[IndentingNewLine]", 
   RowBox[{
    RowBox[{"IGTryUntil", "[", "IGGraphicalQ", "]"}], "@", 
    RowBox[{"RandomVariate", "[", 
     RowBox[{
-     RowBox[{"ZipfDistribution", "[", "1", "]"}], ",", "100"}], 
-    "]"}]}]}]], \
-"Input",ExpressionUUID->"99e1b86d-2cf4-41b5-82d6-e1485afb02aa"],
-
-Cell[BoxData[
- RowBox[{"IGDegreeSequenceGame", "[", 
-  RowBox[{"ds", ",", 
-   RowBox[{"Method", "\[Rule]", "\"\<VigerLatapy\>\""}]}], 
-  "]"}]], "Input",ExpressionUUID->"a1b3fff3-8fa5-4e15-9bae-8df772e85f4f"],
+     RowBox[{"ZipfDistribution", "[", "1", "]"}], ",", "100"}], "]"}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"99e1b86d-2cf4-41b5-82d6-e1485afb02aa"],
 
 Cell["\<\
 Generate a random tree (a connected graph) with a given degree sequence using \
@@ -51087,23 +51155,7 @@ Cell[BoxData[
      RowBox[{"3", ",", "50"}], "]"}], ",", "\[IndentingNewLine]", 
     RowBox[{"Method", "\[Rule]", "\"\<ConfigurationModelSimple\>\""}]}], 
    "\[IndentingNewLine]", "]"}], "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"3aed9553-b0ec-4bf0-a84a-52fc32140d77"],
-
-Cell[TextData[{
- "Use ",
- Cell[BoxData[
- "Echo"],ExpressionUUID->"c19c1d9a-c7d1-42ef-ad74-94b6e380c27d"],
- " to see the rejected results."
-}], "Text",ExpressionUUID->"2afe9ed8-cd91-44b2-b425-645769da82c7"],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"x", "=", "5"}], ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"IGTryUntil", "[", "NonPositive", "]"}], "[", 
-  RowBox[{"Echo", "[", 
-   RowBox[{"x", "--"}], "]"}], 
-  "]"}]}], "Input",ExpressionUUID->"bbe9c986-3449-4284-b969-bdc75c4738a3"]
+  "]"}]], "Input",ExpressionUUID->"3aed9553-b0ec-4bf0-a84a-52fc32140d77"]
 }, Closed]]
 }, Closed]]
 }, Closed]],
@@ -51755,7 +51807,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (March 13, 2020)",
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -51776,8 +51828,7 @@ StyleDefinitions->Notebook[{
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> "12.1 for Mac OS X x86 (64-bit) (March 13, 2020)", 
-  StyleDefinitions -> "PrivateStylesheetFormatting.nb"],
-ExpressionUUID->"50bbdb95-f24c-42b9-a281-117713a9ea0a"
+  FrontEndVersion -> "12.0 for Mac OS X x86 (64-bit) (April 8, 2019)", 
+  StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
 ]
 
