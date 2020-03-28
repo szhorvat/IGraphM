@@ -704,10 +704,10 @@ If[Not@MemberQ[$LibraryPath, $libraryDirectory],
 IGraphM`Developer`Recompile::build = "No build settings found. Please check BuildSettings.m."
 
 IGraphM`Developer`Recompile[] :=
-    Module[{},
+    catch[
       If[$buildSettings === None,
         Message[IGraphM`Developer`Recompile::build];
-        Return[$Failed]
+        throw[$Failed]
       ];
       If[Not@DirectoryQ[$libraryDirectory],
         CreateDirectory[$libraryDirectory]
@@ -1064,7 +1064,7 @@ IGSeedRandom::nogen =
     ".";
 
 IGSeedRandom[seed : (_?Internal`NonNegativeMachineIntegerQ | Automatic) : Automatic, opt : OptionsPattern[]] :=
-    catch@Module[{},
+    catch[
       If[OptionValue[Method] =!= Automatic,
         check@igraphGlobal@"setRandomGenerator"[
           Lookup[igRandomMethods, OptionValue[Method],

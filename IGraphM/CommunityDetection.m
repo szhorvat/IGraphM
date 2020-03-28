@@ -238,7 +238,7 @@ igCompareCommunitiesMethods = {
 igCompareCommunitiesMethodsAsc = AssociationThread[igCompareCommunitiesMethods, Range@Length[igCompareCommunitiesMethods] - 1]
 
 igCompareCommunities[elems_, c1_, c2_, method_] :=
-    Block[{},
+    Block[{res},
       res = check@igraphGlobal@"compareCommunities"[communitiesToMembershipChecked[elems, c1], communitiesToMembershipChecked[elems, c2],
         Lookup[igCompareCommunitiesMethodsAsc, method, -1]
       ];

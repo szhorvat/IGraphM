@@ -191,10 +191,10 @@ SyntaxInformation[IGReverseGraph] = {"ArgumentsPattern" -> {_}};
 IGReverseGraph::nmg = "Multigraphs are not currently supported.";
 IGReverseGraph[g_?UndirectedGraphQ, opt : OptionsPattern[]] := Graph[g, opt]
 IGReverseGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
-    Module[{},
+    catch[
       If[MultigraphQ[g],
         Message[IGReverseGraph::nmg];
-        Return[$Failed]
+        throw[$Failed]
       ];
       Graph[
         VertexList[g],
