@@ -4,12 +4,14 @@
 
 Paclet[
     Name -> "IGraphM",
-    Version -> "0.3.114",
+    Version -> "0.3.115",
     MathematicaVersion -> "10.0+",
     Description -> "IGraph/M \[Dash] the igraph interface for Mathematica.",
     Creator -> "Szabolcs Horvát <szhorvat@gmail.com>",
     URL -> "http://szhorvat.net/mathematica/IGraphM",
     Thumbnail -> "Logo.png",
+    "Icon" -> "Logo.png",
+    "Keywords" -> {"igraph", "graph theory", "network analysis"},
     SystemID -> {"MacOSX-x86-64", "Windows-x86-64", "Linux-x86-64", "Linux-ARM"},
     Extensions -> 
         {    
