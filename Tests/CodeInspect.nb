@@ -1,0 +1,113 @@
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Lint all package files", \
+"Title",ExpressionUUID->"4426cb12-6147-484d-812d-5c37f1db73ba"],
+
+Cell[CellGroupData[{
+
+Cell["Setup", \
+"Subsection",ExpressionUUID->"871e836c-8525-43d5-b67e-ee0640e8b75c"],
+
+Cell["Start in a fresh kernel.", \
+"Text",ExpressionUUID->"3d97f1de-fceb-4eb5-adb9-ef31e9337ab0"],
+
+Cell["Verify that Lint is installed, then load it.", \
+"Text",ExpressionUUID->"2c116019-5039-4b12-8a6a-3989d049772f"],
+
+Cell[BoxData[
+ RowBox[{"PacletManager`PacletInformation", "[", "\"\<CodeInspector\>\"", 
+  "]"}]], "Input",
+ CellLabel->"In[1]:=",ExpressionUUID->"f53dbc4e-c3c0-4677-941b-26ed6087dd41"],
+
+Cell[BoxData[
+ RowBox[{"Needs", "[", "\"\<CodeInspector`\>\"", "]"}]], "Input",
+ CellLabel->"In[2]:=",ExpressionUUID->"da219cf1-741f-45a5-b0ce-8825cc03fa6f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Lint", \
+"Subsection",ExpressionUUID->"63a37f0d-3412-452d-8849-e33c9fef39d7"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"files", "=", 
+   RowBox[{"File", "/@", 
+    RowBox[{"FileNames", "[", 
+     RowBox[{"\"\<*.m\>\"", ",", 
+      RowBox[{"FileNameJoin", "[", 
+       RowBox[{"{", 
+        RowBox[{"\"\<..\>\"", ",", "\"\<IGraphM\>\""}], "}"}], "]"}], ",", 
+      "Infinity"}], "]"}]}]}], ";"}]}], "Input",
+ CellLabel->"In[3]:=",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
+
+Cell[BoxData[
+ RowBox[{"Column", "@", 
+  RowBox[{"DeleteCases", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{
+      RowBox[{"CodeInspectSummarize", "[", 
+       RowBox[{"#", ",", "\[IndentingNewLine]", 
+        RowBox[{"PerformanceGoal", "->", "\"\<Quality\>\""}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
+         RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+        RowBox[{"ConfidenceLevel", "\[Rule]", "0.5"}]}], 
+       "\[IndentingNewLine]", "]"}], "&"}], "/@", "files"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"InspectedFileObject", "[", 
+     RowBox[{"_", ",", 
+      RowBox[{"{", "}"}]}], "]"}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
+ 
+ CellLabel->"In[8]:=",ExpressionUUID->"8b9f9e58-afa1-4673-88b0-d8d5e1391716"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Lint Tests.m", \
+"Subsection",ExpressionUUID->"89ef2f35-921d-4471-961c-4cfa9b3f82ad"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\n", 
+ RowBox[{"CodeInspectSummarize", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"File", "[", "\"\<Tests.m\>\"", "]"}], ",", "\[IndentingNewLine]", 
+   
+   RowBox[{"PerformanceGoal", "->", "\"\<Quality\>\""}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
+    RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"ConfidenceLevel", "\[Rule]", "0.5"}], ",", "\[IndentingNewLine]", 
+   
+   RowBox[{"\"\<TagExclusions\>\"", "\[Rule]", 
+    RowBox[{"{", "\"\<DuplicateKeys\>\"", "}"}]}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",
+ CellLabel->"In[6]:=",ExpressionUUID->"e26cbd1c-4b10-4a3c-8289-c32f15260698"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{985, 855},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+PrivateNotebookOptions->{"FileOutlineCache"->False},
+TaggingRules->{
+ "SEUploaderLastUpdateCheck" -> 3.766254953638397`16.32848470505581*^9, 
+  "SEUploaderVersion" -> {
+   "Version" -> 130, "Changes" -> {"Fixed SE Uploader to use https"}}, 
+  "DevTools" -> {"MenuMethod" -> "Cell"}, "TryRealOnly" -> False},
+TrackCellChangeTimes->False,
+SpellingDictionaries->{"CorrectWords"->{
+ "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
+  "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
+  "builtin"}},
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (March 13, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"a6eba230-c4a7-400d-aaa3-b6ab0ec650dc"
+]
+
