@@ -511,11 +511,19 @@ IGTryUntil::usage =
     "IGTryUntil[cond, max][expr] evaluates expr at most max times and returns $Failed if cond[expr] was never True.";
 SyntaxInformation[IGTryUntil] = {"ArgumentsPattern" -> {_, _.}};
 
+IGTryUntil::invcond = "The condition function returned `1` instead of a valid Boolean value.";
 IGTryUntil[cond_] :=
     Function[expr,
-      Module[{res},
-        While@Not@cond[res = expr];
-        res
+      Module[{b, res},
+        While[True,
+          If[b = cond[res = expr],
+            Return[res, Module],
+            Null,
+            (* if cond[] returned neither True nor False: *)
+            Message[IGTryUntil::invcond, b];
+            Return[res, Module]
+          ]
+        ]
       ],
       {HoldFirst}
     ]
@@ -526,8 +534,17 @@ IGTryUntil[cond_, Infinity] := IGTryUntil[cond]
 
 IGTryUntil[cond_, max_?Internal`RealValuedNumericQ] :=
     Function[expr,
-      Module[{res},
-        Do[If[cond[res = expr], Return[res, Module]], {max}];
+      Module[{res, b},
+        Do[
+          If[b = cond[res = expr],
+            Return[res, Module],
+            Null,
+            (* if cond[] returned neither True nor False: *)
+            Message[IGTryUntil::invcond, b];
+            Return[res, Module]
+          ],
+          {max}
+        ];
         $Failed
       ],
       {HoldFirst}
