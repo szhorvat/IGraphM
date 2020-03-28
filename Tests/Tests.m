@@ -79,7 +79,7 @@ samePropGraphQ[g1_, g2_] :=
     ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Test graphs*)
 
 
@@ -105,6 +105,14 @@ dgi = GraphComputation`ToGraphRepresentation[RandomGraph[{12,25}, DirectedEdges 
 
 umulti = Graph[UndirectedEdge @@@ RandomInteger[10, {50, 2}]];
 dmulti = Graph[DirectedEdge @@@ RandomInteger[10, {50, 2}]];
+
+
+umulti2 = Graph[UndirectedEdge @@@ RandomInteger[10, {60, 2}]];
+dmulti2 = Graph[DirectedEdge @@@ RandomInteger[10, {60, 2}]];
+If[$VersionNumber >= 12.1,
+	umulti2 = EdgeTaggedGraph[umulti2];
+	dmulti2 = EdgeTaggedGraph[dmulti2];
+]
 
 
 usweights = RandomReal[1, EdgeCount[ugs]];
@@ -620,23 +628,24 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Cycling graphs through igraph*)
 
 
 MTSection["Cycling graphs through igraph"]
 
 
+(* We discard the 3rd argument of edge expressions, which is present in EdgeTaggedGraphs in M12.1 *)
 compare[ig_, graph_] :=
     If[DirectedGraphQ[graph],
-      IGraphM`PackageScope`igIndexVec[ig@"edgeList"[]] == List @@@ EdgeList@IndexGraph[graph]
+      IGraphM`PackageScope`igIndexVec[ig@"edgeList"[]] == List @@@ (EdgeList@IndexGraph[graph])[[All, {1,2}]]
       ,
-      Sort /@ IGraphM`PackageScope`igIndexVec[ig@"edgeList"[]] == Sort /@ (List @@@ EdgeList@IndexGraph[graph])
+      Sort /@ IGraphM`PackageScope`igIndexVec[ig@"edgeList"[]] == Sort /@ (List @@@ EdgeList@IndexGraph[graph])[[All, {1,2}]]
     ]
 
 
 cycleTestList = {
-  ugs, dgs, ugi, dgi, umulti, dmulti,
+  ugs, dgs, ugi, dgi, umulti, dmulti, umulti2, dmulti2,
   empty, edgeless,
   dolphin, web, football, collab,
   KaryTree[100], KaryTree[101, DirectedEdges -> True]
@@ -3017,7 +3026,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Centralities*)
 
 
@@ -3030,7 +3039,7 @@ MT[
 ]& /@ {IGBetweenness, IGEdgeBetweenness, IGCloseness, IGPageRank, IGEigenvectorCentrality, IGHubScore, IGAuthorityScore, IGConstraintScore}
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Betweenness*)
 
 
@@ -3049,6 +3058,22 @@ MT[
   IGBetweenness[#],
   SameTest -> tolEq
 ]& /@ {ugs, ugi, dgs, dgi}
+
+
+MT[
+  IGBetweenness[Graph[{1 <-> 2}], {}],
+  {}
+]
+
+MT[
+  IGBetweenness[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGBetweenness[IGEmptyGraph[3]],
+  {0., 0., 0.}
+]
 
 
 MT[
@@ -3083,7 +3108,27 @@ MT[
   ClosenessCentrality[#],
   IGCloseness[#, Normalized -> True],
   SameTest -> Equal
-]& /@ {ugs, dgs, wugs, wdgs, umulti, dmulti}
+]& /@ {ugs, dgs, wugs, wdgs, umulti, dmulti, umulti2, dmulti2}
+
+
+MT[
+  IGCloseness[Graph[{1 <-> 2}], {}],
+  {}
+]
+
+
+MT[
+  IGCloseness[IGEmptyGraph[]],
+  {}
+]
+
+
+(* TODO this should be changed in the C core. *)
+MT[
+  IGCloseness[IGEmptyGraph[2]],
+  {0.5, 0.5},
+  {IGraphM::warning}
+]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -3132,7 +3177,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGEigenvectorCentrality*)
 
 
@@ -3172,14 +3217,14 @@ MT[
 (* TODO unweighted and weighted *)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Clustering coefficients*)
 
 
 MTSection["Clustering coefficients"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Global, local, average local*)
 
 
@@ -3205,6 +3250,16 @@ MT[
 
 MT[
   LocalClusteringCoefficient[umulti] == IGLocalClusteringCoefficient[umulti],
+  True
+]
+
+MT[
+  GlobalClusteringCoefficient[umulti2] == IGGlobalClusteringCoefficient[umulti2],
+  True
+]
+
+MT[
+  LocalClusteringCoefficient[umulti2] == IGLocalClusteringCoefficient[umulti2],
   True
 ]
 
@@ -3281,7 +3336,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Cliques*)
 
 
@@ -3372,22 +3427,22 @@ MT[
 MT[
   IGCliqueNumber[#] == IGIndependenceNumber@GraphComplement[#],
   True
-]& /@ {ugs, ugi, umulti}
+]& /@ {ugs, ugi, umulti, umulti2}
 
 MT[
   IGCliqueNumber@GraphComplement[#] == IGIndependenceNumber[#],
   True
-]& /@ {ugs, ugi, umulti}
+]& /@ {ugs, ugi, umulti, umulti2}
 
 MT[
   IGCliqueNumber[#] == Length@First@FindClique[#],
   True
-]& /@ {ugs, ugi, umulti}
+]& /@ {ugs, ugi, umulti, umulti2}
 
 MT[
   IGIndependenceNumber[#] == Length@First@FindIndependentVertexSet[#],
   True
-]& /@ {ugs, ugi, umulti}
+]& /@ {ugs, ugi, umulti, umulti2}
 
 MT[
   IGCliqueNumber[empty],
@@ -3756,14 +3811,14 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Connectivity*)
 
 
 MTSection["Connectivity"]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGVertexConnectivity and IGEdgeConnectivity*)
 
 
@@ -3845,6 +3900,26 @@ MT[
 MT[
   IGEdgeConnectivity[dmulti],
   EdgeConnectivity[dmulti]
+]
+
+MT[
+  IGVertexConnectivity[umulti2],
+  VertexConnectivity[umulti2]
+]
+
+MT[
+  IGVertexConnectivity[dmulti2],
+  VertexConnectivity[dmulti2]
+]
+
+MT[
+  IGEdgeConnectivity[umulti2],
+  EdgeConnectivity[umulti2]
+]
+
+MT[
+  IGEdgeConnectivity[dmulti2],
+  EdgeConnectivity[dmulti2]
 ]
 
 MT[
@@ -4306,7 +4381,7 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGDistanceCounts and IGDistanceHistogram*)
 
 
@@ -4339,14 +4414,14 @@ distanceCounts[graph_, verts_] :=
 MT[
   IGDistanceCounts[#, All] == IGDistanceCounts[#, VertexList[#]],
   True
-]& /@ {empty, edgeless, ugs, dgs, umulti, dmulti}
+]& /@ {empty, edgeless, ugs, dgs, umulti, dmulti, umulti2, dmulti2}
 
 With[{v = RandomSample[VertexList[#], Quotient[VertexCount[#],3]]},
   MT[
     IGDistanceCounts[#, v],
     distanceCounts[#, v]
   ]
-]& /@ {ugs, dgs, umulti, dmulti}
+]& /@ {ugs, dgs, umulti, dmulti, umulti2, dmulti2}
 
 
 MT[
@@ -4469,7 +4544,7 @@ MT[
   IGDiameter[#],
   GraphDiameter[#],
   SameTest -> Equal
-]& /@ {ugs, ugi, dgs, dgi, wugs, wugi, wdgs, wdgi, umulti, dmulti}
+]& /@ {ugs, ugi, dgs, dgi, wugs, wugi, wdgs, wdgi, umulti, dmulti, umulti2, dmulti2}
 
 
 (* ::Subsubsection::Closed:: *)
@@ -5672,7 +5747,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Property operations*)
 
 
@@ -5772,7 +5847,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Matrix functions*)
 
 
@@ -6347,7 +6422,7 @@ MT[
   IGEdgeWeightedQ[#],
   False
 ]& /@ Hold[
-  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
+  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti, umulti2, dmulti2,
   vwg
 ] // ReleaseHold
 
@@ -6355,7 +6430,7 @@ MT[
   IGVertexWeightedQ[#],
   False
 ]& /@ Hold[
-  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti,
+  empty, edgeless, ugi, ugs, dgi, dgs, umulti, dmulti, umulti2, dmulti2,
   wugi, wugs, wdgi, wdgs
 ] // ReleaseHold
 
@@ -7622,14 +7697,108 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGRegularQ*)
 
 
-(* TODO *)
+MT[
+  IGRegularQ[IGEmptyGraph[]],
+  True
+]
 
 
-(* ::Subsubsection:: *)
+MT[
+  IGRegularQ[IGEmptyGraph[1]],
+  True
+]
+
+
+MT[
+  IGRegularQ[Graph[{1 -> 2, 2 -> 1}]],
+  True
+]
+
+
+MT[
+  IGRegularQ[Graph[{1 -> 2, 1 -> 2, 2 -> 1}]],
+  False
+]
+
+
+MT[
+  IGRegularQ[Graph[{1 -> 2, 1 -> 2, 2 -> 1, 2 -> 1}]],
+  True
+]
+
+
+MT[
+  IGRegularQ[Graph[{1 -> 2, 1 <-> 2}]],
+  False,
+  {IGraphM::mixed}
+]
+
+
+MT[
+  IGRegularQ[Graph[{1 <-> 2}]],
+  True
+]
+
+
+MT[
+  IGRegularQ[CompleteGraph[5]],
+  True
+]
+
+
+MT[
+  IGRegularQ[Graph[{1 <-> 2, 3 <-> 4}]],
+  True
+]
+
+
+MT[
+  IGRegularQ[IGEmptyGraph[], 1],
+  False
+]
+
+
+MT[
+  IGRegularQ[IGEmptyGraph[], 0],
+  True
+]
+
+
+MT[
+  IGRegularQ[IGEmptyGraph[5], 0],
+  True
+]
+
+
+MT[
+  IGRegularQ[Graph[{1 <-> 2, 1 <-> 2}], 1],
+  False
+]
+
+MT[
+  IGRegularQ[Graph[{1 <-> 2, 1 <-> 2}], 2],
+  True
+]
+
+
+(* non-graph input *)
+
+MT[
+  IGRegularQ[1],
+  False
+]
+
+MT[
+  IGRegularQ[1, 2],
+  False
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*IGStronglyRegularQ and IGStronglyRegularParameters*)
 
 
@@ -7695,7 +7864,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGDistanceRegularQ and IGIntersectionArray*)
 
 
@@ -7892,7 +8061,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGSymmetricQ*)
 
 
@@ -8052,6 +8221,39 @@ MT[
 ]
 
 
+(* ::Subsubsection::Closed:: *)
+(*IGSameGraphQ*)
+
+
+MT[
+  IGSameGraphQ[IGEmptyGraph[], IGEmptyGraph[]],
+  True
+]
+
+MT[
+  IGSameGraphQ[IGEmptyGraph[], IGEmptyGraph[1]],
+  False
+]
+
+
+(* ::Subsubsection:: *)
+(*IGAdjacentVerticesQ*)
+
+
+(* TODO *)
+
+
+MT[
+  IGAdjacentVerticesQ[Graph[{1 <-> 2}], {1, 2}],
+  True
+]
+
+MT[
+  IGAdjacentVerticesQ[Graph[{1 <-> 2}], {2, 1}],
+  True
+]
+
+
 (* ::Subsection::Closed:: *)
 (*General tests*)
 
@@ -8088,6 +8290,63 @@ MT[IGGraphicalQ[DUMMY1, DUMMY2], False]
 
 MT[IGEmbeddingQ[123], False]
 MT[IGEmbeddingQ[{1,2,3}], False]
+
+
+MT[
+  IGSameGraphQ[1, 2],
+  False
+]
+
+MT[
+  IGSameGraphQ[IGEmptyGraph[], 2],
+  False
+]
+
+
+(* ::Section::Closed:: *)
+(*Processes*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGSIRProcess*)
+
+
+(* ::Text:: *)
+(*We check the validity of the returned TimeSeries or TemporalData by verifying that it responds to property requests.*)
+
+
+MT[
+  IGSIRProcess[IGEmptyGraph[1], {1, 1}, 5]["Caller"],
+  TemporalData
+]
+
+MT[
+  IGSIRProcess[IGEmptyGraph[1], {1, 1}]["Caller"],
+  TimeSeries
+]
+
+MT[
+  IGSIRProcess[CompleteGraph[5], {1, 1}]["FirstTime"],
+  0.
+]
+
+MT[
+  IGSIRProcess[IGEmptyGraph[3], {1, 1}]["ValueDimensions"],
+  3
+]
+
+
+MT[
+  IGSIRProcess[IGEmptyGraph[], {1, 1}],
+  $Failed,
+  {IGraphM::error}
+]
+
+MT[
+  IGSIRProcess[IGEmptyGraph[], {1, 1}, 5],
+  $Failed,
+  {IGraphM::error}
+]
 
 
 (* ::Section::Closed:: *)
