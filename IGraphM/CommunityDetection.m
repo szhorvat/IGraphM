@@ -117,29 +117,57 @@ IGClusterData[asc_?AssociationQ][key_String] := Lookup[asc, key, Message[IGClust
 
 IGClusterData[asc_?AssociationQ][keys_List] := IGClusterData[asc] /@ keys
 
+igClusterDataInformation[IGClusterData[asc_?AssociationQ]] :=
+    <|
+      "Algorithm" -> asc["Algorithm"],
+      "ElementCount" -> Length@asc["Elements"],
+      "ClusterCount" -> Length@asc["Communities"],
+      "Hierarchical" -> hierarchicalQ[asc],
+      "Modularity" -> If[KeyExistsQ[asc, "Modularity"], Max@asc["Modularity"], None],
+      KeyTake[asc, {"Quality", "CodeLength", "FinalTemperature"}]
+    |>
+
 (* Switch to using built-in summary boxes. Since the construction syntax hasn't changed between 10.0-11.2,
    it seems to be relatively safe to use this undocumented functionality *)
 IGClusterData /: MakeBoxes[c : IGClusterData[asc_?clusterAscQ], form : (StandardForm|TraditionalForm)] :=
-    BoxForm`ArrangeSummaryBox[
-      IGClusterData,
-      c,
-      $igClusterDataIcon,
-      {
-        BoxForm`SummaryItem[{"Elements: ", Length@asc@"Elements"}],
-        BoxForm`SummaryItem[{"Communities: ", Length@asc@"Communities"}]
-      },
-      {
-        BoxForm`SummaryItem[{"Community sizes: ", Short[Length /@ asc@"Communities", 0.35]}],
-        BoxForm`SummaryItem[{"Modularity: ", If[KeyExistsQ[asc, "Modularity"], Max@asc@"Modularity", "unavailable"]}],
-        If[KeyExistsQ[asc, "Quality"],
-          BoxForm`SummaryItem[{"Quality: ", asc@"Quality"}],
-          Unevaluated@Sequence[]
-        ],
-        BoxForm`SummaryItem[{"Hierarchical: ", hierarchicalQ[asc]}],
-        BoxForm`SummaryItem[{"Algorithm: ", asc@"Algorithm"}]
-      },
-      form
+    With[{info = igClusterDataInformation[c]},
+      BoxForm`ArrangeSummaryBox[
+        IGClusterData,
+        c,
+        $igClusterDataIcon,
+        {
+          BoxForm`SummaryItem[{"Elements: ", info["ElementCount"]}],
+          BoxForm`SummaryItem[{"Communities: ", info["ClusterCount"]}]
+        },
+        {
+          BoxForm`SummaryItem[{"Community sizes: ", Short[Length /@ asc@"Communities", 0.35]}],
+          BoxForm`SummaryItem[{"Modularity: ", Replace[info["Modularity"], None -> "unavailable"]}],
+          If[KeyExistsQ[info, "Quality"],
+            BoxForm`SummaryItem[{"Quality: ", info@"Quality"}],
+            Unevaluated@Sequence[]
+          ],
+          If[KeyExistsQ[info, "CodeLength"],
+            BoxForm`SummaryItem[{"Code length: ", info@"CodeLength"}],
+            Unevaluated@Sequence[]
+          ],
+          BoxForm`SummaryItem[{"Hierarchical: ", info["Hierarchical"]}],
+          BoxForm`SummaryItem[{"Algorithm: ", info["Algorithm"]}]
+        },
+        form
+      ]
     ]
+
+If[$VersionNumber >= 12.0,
+  IGClusterData /: Information[c : IGClusterData[asc_?clusterAscQ]] :=
+      InformationData[Prepend[igClusterDataInformation[c], "ObjectType" -> "ClusterData"]];
+
+  IGClusterData /: Information[c : IGClusterData[asc_?clusterAscQ], All] := Information[c];
+
+  IGClusterData /: Information[c : IGClusterData[asc_?clusterAscQ], key_] :=
+      With[{info = igClusterDataInformation[c]},
+        If[KeyExistsQ[info, key], info[key], c[key]]
+      ];
+]
 
 (* Provide short formatting for text mode as well. *)
 Format[c : IGClusterData[asc_?clusterAscQ], OutputForm] :=
@@ -481,7 +509,7 @@ IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
         "Modularity" -> {modularity},
-        "Temperature" -> temp,
+        "FinalTemperature" -> temp,
         "Algorithm" -> "SpinGlass"
       |>
     ]
