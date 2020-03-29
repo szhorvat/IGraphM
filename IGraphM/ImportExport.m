@@ -65,7 +65,7 @@ $ignoredVertexProperties = {VertexShapeFunction, VertexShape, VertexStyle, Verte
 
 (* Memoized *)
 propType[propName_, g_, extractor_] := propType[propName, g, extractor] =
-    With[{list = DeleteMissing[extractor[propName][g]]},
+    With[{list = DeleteMissing@Check[extractor[propName][g], Throw[$Failed, graphmlTag]]},
       Which[
         VectorQ[list, Developer`MachineIntegerQ], "Integer",
         VectorQ[list, Internal`RealValuedNumericQ], "Real",
@@ -90,7 +90,7 @@ value["Integer"][e_] := ToString[e]
 value["Real"][e_] := ToString@CForm@N[e]
 
 getVertexProp[name_, g_] := value[vPropType[name, g]] /@ IGVertexProp[name][g]
-getEdgeProp[name_, g_]   := value[ePropType[name, g]] /@ IGEdgeProp[name][g]
+getEdgeProp[name_, g_]   := value[ePropType[name, g]] /@ Check[IGEdgeProp[name][g], Throw[$Failed, graphmlTag]]
 
 getObj[g_, getProp_, propNames_, list_] :=
     MapThread[
@@ -107,7 +107,7 @@ getObj[g_, getProp_, propNames_, list_] :=
     ]
 
 getVertices[g_] := getObj[g, getVertexProp, vPropNames, VertexList[g]]
-getEdges[g_] := getObj[g, getEdgeProp, ePropNames, List @@@ EdgeList[g]]
+getEdges[g_] := getObj[g, getEdgeProp, ePropNames, List @@@ EdgeList[g][[All, {1,2}]] ]
 
 
 (***** GraphML *****)
