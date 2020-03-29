@@ -140,8 +140,8 @@ Cell[BoxData[
      RowBox[{
       RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<img\>\""}], "}"}], 
     "]"}], ",", 
-   RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
-  "]"}]], "Input",ExpressionUUID->"57c715b6-e0ad-4b51-bdf9-cbbcc2c1ca8f"],
+   RowBox[{"DeleteContents", "\[Rule]", "True"}]}], "]"}]], "Input",
+ CellLabel->"In[12]:=",ExpressionUUID->"57c715b6-e0ad-4b51-bdf9-cbbcc2c1ca8f"],
 
 Cell[BoxData[
  RowBox[{
@@ -159,7 +159,7 @@ Cell[BoxData[
            RowBox[{"TemplateSlot", "[", "1", "]"}], ",", " ", 
            "\"\<\\n```\>\""}], "]"}]}]}]}], "\[IndentingNewLine]", "|>"}]}]}],
     "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]], "Input",
- CellLabel->"In[14]:=",ExpressionUUID->"7590c8c8-488d-4306-a379-b7411b5a7fe9"],
+ CellLabel->"In[13]:=",ExpressionUUID->"7590c8c8-488d-4306-a379-b7411b5a7fe9"],
 
 Cell[BoxData[{
  RowBox[{
@@ -197,8 +197,8 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
         RowBox[{"DeleteCases", "[", "\"\<\:03a2\>\"", "]"}]}]}], " ", 
       RowBox[{"(*", " ", 
        RowBox[{"exclude", " ", "capital", " ", "final", " ", "sigma"}], " ", 
-       "*)"}], "\[IndentingNewLine]", "]"}]}]}], ";"}], "\[IndentingNewLine]",
-   "\n", 
+       "*)"}], "\[IndentingNewLine]", "]"}]}]}], ";"}], "\n", 
+  "\[IndentingNewLine]", 
   RowBox[{"(*", " ", 
    RowBox[{
    "replace", " ", "special", " ", "named", " ", "characters", " ", "and", 
@@ -292,7 +292,7 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
    RowBox[{"CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], 
   "\[IndentingNewLine]", "]"}]}], "Input",
  CellLabel->
-  "In[15]:=",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
+  "In[14]:=",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
 }, Open  ]]
 }, Open  ]],
 
@@ -304,7 +304,7 @@ Cell["Create syntax highlighting file for pandoc", \
 Cell[BoxData[
  RowBox[{
   RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}], ";"}]], "Input",
- CellLabel->"In[18]:=",ExpressionUUID->"d204c740-3273-4eab-be4d-bb7e014d5940"],
+ CellLabel->"In[17]:=",ExpressionUUID->"d204c740-3273-4eab-be4d-bb7e014d5940"],
 
 Cell[BoxData[{
  RowBox[{
@@ -319,7 +319,7 @@ Cell[BoxData[{
        RowBox[{
        "\"\<%%\>\"", ",", "\"\<%%\>\"", ",", "\"\<<%\>\"", ",", 
         "\"\<%>\>\""}], "}"}]}]}], "]"}]}], ";"}]}], "Input",
- CellLabel->"In[19]:=",ExpressionUUID->"91d76193-2d1f-457b-9913-318b8dc0e526"],
+ CellLabel->"In[18]:=",ExpressionUUID->"91d76193-2d1f-457b-9913-318b8dc0e526"],
 
 Cell[BoxData[
  RowBox[{"Export", "[", "\[IndentingNewLine]", 
@@ -338,8 +338,34 @@ Cell[BoxData[
         "\"\<\\n\>\""}], "]"}]}], "|>"}], "\[IndentingNewLine]", "]"}], ",", 
    "\[IndentingNewLine]", "\"\<String\>\""}], "\[IndentingNewLine]", 
   "]"}]], "Input",
+ CellLabel->"In[20]:=",ExpressionUUID->"2b13b2c6-3fdc-4b61-a162-1cda541ee93d"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"template", "=", 
+   RowBox[{"FileTemplate", "[", 
+    RowBox[{"\"\<igraphm.yaml.template\>\"", ",", 
+     RowBox[{"Delimiters", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<%%\>\"", ",", "\"\<%%\>\"", ",", "\"\<<%\>\"", ",", 
+        "\"\<%>\>\""}], "}"}]}]}], "]"}]}], ";"}]}], "Input",
+ CellLabel->"In[21]:=",ExpressionUUID->"e9faed20-ac49-49c1-8b60-d0691556bf63"],
+
+Cell[BoxData[
+ RowBox[{"Export", "[", "\[IndentingNewLine]", 
+  RowBox[{"\"\<igraphm.yaml\>\"", ",", "\[IndentingNewLine]", 
+   RowBox[{"template", "[", "\[IndentingNewLine]", 
+    RowBox[{"<|", 
+     RowBox[{
+     "\"\<versionString\>\"", "\[Rule]", "IGraphM`Information`$Version"}], 
+     "|>"}], "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
+   "\"\<String\>\""}], "\[IndentingNewLine]", "]"}]], "Input",
  CellLabel->
-  "In[21]:=",ExpressionUUID->"2b13b2c6-3fdc-4b61-a162-1cda541ee93d"]
+  "In[23]:=",ExpressionUUID->"52ff5760-9d46-4b7a-8951-f76da9fefd19"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -363,14 +389,15 @@ Cell[BoxData[
       RowBox[{
        RowBox[{"Environment", "[", "\"\<PATH\>\"", "]"}], "<>", 
        "\"\<:/opt/local/bin\>\""}]}], "]"}]}], "\[IndentingNewLine]", "]"}], 
-  ";"}]], "Input",ExpressionUUID->"c573f3bc-09a0-4ba9-a664-cf9cdb71f9d5"],
+  ";"}]], "Input",
+ CellLabel->"In[24]:=",ExpressionUUID->"c573f3bc-09a0-4ba9-a664-cf9cdb71f9d5"],
 
 Cell["Optimize images.", \
 "Text",ExpressionUUID->"6b05b7cd-c6ba-439f-8165-c9bc4d10b279"],
 
 Cell[BoxData[
  RowBox[{"Run", "[", "\"\<./optimg.sh\>\"", "]"}]], "Input",
- CellLabel->"In[24]:=",ExpressionUUID->"fe0c1c5e-a7df-4e51-8a71-9cc9e56fde43"],
+ CellLabel->"In[25]:=",ExpressionUUID->"fe0c1c5e-a7df-4e51-8a71-9cc9e56fde43"],
 
 Cell["\<\
 Convert Markdown to HTML with Pandoc. Pandoc 2.8 or later is required.\
@@ -378,14 +405,14 @@ Convert Markdown to HTML with Pandoc. Pandoc 2.8 or later is required.\
 
 Cell[BoxData[
  RowBox[{"Run", "[", "\"\<./gendoc.sh\>\"", "]"}]], "Input",
- CellLabel->"In[25]:=",ExpressionUUID->"17a86769-10cc-48d3-9677-5acd0f70e385"],
+ CellLabel->"In[26]:=",ExpressionUUID->"17a86769-10cc-48d3-9677-5acd0f70e385"],
 
 Cell["View page.", \
 "Text",ExpressionUUID->"7e1fca15-046e-4609-9ea5-d9f1687ab65a"],
 
 Cell[BoxData[
  RowBox[{"SystemOpen", "[", "\"\<index.html\>\"", "]"}]], "Input",
- CellLabel->"In[26]:=",ExpressionUUID->"8778a7fd-01a2-4b66-95e1-127490f94aaf"],
+ CellLabel->"In[27]:=",ExpressionUUID->"8778a7fd-01a2-4b66-95e1-127490f94aaf"],
 
 Cell["Copy files into place.", \
 "Text",ExpressionUUID->"21fd180d-c22c-4a1a-bd9f-366a371d77e5"],
@@ -399,7 +426,7 @@ Cell[BoxData[{
    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
   "]"}], "\[IndentingNewLine]", 
  RowBox[{"CreateDirectory", "[", "\"\<IGDocumentation\>\"", "]"}]}], "Input",
- CellLabel->"In[27]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
+ CellLabel->"In[28]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
 
 Cell[BoxData[{
  RowBox[{"CopyDirectory", "[", 
@@ -411,14 +438,14 @@ Cell[BoxData[{
   RowBox[{"\"\<igmdoc.css\>\"", ",", "\"\<IGDocumentation/igmdoc.css\>\""}], 
   "]"}]}], "Input",
  CellLabel->
-  "In[30]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
+  "In[31]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
 }, Open  ]]
 },
 WindowSize->{948, 847},
-WindowMargins->{{Automatic, 358}, {Automatic, 11}},
+WindowMargins->{{134, Automatic}, {-3, Automatic}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (February 26, 2020)",
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (March 13, 2020)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"7fe29730-3b01-4e49-bc76-1b51ab284617"
 ]
