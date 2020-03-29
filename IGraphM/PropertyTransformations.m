@@ -12,6 +12,27 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Property transformation functions *****)
 (*********************************************)
 
+(* Check if all edges of a graph (including parallel edges) are distinguishable. *)
+If[$VersionNumber >= 12.1,
+  nonDistinguishableEdgesQ = MultigraphQ[#] && Not[EdgeTaggedGraphQ[#] && distinguishableTaggedEdgesQ[#]]&;
+  distinguishableTaggedEdgesQ[graph_] :=
+      If[MixedGraphQ[graph],
+        canonicalEdgeBlock@DuplicateFreeQ@EdgeList[#]
+        ,
+        If[UndirectedGraphQ[graph],
+          DuplicateFreeQ@Transpose@Append[
+            Transpose[igraphGlobal@"edgeListSortPairs"[IGIndexEdgeList[graph]]],
+            EdgeTags[graph]
+          ],
+          DuplicateFreeQ@Transpose@Append[
+            Transpose[IGIndexEdgeList[graph]],
+            EdgeTags[graph]
+          ]
+        ]
+      ]
+  ,
+  nonDistinguishableEdgesQ = MultigraphQ;
+]
 
 (***** Edge and vertex property extractors *****)
 
@@ -49,7 +70,11 @@ IGEdgeProp::usage   = "IGEdgeProp[prop] is an operator that extracts the values 
 
 specialEdgePropsPattern = EdgeWeight|EdgeCost|EdgeCapacity;
 
-IGEdgeProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgePropsPattern] <> ".";
+If[$VersionNumber >= 12.1,
+  IGEdgeProp::nmg = "Multigraphs with non-distinguishable edges are only supported with the following properties: " <> ToString[List @@ specialEdgePropsPattern] <> ". Consider using EdgeTaggedGraph.";
+  ,
+  IGEdgeProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgePropsPattern] <> ".";
+]
 
 SyntaxInformation[IGEdgeProp] = {"ArgumentsPattern" -> {_}};
 IGEdgeProp[prop_][g_?IGNullGraphQ] := {} (* some of the below may fail on null graphs, so we catch them early *)
@@ -66,7 +91,7 @@ IGEdgeProp[prop : specialEdgePropsPattern][g_?GraphQ] :=
       ]
     ]
 IGEdgeProp[prop_][g_?GraphQ] :=
-    Module[{multi = MultigraphQ[g]},
+    Module[{multi = nonDistinguishableEdgesQ[g]},
       If[multi, Message[IGEdgeProp::nmg]];
       Replace[PropertyValue[{g, #}, prop]& /@ EdgeList[g], $Failed -> missing, {1}] /; Not[multi]
     ]
@@ -87,14 +112,6 @@ IGEdgeVertexProp[prop_][g_?GraphQ] :=
 
 
 (***** Edge and vertex property mapping *****)
-
-(* Check if parallel edges of a graph are distinguishable. *)
-If[$VersionNumber >= 12.1,
-  nonDistinguishableEdgesQ = MultigraphQ[#] && (Not@EdgeTaggedGraphQ[#] || Length@DeleteDuplicates@EdgeList[#] != EdgeCount[#])&
-  ,
-  nonDistinguishableEdgesQ = MultigraphQ
-]
-
 
 PackageScope["igSetVertexProperty"]
 igSetVertexProperty::usage = "igSetVertexProperty[graph, prop, values]";
@@ -186,7 +203,7 @@ checkEdgeProp[prop_] := Message[IGEdgeMap::propname, prop]
 SyntaxInformation[IGEdgeMap] = {"ArgumentsPattern" -> {_, _, _.}};
 IGEdgeMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
     Module[{values},
-      If[nonDistinguishableEdgesQ[g] && Not@MatchQ[prop, specialEdgePropsPattern],
+      If[Not@MatchQ[prop, specialEdgePropsPattern] && nonDistinguishableEdgesQ[g],
         Message[IGEdgeMap::nmg];
         Return[$Failed]
       ];
@@ -200,7 +217,7 @@ IGEdgeMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
     ]
 IGEdgeMap[fun_, (Rule|RuleDelayed)[prop_, pfunlist_List], g_?GraphQ] :=
     Module[{values, badpos},
-      If[nonDistinguishableEdgesQ[g] && Not@MatchQ[prop, specialEdgePropsPattern],
+      If[Not@MatchQ[prop, specialEdgePropsPattern] && nonDistinguishableEdgesQ[g],
         Message[IGEdgeMap::nmg];
         Return[$Failed]
       ];
