@@ -2765,11 +2765,13 @@ public:
             auto &es = inclist[v];
             // smooth degree-2 vertices
             if (es.size() == 2) {
-                edge e1 = *es.begin();
-                es.erase(es.begin());
+                auto it = es.begin();
+                edge e1 = *it++;
+                edge e2 = *it++;
+                if (e1.v1 == e1.v2 || e2.v1 == e2.v2)
+                    continue; // skip self loops
 
-                edge e2 = *es.begin();
-                es.erase(es.begin());
+                es.clear();
 
                 igraph_integer_t v1 = e1.v1 != v ? e1.v1 : e1.v2;
                 igraph_integer_t v2 = e2.v1 != v ? e2.v1 : e2.v2;
