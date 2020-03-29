@@ -84,11 +84,15 @@ IGVertexContract[graph_?igGraphQ, arg_, opt : OptionsPattern[]] := Null /; Messa
 
 PackageExport["IGSmoothen"]
 IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtaining the smallest topologically equivalent graph. Edge directions are discarded. The weights of merged edges are added up.";
-
-SyntaxInformation[IGSmoothen] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+Options[IGSmoothen] = { DirectedEdges -> Automatic };
+SyntaxInformation[IGSmoothen] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSmoothen, Graph]};
 IGSmoothen[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
-    catch@Module[{ig = igMakeEmpty[], ig2 = igMake[graph], graph2, deletedIndices},
-      deletedIndices = igIndexVec@check@ig@"smoothen"[ManagedLibraryExpressionID[ig2]];
+    catch@Module[{ig = igMakeEmpty[], ig2 = igMake[graph], graph2, deletedIndices, directed},
+      directed = DirectedGraphQ[graph] && TrueQ@Replace[OptionValue[DirectedEdges], Automatic -> True];
+      deletedIndices = igIndexVec@check@If[directed,
+        ig@"smoothenDirected"[ManagedLibraryExpressionID[ig2]],
+        ig@"smoothen"[ManagedLibraryExpressionID[ig2]]
+      ];
       graph2 = igToWeightedGraphWithNames[ig, VertexList[graph]];
       IGWeightedVertexDelete[graph2, VertexList[graph][[ deletedIndices ]], opt]
     ]

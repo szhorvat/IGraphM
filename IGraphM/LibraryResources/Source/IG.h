@@ -2816,6 +2816,100 @@ public:
     }
 
 
+    mma::IntTensorRef smoothenDirected(const IG &ig) {
+        struct edge {
+            igraph_integer_t v1, v2;
+            double weight;
+            int key; // the key serves to distinguish parallel eges
+
+            bool operator < (const edge &e) const {
+                return std::tie(v1, v2, weight, key) < std::tie(e.v1, e.v2, e.weight, e.key);
+            }
+        };
+
+        mint vcount = ig.vertexCount();
+        mint ecount = ig.edgeCount();
+
+        std::vector<std::set<edge>> inclist_out(vcount);
+        std::vector<std::set<edge>> inclist_in(vcount);
+
+        // build a vertex-edge incidence list
+        for (int i=0; i < ecount; ++i) {
+            edge e = {
+                IGRAPH_FROM(&ig.graph, i),
+                IGRAPH_TO(&ig.graph, i),
+                ig.weightedQ() ? ig.weights[i] : 1.0,
+                i
+            };
+
+            inclist_out[e.v1].insert(e);
+            inclist_in[e.v2].insert(e);
+        }
+
+        // This vector records the vertices that are smoothed out, so that
+        // later they can be deleted in pure Mathematica code.
+        std::vector<mint> deletedVertices;
+
+        int key = ecount;
+        for (igraph_integer_t v=0; v < inclist_out.size(); ++v) {
+            auto &es_out = inclist_out[v];
+            auto &es_in = inclist_in[v];
+            // smooth degree-2 vertices
+            if (es_out.size() == 1 && es_in.size() == 1) {
+                edge e_out = *es_out.begin();
+                edge e_in = *es_in.begin();
+
+                if (e_in.v1 == e_in.v2 || e_out.v1 == e_out.v2)
+                    continue; // skip self-loops
+
+                es_in.clear();
+                es_out.clear();
+
+                igraph_integer_t v_out = e_out.v2;
+                igraph_integer_t v_in = e_in.v1;
+
+                edge combined = {v_in, v_out, e_in.weight + e_out.weight, key++};
+
+                inclist_out[v_in].erase(e_in);
+                inclist_out[v_in].insert(combined);
+
+                inclist_in[v_out].erase(e_out);
+                inclist_in[v_out].insert(combined);
+
+                deletedVertices.push_back(v);
+            }
+        }
+
+        std::set<edge> result;
+        for (const auto &s : inclist_out)
+            result.insert(s.begin(), s.end());
+        for (const auto &s : inclist_in)
+            result.insert(s.begin(), s.end());
+
+        igVector igedges(2*result.size());
+        {
+            mint i=0;
+            for (const auto &e : result) {
+                igedges[i++] = e.v1;
+                igedges[i++] = e.v2;
+            }
+        }
+
+        destroy();
+        igConstructorCheck(igraph_create(&graph, &igedges.vec, vcount, true));
+
+        weighted = true;
+        weights.resize(result.size());
+        {
+            mint i=0;
+            for (const auto &e : result)
+                weights[i++] = e.weight;
+        }
+
+        return mma::makeVector<mint>(deletedVertices.size(), deletedVertices.data());
+    }
+
+
     // warning: this function modifies the graph (converts to a double-connected directed representation).
     mma::IntTensorRef coordinatesToEmbedding(mma::RealMatrixRef coord) {
         igCheck(igraph_to_undirected(&graph, IGRAPH_TO_UNDIRECTED_COLLAPSE, nullptr));

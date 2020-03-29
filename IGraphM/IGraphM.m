@@ -581,6 +581,7 @@ template = LTemplate["IGraphM",
         LFun["treelikeComponents", {}, {Integer, 1}],
 
         LFun["smoothen", {LExpressionID["IG"]}, {Integer, 1}],
+        LFun["smoothenDirected", {LExpressionID["IG"]}, {Integer, 1}],
 
         LFun["coordinatesToEmbedding", {{Real, 2, "Constant"} (* coordinate list *)}, {Integer, 1}],
 
