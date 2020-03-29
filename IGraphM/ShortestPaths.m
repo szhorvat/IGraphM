@@ -94,15 +94,17 @@ IGDistanceCounts[graph_?igGraphQ, vs : (_List | All)] :=
 
 PackageExport["IGNeighborhoodSize"]
 IGNeighborhoodSize::usage =
-    "IGNeighborhoodSize[graph, vertex] returns the number of direct neighbours of vertex.\n" <>
-    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}] returns the number of direct neighbours of each vertex.\n" <>
-    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, max] returns the number of vertices reachable in at most max hops.\n" <>
-    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, {n}] returns the number of vertices reachable in precisely n hops.\n" <>
-    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}, {min, max}] returns the number of vertices reachable in between min and max hops (inclusive).";
+    "IGNeighborhoodSize[graph, vertex] gives the number of direct neighbours of vertex, i.e. its degree.\n" <>
+    "IGNeighborhoodSize[graph, All] gives the number of direct neighbours of all vertices.\n" <>
+    "IGNeighborhoodSize[graph, {vertex1, vertex2, \[Ellipsis]}] gives the number of direct neighbours of the specified vertices.\n" <>
+    "IGNeighborhoodSize[graph, All, max] gives the number of vertices reachable in at most max hops.\n" <>
+    "IGNeighborhoodSize[graph, All, {n}] gives the number of vertices reachable in precisely n hops.\n" <>
+    "IGNeighborhoodSize[graph, All, {min, max}] gives the number of vertices reachable in between min and max hops (inclusive).\n" <>
+    "IGNeighborhoodSize[graph, All, {min, max}, mode] uses the given mode, \"In\", \"Out\" or \"All\", when finding neighbours in directed graphs.";
 
-igNeighborhoodSize[graph_, vs_, {min_, max_}] :=
+igNeighborhoodSize[graph_, vs_, {min_, max_}, mode_] :=
     Block[{ig = igMakeFast[graph]},
-      Round@check@ig@"neighborhoodSize"[vss[graph][vs], min, max]
+      Round@check@ig@"neighborhoodSize"[vss[graph][vs], min, max, encodeNeighborMode[mode]]
     ]
 
 canonOrd[n_] := {0, n}
@@ -115,12 +117,12 @@ ordQ[_?Internal`NonNegativeMachineIntegerQ |
   ] := True
 ordQ[_] := False
 
-SyntaxInformation[IGNeighborhoodSize] = {"ArgumentsPattern" -> {_, _, _.}};
-IGNeighborhoodSize[graph_?igGraphQ, {}, ord : _?ordQ : {1}] := {}
-IGNeighborhoodSize[graph_?igGraphQ, vs : (_List | All), ord : _?ordQ : {1}] :=
-    catch@igNeighborhoodSize[graph, vs, canonOrd[ord]]
-IGNeighborhoodSize[graph_?igGraphQ, v_, ord : _?ordQ : {1}] :=
-    catch@First@igNeighborhoodSize[graph, {v}, canonOrd[ord]]
+SyntaxInformation[IGNeighborhoodSize] = {"ArgumentsPattern" -> {_, _, _., _.}};
+IGNeighborhoodSize[graph_?igGraphQ, {}, ord : _?ordQ : {1}, mode_String : "Out"] := {}
+IGNeighborhoodSize[graph_?igGraphQ, vs : (_List | All), ord : _?ordQ : {1}, mode_String : "Out"] :=
+    catch@igNeighborhoodSize[graph, vs, canonOrd[ord], mode]
+IGNeighborhoodSize[graph_?igGraphQ, v_, ord : _?ordQ : {1}, mode_String : "Out"] :=
+    catch@First@igNeighborhoodSize[graph, {v}, canonOrd[ord], mode]
 
 
 PackageExport["IGDistanceHistogram"]

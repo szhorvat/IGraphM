@@ -1279,10 +1279,10 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef neighborhoodSize(mma::RealTensorRef vs, mint mindist, mint maxdist) const {
+    mma::RealTensorRef neighborhoodSize(mma::RealTensorRef vs, mint mindist, mint maxdist, mint mode) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
-        igCheck(igraph_neighborhood_size(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), maxdist, IGRAPH_OUT, mindist));
+        igCheck(igraph_neighborhood_size(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), maxdist, igNeighborMode(mode, "neighborhoodSize"), mindist));
         return res.makeMTensor();
     }
 
