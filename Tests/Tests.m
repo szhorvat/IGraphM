@@ -79,7 +79,7 @@ samePropGraphQ[g1_, g2_] :=
     ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Test graphs*)
 
 
@@ -628,7 +628,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Cycling graphs through igraph*)
 
 
@@ -866,6 +866,20 @@ MT[
   IGChordalRing[15, {{3, 12, 4, 3}, {7, 8, 11, 3}}];,
   Null,
   {IGraphM::error}
+]
+
+
+MT[
+  IGChordalRing[5, {}],
+  Graph[{1, 2, 3, 4, 5}, {1 <-> 2, 1 <-> 5, 2 <-> 3, 3 <-> 4, 4 <-> 5}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGChordalRing[6, {2, 3, 1}],
+  Graph[{1 <-> 2, 2 <-> 3, 3 <-> 4, 4 <-> 5, 5 <-> 6, 1 <-> 6, 1 <-> 3, 2 <-> 5, 3 <-> 4, 4 <-> 6, 2 <-> 5, 1 <-> 6}],
+  SameTest -> IGSameGraphQ
 ]
 
 
@@ -1120,6 +1134,48 @@ MT[
 ]
 
 
+MT[
+  IGCompleteGraph[5],
+  CompleteGraph[5],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGCompleteGraph[6, DirectedEdges -> True],
+  CompleteGraph[6, DirectedEdges -> True],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGCompleteGraph[0],
+  IGEmptyGraph[],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGCompleteGraph[{}],
+  IGEmptyGraph[],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGCompleteGraph[4, SelfLoops -> True],
+  Graph[{1 <-> 1, 1 <-> 2, 1 <-> 3, 1 <-> 4, 2 <-> 2, 2 <-> 3, 2 <-> 4, 3 <-> 3, 3 <-> 4, 4 <-> 4}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  VertexList[IGCompleteGraph[{"a", "b", "c", "d"}]],
+  {"a", "b", "c", "d"}
+]
+
+MT[
+  IGCompleteGraph[{"a","b","c","d"}],
+  CompleteGraph[4],
+  SameTest -> IGIsomorphicQ
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGCompleteAcyclicGraph*)
 
@@ -1130,6 +1186,25 @@ MT[
     DirectedGraph[CompleteGraph[4], "Acyclic"]
   ],
   True
+]
+
+MT[
+  IGIsomorphicQ[
+    IGCompleteAcyclicGraph[{"a","b","c","d"}],
+    DirectedGraph[CompleteGraph[4], "Acyclic"]
+  ],
+  True
+]
+
+MT[
+  Sort[VertexList[IGCompleteAcyclicGraph[{"a", "b", "c"}]]],
+  {"a", "b", "c"}
+]
+
+MT[
+  IGCompleteAcyclicGraph[{}],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
 ]
 
 
@@ -1305,6 +1380,26 @@ MT[
   IGFromNauty["xx"],
   $Failed,
   {IGraphM::error}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGExpressionTree*)
+
+
+(* TODO *)
+
+
+MT[
+  IGExpressionTree[{{1}, {2, 3}, 4}],
+  Graph[{{1, 1}, {1}, {2, 1}, {2, 2}, {2}, {3}, {}}, {{1} -> {1, 1}, {} -> {1}, {2} -> {2, 1}, {2} -> {2, 2}, {} -> {2}, {} -> {3}}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGExpressionTree[{{1}, {2, 3}, 4}, DirectedEdges -> False],
+  Graph[{{1, 1}, {1}, {2, 1}, {2, 2}, {2}, {3}, {}}, {{1} <-> {1, 1}, {} <-> {1}, {2} <-> {2, 1}, {2} <-> {2, 2}, {} <-> {2}, {} <-> {3}}],
+  SameTest -> IGSameGraphQ
 ]
 
 
@@ -2455,7 +2550,19 @@ MT[
 ]
 
 
-(* ::Section:: *)
+MT[
+  IGRandomSpanningTree[CompleteGraph[5], 0],
+  {}
+]
+
+
+MT[
+  VertexCount /@ IGRandomSpanningTree[{IGDisjointUnion[{CompleteGraph[5], CycleGraph[10]}], {1, 1}}, 5],
+  {5, 5, 5, 5, 5}
+]
+
+
+(* ::Section::Closed:: *)
 (*Isomorphism*)
 
 
@@ -3026,7 +3133,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Centralities*)
 
 
@@ -3217,7 +3324,7 @@ MT[
 (* TODO unweighted and weighted *)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Clustering coefficients*)
 
 
@@ -3336,7 +3443,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Cliques*)
 
 
@@ -3811,7 +3918,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Connectivity*)
 
 
@@ -4229,7 +4336,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Shortest paths*)
 
 
@@ -4645,6 +4752,25 @@ MT[
 MT[
   IGBipartitePartitions[dbipartite],
   {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10, 11, 12}}
+]
+
+
+MT[
+  Sort /@ IGBipartitePartitions[IGShorthand["1-2-3-4-5"], 2],
+  {{2, 4}, {1, 3, 5}}
+]
+
+
+MT[
+  IGBipartitePartitions[IGShorthand["1-2-3-1"]],
+  $Failed,
+  {IGBipartitePartitions::nbipart}
+]
+
+MT[
+  IGBipartitePartitions[IGShorthand["1-2-3-1"], 2],
+  $Failed,
+  {IGBipartitePartitions::nbipart}
 ]
 
 
@@ -5064,7 +5190,7 @@ MT[
 (* TODO need to test on 1D, 2D, 3D and mixed dimensional meshes in various embedding dimensions *)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Graph colouring*)
 
 
@@ -5748,6 +5874,199 @@ MT[
 
 
 (* ::Section::Closed:: *)
+(*Neighbour degrees*)
+
+
+MTSection["Neighbour degrees"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGAverageNeighborDegree*)
+
+
+MT[
+  IGAverageNeighborDegree[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGAverageNeighborDegree[IGEmptyGraph[1]],
+  {Indeterminate}
+]
+
+MT[
+  IGAverageNeighborDegree[IGEmptyGraph[3]],
+  {Indeterminate, Indeterminate, Indeterminate}
+]
+
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1-2"]],
+  {1., 1.}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1,2-3"]],
+  {Indeterminate, 1., 1.}
+]
+
+
+(* works only with simple graphs *)
+MT[
+  IGAverageNeighborDegree[Graph[{1 <-> 2, 1 <-> 2}]],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
+  IGAverageNeighborDegree[StarGraph[5]],
+  {1., 4., 4., 4., 4.}
+]
+
+MT[
+  IGAverageNeighborDegree[StarGraph[5], {}],
+  {}
+]
+
+MT[
+  IGAverageNeighborDegree[StarGraph[5], {1, 3}],
+  {1., 4.}
+]
+
+MT[
+  IGAverageNeighborDegree[StarGraph[5], All],
+  {1., 4., 4., 4., 4.}
+]
+
+
+(* ::Text:: *)
+(*Directed graphs:*)
+
+
+MT[
+  IGAverageNeighborDegree[Graph[{1 -> 2}]],
+  {0., Indeterminate}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"]],
+  {1., 1., 1.}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "All"],
+  {3., 2.6666666666666665, 2.6666666666666665}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "In"],
+  {Indeterminate, 1., 1.}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "Out"],
+  {1., 1., 1.}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "Out", "All"],
+  {1., 1.3333333333333333, 1.3333333333333333}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "Out", "In"],
+  {Indeterminate, 1.5, 1.5}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "Out", Automatic],
+  {1., 1., 1.}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "All", "Out"],
+  {3., 3., 3.}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "All", "In"],
+  {Indeterminate, 2.5, 2.5}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "In", "Out"],
+  {2., 2., 2.}
+]
+
+MT[
+  IGAverageNeighborDegree[IGShorthand["1->2<->3, 1->3"], All, "In", "All"],
+  {2., 1.3333333333333333, 1.3333333333333333}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGAverageDegreeConnectivity*)
+
+
+MT[
+  IGAverageDegreeConnectivity[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGAverageDegreeConnectivity[IGEmptyGraph[5]],
+  {}
+]
+
+
+MT[
+  IGAverageDegreeConnectivity[StarGraph[5]],
+  {4., Indeterminate, Indeterminate, 1.}
+]
+
+MT[
+  IGAverageDegreeConnectivity[StarGraph[5, DirectedEdges -> True]],
+  {Indeterminate, Indeterminate, Indeterminate, 0.}
+]
+
+MT[
+  IGAverageDegreeConnectivity[StarGraph[5, DirectedEdges -> True], "Out"],
+  {Indeterminate, Indeterminate, Indeterminate, 0.}
+]
+
+MT[
+  IGAverageDegreeConnectivity[StarGraph[5, DirectedEdges -> True], "In"],
+  {0.}
+]
+
+MT[
+  IGAverageDegreeConnectivity[StarGraph[5, DirectedEdges -> True], "All"],
+  {4., Indeterminate, Indeterminate, 1.}
+]
+
+MT[
+  IGAverageDegreeConnectivity[StarGraph[5, DirectedEdges -> True], "All", "In"],
+  {4.}
+]
+
+MT[
+  IGAverageDegreeConnectivity[StarGraph[5, DirectedEdges -> True], "All", "Out"],
+  {Indeterminate, Indeterminate, Indeterminate, 1.}
+]
+
+MT[
+  IGAverageDegreeConnectivity[SimpleGraph[AdjacencyGraph[Outer[Boole @* Divisible, Range[10], Range[10]]]]],
+  {0., 0.5, 0.7777777777777777}
+]
+
+MT[
+  IGAverageDegreeConnectivity[IGKRegularGame[100, 3]],
+  {Indeterminate, Indeterminate, 3.}
+]
+
+
+(* ::Section::Closed:: *)
 (*Property operations*)
 
 
@@ -6131,8 +6450,23 @@ MTSection["Planar graphs"]
 (* TODO *)
 
 
+(* only works on simple graphs *)
+canonicalEmbedding[emb_]:=
+	Module[{cemb},
+		cemb=RotateLeft[#,First@Ordering[#,1]-1]&/@KeySort[emb];
+		If[OrderedQ[cemb[[1,{1,2}]]],
+			cemb,
+			Reverse/@cemb
+		]
+	]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGPlanarQ*)
+
+
+(* ::Subsubsubsection:: *)
+(*Graphs*)
 
 
 (* ::Text:: *)
@@ -6217,6 +6551,55 @@ MT[
 ]
 
 
+(* ::Subsubsubsection:: *)
+(*Embeddings*)
+
+
+MT[
+  IGPlanarQ[Association[]],
+  True
+]
+
+
+MT[
+  IGPlanarQ[Association[1 -> {}]],
+  True
+]
+
+
+MT[
+  IGPlanarQ[Association[1 -> {2}]],
+  False,
+  {IGraphM::invemb}
+]
+
+
+MT[
+  IGPlanarQ[Association[1 -> {2}, 2 -> {1}]],
+  True
+]
+
+
+(* ::Text:: *)
+(*A planar embedding of K4:*)
+
+
+MT[
+  IGPlanarQ[Association[1 -> {4, 2, 3}, 2 -> {3, 1, 4}, 3 -> {4, 1, 2}, 4 -> {2, 1, 3}]],
+  True
+]
+
+
+(* ::Text:: *)
+(*A non-planar embedding of K4:*)
+
+
+MT[
+  IGPlanarQ[Association[1 -> {4, 3, 2}, 2 -> {1, 4, 3}, 3 -> {4, 2, 1}, 4 -> {3, 2, 1}]],
+  False
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGMaximalPlanarQ*)
 
@@ -6291,7 +6674,11 @@ MT[
 
 
 (* ::Subsubsection::Closed:: *)
-(*IGOuterPlanarQ*)
+(*IGOuterplanarQ*)
+
+
+(* ::Subsubsubsection:: *)
+(*Graphs*)
 
 
 MT[
@@ -6313,6 +6700,13 @@ MT[
 ]
 
 
+(* disconnected non-outerplanar *)
+MT[
+  IGOuterplanarQ[IGDisjointUnion[{CompleteGraph[4], CycleGraph[5]}]],
+  False
+]
+
+
 (* planar but not outerplanar *)
 MT[
   IGOuterplanarQ[CompleteGraph[4]],
@@ -6324,6 +6718,153 @@ MT[
 MT[
   IGOuterplanarQ[CompleteGraph[5]],
   False
+]
+
+
+(* ::Subsubsubsection:: *)
+(*Embeddings*)
+
+
+MT[
+  IGOuterplanarQ[Association[]],
+  True
+]
+
+
+MT[
+  IGOuterplanarQ[Association[1 -> {}]],
+  True
+]
+
+
+MT[
+  IGOuterplanarQ[Association[1 -> {2}]],
+  False,
+  {IGraphM::invemb}
+]
+
+
+MT[
+  IGOuterplanarQ[Association[1 -> {2}, 2 -> {1}]],
+  True
+]
+
+
+(* ::Text:: *)
+(*Non-planar embedding of planar graph:*)
+
+
+MT[
+  IGOuterplanarQ[Association[1 -> {2, 4, 3}, 2 -> {1, 3}, 3 -> {2, 4, 1}, 4 -> {1, 3}]],
+  False
+]
+
+
+(* ::Text:: *)
+(*Planar embedding of the same:*)
+
+
+MT[
+  IGOuterplanarQ[Association[1 -> {2, 3, 4}, 2 -> {1, 3}, 3 -> {2, 4, 1}, 4 -> {3, 1}]],
+  True
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGOuterplanarEmbedding*)
+
+
+MT[
+  IGOuterplanarEmbedding[IGEmptyGraph[]],
+  <||>
+]
+
+MT[
+  IGOuterplanarEmbedding[IGEmptyGraph[2]],
+  <|1 -> {}, 2 -> {}|>
+]
+
+
+MT[
+  IGOuterplanarEmbedding[CompleteGraph[3]],
+  <|1 -> {2, 3}, 2 -> {1, 3}, 3 -> {2, 1}|>
+]
+
+
+MT[
+  IGOuterplanarEmbedding[CompleteGraph[4]],
+  $Failed,
+  {IGOuterplanarEmbedding::nopl}
+]
+
+
+MT[
+  IGOuterplanarEmbedding[IGShorthand["1-2-3-4-1,1-3"]],
+  <|1 -> {2, 3, 4}, 2 -> {1, 3}, 3 -> {2, 4, 1}, 4 -> {3, 1}|>
+]
+
+
+MT[
+  IGOuterplanarEmbedding[IGDisjointUnion[{CycleGraph[3], CycleGraph[4]}]],
+  <|{1, 1} -> {{1, 2}, {1, 3}}, {1, 2} -> {{1, 1}, {1, 3}}, {1, 3} -> {{1, 2}, {1, 1}}, {2, 1} -> {{2, 2}, {2, 4}}, {2, 2} -> {{2, 1}, {2, 3}}, {2, 3} -> {{2, 2}, {2, 4}}, {2, 4} -> {{2, 3}, {2, 1}}|>
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGCoordinatesToEmbedding and IGEmbeddingToCoordinates*)
+
+
+g   = IGDelaunayGraph@RandomReal[1, {10, 2}];
+emb = IGCoordinatesToEmbedding[g];
+
+MT[
+  IGPlanarQ[emb],
+  True
+]
+
+MT[
+  IGOuterplanarQ[emb],
+  False
+]
+
+MT[
+	canonicalEmbedding@IGCoordinatesToEmbedding@Graph[g, VertexCoordinates->IGEmbeddingToCoordinates[emb]],
+	canonicalEmbedding[emb]
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGDualGraph*)
+
+
+MT[
+	IGDualGraph@CompleteGraph[4],
+	CompleteGraph[4],
+	SameTest -> IGIsomorphicQ
+]
+
+MT[
+	IGDualGraph@Graph[{1<->2}],
+	IGEmptyGraph[1],
+	SameTest -> IGIsomorphicQ
+]
+
+MT[
+	IGDualGraph@IGEmptyGraph[1],
+	IGEmptyGraph[],
+	SameTest -> IGIsomorphicQ
+]
+
+MT[
+	IGDualGraph@IGEmptyGraph[],
+	IGEmptyGraph[],
+	SameTest -> IGIsomorphicQ
+]
+
+MT[
+	IGDualGraph@CycleGraph[3],
+	Graph[{1<->2}],
+	SameTest -> IGIsomorphicQ
 ]
 
 
@@ -7395,7 +7936,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Import/Export*)
 
 
@@ -7442,7 +7983,53 @@ MT[
 (* TODO check multigraph handling with and without properties *)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
+(*Processes*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGSIRProcess*)
+
+
+(* ::Text:: *)
+(*We check the validity of the returned TimeSeries or TemporalData by verifying that it responds to property requests.*)
+
+
+MT[
+  IGSIRProcess[IGEmptyGraph[1], {1, 1}, 5]["Caller"],
+  TemporalData
+]
+
+MT[
+  IGSIRProcess[IGEmptyGraph[1], {1, 1}]["Caller"],
+  TimeSeries
+]
+
+MT[
+  IGSIRProcess[CompleteGraph[5], {1, 1}]["FirstTime"],
+  0.
+]
+
+MT[
+  IGSIRProcess[IGEmptyGraph[3], {1, 1}]["ValueDimensions"],
+  3
+]
+
+
+MT[
+  IGSIRProcess[IGEmptyGraph[], {1, 1}],
+  $Failed,
+  {IGraphM::error}
+]
+
+MT[
+  IGSIRProcess[IGEmptyGraph[], {1, 1}, 5],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+(* ::Section::Closed:: *)
 (*Q functions*)
 
 
@@ -8300,52 +8887,6 @@ MT[
 MT[
   IGSameGraphQ[IGEmptyGraph[], 2],
   False
-]
-
-
-(* ::Section::Closed:: *)
-(*Processes*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*IGSIRProcess*)
-
-
-(* ::Text:: *)
-(*We check the validity of the returned TimeSeries or TemporalData by verifying that it responds to property requests.*)
-
-
-MT[
-  IGSIRProcess[IGEmptyGraph[1], {1, 1}, 5]["Caller"],
-  TemporalData
-]
-
-MT[
-  IGSIRProcess[IGEmptyGraph[1], {1, 1}]["Caller"],
-  TimeSeries
-]
-
-MT[
-  IGSIRProcess[CompleteGraph[5], {1, 1}]["FirstTime"],
-  0.
-]
-
-MT[
-  IGSIRProcess[IGEmptyGraph[3], {1, 1}]["ValueDimensions"],
-  3
-]
-
-
-MT[
-  IGSIRProcess[IGEmptyGraph[], {1, 1}],
-  $Failed,
-  {IGraphM::error}
-]
-
-MT[
-  IGSIRProcess[IGEmptyGraph[], {1, 1}, 5],
-  $Failed,
-  {IGraphM::error}
 ]
 
 
