@@ -1726,11 +1726,70 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGSmoothen*)
 
 
-(* TODO *)
+MT[
+  IGSmoothen[IGEmptyGraph[]],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSmoothen[IGEmptyGraph[4]],
+  Graph[{1, 2, 3, 4}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGSmoothen[Graph[{1 <-> 2, 1 <-> 2, 2 <-> 3}]],
+  Graph[{2 <-> 2, 2 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGEdgeProp[EdgeWeight][IGSmoothen[Graph[{1 <-> 2, 1 <-> 2, 2 <-> 3}]]],
+  {2., 1.}
+]
+
+MT[
+  IGSmoothen[CycleGraph[5]],
+  Graph[{5 <-> 5}],
+  SameTest -> IGIsomorphicQ
+]
+
+MT[
+  IGEdgeProp[EdgeWeight][IGSmoothen[CycleGraph[5]]],
+  {5.}
+]
+
+
+MT[
+  IGSmoothen[Graph[{1 -> 2, 2 -> 3}]],
+  Graph[{1 -> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGEdgeProp[EdgeWeight][IGSmoothen[Graph[{1 -> 2, 2 -> 3}]]],
+  {2.}
+]
+
+
+MT[
+  IGSmoothen[Graph[{1 -> 1, 1 -> 2, 2 -> 3, 3 -> 4, 5 -> 4, 5 -> 2}]],
+  Graph[{1 -> 1, 1 -> 2, 2 -> 4, 5 -> 2, 5 -> 4}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGSmoothen[Graph[{1 -> 2, 2 <-> 3}]],
+  Quiet@IGSmoothen[Graph[{1 -> 2, 2 <-> 3}]],
+  {IGraphM::mixed}
+]
 
 
 (* ::Section::Closed:: *)
