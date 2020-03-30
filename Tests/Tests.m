@@ -6886,8 +6886,9 @@ MT[
   False
 ]
 
+(* Note: Graph[g, VertexCoordinates -> coords] fails in some versions (11.x), so we use SetProperty instead. *)
 MT[
-	canonicalEmbedding@IGCoordinatesToEmbedding@Graph[g, VertexCoordinates->IGEmbeddingToCoordinates[emb]],
+	canonicalEmbedding@IGCoordinatesToEmbedding@SetProperty[g, VertexCoordinates->IGEmbeddingToCoordinates[emb]],
 	canonicalEmbedding[emb]
 ]
 
