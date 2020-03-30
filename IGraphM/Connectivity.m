@@ -346,4 +346,8 @@ PackageExport["IGIsolatedVertexList"]
 IGIsolatedVertexList::usage = "IGIsolatedVertexList[graph] gives the list of isolated vertices.";
 
 SyntaxInformation[IGIsolatedVertexList] = {"ArgumentsPattern" -> {_}};
-IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree[g], 0]
+(* Use SimpleGraph so that vertices with only self-loops can be included. *)
+If[$VersionNumber >= 12.0,
+  IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree@SimpleGraph[g, Properties -> None], 0],
+  IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree@SimpleGraph[g], 0]
+]
