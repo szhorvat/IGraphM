@@ -6933,60 +6933,46 @@ MT[
 
 MTSection["Layout functions"]
 
+layoutFunctions = {
+  IGLayoutBipartite, IGLayoutCircle, IGLayoutDavidsonHarel,
+  If[$SystemID === "Linux-ARM", (* Raspberry Pi 1 does not have enough memory for DrL *)
+    Unevaluated@Sequence[],
+    Unevaluated@Sequence[IGLayoutDrL, IGLayoutDrL3D]
+  ],
+  IGLayoutFruchtermanReingold, IGLayoutFruchtermanReingold3D,
+  IGLayoutGEM, IGLayoutGraphOpt, IGLayoutKamadaKawai, IGLayoutKamadaKawai3D,
+  IGLayoutPlanar, IGLayoutRandom, IGLayoutReingoldTilford,
+  IGLayoutReingoldTilfordCircular, IGLayoutSphere
+};
 
 (* Check that each layout works, and issues no errors. *)
 MT[
   GraphQ[#[Graph[{1<->2}]]],
   True
-]&/@ {
-  IGLayoutBipartite,IGLayoutCircle,IGLayoutDavidsonHarel,IGLayoutDrL,
-  IGLayoutDrL3D,IGLayoutFruchtermanReingold,IGLayoutFruchtermanReingold3D,
-  IGLayoutGEM,IGLayoutGraphOpt,IGLayoutKamadaKawai,IGLayoutKamadaKawai3D,
-  IGLayoutPlanar,IGLayoutRandom,IGLayoutReingoldTilford,
-  IGLayoutReingoldTilfordCircular,IGLayoutSphere}
+]&/@ layoutFunctions
   
 MT[
   ListQ@OptionValue[Options[#[Graph[{1<->2}]],VertexCoordinates],VertexCoordinates],
   True
-]&/@ {
-  IGLayoutBipartite,IGLayoutCircle,IGLayoutDavidsonHarel,IGLayoutDrL,
-  IGLayoutDrL3D,IGLayoutFruchtermanReingold,IGLayoutFruchtermanReingold3D,
-  IGLayoutGEM,IGLayoutGraphOpt,IGLayoutKamadaKawai,IGLayoutKamadaKawai3D,
-  IGLayoutPlanar,IGLayoutRandom,IGLayoutReingoldTilford,
-  IGLayoutReingoldTilfordCircular,IGLayoutSphere}  
+]&/@ layoutFunctions
 
 
 MT[
   GraphQ[#[IGEmptyGraph[1]]],
   True
-]&/@ {
-  IGLayoutBipartite,IGLayoutCircle,IGLayoutDavidsonHarel,IGLayoutDrL,
-  IGLayoutDrL3D,IGLayoutFruchtermanReingold,IGLayoutFruchtermanReingold3D,
-  IGLayoutGEM,IGLayoutGraphOpt,IGLayoutKamadaKawai,IGLayoutKamadaKawai3D,
-  IGLayoutPlanar,IGLayoutRandom,IGLayoutReingoldTilford,
-  IGLayoutReingoldTilfordCircular,IGLayoutSphere}
+]&/@ layoutFunctions
   
 MT[
   ListQ@OptionValue[Options[#[IGEmptyGraph[1]],VertexCoordinates],VertexCoordinates],
   True
-]&/@ {
-  IGLayoutBipartite,IGLayoutCircle,IGLayoutDavidsonHarel,IGLayoutDrL,
-  IGLayoutDrL3D,IGLayoutFruchtermanReingold,IGLayoutFruchtermanReingold3D,
-  IGLayoutGEM,IGLayoutGraphOpt,IGLayoutKamadaKawai,IGLayoutKamadaKawai3D,
-  IGLayoutPlanar,IGLayoutRandom,IGLayoutReingoldTilford,
-  IGLayoutReingoldTilfordCircular,IGLayoutSphere}  
+]&/@ layoutFunctions
 
 
 MT[
   #[IGEmptyGraph[]],
   IGEmptyGraph[],
   SameTest -> IGSameGraphQ (* there may be options added such as GraphLayout -> {"Dimension" -> 3} *)
-]&/@ {
-  IGLayoutBipartite,IGLayoutCircle,IGLayoutDavidsonHarel,IGLayoutDrL,
-  IGLayoutDrL3D,IGLayoutFruchtermanReingold,IGLayoutFruchtermanReingold3D,
-  IGLayoutGEM,IGLayoutGraphOpt,IGLayoutKamadaKawai,IGLayoutKamadaKawai3D,
-  IGLayoutPlanar,IGLayoutRandom,IGLayoutReingoldTilford,
-  IGLayoutReingoldTilfordCircular,IGLayoutSphere}
+]&/@ layoutFunctions
 
 
 (* IGLayoutTutte only works on 3-connected graphs, so we need a different test case for it. *)
