@@ -48,6 +48,8 @@ To open the documentation notebook, evaluate
 
 or search for "igraphm" in Mathematica's Documentation Center.
 
+A web-based preview is available [here](http://szhorvat.net/mathematica/IGDocumentation/).
+
 The documentation is not yet complete and contributions are very welcome.  If you would like to help out with expanding the documentation, send me an email.
 
 For additional details about functions, or for paper references for the methods used, also check [the igraph documentation pages](http://igraph.org/c/doc/).
