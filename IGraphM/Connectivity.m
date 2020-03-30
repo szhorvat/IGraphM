@@ -261,7 +261,7 @@ IGMinimumEdgeCuts[graph_?igGraphQ, s_, t_] :=
     ]
 
 
-PackageExport["IGMinimumEdgeCuts"]
+PackageExport["IGMinimalEdgeCuts"]
 IGMinimalEdgeCuts::usage =
     "IGMinimalEdgeCuts[graph, s, t] gives all minimal edge cuts that disconnect s and t in a directed graph.";
 
