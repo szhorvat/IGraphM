@@ -83,7 +83,7 @@ IGVertexContract[graph_?igGraphQ, arg_, opt : OptionsPattern[]] := Null /; Messa
 
 
 PackageExport["IGSmoothen"]
-IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtaining the smallest topologically equivalent graph. Edge directions are discarded. The weights of merged edges are added up.";
+IGSmoothen::usage = "IGSmoothen[graph] suppresses degree-2 vertices, thus obtaining the smallest topologically equivalent graph. The weights of merged edges are added up.";
 Options[IGSmoothen] = { DirectedEdges -> Automatic };
 SyntaxInformation[IGSmoothen] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGSmoothen, Graph]};
 IGSmoothen[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
