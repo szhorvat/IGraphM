@@ -71,7 +71,7 @@ IGEdgeProp::usage   = "IGEdgeProp[prop] is an operator that extracts the values 
 specialEdgePropsPattern = EdgeWeight|EdgeCost|EdgeCapacity;
 
 If[$VersionNumber >= 12.1,
-  IGEdgeProp::nmg = "Multigraphs with non-distinguishable edges are only supported with the following properties: " <> ToString[List @@ specialEdgePropsPattern] <> ". Consider using EdgeTaggedGraph.";
+  IGEdgeProp::nmg = "Multigraphs with non-distinguishable edges are only supported with the following properties: " <> ToString[List @@ specialEdgePropsPattern] <> ". Consider using EdgeTaggedGraph to make edges distinguishable.";
   ,
   IGEdgeProp::nmg = "Multigraphs are only supported with the following properties: " <> ToString[List @@ specialEdgePropsPattern] <> ".";
 ]
