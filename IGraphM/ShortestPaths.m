@@ -201,7 +201,7 @@ PackageExport["IGLocalEfficiency"]
 IGLocalEfficiency::usage =
     "IGLocalEfficiency[graph] gives the local efficiency around each vertex of graph.\n" <>
     "IGLocalEfficiency[graph, {vertex1, vertex2, \[Ellipsis]}] gives the local efficiency around the given vertices.\n" <>
-    "IGLocalEfficiency[graph, All, \"Out\"] uses outgoing edges to define the neighbourhood.";
+    "IGLocalEfficiency[graph, All, \"Out\"] uses outgoing edges to define the neighbourhood in a directed graph.";
 Options[IGLocalEfficiency] = { DirectedEdges -> True };
 SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}};
 IGLocalEfficiency[graph_?igGraphQ, {}, mode_String, OptionsPattern[]] := {}
@@ -215,7 +215,7 @@ addCompletion[IGLocalEfficiency, {0, 0, {"Out", "In", "All"}}]
 PackageExport["IGAverageLocalEfficiency"]
 IGAverageLocalEfficiency::usage =
     "IGAverageLocalEfficiency[graph] gives the average local efficiency of graph.\n" <>
-    "IGAverageLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood.";
+    "IGAverageLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood in a directed graph.";
 SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 Options[IGAverageLocalEfficiency] = { DirectedEdges -> True };
 IGAverageLocalEfficiency[graph_?igGraphQ, mode_String : "All", OptionsPattern[]] :=

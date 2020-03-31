@@ -15,7 +15,7 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Voronoi cells with graph distance *****)
 
 PackageExport["IGVoronoiCells"]
-IGVoronoiCells::usage = "IGVoronoiCells[graph, {v1, v2, \[Ellipsis]}] find the sets of vertices closest to each given vertex.";
+IGVoronoiCells::usage = "IGVoronoiCells[graph, {v1, v2, \[Ellipsis]}] returns the sets of vertices closest to each given vertex.";
 
 IGVoronoiCells::ivert = "The given centers `1` are not vertices of the graph.";
 Options[IGVoronoiCells] = { "Tiebreaker" -> Automatic };
