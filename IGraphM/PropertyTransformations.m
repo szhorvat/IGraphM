@@ -17,7 +17,7 @@ If[$VersionNumber >= 12.1,
   nonDistinguishableEdgesQ = MultigraphQ[#] && Not[EdgeTaggedGraphQ[#] && distinguishableTaggedEdgesQ[#]]&;
   distinguishableTaggedEdgesQ[graph_] :=
       If[MixedGraphQ[graph],
-        canonicalEdgeBlock@DuplicateFreeQ@EdgeList[#]
+        canonicalEdgeBlock@DuplicateFreeQ@EdgeList[graph]
         ,
         If[UndirectedGraphQ[graph],
           DuplicateFreeQ@Transpose@Append[
