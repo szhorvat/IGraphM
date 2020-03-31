@@ -236,11 +236,7 @@ IGEdgeMap[fun_, spec_][g_] := IGEdgeMap[fun, spec, g]
 
 (***** Retrieve available edge and vertex property names *****)
 
-(* In 12.1 and later, custom Graph properties are stored as AnnotationRules, not as Properties *)
-If[$VersionNumber >= 12.1,
-  hasCustomPropQ[g_] := OptionValue[Options[g, AnnotationRules], AnnotationRules] =!= {},
-  hasCustomPropQ[g_] := OptionValue[Options[g, Properties], Properties] =!= {}
-]
+hasCustomPropQ[g_] := OptionValue[Options[g, PropOptName], PropOptName] =!= {}
 
 PackageExport["IGVertexPropertyList"]
 IGVertexPropertyList::usage = "IGVertexPropertyList[graph] gives the list of available vertex properties in graph.";
@@ -255,7 +251,13 @@ standardVertexProperties = {
 SyntaxInformation[IGVertexPropertyList] = {"ArgumentsPattern" -> {_}};
 IGVertexPropertyList[g_?IGNullGraphQ] = {};
 IGVertexPropertyList[g_ /; GraphQ[g] && hasCustomPropQ[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, VertexList[g]}]]
-IGVertexPropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardVertexProperties]
+IGVertexPropertyList[g_ /; GraphQ[g]] :=
+    (* PropertyList has a bug where PropertyList[g] will return VertexWeight for graphs which are
+       edge weighted but NOT vertex weighted. We remove it manually when appropriate. *)
+    Complement[
+      Intersection[PropertyList[g], standardVertexProperties],
+      If[IGVertexWeightedQ[g], {}, {VertexWeight}]
+    ]
 
 PackageExport["IGEdgePropertyList"]
 IGEdgePropertyList::usage = "IGEdgePropertyList[graph] gives the list of available edge properties in graph.";
@@ -268,4 +270,10 @@ standardEdgeProperties = {
 SyntaxInformation[IGEdgePropertyList] = {"ArgumentsPattern" -> {_}};
 IGEdgePropertyList[g_?EmptyGraphQ] = {};
 IGEdgePropertyList[g_ /; GraphQ[g] && hasCustomPropQ[g]] := Sort@DeleteDuplicates[Join @@ PropertyList[{g, EdgeList[g]}]]
-IGEdgePropertyList[g_ /; GraphQ[g]] := Intersection[PropertyList[g], standardEdgeProperties]
+IGEdgePropertyList[g_ /; GraphQ[g]] :=
+    (* PropertyList has a bug where PropertyList[g] will return EdgeWeight for graphs which are
+       vertex weighted but NOT edge weighted. We remove it manually when appropriate. *)
+    Complement[
+      Intersection[PropertyList[g], standardEdgeProperties],
+      If[IGEdgeWeightedQ[g], {}, {EdgeWeight}]
+    ]
