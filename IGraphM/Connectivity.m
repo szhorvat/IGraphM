@@ -249,25 +249,25 @@ IGGomoryHuTree[graph_?GraphQ, opt : OptionsPattern[]] :=
     ]
 
 
-PackageExport["IGMinimumEdgeCuts"]
-IGMinimumEdgeCuts::usage =
-    "IGMinimumEdgeCuts[graph, s, t] gives all minimum edge cuts that disconnect s and t in a directed graph.";
+PackageExport["IGFindMinimumCuts"]
+IGFindMinimumCuts::usage =
+    "IGFindMinimumCuts[graph, s, t] gives all minimum edge cuts that disconnect s and t in a weighted directed graph.";
 
-SyntaxInformation[IGMinimumEdgeCuts] = {"ArgumentsPattern" -> {_, _, _}};
-IGMinimumEdgeCuts[graph_?EmptyGraphQ, s_, t_] := {}
-IGMinimumEdgeCuts[graph_?igGraphQ, s_, t_] :=
+SyntaxInformation[IGFindMinimumCuts] = {"ArgumentsPattern" -> {_, _, _}};
+IGFindMinimumCuts[graph_?EmptyGraphQ, s_, t_] := {}
+IGFindMinimumCuts[graph_?igGraphQ, s_, t_] :=
     catch@Block[{ig = igMake[graph]},
       igUnpackEdgeSet[graph]@check@ig@"allMinCutsST"[vs[graph][s], vs[graph][t]]
     ]
 
 
-PackageExport["IGMinimalEdgeCuts"]
-IGMinimalEdgeCuts::usage =
-    "IGMinimalEdgeCuts[graph, s, t] gives all minimal edge cuts that disconnect s and t in a directed graph.";
+PackageExport["IGFindMinimalCuts"]
+IGFindMinimalCuts::usage =
+    "IGFindMinimalCuts[graph, s, t] gives all minimal edge cuts that disconnect s and t in a directed graph.";
 
-SyntaxInformation[IGMinimalEdgeCuts] = {"ArgumentsPattern" -> {_, _, _}};
-IGMinimalEdgeCuts[graph_?EmptyGraphQ, s_, t_] := {}
-IGMinimalEdgeCuts[graph_?igGraphQ, s_, t_] :=
+SyntaxInformation[IGFindMinimalCuts] = {"ArgumentsPattern" -> {_, _, _}};
+IGFindMinimalCuts[graph_?EmptyGraphQ, s_, t_] := {}
+IGFindMinimalCuts[graph_?igGraphQ, s_, t_] :=
     catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackEdgeSet[graph]@check@ig@"allCutsST"[vs[graph][s], vs[graph][t]]
     ]
