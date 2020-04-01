@@ -9,7 +9,7 @@
 The IGraph/M package provides a [Wolfram Language](https://www.wolfram.com/) interface to the popular [igraph](https://igraph.org/) network analysis and graph theory library, as well as many other useful functions for working with graphs in _Mathematica_.  Check out the [blog post][main] for an overview.
 
 
-## Installation
+## 📦 Installation
 
 The system requirements are _Mathematica_ 10.0.2 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
 
@@ -39,7 +39,7 @@ Verify that it works by evaluating `IGVersion[]`, then continue to the documenta
 To uninstall all currently installed versions of IGraph/M, evaluate `PacletUninstall["IGraphM"]`. This will remove all traces of IGraph/M from your system.
 
 
-## Documentation
+## 📖 Documentation
 
 To open the documentation notebook, evaluate
 
@@ -57,7 +57,7 @@ The documentation is not yet complete and contributions are very welcome.  If yo
 For additional details about functions, also check [the igraph documentation pages](http://igraph.org/c/doc/).
 
 
-## Contributions
+## 🛠️ Contributions
 
 **Help wanted with editing documentation and writing unit tests! Only basic _Mathematica_ knowledge is required for this.**
 
@@ -79,12 +79,12 @@ If you are interested in contributing, send me an email for guidance. Evaluate t
 C++ programmers should look at [Development.md](Development.md) for additional information.
 
 
-## Additional information
+## 💡Additional information
 
  - [Support and Troubleshooting](SUPPORT.md)
  - [Revision history](CHANGELOG.md)
 
-## License
+## ⚖️ License
 
 IGraph/M is licensed under the [GNU GPLv3](https://opensource.org/licenses/gpl-3.0.html). See [LICENSE.txt](LICENSE.txt) for details.
 
