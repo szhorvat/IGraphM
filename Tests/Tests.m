@@ -168,7 +168,7 @@ dbipartite = Graph[
 (* These graphs have no non-trivial automorphisms, and therefore asymmetric. *)
 (* Exclude the null and singleton graphs because they are symmetric. *)
 asymmList = {
-  Graph[{1\[UndirectedEdge]2,2\[UndirectedEdge]3,3\[UndirectedEdge]4,2\[UndirectedEdge]4,4\[UndirectedEdge]5,5\[UndirectedEdge]6}],
+  Graph[{1 <-> 2, 2 <-> 3, 3 <-> 4, 2 <-> 4, 4 <-> 5, 5 <-> 6}],
   GraphData["FruchtGraph"],
   GraphData[{6,69}],
   GraphData[{6,95}],
@@ -2328,14 +2328,14 @@ MT[
 
 MT[
   IGFromPrufer /@ Tuples[Range[4], {2}],
-  Graph /@ {{1\[UndirectedEdge]2,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]3,1\[UndirectedEdge]2,2\[UndirectedEdge]4},{1\[UndirectedEdge]2,1\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]2,1\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]3,1\[UndirectedEdge]2,1\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]3,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]4,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]4,3\[UndirectedEdge]4}},
+  Graph /@ {{1 <-> 2,1 <-> 3,1 <-> 4},{1 <-> 3,1 <-> 2,2 <-> 4},{1 <-> 2,1 <-> 3,3 <-> 4},{1 <-> 2,1 <-> 4,3 <-> 4},{2 <-> 3,1 <-> 2,1 <-> 4},{1 <-> 2,2 <-> 3,2 <-> 4},{1 <-> 2,2 <-> 3,3 <-> 4},{1 <-> 2,2 <-> 4,3 <-> 4},{2 <-> 3,1 <-> 3,1 <-> 4},{1 <-> 3,2 <-> 3,2 <-> 4},{1 <-> 3,2 <-> 3,3 <-> 4},{1 <-> 3,2 <-> 4,3 <-> 4},{2 <-> 4,1 <-> 3,1 <-> 4},{1 <-> 4,2 <-> 3,2 <-> 4},{1 <-> 4,2 <-> 3,3 <-> 4},{1 <-> 4,2 <-> 4,3 <-> 4}},
   SameTest -> (And @@ MapThread[IGSameGraphQ, {#1, #2}]&)
 ]
 
 
 MT[
   IGFromPrufer@{5,18,14,19,16,14,9,20,8,17,17,10,14,4,4,9,16,3},
-  Graph@{4\[UndirectedEdge]19,4\[UndirectedEdge]14,5\[UndirectedEdge]14,10\[UndirectedEdge]14,6\[UndirectedEdge]19,4\[UndirectedEdge]9,9\[UndirectedEdge]16,3\[UndirectedEdge]16,3\[UndirectedEdge]20,13\[UndirectedEdge]20,1\[UndirectedEdge]5,7\[UndirectedEdge]16,10\[UndirectedEdge]17,8\[UndirectedEdge]17,11\[UndirectedEdge]14,8\[UndirectedEdge]15,17\[UndirectedEdge]18,2\[UndirectedEdge]18,9\[UndirectedEdge]12},
+  Graph@{4 <-> 19,4 <-> 14,5 <-> 14,10 <-> 14,6 <-> 19,4 <-> 9,9 <-> 16,3 <-> 16,3 <-> 20,13 <-> 20,1 <-> 5,7 <-> 16,10 <-> 17,8 <-> 17,11 <-> 14,8 <-> 15,17 <-> 18,2 <-> 18,9 <-> 12},
   SameTest -> IGSameGraphQ
 ]
 

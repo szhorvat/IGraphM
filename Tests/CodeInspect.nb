@@ -18,11 +18,12 @@ Cell["Verify that Lint is installed, then load it.", \
 Cell[BoxData[
  RowBox[{"PacletManager`PacletInformation", "[", "\"\<CodeInspector\>\"", 
   "]"}]], "Input",
- CellLabel->"In[1]:=",ExpressionUUID->"f53dbc4e-c3c0-4677-941b-26ed6087dd41"],
+ CellLabel->"In[14]:=",ExpressionUUID->"f53dbc4e-c3c0-4677-941b-26ed6087dd41"],
 
 Cell[BoxData[
  RowBox[{"Needs", "[", "\"\<CodeInspector`\>\"", "]"}]], "Input",
- CellLabel->"In[2]:=",ExpressionUUID->"da219cf1-741f-45a5-b0ce-8825cc03fa6f"]
+ CellLabel->
+  "In[15]:=",ExpressionUUID->"da219cf1-741f-45a5-b0ce-8825cc03fa6f"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -43,7 +44,7 @@ Cell[BoxData[{
        RowBox[{"{", 
         RowBox[{"\"\<..\>\"", ",", "\"\<IGraphM\>\""}], "}"}], "]"}], ",", 
       "Infinity"}], "]"}]}]}], ";"}]}], "Input",
- CellLabel->"In[3]:=",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
+ CellLabel->"In[16]:=",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
 
 Cell[BoxData[
  RowBox[{"Column", "@", 
@@ -57,14 +58,18 @@ Cell[BoxData[
         "\[IndentingNewLine]", 
         RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
          RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
-        RowBox[{"ConfidenceLevel", "\[Rule]", "0.5"}]}], 
+        RowBox[{"\"\<TagExclusions\>\"", "\[Rule]", 
+         RowBox[{"{", "\"\<OptionsPattern\>\"", "}"}]}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"ConfidenceLevel", "\[Rule]", "0.1"}]}], 
        "\[IndentingNewLine]", "]"}], "&"}], "/@", "files"}], ",", 
     "\[IndentingNewLine]", 
     RowBox[{"InspectedFileObject", "[", 
      RowBox[{"_", ",", 
       RowBox[{"{", "}"}]}], "]"}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
  
- CellLabel->"In[8]:=",ExpressionUUID->"8b9f9e58-afa1-4673-88b0-d8d5e1391716"]
+ CellLabel->
+  "In[19]:=",ExpressionUUID->"8b9f9e58-afa1-4673-88b0-d8d5e1391716"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -84,12 +89,11 @@ Cell[BoxData[{
    "\[IndentingNewLine]", 
    RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
     RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
-   RowBox[{"ConfidenceLevel", "\[Rule]", "0.5"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"ConfidenceLevel", "\[Rule]", "0.1"}], ",", "\[IndentingNewLine]", 
    
    RowBox[{"\"\<TagExclusions\>\"", "\[Rule]", 
     RowBox[{"{", "\"\<DuplicateKeys\>\"", "}"}]}]}], "\[IndentingNewLine]", 
-  "]"}]}], "Input",
- CellLabel->"In[6]:=",ExpressionUUID->"e26cbd1c-4b10-4a3c-8289-c32f15260698"]
+  "]"}]}], "Input",ExpressionUUID->"e26cbd1c-4b10-4a3c-8289-c32f15260698"]
 }, Open  ]]
 }, Open  ]]
 },
