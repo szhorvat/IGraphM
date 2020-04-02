@@ -14,7 +14,7 @@ igContextSetup[igPackagePrivateSymbol]
 
 (* Check if all edges of a graph (including parallel edges) are distinguishable. *)
 If[$VersionNumber >= 12.1,
-  nonDistinguishableEdgesQ = MultigraphQ[#] && Not[EdgeTaggedGraphQ[#] && distinguishableTaggedEdgesQ[#]]&;
+  nonDistinguishableEdgesQ = MultigraphQ[#] && Not[EdgeTaggedGraphQ[#] && cachedFun[distinguishableTaggedEdgesQ][#]]&;
   distinguishableTaggedEdgesQ[graph_] :=
       If[MixedGraphQ[graph],
         canonicalEdgeBlock@DuplicateFreeQ@EdgeList[graph]
