@@ -204,7 +204,7 @@ IGLocalEfficiency::usage =
     "IGLocalEfficiency[graph, All, \"Out\"] uses outgoing edges to define the neighbourhood in a directed graph.";
 Options[IGLocalEfficiency] = { DirectedEdges -> True };
 SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}};
-IGLocalEfficiency[graph_?igGraphQ, {}, mode_String, OptionsPattern[]] := {}
+IGLocalEfficiency[graph_?igGraphQ, {}, mode_String : "All", OptionsPattern[]] := {}
 IGLocalEfficiency[graph_?igGraphQ, vs : (_List | All) : All, mode_String : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       check@ig@"localEfficiency"[vss[graph][vs], OptionValue[DirectedEdges], encodeNeighborMode[mode]]
