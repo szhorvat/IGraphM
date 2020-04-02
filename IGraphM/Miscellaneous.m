@@ -15,7 +15,7 @@ igContextSetup[igPackagePrivateSymbol]
 (***** Voronoi cells with graph distance *****)
 
 PackageExport["IGVoronoiCells"]
-IGVoronoiCells::usage = "IGVoronoiCells[graph, {v1, v2, \[Ellipsis]}] find the sets of vertices closest to each given vertex.";
+IGVoronoiCells::usage = "IGVoronoiCells[graph, {v1, v2, \[Ellipsis]}] returns the sets of vertices closest to each given vertex.";
 
 IGVoronoiCells::ivert = "The given centers `1` are not vertices of the graph.";
 Options[IGVoronoiCells] = { "Tiebreaker" -> Automatic };
@@ -101,7 +101,7 @@ IGAverageNeighborDegree::usage =
     "IGAverageNeighborDegree[graph, All, degreeMode, neighborMode] uses different modes for finding neighbours and degrees.";
 
 SyntaxInformation[IGAverageNeighborDegree] = {"ArgumentsPattern" -> {_, _., _., _.}};
-IGAverageNeighborDegree[graph_?igGraphQ, {}, degMode_String : "Out", neiMode_String : Automatic] := {}
+IGAverageNeighborDegree[graph_?igGraphQ, {}, degMode_String : "Out", neiMode : _String | Automatic : Automatic] := {}
 IGAverageNeighborDegree[graph_?igGraphQ, vs : (_List | All) : All, degMode_String : "Out", neiMode : _String | Automatic : Automatic] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       fixInfNaN@check@ig@"averageNeighborDegree"[vss[graph][vs], encodeNeighborMode@Replace[neiMode, Automatic -> degMode], encodeNeighborMode[degMode]]

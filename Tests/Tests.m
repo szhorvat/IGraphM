@@ -79,7 +79,7 @@ samePropGraphQ[g1_, g2_] :=
     ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Test graphs*)
 
 
@@ -168,7 +168,7 @@ dbipartite = Graph[
 (* These graphs have no non-trivial automorphisms, and therefore asymmetric. *)
 (* Exclude the null and singleton graphs because they are symmetric. *)
 asymmList = {
-  Graph[{1\[UndirectedEdge]2,2\[UndirectedEdge]3,3\[UndirectedEdge]4,2\[UndirectedEdge]4,4\[UndirectedEdge]5,5\[UndirectedEdge]6}],
+  Graph[{1 <-> 2, 2 <-> 3, 3 <-> 4, 2 <-> 4, 4 <-> 5, 5 <-> 6}],
   GraphData["FruchtGraph"],
   GraphData[{6,69}],
   GraphData[{6,95}],
@@ -2328,14 +2328,14 @@ MT[
 
 MT[
   IGFromPrufer /@ Tuples[Range[4], {2}],
-  Graph /@ {{1\[UndirectedEdge]2,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]3,1\[UndirectedEdge]2,2\[UndirectedEdge]4},{1\[UndirectedEdge]2,1\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]2,1\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]3,1\[UndirectedEdge]2,1\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]2,2\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]3,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]3,2\[UndirectedEdge]4,3\[UndirectedEdge]4},{2\[UndirectedEdge]4,1\[UndirectedEdge]3,1\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]3,2\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]3,3\[UndirectedEdge]4},{1\[UndirectedEdge]4,2\[UndirectedEdge]4,3\[UndirectedEdge]4}},
+  Graph /@ {{1 <-> 2,1 <-> 3,1 <-> 4},{1 <-> 3,1 <-> 2,2 <-> 4},{1 <-> 2,1 <-> 3,3 <-> 4},{1 <-> 2,1 <-> 4,3 <-> 4},{2 <-> 3,1 <-> 2,1 <-> 4},{1 <-> 2,2 <-> 3,2 <-> 4},{1 <-> 2,2 <-> 3,3 <-> 4},{1 <-> 2,2 <-> 4,3 <-> 4},{2 <-> 3,1 <-> 3,1 <-> 4},{1 <-> 3,2 <-> 3,2 <-> 4},{1 <-> 3,2 <-> 3,3 <-> 4},{1 <-> 3,2 <-> 4,3 <-> 4},{2 <-> 4,1 <-> 3,1 <-> 4},{1 <-> 4,2 <-> 3,2 <-> 4},{1 <-> 4,2 <-> 3,3 <-> 4},{1 <-> 4,2 <-> 4,3 <-> 4}},
   SameTest -> (And @@ MapThread[IGSameGraphQ, {#1, #2}]&)
 ]
 
 
 MT[
   IGFromPrufer@{5,18,14,19,16,14,9,20,8,17,17,10,14,4,4,9,16,3},
-  Graph@{4\[UndirectedEdge]19,4\[UndirectedEdge]14,5\[UndirectedEdge]14,10\[UndirectedEdge]14,6\[UndirectedEdge]19,4\[UndirectedEdge]9,9\[UndirectedEdge]16,3\[UndirectedEdge]16,3\[UndirectedEdge]20,13\[UndirectedEdge]20,1\[UndirectedEdge]5,7\[UndirectedEdge]16,10\[UndirectedEdge]17,8\[UndirectedEdge]17,11\[UndirectedEdge]14,8\[UndirectedEdge]15,17\[UndirectedEdge]18,2\[UndirectedEdge]18,9\[UndirectedEdge]12},
+  Graph@{4 <-> 19,4 <-> 14,5 <-> 14,10 <-> 14,6 <-> 19,4 <-> 9,9 <-> 16,3 <-> 16,3 <-> 20,13 <-> 20,1 <-> 5,7 <-> 16,10 <-> 17,8 <-> 17,11 <-> 14,8 <-> 15,17 <-> 18,2 <-> 18,9 <-> 12},
   SameTest -> IGSameGraphQ
 ]
 
@@ -4547,7 +4547,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGDistanceCounts and IGDistanceHistogram*)
 
 
@@ -4666,7 +4666,14 @@ MT[
 
 MT[
   IGAveragePathLength[dolphin],
-  N@Mean@WeightedData[Range@Length[hist], hist]
+  N@Mean@WeightedData[Range@Length[hist], hist] (* hist is defined in the IGDistanceHistogram tests *)
+]
+
+
+(* disconnected *)
+MT[
+  IGAveragePathLength[IGShorthand["1-2,3-4"]],
+  1.
 ]
 
 
@@ -4692,7 +4699,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGDiameter*)
 
 
@@ -4750,6 +4757,82 @@ MT[
 MT[
   IGFindDiameter[Graph[{4,3,2,1}, {1 -> 2, 2 -> 3, 4 -> 3}], "ByComponents" -> True],
   {1,2,3}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGLocalEfficiency and IGAverageLocalEfficiency*)
+
+
+(* TODO *)
+
+
+MT[
+  IGLocalEfficiency[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGLocalEfficiency[IGEmptyGraph[3]],
+  {0., 0., 0.}
+]
+
+
+MT[
+  IGLocalEfficiency[dolphin],
+  {0.5777777777777777, 0.46130952380952367, 0.4166666666666667, 0.6111111111111112, 0., 0.75, 0.7444444444444444, 0.5166666666666666, 0.5722222222222223, 0.7619047619047619, 0.625, 0., 0., 0.744047619047619, 0.577020202020202, 0.5555555555555555, 0.8, 0.3564814814814814, 0.7301587301587302, 0.75, 0.4699074074074072, 0.7555555555555556, 0., 0.611111111111111, 0.7555555555555556, 0.8333333333333334, 0.8333333333333334, 0.6416666666666667, 0.6000000000000001, 0.4513888888888888, 0.5583333333333333, 0., 0.3333333333333333, 0.5629629629629629, 0.5583333333333335, 0., 0.38299319727891157, 0.5575757575757578, 0.49404761904761896, 0.3333333333333333, 0.5428571428571428, 0.8, 0.6222222222222221, 0.5150793650793649, 0.4583333333333333, 0.6242424242424242, 0.3333333333333333, 0.6555555555555556, 0., 0.3333333333333333, 0.5793650793650792, 0.4185185185185186, 0.638888888888889, 0.5, 0.6349206349206349, 0.5, 0.5, 0.5263888888888889, 0., 0.6166666666666667, 0., 0.3611111111111111},
+  SameTest -> Equal
+]
+
+
+MT[
+  IGLocalEfficiency[dolphin, {}],
+  {}
+]
+
+
+MT[
+  IGAverageLocalEfficiency[dolphin],
+  0.49103141908441456,
+  SameTest -> Equal
+]
+
+MT[
+  IGAverageLocalEfficiency[dolphin],
+  Mean@IGLocalEfficiency[dolphin],
+  SameTest -> Equal
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGGlobalEfficiency*)
+
+
+MT[
+  IGGlobalEfficiency[IGEmptyGraph[0]],
+  Indeterminate
+]
+
+MT[
+  IGGlobalEfficiency[IGEmptyGraph[1]],
+  Indeterminate
+]
+
+MT[
+  IGGlobalEfficiency[IGEmptyGraph[2]],
+  0.
+]
+
+MT[
+  IGGlobalEfficiency[IGEmptyGraph[3]],
+  0.
+]
+
+
+MT[
+  IGGlobalEfficiency[dolphin],
+  0.37921419757749875,
+  SameTest -> Equal
 ]
 
 

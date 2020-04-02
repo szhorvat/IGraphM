@@ -19,7 +19,8 @@ PackageExport["IGConnectedQ"]
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
 
 SyntaxInformation[IGConnectedQ] = {"ArgumentsPattern" -> {_}};
-IGConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[True]]
+igConnectedQ[g_] := Block[{ig = igMakeFast[g]}, check@ig@"connectedQ"[True]]
+IGConnectedQ[g_?igGraphQ] := catch@cachedFun[igConnectedQ][g]
 IGConnectedQ[_] := False
 
 
@@ -27,7 +28,8 @@ PackageExport["IGWeaklyConnectedQ"]
 IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly connected.";
 
 SyntaxInformation[IGWeaklyConnectedQ] = {"ArgumentsPattern" -> {_}};
-IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[False]]
+igWeaklyConnectedQ[g_] := Block[{ig = igMakeFast[g]}, check@ig@"connectedQ"[False]]
+IGWeaklyConnectedQ[g_?igGraphQ] := catch@cachedFun[igWeaklyConnectedQ][g]
 IGWeaklyConnectedQ[_] := False
 
 
@@ -249,25 +251,30 @@ IGGomoryHuTree[graph_?GraphQ, opt : OptionsPattern[]] :=
     ]
 
 
-PackageExport["IGMinimumEdgeCuts"]
-IGMinimumEdgeCuts::usage =
-    "IGMinimumEdgeCuts[graph, s, t] gives all minimum edge cuts that disconnect s and t in a directed graph.";
+PackageExport["IGFindMinimumCuts"]
+IGFindMinimumCuts::usage =
+    "IGFindMinimumCuts[graph, s, t] gives all minimum edge cuts that disconnect s and t in a weighted graph.";
 
-SyntaxInformation[IGMinimumEdgeCuts] = {"ArgumentsPattern" -> {_, _, _}};
-IGMinimumEdgeCuts[graph_?EmptyGraphQ, s_, t_] := {}
-IGMinimumEdgeCuts[graph_?igGraphQ, s_, t_] :=
+SyntaxInformation[IGFindMinimumCuts] = {"ArgumentsPattern" -> {_, _, _}};
+IGFindMinimumCuts[graph_?EmptyGraphQ, s_, t_] := {}
+(* Note: DirectedGraph preserves EdgeWeights even in old versions such as M10.0. *)
+IGFindMinimumCuts[graph_?UndirectedGraphQ, s_, t_] :=
+    Apply[UndirectedEdge, IGFindMinimumCuts[DirectedGraph[graph], s, t], {2}]
+IGFindMinimumCuts[graph_?igGraphQ, s_, t_] :=
     catch@Block[{ig = igMake[graph]},
       igUnpackEdgeSet[graph]@check@ig@"allMinCutsST"[vs[graph][s], vs[graph][t]]
     ]
 
 
-PackageExport["IGMinimumEdgeCuts"]
-IGMinimalEdgeCuts::usage =
-    "IGMinimalEdgeCuts[graph, s, t] gives all minimal edge cuts that disconnect s and t in a directed graph.";
+PackageExport["IGFindMinimalCuts"]
+IGFindMinimalCuts::usage =
+    "IGFindMinimalCuts[graph, s, t] gives all minimal edge cuts that disconnect s and t in graph.";
 
-SyntaxInformation[IGMinimalEdgeCuts] = {"ArgumentsPattern" -> {_, _, _}};
-IGMinimalEdgeCuts[graph_?EmptyGraphQ, s_, t_] := {}
-IGMinimalEdgeCuts[graph_?igGraphQ, s_, t_] :=
+SyntaxInformation[IGFindMinimalCuts] = {"ArgumentsPattern" -> {_, _, _}};
+IGFindMinimalCuts[graph_?EmptyGraphQ, s_, t_] := {}
+IGFindMinimalCuts[graph_?UndirectedGraphQ, s_, t_] :=
+    Apply[UndirectedEdge, IGFindMinimalCuts[DirectedGraph[graph], s, t], {2}]
+IGFindMinimalCuts[graph_?igGraphQ, s_, t_] :=
     catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackEdgeSet[graph]@check@ig@"allCutsST"[vs[graph][s], vs[graph][t]]
     ]
@@ -346,4 +353,8 @@ PackageExport["IGIsolatedVertexList"]
 IGIsolatedVertexList::usage = "IGIsolatedVertexList[graph] gives the list of isolated vertices.";
 
 SyntaxInformation[IGIsolatedVertexList] = {"ArgumentsPattern" -> {_}};
-IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree[g], 0]
+(* Use SimpleGraph so that vertices with only self-loops can be included. *)
+If[$VersionNumber >= 12.0,
+  IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree@SimpleGraph[g, Properties -> None], 0],
+  IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree@SimpleGraph[g], 0]
+]

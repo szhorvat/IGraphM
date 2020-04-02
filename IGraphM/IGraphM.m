@@ -130,6 +130,19 @@ $buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}];
 
 IGraphM`Information`$Version = $packageVersion;
 
+(***** Cache for simple computed graph properties *****)
+
+$exprStore = Language`NewExpressionStore["IGraphMCache"]
+
+PackageScope["cachedFun"]
+cachedFun::usage = "cachedFun[fun][arg] computes fun[arg] and caches the result for future evaluations.";
+cachedFun[fun_][arg_] :=
+    If[$exprStore@"containsQ"[arg, fun],
+      $exprStore@"get"[arg, fun],
+      With[{res = fun[arg]},
+        $exprStore@"put"[arg, fun, res]; res
+      ]
+    ]
 
 (***** Class interface definition *****)
 
