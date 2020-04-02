@@ -19,7 +19,8 @@ PackageExport["IGConnectedQ"]
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
 
 SyntaxInformation[IGConnectedQ] = {"ArgumentsPattern" -> {_}};
-IGConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[True]]
+igConnectedQ[g_] := Block[{ig = igMakeFast[g]}, check@ig@"connectedQ"[True]]
+IGConnectedQ[g_?igGraphQ] := catch@cachedFun[igConnectedQ][g]
 IGConnectedQ[_] := False
 
 
@@ -27,7 +28,8 @@ PackageExport["IGWeaklyConnectedQ"]
 IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly connected.";
 
 SyntaxInformation[IGWeaklyConnectedQ] = {"ArgumentsPattern" -> {_}};
-IGWeaklyConnectedQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"connectedQ"[False]]
+igWeaklyConnectedQ[g_] := Block[{ig = igMakeFast[g]}, check@ig@"connectedQ"[False]]
+IGWeaklyConnectedQ[g_?igGraphQ] := catch@cachedFun[igWeaklyConnectedQ][g]
 IGWeaklyConnectedQ[_] := False
 
 
