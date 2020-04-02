@@ -101,7 +101,7 @@ IGAverageNeighborDegree::usage =
     "IGAverageNeighborDegree[graph, All, degreeMode, neighborMode] uses different modes for finding neighbours and degrees.";
 
 SyntaxInformation[IGAverageNeighborDegree] = {"ArgumentsPattern" -> {_, _., _., _.}};
-IGAverageNeighborDegree[graph_?igGraphQ, {}, degMode_String : "Out", neiMode_String : Automatic] := {}
+IGAverageNeighborDegree[graph_?igGraphQ, {}, degMode_String : "Out", neiMode : _String | Automatic : Automatic] := {}
 IGAverageNeighborDegree[graph_?igGraphQ, vs : (_List | All) : All, degMode_String : "Out", neiMode : _String | Automatic : Automatic] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       fixInfNaN@check@ig@"averageNeighborDegree"[vss[graph][vs], encodeNeighborMode@Replace[neiMode, Automatic -> degMode], encodeNeighborMode[degMode]]
