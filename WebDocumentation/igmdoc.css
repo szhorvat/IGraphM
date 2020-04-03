@@ -702,6 +702,7 @@ table tr:nth-child(2n) {
 
 img {
     max-width: 100%;
+    height: auto;
     background-color: #f1f3f6;
 }
 
