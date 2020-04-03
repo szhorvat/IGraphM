@@ -120,7 +120,8 @@ Cell[BoxData[{
   RowBox[{"Unprotect", "[", "$ImageResolution", "]"}], 
   ";"}], "\[IndentingNewLine]", 
  RowBox[{
-  RowBox[{"$ImageResolution", "=", "72"}], ";"}]}], "Input",
+  RowBox[{"$ImageResolution", "=", 
+   RowBox[{"2", "*", "72"}]}], ";"}]}], "Input",
  CellLabel->"In[8]:=",ExpressionUUID->"e930c2e5-1774-40f8-b50f-cfb9a085b547"],
 
 Cell[BoxData[{
@@ -151,14 +152,45 @@ Cell[BoxData[
     ",", "\[IndentingNewLine]", 
     RowBox[{"\"\<MDElementTemplates\>\"", "\[Rule]", "\[IndentingNewLine]", 
      RowBox[{"<|", "\[IndentingNewLine]", 
-      RowBox[{"\"\<Output\>\"", "    ", "->", " ", 
-       RowBox[{"TemplateExpression", " ", "@", " ", 
-        RowBox[{"mdQuote", " ", "@", " ", 
-         RowBox[{"StringJoin", "[", 
-          RowBox[{"\"\<```mathematica\\n\>\"", ",", " ", 
-           RowBox[{"TemplateSlot", "[", "1", "]"}], ",", " ", 
-           "\"\<\\n```\>\""}], "]"}]}]}]}], "\[IndentingNewLine]", "|>"}]}]}],
-    "\[IndentingNewLine]", "]"}], "//", "AbsoluteTiming"}]], "Input",
+      RowBox[{
+       RowBox[{"\"\<Output\>\"", "\[Rule]", 
+        RowBox[{"TemplateExpression", " ", "@", " ", 
+         RowBox[{"mdQuote", " ", "@", " ", 
+          RowBox[{"StringJoin", "[", 
+           RowBox[{"\"\<```mathematica\\n\>\"", ",", " ", 
+            RowBox[{"TemplateSlot", "[", "1", "]"}], ",", " ", 
+            "\"\<\\n```\>\""}], "]"}]}]}]}], ",", "\[IndentingNewLine]", 
+       RowBox[{"\"\<Image\>\"", " ", "\[Rule]", 
+        RowBox[{"TemplateExpression", " ", "@", 
+         RowBox[{"Module", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"name", "=", 
+              RowBox[{"TemplateSlot", "[", "1", "]"}]}], ",", 
+             RowBox[{"file", "=", 
+              RowBox[{"TemplateSlot", "[", "2", "]"}]}], ",", "w", ",", "h"}],
+             "}"}], ",", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"w", ",", "h"}], "}"}], "=", 
+             RowBox[{"Import", "[", 
+              RowBox[{"file", ",", 
+               RowBox[{"{", 
+                RowBox[{"\"\<PNG\>\"", ",", "\"\<ImageSize\>\""}], "}"}]}], 
+              "]"}]}], ";", "\[IndentingNewLine]", 
+            RowBox[{"StringJoin", "[", 
+             RowBox[{
+             "\"\<<img src=\\\"\>\"", ",", "file", ",", 
+              "\"\<\\\" loading=\\\"lazy\\\" width=\>\"", ",", 
+              RowBox[{"IntegerString", "[", 
+               RowBox[{"w", "/", "2"}], "]"}], ",", "\"\< height=\>\"", ",", 
+              RowBox[{"IntegerString", "[", 
+               RowBox[{"h", "/", "2"}], "]"}], ",", "\"\<>\>\""}], "]"}]}]}], 
+          "\[IndentingNewLine]", "]"}]}]}]}], "\[IndentingNewLine]", 
+      "|>"}]}]}], "\[IndentingNewLine]", "]"}], "//", 
+  "AbsoluteTiming"}]], "Input",
  CellLabel->"In[13]:=",ExpressionUUID->"7590c8c8-488d-4306-a379-b7411b5a7fe9"],
 
 Cell[BoxData[{
@@ -197,12 +229,12 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
         RowBox[{"DeleteCases", "[", "\"\<\:03a2\>\"", "]"}]}]}], " ", 
       RowBox[{"(*", " ", 
        RowBox[{"exclude", " ", "capital", " ", "final", " ", "sigma"}], " ", 
-       "*)"}], "\[IndentingNewLine]", "]"}]}]}], ";"}], "\n", 
-  "\[IndentingNewLine]", 
+       "*)"}], "\[IndentingNewLine]", "]"}]}]}], ";"}], "\[IndentingNewLine]",
+   "\[IndentingNewLine]", 
   RowBox[{"(*", " ", 
    RowBox[{
    "replace", " ", "special", " ", "named", " ", "characters", " ", "and", 
-    " ", "append", " ", "footer"}], " ", "*)"}]}], "\[IndentingNewLine]", 
+    " ", "append", " ", "footer"}], " ", "*)"}]}], "\n", 
  RowBox[{"Export", "[", "\[IndentingNewLine]", 
   RowBox[{"\"\<igraphm.md\>\"", ",", "\[IndentingNewLine]", 
    RowBox[{
@@ -396,6 +428,10 @@ Cell["Optimize images.", \
 "Text",ExpressionUUID->"6b05b7cd-c6ba-439f-8165-c9bc4d10b279"],
 
 Cell[BoxData[
+ RowBox[{"Run", "[", "\"\<./quantimg.sh\>\"", 
+  "]"}]], "Input",ExpressionUUID->"b2cbf48b-0147-4b83-aa68-2603807094bf"],
+
+Cell[BoxData[
  RowBox[{"Run", "[", "\"\<./optimg.sh\>\"", "]"}]], "Input",
  CellLabel->"In[25]:=",ExpressionUUID->"fe0c1c5e-a7df-4e51-8a71-9cc9e56fde43"],
 
@@ -426,7 +462,7 @@ Cell[BoxData[{
    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
   "]"}], "\[IndentingNewLine]", 
  RowBox[{"CreateDirectory", "[", "\"\<IGDocumentation\>\"", "]"}]}], "Input",
- CellLabel->"In[28]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
+ CellLabel->"In[34]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
 
 Cell[BoxData[{
  RowBox[{"CopyDirectory", "[", 
@@ -438,7 +474,7 @@ Cell[BoxData[{
   RowBox[{"\"\<igmdoc.css\>\"", ",", "\"\<IGDocumentation/igmdoc.css\>\""}], 
   "]"}]}], "Input",
  CellLabel->
-  "In[31]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
+  "In[37]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
 }, Open  ]]
 },
 WindowSize->{948, 847},

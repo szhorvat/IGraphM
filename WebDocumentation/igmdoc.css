@@ -701,7 +701,8 @@ table tr:nth-child(2n) {
 }
 
 img {
-    max-width: 100%
+    max-width: 100%;
+    background-color: #f1f3f6;
 }
 
 code, tt {
