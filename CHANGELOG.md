@@ -1,6 +1,6 @@
 ## Revision history for [IGraph/M](README.md)
 
-##### v0.4
+#### v0.4
 
 New functions:
 
@@ -67,7 +67,7 @@ Notes:
 
  - IGraph/M 0.4 will be the last version of IGraph/M to support _Mathematica_ 10.0. Starting with IGraph/M 0.5, it will only work [with versions of _Mathematica_ that are still supported by Wolfram Research](http://support.wolfram.com/kb/22107).
 
-##### v0.3.0
+#### v0.3.0
 
  - Compatibility with *Mathematica* 11.1.
  - Additional random graph generators (`IGBarabasiAlbertGame`, `IGStaticFitnessGame`, `IGStaticPowerLawGame`, `IGGeometricGame`, `IGGrowingGame`, `IGForestFireGame`).
@@ -80,14 +80,14 @@ Notes:
  - Significantly improved package loading performance.
  - Bug fixes and polish.
 
-##### v0.2.2
+#### v0.2.2
 
 This is a bugfix release with several minor fixes.  Important changes to be aware of:
 
  - VF2 isomorphism functions now work when *both* vertex and edge colours are specified at the same time.
  - `IGBlissCanonicalGraph` is now suitable for filtering isomorphic duplicates. Its output may be different from previous releases.
 
-##### v0.2.1
+#### v0.2.1
 
 This is a bugfix release.  The following changes require special mention:
 
@@ -97,7 +97,7 @@ This is a bugfix release.  The following changes require special mention:
 
 A number of other small bugs were also fixed.
 
-##### v0.2.0
+#### v0.2.0
 
 - Significant performance improvements for many functions
 - New and extended functions for shortest path calculations (extended `IGDistanceMatrix`, `IGDistanceCounts`, `IGDistanceHistogram`, `IGDiameter`, `IGFindDiameter`)
