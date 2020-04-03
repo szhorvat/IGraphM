@@ -2,7 +2,7 @@
 
 For support, use the [official igraph forum](https://igraph.discourse.group/) or [Mathematica StackExchange](https://mathematica.stackexchange.com/).
 
-IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until most problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues). **In the bug report include the output of ``IGraphM`Developer`GetInfo[]``.**
+IGraph/M is currently under development, and a few bugs are to be expected.  However, I try not to release a new version until most problems I know of are fixed.  If you do find a problem, please [open an issue on GitHub](https://github.com/szhorvat/IGraphM/issues). **Please include the output of ``IGraphM`Developer`GetInfo[]`` in the bug report.**
 
 
 #### Common problems
@@ -11,9 +11,9 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
     This message will be shown in the following situations:
 
-    - IGraph/M is not installed. Please follow the installation instructions above carefully.
+    - IGraph/M is not installed. Please follow [the installation instructions](README.md) carefully.
 
-    - IGraph/M is not compatible with your system. Please review the requirements in the Installation section above.  Additional symptoms will be that `PacletFind["IGraphM"]` returns `{}` but `PacletFind["IGraphM", "MathematicaVersion" -> All, "SystemID" -> All]` returns a non-empty list.
+    - IGraph/M is not compatible with your system. Please review [the system requirements](README.md).  Additional symptoms will be that `PacletFind["IGraphM"]` returns `{}` but `PacletFind["IGraphM", "MathematicaVersion" -> All, "SystemID" -> All]` returns a non-empty list.
 
   * **"Cannot open ``LTemplate`LTemplatePrivate` ``"**
 
@@ -25,7 +25,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
   * **"No build settings found. Please check `BuildSettings.m`"**
 
-    This error may be shown when trying to load IGraph/M on an incompatible platform.  Currently, the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux x86_64 with glibc 2.14 or later, Raspberry Pi with Raspbian Stretch.
+    This error may be shown when trying to load IGraph/M on an incompatible platform.  Currently, the following platforms are supported: Windows 64-bit, OS X 10.9 or later, Linux x86_64 with glibc 2.14 or later, Raspberry Pi with Raspbian Buster.
 
     It may be possible to run IGraph/M on other platforms, however, it will be necessary to compile it from source.
 
@@ -43,7 +43,7 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
          Graph[ Graph[...], VertexCoordinates -> {...} ]
 
-     or similar. A property does not get correctly applied to the graph.  This is due to a bug in Mathematica. I believe I have worked around most of these issues, but if you encounter them, one possible workaround is to cycle the graph `g` through some other representation, e.g. `g = Uncompress@Compress[g]`.
+     or similar. A property does not get correctly applied to the graph.  This is due to a bug in _Mathematica_. I believe I have worked around most of these issues, but if you encounter them, one possible workaround is to cycle the graph `g` through some other representation, e.g. `g = Uncompress@Compress[g]`.
 
    * The graphs returned by `IGBipartiteGameGNM` and `IGBipartiteGameGNP` may not render when using the `DirectedEdges -> True` and `"Bidirectional" -> True` options.  This is due to a bug in _Mathematica_'s `"BipartiteEmbedding"` graph layout and can be corrected by passing `GraphLayout -> Automatic` to these functions. Alternatively, they may be rendered using `IGLayoutBipartite`.
 

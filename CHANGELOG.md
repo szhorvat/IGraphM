@@ -1,6 +1,6 @@
 ## Revision history for [IGraph/M](README.md)
 
-##### v0.4.0dev (work in progress)
+##### v0.4
 
 New functions:
 

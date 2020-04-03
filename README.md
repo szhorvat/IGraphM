@@ -21,11 +21,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.3.116.paclet` was downloaded into the directory `~/Downloads`, evaluate
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.4.paclet` was downloaded into the directory `~/Downloads`, evaluate:
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.3.116.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.4.paclet"]
 ```
 
 After installation, the package can now be loaded with:
@@ -41,14 +41,14 @@ To uninstall all currently installed versions of IGraph/M, evaluate `PacletUnins
 
 ## 📖 Documentation
 
-To open the documentation notebook, evaluate
+To open the documentation notebook, evaluate:
 
 ```mathematica
 Needs["IGraphM`"]
 IGDocumentation[]
 ```
 
-or search for "igraphm" in _Mathematica_'s Documentation Center.
+Alternatively, search for "igraphm" in _Mathematica_'s Documentation Center.
 
 [A web-based preview](http://szhorvat.net/mathematica/IGDocumentation/) is also available.
 
@@ -90,4 +90,4 @@ IGraph/M is licensed under the [GNU GPLv3](https://opensource.org/licenses/gpl-3
 
  [ltemplate]: https://github.com/szhorvat/LTemplate/
  [main]: http://szhorvat.net/mathematica/IGraphM
- [chat]: https://gitter.im/IGraphM/Lobby
+
