@@ -165,13 +165,13 @@ IGBarabasiAlbertGame[
 
 IGBarabasiAlbertGame[
   n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
-  power_?nonNegativeNumericQ,
+  power_?NumericQ,
   opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
     igBarabasiAlbertGame[n, m, {power,1}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], OptionValue["StartingGraph"], opt]
 
 IGBarabasiAlbertGame[
   n_?Internal`NonNegativeMachineIntegerQ, m : (_?Internal`PositiveMachineIntegerQ | _?nonNegIntVecQ),
-  {power_?nonNegativeNumericQ, a_?nonNegativeNumericQ},
+  {power_?NumericQ, a_?nonNegativeNumericQ},
   opt : OptionsPattern[{IGBarabasiAlbertGame, Graph}]] :=
     igBarabasiAlbertGame[n, m, {power, a}, OptionValue[DirectedEdges], OptionValue["TotalDegreeAttraction"], OptionValue[Method], OptionValue["StartingGraph"], opt]
 
