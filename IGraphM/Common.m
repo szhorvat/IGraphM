@@ -190,11 +190,8 @@ emptyArrayQ::usage = "emptyArrayQ[arr]";
 emptyArrayQ[arr_] := MemberQ[Dimensions[arr], 0]
 
 PackageScope["positiveOrInfQ"]
-(* TODO: It seems that this can be replaced by TrueQ@Positive[#}& because Positive[Infinity] === True.
-   Investigate performance. A well-named function is still needed for this purpose for clarity. *)
 positiveOrInfQ::usage = "positiveOrInfQ[val]";
-positiveOrInfQ[Infinity] = True;
-positiveOrInfQ[x_ /; NumericQ[x] && Positive[x]] = True;
+positiveOrInfQ = TrueQ@Positive[#]&;
 
 (* Replace Infinity by 0 *)
 PackageScope["infToZero"]
