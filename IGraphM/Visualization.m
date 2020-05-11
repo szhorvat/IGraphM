@@ -91,7 +91,7 @@ IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPatt
       ticks = MapAt[Replace[Automatic -> cticks], ticks, {2, All}];
 
       (* construct ColorRules *)
-      If[unconnCol =!= Automatic && Not@ColorQ[unconnCol],
+      If[unconnCol =!= Automatic && unconnCol =!= None && Not@ColorQ[unconnCol],
         Message[IGAdjacencyMatrixPlot::invopt, unconnCol, "UnconnectedColor", Automatic];
         unconnCol = Automatic;
       ];
