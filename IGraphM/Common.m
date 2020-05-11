@@ -83,7 +83,7 @@ transformGraphOptions[fun_][g_?GraphQ] :=
 
 
 PackageScope["ruleQ"]
-ruleQ::usage = "ruleQ[expr] gives True if expr is a rule, False otherwise.";
+ruleQ::usage = "ruleQ[expr] gives True if expr is a Rule or RuleDelayed, False otherwise.";
 ruleQ[_Rule | _RuleDelayed] = True;
 ruleQ[_] = False;
 
@@ -195,13 +195,13 @@ positiveOrInfQ = TrueQ@Positive[#]&;
 
 (* Replace Infinity by 0 *)
 PackageScope["infToZero"]
-infToZero::usage = "infToZero[]";
+infToZero::usage = "infToZero[arg] returns 0 if arg === Infinity.";
 infToZero[arg_] := Replace[arg, Infinity -> 0]
 
 (* Unpack array containing infinities or indeterminates *)
 (* TODO: Test on all platforms that unpacking such arrays produces usable Infinity and Indeterminate *)
 PackageScope["fixInfNaN"]
-fixInfNaN::usage = "fixInfNaN[]";
+fixInfNaN::usage = "fixInfNaN[array] unpacks array if it contains Inf or NaN.";
 fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Developer`FromPackedArray[arr], arr]
 fixInfNaN[arr_] := arr
 
