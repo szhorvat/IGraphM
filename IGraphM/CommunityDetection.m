@@ -210,11 +210,12 @@ IGModularity::usage =
     "IGModularity[graph, {{v11, v12, \[Ellipsis]}, {v21, v22, \[Ellipsis]}, \[Ellipsis]}] gives the modularity the specified partitioning of graph's vertices into communities. Edge directions are ignored.\n" <>
     "IGModularity[graph, clusterdata] uses the partitioning specified by an IGClusterData object.";
 
-SyntaxInformation[IGModularity] = {"ArgumentsPattern" -> {_, _}};
-IGModularity[graph_?igGraphQ, clusters_?igClusterDataQ] := IGModularity[graph, clusters["Communities"]]
-IGModularity[graph_?igGraphQ, communities : {__List}] :=
+Options[IGModularity] = { "Resolution" -> 1 };
+SyntaxInformation[IGModularity] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+IGModularity[graph_?igGraphQ, clusters_?igClusterDataQ, opt : OptionsPattern[]] := IGModularity[graph, clusters["Communities"], opt]
+IGModularity[graph_?igGraphQ, communities : {__List}, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      check@ig@"modularity"[communitiesToMembershipChecked[VertexList[graph], communities]]
+      check@ig@"modularity"[communitiesToMembershipChecked[VertexList[graph], communities], OptionValue["Resolution"]]
     ]
 
 
@@ -362,10 +363,11 @@ IGCommunitiesOptimalModularity[graph_?igGraphQ] :=
 PackageExport["IGCommunitiesMultilevel"]
 IGCommunitiesMultilevel::usage = "IGCommunitiesMultilevel[graph] finds communities using the Louvain method.";
 
-SyntaxInformation[IGCommunitiesMultilevel] = {"ArgumentsPattern" -> {_}};
-IGCommunitiesMultilevel[graph_?igGraphQ] :=
+Options[IGCommunitiesMultilevel] = { "Resolution" -> 1 };
+SyntaxInformation[IGCommunitiesMultilevel] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGCommunitiesMultilevel[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, memberships},
-      {modularity, membership, memberships} = check@ig@"communityMultilevel"[];
+      {modularity, membership, memberships} = check@ig@"communityMultilevel"[N@OptionValue["Resolution"]];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
         "Modularity" -> modularity,

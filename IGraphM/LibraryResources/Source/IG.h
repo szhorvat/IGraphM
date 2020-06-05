@@ -2241,11 +2241,11 @@ public:
 
     // Community detection
 
-    double modularity(mma::RealTensorRef t) const {
+    double modularity(mma::RealTensorRef t, double resolution) const {
         igraph_vector_t membership = igVectorView(t);
-        double res;
-        igCheck(igraph_modularity(&graph, &membership, &res, passWeights()));
-        return res;
+        double Q;
+        igCheck(igraph_modularity(&graph, &membership, passWeights(), resolution, &Q));
+        return Q;
     }
 
     /*
@@ -2312,7 +2312,7 @@ public:
             igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, nullptr, nullptr));
             computeMembership(n_communities, merges, membership);
             modularity.resize(1);
-            igraph_modularity(&graph, &membership.vec, modularity.begin() /* ptr to first vec elem */, passWeights());
+            igraph_modularity(&graph, &membership.vec, passWeights(), /* resolution= */ 1, modularity.begin() /* ptr to first vec elem */);
         }
 
         ml.newPacket();
@@ -2336,12 +2336,13 @@ public:
 
     void communityMultilevel(MLINK link) const {
         mlStream ml{link, "communityMultilevel"};
-        ml >> mlCheckArgs(0);
+        double resolution;
+        ml >> mlCheckArgs(1) >> resolution;
 
         igVector modularity, membership;
         igMatrix memberships;
 
-        igCheck(igraph_community_multilevel(&graph, passWeights(), &membership.vec, &memberships.mat, &modularity.vec));
+        igCheck(igraph_community_multilevel(&graph, passWeights(), resolution, &membership.vec, &memberships.mat, &modularity.vec));
 
         ml.newPacket();
         ml << mlHead("List", 3) << modularity << membership << memberships;
@@ -2533,7 +2534,7 @@ public:
             finalMembership = membership;
             igraph_integer_t cc = 1 + static_cast<igraph_integer_t>( *std::max_element(membership.begin(), membership.end()) );
             igCheck(igraph_le_community_to_membership(&merges.mat, cc - n_communities, &membership.vec, nullptr));
-            igCheck(igraph_modularity(&graph, &membership.vec, &modularity, passWeights()));
+            igCheck(igraph_modularity(&graph, &membership.vec, passWeights(), /* resolution= */ 1, &modularity));
         }
 
         ml.newPacket();
