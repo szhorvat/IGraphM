@@ -198,6 +198,11 @@ PackageScope["infToZero"]
 infToZero::usage = "infToZero[arg] returns 0 if arg === Infinity.";
 infToZero[arg_] := Replace[arg, Infinity -> 0]
 
+(* Replace Infinity by -1 *)
+PackageScope["infToNeg"]
+infToNeg::usage = "infToNeg[arg] returns 0 if arg === Infinity.";
+infToNeg[arg_] := Replace[arg, Infinity -> -1]
+
 (* Unpack array containing infinities or indeterminates *)
 (* TODO: Test on all platforms that unpacking such arrays produces usable Infinity and Indeterminate *)
 PackageScope["fixInfNaN"]

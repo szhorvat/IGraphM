@@ -80,7 +80,7 @@ IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, {}, opt : OptionsPatt
 IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
       check@ig@"betweennessEstimate"[
-        infToZero[cutoff],
+        infToNeg[cutoff],
         Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweennessEstimate::bdmtd, OptionValue[Method]]; False],
         OptionValue[Normalized],
         vss[g][vs]
@@ -95,7 +95,7 @@ IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff] est
 Options[IGEdgeBetweennessEstimate] = { Normalized -> False };
 SyntaxInformation[IGEdgeBetweennessEstimate] = {"ArgumentsPattern" -> {_, _}};
 IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, OptionsPattern[]] :=
-    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"[infToZero[cutoff], OptionValue[Normalized]]]
+    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"[infToNeg[cutoff], OptionValue[Normalized]]]
 
 
 PackageExport["IGClosenessEstimate"]
@@ -109,7 +109,7 @@ IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, {}, opt : OptionsPatter
 IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
       If[VertexCount[g] == 1, Developer`FromPackedArray, Identity] @ (* prevent {Indeterminate} packed array, which may misbehave, for single-vertex graph *)
-        check@ig@"closenessEstimate"[infToZero[cutoff], OptionValue[Normalized], vss[g][vs]]
+        check@ig@"closenessEstimate"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]]
     ]
 
 
