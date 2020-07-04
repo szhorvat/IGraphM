@@ -210,12 +210,16 @@ IGModularity::usage =
     "IGModularity[graph, {{v11, v12, \[Ellipsis]}, {v21, v22, \[Ellipsis]}, \[Ellipsis]}] gives the modularity the specified partitioning of graph's vertices into communities. Edge directions are ignored.\n" <>
     "IGModularity[graph, clusterdata] uses the partitioning specified by an IGClusterData object.";
 
-Options[IGModularity] = { "Resolution" -> 1 };
+Options[IGModularity] = { "Resolution" -> 1, DirectedEdges -> False };
 SyntaxInformation[IGModularity] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGModularity[graph_?igGraphQ, clusters_?igClusterDataQ, opt : OptionsPattern[]] := IGModularity[graph, clusters["Communities"], opt]
 IGModularity[graph_?igGraphQ, communities : {__List}, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      check@ig@"modularity"[communitiesToMembershipChecked[VertexList[graph], communities], OptionValue["Resolution"]]
+      check@ig@"modularity"[
+        communitiesToMembershipChecked[VertexList[graph], communities],
+        OptionValue["Resolution"],
+        Replace[OptionValue[DirectedEdges], Automatic -> UndirectedGraphQ[graph]]
+      ]
     ]
 
 
