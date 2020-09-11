@@ -781,6 +781,6 @@ SyntaxInformation[IGColoredSimpleGraph] = {"ArgumentsPattern" -> {_}};
 IGColoredSimpleGraph[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeUnweighted[graph], new = igMakeEmpty[], vc, ec},
       {vc, ec} = check@new@"coloredSimpleGraph"[ManagedLibraryExpressionID[ig]];
-      (*igSetVertexProperty[igSetEdgeProperty[igToGraph[new], "EdgeColor", ec], "VertexColor", vc]*)
-      {igToGraph[new], "VertexColors" -> vc, "EdgeColors" -> ec}
+      (*igSetVertexProperty[igSetEdgeProperty[igToGraphWithNames[new, VertexList[graph]], "EdgeColor", ec], "VertexColor", vc]*)
+      {igToGraphWithNames[new, VertexList[graph]], "VertexColors" -> vc, "EdgeColors" -> ec}
     ]
