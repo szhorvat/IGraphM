@@ -118,12 +118,14 @@ public:
 
     void fromEdgeListML(MLINK link);
 
-    void realizeDegreeSequence(mma::RealTensorRef outdegs, mma::RealTensorRef indegs, mint method) {
+    void realizeDegreeSequence(mma::RealTensorRef outdegs, mma::RealTensorRef indegs, bool loops, bool multi, mint method) {
         destroy();
         igraph_vector_t out = igVectorView(outdegs);
-        igraph_vector_t in = igVectorView(indegs);
-        igraph_realize_degseq_t ig_method;
+        igraph_vector_t in = igVectorView(indegs);        
 
+        igraph_edge_type_sw_t et = (loops ? IGRAPH_LOOPS_SW : IGRAPH_SIMPLE_SW) | (multi ? IGRAPH_MULTI_SW : IGRAPH_SIMPLE_SW);
+
+        igraph_realize_degseq_t ig_method;
         switch (method) {
         case 0: ig_method = IGRAPH_REALIZE_DEGSEQ_SMALLEST; break;
         case 1: ig_method = IGRAPH_REALIZE_DEGSEQ_LARGEST; break;
@@ -131,7 +133,7 @@ public:
         default: throw mma::LibraryError("Unknown degree sequence realization method.");
         }
 
-        igConstructorCheck(igraph_realize_degree_sequence(&graph, &out, &in, ig_method));
+        igConstructorCheck(igraph_realize_degree_sequence(&graph, &out, indegs.size() == 0 ? nullptr : &in, et, ig_method));
     }
 
     void fromLCF(mint n, mma::RealTensorRef v, mint repeats) {

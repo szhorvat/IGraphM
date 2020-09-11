@@ -44,21 +44,33 @@ IGLCF[shifts_?intVecQ, repeats : _?Internal`PositiveMachineIntegerQ : 1, n : (_?
 
 PackageExport["IGRealizeDegreeSequence"]
 IGRealizeDegreeSequence::usage =
-    "IGRealizeDegreeSequence[degseq] gives an undirected graph having the given degree sequence.\n" <>
-    "IGRealizeDegreeSequence[outdegseq, indegseq] gives a directed graph having the given out- and in-degree sequences.\n";
+    "IGRealizeDegreeSequence[degrees] gives an undirected graph having the given degree sequence.\n" <>
+    "IGRealizeDegreeSequence[indegrees, outdegrees] gives a directed graph having the given out- and in-degree sequences.\n";
 
-Options[IGRealizeDegreeSequence] = { Method -> "SmallestFirst" };
+Options[IGRealizeDegreeSequence] = {
+  Method -> "SmallestFirst",
+  SelfLoops -> False,
+  MultiEdges -> False
+};
 igRealizeDegreeSequenceMethods = <|"SmallestFirst" -> 0, "LargestFirst" -> 1, "Index" -> 2|>;
 amendUsage[IGRealizeDegreeSequence, "Available Method options: <*Keys[igRealizeDegreeSequenceMethods]*>."];
 SyntaxInformation[IGRealizeDegreeSequence] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGRealizeDegreeSequence, Graph]};
 IGRealizeDegreeSequence[degrees_?intVecQ, opt : OptionsPattern[{IGRealizeDegreeSequence, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"realizeDegreeSequence"[degrees, {}, Lookup[igRealizeDegreeSequenceMethods, OptionValue[Method], -1]];
+      check@ig@"realizeDegreeSequence"[
+        degrees, {},
+        OptionValue[SelfLoops], OptionValue[MultiEdges],
+        Lookup[igRealizeDegreeSequenceMethods, OptionValue[Method], -1]
+      ];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
-IGRealizeDegreeSequence[outdeg_?intVecQ, indeg_?intVecQ, opt : OptionsPattern[{IGRealizeDegreeSequence, Graph}]] :=
+IGRealizeDegreeSequence[indeg_?intVecQ, outdeg_?intVecQ, opt : OptionsPattern[{IGRealizeDegreeSequence, Graph}]] :=
     catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"realizeDegreeSequence"[outdeg, indeg, Lookup[igRealizeDegreeSequenceMethods, OptionValue[Method], -1]];
+      check@ig@"realizeDegreeSequence"[
+        outdeg, indeg,
+        OptionValue[SelfLoops], OptionValue[MultiEdges],
+        Lookup[igRealizeDegreeSequenceMethods, OptionValue[Method], -1]
+      ];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
 

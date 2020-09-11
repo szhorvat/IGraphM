@@ -127,14 +127,23 @@ public:
         massert(false);
     }
 
-    bool graphicalQ(mma::RealTensorRef outdeg, mma::RealTensorRef indeg) {
+    bool graphicalQ(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, bool loops, bool multi) {
         igraph_vector_t ig_outdeg = igVectorView(outdeg);
         igraph_vector_t ig_indeg  = igVectorView(indeg);
         igraph_bool_t res;
+        igraph_edge_type_sw_t et = (loops ? IGRAPH_LOOPS_SW : IGRAPH_SIMPLE_SW) | (multi ? IGRAPH_MULTI_SW : IGRAPH_SIMPLE_SW);
         if (indeg.length() == 0)
-            igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, nullptr, &res));
+            igCheck(igraph_is_graphical(&ig_outdeg, nullptr, et, &res));
         else
-            igCheck(igraph_is_graphical_degree_sequence(&ig_outdeg, &ig_indeg, &res));
+            igCheck(igraph_is_graphical(&ig_outdeg, &ig_indeg, et, &res));
+        return res;
+    }
+
+    bool bigraphicalQ(mma::RealTensorRef deg1, mma::RealTensorRef deg2, bool multi) {
+        igraph_vector_t ig_deg1 = igVectorView(deg1);
+        igraph_vector_t ig_deg2 = igVectorView(deg2);
+        igraph_bool_t res;
+        igCheck(igraph_is_bigraphical(&ig_deg1, &ig_deg2, multi ? IGRAPH_MULTI_SW : IGRAPH_SIMPLE_SW, &res));
         return res;
     }
 

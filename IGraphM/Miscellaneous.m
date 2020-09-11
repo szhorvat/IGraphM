@@ -60,13 +60,28 @@ addCompletion[IGCoreness, {0, {"In", "Out", "All"}}]
 PackageExport["IGGraphicalQ"]
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if degrees is the degree sequence of any simple undirected graph.\n" <>
-    "IGGraphicalQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any simple directed graph.";
-
-SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _.}};
-IGGraphicalQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"erdosGallai"[degrees] (* use fast custom implementation instead of igraph *)
-IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] := sck@igraphGlobal@"graphicalQ"[outdeg, indeg]
+    "IGGraphicalQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any simple directed graph.\n" <>
+    "IGGraphicalQ[degrees, SelfLoops -> True] tests if degrees is the degree sequence of any undirected graph with at most one self-loop per vetrex.\n" <>
+    "IGGraphicalQ[degrees, MultiEdges -> True] tests if degrees is the degree sequence of any undirected loop-free multigraph.";
+Options[IGGraphicalQ] = { SelfLoops -> False, MultiEdges -> False };
+SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+IGGraphicalQ[{}, {}, opt : OptionsPattern[]] := True
+IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ, opt : OptionsPattern[]] :=
+    sck@igraphGlobal@"graphicalQ"[outdeg, indeg, OptionValue[SelfLoops], OptionValue[MultiEdges]]
+IGGraphicalQ[degrees_?nonNegIntVecQ, opt : OptionsPattern[]] :=
+    sck@igraphGlobal@"graphicalQ"[degrees, {}, OptionValue[SelfLoops], OptionValue[MultiEdges]]
+(*    sck@igraphGlobal@"erdosGallai"[degrees] *)(* use fast custom implementation instead of igraph *)
 IGGraphicalQ[___] := False
 
+
+PackageExport["IGBigraphicalQ"]
+IGBigraphicalQ::usage =
+    "IGBigraphicalQ[degrees1, degrees2] tests if (degrees1, degrees2) is the degree sequence of any bipartite simple graph.\n" <>
+    "IGBigraphicalQ[degrees1, degrees2, MultiEdges -> True] tests if (degrees1, degrees2) is the degree sequence of any bipartite multigraph.";
+Options[IGBigraphicalQ] = { MultiEdges -> False };
+SyntaxInformation[IGBigraphicalQ] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
+IGBigraphicalQ[deg1_?nonNegIntVecQ, deg2_?nonNegIntVecQ, opt : OptionsPattern[]] :=
+    sck@igraphGlobal@"bigraphicalQ"[deg1, deg2, OptionValue[MultiEdges]]
 
 (***** Dominators *****)
 
