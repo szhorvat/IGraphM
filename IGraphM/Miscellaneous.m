@@ -67,9 +67,9 @@ Options[IGGraphicalQ] = { SelfLoops -> False, MultiEdges -> False };
 SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGGraphicalQ[{}, {}, opt : OptionsPattern[]] := True
 IGGraphicalQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ, opt : OptionsPattern[]] :=
-    sck@igraphGlobal@"graphicalQ"[outdeg, indeg, OptionValue[SelfLoops], OptionValue[MultiEdges]]
+    sck@igraphGlobal@"graphicalQ"[outdeg, indeg, True, OptionValue[SelfLoops], OptionValue[MultiEdges]]
 IGGraphicalQ[degrees_?nonNegIntVecQ, opt : OptionsPattern[]] :=
-    sck@igraphGlobal@"graphicalQ"[degrees, {}, OptionValue[SelfLoops], OptionValue[MultiEdges]]
+    sck@igraphGlobal@"graphicalQ"[degrees, {}, False, OptionValue[SelfLoops], OptionValue[MultiEdges]]
 (*    sck@igraphGlobal@"erdosGallai"[degrees] *)(* use fast custom implementation instead of igraph *)
 IGGraphicalQ[___] := False
 

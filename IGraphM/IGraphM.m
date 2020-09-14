@@ -162,7 +162,7 @@ template = LTemplate["IGraphM",
         (* Graph related functions that do not use the IG data structure *)
 
         LFun["erdosGallai", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
-        LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), True|False (* loops *), True|False (* multi *)}, True|False],
+        LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), True|False (* directed *), True|False (* loops *), True|False (* multi *)}, True|False],
         LFun["bigraphicalQ", {{Real, 1, "Constant"} (* deg1 *), {Real, 1, "Constant"} (* deg2 *), True|False (* multi *)}, True|False],
 
         LFun["compareCommunities", {{Real, 1, "Constant"}, {Real, 1, "Constant"}, Integer (* method *)}, Real],
