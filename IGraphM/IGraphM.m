@@ -1093,7 +1093,7 @@ IGSeedRandom[seed : (_?Internal`NonNegativeMachineIntegerQ | Automatic) : Automa
         ]
       ];
       If[igraphGlobal@"randomGeneratorName"[] === "Mathematica",
-        SeedRandom[seed]
+        SeedRandom[seed]; (* ';' is needed in 12.2+ as SeedRandom no longer returns Null *)
         ,
         If[seed === Automatic,
           (* Notes on automatic seed generation for the igraph RNG:
