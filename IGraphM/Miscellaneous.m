@@ -83,6 +83,34 @@ SyntaxInformation[IGBigraphicalQ] = {"ArgumentsPattern" -> {_, _, OptionsPattern
 IGBigraphicalQ[deg1_?nonNegIntVecQ, deg2_?nonNegIntVecQ, opt : OptionsPattern[]] :=
     sck@igraphGlobal@"bigraphicalQ"[deg1, deg2, OptionValue[MultiEdges]]
 
+
+PackageExport["IGPotentiallyConnectedQ"]
+IGPotentiallyConnectedQ::usage =
+    "IGPotentiallyConnectedQ[degrees] tests if degrees is the degree sequence of any connected graph.\n" <>
+    "IGPotentiallyConnectedQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any strongly connected directed graph.";
+SyntaxInformation[IGPotentiallyConnectedQ] = {"ArgumentsPattern" -> {_, _.}};
+(* Undirected case:
+ * (no. of edges) >= (no. of vertices) - 1
+ * All degrees are at least 1.
+ * The singleton graph, which has one zero-degree vertex, is an exception.
+ *)
+IGPotentiallyConnectedQ[{}] := False (* the null graph is disconnected *)
+IGPotentiallyConnectedQ[{0}] := True (* the singleton graph is connected *)
+IGPotentiallyConnectedQ[degrees_?nonNegIntVecQ] :=
+    With[{tot = Total[degrees], len = Length[degrees]},
+      EvenQ[tot] && tot >= 2*(len-1) && Min[degrees] > 0 (* note: do not use FreeQ[degrees, 0, {1}] because it unpacks *)
+    ]
+(* Directed case:
+ * All in- and out-degrees must be at least 1, see e.g. https://dx.doi.org/10.1186%2Fs13660-017-1544-3, Theorem 3.1 condition (ii).
+ * The singleton graph, which has one zero-degree vertex, is an exception.
+ *)
+IGPotentiallyConnectedQ[{}, {}] := False (* the null graph is disconnected *)
+IGPotentiallyConnectedQ[{0}, {0}] := True (* the singleton graph is connected *)
+IGPotentiallyConnectedQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] :=
+    Total[indeg] == Total[outdeg] && Min[indeg] > 0 && Min[outdeg] > 0
+IGPotentiallyConnectedQ[___] := False
+
+
 (***** Dominators *****)
 
 PackageExport["IGDominatorTree"]
