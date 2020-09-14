@@ -2679,6 +2679,36 @@ public:
         return cores.makeMTensor();
     }
 
+    // Eulerian paths and cycles
+
+    bool eulerianQ(bool closed) const {
+        igraph_bool_t has_path, has_cycle;
+        igCheck(igraph_is_eulerian(&graph, &has_path, &has_cycle));
+        return closed ? has_cycle : has_path;
+    }
+
+    mma::RealTensorRef eulerianPath(bool closed) const {
+        igVector edges;
+
+        if (closed)
+            igCheck(igraph_eulerian_cycle(&graph, &edges.vec, nullptr));
+        else
+            igCheck(igraph_eulerian_path(&graph, &edges.vec, nullptr));
+
+        return edges.makeMTensor();
+    }
+
+    mma::RealTensorRef eulerianPathVertices(bool closed) const {
+        igVector vertices;
+
+        if (closed)
+            igCheck(igraph_eulerian_cycle(&graph, nullptr, &vertices.vec));
+        else
+            igCheck(igraph_eulerian_path(&graph, nullptr, &vertices.vec));
+
+        return vertices.makeMTensor();
+    }
+
     // Other
 
     mma::IntTensorRef treelikeComponents() const {

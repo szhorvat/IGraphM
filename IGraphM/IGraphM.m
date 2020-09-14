@@ -588,7 +588,13 @@ template = LTemplate["IGraphM",
         (* Coreness *)
         LFun["coreness", {Integer (* mode *)}, {Real, 1}],
 
+        (* Colouring *)
         LFun["vertexColoring", {}, {Integer, 1}],
+
+        (* Eulerian paths *)
+        LFun["eulerianQ", {True|False (* closed *)}, True|False],
+        LFun["eulerianPath", {True|False (* closed *)}, {Real, 1}],
+        LFun["eulerianPathVertices", {True|False (* closed *)}, {Real, 1}],
 
         (* Other functions *)
 

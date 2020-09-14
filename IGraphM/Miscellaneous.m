@@ -138,6 +138,42 @@ IGAverageDegreeConnectivity[graph_?igGraphQ, degMode_String : "Out", neiMode : _
 addCompletion[IGAverageDegreeConnectivity, {0, {"In", "Out", "All"}, {"In", "Out", "All"}}]
 
 
+(***** Eulerian paths *****)
+
+PackageExport["IGEulerianQ"]
+IGEulerianQ::usage =
+    "IGEulerianQ[graph] tests if graph has a path that traverses each edge once (Eulerian path).\n" <>
+    "IGEulerianQ[graph, Closed -> True] tests if graph has a cycle that traverses each edge once.";
+Options[IGEulerianQ] = { Closed -> False };
+SyntaxInformation[IGEulerianQ] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGEulerianQ[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    Block[{ig = igMakeUnweighted[graph]},
+      sck@ig@"eulerianQ"[OptionValue[Closed]]
+    ]
+
+PackageExport["IGEulerianPath"]
+IGEulerianPath::usage =
+    "IGEulerianPath[graph] returns the edges of an Eulerian path, if it exists.\n" <>
+    "IGEulerianPath[graph, Closed -> True] returns an Eulerian cycle.";
+Options[IGEulerianPath] = { Closed -> False };
+SyntaxInformation[IGEulerianPath] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGEulerianPath[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+      EdgeList[graph][[ igIndexVec@check@ig@"eulerianPath"[OptionValue[Closed]] ]]
+    ]
+
+PackageExport["IGEulerianPathVertices"]
+IGEulerianPathVertices::usage =
+    "IGEulerianPathVertices[graph] returns the vertices of an Eulerian path, if it exists.\n" <>
+    "IGEulerianPathVertices[graph, Closed -> True] returns the vertices of an Eulerian cycle.";
+Options[IGEulerianPathVertices] = { Closed -> False };
+SyntaxInformation[IGEulerianPathVertices] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGEulerianPathVertices[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+      VertexList[graph][[ igIndexVec@check@ig@"eulerianPathVertices"[OptionValue[Closed]] ]]
+    ]
+
+
 (***** Other functions *****)
 
 PackageExport["IGTreelikeComponents"]
