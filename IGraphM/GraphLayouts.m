@@ -293,8 +293,8 @@ IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldT
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> chooseRoots[graph]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         Composition[
-          RotationTransform[Pi + OptionValue["Rotation"]],
-          ScalingTransform[{OptionValue["LeafDistance"], OptionValue["LayerHeight"]}]
+          RotationTransform[OptionValue["Rotation"]],
+          ScalingTransform[{OptionValue["LeafDistance"], -OptionValue["LayerHeight"]}]
         ] @ check@ig@"layoutReingoldTilford"[roots, False]
       ]
     ]
