@@ -32,7 +32,7 @@ SyntaxInformation[IGLocalClusteringCoefficient] = {"ArgumentsPattern" -> {_, Opt
 (* See https://github.com/igraph/igraph/issues/907 for why SimpleGraph and UndirectedGraph are needed. *)
 IGLocalClusteringCoefficient[graph_?igGraphQ, OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[SimpleGraph@UndirectedGraph[graph]]},
-      fixInfNaN@check@ig@"transitivityLocalUndirected"[OptionValue["ExcludeIsolates"]]
+      expectInfNaN@fixInfNaN@check@ig@"transitivityLocalUndirected"[OptionValue["ExcludeIsolates"]]
     ]
 
 
@@ -54,5 +54,5 @@ Options[IGWeightedClusteringCoefficient] = { "ExcludeIsolates" -> False };
 SyntaxInformation[IGWeightedClusteringCoefficient] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGWeightedClusteringCoefficient[graph_?igGraphQ, OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      fixInfNaN@check@ig@"transitivityBarrat"[OptionValue["ExcludeIsolates"]]
+      expectInfNaN@fixInfNaN@check@ig@"transitivityBarrat"[OptionValue["ExcludeIsolates"]]
     ]

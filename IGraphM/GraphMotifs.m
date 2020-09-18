@@ -46,7 +46,7 @@ IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[
         True, ig@"makeDirected"[],
         False, ig@"makeUndirected"[]
       ];
-      Round@Developer`FromPackedArray@check@ig@"motifs"[size, ConstantArray[0, size]]
+      Round@Developer`FromPackedArray@expectInfNaN@check@ig@"motifs"[size, ConstantArray[0, size]]
     ]
 IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
@@ -54,7 +54,7 @@ IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ, 
         True, ig@"makeDirected"[],
         False, ig@"makeUndirected"[]
       ];
-      Round@Developer`FromPackedArray@check@ig@"motifs"[size, cutprob]
+      Round@Developer`FromPackedArray@expectInfNaN@check@ig@"motifs"[size, cutprob]
     ]
 
 

@@ -54,22 +54,22 @@ IGDistanceMatrix[graph_?igGraphQ, from : (_List | All) : All, to : (_List | All)
 
 igDistanceMatrixUnweighted[graph_, from_, to_] :=
     Block[{ig = igMakeFast[graph]},
-      Round@fixInfNaN@check@ig@"shortestPaths"[from, to]
+      Round@expectInfNaN@fixInfNaN@check@ig@"shortestPaths"[from, to]
     ]
 
 igDistanceMatrixDijkstra[graph_, from_, to_] :=
     Block[{ig = igMakeFastWeighted[graph]},
-      fixInfNaN@check@ig@"shortestPathsDijkstra"[from, to]
+      expectInfNaN@fixInfNaN@check@ig@"shortestPathsDijkstra"[from, to]
     ]
 
 igDistanceMatrixBellmanFord[graph_, from_, to_] :=
     Block[{ig = igMakeFastWeighted[graph]},
-      fixInfNaN@check@ig@"shortestPathsBellmanFord"[from, to]
+      expectInfNaN@fixInfNaN@check@ig@"shortestPathsBellmanFord"[from, to]
     ]
 
 igDistanceMatrixJohnson[graph_, from_, to_] :=
     Block[{ig = igMakeFastWeighted[graph]},
-      fixInfNaN@check@ig@"shortestPathsJohnson"[from, to]
+      expectInfNaN@fixInfNaN@check@ig@"shortestPathsJohnson"[from, to]
     ]
 
 

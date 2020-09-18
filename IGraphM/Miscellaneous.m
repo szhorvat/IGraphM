@@ -147,7 +147,7 @@ SyntaxInformation[IGAverageNeighborDegree] = {"ArgumentsPattern" -> {_, _., _., 
 IGAverageNeighborDegree[graph_?igGraphQ, {}, degMode_String : "Out", neiMode : _String | Automatic : Automatic] := {}
 IGAverageNeighborDegree[graph_?igGraphQ, vs : (_List | All) : All, degMode_String : "Out", neiMode : _String | Automatic : Automatic] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      fixInfNaN@check@ig@"averageNeighborDegree"[vss[graph][vs], encodeNeighborMode@Replace[neiMode, Automatic -> degMode], encodeNeighborMode[degMode]]
+      expectInfNaN@fixInfNaN@check@ig@"averageNeighborDegree"[vss[graph][vs], encodeNeighborMode@Replace[neiMode, Automatic -> degMode], encodeNeighborMode[degMode]]
     ]
 addCompletion[IGAverageNeighborDegree, {0, 0, {"In", "Out", "All"}, {"In", "Out", "All"}}]
 
@@ -161,7 +161,7 @@ IGAverageDegreeConnectivity::usage =
 SyntaxInformation[IGAverageDegreeConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
 IGAverageDegreeConnectivity[graph_?igGraphQ, degMode_String : "Out", neiMode : _String | Automatic : Automatic] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      fixInfNaN@check@ig@"averageDegreeConnectivity"[encodeNeighborMode@Replace[neiMode, Automatic -> degMode], encodeNeighborMode[degMode]]
+      expectInfNaN@fixInfNaN@check@ig@"averageDegreeConnectivity"[encodeNeighborMode@Replace[neiMode, Automatic -> degMode], encodeNeighborMode[degMode]]
     ]
 addCompletion[IGAverageDegreeConnectivity, {0, {"In", "Out", "All"}, {"In", "Out", "All"}}]
 

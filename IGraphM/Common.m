@@ -203,13 +203,29 @@ PackageScope["infToNeg"]
 infToNeg::usage = "infToNeg[arg] returns 0 if arg === Infinity.";
 infToNeg[arg_] := Replace[arg, Infinity -> -1]
 
+(* Temporarily disable floating point exception checking in LibraryLink *)
+PackageScope["expectInfNaN"]
+expectInfNaN::usage = "expectInfNaN[expr] evaluates expr with settings that allow LibraryLink functions to return Infinity or Indeterminate.";
+If[$VersionNumber >= 12.2,
+  SetAttributes[expectInfNaN, HoldAll];
+  expectInfNaN[expr_] :=
+      With[{llo = SystemOptions["LibraryLinkOptions" -> "TestFloatingPointExceptions"]},
+        Internal`WithLocalSettings[
+          SetSystemOptions["LibraryLinkOptions" -> "TestFloatingPointExceptions" -> False],
+          expr,
+          SetSystemOptions[llo]
+        ]
+      ]
+  ,
+  expectInfNaN[expr_] := expr
+]
+
 (* Unpack array containing infinities or indeterminates *)
 (* TODO: Test on all platforms that unpacking such arrays produces usable Infinity and Indeterminate *)
 PackageScope["fixInfNaN"]
 fixInfNaN::usage = "fixInfNaN[array] unpacks array if it contains Inf or NaN.";
-fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Developer`FromPackedArray[arr], arr]
+fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Developer`FromPackedArray[arr], arr];
 fixInfNaN[arr_] := arr
-
 
 (***** Workarounds for old versions missing some functions *****)
 
