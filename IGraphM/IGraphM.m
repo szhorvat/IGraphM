@@ -166,6 +166,7 @@ template = LTemplate["IGraphM",
         LFun["bigraphicalQ", {{Real, 1, "Constant"} (* deg1 *), {Real, 1, "Constant"} (* deg2 *), True|False (* multi *)}, True|False],
 
         LFun["splitQ", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
+        LFun["thresholdQ", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
 
         LFun["compareCommunities", {{Real, 1, "Constant"}, {Real, 1, "Constant"}, Integer (* method *)}, Real],
 

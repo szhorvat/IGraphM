@@ -169,6 +169,45 @@ public:
         return dsum1 == m*(m-1) + dsum2;
     }
 
+    // Recognize the degree sequence of a threshold graph
+    // Algorithm: Repeatedly remove isolated or dominating vertices.
+    // If nothing remains, the graph is a threshold graph.
+    bool thresholdQ(mma::IntTensorRef d) {
+        std::sort(d.begin(), d.end(), std::greater<mint>());
+
+        mint n = d.size();
+        mint l = 0, h = n-1;
+        mint offset = 0; // after some vertex removals, actual degrees are 'offset' lower than stored degrees
+
+        if (n == 0)
+            return true;
+
+        if (d[l] > n-1 || d[h] < 0)
+            return false;
+
+        while (n > 0) {
+            // Remvove isolated vertices
+            while (d[h] == offset && n > 0) {
+                h--;
+                n--;
+            }
+
+            if (n == 0)
+                break;
+
+            // There must be a dominating vertex now
+            if (d[l] == n-1 + offset) {
+                l++;
+                n--;
+                offset += 1;
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     double compareCommunities(mma::RealTensorRef c1, mma::RealTensorRef c2, mint m) const {
         igraph_community_comparison_t method;
         switch (m) {

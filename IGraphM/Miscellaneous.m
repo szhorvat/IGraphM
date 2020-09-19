@@ -125,6 +125,23 @@ IGSplitQ[graph_?DirectedGraphQ] := (Message[IGSplitQ::dirg]; $Failed)
 IGSplitQ[graph_?MixedGraphQ] := (Message[IGraphM::mixed]; $Failed)
 IGSplitQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"splitQ"[degrees]
 IGSplitQ[_] := False
+
+
+PackageExport["IGThresholdQ"]
+IGThresholdQ::usage =
+    "IGThresholdQ[graph] tests if graph is a threshold graph.\n" <>
+    "IGThresholdQ[degrees] tests if degrees form a threshold degree sequence.";
+
+IGThresholdQ::dirg = "Directed graphs are not currently supported.";
+
+SyntaxInformation[IGThresholdQ] = {"ArgumentsPattern" -> {_}};
+IGThresholdQ[graph_?UndirectedGraphQ] :=
+    sck@igraphGlobal@"thresholdQ"[ VertexDegree@SimpleGraph[graph] ]
+IGThresholdQ[graph_?DirectedGraphQ] := (Message[IGThresholdQ::dirg]; $Failed)
+IGThresholdQ[graph_?MixedGraphQ] := (Message[IGraphM::mixed]; $Failed)
+IGThresholdQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"thresholdQ"[degrees]
+
+
 (***** Dominators *****)
 
 PackageExport["IGDominatorTree"]
