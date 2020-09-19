@@ -3,6 +3,11 @@
 (* Reminder: Avoid mentioning any non-System` symbols in this file,
    otherwise they will be created in Global` when the package is loaded. *)
 
+If[$CloudEvaluation,
+  Print["IGraph/M cannot run in the Wolfram Cloud because the cloud does not support LibraryLink.  Aborting."];
+  Abort[]
+]
+
 (* TODO!
    In M12.1.0, the FE will hang if Needs["IGraphM`"] is evaluated within a certain amount of time
    after kernel startup. The hung FE can be recovered by killing the kernel.
