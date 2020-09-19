@@ -165,6 +165,8 @@ template = LTemplate["IGraphM",
         LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), True|False (* directed *), True|False (* loops *), True|False (* multi *)}, True|False],
         LFun["bigraphicalQ", {{Real, 1, "Constant"} (* deg1 *), {Real, 1, "Constant"} (* deg2 *), True|False (* multi *)}, True|False],
 
+        LFun["splitQ", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
+
         LFun["compareCommunities", {{Real, 1, "Constant"}, {Real, 1, "Constant"}, Integer (* method *)}, Real],
 
         LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 2}],

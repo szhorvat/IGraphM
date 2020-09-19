@@ -224,3 +224,14 @@ IGIndependenceNumber::usage = "IGIndependenceNumber[graph] gives the independenc
 
 SyntaxInformation[IGIndependenceNumber] = {"ArgumentsPattern" -> {_}};
 IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"independenceNumber"[]]
+
+
+PackageExport["IGSplitQ"]
+IGSplitQ::usage =
+    "IGSplitQ[graph] tests if graph is a split graph.\n" <>
+    "IGSplitQ[degrees] tests if degrees is the degree sequence of a split graph.";
+SyntaxInformation[IGSplitQ] = {"ArgumentsPattern" -> {_}};
+IGSplitQ[graph_?igGraphQ] :=
+    sck@igraphGlobal@"splitQ"[ VertexDegree@SimpleGraph@UndirectedGraph[graph] ]
+IGSplitQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"splitQ"[degrees]
+IGSplitQ[_] := False

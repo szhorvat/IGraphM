@@ -147,6 +147,27 @@ public:
         return res;
     }
 
+    // Recognize the degree sequence of a split graph.
+    // https://en.wikipedia.org/wiki/Split_graph#Degree_sequences
+    bool splitQ(mma::IntTensorRef d) {
+        std::sort(d.begin(), d.end(), std::greater<mint>());
+
+        mint dsum1 = 0;
+        mint m = 0;
+        for (; m < d.size(); ++m) {
+            if (d[m] < m)
+                break;
+            dsum1 += d[m];
+        }
+
+        mint dsum2 = 0;
+        for (mint i=m; i < d.size(); ++i) {
+            dsum2 += d[i];
+        }
+
+        return dsum1 == m*(m-1) + dsum2;
+    }
+
     double compareCommunities(mma::RealTensorRef c1, mma::RealTensorRef c2, mint m) const {
         igraph_community_comparison_t method;
         switch (m) {
