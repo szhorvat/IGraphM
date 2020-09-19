@@ -79,7 +79,7 @@ samePropGraphQ[g1_, g2_] :=
     ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Test graphs*)
 
 
@@ -176,7 +176,7 @@ asymmList = {
 };
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Sanity checks for Mathematica built-ins*)
 
 
@@ -257,7 +257,7 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Tests for IncidenceMatrix*)
 
 
@@ -283,26 +283,12 @@ MT[
  * This is relevant for IG::fromIncidenceMatrix() in IG.h, however this function is already
  * written in a way that it should be immune to such a change.
  *)
+If[$VersionNumber < 12.1, (* behaviour has been updated to match the docs in 12.1 *)
+
 MT[
   Normal@IncidenceMatrix[Graph[{a, b}, {b -> b}]],
   {{0}, {2}}
-]
-
-MT[
-  Normal@IncidenceMatrix@Graph[Range[10], {1 <-> 8, 8 <-> 10, 6 <-> 10, 2 <-> 2, 7 <-> 1,
-    8 <-> 9, 3 <-> 8, 2 <-> 7, 1 <-> 2, 3 <-> 3, 1 <-> 6, 6 <-> 5,
-    3 <-> 2, 10 <-> 9, 10 <-> 9}],
-  {{1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
-    {0, 0, 0, 2, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-    {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
-    {0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-    {1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-    {0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1}}
-]
+];
 
 MT[
   Normal@IncidenceMatrix@Graph[Range[10], {DirectedEdge[6, 9], DirectedEdge[3, 7],
@@ -321,6 +307,24 @@ MT[
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, 0, 0, 1, 1},
     {0, 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 0, 0, -1}}
+]
+
+] (* end If *)
+
+MT[
+  Normal@IncidenceMatrix@Graph[Range[10], {1 <-> 8, 8 <-> 10, 6 <-> 10, 2 <-> 2, 7 <-> 1,
+    8 <-> 9, 3 <-> 8, 2 <-> 7, 1 <-> 2, 3 <-> 3, 1 <-> 6, 6 <-> 5,
+    3 <-> 2, 10 <-> 9, 10 <-> 9}],
+  {{1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0},
+    {0, 0, 0, 2, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0},
+    {0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 1, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+    {0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+    {0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+    {1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+    {0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1}}
 ]
 
 
@@ -1857,14 +1861,14 @@ MT[
 (* TODO ensure that In,Out version respects SelfLoops and MultiEdges setting *)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Acyclic graphs*)
 
 
 MTSection["Acyclic graphs"]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGTopologicalOrdering*)
 
 
@@ -1890,8 +1894,8 @@ MT[
 (* behaviour with non-acylic graph *)
 MT[
   IGTopologicalOrdering[CycleGraph[3, DirectedEdges -> True]],
-  {},
-  {IGraphM::warning}
+  $Failed,
+  {IGraphM::error}
 ]
 
 
@@ -5790,6 +5794,45 @@ MTSection["Degree sequences"]
 
 
 MT[
+  IGGraphicalQ[{}],
+  True
+]
+
+MT[
+  IGGraphicalQ[{0, 0, 0}],
+  True
+]
+
+
+MT[
+  IGGraphicalQ[{}, {}],
+  True
+]
+
+MT[
+  IGGraphicalQ[{0}, {0}],
+  True
+]
+
+
+(* ::Text:: *)
+(*Non-matching in- and out-degree vector lengths:*)
+
+
+MT[
+  IGGraphicalQ[{0}, {}],
+  $Failed,
+  {IGraphM::error}
+]
+
+MT[
+  IGGraphicalQ[{}, {0}],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
   IGGraphicalQ@VertexDegree[#],
   True
 ]& /@ ulist
@@ -5820,6 +5863,37 @@ MT[
 
 
 MT[
+  IGGraphicalQ[{1, 2, 3}],
+  False
+]
+
+MT[
+  IGGraphicalQ[{3, 2, 1}],
+  False
+]
+
+MT[
+  IGGraphicalQ[{3, 2, 1}, MultiEdges -> True],
+  True
+]
+
+MT[
+  IGGraphicalQ[{5, 2, 1}],
+  False
+]
+
+MT[
+  IGGraphicalQ[{5, 2, 1}, MultiEdges -> True],
+  False
+]
+
+MT[
+  IGGraphicalQ[{5, 2, 1}, MultiEdges -> True, SelfLoops -> True],
+  True
+]
+
+
+MT[
   IGGraphicalQ[{4,4,4,1,1,1,1}],
   False
 ]
@@ -5844,7 +5918,42 @@ MT[
 
 
 MT[
+  IGGraphicalQ[{0}, {0}],
+  True
+]
+
+
+MT[
+  IGGraphicalQ[{1, 1, 1}],
+  False
+]
+
+
+MT[
+  IGGraphicalQ[{-1}],
+  False
+]
+
+MT[
+  IGGraphicalQ[{1}, {-1}],
+  False
+]
+
+
+MT[
+  IGGraphicalQ[{0}, {0, 0}],
+  $Failed,
+  {IGraphM::error}
+]
+
+
+MT[
   IGGraphicalQ[{}],
+  True
+]
+
+MT[
+  IGGraphicalQ[{}, {}],
   True
 ]
 
@@ -5874,6 +5983,73 @@ MT[
 
 
 (* ::Subsubsection::Closed:: *)
+(*IGBigraphicalQ*)
+
+
+MT[
+  IGBigraphicalQ[{}, {}],
+  True
+]
+
+MT[
+  IGBigraphicalQ[{}, {0, 0}],
+  True
+]
+
+MT[
+  IGBigraphicalQ[{}, {0, 0}, MultiEdges -> True],
+  True
+]
+
+
+MT[
+  IGBigraphicalQ @@ {{3, 3}, {1, 2, 3}},
+  False
+]
+
+MT[
+  IGBigraphicalQ @@ {{3, 1, 2}, {3, 3}},
+  False
+]
+
+MT[
+  IGBigraphicalQ @@ {{2, 2, 2}, {3, 3}},
+  True
+]
+
+MT[
+  IGBigraphicalQ @@ {{2, 2, 2}, {0, 0, 0, 3, 3}},
+  True
+]
+
+MT[
+  IGBigraphicalQ @@ {{2, 2, 2, 0, 0}, {3, 3}},
+  True
+]
+
+MT[
+  IGBigraphicalQ @@ {{1, 2, 3}, {3, 2, 1}},
+  True
+]
+
+MT[
+  IGBigraphicalQ @@ {{1, 2, 3}, {3, 1, 1}},
+  False
+]
+
+
+MT[
+  IGBigraphicalQ[{1, 2, 3}, {3, 1, 1}, MultiEdges -> True],
+  False
+]
+
+MT[
+  IGBigraphicalQ[{1, 2, 3}, {3, 3}, MultiEdges -> True],
+  True
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*IGRealizeDegreeSequence*)
 
 
@@ -5892,7 +6068,7 @@ Do[
 
 Do[
   MT[
-    Through[{VertexOutDegree,VertexInDegree}@IGRealizeDegreeSequence[VertexOutDegree[g],VertexInDegree[g],Method->m]],
+    Through[{VertexInDegree,VertexOutDegree}@IGRealizeDegreeSequence[VertexOutDegree[g],VertexInDegree[g],Method->m]],
     {VertexOutDegree[g],VertexInDegree[g]}
   ],
   {g,dlist}, {m,{"LargestFirst","SmallestFirst","Index"}}
@@ -5997,19 +6173,19 @@ MT[
 
 
 MT[
-  IGRealizeDegreeSequence[{3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, {2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, Method -> "LargestFirst"],
+  IGRealizeDegreeSequence[{2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, {3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, Method -> "LargestFirst"],
   Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {8 -> 1, 2 -> 8, 7 -> 8, 7 -> 2, 7 -> 5, 7 -> 1, 7 -> 3, 6 -> 8, 6 -> 9, 1 -> 8, 1 -> 6, 1 -> 2, 3 -> 5, 3 -> 7, 9 -> 4}],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGRealizeDegreeSequence[{3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, {2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, Method -> "SmallestFirst"],
+  IGRealizeDegreeSequence[{2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, {3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, Method -> "SmallestFirst"],
   Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {9 -> 8, 6 -> 8, 6 -> 1, 3 -> 8, 3 -> 2, 2 -> 5, 8 -> 7, 7 -> 1, 7 -> 8, 7 -> 5, 7 -> 2, 7 -> 3, 1 -> 6, 1 -> 9, 1 -> 4}],
   SameTest -> IGSameGraphQ
 ]
 
 MT[
-  IGRealizeDegreeSequence[{3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, {2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, Method -> "Index"],
+  IGRealizeDegreeSequence[{2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, {3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, Method -> "Index"],
   Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {1 -> 8, 1 -> 2, 1 -> 5, 2 -> 8, 3 -> 8, 3 -> 1, 6 -> 7, 6 -> 8, 7 -> 9, 7 -> 6, 7 -> 1, 7 -> 3, 7 -> 2, 8 -> 5, 9 -> 4}],
   SameTest -> IGSameGraphQ
 ]
@@ -6205,6 +6381,173 @@ MT[
 MT[
   IGAverageDegreeConnectivity[IGKRegularGame[100, 3]],
   {Indeterminate, Indeterminate, 3.}
+]
+
+
+(* ::Section::Closed:: *)
+(*Cycles*)
+
+
+MTSection["Cycles"]
+
+
+(* ::Subsection::Closed:: *)
+(*Eulerian cycles*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGEulerianQ*)
+
+
+MT[
+  IGEulerianQ[IGEmptyGraph[#]],
+  True
+]& /@ Range[0,4]
+
+MT[
+  IGEulerianQ[IGEmptyGraph[#], Closed -> True],
+  True
+]& /@ Range[0,4]
+
+
+MT[
+  IGEulerianQ[PathGraph[Range[5]]],
+  True
+]
+
+MT[
+  IGEulerianQ[PathGraph[Range[5]], Closed -> True],
+  False
+]
+
+
+MT[
+  IGEulerianQ[Graph[{1, 2}, {1 <-> 1}]],
+  True
+]
+
+MT[
+  IGEulerianQ[Graph[{1 <-> 1, 2 <-> 2}]],
+  False
+]
+
+MT[
+  IGEulerianQ[Graph[{1, 2}, {1 <-> 1, 1 <-> 1}]],
+  True
+]
+
+MT[
+  IGEulerianQ[Graph[{1 <-> 1, 2 <-> 2, 1 <-> 2}]],
+  True
+]
+
+MT[
+  IGEulerianQ[Graph[{1 <-> 1, 2 <-> 2, 1 <-> 2}], Closed -> True],
+  False
+]
+
+MT[
+  IGEulerianQ[Graph[{1 <-> 2, 1 <-> 2}], Closed -> True],
+  True
+]
+
+MT[
+  IGEulerianQ[Graph[{1 <-> 2, 1 <-> 2, 1 <-> 2}], Closed -> True],
+  False
+]
+
+MT[
+  IGEulerianQ[Graph[{1 <-> 2, 1 <-> 2, 1 <-> 2}], Closed -> False],
+  True
+]
+
+
+MT[
+  IGEulerianQ[Graph[{1 -> 2, 2 -> 3, 1 -> 3}]],
+  False
+]
+
+MT[
+  IGEulerianQ[Graph[{1 -> 2, 2 -> 3, 3 -> 1}]],
+  True
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGEulerianPath and IGEulerianPathVertices*)
+
+
+MT[
+  IGEulerianPath[Graph[{}]],
+  {}
+]
+
+MT[
+  IGEulerianPath[Graph[{1, 2}, {}]],
+  {}
+]
+
+MT[
+  IGEulerianPath[Graph[{1, 2}, {1 <-> 1}]],
+  {UndirectedEdge[1, 1]}
+]
+
+MT[
+  IGEulerianPath[CycleGraph[5]],
+  {UndirectedEdge[1, 2], UndirectedEdge[2, 3], UndirectedEdge[3, 4], UndirectedEdge[4, 5], UndirectedEdge[1, 5]}
+]
+
+MT[
+  IGEulerianPath[CycleGraph[5, DirectedEdges -> True]],
+  {DirectedEdge[1, 2], DirectedEdge[2, 3], DirectedEdge[3, 4], DirectedEdge[4, 5], DirectedEdge[5, 1]}
+]
+
+
+MT[
+  IGEulerianPathVertices[Graph[{}]],
+  {}
+]
+
+MT[
+  IGEulerianPathVertices[Graph[{1, 2, 3}, {}]],
+  {}
+]
+
+MT[
+  IGEulerianPathVertices[Graph[{1 <-> 2, 1 <-> 2}]],
+  {1, 2, 1}
+]
+
+MT[
+  IGEulerianPathVertices[Graph[{1 <-> 2, 1 <-> 2, 1 <-> 2}]],
+  {1, 2, 1, 2}
+]
+
+MT[
+  IGEulerianPathVertices[Graph[{1 <-> 1}]],
+  {1, 1}
+]
+
+MT[
+  IGEulerianPathVertices[Graph[{1 <-> 2, 1 <-> 3, 2 <-> 4, 1 <-> 4}]],
+  {1, 2, 4, 1, 3}
+]
+
+
+(* ::Text:: *)
+(*Non-Eulerian input:*)
+
+
+MT[
+  IGEulerianPath[Graph[{1 -> 2, 3 -> 2}]],
+  $Failed,
+  {IGraphM::error}
+]
+
+MT[
+  IGEulerianPathVertices[Graph[{1 -> 2, 3 -> 2}]],
+  $Failed,
+  {IGraphM::error}
 ]
 
 
