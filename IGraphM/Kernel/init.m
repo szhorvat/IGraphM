@@ -20,7 +20,7 @@ If[$CloudEvaluation,
      - Disabling SyntaxInformation using (Unprotect[SyntaxInformation]; SyntaxInformation = dummy) avoids the hang.
  *)
 If[$VersionNumber == 12.1 && SessionTime[] < 3,
-  Pause[1]
+  Pause[1.5]
 ]
 
 (* Mathematica version check *)
