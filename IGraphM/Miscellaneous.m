@@ -111,6 +111,20 @@ IGPotentiallyConnectedQ[indeg_?nonNegIntVecQ, outdeg_?nonNegIntVecQ] :=
 IGPotentiallyConnectedQ[___] := False
 
 
+PackageExport["IGSplitQ"]
+IGSplitQ::usage =
+    "IGSplitQ[graph] tests if graph is a split graph.\n" <>
+    "IGSplitQ[degrees] tests if degrees is the degree sequence of a split graph.";
+
+IGSplitQ::dirg = "Directed graphs are not currently supported.";
+
+SyntaxInformation[IGSplitQ] = {"ArgumentsPattern" -> {_}};
+IGSplitQ[graph_?UndirectedGraphQ] :=
+    sck@igraphGlobal@"splitQ"[ VertexDegree@SimpleGraph[graph] ]
+IGSplitQ[graph_?DirectedGraphQ] := (Message[IGSplitQ::dirg]; $Failed)
+IGSplitQ[graph_?MixedGraphQ] := (Message[IGraphM::mixed]; $Failed)
+IGSplitQ[degrees_?nonNegIntVecQ] := sck@igraphGlobal@"splitQ"[degrees]
+IGSplitQ[_] := False
 (***** Dominators *****)
 
 PackageExport["IGDominatorTree"]

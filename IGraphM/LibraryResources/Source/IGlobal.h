@@ -149,6 +149,7 @@ public:
 
     // Recognize the degree sequence of a split graph.
     // https://en.wikipedia.org/wiki/Split_graph#Degree_sequences
+    // Assumption: d[i] >= 0 for all i.
     bool splitQ(mma::IntTensorRef d) {
         std::sort(d.begin(), d.end(), std::greater<mint>());
 
