@@ -176,7 +176,7 @@ asymmList = {
 };
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Sanity checks for Mathematica built-ins*)
 
 
@@ -257,7 +257,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Tests for IncidenceMatrix*)
 
 
@@ -1861,14 +1861,14 @@ MT[
 (* TODO ensure that In,Out version respects SelfLoops and MultiEdges setting *)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Acyclic graphs*)
 
 
 MTSection["Acyclic graphs"]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGTopologicalOrdering*)
 
 
@@ -2622,6 +2622,94 @@ MT[
 MT[
   VertexCount /@ IGRandomSpanningTree[{IGDisjointUnion[{CompleteGraph[5], CycleGraph[10]}], {1, 1}}, 5],
   {5, 5, 5, 5, 5}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGSpanningTree*)
+
+
+MT[
+  IGSpanningTree[IGEmptyGraph[]],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSpanningTree[IGEmptyGraph[1]],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSpanningTree[IGEmptyGraph[2]],
+  Graph[{1, 2}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSpanningTree[IGShorthand["1-2"]],
+  Graph[{1 <-> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSpanningTree[IGShorthand["1->2"]],
+  Graph[{1 -> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSpanningTree[IGShorthand["1->2<-3"]],
+  Graph[{1 -> 2, 3 -> 2}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGSpanningTree[IGShorthand["1-2,2-3,4"]],
+  Graph[{1, 2, 3, 4}, {1 <-> 2, 2 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  With[{t = IGTreeGame[500]}, IGSameGraphQ[t, IGSpanningTree[t]]],
+  True
+]
+
+
+MT[
+  IGEdgeProp[EdgeWeight][IGSpanningTree[Graph[{1 <-> 2}, EdgeWeight -> {34}]]],
+  {34}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGUnfoldTree*)
+
+
+MT[
+  IGUnfoldTree[IGEmptyGraph[], {}],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGUnfoldTree[IGEmptyGraph[1], {1}],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGUnfoldTree[IGShorthand["1-2-3-1"], {2}],
+  Graph[{1 <-> 2, 2 <-> 3, 1 <-> 4}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGUnfoldTree[IGShorthand["1-2-3-1"], {}],
+  Graph[{1, 2, 3}, {}],
+  SameTest -> IGSameGraphQ
 ]
 
 
@@ -3988,7 +4076,7 @@ MT[
 MTSection["Connectivity"]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGVertexConnectivity and IGEdgeConnectivity*)
 
 
@@ -4258,12 +4346,74 @@ MT[
 
 
 (* ::Subsubsection::Closed:: *)
-(*IGMinimumSeparators*)
+(*IGMinimumSeparators, IGMinimalSeparators, IGVertexSeparatorQ*)
 
 
 MT[
   IGMinimumSeparators[#] =!= {} & /@ ulist,
   ConnectedGraphQ /@ ulist
+]
+
+
+gsep = IGShorthand["1-2-3-4-5-1,2-4-6-7"];
+
+MT[
+  Sort[Sort /@ IGMinimumSeparators[gsep]],
+  {{4}, {6}}
+]
+
+MT[
+  Sort[Sort /@ IGMinimalSeparators[gsep]],
+  {{4}, {6}, {1, 4}, {2, 4}, {2, 5}}
+]
+
+
+MT[
+  (IGVertexSeparatorQ[gsep, #1] & ) /@ IGMinimalSeparators[gsep],
+  {True, True, True, True, True}
+]
+
+MT[
+  (IGVertexSeparatorQ[gsep, #1] & ) /@ IGMinimumSeparators[gsep],
+  {True, True}
+]
+
+
+MT[
+  IGVertexSeparatorQ[gsep, {7}],
+  False
+]
+
+MT[
+  IGVertexSeparatorQ[gsep, {1}],
+  False
+]
+
+MT[
+  IGVertexSeparatorQ[gsep, {3, 5, 2}],
+  True
+]
+
+MT[
+  IGVertexSeparatorQ[gsep, {4, 7}],
+  True
+]
+
+MT[
+  IGVertexSeparatorQ[gsep, {}],
+  False
+]
+
+
+MT[
+  IGVertexSeparatorQ[IGEmptyGraph[], {}],
+  False
+]
+
+MT[
+  IGVertexSeparatorQ[IGEmptyGraph[], {1}],
+  $Failed,
+  {VertexIndex::inv}
 ]
 
 
@@ -4317,6 +4467,114 @@ MT[
   IGGiantComponent[Graph[{1, 2, 3}, {2 <-> 3}]],
   Graph[{2 <-> 3}],
   SameTest -> IGSameGraphQ
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGConnectedQ and IGWeaklyConnectedQ*)
+
+
+MT[
+  IGConnectedQ /@ ulist,
+  ConnectedGraphQ /@ ulist
+]
+
+MT[
+  IGConnectedQ /@ dlist,
+  ConnectedGraphQ /@ dlist
+]
+
+MT[
+  IGWeaklyConnectedQ /@ ulist,
+  ConnectedGraphQ /@ ulist
+]
+
+MT[
+  IGWeaklyConnectedQ /@ dlist,
+  WeaklyConnectedGraphQ /@ dlist
+]
+
+
+(* ::Text:: *)
+(*Test a second time to verify result caching.*)
+
+
+MT[
+  IGConnectedQ /@ ulist,
+  ConnectedGraphQ /@ ulist
+]
+
+MT[
+  IGConnectedQ /@ dlist,
+  ConnectedGraphQ /@ dlist
+]
+
+MT[
+  IGWeaklyConnectedQ /@ ulist,
+  ConnectedGraphQ /@ ulist
+]
+
+MT[
+  IGWeaklyConnectedQ /@ dlist,
+  WeaklyConnectedGraphQ /@ dlist
+]
+
+
+(* Special case: null graph *)
+MT[
+  IGConnectedQ[IGEmptyGraph[]],
+  True
+]
+
+MT[
+  IGWeaklyConnectedQ[IGEmptyGraph[]],
+  True
+]
+
+
+MT[
+  IGConnectedQ[IGEmptyGraph[1]],
+  True
+]
+
+MT[
+  IGWeaklyConnectedQ[IGEmptyGraph[1]],
+  True
+]
+
+MT[
+  IGConnectedQ[IGEmptyGraph[2]],
+  False
+]
+
+MT[
+  IGWeaklyConnectedQ[IGEmptyGraph[2]],
+  False
+]
+
+MT[
+  IGConnectedQ[IGShorthand["1->2"]],
+  False
+]
+
+MT[
+  IGWeaklyConnectedQ[IGShorthand["1->2"]],
+  True
+]
+
+
+(* ::Text:: *)
+(*Non-graph:*)
+
+
+MT[
+  IGConnectedQ[123],
+  False
+]
+
+MT[
+  IGWeaklyConnectedQ[123],
+  False
 ]
 
 
@@ -5610,6 +5868,30 @@ MT[
 
 
 MT[
+  IGDelaunayGraph[{}],
+  Graph[{}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGDelaunayGraph[{{0, 0}}],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGDelaunayGraph[{{0, 0, 0}}],
+  Graph[{1}, {}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGDelaunayGraph[{{1}, {2}, {3}}],
+  Graph[{1 <-> 2, 2 <-> 3}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
   IGDelaunayGraph[{{0,0}, {1,1}, {2,2}}],
   Graph[{1<->2, 2<->3}],
   SameTest -> IGSameGraphQ
@@ -5646,11 +5928,16 @@ MT[
   SameTest -> IGSameGraphQ
 ]
 
-points3d = RandomReal[1, {100, 2}];
+points3d = RandomReal[1, {100, 3}];
 MT[
   IGDelaunayGraph[points3d],
   IGMeshGraph@DelaunayMesh[points3d],
   SameTest -> IGSameGraphQ
+]
+
+MT[
+  With[{g = IGDelaunayGraph[RandomReal[1, {10, 3}]]}, {VertexCount[g] == 10, ConnectedGraphQ[g]}],
+  {True, True}
 ]
 
 
@@ -6188,6 +6475,62 @@ MT[
   IGRealizeDegreeSequence[{2, 2, 1, 1, 2, 1, 1, 4, 1, 0}, {3, 1, 2, 0, 0, 2, 5, 1, 1, 0}, Method -> "Index"],
   Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {1 -> 8, 1 -> 2, 1 -> 5, 2 -> 8, 3 -> 8, 3 -> 1, 6 -> 7, 6 -> 8, 7 -> 9, 7 -> 6, 7 -> 1, 7 -> 3, 7 -> 2, 8 -> 5, 9 -> 4}],
   SameTest -> IGSameGraphQ
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGSplitQ*)
+
+
+MT[
+  IGSplitQ[IGEmptyGraph[]],
+  True
+]
+
+
+MT[
+  AllTrue[GraphData /@ GraphData[;;3], IGSplitQ],
+  True
+]
+
+
+MT[
+  IGSplitQ[PathGraph[Range[4]]],
+  True
+]
+
+
+MT[
+  IGSplitQ[CycleGraph[4]],
+  False
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGThresholdQ*)
+
+
+MT[
+  IGThresholdQ[IGEmptyGraph[]],
+  True
+]
+
+
+MT[
+  AllTrue[GraphData /@ GraphData[;;3], IGThresholdQ],
+  True
+]
+
+
+MT[
+  IGThresholdQ[PathGraph[Range[4]]],
+  False
+]
+
+
+MT[
+  IGThresholdQ[CycleGraph[4]],
+  False
 ]
 
 

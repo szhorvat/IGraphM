@@ -1,5 +1,45 @@
 ## Revision history for [IGraph/M](README.md)
 
+#### v0.5
+
+New functions:
+
+ - `IGSplitQ` recognizes split graphs and their degree sequences.
+ - `IGThresholdQ` recognizes threshold graphs and their degree sequences.
+ - `IGPotentiallyConnectedQ` recognizes the degree sequences of connected graphs.
+ - `IGBigraphicalQ` recognizes the degree sequence pairs of bipartite graphs. 
+ - `IGEulerianQ` tests if a graph has an Eulerian path; `IGEulerianPath` and `IGEulerianPathVertices` find it.
+
+Changes to existing functions: 
+ 
+ - `IGGraphicalQ` and `IGRealizeDegreeSequence` now support some types of non-simple graphs.
+ - `IGRealizeDegreeSequence` now takes arguments in the order `indegrees`, `outdegrees` for consistency with other functions (previously it was `outdegrees`, `indegrees`).
+ - `IGEigenvectorCentrality` sometimes returned incorrect values for isolated vertices in weighted graphs.
+ - `IGColoredSimpleGraph` no longer discards vertex names.
+ - `IGModularity` now supports directed graphs.
+ - `IGModularity` and `IGCommunitiesMultilevel` now have a resolution parameter.
+ - `IGAdjacencyMatrixPlot` now allows `None` to be specified as the colour representing non-existing edges.
+ - `IGEigenvectorCentrality` assumes the adjacency matrix of undirected graphs to have twice the number of self-loops for each vertex on the diagonal. This makes the results consistent between an undirected graph and its directed equivalent when each edge is replaced by a mutual edge pair.
+ 
+Fixes:
+
+ - `IGLayoutReingoldTilford` no longer flips the layout.
+ - `IGLayoutReingoldTilford` no longer draws overlapping tree branches.
+ - `IGBarabasiAlbertGame` now allows negative values for β.
+ - `IGBetweennessEstimate` sometimes returned incorrect results with finite cutoffs. This is now corrected.
+ - `IGCommunitiesLeiden`: fix incorrect results when self-loops are present.
+ - `IGEigenvectorCentrality`: fix incorrect results for isolated vertices and for vertices with self-loops.
+ - `IGGraphicalQ` would return incorrect results when the second argument was `{}`. This is now corrected.
+ 
+Other changes:
+
+ - `IGDegreeSequenceGame`'s `"ConfigurationModelSimple"` method is now much faster.
+ - More robust error handling.
+ 
+Notes:
+
+ - IGraph/M 0.5 has been tested with Mathematica 10.3 and later only. Some effort has been made to allow it to work with Mathematica 10.0.2, but it has not been tested and compatibility is not guaranteed.
+
 #### v0.4
 
 New functions:
