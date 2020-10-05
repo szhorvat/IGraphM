@@ -3086,29 +3086,21 @@ public:
         if (! connectedQ(/* strong= */ false))
             return false;
 
-        igraph_integer_t count;
-        igList list;
-        igCheck(igraph_biconnected_components(&graph, &count, nullptr, nullptr, &list.list, nullptr));
+        igList edge_comps, vertex_comps;
+        igCheck(igraph_biconnected_components(&graph, nullptr, nullptr, &edge_comps.list, &vertex_comps.list, nullptr));
 
-        // TODO avoid creating the induced subgraph; just count its edges
         // We verify that each bi-connected component is either K_2 or an induced cycle.
         // Knowing that the component is biconnected, it is sufficient to check that E <= V.
-        bool res = true;
-        for (const auto ptr : list) {
-            igraph_integer_t vcount = igraph_vector_size(ptr);
-            if (vcount > 2) {
-                igraph_t sg;
-                igCheck(igraph_induced_subgraph(&graph, &sg, igraph_vss_vector(ptr), IGRAPH_SUBGRAPH_CREATE_FROM_SCRATCH));
-                if (igraph_ecount(&sg) > vcount) {
-                    res = false;
-                    igraph_destroy(&sg);
-                    break;
-                }
-                igraph_destroy(&sg);
-            }
+        long no_comps = vertex_comps.size();
+        for (long i=0; i < no_comps; ++i) {
+            igraph_integer_t vcount = igraph_vector_size(vertex_comps[i]);
+            igraph_integer_t ecount = igraph_vector_size(edge_comps[i]);
+
+            if (ecount > vcount)
+                return false;
         }
 
-        return res;
+        return true;
     }
 
     bool nonSimpleCactusQ() {
@@ -3128,25 +3120,21 @@ public:
         if (! connectedQ(/* strong= */ false))
             return false;
 
-        igraph_integer_t count;
-        igList list;
-        igCheck(igraph_biconnected_components(&graph, &count, nullptr, nullptr, &list.list, nullptr));
+        igList edge_comps, vertex_comps;
+        igCheck(igraph_biconnected_components(&graph, nullptr, nullptr, &edge_comps.list, &vertex_comps.list, nullptr));
 
-        // TODO avoid creating the induced subgraph; just count its edges
-        bool res = true;
-        for (const auto ptr : list) {
-            igraph_integer_t vcount = igraph_vector_size(ptr);
-            igraph_t sg;
-            igCheck(igraph_induced_subgraph(&graph, &sg, igraph_vss_vector(ptr), IGRAPH_SUBGRAPH_CREATE_FROM_SCRATCH));
-            if (igraph_ecount(&sg) > vcount) {
-                res = false;
-                igraph_destroy(&sg);
-                break;
-            }
-            igraph_destroy(&sg);
+        // We verify that each bi-connected component is either K_2 or an induced cycle.
+        // Knowing that the component is biconnected, it is sufficient to check that E <= V.
+        long no_comps = vertex_comps.size();
+        for (long i=0; i < no_comps; ++i) {
+            igraph_integer_t vcount = igraph_vector_size(vertex_comps[i]);
+            igraph_integer_t ecount = igraph_vector_size(edge_comps[i]);
+
+            if (ecount > vcount)
+                return false;
         }
 
-        return res;
+        return true;
     }
 
     mma::IntTensorRef strahlerNumber() const {
