@@ -377,13 +377,13 @@ toPermGroup = PermutationGroup[PermutationCycles /@ #]&;
 Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissAutomorphismGroup] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 
-IGBlissAutomorphismGroup[graph_?GraphQ, opt : OptionsPattern[]] :=
+IGBlissAutomorphismGroup[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph]},
       blissCheckMulti[graph];
       toPermGroup@igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
     ]
 
-IGBlissAutomorphismGroup[{graph_?GraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
+IGBlissAutomorphismGroup[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFast[graph], vcol},
       blissCheckMulti[graph];
       vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];

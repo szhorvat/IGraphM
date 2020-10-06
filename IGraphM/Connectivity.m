@@ -244,7 +244,7 @@ IGGomoryHuTree::usage = "IGGomoryHuTree[graph] gives the Gomory–Hu tree of a g
 
 (* Note: edge ordering is critical *)
 SyntaxInformation[IGGomoryHuTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGGomoryHuTree[graph_?GraphQ, opt : OptionsPattern[]] :=
+IGGomoryHuTree[graph_?igGraphQ, opt : OptionsPattern[]] :=
     catch@Block[{new = igMakeEmpty[], ig = igMake[graph], flow},
       flow = check@new@"gomoryHuTree"[ManagedLibraryExpressionID[ig]];
       igToGraphWithNames[new, VertexList[graph], EdgeWeight -> flow, opt]

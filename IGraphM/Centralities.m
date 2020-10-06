@@ -126,7 +126,7 @@ Options[IGPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
 SyntaxInformation[IGPageRank] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 amendUsage[IGPageRank, "Available Method options: <*igPageRankMethods*>."];
 
-IGPageRank[graph_?GraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
+IGPageRank[graph_?igGraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}, powerOpt},
       method = OptionValue[Method];
       If[ListQ[method],
@@ -149,7 +149,7 @@ SyntaxInformation[IGPersonalizedPageRank] = {"ArgumentsPattern" -> {_, _, _., Op
 
 IGPersonalizedPageRank::invarg = "Second argument must be a vector of the same length as the vertex count of the graph.";
 
-IGPersonalizedPageRank[graph_?GraphQ, reset_?VectorQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
+IGPersonalizedPageRank[graph_?igGraphQ, reset_?VectorQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}, powerOpt},
       method = OptionValue[Method];
       If[ListQ[method],
@@ -171,7 +171,7 @@ IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph] gives the eigen
 
 Options[IGEigenvectorCentrality] = { DirectedEdges -> True, "Normalized" -> True };
 SyntaxInformation[IGEigenvectorCentrality] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-IGEigenvectorCentrality[graph_?GraphQ, opt : OptionsPattern[]] :=
+IGEigenvectorCentrality[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"eigenvectorCentrality"[OptionValue[DirectedEdges], OptionValue["Normalized"]]
     ]
@@ -182,7 +182,7 @@ IGHubScore::usage = "IGHubScore[graph] gives Kleinberg's hub score for each vert
 
 Options[IGHubScore] = { "Normalized" -> True };
 SyntaxInformation[IGHubScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-IGHubScore[graph_?GraphQ, opt : OptionsPattern[]] :=
+IGHubScore[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"hubScore"[OptionValue["Normalized"]]
     ]
@@ -193,7 +193,7 @@ IGAuthorityScore::usage = "IGAuthorityScore[graph] gives Kleinberg's authority s
 
 Options[IGAuthorityScore] = { "Normalized" -> True };
 SyntaxInformation[IGAuthorityScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
-IGAuthorityScore[graph_?GraphQ, opt : OptionsPattern[]] :=
+IGAuthorityScore[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFastWeighted[graph]},
       sck@ig@"authorityScore"[OptionValue["Normalized"]]
     ]
