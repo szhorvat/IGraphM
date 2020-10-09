@@ -1601,6 +1601,192 @@ MT[
 
 
 (* ::Section::Closed:: *)
+(*Similarity measures*)
+
+
+MTSection["Similarity measures"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGCocitationCoupling*)
+
+
+cocitCoup[g_] :=
+	With[{am = AdjacencyMatrix[g]},
+		Normal[Transpose[am].am] - DiagonalMatrix@VertexInDegree[g]
+	]
+
+
+MT[
+  IGCocitationCoupling[#],
+  cocitCoup[#]
+]& /@ ulist
+
+MT[
+  IGCocitationCoupling[#],
+  cocitCoup[#]
+]& /@ dlist
+
+MT[
+  IGCocitationCoupling[dgs],
+  cocitCoup[dgs]
+]
+
+MT[
+  IGCocitationCoupling[dmulti],
+  cocitCoup[dmulti]
+]
+
+MT[
+  IGCocitationCoupling[dmulti2],
+  cocitCoup[dmulti2]
+]
+
+
+MT[
+  IGCocitationCoupling[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGCocitationCoupling[IGEmptyGraph[1]],
+  {{0}}
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGBibliographicCoupling*)
+
+
+bibCoup[g_] :=
+	With[{am = AdjacencyMatrix[g]},
+		Normal[am.Transpose[am] - DiagonalMatrix@VertexOutDegree[g]]
+	]
+
+
+MT[
+  IGBibliographicCoupling[#],
+  bibCoup[#]
+]& /@ ulist
+
+MT[
+  IGBibliographicCoupling[#],
+  bibCoup[#]
+]& /@ dlist
+
+MT[
+  IGBibliographicCoupling[dgs],
+  bibCoup[dgs]
+]
+
+MT[
+  IGBibliographicCoupling[dmulti],
+  bibCoup[dmulti]
+]
+
+MT[
+  IGBibliographicCoupling[dmulti2],
+  bibCoup[dmulti2]
+]
+
+
+MT[
+  IGBibliographicCoupling[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGBibliographicCoupling[IGEmptyGraph[1]],
+  {{0}}
+]
+
+
+(* ::Section::Closed:: *)
+(*Random walks*)
+
+
+MTSection["Random walks"]
+
+
+rwg=IGShorthand["1->2->3->4->2"]
+
+
+MT[
+  Union[IGRandomWalk[rwg, 2, 100]],
+  {2, 3, 4}
+]
+
+MT[
+  Union[IGRandomWalk[rwg, 1, 100]],
+  {1, 2, 3, 4}
+]
+
+MT[
+  Union[IGRandomEdgeIndexWalk[rwg, 2, 100]],
+  {2, 3, 4}
+]
+
+MT[
+  Union[IGRandomEdgeIndexWalk[rwg, 1, 100]],
+  {1, 2, 3, 4}
+]
+
+MT[
+  Union[IGRandomEdgeWalk[rwg, 2, 100]],
+  {DirectedEdge[2, 3], DirectedEdge[3, 4], DirectedEdge[4, 2]}
+]
+
+MT[
+  Union[IGRandomEdgeWalk[rwg, 1, 100]],
+  {DirectedEdge[1, 2], DirectedEdge[2, 3], DirectedEdge[3, 4], DirectedEdge[4, 2]}
+]
+
+MT[
+  Union[IGRandomWalk[Graph[{"a" <-> "b"}], "b", 100]],
+  {"a", "b"}
+]
+
+
+MT[
+  IGRandomWalk[Graph[{"a" <-> "b"}], "x", 100],
+  $Failed,
+  {VertexIndex::inv}
+]
+
+
+MT[
+  Length[IGRandomWalk[rwg, 1, 100]],
+  100
+]
+
+MT[
+  Length[IGRandomEdgeWalk[rwg, 1, 100]],
+  100
+]
+
+MT[
+  Length[IGRandomEdgeIndexWalk[rwg, 1, 100]],
+  100
+]
+
+
+MT[
+  Union[IGRandomWalk[IGShorthand["1-2-3", EdgeWeight -> {2, 1}], 1, 100]],
+  {1, 2, 3}
+]
+
+MT[
+  Union[Rest[IGRandomWalk[IGShorthand["1-2-3", EdgeWeight -> {0, 1}], 1, 100]]],
+  {2, 3}
+]
+
+MT[
+  Union[Rest[IGRandomWalk[IGShorthand["1-2-3", EdgeWeight -> {0, 1}], 1, 100, EdgeWeight -> None]]],
+  {1, 2, 3}
+]
+
+
+(* ::Section::Closed:: *)
 (*Modification*)
 
 
@@ -4066,6 +4252,48 @@ MT[
 MT[
   IGAdjacentTriangleCount[Graph[{1,2,3},{}]],
   {0,0,0}
+]
+
+
+(* ::Section::Closed:: *)
+(*Matching*)
+
+
+MTSection["Matching"]
+
+
+MT[
+  IGMatchingNumber[IGEmptyGraph[#]],
+  0
+]& /@ Range[0, 3]
+
+
+MT[
+  IGMatchingNumber[Graph[{1 <-> 2}]],
+  1
+]
+
+
+MT[
+  IGMatchingNumber[CycleGraph[6]],
+  3
+]
+
+MT[
+  IGMatchingNumber[CycleGraph[7]],
+  3
+]
+
+
+MT[
+  IGMaximumMatching[IGEmptyGraph[#]],
+  {}
+]& /@ Range[0, 3]
+
+
+MT[
+  IGMaximumMatching[IGShorthand["1-2-3-4-5-1-6"]],
+  {UndirectedEdge[4, 5], UndirectedEdge[2, 3], UndirectedEdge[1, 6]}
 ]
 
 
