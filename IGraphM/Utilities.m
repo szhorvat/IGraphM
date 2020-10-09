@@ -187,21 +187,19 @@ expr : IGAdjacencyGraph[adjList_?AssociationQ, opt : OptionsPattern[{IGAdjacency
 PackageExport["IGReverseGraph"]
 IGReverseGraph::usage = "IGReverseGraph[graph] reverses the directed edges in graph while preserving edge weights.";
 
+If[$VersionNumber >= 12.1,
+  reversedEdges[g_] := Permute[#, Cycles[{{1,2}}]]& /@ EdgeList[g], (* edges may have a third argument, the tag, in 12.1 and later *)
+  reversedEdges[g_] := Reverse /@ EdgeList[g]
+]
+
 SyntaxInformation[IGReverseGraph] = {"ArgumentsPattern" -> {_}};
-IGReverseGraph::nmg = "Multigraphs are not currently supported.";
 IGReverseGraph[g_?UndirectedGraphQ, opt : OptionsPattern[]] := Graph[g, opt]
 IGReverseGraph[g_?igGraphQ, opt : OptionsPattern[]] :=
-    catch[
-      If[MultigraphQ[g],
-        Message[IGReverseGraph::nmg];
-        throw[$Failed]
-      ];
-      Graph[
-        VertexList[g],
-        Reverse /@ EdgeList[g],
-        opt,
-        Options[g, {EdgeWeight, EdgeCapacity, EdgeCost, VertexWeight, VertexCapacity}]
-      ]
+    Graph[
+      VertexList[g],
+      reversedEdges[g],
+      opt,
+      Options[g, {EdgeWeight, EdgeCapacity, EdgeCost, VertexWeight, VertexCapacity}]
     ]
 
 
