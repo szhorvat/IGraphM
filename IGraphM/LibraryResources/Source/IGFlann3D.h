@@ -171,6 +171,8 @@ public:
             }
 
             res[i] = count;
+
+            mma::check_abort();
         }
 
         return res;
