@@ -422,6 +422,12 @@ blockLayout[n_, gap_, height_, mult_, offset_] :=
       Table[gap QuotientRemainder[i, nrow] mult + offset, {i, 0, n - 1}]
     ]
 
+(* Deletes elements in list1 that are also present in list2.
+   Assumes that both list1 and list2 are free of duplicates.
+   Thanks to Mr. Wizard: https://mathematica.stackexchange.com/a/1295 *)
+unsortedComplement[list1_, {}] := list1
+unsortedComplement[list1_, list2_] := Drop[DeleteDuplicates@Join[list2, list1], Length[list2]]
+
 Options[IGLayoutBipartite] = {
   "VertexGap" -> 0.1,
   "PartitionGap" -> 1,
@@ -440,7 +446,7 @@ IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Grap
       parts = OptionValue["BipartitePartitions"];
       If[parts === Automatic,
         isolated = Pick[VertexList[graph], VertexDegree[graph], 0];
-        connected = Complement[VertexList[graph], isolated];
+        connected = unsortedComplement[VertexList[graph], isolated];
         sg = igSubgraph[graph, connected];
         ig = igMakeFast[sg];
         If[Not@ig@"bipartiteQ"[],
