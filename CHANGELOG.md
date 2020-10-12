@@ -1,6 +1,6 @@
 ## Revision history for [IGraph/M](README.md)
 
-#### v0.5
+#### v0.5.1
 
 Changes to exsiting functions:
 
