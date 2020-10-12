@@ -2,6 +2,22 @@
 
 #### v0.5
 
+Changes to exsiting functions:
+
+ - `IGReverseGraph` now supports non-simple graphs.
+ - `IGLuneBetaSkeleton` is now interruptible for β < 1.
+ 
+Fixes:
+
+ - Several functions failed to check if the graph was mixed (having both directed and undirected edges). This is now corrected.
+ - `IGLayoutBipartite` now uses partitions which are consistent with `IGBipartitePartitions`.
+ 
+Other changes:
+
+ - Many corrections and improvements to the documentation.
+
+#### v0.5
+
 New functions:
 
  - `IGSplitQ` recognizes split graphs and their degree sequences.
