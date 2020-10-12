@@ -1117,7 +1117,7 @@ public:
     mma::RealMatrixRef motifsParticipation(mint size, mma::RealTensorRef cut_prob) const {
         igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
 
-        struct {
+        struct MotifCounter {
             static igraph_bool_t handler(const igraph_t *, igraph_vector_t *vids, int isoclass, void *data) {
                 auto *mat = static_cast<mma::RealMatrixRef *>(data);
                 long len = igraph_vector_size(vids);
@@ -1136,16 +1136,16 @@ public:
                     return 1;
                 }
             }
-        } motif_counter;
+        };
 
         bool dir = directedQ();
 
-        mma::RealMatrixRef mat = mma::makeMatrix<double>(vertexCount(), motif_counter.isoclass_count(dir, size));
+        mma::RealMatrixRef mat = mma::makeMatrix<double>(vertexCount(), MotifCounter::isoclass_count(dir, size));
         for (auto &el : mat) el = 0;
 
         LTGuard<mma::RealTensorRef> guard(mat); // automatically free 'mat' upon premature exit from the function
 
-        igCheck(igraph_motifs_randesu_callback(&graph, size, &ig_cut_prob, &(motif_counter.handler), &mat));
+        igCheck(igraph_motifs_randesu_callback(&graph, size, &ig_cut_prob, &(MotifCounter::handler), &mat));
 
         for (mint i=0; i < mat.rows(); ++i)
             switch (size) {
