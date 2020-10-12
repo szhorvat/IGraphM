@@ -230,11 +230,11 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
       RowBox[{"(*", " ", 
        RowBox[{"exclude", " ", "capital", " ", "final", " ", "sigma"}], " ", 
        "*)"}], "\[IndentingNewLine]", "]"}]}]}], ";"}], "\[IndentingNewLine]",
-   "\[IndentingNewLine]", 
+   "\n", 
   RowBox[{"(*", " ", 
    RowBox[{
    "replace", " ", "special", " ", "named", " ", "characters", " ", "and", 
-    " ", "append", " ", "footer"}], " ", "*)"}]}], "\n", 
+    " ", "append", " ", "footer"}], " ", "*)"}]}], "\[IndentingNewLine]", 
  RowBox[{"Export", "[", "\[IndentingNewLine]", 
   RowBox[{"\"\<igraphm.md\>\"", ",", "\[IndentingNewLine]", 
    RowBox[{
@@ -308,7 +308,9 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
            ",", "\[IndentingNewLine]", 
           RowBox[{
           "\"\<\\\\[Ellipsis]\>\"", "\[Rule]", "\"\<\[Ellipsis]\>\""}], ",", 
-          "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\"\<\\\\[UndirectedEdge]\>\"", "\[Rule]", "\"\<<->\>\""}], 
+          ",", "\[IndentingNewLine]", "\[IndentingNewLine]", 
           RowBox[{"(*", " ", 
            RowBox[{"fix", " ", "keyboard", " ", "characters"}], " ", "*)"}], 
           "\[IndentingNewLine]", 
@@ -322,9 +324,8 @@ margin: 15px 0; font-size: 0.85em;'>IGraph/M Documentation \[Copyright] 2016\
      "]"}], "<>", "footer"}], ",", "\[IndentingNewLine]", "\"\<Text\>\"", ",",
     "\[IndentingNewLine]", 
    RowBox[{"CharacterEncoding", "\[Rule]", "\"\<UTF-8\>\""}]}], 
-  "\[IndentingNewLine]", "]"}]}], "Input",
- CellLabel->
-  "In[14]:=",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
+  "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"89ca4a66-57fa-4d49-889b-ee7ba44b1a7d"]
 }, Open  ]]
 }, Open  ]],
 
@@ -428,12 +429,12 @@ Cell["Optimize images.", \
 "Text",ExpressionUUID->"6b05b7cd-c6ba-439f-8165-c9bc4d10b279"],
 
 Cell[BoxData[
- RowBox[{"Run", "[", "\"\<./quantimg.sh\>\"", 
-  "]"}]], "Input",ExpressionUUID->"b2cbf48b-0147-4b83-aa68-2603807094bf"],
+ RowBox[{"Run", "[", "\"\<./quantimg.sh\>\"", "]"}]], "Input",
+ CellLabel->"In[25]:=",ExpressionUUID->"b2cbf48b-0147-4b83-aa68-2603807094bf"],
 
 Cell[BoxData[
  RowBox[{"Run", "[", "\"\<./optimg.sh\>\"", "]"}]], "Input",
- CellLabel->"In[25]:=",ExpressionUUID->"fe0c1c5e-a7df-4e51-8a71-9cc9e56fde43"],
+ CellLabel->"In[26]:=",ExpressionUUID->"fe0c1c5e-a7df-4e51-8a71-9cc9e56fde43"],
 
 Cell["\<\
 Convert Markdown to HTML with Pandoc. Pandoc 2.8 or later is required.\
@@ -441,14 +442,14 @@ Convert Markdown to HTML with Pandoc. Pandoc 2.8 or later is required.\
 
 Cell[BoxData[
  RowBox[{"Run", "[", "\"\<./gendoc.sh\>\"", "]"}]], "Input",
- CellLabel->"In[26]:=",ExpressionUUID->"17a86769-10cc-48d3-9677-5acd0f70e385"],
+ CellLabel->"In[27]:=",ExpressionUUID->"17a86769-10cc-48d3-9677-5acd0f70e385"],
 
 Cell["View page.", \
 "Text",ExpressionUUID->"7e1fca15-046e-4609-9ea5-d9f1687ab65a"],
 
 Cell[BoxData[
  RowBox[{"SystemOpen", "[", "\"\<index.html\>\"", "]"}]], "Input",
- CellLabel->"In[27]:=",ExpressionUUID->"8778a7fd-01a2-4b66-95e1-127490f94aaf"],
+ CellLabel->"In[28]:=",ExpressionUUID->"8778a7fd-01a2-4b66-95e1-127490f94aaf"],
 
 Cell["Copy files into place.", \
 "Text",ExpressionUUID->"21fd180d-c22c-4a1a-bd9f-366a371d77e5"],
@@ -462,7 +463,7 @@ Cell[BoxData[{
    RowBox[{"DeleteContents", "\[Rule]", "True"}]}], 
   "]"}], "\[IndentingNewLine]", 
  RowBox[{"CreateDirectory", "[", "\"\<IGDocumentation\>\"", "]"}]}], "Input",
- CellLabel->"In[34]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
+ CellLabel->"In[29]:=",ExpressionUUID->"a9f585b3-8e8e-476d-945e-c3fcb595faec"],
 
 Cell[BoxData[{
  RowBox[{"CopyDirectory", "[", 
@@ -474,14 +475,14 @@ Cell[BoxData[{
   RowBox[{"\"\<igmdoc.css\>\"", ",", "\"\<IGDocumentation/igmdoc.css\>\""}], 
   "]"}]}], "Input",
  CellLabel->
-  "In[37]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
+  "In[32]:=",ExpressionUUID->"011edaf9-ebfa-48e1-91d0-889196cb2ad7"]
 }, Open  ]]
 },
 WindowSize->{948, 847},
 WindowMargins->{{134, Automatic}, {-3, Automatic}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (March 13, 2020)",
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (June 19, 2020)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"7fe29730-3b01-4e49-bc76-1b51ab284617"
 ]
