@@ -207,7 +207,8 @@ SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_, _., _., Option
 IGLocalEfficiency[graph_?igGraphQ, {}, mode_String : "All", OptionsPattern[]] := {}
 IGLocalEfficiency[graph_?igGraphQ, vs : (_List | All) : All, mode_String : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
-      check@ig@"localEfficiency"[vss[graph][vs], OptionValue[DirectedEdges], encodeNeighborMode[mode]]
+      (* Infinities may be returned when some of the edge weights are zero. *)
+      expectInfNaN@fixInfNaN@check@ig@"localEfficiency"[vss[graph][vs], OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]
 addCompletion[IGLocalEfficiency, {0, 0, {"Out", "In", "All"}}]
 
