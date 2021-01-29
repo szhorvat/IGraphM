@@ -6,6 +6,7 @@
 
 #include "IGlobal.h"
 #include <cstring>
+#include <csetjmp>
 
 int igInterruptionHandler(void *) {
     if (mma::libData->AbortQ()) {
@@ -31,6 +32,22 @@ void igErrorHandler(const char *reason, const char *file, int line, int /* igrap
         mma::message(msg.str(), mma::M_ERROR);
     }
     IGRAPH_FINALLY_FREE();
+}
+
+
+void igFatalHandler(const char *reason, const char *file, int line) {
+
+    // Use a separate block to ensure that the destructor of msg is run before the mma::fatal_error()
+    // mma::fatal_error() does a longjmp(), which may prevent the destructor from being called.
+    {
+        std::ostringstream msg;
+        msg << "Unexpected error in igraph. Please report this as a bug, along with the steps to reproduce it.\n";
+        msg << file << ":" << line << " - " << reason;
+        mma::message(msg.str(), mma::M_ERROR);
+    }
+
+    IGRAPH_FINALLY_CLEAN(IGRAPH_FINALLY_STACK_SIZE());
+    mma::fatal_error();
 }
 
 

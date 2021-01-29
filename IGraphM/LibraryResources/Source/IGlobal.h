@@ -16,9 +16,10 @@
 #include <cmath>
 
 
-void igWarningHandler(const char *reason, const char *file, int line, int igraph_errno);
-void igErrorHandler(const char *reason, const char *file, int line, int igraph_errno);
-int  igInterruptionHandler(void *);
+igraph_warning_handler_t igWarningHandler;
+igraph_error_handler_t igErrorHandler;
+igraph_fatal_handler_t igFatalHandler;
+igraph_interruption_handler_t igInterruptionHandler;
 
 
 class IGlobal {
@@ -27,6 +28,7 @@ public:
         igraph_set_error_handler(igErrorHandler);
         igraph_set_warning_handler(igWarningHandler);
         igraph_set_interruption_handler(igInterruptionHandler);
+        igraph_set_fatal_handler(igFatalHandler);
 
         rngInit();
     }
