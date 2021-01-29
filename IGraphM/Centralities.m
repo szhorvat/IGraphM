@@ -118,23 +118,21 @@ IGPageRank::usage =
     "IGPageRank[graph] gives a list of PageRank centralities for the vertices of the graph using damping factor 0.85.\n" <>
     "IGPageRank[graph, damping] gives a list of PageRank centralities for the vertices of the graph using the given damping factor.";
 
-igPageRankMethods = { "PowerIteration", "Arnoldi", "PRPACK" };
+igPageRankMethods = { "PowerIteration" (* TODO: no longer supported, remove and update C++ code *), "Arnoldi", "PRPACK" };
 igPageRankMethodsAsc = AssociationThread[igPageRankMethods, Range@Length[igPageRankMethods] - 1];
-igPageRankPowerOptions = <| "Epsilon" -> 0.001, "MaxIterations" -> 1000 |>;
 
 Options[IGPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
 SyntaxInformation[IGPageRank] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
-amendUsage[IGPageRank, "Available Method options: <*igPageRankMethods*>."];
+amendUsage[IGPageRank, "Available Method options: <*DeleteCases[igPageRankMethods, \"PowerIteration\"]*>."];
 
 IGPageRank[graph_?igGraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}, powerOpt},
+    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
       method = OptionValue[Method];
       If[ListQ[method],
         {method, methodOptions} = {First[method], Rest[method]};
       ];
-      powerOpt = Join[igPageRankPowerOptions, Association[methodOptions]];
       check@ig@"pageRank"[
-        Lookup[igPageRankMethodsAsc, method, -1], damping, OptionValue[DirectedEdges], powerOpt["MaxIterations"], powerOpt["Epsilon"]
+        Lookup[igPageRankMethodsAsc, method, -1], damping, OptionValue[DirectedEdges]
       ]
     ]
 
@@ -150,18 +148,17 @@ SyntaxInformation[IGPersonalizedPageRank] = {"ArgumentsPattern" -> {_, _, _., Op
 IGPersonalizedPageRank::invarg = "Second argument must be a vector of the same length as the vertex count of the graph.";
 
 IGPersonalizedPageRank[graph_?igGraphQ, reset_?VectorQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}, powerOpt},
+    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
       method = OptionValue[Method];
       If[ListQ[method],
         {method, methodOptions} = {First[method], Rest[method]};
       ];
-      powerOpt = Join[igPageRankPowerOptions, Association[methodOptions]];
       If[Length[reset] != VertexCount[graph],
         Message[IGPersonalizedPageRank::invarg];
         throw[$Failed]
       ];
       check@ig@"personalizedPageRank"[
-        Lookup[igPageRankMethodsAsc, method, -1], Normal[reset], damping, OptionValue[DirectedEdges], powerOpt["MaxIterations"], powerOpt["Epsilon"]
+        Lookup[igPageRankMethodsAsc, method, -1], Normal[reset], damping, OptionValue[DirectedEdges]
       ]
     ]
 

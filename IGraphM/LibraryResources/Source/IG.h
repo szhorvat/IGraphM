@@ -497,12 +497,12 @@ public:
 
     // Centrality measures
 
-    mma::RealTensorRef betweenness(bool nobigint, bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef betweenness(bool normalized, mma::RealTensorRef vs) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_betweenness(
                 &graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
-                true, passWeights(), nobigint));
+                true, passWeights()));
         auto t = res.makeMTensor();
         if (normalized) {
             double vcount = vertexCount();
