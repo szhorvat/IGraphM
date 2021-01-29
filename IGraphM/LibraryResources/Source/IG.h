@@ -497,12 +497,12 @@ public:
 
     // Centrality measures
 
-    mma::RealTensorRef betweenness(bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef betweenness(bool nobigint, bool normalized, mma::RealTensorRef vs) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_betweenness(
                 &graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
-                true, passWeights()));
+                true, passWeights(), nobigint));
         auto t = res.makeMTensor();
         if (normalized) {
             double vcount = vertexCount();
@@ -547,26 +547,18 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef pageRank(mint method, double damping, bool directed, mint powerNiter, double powerEpsilon) const {
+    mma::RealTensorRef pageRank(mint method, double damping, bool directed) const {
         igraph_pagerank_algo_t algo;
-        void *options;
-        igraph_pagerank_power_options_t power_options;
         igraph_arpack_options_t arpack_options;
         switch (method) {
         case 0:
-            algo = IGRAPH_PAGERANK_ALGO_POWER;
-            power_options.niter = powerNiter;
-            power_options.eps = powerEpsilon;
-            options = &power_options;
-            break;
+            throw mma::LibraryError("Power iteration is no longer supported for PageRank calculation.");
         case 1:
             algo = IGRAPH_PAGERANK_ALGO_ARPACK;
             igraph_arpack_options_init(&arpack_options);
-            options = &arpack_options;
             break;
         case 2:
             algo = IGRAPH_PAGERANK_ALGO_PRPACK;
-            options = nullptr;
             break;
         default: throw mma::LibraryError("Unknown PageRank method.");
         }
@@ -576,31 +568,23 @@ public:
 
         igCheck(igraph_pagerank(
                     &graph, algo, &vector.vec, &value, igraph_vss_all(),
-                    directed, damping, passWeights(), options));
+                    directed, damping, passWeights(), &arpack_options));
         // TODO warn if value != 1.
         return vector.makeMTensor();
     }
 
-    mma::RealTensorRef personalizedPageRank(mint method, mma::RealTensorRef treset, double damping, bool directed, mint powerNiter, double powerEpsilon) const {
+    mma::RealTensorRef personalizedPageRank(mint method, mma::RealTensorRef treset, double damping, bool directed) const {
         igraph_pagerank_algo_t algo;
-        void *options;
-        igraph_pagerank_power_options_t power_options;
         igraph_arpack_options_t arpack_options;
         switch (method) {
         case 0:
-            algo = IGRAPH_PAGERANK_ALGO_POWER;
-            power_options.niter = powerNiter;
-            power_options.eps = powerEpsilon;
-            options = &power_options;
-            break;
+            throw mma::LibraryError("Power iteration is no longer supported for personalized PageRank calculation.");
         case 1:
             algo = IGRAPH_PAGERANK_ALGO_ARPACK;
             igraph_arpack_options_init(&arpack_options);
-            options = &arpack_options;
             break;
         case 2:
             algo = IGRAPH_PAGERANK_ALGO_PRPACK;
-            options = nullptr;
             break;
         default: throw mma::LibraryError("Uknown PageRank method.");
         }
@@ -612,7 +596,7 @@ public:
 
         igCheck(igraph_personalized_pagerank(
                     &graph, algo, &vector.vec, &value, igraph_vss_all(),
-                    directed, damping, &reset, passWeights(), options));
+                    directed, damping, &reset, passWeights(), &arpack_options));
         // TODO warn if value != 1.
         return vector.makeMTensor();
     }
