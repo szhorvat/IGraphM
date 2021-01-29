@@ -1613,7 +1613,7 @@ MTSection["Similarity measures"]
 
 cocitCoup[g_] :=
 	With[{am = AdjacencyMatrix[g]},
-		Normal[Transpose[am].am] - DiagonalMatrix@VertexInDegree[g]
+		Normal[Transpose[am] . am] - DiagonalMatrix@VertexInDegree[g]
 	]
 
 
@@ -1660,7 +1660,7 @@ MT[
 
 bibCoup[g_] :=
 	With[{am = AdjacencyMatrix[g]},
-		Normal[am.Transpose[am] - DiagonalMatrix@VertexOutDegree[g]]
+		Normal[am . Transpose[am] - DiagonalMatrix@VertexOutDegree[g]]
 	]
 
 
@@ -3470,7 +3470,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Centralities*)
 
 
@@ -3490,12 +3490,6 @@ MT[
 (* ::Text:: *)
 (*Note: BetweennessCentrality does not support multigraphs.*)
 
-
-MT[
-  BetweennessCentrality[#],
-  IGBetweenness[#, Method -> "Fast"],
-  SameTest -> Equal
-]& /@ {ugs, ugi, dgs, dgi}
 
 MT[
   BetweennessCentrality[#],
@@ -3536,7 +3530,7 @@ MT[
 (* test on one instance of a multigraph *)
 MT[
   IGBetweenness@Graph[Range[6],{1 <-> 2,2 <-> 3,3 <-> 4,2 <-> 5,4 <-> 5,4 <-> 5,4 <-> 6}],
-  {0.`,4.3333333320000005`,1.333333332`,4.666666665`,2.666666664`,0.`},
+  {0., 4.333333333333333, 1.3333333333333333, 4.666666666666666, 2.6666666666666665, 0.},
   SameTest -> Equal
 ]
 
@@ -3544,7 +3538,7 @@ MT[
 (* TODO directed multigraph *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Closeness*)
 
 
@@ -3566,12 +3560,14 @@ MT[
   {}
 ]
 
+MT[
+  IGCloseness[IGEmptyGraph[1]],
+  {Indeterminate}
+]
 
-(* TODO this should be changed in the C core. *)
 MT[
   IGCloseness[IGEmptyGraph[2]],
-  {0.5, 0.5},
-  {IGraphM::warning}
+  {Indeterminate, Indeterminate}
 ]
 
 
@@ -3581,17 +3577,17 @@ MT[
 
 MT[
   IGBetweenness[#],
-  IGBetweennessEstimate[#, Infinity]
+  IGBetweennessCutoff[#, Infinity]
 ]& /@ {ugs, dgs}
 
 MT[
   IGCloseness[#],
-  IGClosenessEstimate[#, Infinity]
+  IGClosenessCutoff[#, Infinity]
 ]& /@ {ugs, dgs}
 
 MT[
   IGEdgeBetweenness[#],
-  IGEdgeBetweennessEstimate[#, Infinity]
+  IGEdgeBetweennessCutoff[#, Infinity]
 ]& /@ {ugs, dgs}
 
 
@@ -4046,7 +4042,7 @@ MTSection["Motifs and subgraph counts"]
 (*IGTriangles*)
 
 
-triangleCount[am_?MatrixQ] := Tr[am.am.am]/6
+triangleCount[am_?MatrixQ] := Tr[am . am . am]/6
 triangleCount[g_?GraphQ] := triangleCount@AdjacencyMatrix[g]
 
 MT[
@@ -4241,7 +4237,7 @@ MT[
 
 MT[
   IGAdjacentTriangleCount[#],
-  With[{am = AdjacencyMatrix[#]}, Normal@Diagonal[am.am.am]/2]
+  With[{am = AdjacencyMatrix[#]}, Normal@Diagonal[am . am . am]/2]
 ]& /@ ulist
 
 MT[
@@ -4297,7 +4293,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Connectivity*)
 
 
@@ -4698,7 +4694,7 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGConnectedQ and IGWeaklyConnectedQ*)
 
 
@@ -4751,12 +4747,12 @@ MT[
 (* Special case: null graph *)
 MT[
   IGConnectedQ[IGEmptyGraph[]],
-  True
+  False
 ]
 
 MT[
   IGWeaklyConnectedQ[IGEmptyGraph[]],
-  True
+  False
 ]
 
 
@@ -4885,7 +4881,7 @@ MT[
 ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Shortest paths*)
 
 
@@ -5167,7 +5163,7 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGGirth*)
 
 
@@ -5177,9 +5173,16 @@ MT[
 ]
 
 
+(* For graphs with no cycles, we return Infinity. *)
+
 MT[
   IGGirth[IGEmptyGraph[]],
-  0
+  Infinity
+]
+
+MT[
+  IGGirth[IGKaryTree[12]],
+  Infinity
 ]
 
 
@@ -5189,13 +5192,13 @@ MT[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*IGDiameter*)
 
 
 MT[
   IGDiameter[empty],
-  Infinity
+  Indeterminate
 ]
 
 MT[
@@ -5412,7 +5415,7 @@ MT[
 
 bipartiteProjectionAM[g_, parts_] :=
     With[{im = IGBipartiteIncidenceMatrix[g, parts]},
-      IGZeroDiagonal /@ Unitize[{im.Transpose[im], Transpose[im].im}]
+      IGZeroDiagonal /@ Unitize[{im . Transpose[im], Transpose[im] . im}]
     ]
 
 MT[
