@@ -398,7 +398,7 @@ template = LTemplate["IGraphM",
         LFun["shortestPathsBellmanFord", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathsJohnson", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
 
-        LFun["diameter", {True|False (* by components *)}, Integer],
+        LFun["diameter", {True|False (* by components *)}, Real],
         LFun["findDiameter", {True|False (* by components *)}, {Real, 1}],
         LFun["diameterDijkstra", {True|False (* by components *)}, Real],
         LFun["findDiameterDijkstra", {True|False (* by components *)}, {Real, 1}],

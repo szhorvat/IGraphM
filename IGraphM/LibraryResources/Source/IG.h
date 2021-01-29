@@ -1398,8 +1398,8 @@ public:
         return res;
     }
 
-    mint diameter(bool components) const {
-        igraph_integer_t diam;
+    double diameter(bool components) const {
+        double diam;
         igCheck(igraph_diameter(&graph, &diam, nullptr, nullptr, nullptr, true, components));
         return diam;
     }

@@ -261,12 +261,8 @@ IGDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 igDiameterUnweighted[graph_, bycomp_] :=
-    catch@Block[{ig = igMakeFast[graph], diam},
-      diam = check@ig@"diameter"[bycomp];
-      (* igraph returns the number of vertices for non-connected graphs.
-         We translate this to Infinity, which is the only reasonable result.
-         TODO https://github.com/igraph/igraph/issues/1345 *)
-      If[diam == VertexCount[graph], Infinity, diam]
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"diameter"[bycomp]
     ]
 
 igDiameterDijkstra[graph_, bycomp_] :=
