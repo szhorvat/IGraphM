@@ -305,7 +305,7 @@ IGTreeGame[n_?Internal`NonNegativeIntegerQ, opt : OptionsPattern[{IGTreeGame, Gr
 PackageExport["IGCallawayTraitsGame"]
 IGCallawayTraitsGame::usage = "IGCallawayTraitsGame[n, k, typeWeights, preferenceMatrix]";
 
-IGEstablishmentGame::prefmsym  = IGCallawayTraitsGame::prefmsym = "The preference matrix must be symmetric when generating undirected graphs.";
+IGEstablishmentGame::prefmsym = IGCallawayTraitsGame::prefmsym = "The preference matrix must be symmetric when generating undirected graphs.";
 IGEstablishmentGame::prefmdim = IGCallawayTraitsGame::prefmdim = "The preference matrix must be square and agree in size with the number of vertex types.";
 IGEstablishmentGame::prefmel  = IGCallawayTraitsGame::prefmel  = "The elements of the preference matrix must be probabilities between 0 and 1.";
 IGEstablishmentGame::weightnn = IGCallawayTraitsGame::weightnn = "The vertex type weights must be non-negative.";
@@ -319,7 +319,7 @@ IGCallawayTraitsGame[
   typeWeights_?VectorQ, prefMatrix_?MatrixQ,
   opt : OptionsPattern[{IGCallawayTraitsGame, Graph}]] :=
       catch@Block[{ig = igMakeEmpty[]},
-        If[Not@positiveVecQ[typeWeights],
+        If[Not@nonNegVecQ[typeWeights],
           Message[IGCallawayTraitsGame::weightnn];
           Return[$Failed];
         ];
