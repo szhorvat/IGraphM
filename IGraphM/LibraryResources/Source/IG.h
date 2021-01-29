@@ -497,12 +497,12 @@ public:
 
     // Centrality measures
 
-    mma::RealTensorRef betweenness(bool nobigint, bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef betweenness(bool normalized, mma::RealTensorRef vs) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_betweenness(
                 &graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
-                true, passWeights(), nobigint));
+                true, passWeights()));
         auto t = res.makeMTensor();
         if (normalized) {
             double vcount = vertexCount();
@@ -542,6 +542,15 @@ public:
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
         igCheck(igraph_closeness(
+                &graph, &res.vec, nullptr, nullptr, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
+                IGRAPH_OUT, passWeights(), normalized));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef harmonicCentrality(bool normalized, mma::RealTensorRef vs) const {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_harmonic_centrality(
                 &graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
                 IGRAPH_OUT, passWeights(), normalized));
         return res.makeMTensor();
@@ -634,13 +643,12 @@ public:
         return vec.makeMTensor();
     }
 
-    // Centrality measures (estimates)
+    // Range-limited centrality measures
 
-    mma::RealTensorRef betweennessEstimate(double cutoff, bool nobigint, bool normalized, mma::RealTensorRef vs) const {
-        if (cutoff == 0) cutoff = -1; /* temporary measure; see bug #56 */
+    mma::RealTensorRef betweennessCutoff(double cutoff, bool normalized, mma::RealTensorRef vs) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
-        igCheck(igraph_betweenness_estimate(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, cutoff, passWeights(), nobigint));
+        igCheck(igraph_betweenness_cutoff(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, passWeights(), cutoff));
         auto t = res.makeMTensor();
         if (normalized) {
             double vcount = vertexCount();
@@ -657,10 +665,9 @@ public:
         return t;
     }
 
-    mma::RealTensorRef edgeBetweennessEstimate(double cutoff, bool normalized) const {
-        if (cutoff == 0) cutoff = -1; /* temporary measure; see bug #56 */
+    mma::RealTensorRef edgeBetweennessCutoff(double cutoff, bool normalized) const {
         igVector res;
-        igCheck(igraph_edge_betweenness_estimate(&graph, &res.vec, true, cutoff, passWeights()));
+        igCheck(igraph_edge_betweenness_cutoff(&graph, &res.vec, true, passWeights(), cutoff));
         auto t = res.makeMTensor();
         if (normalized) {
             double vcount = vertexCount();
@@ -677,11 +684,27 @@ public:
         return t;
     }
 
-    mma::RealTensorRef closenessEstimate(double cutoff, bool normalized, mma::RealTensorRef vs) const {
-        if (cutoff == 0) cutoff = -1; /* temporary measure; see bug #56 */
+    mma::RealTensorRef closenessCutoff(double cutoff, bool normalized, mma::RealTensorRef vs) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
-        igCheck(igraph_closeness_estimate(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, cutoff, passWeights(), normalized));
+        igCheck(igraph_closeness_cutoff(&graph, &res.vec, nullptr, nullptr, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, passWeights(), normalized, cutoff));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef neighborhoodCloseness(double cutoff, bool normalized, mma::RealTensorRef vs) const {
+        igVector res, reachable;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_closeness_cutoff(&graph, &res.vec, &reachable.vec, nullptr, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, passWeights(), normalized, cutoff));
+        auto ret = mma::makeMatrix<double>(2, res.size());
+        std::copy(res.begin(), res.end(), ret.data());
+        std::copy(reachable.begin(), reachable.end(), ret.data() + res.size());
+        return ret;
+    }
+
+    mma::RealTensorRef harmonicCentralityCutoff(double cutoff, bool normalized, mma::RealTensorRef vs) const {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igCheck(igraph_harmonic_centrality_cutoff(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, passWeights(), normalized, cutoff));
         return res.makeMTensor();
     }
 
@@ -694,9 +717,9 @@ public:
         return result;
     }
 
-    double betweennessCentralization(bool nobigint, bool normalized) const {
+    double betweennessCentralization(bool normalized) const {
         igraph_real_t result;
-        igCheck(igraph_centralization_betweenness(&graph, nullptr, true, nobigint, &result, nullptr, normalized));
+        igCheck(igraph_centralization_betweenness(&graph, nullptr, true, &result, nullptr, normalized));
         return result;
     }
 

@@ -18,24 +18,12 @@ IGBetweenness::usage =
     "IGBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.\n" <>
     "IGBetweenness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of betweenness centralities for the specified vertices.";
 
-igBetweennessMethods = <| "Precise" -> False, "Fast" -> True |>;
-
-Options[IGBetweenness] = { Method -> "Precise", Normalized -> False };
-
-IGBetweenness::bdmtd =
-    "Value of option Method -> `` is not one of " <>
-        ToString[Keys[igBetweennessMethods], InputForm] <>
-        ". Defaulting to " <> ToString[OptionValue[IGBetweenness, Method], InputForm] <> ".";
-
-amendUsage[IGBetweenness, "Available Method options: <*Keys[igBetweennessMethods]*>."];
-
+Options[IGBetweenness] = { Normalized -> False };
 SyntaxInformation[IGBetweenness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
-
 IGBetweenness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
 IGBetweenness[g_?igGraphQ, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
       check@ig@"betweenness"[
-        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweenness::bdmtd, OptionValue[Method]]; False],
         OptionValue[Normalized],
         vss[g][vs]
       ]
@@ -57,59 +45,111 @@ IGCloseness::usage =
     "IGCloseness[graph] gives a list of closeness centralities for the vertices of graph.\n" <>
     "IGCloseness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of closeness centralities for the specified vertices.";
 
-Options[IGCloseness] = { Normalized -> False };
+Options[IGCloseness] = { Normalized -> True };
 SyntaxInformation[IGCloseness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGCloseness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
 IGCloseness[g_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
-      If[VertexCount[g] == 1, Developer`FromPackedArray, Identity] @ (* prevent {Indeterminate} packed array, which may misbehave, for single-vertex graph *)
-        check@ig@"closeness"[OptionValue[Normalized], vss[g][vs]]
+      expectInfNaN@fixInfNaN@check@ig@"closeness"[OptionValue[Normalized], vss[g][vs]]
     ]
 
 
-PackageExport["IGBetweennessEstimate"]
-IGBetweennessEstimate::usage =
-    "IGBetweennessEstimate[graph, cutoff] estimates vertex betweenness by considering only paths of at most length cutoff.\n" <>
-    "IGBetweennessEstimate[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] estimates the betweenness of the specified vertices.";
+PackageExport["IGHarmonicCentrality"]
+IGHarmonicCentrality::usage =
+    "IGHarmonicCentrality[graph] gives the harmonic centralities for the vertices of graph.\n" <>
+    "IGHarmonicCentrality[graph, {vertex1, vertex2, \[Ellipsis]}] gives the harmonic centralities for the specified vertices.";
 
-Options[IGBetweennessEstimate] = { Method -> "Precise", Normalized -> False };
-IGBetweennessEstimate::bdmtd = IGBetweenness::bdmtd;
-amendUsage[IGBetweennessEstimate, "Available Method options: <*Keys[igBetweennessMethods]*>."];
-SyntaxInformation[IGBetweennessEstimate] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
-IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, {}, opt : OptionsPattern[]] := {}
-IGBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+Options[IGHarmonicCentrality] = { Normalized -> True };
+SyntaxInformation[IGHarmonicCentrality] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+IGHarmonicCentrality[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
+IGHarmonicCentrality[g_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
-      check@ig@"betweennessEstimate"[
+      check@ig@"harmonicCentrality"[OptionValue[Normalized], vss[g][vs]]
+    ]
+
+
+PackageExport["IGBetweennessCutoff"]
+IGBetweennessCutoff::usage =
+    "IGBetweennessCutoff[graph, cutoff] gives the range-limited betweenness centralities by considering only paths of at most length cutoff.\n" <>
+    "IGBetweennessCutoff[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] gives the range-limited betweenness centralities for the specified vertices.";
+
+Options[IGBetweennessCutoff] = { Normalized -> False };
+SyntaxInformation[IGBetweennessCutoff] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
+IGBetweennessCutoff[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
+IGBetweennessCutoff[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      check@ig@"betweennessCutoff"[
         infToNeg[cutoff],
-        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweennessEstimate::bdmtd, OptionValue[Method]]; False],
         OptionValue[Normalized],
         vss[g][vs]
       ]
     ]
 
+PackageExport["IGBetweennessEstimate"]
+IGBetweennessEstimate::usage = "IGBetweennessEstimate[] is deprecated. Use IGBetweennessCutoff[] instead.";
+IGBetweennessEstimate::deprec = "IGBetweennessEstimate is deprecated and will be removed from future versions of IGraph/M. Use IGBetweennessCutoff instead.";
+IGBetweennessEstimate[args___] := (Message[IGBetweennessEstimate::deprec]; IGBetweennessCutoff[args]) (* TODO: remove eventually *)
 
-PackageExport["IGEdgeBetweennessEstimate"]
-IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[graph, cutoff] estimates edge betweenness by considering only paths of at most length cutoff.";
+
+PackageExport["IGEdgeBetweennessCutoff"]
+IGEdgeBetweennessCutoff::usage = "IGEdgeBetweennessCutoff[graph, cutoff] gives the range-limited edge betweenness centralities by considering only paths of at most length cutoff.";
 
 (* Note: edge ordering is critical *)
-Options[IGEdgeBetweennessEstimate] = { Normalized -> False };
-SyntaxInformation[IGEdgeBetweennessEstimate] = {"ArgumentsPattern" -> {_, _}};
-IGEdgeBetweennessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, OptionsPattern[]] :=
-    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessEstimate"[infToNeg[cutoff], OptionValue[Normalized]]]
+Options[IGEdgeBetweennessCutoff] = { Normalized -> False };
+SyntaxInformation[IGEdgeBetweennessCutoff] = {"ArgumentsPattern" -> {_, _}};
+IGEdgeBetweennessCutoff[g_?igGraphQ, cutoff_?NonNegative, OptionsPattern[]] :=
+    Block[{ig = igMake[g]}, sck@ig@"edgeBetweennessCutoff"[infToNeg[cutoff], OptionValue[Normalized]]]
 
+PackageExport["IGEdgeBetweennessEstimate"]
+IGEdgeBetweennessEstimate::usage = "IGEdgeBetweennessEstimate[] is deprecated. Use IGEdgeBetweennessCutoff[] instead.";
+IGEdgeBetweennessEstimate::deprec = "IGEdgeBetweennessEstimate is deprecated and will be removed from future versions of IGraph/M. Use IGEdgeBetweennessCutoff instead.";
+IGEdgeBetweennessEstimate[args___] := (Message[IGEdgeBetweennessEstimate::deprec]; IGEdgeBetweennessCutoff[args]) (* TODO: remove eventually *)
+
+
+PackageExport["IGClosenessCutoff"]
+IGClosenessCutoff::usage =
+    "IGClosenessCutoff[graph, cutoff] gives the range-limited closeness centralities by considering only paths of at most length cutoff.\n" <>
+    "IGClosenessCutoff[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] gives the range-limited closeness centralities for the specified vertices.";
+
+Options[IGClosenessCutoff] = { Normalized -> True };
+SyntaxInformation[IGClosenessCutoff] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
+IGClosenessCutoff[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
+IGClosenessCutoff[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      expectInfNaN@fixInfNaN@check@ig@"closenessCutoff"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]]
+    ]
 
 PackageExport["IGClosenessEstimate"]
-IGClosenessEstimate::usage =
-    "IGClosenessEstimate[graph, cutoff] estimates closeness centrality by considering only paths of at most length cutoff.\n" <>
-    "IGClosenessEstimate[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] estimates the closeness centrality of the specified vertices.";
+IGClosenessEstimate::usage = "IGClosenessEstimate[] is deprecated. Use IGClosenessCutoff[] instead.";
+IGClosenessEstimate::deprec = "IGClosenessEstimate is deprecated and will be removed from future versions of IGraph/M. Use IGClosenessCutoff instead.";
+IGClosenessEstimate[args___] := (Message[IGClosenessEstimate::deprec]; IGClosenessCutoff[args]) (* TODO: remove eventually *)
 
-Options[IGClosenessEstimate] = { Normalized -> False };
-SyntaxInformation[IGClosenessEstimate] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
-IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, {}, opt : OptionsPattern[]] := {}
-IGClosenessEstimate[g_?igGraphQ, cutoff_?positiveOrInfQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+
+PackageExport["IGNeighborhoodCloseness"]
+IGNeighborhoodCloseness::usage =
+    "IGNeighborhoodCloseness[graph, cutoff] gives the range-limited closeness centralities along with the number of vertices reachable within the cutoff distance.\n" <>
+    "IGNeighborhoodCloseness[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] gives the range-limited closeness centralities and number of reachable vertices for the specified vertices.";
+
+Options[IGNeighborhoodCloseness] = { Normalized -> True };
+SyntaxInformation[IGNeighborhoodCloseness] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
+IGNeighborhoodCloseness[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
+IGNeighborhoodCloseness[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      expectInfNaN@fixInfNaN@check@ig@"neighborhoodCloseness"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]]
+    ]
+
+PackageExport["IGHarmonicCentralityCutoff"]
+IGHarmonicCentralityCutoff::usage =
+    "IGHarmonicCentralityCutoff[graph, cutoff] gives the range-limited harmonic centralities by considering only paths of at most length cutoff.\n" <>
+    "IGHarmonicCentralityCutoff[graph, cutoff, {vertex1, vertex2, \[Ellipsis]}] gives the range-limited harmonic centralities of the specified vertices.";
+
+Options[IGHarmonicCentralityCutoff] = { Normalized -> True };
+SyntaxInformation[IGHarmonicCentralityCutoff] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
+IGHarmonicCentralityCutoff[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
+IGHarmonicCentralityCutoff[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
       If[VertexCount[g] == 1, Developer`FromPackedArray, Identity] @ (* prevent {Indeterminate} packed array, which may misbehave, for single-vertex graph *)
-        check@ig@"closenessEstimate"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]]
+        check@ig@"harmonicCentralityCutoff"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]]
     ]
 
 
@@ -225,13 +265,11 @@ addCompletion[IGDegreeCentralization, {0, {"In", "Out", "All"}}]
 PackageExport["IGBetweennessCentralization"]
 IGBetweennessCentralization::usage = "IGBetweennessCentralization[graph] gives the graph level centralization based on betweenness.";
 
-IGBetweennessCentralization::bdmtd = IGBetweenness::bdmtd;
-Options[IGBetweennessCentralization] = { Normalized -> True, Method -> "Precise" };
+Options[IGBetweennessCentralization] = { Normalized -> True };
 SyntaxInformation[IGBetweennessCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGBetweennessCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
     Block[{ig = igMakeFast[graph]},
       sck@ig@"betweennessCentralization"[
-        Lookup[igBetweennessMethods, OptionValue[Method], Message[IGBetweennessCentralization::bdmtd, OptionValue[Method]]; False],
         OptionValue[Normalized]
       ]
     ]

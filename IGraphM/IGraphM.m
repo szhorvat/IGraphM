@@ -289,13 +289,16 @@ template = LTemplate["IGraphM",
 
         (* Centrality *)
 
-        LFun["betweenness", {True|False (* nobigint *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["betweenness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
         LFun["edgeBetweenness", {True|False (* normalized *)}, {Real, 1}],
         LFun["closeness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["harmonicCentrality", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
-        LFun["betweennessEstimate", {Real (* cutoff *), True|False (* nobigint *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
-        LFun["edgeBetweennessEstimate", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
-        LFun["closenessEstimate", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["betweennessCutoff", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["edgeBetweennessCutoff", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
+        LFun["closenessCutoff", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["neighborhoodCloseness", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
+        LFun["harmonicCentralityCutoff", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
         LFun["pageRank", {Integer (* method *), Real (* damping *), True|False (* directed *)}, {Real, 1}],
         LFun["personalizedPageRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *)}, {Real, 1}],
@@ -307,7 +310,7 @@ template = LTemplate["IGraphM",
         (* Centralization *)
 
         LFun["degreeCentralization", {Integer (* mode *), True|False (* loops *), True|False (* normalized *)}, Real],
-        LFun["betweennessCentralization", {True|False (* nobigint *), True|False (* normalized *)}, Real],
+        LFun["betweennessCentralization", {True|False (* normalized *)}, Real],
         LFun["closenessCentralization", {True|False (* normalized *)}, Real],
         LFun["eigenvectorCentralization", {True|False (* scale *), True|False (* normalized *)}, Real],
         LFun["centralization", {{Real, 1, "Constant"} (* centrality scores *), Real (* theor. max *), True|False (* normalized *)}, Real],
