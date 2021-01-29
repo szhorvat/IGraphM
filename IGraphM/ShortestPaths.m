@@ -326,7 +326,7 @@ IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the
 SyntaxInformation[IGGirth] = {"ArgumentsPattern" -> {_}};
 IGGirth[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
-      Round@check@ig@"girth"[]
+      Replace[check@ig@"girth"[], 0 -> Infinity]
     ]
 
 

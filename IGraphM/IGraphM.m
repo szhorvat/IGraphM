@@ -390,7 +390,7 @@ template = LTemplate["IGraphM",
         LFun["globalEfficiency", {}, Real],
         LFun["localEfficiency", {{Real, 1, "Constant"} (* vertices *), True|False (* directed *), Integer (* mode *)}, {Real, 1}],
         LFun["averageLocalEfficiency", {True|False (* directed *), Integer (* mode *)}, Real],
-        LFun["girth", {}, Real],
+        LFun["girth", {}, Integer],
         LFun["radius", {}, Real],
         LFun["eccentricity", {{Real, 1, "Constant"}}, {Real, 1}],
 
