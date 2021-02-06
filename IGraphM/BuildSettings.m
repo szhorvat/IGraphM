@@ -17,8 +17,8 @@ Switch[$OperatingSystem,
     "SystemCompileOptions" -> "-O3 -m64 -fPIC -framework Foundation -framework mathlink",*)
 
     "CompileOptions" -> {
-      "-flto=thin", "-O3",
-      (*"-g -Og -fno-omit-frame-pointer -fsanitize=address -fsanitize=undefined", *)
+      "-flto=thin", "-O3", "-fvisibility=hidden",
+      (* "-g -Og -fno-omit-frame-pointer -fsanitize=address -fsanitize=undefined", *)
       "-framework Accelerate", (* for BLAS and LAPACK *)
       "-mmacosx-version-min=10.9", (* earliest supported macOS version---required for C++11 *)
       "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk" },
