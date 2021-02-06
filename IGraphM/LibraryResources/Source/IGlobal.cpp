@@ -8,6 +8,16 @@
 #include <cstring>
 #include <csetjmp>
 
+
+static inline bool is_punctuated(const char *str) {
+    const size_t len = strlen(str);
+    if (len == 0)
+        return true;
+    if (str[len-1] == '.' || str[len-1] == '!' || str[len-1] == '?')
+        return true;
+    return false;
+}
+
 int igInterruptionHandler(void *) {
     if (mma::libData->AbortQ()) {
         IGRAPH_FINALLY_FREE();
@@ -20,6 +30,9 @@ int igInterruptionHandler(void *) {
 void igWarningHandler(const char *reason, const char *file, int line, int /* igraph_errno */) {
     std::ostringstream msg;
     msg << file << ":" << line << " - " << reason;
+    // If the message is not puncutated, add a fullstop.
+    if (! is_punctuated(reason))
+        msg << '.';
     mma::message(msg.str(), mma::M_WARNING);
 }
 
@@ -29,6 +42,9 @@ void igErrorHandler(const char *reason, const char *file, int line, int /* igrap
     if (strlen(reason) != 0) {
         std::ostringstream msg;
         msg << file << ":" << line << " - " << reason;
+        // If the message is not puncutated, add a fullstop.
+        if (! is_punctuated(reason))
+            msg << '.';
         mma::message(msg.str(), mma::M_ERROR);
     }
     IGRAPH_FINALLY_FREE();
@@ -43,6 +59,9 @@ void igFatalHandler(const char *reason, const char *file, int line) {
         std::ostringstream msg;
         msg << "Unexpected error in igraph. Please report this as a bug, along with the steps to reproduce it.\n";
         msg << file << ":" << line << " - " << reason;
+        // If the message is not puncutated, add a fullstop.
+        if (! is_punctuated(reason))
+            msg << '.';
         mma::message(msg.str(), mma::M_ERROR);
     }
 
