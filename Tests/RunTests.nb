@@ -98,15 +98,16 @@ Cell[BoxData[
         "deprecated", " ", "names", " ", "do", " ", "not", " ", "need", " ", 
          RowBox[{"SyntaxInformation", ":"}]}], " ", "*)"}], 
        "\[IndentingNewLine]", "\"\<IGDirectedTree\>\"", ",", 
-       "\"\<IGMinSeparators\>\"", ",", "\"\<IGTake\>\""}], 
-      "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "]"}], ",", 
-   "\[IndentingNewLine]", 
+       "\"\<IGMinSeparators\>\"", ",", "\"\<IGTake\>\"", ",", " ", 
+       "\"\<IGBetweennessEstimate\>\"", ",", "\"\<IGClosenessEstimate\>\"", 
+       ",", "\"\<IGEdgeBetweennessEstimate\>\""}], "\[IndentingNewLine]", 
+      "}"}]}], "\[IndentingNewLine]", "]"}], ",", "\[IndentingNewLine]", 
    RowBox[{
     RowBox[{
      RowBox[{"ToExpression", "[", 
       RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
-     RowBox[{"{", "}"}]}], "&"}]}], "\[IndentingNewLine]", "]"}]], "Input",
- CellLabel->"In[10]:=",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
+     RowBox[{"{", "}"}]}], "&"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
 
 Cell["\<\
 Print all usage messages for eyeball verification and spellchecking.\
@@ -146,7 +147,8 @@ SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
   "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
   "builtin"}},
-FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
-StyleDefinitions->"Default.nb"
+FrontEndVersion->"12.2 for Mac OS X x86 (64-bit) (December 12, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"bb39a162-8064-4a8d-aa80-de59318b4085"
 ]
 
