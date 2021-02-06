@@ -2724,7 +2724,7 @@ public:
         igraph_adjlist_t al;
         // This is the only igraph function used in treelikeComponents() that can fail.
         // Thus a simple igCheck() will do, no need to worry about freeing other igraph-specific data structures.
-        igCheck(igraph_adjlist_init(&graph, &al, IGRAPH_ALL));
+        igCheck(igraph_adjlist_init(&graph, &al, IGRAPH_ALL, IGRAPH_NO_LOOPS, IGRAPH_MULTIPLE));
 
         mint vcount = vertexCount();
         std::vector<mint> degrees;
@@ -2966,7 +2966,7 @@ public:
             throw mma::LibraryError("coordinatesToEmbedding: The number of coordinate-pairs should be the same as the vertex count.");
 
         igraph_inclist_t inclist;
-        igraph_inclist_init(&graph, &inclist, IGRAPH_OUT);
+        igraph_inclist_init(&graph, &inclist, IGRAPH_OUT, IGRAPH_NO_LOOPS);
 
         std::vector<double> angles(ecount);
 

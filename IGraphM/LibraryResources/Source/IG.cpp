@@ -408,7 +408,7 @@ void IG::intersectionArray(MLINK link) const {
     std::vector<mint> bvec(diam+1, -1), cvec(diam+1, -1);
 
     igraph_adjlist_t al;
-    igCheck(igraph_adjlist_init(&graph, &al, IGRAPH_ALL));
+    igCheck(igraph_adjlist_init(&graph, &al, IGRAPH_ALL, IGRAPH_NO_LOOPS, IGRAPH_NO_MULTIPLE));
 
     for (size_t u=0; u < vcount; ++u) {
         for (size_t v=0; v < vcount; ++v) {
