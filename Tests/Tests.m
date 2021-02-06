@@ -79,7 +79,7 @@ samePropGraphQ[g1_, g2_] :=
     ]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Test graphs*)
 
 
@@ -148,6 +148,7 @@ collab = ExampleData[{"NetworkGraph", "CondensedMatterCollaborations2005"}];
 football = ExampleData[{"NetworkGraph", "AmericanCollegeFootball"}];
 lesmiserables = ExampleData[{"NetworkGraph", "LesMiserables"}];
 terrorist  = ExampleData[{"NetworkGraph", "EastAfricaEmbassyAttacks"}];
+friendship = ExampleData[{"NetworkGraph","Friendship"}];
 
 
 bipartite = Graph[
@@ -174,6 +175,20 @@ asymmList = {
   GraphData[{6,95}],
   GraphData[{"Tree",{7,7}}]
 };
+
+
+dmultiloopy = 
+	Graph[
+		Range[11],
+		{1->2,2->11,11->3,3->4,4->1,1->5,5->6,7->2,4->4,4->4,4->4,2->11,2->8,8->3,3->9,9->9,5->10}
+	];
+
+
+umultiloopy = 
+    Graph[
+        Range[10],
+        {1 <-> 2, 2 <-> 3, 3 <-> 4, 4 <-> 1, 1 <-> 4, 1 <-> 5, 5 <-> 6, 3 <-> 7, 7 <-> 8, 5 <-> 9, 9 <-> 10, 10 <-> 7, 6 <-> 6, 6 <-> 6, 9 <-> 9, 9 <-> 3, 3 <-> 9, 9 <-> 3}
+    ];
 
 
 (* ::Section::Closed:: *)
@@ -3470,7 +3485,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Centralities*)
 
 
@@ -3535,10 +3550,19 @@ MT[
 ]
 
 
-(* TODO directed multigraph *)
+MT[
+  IGBetweenness[umultiloopy],
+  {4.666666666666667, 0.9999999999999999, 14.833333333333332, 1.9999999999999998, 10., 0., 8.75, 0., 11.25, 1.5}
+]
+
+MT[
+  IGBetweenness[dmultiloopy],
+  {30., 22., 31., 27., 14., 0., 0., 6.333333333333334, 0., 0., 12.666666666666668},
+  SameTest -> Equal
+]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Closeness*)
 
 
@@ -3571,6 +3595,26 @@ MT[
 ]
 
 
+(* must be compared using SameQ because of Indeterminate *)
+Block[{Internal`$SameQTolerance = Log10[2.]*7},
+  MT[
+    IGCloseness[dmultiloopy],
+    {0.42857142857142855, 0.2903225806451613, 0.34615384615384615, 0.34615384615384615, 1., Indeterminate, 0.24390243902439024, 0.2903225806451613, Indeterminate, Indeterminate, 0.2903225806451613}
+  ]
+]
+
+
+MT[
+	IGCloseness[dmultiloopy],
+	IGCloseness@SimpleGraph[dmultiloopy]
+]
+
+MT[
+	IGCloseness[umultiloopy],
+	IGCloseness@SimpleGraph[umultiloopy]
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*Range limited betweenness and closeness*)
 
@@ -3595,7 +3639,7 @@ MT[
 
 
 (* ::Subsubsection::Closed:: *)
-(*Page rank*)
+(*PageRank*)
 
 
 MT[
@@ -3617,8 +3661,45 @@ MT[
 ]
 
 
+MT[
+  IGPageRank[dmultiloopy],
+  {0.05456256995497844, 0.05915471396249873, 0.09522964768947766, 0.1652785569095764, 0.04262996884255929, 0.03755861336978115, 0.019440876611693456, 0.036201378901068094, 0.39942317919814296, 0.03755861336978115, 0.052961881190442726},
+  SameTest -> Equal
+]
+
+MT[
+  IGPageRank[umultiloopy],
+  {0.11169488006788235, 0.06108975438778022, 0.15779712263544857, 0.08482491640220521, 0.07999158291232755, 0.11770088070362338, 0.10255919001820273, 0.0440584371718241, 0.17497752735059527, 0.06530570835011067},
+  SameTest -> Equal
+]
+
+
+MT[
+  IGPageRank[dmultiloopy, Method -> "Arnoldi"],
+  IGPageRank[dmultiloopy, Method -> "PRPACK"],
+  SameTest -> Equal
+]
+
+MT[
+  IGPageRank[umultiloopy, Method -> "Arnoldi"],
+  IGPageRank[umultiloopy, Method -> "PRPACK"],
+  SameTest -> Equal
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGEigenvectorCentrality*)
+
+
+eigCent[g_] :=
+    Module[{am = N@Transpose@WeightedAdjacencyMatrix[g], ev},
+      If[UndirectedGraphQ[g],
+        am += DiagonalMatrix@Diagonal[am]
+      ];
+      ev = First@Eigenvectors[am, 1];
+      ev = Sign@First@MaximalBy[ev, Abs] ev; (* ensure non-negative *)
+      ev / Max[ev] (* normalize such that max centrality is 1 *)
+    ]
 
 
 MT[
@@ -3637,8 +3718,21 @@ MT[
 
 (* weighted *)
 MT[
-  Normalize@IGEigenvectorCentrality[lesmiserables],
-  Normalize@First@Eigenvectors[N@WeightedAdjacencyMatrix[lesmiserables], 1],
+  IGEigenvectorCentrality[lesmiserables],
+  eigCent[lesmiserables],
+  SameTest -> tolEq
+]
+
+
+MT[
+  IGEigenvectorCentrality[umultiloopy],
+  eigCent[umultiloopy],
+  SameTest -> tolEq
+]
+
+MT[
+  IGEigenvectorCentrality[dmultiloopy],
+  eigCent[dmultiloopy],
   SameTest -> tolEq
 ]
 
@@ -3654,6 +3748,13 @@ MT[
 (*IGConstraintScore*)
 
 
+MT[
+  IGConstraintScore[friendship],
+  {0.3742283950617284, 0.611111111111111, 0.611111111111111, 0.6759259259259258, 0.4598765432098765, 0.7847222222222223, 0.5, 0.5, 0.5},
+  SameTest -> Equal
+]
+
+
 (* TODO unweighted and weighted *)
 
 
@@ -3664,7 +3765,7 @@ MT[
 MTSection["Clustering coefficients"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Global, local, average local*)
 
 
@@ -4293,7 +4394,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Connectivity*)
 
 
@@ -4694,7 +4795,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGConnectedQ and IGWeaklyConnectedQ*)
 
 
@@ -4881,7 +4982,7 @@ MT[
 ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Shortest paths*)
 
 
@@ -5163,7 +5264,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGGirth*)
 
 
@@ -5192,7 +5293,14 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* self-loops must be ignored *)
+MT[
+  IGGirth[IGShorthand["1-2-3-1-1", SelfLoops -> True]],
+  3
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*IGDiameter*)
 
 
@@ -5361,6 +5469,18 @@ MT[
 ]
 
 
+(* graphs with self-loops are not bipartite *)
+MT[
+  IGBipartiteQ[IGShorthand["1-2-3-4-1-1", SelfLoops -> True]],
+  False
+]
+
+MT[
+  IGBipartiteQ[Graph[{1 <-> 1}]],
+  False
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGBipartitePartitions*)
 
@@ -5515,7 +5635,15 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* non-simple graph should error *)
+MT[
+  IGChordalQ[Graph[{1 <-> 1}]],
+  LibraryFunctionError["LIBRARY_FUNCTION_ERROR", 6],
+  {IGraphM::error}
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*IGChordalCompletion*)
 
 
@@ -5546,9 +5674,14 @@ MT[
 ]
 
 
+MT[
+  IGChordalCompletion[Graph[{1, 2}, {1 <-> 1}]],
+  $Failed,
+  {IGraphM::error}
+]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGMaximumCardinalitySearch*)
 
 
@@ -5565,6 +5698,13 @@ MT[
 MT[
   IGMaximumCardinalitySearch[GridGraph[{3, 4}]],
   {12, 5, 4, 11, 6, 3, 10, 7, 2, 9, 8, 1}
+]
+
+
+MT[
+  IGMaximumCardinalitySearch[Graph[{1 <-> 2, 1 <-> 2}]],
+  $Failed,
+  {IGraphM::error}
 ]
 
 
@@ -5853,6 +5993,13 @@ MT[
 MT[
   IGVertexColoring@IGEmptyGraph[],
   {}
+]
+
+
+(* self-loops must be ignored *)
+MT[
+  IGVertexColoring[Graph[{1 <-> 2, 1 <-> 2, 2 <-> 2}]],
+  {1, 2} (* note: {2,1} is also good *)
 ]
 
 

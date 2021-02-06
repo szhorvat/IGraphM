@@ -13,6 +13,7 @@
 #include <map>
 #include <set>
 #include <tuple>
+#include <iomanip>
 
 class IG;
 
@@ -556,7 +557,7 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef pageRank(mint method, double damping, bool directed) const {
+    mma::RealTensorRef personalizedPageRank(mint method, mma::RealTensorRef treset, double damping, bool directed) const {
         igraph_pagerank_algo_t algo;
         igraph_arpack_options_t arpack_options;
         switch (method) {
@@ -572,32 +573,6 @@ public:
         default: throw mma::LibraryError("Unknown PageRank method.");
         }
 
-        igVector vector;
-        double value;
-
-        igCheck(igraph_pagerank(
-                    &graph, algo, &vector.vec, &value, igraph_vss_all(),
-                    directed, damping, passWeights(), &arpack_options));
-        // TODO warn if value != 1.
-        return vector.makeMTensor();
-    }
-
-    mma::RealTensorRef personalizedPageRank(mint method, mma::RealTensorRef treset, double damping, bool directed) const {
-        igraph_pagerank_algo_t algo;
-        igraph_arpack_options_t arpack_options;
-        switch (method) {
-        case 0:
-            throw mma::LibraryError("Power iteration is no longer supported for personalized PageRank calculation.");
-        case 1:
-            algo = IGRAPH_PAGERANK_ALGO_ARPACK;
-            igraph_arpack_options_init(&arpack_options);
-            break;
-        case 2:
-            algo = IGRAPH_PAGERANK_ALGO_PRPACK;
-            break;
-        default: throw mma::LibraryError("Uknown PageRank method.");
-        }
-
         igraph_vector_t reset = igVectorView(treset);
 
         igVector vector;
@@ -605,8 +580,18 @@ public:
 
         igCheck(igraph_personalized_pagerank(
                     &graph, algo, &vector.vec, &value, igraph_vss_all(),
-                    directed, damping, &reset, passWeights(), &arpack_options));
-        // TODO warn if value != 1.
+                    directed, damping, treset.size() == 0 ? nullptr : &reset, passWeights(), &arpack_options));
+
+        // 7 binary digits of tolerance, i.e. a factor of 128, if what Mathematica's Equal uses
+        // With igraph's vendored ARPACK, 5 digits were sufficient in a few tests,
+        // but with an external ARPACK 3.8.0, 7 digits were needed to avoid false positives.
+        if (std::fabs(value - 1.0) > 128*std::numeric_limits<double>::epsilon()) {
+            std::ostringstream msg;
+            msg << std::setprecision(std::numeric_limits<double>::digits10) <<
+                   "The PageRank eigenvalue should be 1, actual eigenvalue is " << value << ". Possible convergence problem.";
+            mma::message(msg.str(), mma::M_WARNING);
+        }
+
         return vector.makeMTensor();
     }
 

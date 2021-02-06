@@ -349,7 +349,7 @@ Cell["\<\
 The following sections provide general information on each functionality \
 area, and show common usage patterns.\
 \>", "Text",ExpressionUUID->"30339ffb-b0e8-4bfb-968e-40d3e48f635e"]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -6349,7 +6349,7 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"?", 
-  "IGBetweennessEstimate"}]], \
+  "IGBetweennessCutoff"}]], \
 "Input",ExpressionUUID->"3c3e6a9c-87cf-43d9-9b35-13ee7356068d"],
 
 Cell[BoxData[
@@ -6359,12 +6359,8 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"?", 
-  "IGEdgeBetweennessEstimate"}]], \
+  "IGEdgeBetweennessCutoff"}]], \
 "Input",ExpressionUUID->"450b29cf-4e30-4f30-aeec-163e719ea128"],
-
-Cell["\<\
-Weighted graphs are supported by all betweenness functions in IGraph/M.\
-\>", "Text",ExpressionUUID->"006a0b44-6aca-4f39-a078-cf950f46812b"],
 
 Cell[TextData[{
  "The betweenness of a vertex or edge is, roughly speaking, the number of \
@@ -6424,20 +6420,26 @@ shortest paths passing through it. More formally, the betweenness of vertex \
  "."
 }], "Text",ExpressionUUID->"94496d14-0c21-464f-b430-adbf0516352e"],
 
-Cell["Available options:", \
-"Text",ExpressionUUID->"e62911ad-3469-4c7b-bd6c-9baaaadf2ee2"],
-
-Cell[CellGroupData[{
+Cell["\<\
+Weighted graphs and multigraphs are supported by all betweenness functions in \
+IGraph/M.\
+\>", "Text",ExpressionUUID->"006a0b44-6aca-4f39-a078-cf950f46812b"],
 
 Cell[TextData[{
- Cell[BoxData[
- "Method"],ExpressionUUID->"edd7850c-4fad-4ded-bedf-9ee99abba3f5"],
- ", see below. The default is ",
- Cell[BoxData[
- "\"\<Precise\>\""],ExpressionUUID->"b53d5700-4068-471e-a213-77fb5135d99c"],
- ". This method is currently only available for vertex betweenness \
-calculations."
-}], "Item",ExpressionUUID->"1e56c4fd-63e4-4366-a2ee-fd94ba71275a"],
+ "Note that as of Mathematica 12.2, the built-in ",
+ Cell[BoxData["BetweennessCentrality"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "c5a8c8a2-f85e-48b4-8e1b-f3eaa1a7117a"],
+ " function ignores weighted and multi-edges, which causes it to yield \
+different results from ",
+ Cell[BoxData["IGBetweenness"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "9922334c-ef0a-47fb-97cb-b3a7d500194e"],
+ "."
+}], "Text",ExpressionUUID->"c4471b39-700e-42da-ad1d-bab45bd64ed3"],
+
+Cell["Available options:", \
+"Text",ExpressionUUID->"e62911ad-3469-4c7b-bd6c-9baaaadf2ee2"],
 
 Cell[TextData[{
  Cell[BoxData[
@@ -6465,96 +6467,7 @@ calculation. Thus the normalization factor is ",
      RowBox[{"V", "-", "2"}], ")"}]}], TraditionalForm]],ExpressionUUID->
   "e0640446-ded6-4267-a025-01cf13e6890d"],
  " for undirected graphs. The normalized value lies between 0 and 1."
-}], "Item",ExpressionUUID->"243537e8-8708-4ab6-b610-faaf3ed537aa"]
-}, Open  ]],
-
-Cell[TextData[{
- "Available ",
- Cell[BoxData[
- "Method"],ExpressionUUID->"a5b39a52-5d4d-4a7f-a28f-362c9a64af86"],
- " options for vertex betweenness calculations:"
-}], "Text",ExpressionUUID->"edb8b33b-fd86-47db-8f28-ca94a52cc834"],
-
-Cell[CellGroupData[{
-
-Cell[TextData[{
- Cell[BoxData[
- "\"\<Precise\>\""],ExpressionUUID->"90d4f6b6-f89f-4158-98e7-1e3826feb686"],
- " is accurate, but slow. This is the default."
-}], "Item",ExpressionUUID->"1cc194b4-a93b-443c-885b-743383b4d11d"],
-
-Cell[TextData[{
- Cell[BoxData[
- "\"\<Fast\>\""],ExpressionUUID->"fe456ed8-46a1-446d-9515-747f5ac711d4"],
- " is fast, but may give incorrect results for large graphs with lots of \
-shortest paths."
-}], "Item",ExpressionUUID->"a7467772-d142-4b59-a78f-262173ca0d10"]
-}, Open  ]],
-
-Cell[TextData[{
- "Compare the ",
- Cell[BoxData[
- "\"\<Fast\>\""],ExpressionUUID->"d9f1a4d6-bdb7-4ba1-84bc-d400cb480758"],
- " and ",
- Cell[BoxData[
- "\"\<Precise\>\""],ExpressionUUID->"6350dbe5-e5aa-4d6f-958d-3244f6abeae6"],
- " methods:"
-}], "Text",ExpressionUUID->"6260dd84-738b-4ada-8159-9cdf2fcf79fe"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"g", "=", 
-   RowBox[{"GridGraph", "[", 
-    RowBox[{"{", 
-     RowBox[{"30", ",", "30"}], "}"}], "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"8a4ac86b-5617-43aa-b26d-1e80cd413182"],
-
-Cell[BoxData[
- RowBox[{"Timing", "[", 
-  RowBox[{"Max", "@", 
-   RowBox[{"IGBetweenness", "[", 
-    RowBox[{"g", ",", 
-     RowBox[{"Method", "\[Rule]", "\"\<Precise\>\""}]}], "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"2c1b9223-4b0c-4fdc-8fc9-92aa4d4cf984"],
-
-Cell[BoxData[
- RowBox[{"Timing", "[", 
-  RowBox[{"Max", "@", 
-   RowBox[{"IGBetweenness", "[", 
-    RowBox[{"g", ",", 
-     RowBox[{"Method", "\[Rule]", "\"\<Fast\>\""}]}], "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"0a745ce3-a99c-4852-a955-4c3aa75d344d"],
-
-Cell[TextData[{
- "For this large grid graph, the ",
- Cell[BoxData[
- "\"\<Fast\>\""],ExpressionUUID->"365869a3-3720-40c5-bcff-ee3b9e8695a3"],
- " method no longer gives accurate results:"
-}], "Text",ExpressionUUID->"94832b37-462e-46e5-b308-fb8355402da3"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"g", "=", 
-   RowBox[{"GridGraph", "[", 
-    RowBox[{"{", 
-     RowBox[{"40", ",", "40"}], "}"}], "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"d41c1876-58e1-45a9-b94c-1a5505a2f4a4"],
-
-Cell[BoxData[
- RowBox[{"Timing", "[", 
-  RowBox[{"Max", "@", 
-   RowBox[{"IGBetweenness", "[", 
-    RowBox[{"g", ",", 
-     RowBox[{"Method", "\[Rule]", "\"\<Precise\>\""}]}], "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"b9c50bc9-2383-489d-9182-a8a79c3dc00e"],
-
-Cell[BoxData[
- RowBox[{"Timing", "[", 
-  RowBox[{"Max", "@", 
-   RowBox[{"IGBetweenness", "[", 
-    RowBox[{"g", ",", 
-     RowBox[{"Method", "\[Rule]", "\"\<Fast\>\""}]}], "]"}]}], 
-  "]"}]], "Input",ExpressionUUID->"751a7c03-01b2-4d56-ab81-3ad15efe455a"],
+}], "Item",ExpressionUUID->"243537e8-8708-4ab6-b610-faaf3ed537aa"],
 
 Cell["\<\
 Visualize the vertex and edge betweenness of a weighted geometrical graph, \
@@ -6657,206 +6570,23 @@ Cell[BoxData[{
      RowBox[{"Rescale", "@*", "IGBetweenness"}]}]}], "\[IndentingNewLine]", 
    "]"}]}]}], "Input",ExpressionUUID->"bb707168-8739-4e3b-8ff3-bf243fd0ac5c"],
 
-Cell[TextData[StyleBox["Possible issues:",
- FontWeight->
-  "Bold"]], "Text",ExpressionUUID->"54e4d936-9e61-45b6-be2d-cb6727789b57"],
+Cell[CellGroupData[{
+
+Cell["Possible issues", \
+"Subsubsubsection",ExpressionUUID->"739a1af5-888a-442d-ade4-80d293a31373"],
 
 Cell["\<\
-Weighted betweenness calculations may be affected by numerical precision when \
-non-integer weights are used. Betweenness computations count shortest paths, \
-which means that the total weight of different paths must be compared for \
-equality.  Equality testing with floating point numbers is unreliable.  This \
-can be demonstrated on an example which is purposefully constructed to be \
-problematic.\
-\>", "Text",ExpressionUUID->"aa83e848-c255-43ed-9d7f-17b61a7d7531"],
-
-Cell["\<\
-An unweighted grid graph has many shortest paths between the same pair of \
-vertices.\
-\>", "Text",ExpressionUUID->"310897d1-414d-453f-ad76-c2d815e25a71"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"g", "=", 
-   RowBox[{"GridGraph", "[", 
-    RowBox[{"{", 
-     RowBox[{"6", ",", "6"}], "}"}], "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"4f3613fe-6c30-4f56-b2ec-a221f5c9efb5"],
-
-Cell["\<\
-Let us construct non-integer weights which can add up to (equal) integers in \
-many different ways.\
-\>", "Text",ExpressionUUID->"d3c06ed4-b328-44ce-9656-f601d74353ed"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"weights", "=", 
-   RowBox[{"1", "/", 
-    RowBox[{"RandomInteger", "[", 
-     RowBox[{
-      RowBox[{"{", 
-       RowBox[{"1", ",", "5"}], "}"}], ",", 
-      RowBox[{"EdgeCount", "[", "g", "]"}]}], "]"}]}]}], 
-  ";"}]], "Input",ExpressionUUID->"1e0a26b0-a19f-4b9d-8161-9f49947e8485"],
-
-Cell["\<\
-Let us now associate weights with edges and order the edges in two different \
-random ways. Betweenness should not depend on edge ordering, so graphs \
-constructed from both should have the same betweenness values.\
-\>", "Text",ExpressionUUID->"7fcd37e3-303c-435e-8e2b-1b2d4e1931d1"],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"asc1", "=", 
-   RowBox[{"Association", "@", 
-    RowBox[{"RandomSample", "@", 
-     RowBox[{"Thread", "[", 
-      RowBox[{
-       RowBox[{"EdgeList", "[", "g", "]"}], "\[Rule]", "weights"}], 
-      "]"}]}]}]}], ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"asc2", "=", 
-   RowBox[{"Association", "@", 
-    RowBox[{"RandomSample", "@", 
-     RowBox[{"Thread", "[", 
-      RowBox[{
-       RowBox[{"EdgeList", "[", "g", "]"}], "\[Rule]", "weights"}], 
-      "]"}]}]}]}], 
-  ";"}]}], "Input",ExpressionUUID->"9402514e-6b29-4af6-8c27-e642418d4904"],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"g1", "=", 
-   RowBox[{"Graph", "[", 
-    RowBox[{
-     RowBox[{"Keys", "[", "asc1", "]"}], ",", 
-     RowBox[{"EdgeWeight", "\[Rule]", 
-      RowBox[{"Values", "[", "asc1", "]"}]}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"g2", "=", 
-   RowBox[{"Graph", "[", 
-    RowBox[{
-     RowBox[{"Keys", "[", "asc2", "]"}], ",", 
-     RowBox[{"EdgeWeight", "\[Rule]", 
-      RowBox[{"Values", "[", "asc2", "]"}]}]}], "]"}]}], 
-  ";"}]}], "Input",ExpressionUUID->"313b64ea-d73f-4eb7-a993-c207fcc57beb"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"KeySort", "@", 
-   RowBox[{"AssociationThread", "[", 
-    RowBox[{
-     RowBox[{"VertexList", "[", "g1", "]"}], ",", 
-     RowBox[{"IGBetweenness", "[", "g1", "]"}]}], "]"}]}], "-", 
-  "\[IndentingNewLine]", 
-  RowBox[{"KeySort", "@", 
-   RowBox[{"AssociationThread", "[", 
-    RowBox[{
-     RowBox[{"VertexList", "[", "g2", "]"}], ",", 
-     RowBox[{"IGBetweenness", "[", "g2", "]"}]}], 
-    "]"}]}]}]], \
-"Input",ExpressionUUID->"3e943719-fecb-4593-b390-d545fcafcf45"],
-
-Cell[BoxData[
- RowBox[{"Max", "@", 
-  RowBox[{
-  "Abs", "[", "%", 
-   "]"}]}]], "Input",ExpressionUUID->"a513b2e2-a290-4672-b4ae-22a8a4fbbdf2"],
-
-Cell[TextData[{
- "Yet the results differ. This is because IGraph/M works with floating point \
-numbers. Even when different sums of ",
- StyleBox["exact",
-  FontSlant->"Italic"],
- " weights happen to be equal, floating point calculations will give slightly \
-different results."
-}], "Text",ExpressionUUID->"8d3b459f-66f8-40e3-a6eb-d707fd4efb5e"],
-
-Cell[TextData[{
- "To obtain a reliable result, we must use integer weights. The weights in \
-these example were inverses of ",
- Cell[BoxData[
-  RowBox[{"{", 
-   RowBox[{"1", ",", "2", ",", "3", ",", "4", ",", "5"}], "}"}]],
-  ExpressionUUID->"0c1b274a-c5e8-40f0-b3f8-73dc656f8c1e"],
- ". Multiplying these by their least common multiple will always yield an \
-integer."
-}], "Text",ExpressionUUID->"2755fe63-6c22-4714-bb94-4c1895617cb0"],
-
-Cell[BoxData[
- RowBox[{"LCM", "@@", 
-  RowBox[{"{", 
-   RowBox[{"1", ",", "2", ",", "3", ",", "4", ",", "5"}], 
-   "}"}]}]], "Input",ExpressionUUID->"b55c659c-c96e-4de6-9e6c-88ee24420312"],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"asc1", "=", 
-   RowBox[{"Association", "@", 
-    RowBox[{"RandomSample", "@", 
-     RowBox[{"Thread", "[", 
-      RowBox[{
-       RowBox[{"EdgeList", "[", "g", "]"}], "\[Rule]", 
-       RowBox[{"60", "weights"}]}], "]"}]}]}]}], ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"asc2", "=", 
-   RowBox[{"Association", "@", 
-    RowBox[{"RandomSample", "@", 
-     RowBox[{"Thread", "[", 
-      RowBox[{
-       RowBox[{"EdgeList", "[", "g", "]"}], "\[Rule]", 
-       RowBox[{"60", "weights"}]}], "]"}]}]}]}], 
-  ";"}]}], "Input",ExpressionUUID->"740aaaed-caa3-48c8-8c16-f1162ad8a1da"],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"g1", "=", 
-   RowBox[{"Graph", "[", 
-    RowBox[{
-     RowBox[{"Keys", "[", "asc1", "]"}], ",", 
-     RowBox[{"EdgeWeight", "\[Rule]", 
-      RowBox[{"Values", "[", "asc1", "]"}]}]}], "]"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"g2", "=", 
-   RowBox[{"Graph", "[", 
-    RowBox[{
-     RowBox[{"Keys", "[", "asc2", "]"}], ",", 
-     RowBox[{"EdgeWeight", "\[Rule]", 
-      RowBox[{"Values", "[", "asc2", "]"}]}]}], "]"}]}], 
-  ";"}]}], "Input",ExpressionUUID->"7f694295-e92e-46ee-b5b6-2abe3468fe80"],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"KeySort", "@", 
-   RowBox[{"AssociationThread", "[", 
-    RowBox[{
-     RowBox[{"VertexList", "[", "g1", "]"}], ",", 
-     RowBox[{"IGBetweenness", "[", "g1", "]"}]}], "]"}]}], "-", 
-  "\[IndentingNewLine]", 
-  RowBox[{"KeySort", "@", 
-   RowBox[{"AssociationThread", "[", 
-    RowBox[{
-     RowBox[{"VertexList", "[", "g2", "]"}], ",", 
-     RowBox[{"IGBetweenness", "[", "g2", "]"}]}], 
-    "]"}]}]}]], \
-"Input",ExpressionUUID->"fbdf5a2d-5f6d-4f38-9929-0a2c537770f1"],
-
-Cell[BoxData[
- RowBox[{"Chop", "@", 
-  RowBox[{"Max", "@", 
-   RowBox[{
-   "Abs", "[", "%", 
-    "]"}]}]}]], \
-"Input",ExpressionUUID->"ffd6f690-f40a-468f-9afd-68ffcba50969"],
-
-Cell[TextData[{
- "Now ",
- Cell[BoxData[
- "IGBetweenness"],ExpressionUUID->"7dacba95-eaaf-4de0-82ef-e5bd1fe24466"],
- " gives the same result regardless of edge ordering."
-}], "Text",ExpressionUUID->"99db50c6-56b2-4430-a3ad-76083a4f0260"]
+Betweenness computation involves comparing the lengths of paths, and deciding \
+which specific path is the shortest, and which paths have equal lengths. When \
+non-integer edge weights are used, the path length computation is subject to \
+roundoff errors, which may cause the path length comparison to fail. igraph \
+mitigates this by comparing the lengths using tolerances, however, there is \
+still a small risk that roundoff errors may affect the result. To avoid this \
+potential problem entirely, use integer weights. For example, if the weights \
+are rational, multiply them by the least common multiple of their \
+denominators.\
+\>", "Text",ExpressionUUID->"405cf1b3-0ba7-4d6e-86ce-5e4d96351d44"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -6871,8 +6601,13 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"?", 
-  "IGClosenessEstimate"}]], \
+  "IGClosenessCutoff"}]], \
 "Input",ExpressionUUID->"67f144a3-d2ef-4989-a1ac-7357c576152f"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGNeighborhoodCloseness"}]], \
+"Input",ExpressionUUID->"31e8e7f8-da14-4e5f-8b00-9de2b926d64f"],
 
 Cell["\<\
 The normalized closeness centrality of a vertex is the inverse average \
@@ -6887,31 +6622,24 @@ Cell["Available options:", \
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"Normalized", "\[Rule]", "True"}]],ExpressionUUID->
-  "e3ece11a-9b94-4159-ad1d-4986b461aef7"],
- " will normalize values by the number of vertices minus one. Effectively, \
-this computes closeness as the reciprocal of the average distance to all \
-other nodes. ",
- Cell[BoxData[
   RowBox[{"Normalized", "\[Rule]", "False"}]],ExpressionUUID->
-  "e0830e76-ec30-4efe-9914-b2cfbb7ef8f7"],
- " uses the sum (instead of the average) of distances to all other nodes. The \
-default is ",
- Cell[BoxData["False"],ExpressionUUID->"d3fb079f-1e23-430c-82f1-6f855986c0ba"],
- " for consistency with igraph interfaces in other languages."
+  "e3ece11a-9b94-4159-ad1d-4986b461aef7"],
+ " will compute the non-normalized closeness, i.e. the inverse of the sum of \
+shortest path lengths to all other vertices."
 }], "Item",ExpressionUUID->"a65bd670-ca50-4684-8556-f9588330dc51"],
 
 Cell[TextData[{
- "igraph\[CloseCurlyQuote]s closeness calculation differs from ",
- StyleBox["Mathematica",
-  FontSlant->"Italic"],
- "\[CloseCurlyQuote]s in that when there is no path connecting two vertices, \
-the total number of vertices is used as their distance (a number larger than \
-any other distance in an unweighted graph). ",
- StyleBox["Mathematica",
-  FontSlant->"Italic"],
- " computes closeness separately within each connected component."
-}], "Text",ExpressionUUID->"fd56731a-980a-422d-a8a3-56103c602016"],
+ "There is no standard definition of closeness centrality for disconnected \
+graphs. When the graph is disconnected, IGraph/M will only consider the \
+distances to reachable vertices. In the undirected case, this effectively \
+computes the closeness separately for each connected component. Use ",
+ Cell[BoxData[
+ "IGNeighborhoodCloseness"],ExpressionUUID->
+  "43abb244-ad53-4d34-a435-39cef134642a"],
+ " to obtain both the closeness values, as well as how many vertices were \
+reachable from each vertex. This information allows for computing various \
+generalizations of closeness centrality for disconnected graphs."
+}], "Text",ExpressionUUID->"aac3465f-1aaf-40fa-930c-760f00ecd079"],
 
 Cell["\<\
 Visualize the closeness of nodes in a weighted geometrical graph where \
@@ -6940,16 +6668,64 @@ Cell[BoxData[{
   "]"}]}], "Input",ExpressionUUID->"61707bb2-8ff0-40bb-9a82-03912b41b6ce"],
 
 Cell[TextData[{
+ "For isolated vertices, ",
  Cell[BoxData[
- "Indeterminate"],ExpressionUUID->"2417bd34-bbce-49b9-a3f8-910bbc114cae"],
- " is returned for a single-vertex graph."
+ "Indeterminate"],ExpressionUUID->"54ac1072-5568-499a-986e-774fc1e32396"],
+ " is returned."
 }], "Text",ExpressionUUID->"71497272-b0c1-4e64-a1e2-593c5a5b44a1"],
 
 Cell[BoxData[
  RowBox[{"IGCloseness", "@", 
   RowBox[{
-  "IGEmptyGraph", "[", "1", 
+  "IGShorthand", "[", "\"\<1,2-3\>\"", 
    "]"}]}]], "Input",ExpressionUUID->"09fab602-5cc1-47f9-97c3-bde923552c88"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Harmonic centrality", \
+"Subsubsection",ExpressionUUID->"9e979bd2-04a7-445b-ac49-22840a1f4b57"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGHarmonicCentrality"}]], \
+"Input",ExpressionUUID->"b2eee112-29df-48af-a41c-d5f93fb220af"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGHarmonicCentralityCutoff"}]], \
+"Input",ExpressionUUID->"cef0ff98-c7fa-4888-9a99-acc433b46781"],
+
+Cell["\<\
+The harmonic centrality of a vertex is the average inverse shortest path \
+length to all other vertices. The inverse shortest path length to unreachable \
+vertices is considered to be zero.\
+\>", "Text",ExpressionUUID->"1cb26a3e-3e27-420f-9032-56f5ac34249b"],
+
+Cell["Available options:", \
+"Text",ExpressionUUID->"f744aa49-3233-40ac-b55b-3bd1d0fb8abc"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"Normalized", "\[Rule]", "False"}]],ExpressionUUID->
+  "e7973c38-c3a7-4ceb-89e5-534e26e4d25b"],
+ " computes the non-normalized harmonic centrality, i.e. the sum of inverse \
+shortest path length to all other vertices."
+}], "Item",ExpressionUUID->"599f51b2-a5f3-46db-bddf-c6325d225b68"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"RandomGraph", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"30", ",", "40"}], "}"}], ",", 
+    RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}], "//", 
+  RowBox[{"IGVertexMap", "[", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "\"\<Rainbow\>\"", "]"}], ",", 
+    RowBox[{"VertexStyle", "\[Rule]", 
+     RowBox[{"IGHarmonicCentrality", "/*", "Rescale"}]}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"e0e2c8b2-0932-4f19-9244-5f94c37285c4"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -6967,8 +6743,44 @@ Cell[BoxData[
   "IGPersonalizedPageRank"}]], \
 "Input",ExpressionUUID->"1124b243-c547-4d0a-b829-e55ec7587b42"],
 
-Cell["Weighted graphs and multigraphs are supported.", \
-"Text",ExpressionUUID->"0f2ff807-300b-4204-977a-1584131f57db"],
+Cell[TextData[{
+ "The PageRank centrality of a vertex is the fraction of time a random walker \
+would spend on that vertex. The walker jumps from vertex to vertex randomly, \
+following outward edges with probabilities proportional to their weights. \
+Additionally, after each step, the walk is restarted from a random vertex \
+with probability ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"1", "-", "d"}], TraditionalForm]],ExpressionUUID->
+  "48f28282-ac62-4fb2-bf78-254bc5e93eac"],
+ ", where ",
+ Cell[BoxData[
+  FormBox["d", TraditionalForm]],ExpressionUUID->
+  "c49cda1f-ae05-4776-9f64-db57008c3e64"],
+ " is the damping factor. If the walker is stuck in a sink vertex (i.e. a \
+vertex with no outgoing edges), the walk is also restarted."
+}], "Text",ExpressionUUID->"fa06e721-a856-4439-9fdf-8fcbee8c079f"],
+
+Cell[TextData[{
+ "In the standard version of PageRank, when the walk is restarted, the \
+starting vertex is chosen uniformly. In the personalized version, it is \
+chosen with probabilities proportional to the values in the ",
+ Cell[BoxData["reset"],ExpressionUUID->"5b1fa8ee-4640-4529-8bc6-a980c6040c79"],
+ " parameter."
+}], "Text",ExpressionUUID->"93137aa7-b5e0-4b15-a2f9-0a078cdc43c8"],
+
+Cell["\<\
+Weighted graphs and multigraphs are supported, and self-loops are taken into \
+consideration.\
+\>", "Text",ExpressionUUID->"0f2ff807-300b-4204-977a-1584131f57db"],
+
+Cell[TextData[{
+ "Note that as of Mathematica 12.2, the built-in ",
+ Cell[BoxData["PageRankCentrality"],
+  FormatType->"StandardForm",ExpressionUUID->
+  "8a57955e-c9ab-4cca-a188-018bef64e5f5"],
+ " function ignores self-loops."
+}], "Text",ExpressionUUID->"21fce639-0166-4db9-832c-025a600994ed"],
 
 Cell["The default damping factor is 0.85.", \
 "Text",ExpressionUUID->"125cb2e1-1311-4c1e-a143-1510c03d237b"],
@@ -6984,22 +6796,8 @@ Cell[CellGroupData[{
 
 Cell[TextData[{
  Cell[BoxData[
- "\"\<PowerIteration\>\""],ExpressionUUID->
-  "a25a3daa-7d9d-4031-a780-14f15b4ef8f5"],
- ", deprecated, not recommended. Takes suboptions ",
- Cell[BoxData[
- "\"\<MaxIterations\>\""],ExpressionUUID->
-  "cb465aea-c197-4da4-808d-6816c2917c40"],
- " and ",
- Cell[BoxData[
- "\"\<Epsilon\>\""],ExpressionUUID->"432ce28c-59e8-4930-a66f-3b2acdb44014"],
- ". Does not support weights or multigraphs."
-}], "Item",ExpressionUUID->"c62fdaf2-405d-4c28-a831-58c54f699eb9"],
-
-Cell[TextData[{
- Cell[BoxData[
  "\"\<Arnoldi\>\""],ExpressionUUID->"eccae3e3-c4fc-452f-8db0-b2b8b88980df"],
- " uses ARPACK"
+ " uses ARPACK."
 }], "Item",ExpressionUUID->"448699d5-2f9b-4869-9aa9-0e8d13665cc9"],
 
 Cell[TextData[{
@@ -7013,7 +6811,49 @@ Cell[TextData[{
   ButtonNote->"https://github.com/DavidKurokawa/prpack/"],
  ". It is the default method."
 }], "Item",ExpressionUUID->"7bd6f5fe-f0b6-4904-b20e-6056889f6ae8"]
-}, Open  ]]
+}, Open  ]],
+
+Cell["\<\
+In this example, when restarting the walk, we always choose one of two \
+vertices of a grid graph:\
+\>", "Text",ExpressionUUID->"c5cf4345-b5b0-4351-bc9d-b68c9a248d78"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGSquareLattice", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"10", ",", "10"}], "}"}], ",", 
+     RowBox[{"VertexSize", "\[Rule]", "Large"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"reset", "=", 
+   RowBox[{"ReplacePart", "[", 
+    RowBox[{
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{"0", ",", 
+       RowBox[{"VertexCount", "[", "g", "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", "29", "}"}], ",", 
+        RowBox[{"{", "70", "}"}]}], "}"}], "\[Rule]", "1"}]}], "]"}]}], 
+  ";"}]}], "Input",ExpressionUUID->"e5bfe76a-004b-4683-8716-7dfbcbb8af7e"],
+
+Cell[BoxData[
+ RowBox[{"g", "//", 
+  RowBox[{"IGVertexMap", "[", 
+   RowBox[{
+    RowBox[{"ColorData", "[", "\"\<Rainbow\>\"", "]"}], ",", 
+    RowBox[{"VertexStyle", "\[Rule]", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"IGPersonalizedPageRank", "[", 
+         RowBox[{"#", ",", "reset", ",", "0.99"}], "]"}], "&"}], "/*", 
+       "Rescale"}], ")"}]}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"f2799d41-787e-4bb7-a005-692615db5e89"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -7133,7 +6973,7 @@ Cell[BoxData[
 Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"daa3101d-25bf-4d9b-a9cf-46f7a8301f10"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -7251,85 +7091,7 @@ Cell[BoxData[
      DefaultBaseStyle->{
       "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
      FormatType->TraditionalForm,
-     FrameTicks->None,
-     ImageCache->GraphicsData["CompressedBitmap", "\<\
-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
-ubRixQoZcc1ynZ6Ov30b9/0Hu7SpEA==\
-\>"]], "]"}], ",", "\[IndentingNewLine]", 
+     FrameTicks->None], "]"}], ",", "\[IndentingNewLine]", 
    RowBox[{"IGDegreeCentralization", "[", 
     RowBox[{
      GraphicsBox[
@@ -7361,95 +7123,7 @@ ubRixQoZcc1ynZ6Ov30b9/0Hu7SpEA==\
        "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> 
         Hue[0.8, 1., 0.6]},
       FormatType->TraditionalForm,
-      FrameTicks->None,
-      ImageCache->GraphicsData["CompressedBitmap", "\<\
-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
-YS1956NG0YYNGwjGibGK6IzU+pFe+S++1ptt\
-\>"]], ",", 
+      FrameTicks->None], ",", 
      RowBox[{"SelfLoops", "\[Rule]", "False"}]}], "]"}], ",", 
    "\[IndentingNewLine]", 
    RowBox[{"IGDegreeCentralization", "[", 
@@ -7494,101 +7168,7 @@ riV/fT3t0n4OqDwAsSn4lw==
      DefaultBaseStyle->{
       "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
      FormatType->TraditionalForm,
-     FrameTicks->None,
-     ImageCache->GraphicsData["CompressedBitmap", "\<\
-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
-kmLVhvaHv6n2QeMWdRhAh45yYtpC0X0Sn/5eRKx8DkJJtGTJEk1V5s+TknHA
-Yh2ZhlGao5TDEwush/tkZWXRgwcPGjv9LUX+5eXl0lSGr1zVFijN8dkDDF5a
-WqrJv4kKMCSysrIyacWja4xPWug0V1dXWx0d+6PeVnLIM7hsYmKidKonTpxI
-hYWFdPHiRZXNDa9GxL3+P/X/qf+dqfby00Qqvs2bN1NAnxjyDomk5cWlqD09
-zVXuKkJR9oMKEWJ4y4CjkHgQbkHBwZSeno548jClzLdwc5HiZzZ1YvpA+Pd4
-bzB9GJ9KsQlpQgmgFuwQExODpOJuL+0kMYb84ebtT8nzlus+Bic0+UaMyOay
-Tgm5KiGU0b2YRMFCnCF0mcCET+3adxIKZJZ0sxeyyWdo6Mjln5VSImLGC//k
-5+cbDZaXlJRIehwcm2gtT0j9XAobsGSD5dbnz9hJjX4mbbAcfAy+ZS62lkd+
-NEGUWbRokeNyJ2ExfCvDhfndrS+cWbhFKlh8Qa+qqnJzNC1ciTOQN2dmrdCm
-5YqM/ELeFW2ZFR380VzekuivQRDFMkge31vHTJ5D/YeMlSYAzIKvbowqd0cE
-QRrs2q1bdym3kRjxpRZuRKZnw6Hs83BEJ7gW34MzMzNp3rx5oHFUrAqdiQ4/
-xmP/BiD9HBc=\
-\>"]], "]"}]}], 
+     FrameTicks->None], "]"}]}], 
   "}"}]], "Input",ExpressionUUID->"c6b449ba-8cf5-4be6-be9b-36e414b31108"]
 }, Closed]],
 
@@ -9795,6 +9375,7 @@ Cell[BoxData[
            ShowContents->False], 
           InsetBox["1", {1.944934484934091, 0.4869131293713701},
            BaseStyle->"Graphics"]}, {
+          
           StyleBox[
            DiskBox[{1.0809082023413574, 0.035904784667003864}, 
             0.1803414155696349],
@@ -9829,7 +9410,8 @@ Cell[BoxData[
 
 Cell[TextData[{
  "If the graph has no cycles, ",
- Cell[BoxData["0"],ExpressionUUID->"a6590a73-a48d-4f78-b983-627d6b740fad"],
+ Cell[BoxData[
+ "\[Infinity]"],ExpressionUUID->"a6590a73-a48d-4f78-b983-627d6b740fad"],
  " is returned."
 }], "Text",ExpressionUUID->"07600359-d2b5-4647-ac69-a1da0c22d11a"],
 
@@ -9927,7 +9509,6 @@ Cell[BoxData[
           ArrowBox[{{0.00007263143566471619, 0.}, {0., 0.9737145167850567}}, 
            0.1803414155696349]}}, 
         {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], {
-          
           StyleBox[
            DiskBox[{1.944934484934091, 0.4869131293713701}, 
             0.1803414155696349],
@@ -9967,6 +9548,18 @@ Cell[BoxData[
    FrameTicks->None,
    ImageSize->{101.66796875, Automatic}], 
   "]"}]], "Input",ExpressionUUID->"7992f9e2-8a1d-4b56-8f43-7ff804755b58"],
+
+Cell[TextData[{
+ "For the null graph, ",
+ Cell[BoxData[
+ "Indeterminate"],ExpressionUUID->"d159fd08-a845-44d7-9f2c-b55fe8752423"],
+ " is returned."
+}], "Text",ExpressionUUID->"b25e819a-3fee-4b8a-bd59-ee028a020470"],
+
+Cell[BoxData[
+ RowBox[{"IGDiameter", "[", 
+  RowBox[{"IGEmptyGraph", "[", "]"}], 
+  "]"}]], "Input",ExpressionUUID->"15266397-969b-4872-9c6d-10710e432abd"],
 
 Cell[BoxData[
  RowBox[{"?", 
@@ -11536,7 +11129,7 @@ Cell[BoxData[
    FrameTicks->None], 
   "]"}]], "Input",ExpressionUUID->"0b256f39-945f-4cae-a346-eb5f7b175784"],
 
-Cell["The null graph is considered connected by convention.", \
+Cell["The null graph is considered disconnected by convention.", \
 "Text",ExpressionUUID->"dbcc5bdf-2e45-408f-bd03-71f0c15fb269"],
 
 Cell[BoxData[
@@ -12249,7 +11842,6 @@ Cell[BoxData[
              DynamicLocation["VertexID$7", Automatic, Center]}]]}, {
           Arrowheads[{{0.04, 1, {
               GraphicsBox[
-               
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
@@ -12446,6 +12038,7 @@ Cell[BoxData[
             
             FilledCurveBox[{{{0, 2, 1}, {1, 2, 2}, {0, 1, 1}, {1, 2, 2}, {0, 
              1, 1}, {1, 2, 2}, {0, 1, 1}, {1, 2, 
+             
              2}}}, {{{-3.29411783038469, -3.294117669615308}, \
 {-2.70588233038469, -3.294117669615308}, {-2.55882383038469, \
 -3.294117669615308}, {-2.55882383038469, -3.147058794615308}, \
@@ -12809,6 +12402,7 @@ Cell[BoxData[
             1.8829073080344623`, 1.6753663185872556`}}, 
             0.125485749580099]}}, 
          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], {
+           
            StyleBox[
             DiskBox[{2.4672573199232506, 0.8378444909707423}, 
              0.125485749580099],
@@ -15443,6 +15037,7 @@ Cell[BoxData[
            PaneBox["2",
             Alignment->Center,
             ImageMargins->2], 2, Automatic, {0.34641016151377535, 0.34641016151377535},
+           
            BaseStyle->"Graphics"], InsetBox[
            PaneBox["3",
             Alignment->Center,
@@ -17223,7 +16818,7 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"4ed3aa03-6661-4e79-92af-6348a68a70f9"]
 }, Closed]]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -20713,7 +20308,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20734,7 +20329,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -22657,7 +22252,6 @@ Cell[BoxData[
           CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
-          
           ImageSizeCache->{{-0.2393066909899062, 
            158.2393066909899}, {-63.23930669098989, 58.28533653037081}}],
          MouseAppearanceTag["NetworkGraphics"]],
@@ -54423,13 +54017,9 @@ Cell[TextData[{
  "A threshold graph can be built by repeatedly adding either an isolated \
 vertex, or a dominating vertex, i.e. a vertex that connects to all previous \
 ones. The following function takes a specification in which ",
- Cell[BoxData["."],
-  FormatType->"StandardForm",ExpressionUUID->
-  "ccad6e4e-4124-4981-ab0c-4c0a1eea8221"],
+ Cell[BoxData["."],ExpressionUUID->"ccad6e4e-4124-4981-ab0c-4c0a1eea8221"],
  " and ",
- Cell[BoxData["-"],
-  FormatType->"StandardForm",ExpressionUUID->
-  "a04efd63-d89c-4578-8460-0ead9192eae6"],
+ Cell[BoxData["-"],ExpressionUUID->"a04efd63-d89c-4578-8460-0ead9192eae6"],
  " represent isolated and dominating vertices, respectively, and builds the \
 corresponding graph."
 }], "Text",ExpressionUUID->"8fc2029a-7a8f-41b8-a048-67558429e871"],
@@ -59654,7 +59244,7 @@ with this program.  If not, see ",
 }, Open  ]]
 },
 WindowSize->{851, 1005},
-WindowMargins->{{350, Automatic}, {Automatic, 0}},
+WindowMargins->{{241, Automatic}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,

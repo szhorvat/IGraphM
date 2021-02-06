@@ -171,8 +171,8 @@ IGPageRank[graph_?igGraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPa
       If[ListQ[method],
         {method, methodOptions} = {First[method], Rest[method]};
       ];
-      check@ig@"pageRank"[
-        Lookup[igPageRankMethodsAsc, method, -1], damping, OptionValue[DirectedEdges]
+      check@ig@"personalizedPageRank"[
+        Lookup[igPageRankMethodsAsc, method, -1], (* reset *) {}, damping, OptionValue[DirectedEdges]
       ]
     ]
 
