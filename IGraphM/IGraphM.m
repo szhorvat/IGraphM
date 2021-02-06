@@ -300,7 +300,6 @@ template = LTemplate["IGraphM",
         LFun["neighborhoodCloseness", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
         LFun["harmonicCentralityCutoff", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
-        LFun["pageRank", {Integer (* method *), Real (* damping *), True|False (* directed *)}, {Real, 1}],
         LFun["personalizedPageRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *)}, {Real, 1}],
         LFun["eigenvectorCentrality", {True|False (* directed *), True|False (* normalized *)}, {Real, 1}],
         LFun["hubScore", {True|False (* normalized *)}, {Real, 1}],
