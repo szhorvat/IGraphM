@@ -8,6 +8,23 @@
 #include <cstring>
 #include <csetjmp>
 
+/* Detecting ASan with GCC:
+ *   https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html
+ * Detecting ASan with Clang:
+ *   https://clang.llvm.org/docs/AddressSanitizer.html#conditional-compilation-with-has-feature-address-sanitizer
+ */
+#if defined(__SANITIZE_ADDRESS__)
+#  define IG_SANITIZER_AVAILABLE 1
+#elif defined(__has_feature)
+#  if __has_feature(address_sanitizer)
+#    define IG_SANITIZER_AVAILABLE 1
+#  endif
+#endif
+
+#ifdef IG_SANITIZER_AVAILABLE
+#include <cstdio>
+#include <sanitizer/asan_interface.h>
+#endif
 
 static inline bool is_punctuated(const char *str) {
     const size_t len = strlen(str);
@@ -52,6 +69,14 @@ void igErrorHandler(const char *reason, const char *file, int line, int /* igrap
 
 
 void igFatalHandler(const char *reason, const char *file, int line) {
+
+#ifdef IG_SANITIZER_AVAILABLE
+    // When using AddressSanitizer, also print the fatal error to the terminal,
+    // and show a stack trace.
+    fprintf(stderr, "\nFatal igraph error at %s:%i : %s\n", file, line, reason);
+    fprintf(stderr, "Stack trace:\n");
+    __sanitizer_print_stack_trace();
+#endif
 
     // Use a separate block to ensure that the destructor of msg is run before the mma::fatal_error()
     // mma::fatal_error() does a longjmp(), which may prevent the destructor from being called.
