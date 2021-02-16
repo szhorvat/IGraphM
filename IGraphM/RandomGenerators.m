@@ -371,3 +371,37 @@ IGEstablishmentGame[
       check@ig@"establishmentGame"[n, k, Normal[typeWeights, SparseArray], prefMatrix, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
+
+
+PackageExport["IGPreferenceGame"]
+IGPreferenceGame::usage = "IGPreferenceGame[n, typeWeights, preferenceMatrix]";
+
+Options[IGPreferenceGame] = { DirectedEdges -> False, SelfLoops -> False };
+SyntaxInformation[IGPreferenceGame] = {
+  "ArgumentsPattern" -> {_, _, _, OptionsPattern[]}, "OptionNames" -> optNames[IGPreferenceGame, Graph]
+};
+IGPreferenceGame[
+  n_?Internal`NonNegativeMachineIntegerQ,
+  typeWeights_?VectorQ, prefMatrix_?MatrixQ,
+  opt : OptionsPattern[{IGPreferenceGame, Graph}]] :=
+      catch@Block[{ig = igMakeEmpty[]},
+        check@ig@"preferenceGame"[n, Normal[typeWeights, SparseArray], prefMatrix, OptionValue[DirectedEdges], OptionValue[SelfLoops]];
+        applyGraphOpt[opt]@igToGraph[ig]
+      ]
+
+
+PackageExport["IGAsymmetricPreferenceGame"]
+IGAsymmetricPreferenceGame::usage = "IGAsymmetricPreferenceGame[n, typeWeightsMatrix, preferenceMatrix]";
+
+Options[IGAsymmetricPreferenceGame] = { SelfLoops -> False };
+SyntaxInformation[IGAsymmetricPreferenceGame] = {
+  "ArgumentsPattern" -> {_, _, _, OptionsPattern[]}, "OptionNames" -> optNames[IGPreferenceGame, Graph]
+};
+IGAsymmetricPreferenceGame[
+  n_?Internal`NonNegativeMachineIntegerQ,
+  typeWeightsMatrix_?MatrixQ, prefMatrix_?MatrixQ,
+  opt : OptionsPattern[{IGAsymmetricPreferenceGame, Graph}]] :=
+      catch@Block[{ig = igMakeEmpty[]},
+        check@ig@"asymmetricPreferenceGame"[n, Normal[typeWeightsMatrix, SparseArray], prefMatrix, OptionValue[SelfLoops]];
+        applyGraphOpt[opt]@igToGraph[ig]
+      ]

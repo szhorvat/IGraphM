@@ -431,6 +431,22 @@ public:
         pref_matrix.copyFromMTensor(pref_matrix_ten);
         igConstructorCheck(igraph_establishment_game(&graph, n, type_distr_ten.size(), k, &type_distr, &pref_matrix.mat, directed, nullptr));
     }
+
+    void preferenceGame(mint n, mma::RealTensorRef type_distr_ten, mma::RealMatrixRef pref_matrix_ten, bool directed, bool loops) {
+        destroy();
+        igraph_vector_t type_distr = igVectorView(type_distr_ten);
+        igMatrix pref_matrix;
+        pref_matrix.copyFromMTensor(pref_matrix_ten);
+        igConstructorCheck(igraph_preference_game(&graph, n, type_distr_ten.size(), &type_distr, false, &pref_matrix.mat, nullptr, directed, loops));
+    }
+
+    void asymmetricPreferenceGame(mint n, mma::RealMatrixRef type_distr_ten, mma::RealMatrixRef pref_matrix_ten, bool loops) {
+        destroy();
+        igMatrix type_distr;
+        type_distr.copyFromMTensor(type_distr_ten);
+        igMatrix pref_matrix;
+        pref_matrix.copyFromMTensor(pref_matrix_ten);
+        igConstructorCheck(igraph_asymmetric_preference_game(&graph, n, type_distr.nrow(), type_distr.ncol(), &type_distr.mat, &pref_matrix.mat, nullptr, nullptr, loops));
     }
 
     // Modification

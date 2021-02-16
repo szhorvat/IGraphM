@@ -263,6 +263,10 @@ template = LTemplate["IGraphM",
 
         LFun["establishmentGame", {Integer (* n *), Integer (* k *), {Real, 1, "Constant"} (* type distribution *), {Real, 2, "Constant"} (* pref matrix *), True|False (* directed *)}, "Void"],
 
+        LFun["preferenceGame", {Integer (* n *), {Real, 1, "Constant"} (* type distribution *), {Real, 2, "Constant"} (* pref matrix *), True|False (* directed *), True|False (* loops *)}, "Void"],
+
+        LFun["asymmetricPreferenceGame", {Integer (* n *), {Real, 2, "Constant"} (* type distribution *), {Real, 2, "Constant"} (* pref matrix *), True|False (* directed *)}, "Void"],
+
         (* Modification *)
 
         LFun["connectNeighborhood", {Integer (* order *)}, "Void"],
