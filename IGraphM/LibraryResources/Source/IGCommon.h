@@ -443,7 +443,7 @@ inline mlStream & operator >> (mlStream &ml, igBoolVector &vec) {
 inline void igCheck(int err) {
     if (! err) return;
     std::ostringstream msg;
-    msg << "igraph returned with error: " << igraph_strerror(err);
+    msg << "igraph returned with error: " << igraph_strerror(err) << ".";
     throw mma::LibraryError(msg.str());
 }
 

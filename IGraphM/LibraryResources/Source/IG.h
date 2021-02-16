@@ -28,7 +28,7 @@ class IG {
         if (! err) return;
         empty(); // make sure 'graph' is not left uninitialized
         std::ostringstream msg;
-        msg << "igraph returned with error: " << igraph_strerror(err);
+        msg << "igraph returned with error: " << igraph_strerror(err) << ".";
         throw mma::LibraryError(msg.str());
     }
 
