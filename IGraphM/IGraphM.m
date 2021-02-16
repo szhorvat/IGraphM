@@ -259,9 +259,9 @@ template = LTemplate["IGraphM",
 
         LFun["growingGame", {Integer (* n *), Integer (* m *), True|False (* directed *), True|False (* citation *)}, "Void"],
 
-        LFun["callawayTraitsGame", {Integer (* n *), Integer (* types *), Integer (* k *), {Real, 1, "Constant"} (* type distribution *), {Real, 2, "Constant"} (* pref matrix *), True|False (* directed *)}, "Void"],
+        LFun["callawayTraitsGame", {Integer (* n *), Integer (* k *), {Real, 1, "Constant"} (* type distribution *), {Real, 2, "Constant"} (* pref matrix *), True|False (* directed *)}, "Void"],
 
-        LFun["establishmentGame", {Integer (* n *), Integer (* types *), Integer (* k *), {Real, 1, "Constant"} (* type distribution *), {Real, 2} (* pref matrix *), True|False (* directed *)}, "Void"],
+        LFun["establishmentGame", {Integer (* n *), Integer (* k *), {Real, 1, "Constant"} (* type distribution *), {Real, 2, "Constant"} (* pref matrix *), True|False (* directed *)}, "Void"],
 
         (* Modification *)
 

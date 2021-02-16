@@ -335,7 +335,7 @@ IGCallawayTraitsGame[
           Message[IGCallawayTraitsGame::prefmsym];
           Return[$Failed]
         ];
-        check@ig@"callawayTraitsGame"[n, Length[typeWeights], k, Normal[typeWeights], Normal[prefMatrix], OptionValue[DirectedEdges]];
+        check@ig@"callawayTraitsGame"[n, k, Normal[typeWeights, SparseArray], Normal[prefMatrix], OptionValue[DirectedEdges]];
         applyGraphOpt[opt]@igToGraph[ig]
       ]
 
@@ -368,6 +368,6 @@ IGEstablishmentGame[
         Message[IGEstablishmentGame::prefmsym];
         Return[$Failed]
       ];
-      check@ig@"establishmentGame"[n, Length[typeWeights], k, Normal[typeWeights], prefMatrix, OptionValue[DirectedEdges]];
+      check@ig@"establishmentGame"[n, k, Normal[typeWeights, SparseArray], prefMatrix, OptionValue[DirectedEdges]];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
