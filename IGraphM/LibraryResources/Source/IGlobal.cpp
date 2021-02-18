@@ -95,6 +95,35 @@ void igFatalHandler(const char *reason, const char *file, int line) {
 }
 
 
+double progress_reporting_granularity = 1.0;
+
+int igProgressHandler(const char *message, igraph_real_t percent, void *data) {
+    static igraph_real_t last_percent = 100;
+
+    // Only report progress if it has increased by at least the given granularity,
+    // if it has reached 100%, or if it has decreased since the last report.
+    if (percent < last_percent || percent >= 100 || percent >= last_percent + progress_reporting_granularity) {
+        MLINK link = mma::libData->getMathLink(mma::libData);
+        MLPutFunction(link, "EvaluatePacket", 1);
+            MLPutFunction(link, "Set", 2);
+                MLPutFunction(link, "List", 2);
+                    MLPutSymbol(link, "IGraphM`Progress`Message");
+                    MLPutSymbol(link, "IGraphM`Progress`Percent");
+                MLPutFunction(link, "List", 2);
+                    MLPutString(link, message);
+                    MLPutReal64(link, percent);
+        mma::libData->processMathLink(link);
+        int pkt = MLNextPacket(link);
+        if (pkt == RETURNPKT)
+            MLNewPacket(link);
+
+        last_percent = percent;
+    }
+
+    return IGRAPH_SUCCESS;
+}
+
+
 /***** Read Graph6, Digraph6 and Sparse6 *****/
 
 // MAXBYTE conflicts with winnt.h on Windows

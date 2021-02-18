@@ -151,9 +151,13 @@ template = LTemplate["IGraphM",
     LClass["IGlobal",
       {
         LFun["init", {}, "Void"],
+
+        LFun["setProgressReporting", {True|False (* enabled *), Real (* granularity *)}, "Void"],
+
         LFun["seedRandom", {Integer}, "Void"],
         LFun["randomGeneratorName", {}, "UTF8String"],
         LFun["setRandomGenerator", {Integer}, "Void"],
+
         LFun["version", {}, "UTF8String"],
         LFun["compilationDate", {}, "UTF8String"],
 
@@ -1050,6 +1054,33 @@ Which[
   igSubgraph[_, {}] := Graph[{},{}];
   igSubgraph[args___] := Subgraph[args]
 ];
+
+
+(***** Progress reporting *****)
+
+IGraphM`Progress`Message::usage = "IGraphM`Progress`Message is the current progress message.";
+IGraphM`Progress`Percent::usage = "IGraphM`Progress`Percent is the current progress in percentage.";
+
+IGraphM`Progress`Message = "";
+IGraphM`Progress`Percent = 0.0;
+
+IGraphM`Progress`SetReporting::usage =
+    "IGraphM`Progress`SetReporting[True] enables progress reporting.\n" <>
+    "IGraphM`Progress`SetReporting[False] enables disables reporting.";
+Options[IGraphM`Progress`SetReporting] = {
+  "Granularity" -> 1
+};
+SyntaxInformation[IGraphM`Progress`SetReporting] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGraphM`Progress`SetReporting[enabled : True|False, opt : OptionsPattern[]] :=
+    igraphGlobal@"setProgressReporting"[enabled, Replace[OptionValue["Granularity"], Automatic -> 1]]
+
+IGraphM`Progress`Indicator::usage = "IGraphM`Progress`Indicator[] represents IGraph/M's progress indicator.";
+SyntaxInformation[IGraphM`Progress`Indicator] = {"ArgumentsPattern" -> {}};
+IGraphM`Progress`Indicator[] :=
+    Labeled[
+      ProgressIndicator[Dynamic[IGraphM`Progress`Percent], {0, 100}],
+      Dynamic@If[StringQ@IGraphM`Progress`Message, IGraphM`Progress`Message, ""]
+    ]
 
 
 (***** Public functions *****)

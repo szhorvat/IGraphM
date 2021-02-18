@@ -20,7 +20,9 @@ igraph_warning_handler_t igWarningHandler;
 igraph_error_handler_t igErrorHandler;
 igraph_fatal_handler_t igFatalHandler;
 igraph_interruption_handler_t igInterruptionHandler;
+igraph_progress_handler_t  igProgressHandler;
 
+extern double progress_reporting_granularity;
 
 class IGlobal {
 public:
@@ -42,6 +44,21 @@ public:
     }
 
     const char *compilationDate() { return __DATE__; }
+
+    /* Progress handler */
+
+    void setProgressReporting(bool enabled, double granularity) {
+        if (granularity < 0) {
+            throw mma::LibraryError("Progress reporting granularity must not be negative.");
+        }
+        progress_reporting_granularity = granularity;
+        if (enabled) {
+            igraph_set_progress_handler(igProgressHandler);
+        } else {
+            igraph_set_progress_handler(nullptr);
+            igProgressHandler("", 0.0, nullptr);
+        }
+    }
 
     /* Random number generators */
 
