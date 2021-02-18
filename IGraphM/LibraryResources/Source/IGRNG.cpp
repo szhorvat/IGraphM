@@ -24,17 +24,17 @@ void rng_Mma_get_function_pointers() {
 
 
 int igraph_rng_Mma_init(void **state) {
-    IGRAPH_ERROR("Mathematica RNG error, unsupported function 'init' called", IGRAPH_EINTERNAL);
+    IGRAPH_ERROR("Mathematica RNG error, unsupported function 'init' called.", IGRAPH_EINTERNAL);
     return 0;
 }
 
 void igraph_rng_Mma_destroy(void *state) {
-    igraph_error("Mathematica RNG error, unsupported function 'destroy' called",
+    igraph_error("Mathematica RNG error, unsupported function 'destroy' called.",
                  __FILE__, __LINE__, IGRAPH_EINTERNAL);
 }
 
 int igraph_rng_Mma_seed(void *state, unsigned long int seed) {
-    IGRAPH_ERROR("Mathematica RNG error, unsupported function 'seed' called", IGRAPH_EINTERNAL);
+    IGRAPH_ERROR("Mathematica RNG error, unsupported function 'seed' called.", IGRAPH_EINTERNAL);
     return 0;
 }
 
@@ -69,7 +69,7 @@ igraph_real_t igraph_rng_Mma_get_real(void *state) {
 
     int err = randomReal(mma::libData, 2, FPA, FPA[2]);
     if (err)
-        throw mma::LibraryError("RNG: Error calling RandomReal", err);
+        throw mma::LibraryError("RNG: Error calling RandomReal.", err);
 
     mma::libData->compileLibraryFunctions->WolframLibraryData_cleanUp(mma::libData, 1);
 
@@ -88,7 +88,7 @@ igraph_real_t igraph_rng_Mma_get_norm(void *state) {
 
     int err = randomNormal(mma::libData, 2, FPA, FPA[2]);
     if (err)
-        throw mma::LibraryError("RNG: Error calling RandomNormal", err);
+        throw mma::LibraryError("RNG: Error calling RandomNormal.", err);
 
     mma::libData->compileLibraryFunctions->WolframLibraryData_cleanUp(mma::libData, 1);
 
@@ -125,7 +125,11 @@ void rngInit() {
     static igraph_rng_t rng_Mma = {
         &igraph_rngtype_Mma,
         0,
-        /* def= */ 2 // prevent re-seeding after setting new generator; see RNG_BEGIN()
+        // prevent re-seeding after setting new generator; see RNG_BEGIN()
+        // 0 = non-default
+        // 1 = default, not yet seeded
+        // 2 = default, already seeded
+        /* def= */ 0
     };
 
     rng_array[0] = &rng_Mma;         // Mathematica's RNG
@@ -134,7 +138,7 @@ void rngInit() {
     rng_Mma_get_function_pointers();
 
     // Seeding from the time is no longer needed because currenty there is no way to change the RNG method
-    // without also seending the generator.
+    // without also seeding the generator in IGraph/M. See the definition of IGSeedRandom[].
     // igCheck(igraph_rng_seed(&rng_Default, std::random_device()()));
     rng_Default.def = 2; // prevent re-seeding after setting new generator; see RNG_BEGIN()
 
