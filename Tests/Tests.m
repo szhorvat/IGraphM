@@ -79,7 +79,7 @@ samePropGraphQ[g1_, g2_] :=
     ]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Test graphs*)
 
 
@@ -406,15 +406,14 @@ MT[
 (* Statistics`Library`UpperTriangularMatrixToVector is used in IGTakeUpper in M \[GreaterEqual] 10.4.
    Verify that this undocumented symbol exists and that it works. *)
 
-If[$VersionNumber >= 10.4,
-  MT[
-    Names["Statistics`Library`UpperTriangularMatrixToVector"],
-    {"Statistics`Library`UpperTriangularMatrixToVector"}
-  ];
-  MT[
-    Statistics`Library`UpperTriangularMatrixToVector@Partition[Range[16], 4],
-    {2, 3, 4, 7, 8, 12}
-  ]
+MT[
+  Names["Statistics`Library`UpperTriangularMatrixToVector"],
+  {"Statistics`Library`UpperTriangularMatrixToVector"}
+]
+
+MT[
+  Statistics`Library`UpperTriangularMatrixToVector@Partition[Range[16], 4],
+  {2, 3, 4, 7, 8, 12}
 ]
 
 
@@ -3038,7 +3037,7 @@ subisomorphismTests /@ {
 };
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*IGGetIsomorphism, IGGetSubisomorphism*)
 
 
@@ -3120,7 +3119,7 @@ MT[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Automorphism groups*)
 
 
@@ -3449,7 +3448,28 @@ MT[
 
 
 MT[
+  IGLADSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3, 2 <-> 2}]],
+  True
+]
+
+MT[
+  IGLADSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3, 3 <-> 3}], "Induced" -> True],
+  True
+]
+
+MT[
   IGLADSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3}]],
+  False
+]
+
+MT[
+  IGLADSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3}], "Induced" -> True],
+  False
+]
+
+
+MT[
+  IGLADSubisomorphicQ[Graph[{1 <-> 1}], Graph[{1 <-> 2, 2 <-> 3, 2 <-> 3}]],
   $Failed,
   {IGraphM::error}
 ]
@@ -4742,6 +4762,17 @@ MT[
 ]
 
 
+MT[
+  IGMinimalSeparators[IGEmptyGraph[#]],
+  {}
+]& /@ Range[0, 1]
+
+MT[
+  IGMinimumSeparators[IGEmptyGraph[#]],
+  {}
+]& /@ Range[0, 2]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGGiantComponent*)
 
@@ -4912,13 +4943,20 @@ MTSection["Community detection"]
 
 funs = {IGCommunitiesEdgeBetweenness, IGCommunitiesGreedy, IGCommunitiesInfoMAP,
   IGCommunitiesLabelPropagation, IGCommunitiesMultilevel, IGCommunitiesWalktrap, 
-  IGCommunitiesLeadingEigenvector, IGCommunitiesSpinGlass};
+  IGCommunitiesLeadingEigenvector, IGCommunitiesFluid[#, 4]&,
+  IGCommunitiesSpinGlass[#, Method -> "Original"]&, IGCommunitiesSpinGlass[#, Method -> "Negative"]&,
+  IGCommunitiesLeiden};
 
 igClusterQ = Head[#] === IGClusterData&
 
 MT[
   igClusterQ[#[dolphin]],
   True
+]& /@ funs
+
+MT[
+  #[IGEmptyGraph[]]["Communities"],
+  {}
 ]& /@ funs
 
 
@@ -5635,11 +5673,9 @@ MT[
 ]
 
 
-(* non-simple graph should error *)
 MT[
-  IGChordalQ[Graph[{1 <-> 1}]],
-  LibraryFunctionError["LIBRARY_FUNCTION_ERROR", 6],
-  {IGraphM::error}
+  IGChordalQ[IGShorthand["1-1-2-3-4-1", SelfLoops -> True, MultiEdges -> True]],
+  False
 ]
 
 
@@ -5676,8 +5712,7 @@ MT[
 
 MT[
   IGChordalCompletion[Graph[{1, 2}, {1 <-> 1}]],
-  $Failed,
-  {IGraphM::error}
+  {}
 ]
 
 
@@ -5692,7 +5727,7 @@ MT[
 
 MT[
   IGMaximumCardinalitySearch[IGShorthand["A-B:C:I, B-A:C:D, C-A:B:E:H, D-B:E:F, E-C:D:F:H, F-D:E:G, G-F:H, H-C:E:G:I, I-A:H"]],
-  {"G", "I", "E", "F", "C", "D", "H", "B", "A"}
+  {9, 4, 6, 8, 3, 5, 7, 2, 1}
 ]
 
 MT[
@@ -5703,8 +5738,7 @@ MT[
 
 MT[
   IGMaximumCardinalitySearch[Graph[{1 <-> 2, 1 <-> 2}]],
-  $Failed,
-  {IGraphM::error}
+  {2, 1}
 ]
 
 
