@@ -177,6 +177,27 @@ IGPageRank[graph_?igGraphQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]]
     ]
 
 
+PackageExport["IGLinkRank"]
+IGLinkRank::usage =
+    "IGLinkRank[graph] gives a list of LinkRank centralities for the edges of the graph using damping factor 0.85.\n" <>
+    "IGLinkRank[graph, damping] gives a list of LinkRank centralities for the edges of the graph using the given damping factor.";
+
+Options[IGLinkRank] = { Method -> "PRPACK", DirectedEdges -> True };
+SyntaxInformation[IGLinkRank] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
+amendUsage[IGLinkRank, "Available Method options: <*DeleteCases[igPageRankMethods, \"PowerIteration\"]*>."];
+
+IGLinkRank[graph_?igGraphQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
+      method = OptionValue[Method];
+      If[ListQ[method],
+        {method, methodOptions} = {First[method], Rest[method]};
+      ];
+      check@ig@"personalizedLinkRank"[
+        Lookup[igPageRankMethodsAsc, method, -1], (* reset *) {}, damping, OptionValue[DirectedEdges]
+      ]
+    ]
+
+
 PackageExport["IGPersonalizedPageRank"]
 IGPersonalizedPageRank::usage =
     "IGPersonalizedPageRank[graph, reset] gives a list of personalized PageRank centralities for the vertices of the graph with personalization vector reset.\n" <>
@@ -202,6 +223,39 @@ IGPersonalizedPageRank[graph_?igGraphQ, reset_?VectorQ, damping : _?NumericQ : 0
         Lookup[igPageRankMethodsAsc, method, -1], Normal[reset], damping, OptionValue[DirectedEdges]
       ]
     ]
+
+IGPersonalizedPageRank[graph_?igGraphQ, asc_?AssociationQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
+    IGPersonalizedPageRank[graph, Lookup[asc, VertexList[graph], 0], damping, opt]
+
+
+PackageExport["IGPersonalizedLinkRank"]
+IGPersonalizedLinkRank::usage =
+    "IGPersonalizedLinkRank[graph, reset] gives a list of personalized LinkRank centralities for the edges of the graph with personalization vector reset.\n" <>
+    "IGPersonalizedLinkRank[graph, reset, damping] uses the given damping factor.\n" <>
+    "IGPersonalizedLinkRank[graph, \[LeftAssociation] vertex1 -> weight1, vertex2 -> weight2, \[Ellipsis] \[RightAssociation], damping] uses non-zero personalization weights only for the specified vertices.";
+
+Options[IGPersonalizedLinkRank] = { Method -> "PRPACK", DirectedEdges -> True };
+SyntaxInformation[IGPersonalizedLinkRank] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
+
+IGPersonalizedLinkRank::invarg = IGPersonalizedPageRank::invarg;
+
+IGPersonalizedLinkRank[graph_?igGraphQ, reset_?VectorQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
+      method = OptionValue[Method];
+      If[ListQ[method],
+        {method, methodOptions} = {First[method], Rest[method]};
+      ];
+      If[Length[reset] != VertexCount[graph],
+        Message[IGPersonalizedLinkRank::invarg];
+        throw[$Failed]
+      ];
+      check@ig@"personalizedLinkRank"[
+        Lookup[igPageRankMethodsAsc, method, -1], Normal[reset], damping, OptionValue[DirectedEdges]
+      ]
+    ]
+
+IGPersonalizedLinkRank[graph_?igGraphQ, asc_?AssociationQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
+    IGPersonalizedLinkRank[graph, Lookup[asc, VertexList[graph], 0], damping, opt]
 
 
 PackageExport["IGEigenvectorCentrality"]

@@ -612,6 +612,63 @@ public:
         return vector.makeMTensor();
     }
 
+    mma::RealTensorRef personalizedLinkRank(mint method, mma::RealTensorRef treset, double damping, bool directed) const {
+        igraph_pagerank_algo_t algo;
+        igraph_arpack_options_t arpack_options;
+        switch (method) {
+        case 0:
+            throw mma::LibraryError("Power iteration is no longer supported for LinkRank calculation.");
+        case 1:
+            algo = IGRAPH_PAGERANK_ALGO_ARPACK;
+            igraph_arpack_options_init(&arpack_options);
+            break;
+        case 2:
+            algo = IGRAPH_PAGERANK_ALGO_PRPACK;
+            break;
+        default: throw mma::LibraryError("Unknown LinkRank method.");
+        }
+
+        igraph_vector_t reset = igVectorView(treset);
+
+        igVector page_rank;
+        double value;
+
+        igCheck(igraph_personalized_pagerank(
+                    &graph, algo, &page_rank.vec, &value, igraph_vss_all(),
+                    directed, damping, treset.size() == 0 ? nullptr : &reset, passWeights(), &arpack_options));
+
+        // 7 binary digits of tolerance, i.e. a factor of 128, if what Mathematica's Equal uses
+        // With igraph's vendored ARPACK, 5 digits were sufficient in a few tests,
+        // but with an external ARPACK 3.8.0, 7 digits were needed to avoid false positives.
+        if (std::fabs(value - 1.0) > 128*std::numeric_limits<double>::epsilon()) {
+            std::ostringstream msg;
+            msg << std::setprecision(std::numeric_limits<double>::digits10) <<
+                   "The LinkRank eigenvalue should be 1, actual eigenvalue is " << value << ". Possible convergence problem.";
+            mma::message(msg.str(), mma::M_WARNING);
+        }
+
+        auto link_rank = mma::makeVector<double>(edgeCount());
+        std::fill(link_rank.begin(), link_rank.end(), 0.0);
+
+        igraph_neimode_t mode = directed ? IGRAPH_OUT : IGRAPH_ALL;
+
+        igVector strength;
+        igCheck(igraph_strength(&graph, &strength.vec, igraph_vss_all(), mode, IGRAPH_LOOPS, passWeights()));
+
+        igVector out_edges;
+        mint vcount = vertexCount();
+        for (mint v=0; v < vcount; ++v) {
+            igCheck(igraph_incident(&graph, &out_edges.vec, v, mode));
+
+            for (const auto &e : out_edges) {
+                double weight = weightedQ() ? weights[e] : 1.0;
+                link_rank[e] += strength[v] == 0 ? 0.0 : page_rank[v] * weight / strength[v];
+            }
+        }
+
+        return link_rank;
+    }
+
     mma::RealTensorRef eigenvectorCentrality(bool directed, bool normalized) const {
         igVector vector;
         double value;
