@@ -163,7 +163,7 @@ IGVertexMap[fun_, (Rule|RuleDelayed)[prop_, pfun_], g_?GraphQ] :=
         Message[IGVertexMap::list, pfun];
         Return[$Failed]
       ];
-      igSetVertexProperty[g, prop, fun /@ pfun[g]]
+      igSetVertexProperty[g, prop, fun /@ values]
     ]
 IGVertexMap[fun_, (Rule|RuleDelayed)[prop_, pfunlist_List], g_?GraphQ] :=
     Module[{values, badpos},
@@ -174,7 +174,7 @@ IGVertexMap[fun_, (Rule|RuleDelayed)[prop_, pfunlist_List], g_?GraphQ] :=
         Message[IGVertexMap::list2, Extract[pfunlist, badpos]];
         Return[$Failed]
       ];
-      igSetVertexProperty[g, prop, MapThread[fun, Through[pfunlist[g]]]]
+      igSetVertexProperty[g, prop, MapThread[fun, values]]
     ]
 IGVertexMap[fun_, prop : Except[_Rule|_RuleDelayed], g_?GraphQ] := IGVertexMap[fun, prop -> IGVertexProp[prop], g]
 IGVertexMap[fun_, spec_][g_] := IGVertexMap[fun, spec, g]
