@@ -7,7 +7,7 @@
 
 
 Package["IGraphM`"]
-igContextSetup[igPackagePrivateSymbol]
+
 
 (********************************************)
 (***** Common (package scope) functions *****)

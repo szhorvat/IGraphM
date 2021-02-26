@@ -6,7 +6,7 @@
 (* :Copyright: (c) 2016-2020 Szabolcs Horvát *)
 
 Package["IGraphM`"]
-igContextSetup[igPackagePrivateSymbol]
+
 
 (**********************************************************)
 (***** Utility functions for basic graph manipulation *****)

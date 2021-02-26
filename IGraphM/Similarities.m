@@ -6,7 +6,7 @@
 (* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
 
 Package["IGraphM`"]
-igContextSetup[igPackagePrivateSymbol]
+
 
 (*******************************)
 (***** Similarity measures *****)

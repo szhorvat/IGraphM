@@ -6,7 +6,7 @@
 (* :Copyright: (c) 2018-2019 Szabolcs Horvát *)
 
 Package["IGraphM`"]
-igContextSetup[igPackagePrivateSymbol]
+
 
 (**********************************************)
 (***** Utilities for edge-weighted graphs *****)

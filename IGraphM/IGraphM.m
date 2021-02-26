@@ -14,18 +14,6 @@
 
 Package["IGraphM`"]
 
-(* igContextSetup[] is a workaround for $Context and $ContextPath not being set during loading of new-style packages
-   before M11.0. See also the corresponding Block'ing of $Context and $ContextPath in Kernel/init.m.
-   Every file that is part of IGraphM` must evaluate igContextSetup[igPackagePrivateSymbol] at the beginning. *)
-PackageScope["igContextSetup"]
-If[$VersionNumber < 11.0,
-  igContextSetup::usage = "igContextSetup[localSymbol]";
-  igContextSetup[packagePrivateSymbol_] :=
-      ($Context = Context[packagePrivateSymbol];
-       $ContextPath = {"IGraphM`PackageScope`", "IGraphM`", "System`"})
-]
-igContextSetup[igPackagePrivateSymbol]
-
 PackageImport["IGraphM`LTemplate`"]
 
 (***** Usage messages *****)
@@ -121,8 +109,6 @@ $packageDirectory::usage = "$packageDirectory is the directory where IGraph/M is
 $packageVersion    = "%%version%% (%%date%%)";
 $packageDirectory  = DirectoryName[$InputFileName];
 $systemID = $SystemID;
-(* On OS X libraries use libc++ ABI since M10.4 and libstdc++ ABI up to M10.3.  We need separate binaries. *)
-If[$OperatingSystem === "MacOSX", $systemID = $systemID <> If[$VersionNumber <= 10.3, "-libstdc++", "-libc++"]];
 $libraryDirectory  = FileNameJoin[{$packageDirectory, "LibraryResources", $systemID}];
 $sourceDirectory   = FileNameJoin[{$packageDirectory, "LibraryResources", "Source"}];
 $buildSettingsFile = FileNameJoin[{$packageDirectory, "BuildSettings.m"}];
