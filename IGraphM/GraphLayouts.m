@@ -163,6 +163,21 @@ IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai
     ]
 
 
+toBounds[v : {_?NumericQ, _?NumericQ}] := {v, v}
+toBounds[m : {{_?NumericQ, _?NumericQ}, {_?NumericQ, _?NumericQ}}] := m
+toBounds[_] := throw[$Failed]
+
+makeCons[g_, asc_?AssociationQ, scale] :=
+    With[{size = (Max[Abs[asc]] + 2.0 Sqrt@VertexCount[g])},
+      Join @@ Transpose[
+        Lookup[
+          (toBounds /@ N[asc]) / scale, VertexList[g],
+          {{-1, -1}, {1, 1}} size
+        ],
+        {3, 1, 2}
+      ]
+    ]
+
 PackageExport["IGLayoutFruchtermanReingold"]
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options] lays out the graph using the Fruchterman–Reingold algorithm (similar to \"SpringElectricalEmbedding\").";
 
@@ -170,16 +185,22 @@ igFruchtermanReingoldMethods = <| Automatic -> 2, False -> 1, True -> 0 |>;
 
 Options[IGLayoutFruchtermanReingold] = {
   "MaxIterations" -> 500, "MaxMovement" -> 5, "UseGrid" -> Automatic,
-  "Continue" -> False, "Align" -> True
+  "Continue" -> False, "Align" -> Automatic,
+  "Constraints" -> None
 };
 
 SyntaxInformation[IGLayoutFruchtermanReingold] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutFruchtermanReingold, Graph]};
 
 IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruchtermanReingold,Graph}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.25},
+    catch@Module[{ig = igMakeFastWeighted[graph], scale = 0.25, constraints, cons, al},
+      constraints = Replace[OptionValue["Constraints"], None -> <||>];
+      cons = Length[constraints] > 0;
+      al = Replace[OptionValue["Align"], Automatic -> Not[cons]];
+      constraints = If[cons, makeCons[graph, constraints, scale], {{},{},{},{}}];
       applyGraphOpt[opt]@setVertexCoords[graph,
-        scale align[OptionValue["Align"]]@check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"], scale],
-          OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1]
+        scale align[al]@check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"], scale],
+          OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1],
+          cons, Sequence @@ constraints
         ]
       ]
     ]

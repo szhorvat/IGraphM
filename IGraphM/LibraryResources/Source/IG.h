@@ -1765,7 +1765,10 @@ public:
 
     mma::RealTensorRef layoutFruchtermanReingold(
             mma::RealMatrixRef initial, bool use_seed,
-            mint niter, double start_temp, mint grid_method) const
+            mint niter, double start_temp, mint grid_method,
+            bool constrain,
+            mma::RealTensorRef minx, mma::RealTensorRef miny,
+            mma::RealTensorRef maxx, mma::RealTensorRef maxy) const
     {
         igMatrix mat;
         mat.copyFromMTensor(initial);
@@ -1777,9 +1780,18 @@ public:
         default: throw mma::LibraryError("layoutFruchtermanReingold: Unknown method option.");
         }
 
+        igraph_vector_t iminx, imaxx, iminy, imaxy;
+        if (constrain) {
+            iminx = igVectorView(minx);
+            imaxx = igVectorView(maxx);
+            iminy = igVectorView(miny);
+            imaxy = igVectorView(maxy);
+        }
+
         igCheck(igraph_layout_fruchterman_reingold(
                     &graph, &mat.mat, use_seed, niter, start_temp, grid, passWeights(),
-                    nullptr, nullptr, nullptr, nullptr));
+                    constrain ? &iminx : nullptr, constrain ? &imaxx : nullptr,
+                    constrain ? &iminy : nullptr, constrain ? &imaxy : nullptr));
         return mat.makeMTensor();
     }
 
