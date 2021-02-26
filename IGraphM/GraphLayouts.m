@@ -297,10 +297,10 @@ PackageExport["IGLayoutReingoldTilford"]
 IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options] lays out a tree using the Reingold–Tilford algorithm.";
 
 (* TODO: Do this in C eventually as a workaround for connectedGraphComponents/Subgraph unreliability *)
-chooseRoots[graph_?UndirectedGraphQ] := First@GraphCenter[#]& /@ connectedGraphComponents[graph]
-chooseRoots[graph_? (IGForestQ[#, "Out"]&)] := First@TopologicalSort[#]& /@ connectedGraphComponents[graph]
-chooseRoots[graph_? (IGForestQ[#, "In"]&)] := Last@TopologicalSort[#]& /@ connectedGraphComponents[graph]
-chooseRoots[graph_] := First@GraphCenter[#]& /@ connectedGraphComponents@UndirectedGraph[graph]
+chooseRoots[graph_?UndirectedGraphQ] := First@GraphCenter[#]& /@ WeaklyConnectedGraphComponents[graph]
+chooseRoots[graph_? (IGForestQ[#, "Out"]&)] := First@TopologicalSort[#]& /@ WeaklyConnectedGraphComponents[graph]
+chooseRoots[graph_? (IGForestQ[#, "In"]&)] := Last@TopologicalSort[#]& /@ WeaklyConnectedGraphComponents[graph]
+chooseRoots[graph_] := First@GraphCenter[#]& /@ WeaklyConnectedGraphComponents@UndirectedGraph[graph]
 
 Options[IGLayoutReingoldTilford] = {
   "RootVertices" -> Automatic, "Rotation" -> 0,

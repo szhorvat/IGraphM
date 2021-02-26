@@ -144,12 +144,6 @@ IGWeightedAdjacencyMatrix[graph_?GraphQ, unconnected : Except[_?OptionQ] : 0, op
  * Update: Version 12.0 introduces EdgeWeightedGraphQ and VertexWeightedGraphQ.
  *)
 
-If[$VersionNumber >= 10.1, (* MinMax was added in M10.1 *)
-  minMax = MinMax,
-  minMax = {Min[#], Max[#]}&
-];
-
-
 PackageExport["IGVertexWeightedQ"]
 IGVertexWeightedQ::usage = "IGVertexWeightedQ[graph] tests if graph is a vertex-weighted graph.";
 
@@ -160,7 +154,7 @@ If[$VersionNumber >= 12.0,
   IGVertexWeightedQ[g_] :=
       WeightedGraphQ[g] &&
           With[{weights = Developer`ToPackedArray@GraphComputation`WeightVector[g]},
-            If[First[weights] === 1 && minMax[weights] === {1, 1},
+            If[First[weights] === 1 && MinMax[weights] === {1, 1},
               PropertyValue[g, VertexWeight] =!= Automatic,
               True
             ]
@@ -179,7 +173,7 @@ If[$VersionNumber >= 12.0,
   IGEdgeWeightedQ[g_] :=
       WeightedGraphQ[g] &&
           With[{weights = Developer`ToPackedArray@GraphComputation`WeightValues[g]},
-            If[First[weights] === 1 && minMax[weights] === {1, 1},
+            If[First[weights] === 1 && MinMax[weights] === {1, 1},
               PropertyValue[g, EdgeWeight] =!= Automatic,
               True
             ]

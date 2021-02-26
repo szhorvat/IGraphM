@@ -155,19 +155,12 @@ posIntVecQ = VectorQ[#, Internal`PositiveMachineIntegerQ]&; (* verified fast M11
 
 PackageScope["intVecQ"]
 intVecQ::usage = "intVecQ[]";
-intVecQ =
-    If[$VersionNumber < 11.0,
-      VectorQ[#, IntegerQ]&, (* In M10.4 and earlier VectorQ[{}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
-      VectorQ[#, Developer`MachineIntegerQ]& (* verified fast *)
-    ];
+intVecQ = VectorQ[#, Developer`MachineIntegerQ]&; (* verified fast *)
 
 PackageScope["intMatQ"]
 intMatQ::usage = "intMatQ[mat]";
-intMatQ =
-    If[$VersionNumber < 11.0,
-      MatrixQ[#, IntegerQ]&, (* In M10.4 and earlier MatrixQ[{{}}, Developer`MachineIntegerQ] returns False. M11.0+ is fine. *)
-      MatrixQ[#, Developer`MachineIntegerQ]& (* verified fast *)
-    ];
+intMatQ = MatrixQ[#, Developer`MachineIntegerQ]&; (* verified fast *)
+
 
 PackageScope["positiveNumericQ"]
 positiveNumericQ::usage = "positiveNumericQ[num]";
@@ -228,22 +221,6 @@ fixInfNaN[arr_?Developer`PackedArrayQ] := If[igraphGlobal@"infOrNanQ"[arr], Deve
 fixInfNaN[arr_] := arr
 
 (***** Workarounds for old versions missing some functions *****)
-
-PackageScope["keyValueMap"]
-keyValueMap::usage = "keyValueMap[fun, asc] is a v10.0-compatible replacement for KeyValueMap.";
-If[$VersionNumber >= 10.1,
-  keyValueMap = KeyValueMap,
-  keyValueMap[f_, asc_] := f @@@ Normal[asc]
-]
-
-
-PackageScope["connectedGraphComponents"]
-connectedGraphComponents::usage = "connectedGraphComponents[graph]";
-If[$VersionNumber >= 10.4,
-  connectedGraphComponents = WeaklyConnectedGraphComponents,
-  connectedGraphComponents[g_] := Subgraph[g, #]& /@ WeaklyConnectedComponents[g]
-]
-
 
 PackageScope["circularEmbedding"]
 circularEmbedding::usage = "circularEmbedding is a GraphLayout.";

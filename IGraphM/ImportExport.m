@@ -151,7 +151,7 @@ graphmlEdge[properties[{v1_, v2_}, asc_]] :=
     ]
 
 graphmlData[asc_, keyID_] :=
-    keyValueMap[
+    KeyValueMap[
       Function[{name, value},
         XMLElement["data", {"key" -> keyID[name]}, {value}]
       ],

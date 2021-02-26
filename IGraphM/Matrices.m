@@ -117,9 +117,7 @@ lowerSparse[sa_SparseArray] :=
       ]
     ]
 
-If[$VersionNumber >= 10.4, (* This internal function is only available in M >= 10.4 *)
-  upperDense[mat_?SquareMatrixQ] := Statistics`Library`UpperTriangularMatrixToVector[mat]
-]
+upperDense[mat_?SquareMatrixQ] := Statistics`Library`UpperTriangularMatrixToVector[mat]
 upperDense[mat_] := Join @@ Pick[mat, UpperTriangularize[ConstantArray[1, Dimensions[mat]], 1], 1]
 
 lowerDense[mat_] := Join @@ Pick[mat, LowerTriangularize[ConstantArray[1, Dimensions[mat]], -1], 1]
