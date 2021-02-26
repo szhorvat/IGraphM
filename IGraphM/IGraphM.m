@@ -627,7 +627,9 @@ template = LTemplate["IGraphM",
 
         LFun["intersectionArray", LinkObject],
 
-        LFun["sirProcess", LinkObject]
+        LFun["sirProcess", LinkObject],
+
+        LFun["localDensity", {}, {Real, 1}]
       }
     ],
 
