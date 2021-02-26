@@ -23,12 +23,12 @@ IGChordalQ[_] := False
 
 
 PackageExport["IGMaximumCardinalitySearch"]
-IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a rank to each vertex, from 1 to n, according to the maximum cardinality search algorithm. Visiting the vertices of the graph by decreasing rank is equivalent to always visiting the next vertex with the most already visited neighbours. Ties are broken randomly.";
+IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a rank to each vertex, from 1 to n, according to the maximum cardinality search algorithm. Visiting the vertices of the graph by decreasing rank is equivalent to always visiting the next vertex with the most already visited neighbours.";
 
 SyntaxInformation[IGMaximumCardinalitySearch] = {"ArgumentsPattern" -> {_}};
 IGMaximumCardinalitySearch[graph_?igGraphQ] :=
     catch@Block[{ig = igMakeFast[graph]},
-      igVertexNames[graph]@igIndexVec@check@ig@"maximumCardinalitySearch"[]
+      igIndexVec@check@ig@"maximumCardinalitySearch"[]
     ]
 
 PackageExport["IGChordalCompletion"]
