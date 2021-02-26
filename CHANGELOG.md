@@ -1,10 +1,12 @@
 ## Revision history for [IGraph/M](README.md)
 
-#### v0.6
+#### Unreleased
 
 Added:
 
   - `IGHarmonicCentrality` and `IGHarmonicCentralityCutoff` compute the harmonic centrality and range-limited harmonic centrality.
+  - `IGLinkRank` and `IGPersonalizedLinkRank` compute the equivalent of PageRank for edges.
+  - Experimental progress reporting functionality through functions in the ``IGraphM`Progress` `` context.
 
 Changed:
 
@@ -16,11 +18,22 @@ Changed:
     * `IGBetweennessEstimate`, `IGEdgeBetweennessEstimate` and `IGClosenessEstimate` have been renamed to `IGBetweennessCutoff`, `IGEdgeBetweennessCutoff` and `IGClosenessCutoff`.
  - `IGGirth` now returns `Infinity` for the null graph.
  - `IGDiameter` now returns `Indeterminate` for the null graph.
+ - `IGChordalQ`, `IGChordalCompletion` and `IGMaximumCardinalitySearch` now support non-simple graphs.
+ - LAD isomorphism functions now support self-loops.
 
 Fixed:
 
  - `IGPageRank` and `IGPersonalizedPageRank` will now warn if the calculation did not converge with the `"Arnoldi"` method. This happens only in rare cases.
- - `IGPersonalizedPageRank`: the default `"PRPACK"` method returned an incorrect result when the graph was directed, had some vertices with zero out-degree and the personalization vector was not uniform.
+ - `IGPersonalizedPageRank`: the default `"PRPACK"` method returned an incorrect result when the graph was not connected and the personalization vector was not uniform.
+ - Several community detection functions did not handle zero or one-vertex graphs correctly.
+ - `IGVertexMap` would evaluate the mapped functions twice instead of once.
+ - `IGMaximumCardinalitySearch` returned incorrect ranks for graphs whose vertex names differed from their vertex indices.
+
+Other:
+
+ - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it required Wolfram Engine 12.1 or later.
+ - More robust error handling: when certain serious error occur in the igraph C library, the Mathematica kernel is no longer forced to shut down.
+ - IGraph/M got leaner: smaller binary sizes.
 
 #### v0.5.1
 
