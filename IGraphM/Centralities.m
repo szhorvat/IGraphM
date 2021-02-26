@@ -165,7 +165,7 @@ Options[IGPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
 SyntaxInformation[IGPageRank] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 amendUsage[IGPageRank, "Available Method options: <*DeleteCases[igPageRankMethods, \"PowerIteration\"]*>."];
 
-IGPageRank[graph_?igGraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
+IGPageRank[graph_?igGraphQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
       method = OptionValue[Method];
       If[ListQ[method],
@@ -179,15 +179,16 @@ IGPageRank[graph_?igGraphQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPa
 
 PackageExport["IGPersonalizedPageRank"]
 IGPersonalizedPageRank::usage =
-    "IGPersonalizedPageRank[graph, reset] gives a list of personalized PageRank centralities for the vertices of the graph.\n" <>
-    "IGPersonalizedPageRank[graph, reset, damping] gives a list of personalized PageRank centralities for the vertices of the graph using damping factor damping.";
+    "IGPersonalizedPageRank[graph, reset] gives a list of personalized PageRank centralities for the vertices of the graph with personalization vector reset.\n" <>
+    "IGPersonalizedPageRank[graph, reset, damping] uses the given damping factor.\n" <>
+    "IGPersonalizedPageRank[graph, \[LeftAssociation] vertex1 -> weight1, vertex2 -> weight2, \[Ellipsis] \[RightAssociation], damping] uses non-zero personalization weights only for the specified vertices.";
 
 Options[IGPersonalizedPageRank] = { Method -> "PRPACK", DirectedEdges -> True };
 SyntaxInformation[IGPersonalizedPageRank] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 
 IGPersonalizedPageRank::invarg = "Second argument must be a vector of the same length as the vertex count of the graph.";
 
-IGPersonalizedPageRank[graph_?igGraphQ, reset_?VectorQ, damping : _?positiveNumericQ : 0.85, opt : OptionsPattern[]] :=
+IGPersonalizedPageRank[graph_?igGraphQ, reset_?VectorQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
       method = OptionValue[Method];
       If[ListQ[method],
