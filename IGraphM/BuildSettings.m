@@ -51,9 +51,11 @@ Switch[$OperatingSystem,
   },
 
   "Windows",
-  $buildSettings = { 
-    "CompileOptions" -> {"/EHsc", "/wd4244", "/DNOMINMAX"},
-    "IncludeDirectories" -> {"C:\\msys64\\home\\%USERNAME%\\local\\include", "C:\\msys64\\home\\%USERNAME%\\lemon\\include"},
-    "ExtraObjectFiles" -> {"C:\\msys64\\home\\%USERNAME%\\local\\lib\\libigraph.dll.a", "C:\\msys64\\home\\%USERNAME%\\lemon\\lib\\lemon.lib"}
-  }
+  With[{$depDir = "%USERPROFILE%\\Documents\\Packages"},
+    $buildSettings = { 
+      "CompileOptions" -> {"/EHsc", "/GL", "/wd4244", "/DNOMINMAX", "/DIGRAPH_STATIC"},
+      "IncludeDirectories" -> {$depDir <> "\\igraph\\include", $depDir <> "\\lemon\\include"},
+      "ExtraObjectFiles" -> {$depDir <> "\\igraph\\lib\\igraph.lib", $depDir <> "\\lemon\\lib\\lemon.lib", $depDir <> "\\glpk-5.0\\w64\\glpk.lib"}
+    }
+  ]
 ]
