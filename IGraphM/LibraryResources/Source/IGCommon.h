@@ -337,12 +337,24 @@ inline mlStream & operator << (mlStream &ml, const igList &list) {
 
 
 inline mlStream & operator << (mlStream &ml, const igMatrix &mat) {
+    int ok;
+
     int dims[2];
     dims[0] = mat.ncol();
     dims[1] = mat.nrow();
-    int ok =
-            MLPutFunction(ml.link(), "Transpose", 1) &&
-            MLPutReal64Array(ml.link(), mat.begin(), dims, nullptr, 2);
+    if (mat.nrow() == 0) {
+        // 0-column matrices are represented as {{}, ... {}} in Mathematica.
+        // However, 0-row matrices can only be represented as {}, which
+        // loses the column-count information, and cannot be Transpose[]d
+        // to a 0-column matrix. Therefore, we do the transposition
+        // manually by swapping dimensions (which is safe since there are no
+        // elements in the matrix).
+        std::swap(dims[0], dims[1]);
+        ok = MLPutReal64Array(ml.link(), mat.begin(), dims, nullptr, 2);
+    } else {
+        ok = MLPutFunction(ml.link(), "Transpose", 1) &&
+             MLPutReal64Array(ml.link(), mat.begin(), dims, nullptr, 2);
+    }
     if (! ok)
         ml.error("cannot return matrix");
     return ml;
