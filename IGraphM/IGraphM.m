@@ -457,7 +457,11 @@ template = LTemplate["IGraphM",
 
         LFun["layoutFruchtermanReingold3D",
           {{Real, 2, "Constant"} (* initial position *), True|False (* use initial *),
-            Integer (* niter *), Real (* start_temp *)},
+            Integer (* niter *), Real (* start_temp *),
+            True|False (* constrain *),
+            {Real, 1, "Constant"}, {Real, 1, "Constant"}, {Real, 1, "Constant"},
+            {Real, 1, "Constant"}, {Real, 1, "Constant"}, {Real, 1, "Constant"} (* minx/miny/minz/maxx/maxy/maxz *)
+          },
           {Real, 2}
         ],
 

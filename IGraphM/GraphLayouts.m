@@ -163,20 +163,41 @@ IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai
     ]
 
 
-toBounds[v : {_?NumericQ, _?NumericQ}] := {v, v}
-toBounds[m : {{_?NumericQ, _?NumericQ}, {_?NumericQ, _?NumericQ}}] := m
-toBounds[_] := throw[$Failed]
+IGraphM::badcoord = "`1` is not a valid vertex coordinate specification in `2`.";
+IGraphM::badcons = "Vertex position constraints must be given as an association from vertex names to coordinates.";
 
-makeCons[g_, asc_?AssociationQ, scale] :=
+toBounds2[v : {_?NumericQ, _?NumericQ}] := {v, v}
+toBounds2[m : {{_?NumericQ, _?NumericQ}, {_?NumericQ, _?NumericQ}}] := m
+
+toBounds3[v : {_?NumericQ, _?NumericQ, _?NumericQ}] := {v, v}
+toBounds3[m : {{_?NumericQ, _?NumericQ, _?NumericQ}, {_?NumericQ, _?NumericQ, _?NumericQ}}] := m
+
+toBounds2[e_] := (Message[IGraphM::badcoord, e, "2D"]; throw[$Failed])
+toBounds3[e_] := (Message[IGraphM::badcoord, e, "3D"]; throw[$Failed])
+
+makeCons2[g_, asc_?AssociationQ, scale_] :=
     With[{size = (Max[Abs[asc]] + 2.0 Sqrt@VertexCount[g])},
       Join @@ Transpose[
         Lookup[
-          (toBounds /@ N[asc]) / scale, VertexList[g],
+          (toBounds2 /@ N[asc]) / scale, VertexList[g],
           {{-1, -1}, {1, 1}} size
         ],
         {3, 1, 2}
       ]
     ]
+makeCons2[_, cons_, _] :=(Message[IGraphM::badcons]; throw[$Failed])
+
+makeCons3[g_, asc_?AssociationQ, scale_] :=
+    With[{size = (Max[Abs[asc]] + 2.0 Sqrt@VertexCount[g])},
+      Join @@ Transpose[
+        Lookup[
+          (toBounds3 /@ N[asc]) / scale, VertexList[g],
+          {{-1, -1, -1}, {1, 1, 1}} size
+        ],
+        {3, 1, 2}
+      ]
+    ]
+makeCons3[_, cons_, _] :=(Message[IGraphM::badcons]; throw[$Failed])
 
 PackageExport["IGLayoutFruchtermanReingold"]
 IGLayoutFruchtermanReingold::usage = "IGLayoutFruchtermanReingold[graph, options] lays out the graph using the Fruchterman–Reingold algorithm (similar to \"SpringElectricalEmbedding\").";
@@ -196,7 +217,7 @@ IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruch
       constraints = Replace[OptionValue["Constraints"], None -> <||>];
       cons = Length[constraints] > 0;
       al = Replace[OptionValue["Align"], Automatic -> Not[cons]];
-      constraints = If[cons, makeCons[graph, constraints, scale], {{},{},{},{}}];
+      constraints = If[cons, makeCons2[graph, constraints, scale], {{},{},{},{}}];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[al]@check@ig@"layoutFruchtermanReingold"[continueLayout[graph, OptionValue["Continue"], scale],
           OptionValue["MaxIterations"], OptionValue["MaxMovement"], Lookup[igFruchtermanReingoldMethods, OptionValue["UseGrid"], -1],
@@ -211,16 +232,22 @@ IGLayoutFruchtermanReingold3D::usage = "IGLayoutFruchtermanReingold3D[graph, opt
 
 Options[IGLayoutFruchtermanReingold3D] = {
   "MaxIterations" -> 500, "MaxMovement" -> 5,
-  "Continue" -> False, "Align" -> True
+  "Continue" -> False, "Align" -> Automatic,
+  "Constraints" -> None
 };
 
 SyntaxInformation[IGLayoutFruchtermanReingold3D] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutFruchtermanReingold3D, Graph3D]};
 
 IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruchtermanReingold3D,Graph3D}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.25},
+    catch@Module[{ig = igMakeFastWeighted[graph], scale = 0.25, constraints, cons, al},
+      constraints = Replace[OptionValue["Constraints"], None -> <||>];
+      cons = Length[constraints] > 0;
+      al = Replace[OptionValue["Align"], Automatic -> Not[cons]];
+      constraints = If[cons, makeCons3[graph, constraints, scale], {{},{},{},{},{},{}}];
       applyGraphOpt3D[opt]@setVertexCoords3D[graph,
-        scale align[OptionValue["Align"]]@check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
-          OptionValue["MaxIterations"], OptionValue["MaxMovement"]
+        scale align[al]@check@ig@"layoutFruchtermanReingold3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
+          OptionValue["MaxIterations"], OptionValue["MaxMovement"],
+          cons, Sequence @@ constraints
         ]
       ]
     ]

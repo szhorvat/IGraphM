@@ -1797,13 +1797,29 @@ public:
 
     mma::RealTensorRef layoutFruchtermanReingold3D(
             mma::RealMatrixRef initial, bool use_seed,
-            mint niter, double start_temp) const
+            mint niter, double start_temp,
+            bool constrain,
+            mma::RealTensorRef minx, mma::RealTensorRef miny, mma::RealTensorRef minz,
+            mma::RealTensorRef maxx, mma::RealTensorRef maxy, mma::RealTensorRef maxz) const
     {
         igMatrix mat;
         mat.copyFromMTensor(initial);
+
+        igraph_vector_t iminx, imaxx, iminy, imaxy, iminz, imaxz;
+        if (constrain) {
+            iminx = igVectorView(minx);
+            imaxx = igVectorView(maxx);
+            iminy = igVectorView(miny);
+            imaxy = igVectorView(maxy);
+            iminz = igVectorView(minz);
+            imaxz = igVectorView(maxz);
+        }
+
         igCheck(igraph_layout_fruchterman_reingold_3d(
                     &graph, &mat.mat, use_seed, niter, start_temp, passWeights(),
-                    nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
+                    constrain ? &iminx : nullptr, constrain ? &imaxx : nullptr,
+                    constrain ? &iminy : nullptr, constrain ? &imaxy : nullptr,
+                    constrain ? &iminz : nullptr, constrain ? &imaxz : nullptr));
         return mat.makeMTensor();
     }
 
