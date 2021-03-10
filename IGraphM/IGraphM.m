@@ -383,7 +383,7 @@ template = LTemplate["IGraphM",
         LFun["averageDegreeConnectivity", {Integer (* neighbour mode *), Integer (* degree mode *)}, {Real, 1}],
         LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
         (* LFun["averagePathLength", {}, Real], *) (* currently not in use; averagePathLengthWeighted() will call averagePathLength() in C code when needed *)
-        LFun["averagePathLengthWeighted", {Integer}, Real],
+        LFun["averagePathLengthWeighted", {Integer (* method *), True|False (* by components *)}, Real],
         LFun["globalEfficiency", {}, Real],
         LFun["localEfficiency", {{Real, 1, "Constant"} (* vertices *), True|False (* directed *), Integer (* mode *)}, {Real, 1}],
         LFun["averageLocalEfficiency", {True|False (* directed *), Integer (* mode *)}, Real],

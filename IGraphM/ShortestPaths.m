@@ -162,7 +162,10 @@ igAveragePathLengthMethods = <|
 
 IGAveragePathLength::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igAveragePathLengthMethods], InputForm] <> ".";
 
-Options[IGAveragePathLength] = { Method -> Automatic };
+Options[IGAveragePathLength] = {
+  Method -> Automatic,
+  "ByComponents" -> True
+};
 SyntaxInformation[IGAveragePathLength] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 amendUsage[IGAveragePathLength, "Available Method options: <*Keys[igAveragePathLengthMethods]*>."]
 IGAveragePathLength[graph_?igGraphQ, opt : OptionsPattern[]] :=
@@ -180,7 +183,8 @@ IGAveragePathLength[graph_?igGraphQ, opt : OptionsPattern[]] :=
         ]
       ];
       check@ig@"averagePathLengthWeighted"[
-        Lookup[igAveragePathLengthMethods, method, Message[IGAveragePathLength::bdmtd, method]; throw[$Failed]]
+        Lookup[igAveragePathLengthMethods, method, Message[IGAveragePathLength::bdmtd, method]; throw[$Failed]],
+        OptionValue["ByComponents"]
       ]
     ]
 

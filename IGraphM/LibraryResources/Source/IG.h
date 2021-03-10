@@ -1488,19 +1488,19 @@ public:
         return path.makeMTensor();
     }
 
-    double averagePathLength() const {
+    double averagePathLength(bool components) const {
         double res;
-        igCheck(igraph_average_path_length(&graph, &res, nullptr, /* directed */ true, /* unconnected */ true));
+        igCheck(igraph_average_path_length(&graph, &res, nullptr, /* directed */ true, components));
         return res;
     }
 
-    double averagePathLengthDijkstra() const {
+    double averagePathLengthDijkstra(bool components) const {
         double res;
-        igCheck(igraph_average_path_length_dijkstra(&graph, &res, nullptr, passWeights(), /* directed */ true, /* unconnected */ true));
+        igCheck(igraph_average_path_length_dijkstra(&graph, &res, nullptr, passWeights(), /* directed */ true, components));
         return res;
     }
 
-    double averagePathLengthWeighted(mint method) const {
+    double averagePathLengthWeighted(mint method, bool components) const {
         /* method values:
          * 0 - unweighted
          * 1 - Dijkstra
@@ -1508,9 +1508,9 @@ public:
          * 3 - Johnson
          */
         if (method == 0 || ! weightedQ())
-            return averagePathLength();
+            return averagePathLength(components);
         if (method == 1)
-            return averagePathLengthDijkstra();
+            return averagePathLengthDijkstra(components);
         if (method < 0 || method > 3)
             throw mma::LibraryError("averagePathLengthWeighted: Unknown method.");
 
@@ -1537,9 +1537,14 @@ public:
             }
 
             for (int j=0; j < mat.ncol(); ++j)
-                if (i != j && VECTOR(mat.mat.data)[j] != IGRAPH_INFINITY) {
-                    cnt += 1;
-                    sum += VECTOR(mat.mat.data)[j];
+                if (i != j) {
+                    if (VECTOR(mat.mat.data)[j] != IGRAPH_INFINITY) {
+                        cnt += 1;
+                        sum += VECTOR(mat.mat.data)[j];
+                    } else {
+                        if (! components)
+                            return IGRAPH_INFINITY;
+                    }
                 }
         }
 
