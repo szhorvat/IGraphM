@@ -3849,6 +3849,28 @@ MT[
   N@{1, 1, 1/3, Indeterminate}
 ]
 
+
+MT[
+  IGAverageLocalClusteringCoefficient[IGEmptyGraph[]],
+  0.
+]
+
+MT[
+  IGAverageLocalClusteringCoefficient[IGEmptyGraph[], "ExcludeIsolates" -> True],
+  Indeterminate
+]
+
+MT[
+  IGAverageLocalClusteringCoefficient[IGEmptyGraph[5], "ExcludeIsolates" -> False],
+  0.
+]
+
+MT[
+  IGAverageLocalClusteringCoefficient[IGEmptyGraph[5], "ExcludeIsolates" -> True],
+  Indeterminate
+]
+
+
 MT[
   IGAverageLocalClusteringCoefficient[Graph[{1, 2, 3, 4}, {1 <-> 2, 2 <-> 3, 3 <-> 1, 3 <-> 4}]],
   N[7/12]
@@ -3866,15 +3888,23 @@ MT[
 
 MT[
   IGWeightedClusteringCoefficient[IGEmptyGraph[]],
-  {},
-  {IGraphM::warning}
+  {}
+]
+
+MT[
+  IGWeightedClusteringCoefficient[IGEmptyGraph[], "ExcludeIsolates" -> True],
+  {}
 ]
 
 
 MT[
   IGWeightedClusteringCoefficient[IGEmptyGraph[1]],
-  {0.},
-  {IGraphM::warning}
+  {0.}
+]
+
+MT[
+  IGWeightedClusteringCoefficient[IGEmptyGraph[1], "ExcludeIsolates" -> True],
+  {Indeterminate}
 ]
 
 
