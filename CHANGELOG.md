@@ -11,6 +11,7 @@ Added:
 Changed:
 
  - `IGConnectedQ` and `IGWeaklyConnectedQ` now consider the null graph to be disconnected; this is consistent with other functions such as `IGTreeQ`.
+ - `IGAveragePathLength` now has a `"ByComponents"` option, controlling the handling of disconnected graphs.
  - Centrality functions:
     * `IGCloseness` now computes the normalized closeness, i.e. the inverse of the mean distance to other vertices, by default. Use `Normalized -> False` to get the previous behaviour.
     * `IGCloseness` now uses the distances only to reachable vertices when computing the closeness. In undirected disconnected graphs, it effectively computes the closeness per component. For isolated vertices (or sinks in directed graphs) it now returns `Indeterminate`.
@@ -20,6 +21,7 @@ Changed:
  - `IGDiameter` now returns `Indeterminate` for the null graph.
  - `IGChordalQ`, `IGChordalCompletion` and `IGMaximumCardinalitySearch` now support non-simple graphs.
  - LAD isomorphism functions now support self-loops.
+ - The behaviour of the random number generator is now consistent between platforms, meaning that with a given seed, a randomized IGraph/M function will return the same result on all platforms. However, result will now be different from version 0.5 for the same seed.
 
 Fixed:
 
