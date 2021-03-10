@@ -30,7 +30,7 @@ static inline bool is_punctuated(const char *str) {
     const size_t len = strlen(str);
     if (len == 0)
         return true;
-    if (str[len-1] == '.' || str[len-1] == '!' || str[len-1] == '?')
+    if (str[len-1] == '.' || str[len-1] == '!' || str[len-1] == '?' || str[len-1] == '\n')
         return true;
     return false;
 }
