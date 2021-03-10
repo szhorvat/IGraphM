@@ -9,7 +9,11 @@
 #include <random>
 
 
-static const mint rng_Mma_max_int = std::numeric_limits<mint>::max();
+// We use a hard-coded value of 2^31 - 1 because:
+//  - 'mint' is 32-bit on some platforms and this is th max supported value.
+//  - 'unsigned long int', used by igraph, is 32-bit even on 64-bit Windows. The value must fit it in.
+//  - We want reproducible results across platforms with a given random seed.
+static const mint rng_Mma_max_int = 0x7fffffff;
 
 static LibraryFunctionPointer randomInteger;
 static LibraryFunctionPointer randomReal;
@@ -25,17 +29,17 @@ void rng_Mma_get_function_pointers() {
 
 int igraph_rng_Mma_init(void **state) {
     IGRAPH_ERROR("Mathematica RNG error, unsupported function 'init' called.", IGRAPH_EINTERNAL);
-    return 0;
+    return IGRAPH_SUCCESS;
 }
 
 void igraph_rng_Mma_destroy(void *state) {
-    igraph_error("Mathematica RNG error, unsupported function 'destroy' called.",
-                 __FILE__, __LINE__, IGRAPH_EINTERNAL);
+    // This function does not return an error code, so cannot use IGRAPH_ERROR.
+    IGRAPH_FATAL("Mathematica RNG error, unsupported function 'destroy' called.");
 }
 
 int igraph_rng_Mma_seed(void *state, unsigned long int seed) {
     IGRAPH_ERROR("Mathematica RNG error, unsupported function 'seed' called.", IGRAPH_EINTERNAL);
-    return 0;
+    return IGRAPH_SUCCESS;
 }
 
 unsigned long int igraph_rng_Mma_get(void *state) {
@@ -140,7 +144,6 @@ void rngInit() {
     // Seeding from the time is no longer needed because currenty there is no way to change the RNG method
     // without also seeding the generator in IGraph/M. See the definition of IGSeedRandom[].
     // igCheck(igraph_rng_seed(&rng_Default, std::random_device()()));
-    rng_Default.def = 2; // prevent re-seeding after setting new generator; see RNG_BEGIN()
 
     rngSet(0); // set Mathematica's generator as default
 }
