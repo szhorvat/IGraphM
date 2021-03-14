@@ -3351,6 +3351,11 @@ public:
         return res;
     }
 
+    mma::IntTensorRef fundamentalCycles(mint v) const {
+        igList list;
+        igCheck(igraph_fundamental_cycles(&graph, v, &list.list));
+        return packListIntoIntTensor(list);
+    }
 };
 
 #endif // IG_H

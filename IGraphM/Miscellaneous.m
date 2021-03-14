@@ -265,3 +265,10 @@ IGCactusQ[graph_?UndirectedGraphQ] :=
 IGCactusQ::dirg = "IGCactusQ is not implemented for directed graphs.";
 IGCactusQ[_?DirectedGraphQ] := (Message[IGCactusQ::dirg]; $Failed)
 IGCactusQ[_] := False
+
+
+PackageExport["IGFundamentalCycles"]
+IGFundamentalCycles[graph_?igGraphQ, v_] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+       igUnpackIndices@check@ig@"fundamentalCycles"[vs[graph][v]]
+    ]
