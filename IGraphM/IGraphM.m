@@ -624,7 +624,8 @@ template = LTemplate["IGraphM",
 
         LFun["localDensity", {}, {Real, 1}],
 
-        LFun["fundamentalCycles", {Integer}, {Integer, 1}]
+        LFun["fundamentalCycles", {Integer (* start *), Integer (* cutoff *)}, {Integer, 1}],
+        LFun["minimumCycleBasis", {Integer (* cutoff *), True|False (* complete *)}, {Integer, 1}]
       }
     ],
 

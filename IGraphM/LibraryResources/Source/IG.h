@@ -3351,9 +3351,15 @@ public:
         return res;
     }
 
-    mma::IntTensorRef fundamentalCycles(mint v) const {
+    mma::IntTensorRef fundamentalCycles(mint v, mint cutoff) const {
         igList list;
-        igCheck(igraph_fundamental_cycles(&graph, v, &list.list));
+        igCheck(igraph_fundamental_cycles(&graph, v, cutoff, &list.list));
+        return packListIntoIntTensor(list);
+    }
+
+    mma::IntTensorRef minimumCycleBasis(mint cutoff, bool complete) const {
+        igList list;
+        igCheck(igraph_minimum_cycle_basis(&graph, cutoff, complete, &list.list));
         return packListIntoIntTensor(list);
     }
 };
