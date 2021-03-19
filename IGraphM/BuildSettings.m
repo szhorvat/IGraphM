@@ -21,7 +21,15 @@ Switch[$OperatingSystem,
       (* "-g -Og -fno-omit-frame-pointer -fsanitize=address -fsanitize=undefined", *)
       "-framework Accelerate", (* for BLAS and LAPACK *)
       "-mmacosx-version-min=10.9", (* earliest supported macOS version---required for C++11 *)
-      "-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk" },
+      With[{res = Quiet@RunProcess[{"xcrun", "--sdk", "macosx", "--show-sdk-path"}]},
+        (* If the SDK version can be determined, use it. igraph will be compiled with this SDK by default,
+           and if we don't match it for IGraph/M, the linker will give errors. *)
+        If[Not@FailureQ[res] && res["ExitCode"] == 0,
+          "-isysroot " <> StringTrim[res["StandardOutput"]],
+          Unevaluated@Sequence[]
+        ]
+      ]
+    },
 
     (* Statically link the igraph library *)
     "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libglpk.a", "$HOME/local/lib/libemon.a"},
