@@ -33,6 +33,7 @@ PackageExport["IGDistanceWeighted"]
 IGDistanceWeighted::usage = "IGDistanceWeighted[graph] sets the weight of each edge to be the geometrical distance between its endpoints.";
 Options[IGDistanceWeighted] = { DistanceFunction -> EuclideanDistance };
 SyntaxInformation[IGDistanceWeighted] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGDistanceWeighted[graph_?EmptyGraphQ, opt : OptionsPattern[]] := graph
 IGDistanceWeighted[graph_?GraphQ, opt : OptionsPattern[]] :=
     With[{distanceFunction = OptionValue[DistanceFunction]},
       Switch[distanceFunction,
