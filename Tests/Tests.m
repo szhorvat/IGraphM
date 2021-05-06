@@ -4366,14 +4366,32 @@ MT[
 
 MT[
   IGDyadCensus[empty],
-  <|"Mutual" -> 0, "Asymmetric" -> 0, "Null" -> 0|>,
-  {IGraphM::warning}
+  <|"Mutual" -> 0, "Asymmetric" -> 0, "Null" -> 0|>
 ]
 
 MT[
   IGDyadCensus[Graph[{1,2,3}, {}]],
-  <|"Mutual" -> 0, "Asymmetric" -> 0, "Null" -> 3|>,
-  {IGraphM::warning}
+  <|"Mutual" -> 0, "Asymmetric" -> 0, "Null" -> 3|>
+]
+
+MT[
+  IGDyadCensus[Graph[{1 -> 2}]],
+  <|"Mutual" -> 0, "Asymmetric" -> 1, "Null" -> 0|>
+]
+
+MT[
+  IGDyadCensus[Graph[{1 <-> 2}]],
+  <|"Mutual" -> 1, "Asymmetric" -> 0, "Null" -> 0|>
+]
+
+MT[
+  IGDyadCensus[PathGraph[Range[4]]],
+  <|"Mutual" -> 3, "Asymmetric" -> 0, "Null" -> 3|>
+]
+
+MT[
+  IGDyadCensus[CycleGraph[6, DirectedEdges -> True]],
+  <|"Mutual" -> 0, "Asymmetric" -> 6, "Null" -> 9|>
 ]
 
 MT[
