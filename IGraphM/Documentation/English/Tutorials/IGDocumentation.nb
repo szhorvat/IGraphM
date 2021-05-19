@@ -6922,7 +6922,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -6934,7 +6934,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\n"}], "\[IndentingNewLine]", 
+   ";"}], "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -9570,8 +9570,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"07d80361-a18a-4795-8674-0732f9da9159"],
 
 Cell[TextData[{
- Cell[BoxData["IGAveragePathLength"],
-  FormatType->StandardForm,ExpressionUUID->
+ Cell[BoxData[
+ "IGAveragePathLength"],ExpressionUUID->
   "a3ab37ea-a689-41b4-8e34-1d626d4da266"],
  " computes the average pairwise distances between vertices."
 }], "Text",ExpressionUUID->"5b7e4e87-55a4-45b1-a337-2483de1ba098"],
@@ -9580,45 +9580,36 @@ Cell["Available options:", \
 "Text",ExpressionUUID->"b9776f71-833e-4d04-9d6b-0d2f61bb6855"],
 
 Cell[TextData[{
- Cell[BoxData["Method"],
-  FormatType->StandardForm,ExpressionUUID->
-  "9812d560-5d99-4409-ba88-de77fe394635"],
+ Cell[BoxData[
+ "Method"],ExpressionUUID->"9812d560-5d99-4409-ba88-de77fe394635"],
  " can take the values ",
- Cell[BoxData["\"\<Unweighted\>\""],
-  FormatType->StandardForm,ExpressionUUID->
-  "94d39361-8181-49bb-a8af-935c89d1e55d"],
+ Cell[BoxData[
+ "\"\<Unweighted\>\""],ExpressionUUID->"94d39361-8181-49bb-a8af-935c89d1e55d"],
  ", ",
- Cell[BoxData["\"\<Dijkstra\>\""],
-  FormatType->StandardForm,ExpressionUUID->
-  "8550eba6-07dd-473b-a8fd-90d05f0f2d99"],
+ Cell[BoxData[
+ "\"\<Dijkstra\>\""],ExpressionUUID->"8550eba6-07dd-473b-a8fd-90d05f0f2d99"],
  ", ",
- Cell[BoxData["\"\<BellmanFord\>\""],
-  FormatType->StandardForm,ExpressionUUID->
+ Cell[BoxData[
+ "\"\<BellmanFord\>\""],ExpressionUUID->
   "cab4abfa-caef-494b-ad6e-05f5bcccb12d"],
  ", ",
- Cell[BoxData["\"\<Johnson\>\""],
-  FormatType->StandardForm,ExpressionUUID->
-  "ba48e652-ba9d-49f0-abcf-ebccdf4d69fc"],
+ Cell[BoxData[
+ "\"\<Johnson\>\""],ExpressionUUID->"ba48e652-ba9d-49f0-abcf-ebccdf4d69fc"],
  " and ",
- Cell[BoxData["Automatic"],
-  FormatType->StandardForm,ExpressionUUID->
-  "c9636e0e-84e4-4082-85ce-e76bfd697c1c"],
+ Cell[BoxData[
+ "Automatic"],ExpressionUUID->"c9636e0e-84e4-4082-85ce-e76bfd697c1c"],
  ". ",
- Cell[BoxData["Automatic"],
-  FormatType->StandardForm,ExpressionUUID->
-  "9e5dbb61-d591-4721-8bc7-9470fff3c462"],
+ Cell[BoxData[
+ "Automatic"],ExpressionUUID->"9e5dbb61-d591-4721-8bc7-9470fff3c462"],
  " uses ",
- Cell[BoxData["\"\<Unweighted\>\""],
-  FormatType->StandardForm,ExpressionUUID->
-  "96bac560-e196-4c96-b77c-710cc7f91263"],
+ Cell[BoxData[
+ "\"\<Unweighted\>\""],ExpressionUUID->"96bac560-e196-4c96-b77c-710cc7f91263"],
  " if no edge weights are present, ",
- Cell[BoxData["\"\<Dijkstra\>\""],
-  FormatType->StandardForm,ExpressionUUID->
-  "74bd284a-c478-4656-973a-efc3a4657e83"],
+ Cell[BoxData[
+ "\"\<Dijkstra\>\""],ExpressionUUID->"74bd284a-c478-4656-973a-efc3a4657e83"],
  " if all weights are non-negative and ",
- Cell[BoxData["\"\<Johnson\>\""],
-  FormatType->StandardForm,ExpressionUUID->
-  "f3330def-8ae8-471b-9bbe-a4d12a9e1820"],
+ Cell[BoxData[
+ "\"\<Johnson\>\""],ExpressionUUID->"f3330def-8ae8-471b-9bbe-a4d12a9e1820"],
  " otherwise."
 }], "Item",ExpressionUUID->"ce1a6de3-fbfa-4259-8da6-fbe8f312789d"],
 
@@ -17886,7 +17877,26 @@ Cell[TextData[{
   RowBox[{"IGData", "[", "\"\<MANTriadLabels\>\"", "]"}]],ExpressionUUID->
   "6c5ba777-59e2-4244-ae89-3b2bc51142b6"],
  " are ordered according to isoclass."
-}], "Text",ExpressionUUID->"fa5a5512-9605-4a1d-ab13-48e6fc8ccd57"]
+}], "Text",ExpressionUUID->"fa5a5512-9605-4a1d-ab13-48e6fc8ccd57"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"net", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<NetworkGraph\>\"", ",", 
+      "\"\<MetabolicNetworkActinobacillusActinomycetemcomitans\>\""}], "}"}], 
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"4192d34b-d29b-4d07-8107-65f0315686c4"],
+
+Cell[BoxData[
+ RowBox[{"IGDyadCensus", "[", "net", 
+  "]"}]], "Input",ExpressionUUID->"85e0d74a-af09-4b27-95ec-b942f16939cc"],
+
+Cell[BoxData[
+ RowBox[{"IGTriadCensus", "[", "net", 
+  "]"}]], "Input",ExpressionUUID->"b16229fe-62b9-4851-8993-bcb48da55537"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -20642,7 +20652,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20663,7 +20673,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -22586,7 +22596,6 @@ Cell[BoxData[
           CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
-          
           ImageSizeCache->{{-0.2393066909899062, 
            158.2393066909899}, {-63.23930669098989, 58.28533653037081}}],
          MouseAppearanceTag["NetworkGraphics"]],
