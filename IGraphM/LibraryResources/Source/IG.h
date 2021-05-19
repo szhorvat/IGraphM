@@ -1965,7 +1965,7 @@ public:
 
     double transitivityUndirected(bool exclude) const {
         if (directedQ())
-            mma::message("Edge directions are ignored for clustering coefficient calculations", mma::M_WARNING);
+            mma::message("Edge directions are ignored for clustering coefficient calculations.", mma::M_WARNING);
 
         double res;
         igCheck(igraph_transitivity_undirected(&graph, &res, exclude ? IGRAPH_TRANSITIVITY_NAN : IGRAPH_TRANSITIVITY_ZERO));
@@ -1974,7 +1974,7 @@ public:
 
     mma::RealTensorRef transitivityLocalUndirected(bool exclude) const {
         if (directedQ())
-            mma::message("Edge directions are ignored for clustering coefficient calculations", mma::M_WARNING);
+            mma::message("Edge directions are ignored for clustering coefficient calculations.", mma::M_WARNING);
 
         igVector vec;
         igCheck(igraph_transitivity_local_undirected(&graph, &vec.vec, igraph_vss_all(), exclude ? IGRAPH_TRANSITIVITY_NAN : IGRAPH_TRANSITIVITY_ZERO));
@@ -1983,7 +1983,7 @@ public:
 
     double transitivityAverageLocalUndirected(bool exclude) const {
         if (directedQ())
-            mma::message("Edge directions are ignored for clustering coefficient calculations", mma::M_WARNING);
+            mma::message("Edge directions are ignored for clustering coefficient calculations.", mma::M_WARNING);
 
         double res;
         igCheck(igraph_transitivity_avglocal_undirected(&graph, &res, exclude ? IGRAPH_TRANSITIVITY_NAN : IGRAPH_TRANSITIVITY_ZERO));
@@ -1992,7 +1992,7 @@ public:
 
     mma::RealTensorRef transitivityBarrat(bool exclude) const {
         if (directedQ())
-            mma::message("Edge directions are ignored for clustering coefficient calculations", mma::M_WARNING);
+            mma::message("Edge directions are ignored for clustering coefficient calculations.", mma::M_WARNING);
 
         igVector vec;
         igCheck(igraph_transitivity_barrat(&graph, &vec.vec, igraph_vss_all(), passWeights(), exclude ? IGRAPH_TRANSITIVITY_NAN : IGRAPH_TRANSITIVITY_ZERO));
