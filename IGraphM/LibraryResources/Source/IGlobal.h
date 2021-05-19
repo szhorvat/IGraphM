@@ -39,7 +39,7 @@ public:
 
     const char *version() {
         const char *ver;
-        igCheck(igraph_version(&ver, nullptr, nullptr, nullptr));
+        igraph_version(&ver, nullptr, nullptr, nullptr);
         return ver;
     }
 
