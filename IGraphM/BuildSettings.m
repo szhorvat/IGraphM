@@ -7,18 +7,18 @@
  * Note that the igraph library (e.g., -ligraph or libigraph.a) must be specified within this file.
  *)
 
+$useAddressSanitizer = False;
+
 Switch[$OperatingSystem,
 
   "MacOSX", (* Compilation settings for OS X *)
   $buildSettings = {
-    (*"Compiler" -> CCompilerDriver`GenericCCompiler`GenericCCompiler,
-    "CompilerInstallation" -> "/opt/local/bin",
-    "CompilerName" -> "clang++-mp-7.0",
-    "SystemCompileOptions" -> "-O3 -m64 -fPIC -framework Foundation -framework mathlink",*)
-
     "CompileOptions" -> {
-      "-flto=thin", "-O3", "-fvisibility=hidden",
-      (* "-g -Og -fno-omit-frame-pointer -fsanitize=address -fsanitize=undefined", *)
+      If[$useAddressSanitizer,
+        Unevaluated@Sequence["-g", "-Og", "-fno-omit-frame-pointer", "-fsanitize=address", "-fsanitize=undefined"],
+        Unevaluated@Sequence["-flto=thin", "-O3"]
+      ],
+      "-fvisibility=hidden",
       "-framework Accelerate", (* for BLAS and LAPACK *)
       "-mmacosx-version-min=10.9", (* earliest supported macOS version---required for C++11 *)
       With[{res = Quiet@RunProcess[{"xcrun", "--sdk", "macosx", "--show-sdk-path"}]},
