@@ -1466,26 +1466,83 @@ public:
 
     double diameter(bool components) const {
         double diam;
-        igCheck(igraph_diameter(&graph, &diam, nullptr, nullptr, nullptr, true, components));
+        igCheck(igraph_diameter(&graph, &diam, nullptr, nullptr, nullptr, nullptr, true, components));
         return diam;
     }
 
     mma::RealTensorRef findDiameter(bool components) const {
-        igVector path;
-        igCheck(igraph_diameter(&graph, nullptr, nullptr, nullptr, &path.vec, true, components));
-        return path.makeMTensor();
+        igVector vertex_path;
+        igCheck(igraph_diameter(&graph, nullptr, nullptr, nullptr, &vertex_path.vec, nullptr, true, components));
+        return vertex_path.makeMTensor();
+    }
+
+    /* TODO */
+    mma::RealTensorRef findDiameterEdges(bool components) const {
+        igVector edge_path;
+        igCheck(igraph_diameter(&graph, nullptr, nullptr, nullptr, nullptr, &edge_path.vec, true, components));
+        return edge_path.makeMTensor();
     }
 
     double diameterDijkstra(bool components) const {
         double diam;
-        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), &diam, nullptr, nullptr, nullptr, true, components));
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), &diam, nullptr, nullptr, nullptr, nullptr, true, components));
         return diam;
     }
 
     mma::RealTensorRef findDiameterDijkstra(bool components) const {
-        igVector path;
-        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), nullptr, nullptr, nullptr, &path.vec, true, components));
-        return path.makeMTensor();
+        igVector vertex_path;
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), nullptr, nullptr, nullptr, &vertex_path.vec, nullptr, true, components));
+        return vertex_path.makeMTensor();
+    }
+
+    /* TODO */
+    mma::RealTensorRef findDiameterDijkstraEdges(bool components) const {
+        igVector edge_path;
+        igCheck(igraph_diameter_dijkstra(&graph, passWeights(), nullptr, nullptr, nullptr, nullptr, &edge_path.vec, true, components));
+        return edge_path.makeMTensor();
+    }
+
+    double pseudoDiameter(mint start, bool components) const {
+        double diam;
+
+        igraph_integer_t f, t;
+        igCheck(igraph_pseudo_diameter(&graph, &diam, start, &f, &t, true, components));
+
+        return diam;
+    }
+
+    mma::RealTensorRef findPseudoDiameter(mint start, bool components) const {
+        igraph_integer_t from, to;
+        igVector vertex_path;
+
+        igCheck(igraph_pseudo_diameter(&graph, nullptr, start, &from, &to, true, components));
+
+        if (from < 0)
+            return vertex_path.makeMTensor();
+
+        igCheck(igraph_get_shortest_path(&graph, &vertex_path.vec, nullptr, from, to, IGRAPH_OUT));
+
+        return vertex_path.makeMTensor();
+    }
+
+    double pseudoDiameterDijkstra(mint start, bool components) const {
+        double diam;
+        igCheck(igraph_pseudo_diameter_dijkstra(&graph, passWeights(), &diam, start, nullptr, nullptr, true, components));
+        return diam;
+    }
+
+    mma::RealTensorRef findPseudoDiameterDijkstra(mint start, bool components) const {
+        igraph_integer_t from, to;
+        igVector vertex_path;
+
+        igCheck(igraph_pseudo_diameter_dijkstra(&graph, passWeights(), nullptr, start, &from, &to, true, components));
+
+        if (from < 0)
+            return vertex_path.makeMTensor();
+
+        igCheck(igraph_get_shortest_path_dijkstra(&graph, &vertex_path.vec, nullptr, from, to, passWeights(), IGRAPH_OUT));
+
+        return vertex_path.makeMTensor();
     }
 
     double averagePathLength(bool components) const {

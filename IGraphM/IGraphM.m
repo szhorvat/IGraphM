@@ -400,6 +400,11 @@ template = LTemplate["IGraphM",
         LFun["diameterDijkstra", {True|False (* by components *)}, Real],
         LFun["findDiameterDijkstra", {True|False (* by components *)}, {Real, 1}],
 
+        LFun["pseudoDiameter", {Integer (* start *), True|False (* by components *)}, Real],
+        LFun["findPseudoDiameter", {Integer (* start *), True|False (* by components *)}, {Real, 1}],
+        LFun["pseudoDiameterDijkstra", {Integer (* start *), True|False (* by components *)}, Real],
+        LFun["findPseudoDiameterDijkstra", {Integer (* start *), True|False (* by components *)}, {Real, 1}],
+
         (* Cliques *)
 
         LFun["cliques", {Integer (* min *), Integer (* max *)}, {Integer, 1}],

@@ -287,7 +287,7 @@ igFindDiameterMethods = <|
 
 SyntaxInformation[IGFindDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
-amendUsage[IGFindDiameter, "Available Method options: <*Keys[igDiameterMethods]*>."];
+amendUsage[IGFindDiameter, "Available Method options: <*Keys[igFindDiameterMethods]*>."];
 
 IGFindDiameter::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igFindDiameterMethods], InputForm] <> ".";
 
@@ -315,6 +315,94 @@ igFindDiameterUnweighted[graph_, bycomp_] :=
 igFindDiameterDijkstra[graph_, bycomp_] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       igVertexNames[graph]@igIndexVec@check@ig@"findDiameterDijkstra"[bycomp]
+    ]
+
+
+(***** Pseudo-diameter *****)
+
+PackageExport["IGPseudoDiameter"]
+IGPseudoDiameter::usage = "IGPseudoDiameter[graph] gives the pseudodiameter of graph.";
+
+Options[IGPseudoDiameter] = { Method -> Automatic, "ByComponents" -> False };
+
+igPseudoDiameterMethods = <|
+  "Unweighted" -> igPseudoDiameterUnweighted,
+  "Dijkstra" -> igPseudoDiameterDijkstra
+|>;
+
+SyntaxInformation[IGPseudoDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+
+amendUsage[IGPseudoDiameter, "Available Method options: <*Keys[igPseudoDiameterMethods]*>."];
+
+IGPseudoDiameter::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igPseudoDiameterMethods], InputForm] <> ".";
+
+IGPseudoDiameter[graph_?igGraphQ, v : ({}|Except[_?OptionQ]) : Automatic, opt : OptionsPattern[]] :=
+    Module[{method},
+      method = OptionValue[Method];
+      If[Not@MemberQ[Keys[igPseudoDiameterMethods] ~Join~ {Automatic}, method],
+        Message[IGPseudoDiameter::bdmtd, method];
+        Return[$Failed]
+      ];
+      If[method === Automatic,
+        method = Which[
+          IGEdgeWeightedQ[graph], "Dijkstra",
+          True, "Unweighted"
+        ]
+      ];
+      igPseudoDiameterMethods[method][graph, If[v === Automatic, -1, vs[graph][v]], OptionValue["ByComponents"]]
+    ]
+
+igPseudoDiameterUnweighted[graph_, v_, bycomp_] :=
+    Block[{ig = igMakeFast[graph]},
+      sck@ig@"pseudoDiameter"[v, bycomp]
+    ]
+
+igPseudoDiameterDijkstra[graph_, v_, bycomp_] :=
+    Block[{ig = igMakeFastWeighted[graph]},
+      sck@ig@"pseudoDiameterDijkstra"[v, bycomp]
+    ]
+
+
+PackageExport["IGFindPseudoDiameter"]
+IGFindPseudoDiameter::usage = "IGFindPseudoDiameter[graph] returns a longest shortest path in graph, i.e. a shortest path with length equal to the graph diameter.";
+
+Options[IGFindPseudoDiameter] = { Method -> Automatic, "ByComponents" -> False };
+
+igFindPseudoDiameterMethods = <|
+  "Unweighted" -> igFindPseudoDiameterUnweighted,
+  "Dijkstra" -> igFindPseudoDiameterDijkstra
+|>;
+
+SyntaxInformation[IGFindPseudoDiameter] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+
+amendUsage[IGFindPseudoDiameter, "Available Method options: <*Keys[igFindPseudoDiameterMethods]*>."];
+
+IGFindPseudoDiameter::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igFindPseudoDiameterMethods], InputForm] <> ".";
+
+IGFindPseudoDiameter[graph_?igGraphQ, v : ({}|Except[_?OptionQ]) : Automatic, opt : OptionsPattern[]] :=
+    Module[{method},
+      method = OptionValue[Method];
+      If[Not@MemberQ[Keys[igFindPseudoDiameterMethods] ~Join~ {Automatic}, method],
+        Message[IGFindPseudoDiameter::bdmtd, method];
+        Return[$Failed]
+      ];
+      If[method === Automatic,
+        method = Which[
+          IGEdgeWeightedQ[graph], "Dijkstra",
+          True, "Unweighted"
+        ]
+      ];
+      igFindPseudoDiameterMethods[method][graph, If[v === Automatic, -1, vs[graph][v]], OptionValue["ByComponents"]]
+    ]
+
+igFindPseudoDiameterUnweighted[graph_, v_, bycomp_] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      igVertexNames[graph]@igIndexVec@check@ig@"findPseudoDiameter"[v, bycomp]
+    ]
+
+igFindPseudoDiameterDijkstra[graph_, v_, bycomp_] :=
+    catch@Block[{ig = igMakeFastWeighted[graph]},
+      igVertexNames[graph]@igIndexVec@check@ig@"findPseudoDiameterDijkstra"[v, bycomp]
     ]
 
 
