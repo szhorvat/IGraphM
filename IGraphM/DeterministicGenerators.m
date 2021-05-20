@@ -248,6 +248,16 @@ IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]
     ]
 
 
+PackageExport["IGFamousGraph"]
+IGFamousGraph::usage = "IGFamousGraph[name] returns the given graph from igraph's built-in database.";
+SyntaxInformation[IGFamousGraph] = {"ArgumentsPattern" -> {_}};
+IGFamousGraph[name_?StringQ, opt : OptionsPattern[Graph]] :=
+    catch@Block[{ig = igMakeEmpty[]},
+      check@ig@"famous"[name];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+
 PackageExport["IGTriangularLattice"]
 IGTriangularLattice::usage =
     "IGTriangularLattice[n] generates a triangular lattice graph on a size n equilateral triangle using n(n+1)/2 vertices.\n" <>
