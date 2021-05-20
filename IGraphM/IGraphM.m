@@ -209,6 +209,7 @@ template = LTemplate["IGraphM",
         LFun["deBruijn", {Integer, Integer}, "Void"],
         LFun["extendedChordalRing", {Integer, {Real, 2}, True|False (* directed *), True|False (* self loops *), True|False (* multiple edges *)}, "Void"],
         LFun["graphAtlas", {Integer}, "Void"],
+        LFun["famous", {"UTF8String"}, "Void"],
 
         (* Directedness *)
 

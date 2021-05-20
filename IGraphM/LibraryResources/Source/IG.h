@@ -154,6 +154,12 @@ public:
         igConstructorCheck(igraph_atlas(&graph, n));
     }
 
+    void famous(const char *name) {
+        destroy();
+        igConstructorCheck(igraph_famous(&graph, name));
+        mma::disownString(name);
+    }
+
     void kautz(mint m, mint n) {
         destroy();
         igConstructorCheck(igraph_kautz(&graph, m, n));
