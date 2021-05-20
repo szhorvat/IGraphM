@@ -365,6 +365,7 @@ mma::IntTensorRef IGlobal::fromNauty(const char *str) {
         }
 
     g6done:
+        mma::disownString(str);
         return mma::makeVector<mint>(result.size(), result.data());
     }
 }
