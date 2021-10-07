@@ -543,6 +543,36 @@ public:
         return t;
     }
 
+    mma::RealTensorRef subsetBetweenness(bool normalized, mma::RealTensorRef vs, mma::RealTensorRef sources, mma::RealTensorRef targets) const {
+        igVector res;
+        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_t s = igVectorView(sources);
+        igraph_vector_t t = igVectorView(targets);
+        igCheck(
+            igraph_betweenness_subset(
+                        &graph, &res.vec,
+                        vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
+                        true,
+                        igraph_vss_vector(&s), igraph_vss_vector(&t),
+                        passWeights())
+                    );
+        auto result = res.makeMTensor();
+        if (normalized) {
+            double scount = sources.size();
+            double tcount = targets.size();
+            double norm = 1.0;
+            if (vcount > 2) {
+                if (! directedQ())
+                    norm = 2.0;
+                norm = norm / ((vcount-1)*(vcount-2));
+            }
+
+            for (auto &el : result)
+                el *= norm;
+        }
+        return result;
+    }
+
     mma::RealTensorRef edgeBetweenness(bool normalized) const {
         igVector res;
         igCheck(igraph_edge_betweenness(&graph, &res.vec, true, passWeights()));
@@ -560,6 +590,21 @@ public:
                 el *= norm;
         }
         return t;
+    }
+
+    mma::RealTensorRef subsetEdgeBetweenness(bool normalized, mma::RealTensorRef sources, mma::RealTensorRef targets) const {
+        igVector res;
+        igraph_vector_t s = igVectorView(sources);
+        igraph_vector_t t = igVectorView(targets);
+        igCheck(
+            igraph_edge_betweenness_subset(
+                        &graph, &res.vec,
+                        igraph_ess_all(IGRAPH_EDGEORDER_ID),
+                        true,
+                        igraph_vss_vector(&s), igraph_vss_vector(&t),
+                        passWeights())
+                    );
+        return res.makeMTensor();
     }
 
     mma::RealTensorRef closeness(bool normalized, mma::RealTensorRef vs) const {

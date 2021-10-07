@@ -30,6 +30,39 @@ IGBetweenness[g_?igGraphQ, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
     ]
 
 
+PackageExport["IGSubsetBetweenness"]
+IGSubsetBetweenness::usage =
+    "IGSubsetBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.\n" <>
+    "IGSubsetBetweenness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of betweenness centralities for the specified vertices.";
+
+Options[IGSubsetBetweenness] = { Normalized -> False };
+SyntaxInformation[IGSubsetBetweenness] = {"ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}};
+(*IGSubsetBetweenness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}*)
+IGSubsetBetweenness[g_?igGraphQ, s_List, t_List, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      check@ig@"subsetBetweenness"[
+        OptionValue[Normalized],
+        vss[g][vs], vss[g][s], vss[g][t]
+      ]
+    ]
+
+
+PackageExport["IGSubsetEdgeBetweenness"]
+IGSubsetEdgeBetweenness::usage =
+    "IGSubsetEdgeBetweenness[graph] gives a list of betweenness centralities for the vertices of graph.\n" <>
+    "IGSubsetEdgeBetweenness[graph, {vertex1, vertex2, \[Ellipsis]}] gives a list of betweenness centralities for the specified vertices.";
+
+Options[IGSubsetEdgeBetweenness] = { Normalized -> False };
+SyntaxInformation[IGSubsetEdgeBetweenness] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
+IGSubsetEdgeBetweenness[g_?igGraphQ, s_List, t_List, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeFastWeighted[g]},
+      check@ig@"subsetEdgeBetweenness"[
+        OptionValue[Normalized],
+        vss[g][s], vss[g][t]
+      ]
+    ]
+
+
 PackageExport["IGEdgeBetweenness"]
 IGEdgeBetweenness::usage = "IGEdgeBetweenness[graph] gives a list of betweenness centralities for the edges of graph.";
 

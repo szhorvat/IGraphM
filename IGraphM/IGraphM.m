@@ -285,7 +285,9 @@ template = LTemplate["IGraphM",
         (* Centrality *)
 
         LFun["betweenness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["subsetBetweenness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *), {Real, 1, "Constant"} (* sources *), {Real, 1, "Constant"} (* targets *)}, {Real, 1}],
         LFun["edgeBetweenness", {True|False (* normalized *)}, {Real, 1}],
+        LFun["subsetEdgeBetweenness", {True|False (* normalized *), {Real, 1, "Constant"} (* sources *), {Real, 1, "Constant"} (* targets *)}, {Real, 1}],
         LFun["closeness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
         LFun["harmonicCentrality", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
