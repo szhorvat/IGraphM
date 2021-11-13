@@ -110,7 +110,7 @@ IGMotifsVertexParticipation[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
       ];
       AssociationThread[
         VertexList[graph],
-        Round@Developer`FromPackedArray@check@ig@"motifsParticipation"[size, ConstantArray[0, size]]
+        Round@Developer`FromPackedArray@expectInfNaN@check@ig@"motifsParticipation"[size, ConstantArray[0, size]]
       ]
     ]
 
