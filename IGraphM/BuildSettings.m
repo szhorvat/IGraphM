@@ -32,7 +32,7 @@ Switch[$OperatingSystem,
     },
 
     (* Statically link the igraph library *)
-    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libglpk.a", "$HOME/local/lib/libemon.a"},
+    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libemon.a"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
@@ -51,7 +51,7 @@ Switch[$OperatingSystem,
     },
 
     (* Statically link the igraph library *)
-    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libgmp.a", "$HOME/local/lib/libglpk.a", "$HOME/local/lib/libemon.a"},
+    "ExtraObjectFiles" -> {"$HOME/local/lib/libigraph.a", "$HOME/local/lib/libemon.a"},
 
     (* Set igraph location *)
     "IncludeDirectories" -> {"$HOME/local/include"},
@@ -63,7 +63,7 @@ Switch[$OperatingSystem,
     $buildSettings = { 
       "CompileOptions" -> {"/EHsc", "/GL", "/wd4244", "/DNOMINMAX", "/DIGRAPH_STATIC"},
       "IncludeDirectories" -> {$depDir <> "\\igraph\\include", $depDir <> "\\lemon\\include"},
-      "ExtraObjectFiles" -> {$depDir <> "\\igraph\\lib\\igraph.lib", $depDir <> "\\lemon\\lib\\lemon.lib", $depDir <> "\\glpk-5.0\\w64\\glpk.lib"}
+      "ExtraObjectFiles" -> {$depDir <> "\\igraph\\lib\\igraph.lib", $depDir <> "\\lemon\\lib\\lemon.lib" (* , $depDir <> "\\glpk-5.0\\w64\\glpk.lib" *)}
     }
   ]
 ]
