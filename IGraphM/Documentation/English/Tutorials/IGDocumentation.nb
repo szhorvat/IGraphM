@@ -2278,6 +2278,34 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["IGFamousGraph", \
+"Subsubsection",ExpressionUUID->"8a315b83-37c9-4f5b-a6d1-ea0aec3965b3"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGFamousGraph"}]], \
+"Input",ExpressionUUID->"efba156c-ffa8-4803-b1ff-771151c90fe3"],
+
+Cell[TextData[{
+ "This function returns various \[OpenCurlyDoubleQuote]named\
+\[CloseCurlyDoubleQuote] graphs from the igraph C library\[CloseCurlyQuote]s \
+built-in database. It is included in IGraph/M for compatibility with other \
+igraph interfaces. It is recommended to use Mathematica\[CloseCurlyQuote]s \
+built-in ",
+ Cell[BoxData["GraphData"],
+  FormatType->StandardForm,ExpressionUUID->
+  "db0d60b0-c419-44d0-9588-5b6fb99852d1"],
+ " function instead. See the documentation of the igraph C library for the \
+list of supported graph names."
+}], "Text",ExpressionUUID->"bb76a4f9-7dbe-4aa7-8b3e-e845477d1e24"],
+
+Cell[BoxData[
+ RowBox[{"IGFamousGraph", "[", "\"\<Chvatal\>\"", 
+  "]"}]], "Input",ExpressionUUID->"bd9580de-4d60-421f-8b32-4b48ad5940ff"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["IGFromNauty", \
 "Subsubsection",ExpressionUUID->"622a662c-ca64-4eec-90a9-81d7a5b53b3e"],
 
@@ -2303,8 +2331,8 @@ Cell["Interpret a Graph6 string.", \
 "Text",ExpressionUUID->"1e244de8-e4f6-4b45-a63b-cc527af5ff69"],
 
 Cell[BoxData[
- RowBox[{"IGFromNauty", "[", "\"\<Gr`HOk\>\"", 
-  "]"}]], "Input",ExpressionUUID->"b3fd0c2c-ef86-407e-828d-e4be5e5d4fb7"],
+ RowBox[{"IGFromNauty", "[", "\"\<Gr`HOk\>\"", "]"}]], "Input",ExpressionUUID->"\
+b3fd0c2c-ef86-407e-828d-e4be5e5d4fb7"],
 
 Cell[TextData[{
  "Interpret a Sparse6 string. These start with a ",
@@ -5696,7 +5724,6 @@ Cell[BoxData[
           0.9749279121818236}, {-0.900968867902419, 
           0.43388373911755823`}, {-0.9009688679024191, -0.433883739117558}, \
 {-0.2225209339563146, -0.9749279121818235}, {
-          
           0.6234898018587334, -0.7818314824680299}, {-0.13909697313962913`, \
 -0.17374654968223086`}}, VertexLabels -> {None}, 
          VertexShapeFunction -> {"Name"}}]], Typeset`boxes, 
@@ -6922,7 +6949,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -6934,7 +6961,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\[IndentingNewLine]"}], "\n", 
+   ";"}], "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -9118,7 +9145,6 @@ Cell[BoxData[
            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$1"], 
         TagBox[{
           TagBox[
-           
            DiskBox[{1.879421887793725, 0.6470298527326553}, {
             0.1421869442898585, 0.1421869442898585}], "DynamicName", BoxID -> 
            "VertexID$2"], 
@@ -11178,8 +11204,8 @@ Cell[BoxData[
   RowBox[{"ExampleData", "[", 
    RowBox[{"{", 
     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<DolphinSocialNetwork\>\""}], 
-    "}"}], 
-   "]"}]}]], "Input",ExpressionUUID->"b73fca3d-956a-4c09-bb3e-bc8b711327d5"],
+    "}"}], "]"}]}]], \
+"Input",ExpressionUUID->"b73fca3d-956a-4c09-bb3e-bc8b711327d5"],
 
 Cell[BoxData[
  RowBox[{
@@ -11991,7 +12017,6 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
-                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -20652,7 +20677,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20673,7 +20698,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -22596,6 +22621,7 @@ Cell[BoxData[
           CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
+          
           ImageSizeCache->{{-0.2393066909899062, 
            158.2393066909899}, {-63.23930669098989, 58.28533653037081}}],
          MouseAppearanceTag["NetworkGraphics"]],
@@ -24700,31 +24726,144 @@ Cell[TextData[{
  Cell[BoxData[
   RowBox[{"IGLayoutReingoldTilfordCircular", "[", "]"}]],ExpressionUUID->
   "94c4c9d0-5b1c-455d-bb47-a5d0deeb258c"],
- " are designed for laying out trees. The following options are available:"
+ " are designed for laying out trees or forests. The following options are \
+available:"
 }], "Text",ExpressionUUID->"d5c6c009-02c4-4e64-85bf-32c9444b3696"],
 
 Cell[TextData[{
  Cell[BoxData[
  "\"\<RootVertices\>\""],ExpressionUUID->
   "a2c5935c-655e-4fa2-a072-1a525191abd7"],
- " allows nodes to be used as the root nodes in the layout. It must be a \
-list, even if there is a single root node. Multiple root nodes are meant to \
-be used with forests."
+ " allows specifying the root node(s). It must be a list, even if there is a \
+single root node. Multiple root nodes are meant to be used with forests. The \
+roots should be selected so that all vertices of the graph are reachable from \
+them. ",
+ Cell[BoxData[
+  RowBox[{"\"\<RootVertices\>\"", "->", "Automatic"}]],
+  FormatType->StandardForm,ExpressionUUID->
+  "aab14f82-753d-49b5-94fd-390ec77d0a7f"],
+ " chooses roots automatically, preferring low eccentricity vertices in small \
+graphs (fewer than 500 vertices) and high degree vertices in large graphs."
 }], "Item",ExpressionUUID->"4ad13fa3-4d4a-4793-a48b-0cc95fce7288"],
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "\[Rule]", "True"}]],ExpressionUUID->
+  RowBox[{"DirectedEdges", "\[Rule]", "False"}]],ExpressionUUID->
   "4b4cd110-b399-477b-8d6b-4fd2f6c1c183"],
- " lays out the graph so that directed edges are pointing form lower levels \
-(near the root) towards higher ones (away from the root)."
+ " ignores edge directions. By default, directed graphs are laid out so that \
+edges are pointing away from the root."
 }], "Item",ExpressionUUID->"6f133d6b-5bdc-4cee-bfa7-66ed4560b99d"],
 
 Cell[TextData[{
  Cell[BoxData[
  "\"\<Rotation\>\""],ExpressionUUID->"53900392-8cc6-47f4-bf07-40fad45aa5f5"],
  " controls the orientation of the layout. It must be given in radians."
-}], "Item",ExpressionUUID->"24eb238f-9420-44d8-adb8-72851d37c0b0"]
+}], "Item",ExpressionUUID->"24eb238f-9420-44d8-adb8-72851d37c0b0"],
+
+Cell[TextData[{
+ "The following options are unique to ",
+ Cell[BoxData[
+  RowBox[{"IGLayoutReingoldTilford", "[", "]"}]],ExpressionUUID->
+  "573b23a7-87d2-4264-9406-9be6a2b6f414"],
+ ":"
+}], "Text",ExpressionUUID->"f1278973-22d4-4663-93fe-2c41b1c40074"],
+
+Cell[TextData[{
+ Cell[BoxData["\"\<LeafDistance\>\""],
+  FormatType->StandardForm,ExpressionUUID->
+  "9c5286d4-bff5-4d7a-989c-9074762199d8"],
+ " sets the spacing between tree leaves. The default is ",
+ Cell[BoxData["1"],
+  FormatType->StandardForm,ExpressionUUID->
+  "f8c1ce31-b876-4ac8-b14e-08abe54b2637"],
+ "."
+}], "Item",ExpressionUUID->"1d9ce8ac-9fa3-4f48-a5de-67fd3bfa675d"],
+
+Cell[TextData[{
+ Cell[BoxData["\"\<LayerHeight\>\""],
+  FormatType->StandardForm,ExpressionUUID->
+  "a27513db-2800-4fdd-9468-8ae2188ebcc6"],
+ " sets the spacing between layers of the drawing. The default is ",
+ Cell[BoxData["1"],
+  FormatType->StandardForm,ExpressionUUID->
+  "40d3109d-b937-4924-a01e-3a8e15c03bcf"],
+ "."
+}], "Item",ExpressionUUID->"96bc2faa-a803-441a-8be5-72b8b4891638"],
+
+Cell["The same tree laid out in directed and undirected modes:", \
+"Text",ExpressionUUID->"cc62ec8a-2344-44b0-adad-bc5737305410"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"t", "=", 
+   RowBox[{"IGTreeGame", "[", 
+    RowBox[{"12", ",", 
+     RowBox[{"DirectedEdges", "\[Rule]", "True"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"IGLayoutReingoldTilford", "[", "t", "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"IGLayoutReingoldTilford", "[", 
+    RowBox[{"t", ",", 
+     RowBox[{"DirectedEdges", "\[Rule]", "False"}]}], "]"}]}], 
+  "}"}]}], "Input",ExpressionUUID->"d073f34d-dbff-455f-bc01-c7734a94f548"],
+
+Cell["\<\
+Lay out the tree radially, with successive layers places on circular shells:\
+\>", "Text",ExpressionUUID->"6912d3c4-1079-43ea-be14-0edc4e2894c3"],
+
+Cell[BoxData[
+ RowBox[{"IGLayoutReingoldTilfordCircular", "[", 
+  RowBox[{"t", ",", "\[IndentingNewLine]", 
+   RowBox[{"GraphStyle", "->", "\"\<Minimal\>\""}], ",", 
+   RowBox[{"Prolog", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"Thin", ",", "Gray", ",", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"Circle", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"0", ",", "0"}], "}"}], ",", "r"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"r", ",", 
+          RowBox[{"IGDiameter", "[", 
+           RowBox[{"t", ",", 
+            RowBox[{"\"\<ByComponents\>\"", "->", "True"}]}], "]"}]}], 
+         "}"}]}], "]"}]}], "}"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"9a1e0369-5414-4ada-9eb9-08d09dba1ae2"],
+
+Cell["Use a left-to-right layout, with tightly spaced leaves:", \
+"Text",ExpressionUUID->"f2f11d32-9cd7-417e-91d0-e40d531971d7"],
+
+Cell[BoxData[
+ RowBox[{"IGLayoutReingoldTilford", "[", 
+  RowBox[{"t", ",", 
+   RowBox[{"\"\<Rotation\>\"", "\[Rule]", 
+    RowBox[{"Pi", "/", "2"}]}], ",", 
+   RowBox[{"\"\<LeafDistance\>\"", "->", 
+    RowBox[{"1", "/", "3"}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"cde7ec1c-9c78-4c01-b08b-53b6da912645"],
+
+Cell["In an undirected tree, any vertex may be chosen as the root:", \
+"Text",ExpressionUUID->"98f607d8-3fce-4d0e-999c-bc6ccd400bc6"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"t", "=", 
+   RowBox[{"IGTreeGame", "[", "6", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Table", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"IGLayoutReingoldTilford", "[", 
+    RowBox[{"t", ",", 
+     RowBox[{"\"\<RootVertices\>\"", "->", 
+      RowBox[{"{", "r", "}"}]}], ",", 
+     RowBox[{"GraphStyle", "->", "\"\<DiagramGold\>\""}]}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"r", ",", 
+     RowBox[{"VertexList", "[", "t", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"c43f35a5-88bd-4e09-b2bc-da73ff486653"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -59748,7 +59887,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"12.2 for Mac OS X x86 (64-bit) (December 12, 2020)",
+FrontEndVersion->"12.3 for Mac OS X x86 (64-bit) (June 19, 2021)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -59769,7 +59908,7 @@ StyleDefinitions->Notebook[{
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> "12.2 for Mac OS X x86 (64-bit) (December 12, 2020)", 
+  FrontEndVersion -> "12.3 for Mac OS X x86 (64-bit) (June 19, 2021)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"],
 ExpressionUUID->"f2c61c1c-5321-4c3e-9047-2d29e9f66d92"
 ]
