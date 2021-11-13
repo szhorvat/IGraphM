@@ -324,8 +324,11 @@ PackageExport["IGLayoutReingoldTilford"]
 IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options] lays out a tree using the Reingold–Tilford algorithm.";
 
 Options[IGLayoutReingoldTilford] = {
-  "RootVertices" -> Automatic, "Rotation" -> 0,
-  "LayerHeight" -> 1, "LeafDistance" -> 1
+  "RootVertices" -> Automatic,
+  "Rotation" -> 0,
+  "LayerHeight" -> 1,
+  "LeafDistance" -> 1,
+  DirectedEdges -> True
 };
 
 SyntaxInformation[IGLayoutReingoldTilford] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilford, Graph]};
@@ -337,7 +340,7 @@ IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldT
         Composition[
           RotationTransform[OptionValue["Rotation"]],
           ScalingTransform[{OptionValue["LeafDistance"], -OptionValue["LayerHeight"]}]
-        ] @ check@ig@"layoutReingoldTilford"[roots, True]
+        ] @ check@ig@"layoutReingoldTilford"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 
@@ -345,7 +348,11 @@ IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldT
 PackageExport["IGLayoutReingoldTilfordCircular"]
 IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options] lays out a tree radially using the Reingold–Tilford algorithm.";
 
-Options[IGLayoutReingoldTilfordCircular] = { "RootVertices" -> Automatic, "Rotation" -> 0 };
+Options[IGLayoutReingoldTilfordCircular] = {
+  "RootVertices" -> Automatic,
+  "Rotation" -> 0,
+  DirectedEdges -> True
+};
 
 SyntaxInformation[IGLayoutReingoldTilfordCircular] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilfordCircular, Graph]};
 
@@ -353,7 +360,7 @@ IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutR
     catch@Block[{ig = igMakeFast[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
-        RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, True]
+        RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 
