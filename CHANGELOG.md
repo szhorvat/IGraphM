@@ -6,7 +6,10 @@ Added:
 
   - `IGHarmonicCentrality` and `IGHarmonicCentralityCutoff` compute the harmonic centrality and range-limited harmonic centrality.
   - `IGLinkRank` and `IGPersonalizedLinkRank` compute the equivalent of PageRank for edges.
+  - `IGFamourGraph` exposes the igraph C library's built-in graph database.
   - Experimental progress reporting functionality through functions in the ``IGraphM`Progress` `` context.
+  - `IGReingoldTilford` and `IGReingoldTilfordCircular` now support the `DirectedEdges` option.
+  - `IGFruchtermanReingold` now supports constraining the coordinates of a subset of vertices.
 
 Changed:
 
@@ -20,6 +23,7 @@ Changed:
  - `IGGirth` now returns `Infinity` for the null graph.
  - `IGDiameter` now returns `Indeterminate` for the null graph.
  - `IGChordalQ`, `IGChordalCompletion` and `IGMaximumCardinalitySearch` now support non-simple graphs.
+ - `IGReingoldTilford` and `IGReingoldTilfordCircular` use a new automatic root selection algorithm. The root selection heuristic may change in the future without notice. Specify roots manually for a consistent result.
  - LAD isomorphism functions now support self-loops.
  - The behaviour of the random number generator is now consistent between platforms, meaning that with a given seed, a randomized IGraph/M function will return the same result on all platforms. However, result will now be different from version 0.5 for the same seed.
 
@@ -30,11 +34,16 @@ Fixed:
  - Several community detection functions did not handle zero or one-vertex graphs correctly.
  - `IGVertexMap` would evaluate the mapped functions twice instead of once.
  - `IGMaximumCardinalitySearch` returned incorrect ranks for graphs whose vertex names differed from their vertex indices.
+ - `IGDistanceWeighted` no longer fails on edgeless graphs.
+ - `IGMotifsVertexParticipation` would fail with Mathematica 12.2 or later.
+ - `IGCallawayTraisGame` no longer rejects zeros in the preference matrix.
+ - An error would be triggered when some functions returned a zero-size matrix.
+ - Fixed a memory leak in the Nauty format reader.
 
 Other:
 
- - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it required Wolfram Engine 12.1 or later.
- - More robust error handling: when certain serious error occur in the igraph C library, the Mathematica kernel is no longer forced to shut down.
+ - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it required Wolfram Engine 12.3 or later.
+ - More robust error handling: when certain serious errors occur in the igraph C library, the Mathematica kernel is no longer forced to shut down.
  - IGraph/M got leaner: smaller binary sizes.
 
 #### v0.5.1
