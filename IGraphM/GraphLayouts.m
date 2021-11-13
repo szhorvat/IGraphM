@@ -323,12 +323,6 @@ IGLayoutMDS[graph_?igGraphQ, dim : (2|3) : 2, Optional[distMatrix_?SquareMatrixQ
 PackageExport["IGLayoutReingoldTilford"]
 IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options] lays out a tree using the Reingold–Tilford algorithm.";
 
-(* TODO: Do this in C eventually as a workaround for connectedGraphComponents/Subgraph unreliability *)
-chooseRoots[graph_?UndirectedGraphQ] := First@GraphCenter[#]& /@ WeaklyConnectedGraphComponents[graph]
-chooseRoots[graph_? (IGForestQ[#, "Out"]&)] := First@TopologicalSort[#]& /@ WeaklyConnectedGraphComponents[graph]
-chooseRoots[graph_? (IGForestQ[#, "In"]&)] := Last@TopologicalSort[#]& /@ WeaklyConnectedGraphComponents[graph]
-chooseRoots[graph_] := First@GraphCenter[#]& /@ WeaklyConnectedGraphComponents@UndirectedGraph[graph]
-
 Options[IGLayoutReingoldTilford] = {
   "RootVertices" -> Automatic, "Rotation" -> 0,
   "LayerHeight" -> 1, "LeafDistance" -> 1
@@ -338,12 +332,12 @@ SyntaxInformation[IGLayoutReingoldTilford] = {"ArgumentsPattern" -> {_, OptionsP
 
 IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilford,Graph}]] :=
     catch@Block[{ig = igMakeFast[graph], roots},
-      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> chooseRoots[graph]];
+      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
         Composition[
           RotationTransform[OptionValue["Rotation"]],
           ScalingTransform[{OptionValue["LeafDistance"], -OptionValue["LayerHeight"]}]
-        ] @ check@ig@"layoutReingoldTilford"[roots, False]
+        ] @ check@ig@"layoutReingoldTilford"[roots, True]
       ]
     ]
 
@@ -357,9 +351,9 @@ SyntaxInformation[IGLayoutReingoldTilfordCircular] = {"ArgumentsPattern" -> {_, 
 
 IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilfordCircular,Graph}]] :=
     catch@Block[{ig = igMakeFast[graph], roots},
-      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> chooseRoots[graph]];
+      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
-        RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, False]
+        RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, True]
       ]
     ]
 
