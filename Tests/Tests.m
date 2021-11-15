@@ -1421,6 +1421,24 @@ MT[
 ]
 
 
+(* ::Subsubsection::Closed:: *)
+(*IGFamousGraph*)
+
+
+MT[
+  IGFamousGraph["Herschel"],
+  GraphData["HerschelGraph"],
+  SameTest -> IGIsomorphicQ
+]
+
+
+MT[
+  IGFamousGraph["SmallestCyclicGroup"],
+  GraphData["SmallestCyclicGroupGraph"],
+  SameTest -> IGIsomorphicQ
+]
+
+
 (* ::Section::Closed:: *)
 (*Creation: random*)
 
@@ -3659,6 +3677,39 @@ MT[
 
 
 (* ::Subsubsection::Closed:: *)
+(*IGHarmonicCentrality*)
+
+
+MT[
+  IGHarmonicCentrality[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGHarmonicCentrality[IGEmptyGraph[3]],
+  {0., 0., 0.}
+]
+
+
+harmonicCentr[g_?GraphQ] := 
+  Mean/@(1/MapThread[Delete,{GraphDistanceMatrix[g],Range@VertexCount[g]}])
+
+
+MT[
+  IGHarmonicCentrality[#],
+  harmonicCentr[#],
+  SameTest -> Equal
+]& /@ {ugs, dgs, wugs, wdgs, umulti, dmulti, umulti2, dmulti2}
+
+
+(* ::Subsubsection:: *)
+(*IGHarmonicCentralityCutoff*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection::Closed:: *)
 (*PageRank*)
 
 
@@ -4312,6 +4363,44 @@ MT[
 MT[
   IGMotifsTotalCount[edgeless, 3],
   0
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGMotifsVertexParticipation*)
+
+
+MT[
+  IGMotifsVertexParticipation[IGEmptyGraph[], 3],
+  <||>
+]
+
+MT[
+  IGMotifsVertexParticipation[IGEmptyGraph[3], 3],
+  <|1 -> {Indeterminate, Indeterminate, 0, 0}, 2 -> {Indeterminate, Indeterminate, 0, 0}, 3 -> {Indeterminate, Indeterminate, 0, 0}|>
+]
+
+MT[
+  IGMotifsVertexParticipation[Graph[{1 -> 2}], 3],
+  <|1 -> {Indeterminate, Indeterminate, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 2 -> {Indeterminate, Indeterminate, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}|>
+]
+
+
+MT[
+  IGMotifsVertexParticipation[Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {1 -> 4, 1 -> 5, 2 -> 1, 2 -> 4, 2 -> 5, 2 -> 9, 3 -> 5, 5 -> 2, 6 -> 3, 7 -> 3, 7 -> 8, 7 -> 9, 8 -> 1, 8 -> 4, 8 -> 7, 9 -> 7, 10 -> 1, 10 -> 5, 10 -> 7, 10 -> 9}], 3],
+  <|1 -> {Indeterminate, Indeterminate, 4, Indeterminate, 2, 0, 4, 3, 0, 1, 0, 0, 1, 0, 0, 0}, 2 -> {Indeterminate, Indeterminate, 4, Indeterminate, 0, 3, 2, 1, 0, 2, 0, 0, 1, 0, 0, 0}, 3 -> {Indeterminate, Indeterminate, 3, Indeterminate, 3, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0}, 4 -> {Indeterminate, Indeterminate, 1, Indeterminate, 1, 0, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0}, 5 -> {Indeterminate, Indeterminate, 2, Indeterminate, 3, 2, 3, 1, 0, 2, 0, 0, 1, 0, 0, 0}, 6 -> {Indeterminate, Indeterminate, 1, Indeterminate, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 7 -> {Indeterminate, Indeterminate, 1, Indeterminate, 2, 2, 2, 0, 1, 4, 1, 0, 0, 0, 0, 0}, 8 -> {Indeterminate, Indeterminate, 3, Indeterminate, 1, 1, 0, 1, 0, 3, 1, 0, 0, 0, 0, 0}, 9 -> {Indeterminate, Indeterminate, 1, Indeterminate, 0, 1, 4, 0, 1, 2, 1, 0, 0, 0, 0, 0}, 10 -> {Indeterminate, Indeterminate, 4, Indeterminate, 2, 2, 4, 1, 1, 0, 0, 0, 0, 0, 0, 0}|>
+]
+
+
+MT[
+  IGMotifsVertexParticipation[CompleteGraph[4], 3],
+  <|1 -> {Indeterminate, Indeterminate, 0, 3}, 2 -> {Indeterminate, Indeterminate, 0, 3}, 3 -> {Indeterminate, Indeterminate, 0, 3}, 4 -> {Indeterminate, Indeterminate, 0, 3}|>
+]
+
+
+MT[
+  IGMotifsVertexParticipation[CompleteGraph[5, DirectedEdges -> True], 4],
+  <|1 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 2 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 3 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 4 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 5 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}|>
 ]
 
 
