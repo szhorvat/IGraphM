@@ -1379,6 +1379,8 @@ public:
         return res.makeMTensor();
     }
 
+    // Shortest path length histograms
+
     mma::RealTensorRef shortestPathCounts() const {
         igVector res;
         double unconnected;
@@ -1469,6 +1471,8 @@ public:
         mma::IntTensorRef res = mma::makeVector<mint>(hist.size(), hist.data());
         return res;
     }
+
+    // Diameter
 
     double diameter(bool components) const {
         double diam;
@@ -2939,8 +2943,7 @@ public:
             }
         }
 
-        destroy();
-        igConstructorCheck(igraph_create(&graph, &igedges.vec, vcount, false));
+        fromEdgeList(igedges, vcount, false);
 
         weighted = true;
         weights.resize(result.size());
@@ -3033,8 +3036,7 @@ public:
             }
         }
 
-        destroy();
-        igConstructorCheck(igraph_create(&graph, &igedges.vec, vcount, true));
+        fromEdgeList(igedges, vcount, true);
 
         weighted = true;
         weights.resize(result.size());
