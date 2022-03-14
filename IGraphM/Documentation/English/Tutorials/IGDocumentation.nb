@@ -1273,8 +1273,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"c607d641-1465-446c-bd21-058d0f7fd540"],
 
 Cell[TextData[{
- "A Bethe lattice is an infinite tree in which all vertices have the same \
-degree. ",
+ "A Bethe lattice, also called a regular tree, is an infinite tree in which \
+all vertices have the same degree. ",
  Cell[BoxData[
   RowBox[{"IGBetheLattice", "[", 
    RowBox[{"n", ",", "k"}], "]"}]],ExpressionUUID->
@@ -1304,7 +1304,8 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"781fbd78-9688-4211-9cec-f3f98db4e786"],
 
 Cell["\<\
-Generate a tree where non-leaf nodes have degree 5, and use directed edges.\
+Generate a tree where non-leaf nodes have total degree 5, and use directed \
+edges.\
 \>", "Text",ExpressionUUID->"b9064008-8ede-4c97-b5a9-0432dbd15465"],
 
 Cell[BoxData[
@@ -1335,7 +1336,18 @@ Cell[BoxData[
      RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}], ",", 
      RowBox[{"VertexSize", "\[Rule]", "0.4"}]}], "]"}]}], 
   "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"fc084187-5f9d-4e2f-b6d7-523c1ae3c73b"]
+  "]"}]], "Input",ExpressionUUID->"fc084187-5f9d-4e2f-b6d7-523c1ae3c73b"],
+
+Cell["Visualize the nested line graph of a degree-4 regular tree.", \
+"Text",ExpressionUUID->"2a0c133e-c5c5-43c7-a914-7c1664651c59"],
+
+Cell[BoxData[
+ RowBox[{"Graph3D", "@", 
+  RowBox[{"Nest", "[", 
+   RowBox[{"LineGraph", ",", 
+    RowBox[{"IGBetheLattice", "[", 
+     RowBox[{"5", ",", "4"}], "]"}], ",", "2"}], 
+   "]"}]}]], "Input",ExpressionUUID->"1a1b1019-6ac8-4a4f-810c-9858b6db11ca"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2292,16 +2304,55 @@ Cell[TextData[{
 built-in database. It is included in IGraph/M for compatibility with other \
 igraph interfaces. It is recommended to use Mathematica\[CloseCurlyQuote]s \
 built-in ",
- Cell[BoxData["GraphData"],
-  FormatType->StandardForm,ExpressionUUID->
-  "db0d60b0-c419-44d0-9588-5b6fb99852d1"],
+ Cell[BoxData[
+ "GraphData"],ExpressionUUID->"db0d60b0-c419-44d0-9588-5b6fb99852d1"],
  " function instead. See the documentation of the igraph C library for the \
 list of supported graph names."
 }], "Text",ExpressionUUID->"bb76a4f9-7dbe-4aa7-8b3e-e845477d1e24"],
 
+Cell["Create Krackhardt\[CloseCurlyQuote]s kite graph:", \
+"Text",ExpressionUUID->"6105b90f-b43e-46e3-a677-7dc3db00fe9c"],
+
 Cell[BoxData[
- RowBox[{"IGFamousGraph", "[", "\"\<Chvatal\>\"", 
-  "]"}]], "Input",ExpressionUUID->"bd9580de-4d60-421f-8b32-4b48ad5940ff"]
+ RowBox[{"g", "=", 
+  RowBox[{
+  "IGFamousGraph", "[", "\"\<Krackhardt_Kite\>\"", 
+   "]"}]}]], "Input",ExpressionUUID->"bd9580de-4d60-421f-8b32-4b48ad5940ff"],
+
+Cell["\<\
+Krackhardt\[CloseCurlyQuote]s kite was devised to illustrate the difference \
+between various centrality measures:\
+\>", "Text",ExpressionUUID->"afbc1c36-9328-4466-b234-035ef11300fc"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"#", "[", "g", "]"}], "&"}], "/@", 
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"IGVertexMap", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"0.1", "#"}], "&"}], ",", 
+      RowBox[{"VertexSize", "->", "IGBetweenness"}]}], "]"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"IGVertexMap", "[", 
+     RowBox[{
+      RowBox[{"#", "&"}], ",", 
+      RowBox[{"VertexSize", "->", "IGCloseness"}]}], "]"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"IGVertexMap", "[", 
+     RowBox[{
+      RowBox[{"#", "&"}], ",", 
+      RowBox[{"VertexSize", "->", "IGHarmonicCentrality"}]}], "]"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"IGVertexMap", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"0.1", "#"}], "&"}], ",", 
+      RowBox[{"VertexSize", "->", "VertexDegree"}]}], "]"}]}], 
+   "\[IndentingNewLine]", 
+   "}"}]}]], "Input",ExpressionUUID->"0821072d-1a9d-4ce9-a92d-e5014a5860f5"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -2331,8 +2382,8 @@ Cell["Interpret a Graph6 string.", \
 "Text",ExpressionUUID->"1e244de8-e4f6-4b45-a63b-cc527af5ff69"],
 
 Cell[BoxData[
- RowBox[{"IGFromNauty", "[", "\"\<Gr`HOk\>\"", "]"}]], "Input",ExpressionUUID->"\
-b3fd0c2c-ef86-407e-828d-e4be5e5d4fb7"],
+ RowBox[{"IGFromNauty", "[", "\"\<Gr`HOk\>\"", 
+  "]"}]], "Input",ExpressionUUID->"b3fd0c2c-ef86-407e-828d-e4be5e5d4fb7"],
 
 Cell[TextData[{
  "Interpret a Sparse6 string. These start with a ",
@@ -3304,6 +3355,14 @@ Cell[TextData[{
  Cell[BoxData[
  "IGBarabasiAlbertGame"],ExpressionUUID->
   "ad387680-e143-4dd4-a179-b1714875af4e"],
+ ", while the built-in ",
+ Cell[BoxData[
+ "PriceGraphDistribution"],ExpressionUUID->
+  "cdb44e2b-c2c3-412c-87e9-308b7169e901"],
+ " is equivalent ",
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "->", "True"}]],ExpressionUUID->
+  "182ef871-067f-4389-859b-38b41db5ed20"],
  "."
 }], "Text",ExpressionUUID->"4b2eabad-034e-4257-a1c7-7f7dd278d48d"],
 
@@ -6231,7 +6290,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{8.515798609067184, 
-         334.19513889093275`}, {-66.4842013909328, 67.54963362661194}}],
+         334.19513889093275`}, {-66.4842013909328, 66.54963362661194}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -6808,8 +6867,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<WorldWideWeb\>\""}], "}"}], 
-    "]"}]}], ";"}]], \
-"Input",ExpressionUUID->"e581ad0d-b4f6-402d-a05e-c04d1eb55f30"],
+    "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"e581ad0d-b4f6-402d-a05e-c04d1eb55f30"],
 
 Cell[BoxData[
  RowBox[{"Histogram", "[", 
@@ -6949,7 +7008,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -6961,7 +7020,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\n"}], "\[IndentingNewLine]", 
+   ";"}], "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -7668,7 +7727,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{1.688193309010094, 
-         245.2393066909899}, {-91.50890669098992, 85.26410669098989}}],
+         244.6868066909899}, {-91.50890669098992, 85.26410669098989}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -9012,7 +9071,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         153.6650879409899}, {-81.2393066909899, 79.25184666813647}}],
+         153.6650879409899}, {-81.4307910659899, 79.25184666813644}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -9145,6 +9204,7 @@ Cell[BoxData[
            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$1"], 
         TagBox[{
           TagBox[
+           
            DiskBox[{1.879421887793725, 0.6470298527326553}, {
             0.1421869442898585, 0.1421869442898585}], "DynamicName", BoxID -> 
            "VertexID$2"], 
@@ -12524,8 +12584,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-1.2393066909899062`, 
-         147.2393066909899}, {-81.2393066909899, 75.2393066909899}}],
+        ImageSizeCache->{{-0.3097754409899096, 
+         146.78633794098988`}, {-80.91765926054295, 75.0821826896604}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -12746,7 +12806,6 @@ Cell[BoxData[
             1.8829073080344623`, 1.6753663185872556`}}, 
             0.125485749580099]}}, 
          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], {
-           
            StyleBox[
             DiskBox[{2.4672573199232506, 0.8378444909707423}, 
              0.125485749580099],
@@ -14945,7 +15004,42 @@ Cell[BoxData[
    RowBox[{"IGEdgeMap", "[", 
     RowBox[{"Minus", ",", "EdgeWeight", ",", "g"}], "]"}], ",", 
    RowBox[{"VertexCoordinates", "\[Rule]", "pts"}]}], 
-  "]"}]], "Input",ExpressionUUID->"878eb5ee-31bd-452a-8a89-2505ee6739e8"]
+  "]"}]], "Input",ExpressionUUID->"878eb5ee-31bd-452a-8a89-2505ee6739e8"],
+
+Cell["\<\
+Find the minimum and maximum spanning trees of a network, using its edge \
+betweenness as edge weights.\
+\>", "Text",ExpressionUUID->"0a1d69e4-a790-4f5d-9779-b64f8a6a69f6"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<ZacharyKarateClub\>\""}], 
+     "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"HighlightGraph", "[", "\[IndentingNewLine]", 
+    RowBox[{"g", ",", "\[IndentingNewLine]", 
+     RowBox[{"EdgeList", "@", 
+      RowBox[{"IGSpanningTree", "@", 
+       RowBox[{"IGEdgeMap", "[", 
+        RowBox[{"#", ",", 
+         RowBox[{"EdgeWeight", "->", "IGEdgeBetweenness"}], ",", "g"}], 
+        "]"}]}]}], ",", "\[IndentingNewLine]", 
+     RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<Thick\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Small"}]}], "\[IndentingNewLine]", 
+    "]"}], "&"}], "/@", 
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{"Identity", ",", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"minimum", " ", "spanning", " ", "tree"}], " ", "*)"}], 
+    "\[IndentingNewLine]", "Minus"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{"maximum", " ", "spanning", " ", "tree"}], " ", "*)"}], 
+   "\[IndentingNewLine]", 
+   "}"}]}]}], "Input",ExpressionUUID->"bf350899-1928-4f51-b907-136523322a03"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -15533,8 +15627,8 @@ Cell[BoxData[
        3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
        CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
         SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-       ImageSizeCache->{{-2.4704955170583816`, 
-        60.70096426705837}, {-35.47049551705838, 30.239306690989906`}}],
+       ImageSizeCache->{{-1.6703610092328418`, 
+        59.90082975923283}, {-34.67036100923284, 29.439172183164366`}}],
       MouseAppearanceTag["NetworkGraphics"]],
      AllowKernelInitialization->False,
      UnsavedVariables:>{$CellContext`flag}]],
@@ -15915,8 +16009,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-1.2393066909899053`, 
-         151.00322796249637`}, {-62.089165462496354`, 56.04196177040285}}],
+        ImageSizeCache->{{-0.30228500731643626`, 
+         150.0662062788229}, {-61.15214377882288, 55.10494008672938}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -17190,8 +17284,9 @@ times each possible connectivity pattern of ",
  ") occurs in a graph. The patterns are called ",
  StyleBox["motifs",
   FontSlant->"Italic"],
- ". As of IGraph/M 0.5, only size 3 and 4 motifs are supported, and only \
-(weakly) connected subgraphs are considered."
+ ". As of IGraph/M 0.6, size 3 and 4 motifs are supported in directed graphs \
+and size 3 to 6 in undirected graphs. Only (weakly) connected subgraphs are \
+considered."
 }], "Text",ExpressionUUID->"068ec60a-c024-4b6b-85ab-85c984d9c169"],
 
 Cell[TextData[{
@@ -17687,8 +17782,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-1.7838671259338312`, 
-         171.67058587593382`}, {-44.78386712593381, 37.239306690989906`}}],
+        ImageSizeCache->{{-1.247437428278353, 
+         171.13415617827835`}, {-44.24743742827833, 36.70287699333443}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -17741,7 +17836,7 @@ Cell[TextData[{
    RowBox[{"graph", ",", "motifSize"}], "]"}]],ExpressionUUID->
   "829f0da5-66dc-4ef8-8413-2c1ad81cce83"],
  " counts the number of weakly connected subgraphs of the given size in a \
-graph."
+graph. All subgraph sizes greater than 2 are supported."
 }], "Text",ExpressionUUID->"5d685ce6-c09d-42cc-807e-707ade58c580"],
 
 Cell[TextData[{
@@ -18426,7 +18521,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.2393066909899035`, 
-         82.2393066909899}, {-53.23930669098991, 48.01663919563945}}],
+         82.2393066909899}, {-52.8550676530868, 48.01663919563945}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -18518,7 +18613,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.2393066909898955`, 
-         96.2393066909899}, {-45.2393066909899, 39.20712973709298}}],
+         96.3991042630133}, {-45.2393066909899, 39.20712973709298}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -18690,7 +18785,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         119.912776078745}, {-25.0058373032348, 20.501223792165177`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -18765,8 +18860,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-0.2393066909899062, 
-         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+        ImageSizeCache->{{0.31171371717335816`, 
+         182.2393066909899}, {-23.830327099153163`, 17.54664667499721}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -18831,7 +18926,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         119.912776078745}, {-25.0058373032348, 20.501223792165177`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -18906,8 +19001,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-0.2393066909899062, 
-         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+        ImageSizeCache->{{0.31171371717335816`, 
+         182.2393066909899}, {-23.830327099153163`, 17.54664667499721}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -18977,7 +19072,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         119.912776078745}, {-25.0058373032348, 20.501223792165177`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -19052,8 +19147,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-0.2393066909899062, 
-         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+        ImageSizeCache->{{0.31171371717335816`, 
+         182.2393066909899}, {-23.830327099153163`, 17.54664667499721}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -19126,7 +19221,7 @@ Cell[BoxData[
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
         ImageSizeCache->{{-3.239306690989907, 
-         120.2393066909899}, {-25.239306690989906`, 21.239306690989906`}}],
+         119.912776078745}, {-25.0058373032348, 20.501223792165177`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -19201,8 +19296,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-0.2393066909899062, 
-         182.2393066909899}, {-23.239306690989906`, 18.239306690989906`}}],
+        ImageSizeCache->{{0.31171371717335816`, 
+         182.2393066909899}, {-23.830327099153163`, 17.54664667499721}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -20677,7 +20772,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20698,7 +20793,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -22435,7 +22530,7 @@ Cell[BoxData[
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
           
-          ImageSizeCache->{{-1.2393066909899062`, 
+          ImageSizeCache->{{-0.7049476348674659, 
            132.9229004409899}, {-62.23930669098991, 57.31381534020776}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
@@ -22527,7 +22622,7 @@ Cell[BoxData[
            TrackedSymbols :> {$CellContext`flag}},
           
           ImageSizeCache->{{-3.239306690989906, 
-           112.61795316942276`}, {-74.2393066909899, 70.23497881342917}}],
+           112.61795316942276`}, {-74.25173376142125, 70.23497881342918}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -22622,8 +22717,8 @@ Cell[BoxData[
            SynchronousUpdating -> False, 
            TrackedSymbols :> {$CellContext`flag}},
           
-          ImageSizeCache->{{-0.2393066909899062, 
-           158.2393066909899}, {-63.23930669098989, 58.28533653037081}}],
+          ImageSizeCache->{{-0.06532231598990279, 
+           158.7645410659899}, {-63.23930669098989, 58.28533653037081}}],
          MouseAppearanceTag["NetworkGraphics"]],
         AllowKernelInitialization->False,
         UnsavedVariables:>{$CellContext`flag}]],
@@ -24739,8 +24834,7 @@ single root node. Multiple root nodes are meant to be used with forests. The \
 roots should be selected so that all vertices of the graph are reachable from \
 them. ",
  Cell[BoxData[
-  RowBox[{"\"\<RootVertices\>\"", "->", "Automatic"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"\"\<RootVertices\>\"", "->", "Automatic"}]],ExpressionUUID->
   "aab14f82-753d-49b5-94fd-390ec77d0a7f"],
  " chooses roots automatically, preferring low eccentricity vertices in small \
 graphs (fewer than 500 vertices) and high degree vertices in large graphs."
@@ -24769,24 +24863,20 @@ Cell[TextData[{
 }], "Text",ExpressionUUID->"f1278973-22d4-4663-93fe-2c41b1c40074"],
 
 Cell[TextData[{
- Cell[BoxData["\"\<LeafDistance\>\""],
-  FormatType->StandardForm,ExpressionUUID->
+ Cell[BoxData[
+ "\"\<LeafDistance\>\""],ExpressionUUID->
   "9c5286d4-bff5-4d7a-989c-9074762199d8"],
  " sets the spacing between tree leaves. The default is ",
- Cell[BoxData["1"],
-  FormatType->StandardForm,ExpressionUUID->
-  "f8c1ce31-b876-4ac8-b14e-08abe54b2637"],
+ Cell[BoxData["1"],ExpressionUUID->"f8c1ce31-b876-4ac8-b14e-08abe54b2637"],
  "."
 }], "Item",ExpressionUUID->"1d9ce8ac-9fa3-4f48-a5de-67fd3bfa675d"],
 
 Cell[TextData[{
- Cell[BoxData["\"\<LayerHeight\>\""],
-  FormatType->StandardForm,ExpressionUUID->
+ Cell[BoxData[
+ "\"\<LayerHeight\>\""],ExpressionUUID->
   "a27513db-2800-4fdd-9468-8ae2188ebcc6"],
  " sets the spacing between layers of the drawing. The default is ",
- Cell[BoxData["1"],
-  FormatType->StandardForm,ExpressionUUID->
-  "40d3109d-b937-4924-a01e-3a8e15c03bcf"],
+ Cell[BoxData["1"],ExpressionUUID->"40d3109d-b937-4924-a01e-3a8e15c03bcf"],
  "."
 }], "Item",ExpressionUUID->"96bc2faa-a803-441a-8be5-72b8b4891638"],
 
@@ -55661,8 +55751,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-0.877730340369812, 
-         51.70976159036984}, {-30.877730340369816`, 25.239306690989906`}}],
+        ImageSizeCache->{{-0.4537564187451011, 
+         51.28578766874512}, {-30.453756418745105`, 24.815332769365195`}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -55736,8 +55826,8 @@ Cell[BoxData[
         CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
          SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
         
-        ImageSizeCache->{{-0.877730340369812, 
-         51.70976159036984}, {-30.877730340369816`, 25.239306690989906`}}],
+        ImageSizeCache->{{-0.45375641874510464`, 
+         51.28578766874513}, {-30.453756418745108`, 24.8153327693652}}],
        MouseAppearanceTag["NetworkGraphics"]],
       AllowKernelInitialization->False,
       UnsavedVariables:>{$CellContext`flag}]],
@@ -59836,8 +59926,8 @@ with this program.  If not, see ",
 }, Closed]]
 }, Open  ]]
 },
-WindowSize->{899, 1005},
-WindowMargins->{{323, Automatic}, {Automatic, 0}},
+WindowSize->{899, 855},
+WindowMargins->{{Automatic, 218}, {Automatic, 1}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
@@ -59887,7 +59977,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"12.3 for Mac OS X x86 (64-bit) (June 19, 2021)",
+FrontEndVersion->"13.0 for Mac OS X x86 (64-bit) (December 2, 2021)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -59908,7 +59998,7 @@ StyleDefinitions->Notebook[{
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> "12.3 for Mac OS X x86 (64-bit) (June 19, 2021)", 
+  FrontEndVersion -> "13.0 for Mac OS X x86 (64-bit) (December 2, 2021)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"],
 ExpressionUUID->"f2c61c1c-5321-4c3e-9047-2d29e9f66d92"
 ]
