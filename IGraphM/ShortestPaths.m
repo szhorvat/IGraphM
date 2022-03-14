@@ -72,6 +72,63 @@ igDistanceMatrixJohnson[graph_, from_, to_] :=
       expectInfNaN@fixInfNaN@check@ig@"shortestPathsJohnson"[from, to]
     ]
 
+(***** Shortest path tree *****)
+
+PackageExport["IGShortestPathTree"]
+IGShortestPathTree::usage = "IGShortestPathTree[graph]";
+
+SyntaxInformation[IGShortestPathTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]};
+
+Options[IGShortestPathTree] = {Method -> Automatic};
+igShortestPathTreeMethods = <|
+  "Unweighted" -> igSPTUnweighted,
+  "Dijkstra" -> igSPTDijkstra,
+  "BellmanFord" -> igSPTBellmanFord
+|>;
+
+IGShortestPathTree::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igShortestPathTreeMethods], InputForm] <> ".";
+
+IGShortestPathTree[graph_?igGraphQ, from_, opt : OptionsPattern[]] :=
+    catch@Module[{method = OptionValue[Method]},
+      If[Not@MemberQ[Keys[igDistanceMatrixMethods] ~Join~ {Automatic}, method],
+        Message[IGShortestPathTree::bdmtd, method];
+        Return[$Failed]
+      ];
+      If[method === Automatic,
+        method = Which[
+          Not@IGEdgeWeightedQ[graph], "Unweighted",
+          TrueQ[Min@igEdgeWeights[graph] >= 0], "Dijkstra",
+          True, "BellmanFord"
+        ]
+      ];
+      igShortestPathTreeMethods[method][graph, vs[graph][from]]
+    ]
+
+removeZeroes[vec_] := Delete[vec, Position[vec, 0]]
+
+igSPTUnweighted[graph_, from_] :=
+    Block[{ig = igMakeUnweighted[graph]},
+      IGTakeSubgraph[
+        graph,
+        EdgeList[graph][[ removeZeroes@check@igIndexVec@ig@"shortestPathTreeEdges"[from] ]]
+      ]
+    ]
+
+igSPTDijkstra[graph_, from_] :=
+    Block[{ig = igMake[graph]},
+      IGTakeSubgraph[
+        graph,
+        EdgeList[graph][[ removeZeroes@check@igIndexVec@ig@"shortestPathTreeEdgesDijkstra"[from] ]]
+      ]
+    ]
+
+igSPTBellmanFord[graph_, from_] :=
+    Block[{ig = igMake[graph]},
+      IGTakeSubgraph[
+        graph,
+        EdgeList[graph][[ removeZeroes@check@igIndexVec@ig@"shortestPathTreeEdgesBellmanFord"[from] ]]
+      ]
+    ]
 
 (***** Path length histograms and averages ****)
 

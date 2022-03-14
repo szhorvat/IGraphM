@@ -1353,6 +1353,126 @@ public:
         return res.makeMTensor();
     }
 
+    // Shortest path tree
+
+    mma::IntTensorRef shortestPathTreeEdges(mint from) const {
+        igLongVector pred_e;
+
+        igCheck(igraph_get_shortest_paths(
+                    &graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    IGRAPH_OUT,
+                    nullptr, &pred_e.vec));
+
+        return pred_e.makeMTensor();
+    }
+
+    mma::IntTensorRef shortestPathTreeEdgesDijkstra(mint from) const {
+        igLongVector pred_e;
+
+        igCheck(igraph_get_shortest_paths_dijkstra(
+                    &graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    nullptr, &pred_e.vec));
+
+        return pred_e.makeMTensor();
+    }
+
+    mma::IntTensorRef shortestPathTreeEdgesBellmanFord(mint from) const {
+        igLongVector pred_e;
+
+        igCheck(igraph_get_shortest_paths_bellman_ford(
+                    &graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    nullptr, &pred_e.vec));
+
+        return pred_e.makeMTensor();
+    }
+
+    // note that this is a constructor!
+    void shortestPathTree(const IG &ig, mint from) {
+        igLongVector pred_v;
+
+        igCheck(igraph_get_shortest_paths_dijkstra(
+                    &ig.graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    &pred_v.vec, nullptr));
+
+        igVector edges;
+        edges.reserve(2*ig.vertexCount());
+
+        for (mint v=0; v < pred_v.size(); ++v) {
+            mint u = pred_v[v];
+            if (u >= 0) {
+                edges.push_back(u);
+                edges.push_back(v);
+            }
+        }
+
+        fromEdgeList(edges, ig.vertexCount(), true);
+    }
+
+    // note that this is a constructor!
+    void shortestPathTreeDijkstra(const IG &ig, mint from) {
+        igLongVector pred_v, pred_e;
+
+        igCheck(igraph_get_shortest_paths_dijkstra(
+                    &ig.graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    &pred_v.vec, &pred_e.vec));
+
+        igVector edges;
+        edges.reserve(2*ig.vertexCount());
+
+        weighted = true;
+        weights.reserve(2*ig.vertexCount());
+
+        for (mint v=0; v < pred_v.size(); ++v) {
+            mint u = pred_v[v];
+            if (u >= 0) {
+                edges.push_back(u);
+                edges.push_back(v);
+                weights.push_back(ig.weights[pred_e[v]]);
+            }
+        }
+
+        fromEdgeList(edges, ig.vertexCount(), true);
+    }
+
+    // note that this is a constructor!
+    void shortestPathTreeBellmanFord(const IG &ig, mint from) {
+        igLongVector pred_v, pred_e;
+
+        igCheck(igraph_get_shortest_paths_dijkstra(
+                    &ig.graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    &pred_v.vec, &pred_e.vec));
+
+        igVector edges;
+        edges.reserve(2*ig.vertexCount());
+
+        weighted = true;
+        weights.reserve(2*ig.vertexCount());
+
+        for (mint v=0; v < pred_v.size(); ++v) {
+            mint u = pred_v[v];
+            if (u >= 0) {
+                edges.push_back(u);
+                edges.push_back(v);
+                weights.push_back(ig.weights[pred_e[v]]);
+            }
+        }
+
+        fromEdgeList(edges, ig.vertexCount(), true);
+    }
+
+    // Neighbourhoods
+
     mma::RealTensorRef neighborhoodSize(mma::RealTensorRef vs, mint mindist, mint maxdist, mint mode) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
