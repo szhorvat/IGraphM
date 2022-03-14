@@ -3479,6 +3479,32 @@ public:
         return res;
     }
 
+    double assortativityNominal(mma::RealTensorRef types, bool directed) const {
+        igraph_vector_t types_vec = igVectorView(types);
+        igraph_real_t res;
+
+        igCheck(igraph_assortativity_nominal(&graph, &types_vec, &res, directed));
+
+        return res;
+    }
+
+    double assortativityValued(mma::RealTensorRef values, mma::RealTensorRef values_in, bool directed) const {
+        igraph_vector_t values_vec = igVectorView(values);
+        igraph_vector_t values_in_vec = igVectorView(values_in);
+        igraph_real_t res;
+
+        igCheck(igraph_assortativity(&graph, &values_vec, directed ? &values_in_vec : nullptr, &res, directed));
+
+        return res;
+    }
+
+    double assortativityDegree(bool directed) const {
+        igraph_real_t res;
+
+        igCheck(igraph_assortativity_degree(&graph, &res, directed));
+
+        return res;
+    }
 };
 
 #endif // IG_H
