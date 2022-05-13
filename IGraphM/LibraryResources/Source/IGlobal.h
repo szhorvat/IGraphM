@@ -526,6 +526,7 @@ public:
 
     mma::IntTensorRef fromNauty(const char *str);
 
+    mma::RealTensorRef percolationCurve(mma::IntMatrixRef edges, mint n);
 };
 
 #endif // IGLOBAL_H

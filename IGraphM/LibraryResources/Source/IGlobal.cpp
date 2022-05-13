@@ -123,6 +123,85 @@ int igProgressHandler(const char *message, igraph_real_t percent, void *data) {
     return IGRAPH_SUCCESS;
 }
 
+/***** Percolation *****/
+
+/* Keeps track of connected components during successive edge additions */
+class PercolationComponents {
+    struct Elem {
+        mint parent = -1;
+        mint compsize = 1;
+    };
+
+    mint max_compsize = 1;
+
+    std::vector<Elem> data;
+
+public:
+    PercolationComponents(mint n) : data(n) { }
+
+    mint representative(mint v) {
+        mint u = v;
+        while (data[u].parent >= 0)
+            u = data[u].parent;
+        while (data[v].parent >= 0) {
+            mint next = data[v].parent;
+            data[v].parent = u;
+            v = next;
+        }
+        return u;
+    }
+
+    void add_edge(mint u, mint v) {
+        if (max_compsize == size())
+            return; // already connected
+        mint ru = representative(u);
+        mint rv = representative(v);
+        if (ru != rv) {
+            data[ru].parent = rv;
+            data[rv].compsize += data[ru].compsize;
+
+            if (data[rv].compsize > max_compsize)
+                max_compsize = data[rv].compsize;
+        }
+    }
+
+    mint size() const { return data.size(); }
+    mint giant_compsize() const { return max_compsize; }
+};
+
+
+mma::RealTensorRef IGlobal::percolationCurve(mma::IntMatrixRef edges, mint n) {
+
+    if (edges.rows() == 0) {
+        if (n == 0) {
+            return mma::makeMatrix<double>(0, 2);
+        } else {
+            auto res = mma::makeMatrix<double>(1, 2);
+            res(0,0) = 0.0;
+            res(0,1) = 1.0/n;
+            return res;
+        }
+    }
+
+    massert(edges.cols() == 2);
+
+    PercolationComponents comps(n);
+
+    auto res = mma::makeMatrix<double>(edges.rows() + 1, 2);
+
+    res(0,0) = 0.0;
+    res(0,1) = 1.0 / n;
+    for (mint i=0; i < edges.rows(); ++i) {
+        if (i % 1000 == 0)
+            mma::check_abort();
+        comps.add_edge(edges(i,0), edges(i,1));
+        res(i+1, 0) = 2.0*i / n;
+        res(i+1, 1) = double(comps.giant_compsize()) / n;
+    }
+
+    return res;
+}
+
 
 /***** Read Graph6, Digraph6 and Sparse6 *****/
 

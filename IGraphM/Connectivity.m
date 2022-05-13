@@ -335,6 +335,38 @@ IGGiantComponent[g_?GraphQ, opt : OptionsPattern[Graph]] :=
     Subgraph[g, First@WeaklyConnectedComponents[g], opt]
 
 
+PackageExport["IGPercolationCurve"]
+IGPercolationCurve::usage =
+    "IGPercolationCurve[graph] gives a percolation curve corresponding to random edge removal, as {meanDegree, largestComponentFraction} pairs.\n" <>
+    "IGPercolationCurve[edges] gives the percolation curve when edges are added in the specified order.\n" <>
+    "IGPercolationCurve[edges, n] assumes that there are n vertices.";
+
+SyntaxInformation[IGPercolationCurve] = {"ArgumentsPattern" -> {_, _.}};
+
+IGPercolationCurve::vcount = "The specified vertex count `1` is less than the actual number of vertices `2`.";
+
+IGPercolationCurve[g_?igGraphQ] :=
+    igraphGlobal@"percolationCurve"[RandomSample@IGIndexEdgeList[g] - 1, VertexCount[g]]
+
+IGPercolationCurve[edges_List, n : (_?Developer`MachineIntegerQ | Automatic) : Automatic] :=
+    Module[{vertices, ind, pairs, vc},
+      pairs = edges[[All, {1, 2}]];
+      If[Not@MatrixQ[pairs],
+        pairs = List @@@ pairs;
+      ];
+      pairs = Flatten[pairs];
+      vertices = Union[pairs];
+      ind = AssociationThread[vertices, Range@Length[vertices] - 1];
+      pairs = Lookup[ind, pairs];
+      vc = Replace[n, Automatic -> Length[vertices]];
+      If[vc < Length[vertices],
+        vc = Length[vertices];
+        Message[IGPercolationCurve::vcount, vc, Length[vertices]];
+      ];
+      igraphGlobal@"percolationCurve"[Partition[pairs, 2], vc]
+    ]
+
+
 PackageExport["IGSourceVertexList"]
 IGSourceVertexList::usage = "IGSourceVertexList[graph] gives the list of vertices with no incoming connections.";
 

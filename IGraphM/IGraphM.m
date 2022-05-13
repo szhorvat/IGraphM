@@ -186,7 +186,12 @@ template = LTemplate["IGraphM",
         LFun["upperPos", {{Integer, 2, "Constant"}, True|False (* diagonal *)}, {Integer, 1}],
         LFun["nondiagPos", {{Integer, 2, "Constant"}}, {Integer, 1}],
 
-        LFun["fromNauty", {"UTF8String"}, {Integer, 1}]
+        (* Nauty / Graph6 *)
+
+        LFun["fromNauty", {"UTF8String"}, {Integer, 1}],
+
+        (* Percolation *)
+        LFun["percolationCurve", {{Integer, 2, "Constant"}, Integer}, {Real, 2}]
       }
     ],
 
