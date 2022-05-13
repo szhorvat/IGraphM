@@ -7008,7 +7008,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -7020,7 +7020,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\n"}], "\[IndentingNewLine]", 
+   ";"}], "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -14070,21 +14070,33 @@ Cell[BoxData[
 "Input",ExpressionUUID->"c55eae40-b5e0-4cc6-af3e-062e523b2f49"],
 
 Cell[TextData[{
- Cell[BoxData["IGPercolationCurve"],
-  FormatType->StandardForm,ExpressionUUID->
-  "285d4dec-a949-49e0-b18f-e137bc34c6bb"],
+ Cell[BoxData[
+ "IGPercolationCurve"],ExpressionUUID->"285d4dec-a949-49e0-b18f-e137bc34c6bb"],
  " computes the percolation curve for a sequence of edge additions \
 (interpretable as edge removals in reverse order). The ",
- Cell[BoxData["i"],
-  FormatType->StandardForm,ExpressionUUID->
-  "611a6d00-905e-4cc3-9ba6-917d105ad58e"],
+ Cell[BoxData["i"],ExpressionUUID->"611a6d00-905e-4cc3-9ba6-917d105ad58e"],
  "th element of the result is the mean degree and the fraction of vertices \
 within the largest component before adding the ",
- Cell[BoxData["i"],
-  FormatType->StandardForm,ExpressionUUID->
-  "47b6442a-21df-452d-a6ac-74837567451c"],
+ Cell[BoxData["i"],ExpressionUUID->"47b6442a-21df-452d-a6ac-74837567451c"],
  "th edge."
 }], "Text",ExpressionUUID->"aab64c51-2ca8-4644-b376-93bd44c3690f"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGPercolationCurve", "[", "graph", "]"}]],
+  FormatType->StandardForm,ExpressionUUID->
+  "6ea851b8-fd7a-431f-a4b9-17462480651f"],
+ " is equivalent to ",
+ Cell[BoxData[
+  RowBox[{"IGPercolationCurve", "[", 
+   RowBox[{
+    RowBox[{"RandomSample", "@", 
+     RowBox[{"EdgeList", "[", "graph", "]"}]}], ",", " ", 
+    RowBox[{"VertexCount", "[", "graph", "]"}]}], "]"}]],
+  FormatType->StandardForm,ExpressionUUID->
+  "36df84f4-e6b9-47a0-883e-03495848f34c"],
+ "."
+}], "Text",ExpressionUUID->"bef674dc-dd8a-4d68-95ca-4c2bb45fc415"],
 
 Cell["\<\
 Plot the averaged percolation curve of a grid graph over many random edge \
@@ -14143,7 +14155,48 @@ Cell[BoxData[
      "}"}]}], ",", "\[IndentingNewLine]", 
    RowBox[{"Frame", "->", "True"}], ",", 
    RowBox[{"PlotRange", "->", "All"}]}], 
-  "]"}]], "Input",ExpressionUUID->"4c425aae-443e-4713-858b-d85f83a9e033"]
+  "]"}]], "Input",ExpressionUUID->"4c425aae-443e-4713-858b-d85f83a9e033"],
+
+Cell[TextData[{
+ Cell[BoxData["IGPercolationCurve"],
+  FormatType->StandardForm,ExpressionUUID->
+  "9f974290-f45a-4edd-84aa-d324ecc5e9c8"],
+ " also accepts a list of pairs in addition to a list of edge expressions."
+}], "Text",ExpressionUUID->"19bae177-4e4d-4248-bb45-0ae880bf3568"],
+
+Cell[BoxData[
+ RowBox[{"IGPercolationCurve", "@", 
+  RowBox[{"RandomInteger", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"1", ",", "10"}], "}"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"20", ",", "2"}], "}"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"20825d18-8561-4061-b6f8-3e5c245875ad"],
+
+Cell[TextData[{
+ Cell[BoxData["IGPercolationCurve"],
+  FormatType->StandardForm,ExpressionUUID->
+  "f5fd0d4e-2e9f-4c3e-8e42-9d5721ec6e53"],
+ " works efficiently on large networks."
+}], "Text",ExpressionUUID->"1a146e84-df97-4d11-bca5-48c703bc82a9"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"ExampleData", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<WorldWideWeb\>\""}], "}"}], 
+    "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"EdgeCount", "[", "g", 
+  "]"}]}], "Input",ExpressionUUID->"87d06a74-c321-463c-b06e-9af1a7060c37"],
+
+Cell[BoxData[
+ RowBox[{"ListLinePlot", "[", 
+  RowBox[{
+   RowBox[{"IGPercolationCurve", "[", "g", "]"}], ",", 
+   RowBox[{"MaxPlotPoints", "->", "1000"}]}], 
+  "]"}]], "Input",ExpressionUUID->"631e8ba4-ba9b-453a-b814-e6dcea0bed15"]
 }, Closed]]
 }, Closed]],
 
@@ -20859,7 +20912,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20880,7 +20933,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
