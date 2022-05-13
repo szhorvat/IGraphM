@@ -133,7 +133,7 @@ SyntaxInformation[IGLayoutKamadaKawai] = {"ArgumentsPattern" -> {_, OptionsPatte
 
 IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
-      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 50 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> Max[1, VertexCount[graph]]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"], scale],
@@ -154,7 +154,7 @@ SyntaxInformation[IGLayoutKamadaKawai3D] = {"ArgumentsPattern" -> {_, OptionsPat
 
 IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai3D,Graph3D}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
-      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 50 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> Max[1, VertexCount[graph]]];
       applyGraphOpt3D[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
