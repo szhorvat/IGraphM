@@ -20,7 +20,8 @@ class IGFlann2D {
     typedef KDTreeSingleIndexAdaptor<
             L2_Simple_Adaptor<double, PointSet>,
             PointSet,
-            2 /* dim */
+            2, /* dim */
+            mint /* AccessorType */
         > kdtree_t;
 
     PointSet *ps = nullptr;
@@ -56,7 +57,7 @@ public:
         if (d <= 0)
             throw mma::LibraryError("query: query distance must be positive");
 
-        std::vector<std::pair<size_t, double>> ret_matches;
+        std::vector<std::pair<mint, double>> ret_matches;
 
         SearchParams params;
 
@@ -80,7 +81,7 @@ public:
         std::vector<mint> sizes;
 
         SearchParams params;
-        std::vector<std::pair<size_t, double>> ret_matches;
+        std::vector<std::pair<mint, double>> ret_matches;
 
         for (mint i=0; i < pts.rows(); ++i) {
             double d = dists[i];
@@ -115,7 +116,7 @@ public:
             throw mma::LibraryError("neighborCounts: there must be the same number of query distances as query points");
 
         SearchParams params;
-        std::vector<std::pair<size_t, double>> ret_matches;
+        std::vector<std::pair<mint, double>> ret_matches;
 
         auto res = mma::makeVector<mint>(n);
 
@@ -147,7 +148,7 @@ public:
             throw mma::LibraryError("intersectionCounts: there must be the same number of query distances as query points");
 
         SearchParams params;
-        std::vector<std::pair<size_t, double>> ret_matches;
+        std::vector<std::pair<mint, double>> ret_matches;
 
         auto res = mma::makeVector<mint>(n);
 
@@ -190,7 +191,7 @@ public:
             throw mma::LibraryError("unionCounts: there must be the same number of query distances as query points");
 
         SearchParams params;
-        std::vector<std::pair<size_t, double>> ret_matches;
+        std::vector<std::pair<mint, double>> ret_matches;
 
         auto res = mma::makeVector<mint>(n);
 
