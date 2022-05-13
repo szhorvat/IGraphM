@@ -7008,7 +7008,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -7020,7 +7020,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\[IndentingNewLine]"}], "\n", 
+   ";"}], "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -14057,6 +14057,93 @@ Cell[BoxData[{
    "\[IndentingNewLine]", "]"}], "//", 
   "ListPlot"}]}], \
 "Input",ExpressionUUID->"cfcc2ca6-f799-4878-b837-107ad212cbc1"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGPercolationCurve", \
+"Subsubsection",ExpressionUUID->"6b7e54f5-9153-498c-bffe-81393c9dee10"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGPercolationCurve"}]], \
+"Input",ExpressionUUID->"c55eae40-b5e0-4cc6-af3e-062e523b2f49"],
+
+Cell[TextData[{
+ Cell[BoxData["IGPercolationCurve"],
+  FormatType->StandardForm,ExpressionUUID->
+  "285d4dec-a949-49e0-b18f-e137bc34c6bb"],
+ " computes the percolation curve for a sequence of edge additions \
+(interpretable as edge removals in reverse order). The ",
+ Cell[BoxData["i"],
+  FormatType->StandardForm,ExpressionUUID->
+  "611a6d00-905e-4cc3-9ba6-917d105ad58e"],
+ "th element of the result is the mean degree and the fraction of vertices \
+within the largest component before adding the ",
+ Cell[BoxData["i"],
+  FormatType->StandardForm,ExpressionUUID->
+  "47b6442a-21df-452d-a6ac-74837567451c"],
+ "th edge."
+}], "Text",ExpressionUUID->"aab64c51-2ca8-4644-b376-93bd44c3690f"],
+
+Cell["\<\
+Plot the averaged percolation curve of a grid graph over many random edge \
+removals.\
+\>", "Text",ExpressionUUID->"27ce3496-e3cb-495c-ac8c-3c85be4b9fa9"],
+
+Cell[BoxData[
+ RowBox[{"ListLinePlot", "@", 
+  RowBox[{"Mean", "@", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"IGPercolationCurve", "@", 
+      RowBox[{"GridGraph", "[", 
+       RowBox[{"{", 
+        RowBox[{"50", ",", "50"}], "}"}], "]"}]}], ",", 
+     RowBox[{"{", "100", "}"}]}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"8bbb5d8c-cbda-49a3-840d-a1f75e3b96a0"],
+
+Cell["\<\
+Percolation curve for a random geometric graph when edges are removed in \
+order of decreasing or increasing betweenness.\
+\>", "Text",ExpressionUUID->"7ecb319a-6d6b-4007-bed5-a6130dcbb542"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGGeometricGame", "[", 
+    RowBox[{"500", ",", "0.1"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"edgeOrder", "=", 
+   RowBox[{
+    RowBox[{"EdgeList", "[", "g", "]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"Ordering", "@", 
+      RowBox[{"IGEdgeBetweenness", "[", "g", "]"}]}], "]"}], "]"}]}], 
+  ";"}]}], "Input",ExpressionUUID->"735c1c0d-ea9d-49d8-b314-b2ea5d85580f"],
+
+Cell[BoxData[
+ RowBox[{"ListLinePlot", "[", 
+  RowBox[{
+   RowBox[{"IGPercolationCurve", "/@", 
+    RowBox[{"{", 
+     RowBox[{"edgeOrder", ",", 
+      RowBox[{"Reverse", "[", "edgeOrder", "]"}]}], "}"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"PlotLegends", "->", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<decreasing betweenness\>\"", ",", 
+      "\"\<increasing betweenness\>\""}], "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"FrameLabel", "->", 
+    RowBox[{"{", 
+     RowBox[{
+     "\"\<mean degree\>\"", ",", "\"\<largest component fraction\>\""}], 
+     "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Frame", "->", "True"}], ",", 
+   RowBox[{"PlotRange", "->", "All"}]}], 
+  "]"}]], "Input",ExpressionUUID->"4c425aae-443e-4713-858b-d85f83a9e033"]
 }, Closed]]
 }, Closed]],
 
@@ -20772,7 +20859,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20793,7 +20880,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -59927,7 +60014,7 @@ with this program.  If not, see ",
 }, Open  ]]
 },
 WindowSize->{899, 855},
-WindowMargins->{{Automatic, 218}, {Automatic, 1}},
+WindowMargins->{{Automatic, 218}, {Automatic, 540}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
@@ -59977,7 +60064,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"13.0 for Mac OS X x86 (64-bit) (December 2, 2021)",
+FrontEndVersion->"13.0 for Mac OS X x86 (64-bit) (February 4, 2022)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -59997,8 +60084,9 @@ StyleDefinitions->Notebook[{
        StyleData["Item"], DefaultInlineFormatType -> StandardForm], 
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
-       RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> "13.0 for Mac OS X x86 (64-bit) (December 2, 2021)", 
+       RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, 
+  WindowMargins -> {{316, Automatic}, {-440, Automatic}}, Visible -> False, 
+  FrontEndVersion -> "13.0 for Mac OS X x86 (64-bit) (February 4, 2022)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"],
 ExpressionUUID->"f2c61c1c-5321-4c3e-9047-2d29e9f66d92"
 ]
