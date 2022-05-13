@@ -354,7 +354,7 @@ IGPercolationCurve[edges_List, n : (_?Developer`MachineIntegerQ | Automatic) : A
       If[Not@MatrixQ[pairs],
         pairs = List @@@ pairs;
       ];
-      pairs = Flatten[pairs];
+      pairs = Flatten[pairs, 1];
       vertices = Union[pairs];
       ind = AssociationThread[vertices, Range@Length[vertices] - 1];
       pairs = Lookup[ind, pairs];
