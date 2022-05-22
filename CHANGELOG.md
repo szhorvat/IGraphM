@@ -7,10 +7,12 @@ Added:
   - `IGHarmonicCentrality` and `IGHarmonicCentralityCutoff` compute the harmonic centrality and range-limited harmonic centrality.
   - `IGLinkRank` and `IGPersonalizedLinkRank` compute the equivalent of PageRank for edges.
   - `IGFamousGraph` exposes the igraph C library's built-in graph database.
-  - Experimental progress reporting functionality through functions in the ``IGraphM`Progress` `` context.
   - `IGReingoldTilford` and `IGReingoldTilfordCircular` now support the `DirectedEdges` option.
   - `IGFruchtermanReingold` now supports constraining the coordinates of a subset of vertices.
   - `IGPercolationCurve` for efficiently computing the size of the largest component as a function of mean degree while removing edges.
+  - `IGShortestPathTree` for computing a shortest path tree rooted in a given vertex.
+  - `IGGraphEditor` is an experimental interactive graph editor.
+  - Experimental progress reporting functionality through functions in the ``IGraphM`Progress` `` context.
 
 Changed:
 
