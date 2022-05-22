@@ -7008,7 +7008,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -7020,7 +7020,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\[IndentingNewLine]"}], "\n", 
+   ";"}], "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -10285,6 +10285,37 @@ Cell[BoxData[{
    RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<DehighlightGray\>\""}]}], 
   "\[IndentingNewLine]", 
   "]"}]}], "Input",ExpressionUUID->"b8442e40-fb1a-457f-848b-3ff49a6906de"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGShortestPathTree", \
+"Subsubsection",ExpressionUUID->"41552414-6bc4-435a-a032-134664b59cc3"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGShortestPathTree"}]], \
+"Input",ExpressionUUID->"be1984ae-2dac-48ab-9bde-2cba49005849"],
+
+Cell[TextData[{
+ StyleBox["Experimental:",
+  FontWeight->"Bold"],
+ " This is experimental functionality that may change in the future."
+}], "Text",ExpressionUUID->"2d0ea5b7-0c6a-43dd-ac36-2f8c87e99d2c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGTriangularLattice", "[", "4", "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"b2acdb65-ad8b-4c4c-9a56-8e0557089277"],
+
+Cell[BoxData[
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"IGShortestPathTree", "[", 
+    RowBox[{"g", ",", "1"}], "]"}], ",", 
+   RowBox[{"GraphHighlightStyle", "\[Rule]", "\"\<Thick\>\""}]}], 
+  "]"}]], "Input",ExpressionUUID->"fa65a955-3d13-4a1d-a79f-d4828d61a6af"]
 }, Closed]]
 }, Closed]],
 
@@ -12806,6 +12837,7 @@ Cell[BoxData[
             1.8829073080344623`, 1.6753663185872556`}}, 
             0.125485749580099]}}, 
          {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], {
+           
            StyleBox[
             DiskBox[{2.4672573199232506, 0.8378444909707423}, 
              0.125485749580099],
@@ -14070,6 +14102,12 @@ Cell[BoxData[
 "Input",ExpressionUUID->"c55eae40-b5e0-4cc6-af3e-062e523b2f49"],
 
 Cell[TextData[{
+ StyleBox["Experimental:",
+  FontWeight->"Bold"],
+ " This is experimental functionality that may change in the future."
+}], "Text",ExpressionUUID->"e56eb864-74f3-4bd5-86cd-1be7e91e1925"],
+
+Cell[TextData[{
  Cell[BoxData[
  "IGPercolationCurve"],ExpressionUUID->"285d4dec-a949-49e0-b18f-e137bc34c6bb"],
  " computes the percolation curve for a sequence of edge additions \
@@ -14083,8 +14121,7 @@ within the largest component before adding the ",
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"IGPercolationCurve", "[", "graph", "]"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"IGPercolationCurve", "[", "graph", "]"}]],ExpressionUUID->
   "6ea851b8-fd7a-431f-a4b9-17462480651f"],
  " is equivalent to ",
  Cell[BoxData[
@@ -14092,8 +14129,7 @@ Cell[TextData[{
    RowBox[{
     RowBox[{"RandomSample", "@", 
      RowBox[{"EdgeList", "[", "graph", "]"}]}], ",", " ", 
-    RowBox[{"VertexCount", "[", "graph", "]"}]}], "]"}]],
-  FormatType->StandardForm,ExpressionUUID->
+    RowBox[{"VertexCount", "[", "graph", "]"}]}], "]"}]],ExpressionUUID->
   "36df84f4-e6b9-47a0-883e-03495848f34c"],
  "."
 }], "Text",ExpressionUUID->"bef674dc-dd8a-4d68-95ca-4c2bb45fc415"],
@@ -14158,9 +14194,8 @@ Cell[BoxData[
   "]"}]], "Input",ExpressionUUID->"4c425aae-443e-4713-858b-d85f83a9e033"],
 
 Cell[TextData[{
- Cell[BoxData["IGPercolationCurve"],
-  FormatType->StandardForm,ExpressionUUID->
-  "9f974290-f45a-4edd-84aa-d324ecc5e9c8"],
+ Cell[BoxData[
+ "IGPercolationCurve"],ExpressionUUID->"9f974290-f45a-4edd-84aa-d324ecc5e9c8"],
  " also accepts a list of pairs in addition to a list of edge expressions."
 }], "Text",ExpressionUUID->"19bae177-4e4d-4248-bb45-0ae880bf3568"],
 
@@ -14175,9 +14210,8 @@ Cell[BoxData[
    "]"}]}]], "Input",ExpressionUUID->"20825d18-8561-4061-b6f8-3e5c245875ad"],
 
 Cell[TextData[{
- Cell[BoxData["IGPercolationCurve"],
-  FormatType->StandardForm,ExpressionUUID->
-  "f5fd0d4e-2e9f-4c3e-8e42-9d5721ec6e53"],
+ Cell[BoxData[
+ "IGPercolationCurve"],ExpressionUUID->"f5fd0d4e-2e9f-4c3e-8e42-9d5721ec6e53"],
  " works efficiently on large networks."
 }], "Text",ExpressionUUID->"1a146e84-df97-4d11-bca5-48c703bc82a9"],
 
@@ -20912,7 +20946,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20933,7 +20967,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -46533,7 +46567,7 @@ Cell[BoxData[
     RowBox[{"GraphEmbedding", "[", "g", "]"}]}]}], "\[IndentingNewLine]", 
   "]"}]], "Input",ExpressionUUID->"d59383c4-d84d-4508-bc8d-cbdac4a819c8"]
 }, Closed]]
-}, Closed]]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -54323,10 +54357,8 @@ Cell[TextData[{
  Cell[BoxData[
  "IGPotentiallyConnectedQ"],ExpressionUUID->
   "790adcd7-f76b-4e54-ac7f-c66cd9fe511a"],
- " checks if a degree sequence (respectively, a pair of in- and out-degree \
-sequences) has a realization as a connected graph (respectively strongly \
-connected directed graph). The condition for the undirected case is that the \
-degree sequence ",
+ " checks if a degree sequence has a realization as a connected graph. The \
+condition is that the degree sequence ",
  Cell[BoxData[
   FormBox[
    RowBox[{"(", 
@@ -54355,16 +54387,11 @@ degree sequence ",
  Cell[BoxData[
   FormBox["i", TraditionalForm]],ExpressionUUID->
   "a57437b8-5f21-4da1-ab6c-15daec8bf312"],
- ". The condition for the directed case is that all in- and out-degrees be at \
-least 1. An exception to these conditions is the case of a single zero-degree \
-vertex, which corresponds to the singleton-graph, and is therefore \
-potentially connected. Additionally, ",
+ ". Additionally, ",
  Cell[BoxData[
  "IGPotentiallyConnectedQ"],ExpressionUUID->
   "74983815-6016-4e20-84cc-3d59c53b5bdc"],
- " requires that the sum of degrees be odd (undirected case), or that the in- \
-and out-degrees sum to the same value, which is necessary for a (possibly \
-non-simple) graph to exist."
+ " requires that the sum of degrees be odd."
 }], "Text",ExpressionUUID->"20d38035-de98-48b5-943c-a52303bdd1fe"],
 
 Cell["\<\
@@ -54424,19 +54451,6 @@ Cell[BoxData[
   RowBox[{"{", 
    RowBox[{"3", ",", "3", ",", "3"}], "}"}], 
   "]"}]], "Input",ExpressionUUID->"b7e39dd5-5772-45d7-bc69-1bee935b63dd"],
-
-Cell["\<\
-Check the potential connectedness of a pair of in- and out-degree sequences:\
-\>", "Text",ExpressionUUID->"615a073f-eec5-4eeb-a3cc-fb7a6a291ae2"],
-
-Cell[BoxData[
- RowBox[{"IGPotentiallyConnectedQ", "[", 
-  RowBox[{
-   RowBox[{"{", 
-    RowBox[{"1", ",", "2", ",", "1"}], "}"}], ",", 
-   RowBox[{"{", 
-    RowBox[{"1", ",", "1", ",", "2"}], "}"}]}], 
-  "]"}]], "Input",ExpressionUUID->"eb48e45b-4aec-4aa6-8e18-7fea29f14802"],
 
 Cell["\<\
 Generate a random potentially connected degree sequence and construct a \
@@ -56580,8 +56594,8 @@ Cell[BoxData[
          RowBox[{"ImageSize", "\[Rule]", "20"}]}], "]"}], "&"}], "/@", 
       RowBox[{
        RowBox[{"IGVertexProp", "[", "VertexShape", "]"}], "[", "g", "]"}]}], 
-     ")"}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
+     ")"}]}], "]"}]}]], \
+"Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
 
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
@@ -59749,6 +59763,12 @@ Cell[CellGroupData[{
 Cell["Progress reporting", \
 "Subsection",ExpressionUUID->"5a65e1a8-dddf-4956-aa13-1483816f73c0"],
 
+Cell[TextData[{
+ StyleBox["Experimental:",
+  FontWeight->"Bold"],
+ " This is experimental functionality that may change in the future."
+}], "Text",ExpressionUUID->"cc7e6a41-65c6-42b7-8a4d-abb4367f88c9"],
+
 Cell["\<\
 Some igraph functions can report their progress while working. IGraph/M \
 contains experimental functionality that exposes igraph\[CloseCurlyQuote]s \
@@ -60067,7 +60087,7 @@ with this program.  If not, see ",
 }, Open  ]]
 },
 WindowSize->{899, 855},
-WindowMargins->{{Automatic, 218}, {Automatic, 540}},
+WindowMargins->{{Automatic, 197}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
@@ -60137,8 +60157,7 @@ StyleDefinitions->Notebook[{
        StyleData["Item"], DefaultInlineFormatType -> StandardForm], 
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
-       RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, 
-  WindowMargins -> {{316, Automatic}, {-440, Automatic}}, Visible -> False, 
+       RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
   FrontEndVersion -> "13.0 for Mac OS X x86 (64-bit) (February 4, 2022)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"],
 ExpressionUUID->"f2c61c1c-5321-4c3e-9047-2d29e9f66d92"
