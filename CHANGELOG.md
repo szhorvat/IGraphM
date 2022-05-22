@@ -6,10 +6,11 @@ Added:
 
   - `IGHarmonicCentrality` and `IGHarmonicCentralityCutoff` compute the harmonic centrality and range-limited harmonic centrality.
   - `IGLinkRank` and `IGPersonalizedLinkRank` compute the equivalent of PageRank for edges.
-  - `IGFamourGraph` exposes the igraph C library's built-in graph database.
+  - `IGFamousGraph` exposes the igraph C library's built-in graph database.
   - Experimental progress reporting functionality through functions in the ``IGraphM`Progress` `` context.
   - `IGReingoldTilford` and `IGReingoldTilfordCircular` now support the `DirectedEdges` option.
   - `IGFruchtermanReingold` now supports constraining the coordinates of a subset of vertices.
+  - `IGPercolationCurve` for efficiently computing the size of the largest component as a function of mean degree while removing edges.
 
 Changed:
 
@@ -24,7 +25,10 @@ Changed:
  - `IGDiameter` now returns `Indeterminate` for the null graph.
  - `IGChordalQ`, `IGChordalCompletion` and `IGMaximumCardinalitySearch` now support non-simple graphs.
  - `IGReingoldTilford` and `IGReingoldTilfordCircular` use a new automatic root selection algorithm. The root selection heuristic may change in the future without notice. Specify roots manually for a consistent result.
+ - `IGPotentiallyConnectedQ` no longer supports directed sequences. This feature was flawed in 0.5. It may be re-added in a future version.
+ - `IGLayoutKamadaKawai` and `IGLayoutKamadaKawai3D` perform more iterations by default, and produce more pleasing layouts.
  - LAD isomorphism functions now support self-loops.
+ - Motif finder functions now support size 5 and 6 undirected motifs.
  - The behaviour of the random number generator is now consistent between platforms, meaning that with a given seed, a randomized IGraph/M function will return the same result on all platforms. However, result will now be different from version 0.5 for the same seed.
 
 Fixed:
