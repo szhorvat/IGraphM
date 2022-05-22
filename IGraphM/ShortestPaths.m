@@ -75,7 +75,7 @@ igDistanceMatrixJohnson[graph_, from_, to_] :=
 (***** Shortest path tree *****)
 
 PackageExport["IGShortestPathTree"]
-IGShortestPathTree::usage = "IGShortestPathTree[graph]";
+IGShortestPathTree::usage = "IGShortestPathTree[graph, vertex] give the shortest path tree of graph rooted in vertex.";
 
 SyntaxInformation[IGShortestPathTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]};
 
