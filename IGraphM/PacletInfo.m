@@ -4,7 +4,7 @@
 
 Paclet[
     Name -> "IGraphM",
-    Version -> "0.5.1",
+    Version -> "0.5.90",
     MathematicaVersion -> "11.0+",
     Description -> "IGraph/M \[Dash] the igraph interface for Mathematica.",
     Creator -> "Szabolcs Horvát <szhorvat@gmail.com>",
