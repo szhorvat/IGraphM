@@ -234,7 +234,7 @@ With[{taggingRules = taggingRules},
         NBSetOptions[StyleDefinitions -> NBImport["Stylesheet.nb"]]
       ]["IGDocumentation.nb"];
     ],
-    "10.0" (* write notebooks with 10.0 to avoid InsufficientVersionWarning *)
+    "11.0" (* write notebooks with 10.0 to avoid InsufficientVersionWarning *)
   ]
 ]
 
