@@ -20,7 +20,10 @@ Switch[$OperatingSystem,
       ],
       "-fvisibility=hidden",
       "-framework Accelerate", (* for BLAS and LAPACK *)
-      "-mmacosx-version-min=10.9", (* earliest supported macOS version---required for C++11 *)
+      If[$SystemID === "MacOSX-ARM64",
+        "-mmacosx-version-min=11",
+        "-mmacosx-version-min=10.9" (* earliest supported macOS version---required for C++11 *)
+      ],
       With[{res = Quiet@RunProcess[{"xcrun", "--sdk", "macosx", "--show-sdk-path"}]},
         (* If the SDK version can be determined, use it. igraph will be compiled with this SDK by default,
            and if we don't match it for IGraph/M, the linker will give errors. *)
@@ -44,8 +47,7 @@ Switch[$OperatingSystem,
     "CompileOptions" -> {
       If[$SystemID =!= "Linux-ARM",
         (* Compile with -static-libgcc on non-RPi Linux for better compatibility with older distros *)
-        (* Do not use -flto at this point when compiling on Ubuntu 16.04 as it leads to crashes when igraph returns an error *)
-        Unevaluated@Sequence["-static-libgcc", "-D_GLIBCXX_USE_CXX11_ABI=0"(*, "-flto"*)],
+        Unevaluated@Sequence["-static-libgcc", "-D_GLIBCXX_USE_CXX11_ABI=0", "-flto"],
         Unevaluated@Sequence[]
       ]
     },
