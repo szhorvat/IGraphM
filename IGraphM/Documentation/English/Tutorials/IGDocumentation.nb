@@ -277,7 +277,7 @@ Cell[TextData[{
  "Notice that ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " 12.1 does not include functionality to compute weighted vertex \
+ " 13.0 does not include functionality to compute weighted vertex \
 betweenness. The built-in function ",
  Cell[BoxData[
   RowBox[{"BetweennessCentrality", "[", "]"}]],ExpressionUUID->
@@ -6468,11 +6468,14 @@ IGraph/M.\
 \>", "Text",ExpressionUUID->"006a0b44-6aca-4f39-a078-cf950f46812b"],
 
 Cell[TextData[{
- "Note that as of Mathematica 12.2, the built-in ",
+ "Note that as of ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " 13.0, the built-in ",
  Cell[BoxData[
  "BetweennessCentrality"],ExpressionUUID->
   "c5a8c8a2-f85e-48b4-8e1b-f3eaa1a7117a"],
- " function ignores weighted and multi-edges, which causes it to yield \
+ " function ignores edge weights and multi-edges, which causes it to yield \
 different results from ",
  Cell[BoxData[
  "IGBetweenness"],ExpressionUUID->"9922334c-ef0a-47fb-97cb-b3a7d500194e"],
@@ -6818,7 +6821,7 @@ consideration.\
 \>", "Text",ExpressionUUID->"0f2ff807-300b-4204-977a-1584131f57db"],
 
 Cell[TextData[{
- "Note that as of Mathematica 12.2, the built-in ",
+ "Note that as of Mathematica 13.0, the built-in ",
  Cell[BoxData[
  "PageRankCentrality"],ExpressionUUID->"8a57955e-c9ab-4cca-a188-018bef64e5f5"],
  " function ignores self-loops."
@@ -6873,9 +6876,7 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"Histogram", "[", 
   RowBox[{
-   RowBox[{"IGPageRank", "[", "ndWeb", "]"}], ",", 
-   RowBox[{"{", 
-    RowBox[{"\"\<Log\>\"", ",", "Automatic"}], "}"}], ",", 
+   RowBox[{"IGPageRank", "[", "ndWeb", "]"}], ",", "\"\<Log\>\"", ",", 
    RowBox[{"{", 
     RowBox[{"\"\<Log\>\"", ",", "\"\<PDF\>\""}], "}"}], ",", 
    "\[IndentingNewLine]", 
@@ -7008,7 +7009,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -7020,7 +7021,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\n"}], "\[IndentingNewLine]", 
+   ";"}], "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -9204,7 +9205,6 @@ Cell[BoxData[
            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$1"], 
         TagBox[{
           TagBox[
-           
            DiskBox[{1.879421887793725, 0.6470298527326553}, {
             0.1421869442898585, 0.1421869442898585}], "DynamicName", BoxID -> 
            "VertexID$2"], 
@@ -12108,6 +12108,7 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
+                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -14939,7 +14940,8 @@ Cell[BoxData[
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
      DefaultBaseStyle->{
-      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]}
+      ,
      FormatType->TraditionalForm,
      FrameTicks->None,
      ImageSize->{113.30859375, Automatic}], ",", "5"}], 
@@ -20640,8 +20642,8 @@ Cell[TextData[Cell[BoxData[
       3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
       CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
        SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-      ImageSizeCache->{{0.31984374999999865`, 
-       65.67234375000002}, {-31.732950000000006`, 26.239005994133603`}}],
+      ImageSizeCache->{{0.31984374999999865`, 65.67234375000002}, {-32.73295, 
+       25.239005994133613`}}],
      MouseAppearanceTag["NetworkGraphics"]],
     AllowKernelInitialization->False,
     UnsavedVariables:>{$CellContext`flag}]],
@@ -20743,7 +20745,7 @@ Cell[TextData[{
   ButtonNote->"https://doi.org/10.1016/j.artint.2010.05.002"]
 }], "Item",ExpressionUUID->"e556413d-09f9-472d-9400-7d2df212e521"]
 }, Open  ]]
-}, Open  ]],
+}, Closed]],
 
 Cell[CellGroupData[{
 
@@ -20946,7 +20948,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20967,7 +20969,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -57111,7 +57113,7 @@ Cell[TextData[{
  "As of ",
  StyleBox["Mathematica",
   FontSlant->"Italic"],
- " 12.1, the built-in ",
+ " 13.0, the built-in ",
  Cell[BoxData[
  "Export"],ExpressionUUID->"84251994-5727-4b54-b0f1-f4de95b0f5d2"],
  " function produces non-standard GraphML files that cannot be read by some \
@@ -60043,6 +60045,15 @@ Juho Lauri (advice with the implementation of graph colouring functions)\
 \>", "Item",ExpressionUUID->"191fd7ed-1601-40da-b93b-83c898df4e98"],
 
 Cell[TextData[{
+ "Kuba Podkalicki (implementation of ",
+ Cell[BoxData[
+  RowBox[{"IGGraphEditor", "[", "]"}]],
+  FormatType->StandardForm,ExpressionUUID->
+  "577db3c0-1399-47ed-95e4-e7702cf12a02"],
+ ")"
+}], "Item",ExpressionUUID->"74ac2818-6172-4bd5-8395-a9b4bf1a167c"],
+
+Cell[TextData[{
  "To cite IGraph/M in a publication, please refer to ",
  ButtonBox["doi:10.5281/zenodo.1134932",
   BaseStyle->"Hyperlink",
@@ -60057,7 +60068,7 @@ Cell[CellGroupData[{
 Cell["License", \
 "Section",ExpressionUUID->"8255d8a9-329b-49f5-8660-b2c6d78f4f46"],
 
-Cell["Copyright \[Copyright] 2016-2020 Szabolcs Horv\[AAcute]t", \
+Cell["Copyright \[Copyright] 2016-2022 Szabolcs Horv\[AAcute]t", \
 "Text",ExpressionUUID->"a9291bea-7127-43f9-abf5-fc8a1c0363eb"],
 
 Cell["\<\
@@ -60087,7 +60098,7 @@ with this program.  If not, see ",
 }, Open  ]]
 },
 WindowSize->{899, 855},
-WindowMargins->{{Automatic, 197}, {Automatic, 0}},
+WindowMargins->{{Automatic, 118}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
