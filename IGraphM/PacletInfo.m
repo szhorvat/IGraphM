@@ -12,7 +12,7 @@ Paclet[
     Thumbnail -> "Logo.png",
     "Icon" -> "Logo.png",
     "Keywords" -> {"igraph", "graph theory", "network analysis"},
-    SystemID -> {"MacOSX-x86-64", "Windows-x86-64", "Linux-x86-64", "Linux-ARM"},
+    SystemID -> {"MacOSX-x86-64", "MacOSX-ARM4", "Windows-x86-64", "Linux-x86-64"(*, "Linux-ARM"()*)},
     Extensions -> 
         {    
             {"Kernel", Root -> ".", Context -> "IGraphM`"},
