@@ -322,8 +322,8 @@ IGDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 igDiameterUnweighted[graph_, bycomp_] :=
-    Block[{ig = igMakeFast[graph]},
-      sck@ig@"diameter"[bycomp]
+    catch@Block[{ig = igMakeFast[graph]},
+      Round@check@ig@"diameter"[bycomp]
     ]
 
 igDiameterDijkstra[graph_, bycomp_] :=
