@@ -1202,10 +1202,12 @@ public:
                 switch (vcount) {
                 case 3: return directed ? 16 : 4;
                 case 4: return directed ? 218 : 11;
+                case 5:
+                    if (! directed) return 34;
+                case 6:
+                    if (! directed) return 156;
                 default:
-                    /* We are relying on igraph_motifs_randesu_callback() reporting an error below
-                       if a wrong motif size argument was passed in. */
-                    return 1;
+                    throw mma::LibraryError("Unsupported motif size.");
                 }
             }
         };
@@ -1260,6 +1262,73 @@ public:
                     mat(i,5) = IGRAPH_NAN;
                 }
                 break;
+            case 5:
+                if (! dir) {
+                    mat(i,0) = IGRAPH_NAN;
+                    mat(i,1) = IGRAPH_NAN;
+                    mat(i,2) = IGRAPH_NAN;
+                    mat(i,3) = IGRAPH_NAN;
+                    mat(i,4) = IGRAPH_NAN;
+                    mat(i,5) = IGRAPH_NAN;
+                    mat(i,6) = IGRAPH_NAN;
+                    mat(i,7) = IGRAPH_NAN;
+                    mat(i,8) = IGRAPH_NAN;
+                    mat(i,9) = IGRAPH_NAN;
+                    mat(i,10) = IGRAPH_NAN;
+                    mat(i,12) = IGRAPH_NAN;
+                    mat(i,19) = IGRAPH_NAN;
+                    break;
+                }
+                /* otherwise fall through to default */
+            case 6:
+                if (! dir) {
+                    mat(i,0) = IGRAPH_NAN;
+                    mat(i,1) = IGRAPH_NAN;
+                    mat(i,2) = IGRAPH_NAN;
+                    mat(i,3) = IGRAPH_NAN;
+                    mat(i,4) = IGRAPH_NAN;
+                    mat(i,5) = IGRAPH_NAN;
+                    mat(i,6) = IGRAPH_NAN;
+                    mat(i,7) = IGRAPH_NAN;
+                    mat(i,8) = IGRAPH_NAN;
+                    mat(i,9) = IGRAPH_NAN;
+                    mat(i,10) = IGRAPH_NAN;
+                    mat(i,11) = IGRAPH_NAN;
+                    mat(i,12) = IGRAPH_NAN;
+                    mat(i,13) = IGRAPH_NAN;
+                    mat(i,14) = IGRAPH_NAN;
+                    mat(i,15) = IGRAPH_NAN;
+                    mat(i,16) = IGRAPH_NAN;
+                    mat(i,17) = IGRAPH_NAN;
+                    mat(i,18) = IGRAPH_NAN;
+                    mat(i,19) = IGRAPH_NAN;
+                    mat(i,20) = IGRAPH_NAN;
+                    mat(i,21) = IGRAPH_NAN;
+                    mat(i,22) = IGRAPH_NAN;
+                    mat(i,23) = IGRAPH_NAN;
+                    mat(i,24) = IGRAPH_NAN;
+                    mat(i,25) = IGRAPH_NAN;
+                    mat(i,26) = IGRAPH_NAN;
+                    mat(i,27) = IGRAPH_NAN;
+                    mat(i,28) = IGRAPH_NAN;
+                    mat(i,29) = IGRAPH_NAN;
+                    mat(i,30) = IGRAPH_NAN;
+                    mat(i,31) = IGRAPH_NAN;
+                    mat(i,32) = IGRAPH_NAN;
+                    mat(i,33) = IGRAPH_NAN;
+                    mat(i,35) = IGRAPH_NAN;
+                    mat(i,38) = IGRAPH_NAN;
+                    mat(i,44) = IGRAPH_NAN;
+                    mat(i,50) = IGRAPH_NAN;
+                    mat(i,51) = IGRAPH_NAN;
+                    mat(i,54) = IGRAPH_NAN;
+                    mat(i,74) = IGRAPH_NAN;
+                    mat(i,77) = IGRAPH_NAN;
+                    mat(i,89) = IGRAPH_NAN;
+                    mat(i,120) = IGRAPH_NAN;
+                    break;
+                }
+                /* otherwise fall through to default */
             default:
                 massert("motifsParticipation: this line should never be reached");
             }
