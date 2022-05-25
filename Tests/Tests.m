@@ -4311,6 +4311,16 @@ MT[
 ]
 
 MT[
+  IGMotifs[dolphin, 5],
+  {Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, 508, Indeterminate, 5821, 871, 6189, 1878, 642, 595, Indeterminate, 2158, 666, 229, 6, 48, 110, 142, 223, 129, 29, 65, 8, 26, 3}
+]
+
+MT[
+  IGMotifs[dolphin, 6],
+  {Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, 223, Indeterminate, 4767, 577, Indeterminate, 3227, 15550, 3826, 815, 555, Indeterminate, 2641, 637, 208, 846, 630, Indeterminate, Indeterminate, 14644, 1351, Indeterminate, 3970, 15807, 1395, 9356, 2513, 729, 652, 36, 189, 151, 1678, 893, 243, 5678, 971, 1095, 505, 105, 223, Indeterminate, 1460, 34, Indeterminate, 1353, 284, 455, 98, 1767, 619, 266, 9, 86, 75, 141, Indeterminate, 562, 149, 96, 31, 0, 12, 218, 110, 79, 67, 36, 85, 0, 21, 239, 543, 118, 11, 74, 331, 52, 57, 43, 34, 1, 26, 7, 16, 0, 28, Indeterminate, 572, 198, 126, 66, 10, 35, 95, 33, 63, 25, 39, 9, 32, 31, 5, 7, 0, 0, 0, 7, 0, 0, 2, 5, 8, 5, 0, 14, 1, 1, 4, 0, 2, 1, 0}
+]
+
+MT[
   IGMotifs[empty, 3],
   {Indeterminate, Indeterminate, 0, 0}
 ]
@@ -4353,6 +4363,12 @@ MT[
 MT[
   IGMotifsTotalCount[dolphin, 4],
   3800
+]
+
+(* values greater than what is supported by IGMotifs *)
+MT[
+  IGMotifsTotalCount[dolphin, 8],
+  2683740
 ]
 
 MT[
@@ -4401,6 +4417,15 @@ MT[
 MT[
   IGMotifsVertexParticipation[CompleteGraph[5, DirectedEdges -> True], 4],
   <|1 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 2 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 3 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 4 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 5 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}|>
+]
+
+
+Table[
+  MT[
+    Total@IGMotifsVertexParticipation[dolphin, k] / k,
+    IGMotifs[dolphin, k]
+  ],
+  {k, 3, 6}
 ]
 
 
