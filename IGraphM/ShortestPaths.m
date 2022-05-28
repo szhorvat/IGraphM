@@ -77,14 +77,14 @@ igDistanceMatrixJohnson[graph_, from_, to_] :=
 PackageExport["IGShortestPathTree"]
 IGShortestPathTree::usage = "IGShortestPathTree[graph, vertex] give the shortest path tree of graph rooted in vertex.";
 
-SyntaxInformation[IGShortestPathTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]};
-
 Options[IGShortestPathTree] = {Method -> Automatic};
 igShortestPathTreeMethods = <|
   "Unweighted" -> igSPTUnweighted,
   "Dijkstra" -> igSPTDijkstra,
   "BellmanFord" -> igSPTBellmanFord
 |>;
+
+SyntaxInformation[IGShortestPathTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]};
 
 IGShortestPathTree::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igShortestPathTreeMethods], InputForm] <> ".";
 
@@ -278,8 +278,8 @@ PackageExport["IGAverageLocalEfficiency"]
 IGAverageLocalEfficiency::usage =
     "IGAverageLocalEfficiency[graph] gives the average local efficiency of graph.\n" <>
     "IGAverageLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood in a directed graph.";
-SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 Options[IGAverageLocalEfficiency] = { DirectedEdges -> True };
+SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGAverageLocalEfficiency[graph_?igGraphQ, mode_String : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       check@ig@"averageLocalEfficiency"[OptionValue[DirectedEdges], encodeNeighborMode[mode]]
