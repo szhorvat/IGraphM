@@ -254,6 +254,29 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
     ]
 
 
+(* The relative neighbourhood graph is defined in terms of an open exclusion region,
+ * i.e. points on the region boundaries are not considered. *)
+igRelativeNeighborhoodGraphEdges[pts_] :=
+    Module[{flann, edges, edgeLengths, p, q, dists},
+      {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 2];
+
+      dists = edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon);
+
+      (*
+         Ideally, we would pick those edges where there are no points within the region.
+         Since the boundaries are excluded, the edge endpoints will not be detected as
+         part of the region.
+         Note: UnitStep[0] == 1, so we subtract 1 to get <= 0.
+      *)
+      flann = makeFlann[pts];
+      Pick[
+        edges,
+        UnitStep[flann@"intersectionCounts"[p, q, dists] - 1],
+        0
+      ]
+    ]
+
+
 (* beta >= 1, circle-based *)
 (*
 igCircleBetaSkeletonEdges[pts_, beta_] :=
@@ -432,7 +455,11 @@ IGRelativeNeighborhoodGraph::usage = "IGRelativeNeighborhoodGraph[points] gives 
 
 SyntaxInformation[IGRelativeNeighborhoodGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGRelativeNeighborhoodGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
-    igLuneBetaSkeleton[pts, 2, opt]
+    catch@If[Length[pts] < 2, IGEmptyGraph[Length[pts], opt],
+      With[{ edges = igRelativeNeighborhoodGraphEdges[N[pts]] },
+        Graph[Range@Length[pts], edges, DirectedEdges -> False, opt, VertexCoordinates -> pts]
+      ]
+    ]
 
 
 PackageExport["IGGabrielGraph"]
