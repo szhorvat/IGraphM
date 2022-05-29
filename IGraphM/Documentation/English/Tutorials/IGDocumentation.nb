@@ -20642,8 +20642,8 @@ Cell[TextData[Cell[BoxData[
       3, Typeset`graph, Typeset`boxes, $CellContext`flag], {
       CachedValue :> Typeset`boxes, SingleEvaluation -> True, 
        SynchronousUpdating -> False, TrackedSymbols :> {$CellContext`flag}},
-      ImageSizeCache->{{0.31984374999999865`, 65.67234375000002}, {-32.73295, 
-       25.239005994133613`}}],
+      ImageSizeCache->{{0.31984374999999865`, 
+       65.67234375000002}, {-31.732950000000006`, 26.239005994133603`}}],
      MouseAppearanceTag["NetworkGraphics"]],
     AllowKernelInitialization->False,
     UnsavedVariables:>{$CellContext`flag}]],
@@ -51925,7 +51925,7 @@ Cell[TextData[{
 do not cross. For ",
  Cell[BoxData[
   FormBox[
-   RowBox[{"\[Beta]", "\[LessEqual]", "2"}], TraditionalForm]],ExpressionUUID->
+   RowBox[{"\[Beta]", "<", "2"}], TraditionalForm]],ExpressionUUID->
   "d5b48428-d0f2-482c-8eee-3c81f69c45e2"],
  ", it contains the Euclidean minimum spanning tree, thus it is connected. \
 For ",
@@ -51933,7 +51933,13 @@ For ",
   FormBox[
    RowBox[{"\[Beta]", ">", "2"}], TraditionalForm]],ExpressionUUID->
   "cb5322d4-1d9e-41fe-b113-dc9ba5caf770"],
- ", it is typically disconnected."
+ ", it is typically disconnected. For ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "=", "2"}], TraditionalForm]],ExpressionUUID->
+  "a830e5b9-a37f-4f1b-b9df-6897bd08ec56"],
+ ", it may be disconnected in special degenerate cases when three \
+neighbouring points form an equilateral triangle."
 }], "Text",ExpressionUUID->"ee587657-d412-4812-bd72-6807ba6ae41d"],
 
 Cell[TextData[{
@@ -52486,16 +52492,54 @@ space. Two points ",
     RowBox[{"B", " ", "C"}], "<", 
     RowBox[{"A", " ", "B"}]}], TraditionalForm]],ExpressionUUID->
   "c273fd9d-2b65-4932-a7be-d0a3d00a7398"],
- "."
+ ", with the inequialities being strict."
 }], "Text",ExpressionUUID->"aef92e2b-0512-494a-a253-f6a6de5e0d03"],
 
 Cell[TextData[{
- "The relative neighbourhood graph coincides with a \[Beta]-skeleton for ",
+ "Most authors define the neighbourhood graph to coincide with a \
+\[Beta]-skeleton for ",
  Cell[BoxData[
   FormBox[
    RowBox[{"\[Beta]", "=", "2"}], TraditionalForm]],ExpressionUUID->
   "a65fc48a-4b07-4f7e-ba09-cc3e054224a8"],
- "."
+ ". In IGraph/M, there is a subtle difference: the ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "=", "2"}], TraditionalForm]],ExpressionUUID->
+  "e2e54d39-3a33-470f-9bf1-0d51e553cad9"],
+ " skeleton connects points ",
+ Cell[BoxData[
+  FormBox["A", TraditionalForm]],ExpressionUUID->
+  "e8001c68-f77e-4a4f-b474-de4fc2b39c6c"],
+ " and ",
+ Cell[BoxData[
+  FormBox["B", TraditionalForm]],ExpressionUUID->
+  "952b06ae-67b6-458b-8712-00663ae8caf1"],
+ " when there is no point ",
+ Cell[BoxData[
+  FormBox["C", TraditionalForm]],ExpressionUUID->
+  "a911c7d2-5fea-433d-a245-74efdfd43aa6"],
+ " so that ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"A", " ", "C"}], "\[LessEqual]", 
+    RowBox[{"A", " ", "B"}]}], TraditionalForm]],ExpressionUUID->
+  "ebd96d95-744e-4a44-8953-fef25e0c4191"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"B", " ", "C"}], "\[LessEqual]", 
+    RowBox[{"A", " ", "B"}]}], TraditionalForm]],ExpressionUUID->
+  "e5968081-d488-4e83-9498-9a64005b4576"],
+ ". Therefore, three points forming an equilateral triangle are connected in \
+the relative neighborhood graph, but disconnected in the ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "=", "2"}], TraditionalForm]],ExpressionUUID->
+  "95a99253-18d8-4633-bb2e-b28ea63b20f3"],
+ " skeleton."
 }], "Text",ExpressionUUID->"7ac8f4be-70bf-46f2-80f2-3ee5d9a46fed"],
 
 Cell["\<\
@@ -52567,7 +52611,32 @@ Cell[BoxData[
      RowBox[{
       RowBox[{"PointSize", "[", "0.01", "]"}], ",", 
       RowBox[{"Point", "[", "capitals", "]"}]}], "}"}]}], "}"}], 
-  "]"}]], "Input",ExpressionUUID->"2ea81934-b9a7-4008-a63f-7612d83db2c1"]
+  "]"}]], "Input",ExpressionUUID->"2ea81934-b9a7-4008-a63f-7612d83db2c1"],
+
+Cell[TextData[{
+ "When the point set contain equilateral triangles, the relative \
+neighbourhood graph may not coincide with  the ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Beta]", "=", "2"}], TraditionalForm]],ExpressionUUID->
+  "e021e296-61d6-407a-9cf7-ff0c60343bde"],
+ " skeleton. "
+}], "Text",ExpressionUUID->"c99e4475-2d55-401f-8ce0-846d23aeac97"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"pts", "=", 
+   RowBox[{"MeshCoordinates", "@", 
+    RowBox[{"IGLatticeMesh", "[", "\"\<Triangular\>\"", "]"}]}]}], 
+  ";"}]], "Input",ExpressionUUID->"cfe6785e-8a93-4d33-beed-6a20b63dada3"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"IGRelativeNeighborhoodGraph", "[", "pts", "]"}], ",", 
+   RowBox[{"IGLuneBetaSkeleton", "[", 
+    RowBox[{"pts", ",", "2"}], "]"}]}], 
+  "}"}]], "Input",ExpressionUUID->"ef438487-e142-4f5e-8e63-675adc95614c"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -56596,8 +56665,8 @@ Cell[BoxData[
          RowBox[{"ImageSize", "\[Rule]", "20"}]}], "]"}], "&"}], "/@", 
       RowBox[{
        RowBox[{"IGVertexProp", "[", "VertexShape", "]"}], "[", "g", "]"}]}], 
-     ")"}]}], "]"}]}]], \
-"Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
+     ")"}]}], 
+   "]"}]}]], "Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
 
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
@@ -60047,8 +60116,7 @@ Juho Lauri (advice with the implementation of graph colouring functions)\
 Cell[TextData[{
  "Kuba Podkalicki (implementation of ",
  Cell[BoxData[
-  RowBox[{"IGGraphEditor", "[", "]"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"IGGraphEditor", "[", "]"}]],ExpressionUUID->
   "577db3c0-1399-47ed-95e4-e7702cf12a02"],
  ")"
 }], "Item",ExpressionUUID->"74ac2818-6172-4bd5-8395-a9b4bf1a167c"],
