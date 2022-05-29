@@ -6570,6 +6570,12 @@ MT[
   SameTest -> IGSameGraphQ
 ]
 
+MT[
+  IGLuneBetaSkeleton[GraphEmbedding@IGTriangularLattice[4], 2],
+  IGEmptyGraph@VertexCount@IGTriangularLattice[4],
+  SameTest -> IGSameGraphQ
+]
+
 
 (* ::Subsubsection::Closed:: *)
 (*IGGabrielGraph*)
@@ -6611,7 +6617,7 @@ MT[
 
 MT[
   IGRelativeNeighborhoodGraph@GraphEmbedding@IGTriangularLattice[5],
-  IGEmptyGraph@VertexCount@IGTriangularLattice[5],
+  IGTriangularLattice[5],
   SameTest -> IGSameGraphQ
 ]
 
