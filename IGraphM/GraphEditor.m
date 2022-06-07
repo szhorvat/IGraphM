@@ -21,7 +21,7 @@ IGGraphEditor // Options = {
   "KeepVertexCoordinates" -> True
 , "DefaultEdgeType"       -> "Directed" (* | or else undirected *)  
 , "CreateVertexSelects"   -> True
-, "QuantizeVertexPosition"-> False
+(*, "QuantizeVertexPosition"-> False*)
 , "IndexGraph"            -> False
 }
 
