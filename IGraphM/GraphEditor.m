@@ -9,10 +9,12 @@ Package["IGraphM`"]
 
 PackageExport["IGGraphEditor"]
 
-IGGraphEditor::usage        = "IGGraphEditor[] typesets to a graph editor...";
+IGGraphEditor::usage        =
+    "IGGraphEditor[] typesets to an interactive graph editor.\n" <>
+    "IGGraphEditor[graph] uses the given graph as the starting point.";
 IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed pairs are {1->2, 2->1}.";
 IGGraphEditor::unknownState = "Corrupted editor state."
-IGGraphEditor::oldVer       = "You need to update IGraph/M to continue work with data stored here."
+IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here."
 
 
 IGGraphEditor // Options = {
