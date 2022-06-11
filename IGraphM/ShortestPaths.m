@@ -84,11 +84,11 @@ igShortestPathTreeMethods = <|
   "BellmanFord" -> igSPTBellmanFord
 |>;
 
-SyntaxInformation[IGShortestPathTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGStaticPowerLawGame, Graph]};
+SyntaxInformation[IGShortestPathTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGShortestPathTree, Graph]};
 
 IGShortestPathTree::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igShortestPathTreeMethods], InputForm] <> ".";
 
-IGShortestPathTree[graph_?igGraphQ, from_, opt : OptionsPattern[]] :=
+IGShortestPathTree[graph_?igGraphQ, from_, opt : OptionsPattern[{IGShortestPathTree, Graph}]] :=
     catch@Module[{method = OptionValue[Method]},
       If[Not@MemberQ[Keys[igDistanceMatrixMethods] ~Join~ {Automatic}, method],
         Message[IGShortestPathTree::bdmtd, method];
@@ -101,7 +101,7 @@ IGShortestPathTree[graph_?igGraphQ, from_, opt : OptionsPattern[]] :=
           True, "BellmanFord"
         ]
       ];
-      igShortestPathTreeMethods[method][graph, vs[graph][from]]
+      applyGraphOpt[opt]@igShortestPathTreeMethods[method][graph, vs[graph][from]]
     ]
 
 removeZeroes[vec_] := Delete[vec, Position[vec, 0]]
