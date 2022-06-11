@@ -48,8 +48,8 @@ Switch[$OperatingSystem,
       "-fvisibility=hidden",
       If[$SystemID =!= "Linux-ARM",
         (* Compile with -static-libgcc on non-RPi Linux for better compatibility with older distros *)
-        Unevaluated@Sequence["-static-libgcc", "-D_GLIBCXX_USE_CXX11_ABI=0", "-flto"],
-        Unevaluated@Sequence[]
+        Unevaluated@Sequence["-static-libgcc", (*"-D_GLIBCXX_USE_CXX11_ABI=0",*) "-flto"],
+        Unevaluated@Sequence["-flto"]
       ]
     },
 
