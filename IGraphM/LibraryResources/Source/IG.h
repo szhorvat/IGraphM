@@ -14,6 +14,7 @@
 #include <set>
 #include <tuple>
 #include <iomanip>
+#include <cmath>
 
 class IG;
 
@@ -690,6 +691,11 @@ public:
         igraph_arpack_options_t options;
         igraph_arpack_options_init(&options);
         igCheck(igraph_hub_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        if (value < -std::pow( std::numeric_limits<double>::epsilon(), 2.0/3 ) ) {
+            std::ostringstream msg;
+            msg << "Hub score eigenvalue should be positive, actual eigenvalue is " << value << ". Possible convergence problem.";
+            mma::message(msg.str(), mma::M_WARNING);
+        }
         return vector.makeMTensor();
     }
 
@@ -699,6 +705,11 @@ public:
         igraph_arpack_options_t options;
         igraph_arpack_options_init(&options);
         igCheck(igraph_authority_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        if (value < -std::pow( std::numeric_limits<double>::epsilon(), 2.0/3 ) ) {
+            std::ostringstream msg;
+            msg << "Authority score eigenvalue should be positive, actual eigenvalue is " << value << ". Possible convergence problem.";
+            mma::message(msg.str(), mma::M_WARNING);
+        }
         return vector.makeMTensor();
     }
 
