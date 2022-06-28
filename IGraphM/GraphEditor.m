@@ -9,7 +9,7 @@ Package["IGraphM`"]
 
 PackageExport["IGGraphEditor"]
 
-IGGraphEditor::usage        = "IGGraphEditor[] typesets to a graph editor...";
+IGGraphEditor::usage        = "IGGraphEditor[_Graph] creates an editor GUI. (Alt+Click creates a vertex)";
 IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed pairs are {1->2, 2->1}.";
 IGGraphEditor::unknownState = "Corrupted editor state."
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue work with data stored here."
@@ -165,11 +165,11 @@ GraphToEditorState[ opt:OptionsPattern[]]:=<|
    
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]]:= Module[{state,v,e, pos, quant}
-, v = VertexList[g] // Map[ToString]
+, v = VertexList[g] (*// Map[ToString] *)
 ; pos = GraphEmbedding @ g 
 (*; quant = OptionValue["QuantizeVertexPosition"]
 ; If[ NumericQ @ quant, pos = Round[pos, quant]]*)
-; e = EdgeList[g] // Map[ ToString, #, {2}]&
+; e = EdgeList[g] (*// Map[ ToString, #, {2}]&*)
 
 ; state = GraphToEditorState[opt]
 
@@ -184,6 +184,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]]:= Module[{st
 ; state
 ]
 
+$idPattern = _String | _Integer
 
 optionsToConfig // Options = Options @ IGGraphEditor;
 
@@ -320,7 +321,7 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association]:=If[
 ]  
 
 
-geAction["Select", Dynamic @ state_, vId_String]:= state["selectedVertex"] = vId;
+geAction["Select", Dynamic @ state_, vId:$idPattern]:= state["selectedVertex"] = vId;
 
 
 geAction["Unselect", Dynamic @ state_]:= state["selectedVertex"] = False
@@ -359,15 +360,17 @@ geAction["RemoveVertex", Dynamic @ state_, v_]:=With[{ id = v["id"]}
 ]
 
 
-geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String]:=Module[{eId}
+geAction["CreateEdge", Dynamic @ state_, selectedV:$idPattern, clickedV:$idPattern]:=Module[{eId, type}
 , If[ 
     Not @ newEdgeAllowedQ[state, selectedV, clickedV]
   , Beep[]
   ; Message[IGGraphEditor::multiEdge]
   ; Return[$Failed, Module]
   ]  
-; eId = "e"<>ToString[++state["config", "eCounter"]]      
-; state["edge", eId ] = createEdge[eId,  If[state["config", "defaultEdgeType"] === "Directed", Rule, UndirectedEdge][selectedV, clickedV]]
+; eId = "e"<>ToString[++state["config", "eCounter"]]
+; type =   If[state["config", "defaultEdgeType"] === "Directed", Rule, UndirectedEdge]
+
+; state["edge", eId ] = createEdge[eId,  type[selectedV, clickedV] ]
   
 ; geAction["Unselect", Dynamic @ state]  
 ; geAction["UpdateEdgesShapes", Dynamic @ state]
@@ -421,7 +424,7 @@ geAction[args___]:=(Beep[]; Print @ Framed @ InputForm @ {args})
 
 newEdgeAllowedQ::usage = "Is supposed to test whether a new edge can be created";
 
-newEdgeAllowedQ[state_, v1_String, v2_String]:= Module[{newEdgeType,edges}
+newEdgeAllowedQ[state_, v1:$idPattern, v2:$idPattern]:= Module[{newEdgeType,edges}
 , newEdgeType = state["config", "defaultEdgeType"]
 ; edges = Values @ state["edge"]
 ; If[ 
@@ -433,10 +436,10 @@ newEdgeAllowedQ[state_, v1_String, v2_String]:= Module[{newEdgeType,edges}
 ]
 
 
-createVertex[id_String, pos:{_,_}]:= <|"id" -> id, "pos" -> pos|> 
+createVertex[id:$idPattern, pos:{_,_}]:= <|"id" -> id, "pos" -> pos|>
 
 
-createEdge[eId_String, (e_[v1_String,  v2_String])]:=<|
+createEdge[eId_:$idPattern, (e_[v1:$idPattern,  v2:$idPattern])]:=<|
     "v1"    -> v1
   , "v2"    -> v2
   , "id"    -> eId
