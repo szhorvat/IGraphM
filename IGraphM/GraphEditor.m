@@ -26,6 +26,7 @@ IGGraphEditor // Options = {
 , "CreateVertexSelects"   -> True
 (*, "QuantizeVertexPosition"-> False*)
 , "IndexGraph"            -> False
+, "VertexLabels"          -> False
 }
 
 SyntaxInformation[IGGraphEditor] = {"ArgumentsPattern" -> {OptionsPattern[]}};
@@ -103,12 +104,12 @@ geGraphics[Dynamic @ state_ ]:= Graphics[
 
   , Gray
 
-  , Dynamic @ geEdges @ Dynamic@state  
+  , Dynamic @ geEdges @ Dynamic @ state  
 
   , Dynamic @ Table[ geVertexShapeFunction[Dynamic@state, state["vertex", id] ], {id, Keys @ state["vertex"] }]
 
   }
-, PlotRange -> state["config", "coordinateBounds"]
+, PlotRange -> Dynamic @ state["config", "coordinateBounds"]
 , ImagePadding -> 14
 ]
 
@@ -187,8 +188,10 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]]:= Module[{st
 
 ; state[ "config", "vCounter"] = Length@v
 ; state[ "config", "eCounter"] = Length@e
-; state[ "config", "coordinateBounds"] = CoordinateBounds @ pos
 ; state[ "config", "defaultEdgeType"] = If[ UndirectedGraphQ @ g, "Undirected", "Directed"]      
+
+
+; geAction["UpdateCoordinateBounds", Dynamic @ state]
 
 ; state
 ]
@@ -232,10 +235,16 @@ Module[
   ] & @ quantization 
 
 ; EventHandler[
-  { EdgeForm @ AbsoluteThickness @ Dynamic @ ef
+  { {EdgeForm @ AbsoluteThickness @ Dynamic @ ef
   , DynamicName[ 
       Disk[Dynamic[x], Offset[8]]
     , v["id"]
+    ]
+  }
+  , If[ 
+      state["config", "vertexLabels"] === "Name"
+    , Inset[v["name"], Offset[ {12,12}, DynamicLocation[v["id"]]] ]  
+    , Nothing
     ]
   }
 , {
@@ -324,7 +333,17 @@ Module[{$inside = False}
 
 geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}]:=(
   state["vertex", vId, "pos"] = pos
+; If[
+    ! state["config", "inBoundsRMF"] @ pos
+  , geAction["UpdateCoordinateBounds", Dynamic @ state]  
+  ]  
 ; geAction["UpdateEdgesShapes", Dynamic @ state]
+)
+
+geAction["UpdateCoordinateBounds", Dynamic @ state_]:= (
+    state[ "config", "coordinateBounds"] = CoordinateBounds[ state//Query["vertex", All, "pos"], Scaled[0.05] ]
+  ; state[ "config", "inBoundsRMF" ] = RegionMember[ Rectangle @@ Transpose@ state[ "config", "coordinateBounds"]  ]
+
 )
 
 geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
