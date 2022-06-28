@@ -9,17 +9,19 @@ Package["IGraphM`"]
 
 PackageExport["IGGraphEditor"]
 
-IGGraphEditor::usage        = "IGGraphEditor[_Graph] creates an editor GUI. (Alt+Click creates a vertex)";
+IGGraphEditor::usage        =
+    "IGGraphEditor[] typesets to an interactive graph editor.\n" <>
+    "IGGraphEditor[graph] uses the given graph as the starting point.";
 IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed pairs are {1->2, 2->1}.";
 IGGraphEditor::unknownState = "Corrupted editor state."
-IGGraphEditor::oldVer       = "You need to update IGraph/M to continue work with data stored here."
+IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here."
 
 
 IGGraphEditor // Options = {
   "KeepVertexCoordinates" -> True
 , "DefaultEdgeType"       -> "Directed" (* | or else undirected *)  
 , "CreateVertexSelects"   -> True
-, "QuantizeVertexPosition"-> False
+(*, "QuantizeVertexPosition"-> False*)
 , "IndexGraph"            -> False
 }
 
@@ -95,18 +97,16 @@ geGraphics[Dynamic @ state_ ]:= Graphics[
   DynamicNamespace @ {
   
     geHighlightsPrimitives @ Dynamic @ state
-    
+
   , Gray
-  
+
   , Dynamic @ geEdges @ Dynamic@state  
-  
+
   , Dynamic @ Table[ geVertexShapeFunction[Dynamic@state, state["vertex", id] ], {id, Keys @ state["vertex"] }]
-  
-  
-   
+
   }
 , PlotRange -> state["config", "coordinateBounds"]
-, PlotRangePadding->Scaled[.05]
+, ImagePadding -> 14
 ]
 
 
@@ -160,7 +160,7 @@ GraphToEditorState[ opt:OptionsPattern[]]:=<|
         optionsToConfig[opt]
       , "vCounter"->0
       , "eCounter" ->0
-      , "coordinateBounds" -> 1|>
+      , "coordinateBounds" -> {{-1, 1}, {-1, 1}}|>
     |>;
    
 
@@ -197,7 +197,7 @@ geVertexShapeFunction[Dynamic @ state_, v_Association]:= DynamicModule[{x = v@"p
 , EventHandler[
   { EdgeForm @ AbsoluteThickness @ Dynamic @ ef
   , DynamicName[ 
-      Disk[Dynamic[x], Scaled@.03]
+      Disk[Dynamic[x], Offset[8]]
     , v["id"]
     ]
   }
@@ -261,7 +261,7 @@ geHighlightsPrimitives[Dynamic @ state_]:= With[{ selV := state["selectedVertex"
       If[ 
         StringQ @ selV
       , { 
-          Disk[DynamicLocation[selV], Scaled@.04]
+          Disk[DynamicLocation[selV], Offset[12]]
         , Dashed, Line[{
             DynamicLocation[selV]
           , FrontEnd`MousePosition["Graphics",DynamicLocation[selV]]

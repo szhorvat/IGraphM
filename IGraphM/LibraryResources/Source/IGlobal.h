@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2020 Szabolcs Horvát.
+ * Copyright (c) 2016-2022 Szabolcs Horvát.
  *
  * See the file LICENSE.txt for copying permission.
  */

@@ -7009,7 +7009,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -7021,7 +7021,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\[IndentingNewLine]"}], "\n", 
+   ";"}], "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -20948,7 +20948,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20969,7 +20969,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -58071,6 +58071,66 @@ Cell[BoxData[
 
 Cell[CellGroupData[{
 
+Cell["Graph editor", \
+"Subsection",ExpressionUUID->"cc763f48-07c6-4660-8637-6919dfca8012"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGGraphEditor"}]], \
+"Input",ExpressionUUID->"a6ab29d4-6e42-451b-a6f6-855f1dba45d4"],
+
+Cell[TextData[{
+ StyleBox["Experimental: ",
+  FontWeight->"Bold"],
+ "This is experimental functionality that is likely to change significantly \
+in the future."
+}], "Text",ExpressionUUID->"cdb4819d-c504-4117-885d-107fa0a05bcb"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGGraphEditor", "[", "]"}]],
+  FormatType->StandardForm,ExpressionUUID->
+  "82ede368-4515-4424-9a1a-acfdaf232cfd"],
+ " typesets an interactive graph editor. To add or remove vertices, click \
+while holding down the Alt or Command key. To add edges, click the first, \
+then the second vertex. To remove an edge, Alt-click it (or Command-click it)."
+}], "Text",ExpressionUUID->"c407c11c-5b74-460d-9cc7-403e775973a6"],
+
+Cell[TextData[{
+ "Evaluating the editor using Shift-Enter creates a standard ",
+ Cell[BoxData["Graph"],
+  FormatType->StandardForm,ExpressionUUID->
+  "a284a156-b257-498a-8aa8-bb23f96d4ce3"],
+ " object."
+}], "Text",ExpressionUUID->"e4664c9b-412f-4388-808a-db57a1f65b19"],
+
+Cell["Available options:", \
+"Text",ExpressionUUID->"c4458e48-7938-4bc3-8453-d255e793df62"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<DefaultEdgeType\>\"", "->", "\"\<Undirected\>\""}]],
+  FormatType->StandardForm,ExpressionUUID->
+  "86c3a1f6-ab0f-4d5e-ae82-7e0739797d80"],
+ " adds undirected edges instead of the default ",
+ Cell[BoxData["\"\<Directed\>\""],
+  FormatType->StandardForm,ExpressionUUID->
+  "94737dbf-c033-4b3c-91ad-ff9302ec73b2"],
+ " setting."
+}], "Item",ExpressionUUID->"2d49cf36-046f-4f87-921b-82758417cdfc"],
+
+Cell["The editor can be used to modify an existing graph:", \
+"Text",ExpressionUUID->"ebcf08a3-2721-4a6c-ac6b-71dc307230cd"],
+
+Cell[BoxData[
+ RowBox[{"IGGraphEditor", "[", 
+  RowBox[{"CycleGraph", "[", "5", "]"}], "]"}]], "Input",
+ CellTags->
+  "DeleteOutput",ExpressionUUID->"358aa7ee-4947-43b2-87b6-9c951ceeb891"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
 Cell["Other utility functions", \
 "Subsection",ExpressionUUID->"386f6d4b-3666-4959-8f2d-185c7480a101"],
 
@@ -58987,7 +59047,6 @@ Cell[BoxData[
             "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$7"], 
          TagBox[{
            TagBox[
-            
             RectangleBox[{1.5653086565863823`, 1.565308656586382}, {
              1.868271644529426, 1.8682716445294258`}], "DynamicName", BoxID -> 
             "VertexID$8"], 
