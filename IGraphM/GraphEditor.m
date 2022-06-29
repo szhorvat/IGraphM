@@ -296,7 +296,8 @@ GraphFromEditorState[state_, 1] := Module[{v, e, pos, graph}
 ]
 
 
-GraphToEditorState[ opt:OptionsPattern[]]:=<|
+GraphToEditorState[ opt:OptionsPattern[] ] := Module[{state}
+, state = <|
       "vertex"         -> <||>
     , "edge"           -> <||>
     , "selectedVertex" -> Null
@@ -305,9 +306,14 @@ GraphToEditorState[ opt:OptionsPattern[]]:=<|
         optionsToConfig[opt]
       , "vCounter"->0
       , "eCounter" ->0
-      , "range" -> {{-1, 1}, {-1, 1}}|>
-    |>;
-   
+      , "range" -> {{-1, 1}, {-1, 1}}
+      , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
+      |>
+    |>
+
+
+; state
+]   
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
   {state, v, e, pos, quant}
