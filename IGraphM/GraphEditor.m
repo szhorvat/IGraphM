@@ -30,11 +30,11 @@ IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working w
 
 IGGraphEditor // Options = {
   "KeepVertexCoordinates" -> True
-, "DefaultEdgeType"       -> "Directed" (* | or else undirected *)  
 , "CreateVertexSelects"   -> True
 (*, "QuantizeVertexPosition"-> False*)
 , "IndexGraph"            -> False
-, "VertexLabels"          -> False
+, VertexLabels            -> False
+, DirectedEdges           -> False
 , ImageSize               -> Automatic
 }
 
@@ -125,7 +125,7 @@ geGraphics[Dynamic @ state_ ]:= DynamicModule[{range}
       }
     , PlotRange -> Dynamic @ range
     , ImagePadding -> 14
-    , ImageSize -> state["config", "imageSize"]
+    , ImageSize -> state["config", ImageSize]
     ]
   , range = state["config", "range"]
   ]
@@ -148,7 +148,7 @@ geVertexShapeFunction[Dynamic @ state_, v_Association]:=
 DynamicModule[
   {x = v@"pos", ef = 1},
 Module[
-  {mouseDragged, quantization = state["config", "quantizeVertexPosition"]}
+  {mouseDragged, quantization = state["config", "QuantizeVertexPosition"]}
 
 , mouseDragged = If[ NumericQ @ #
     , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], #])
@@ -163,7 +163,7 @@ Module[
     ]
   }
   , If[ 
-      state["config", "vertexLabels"] === "Name"
+      state["config", VertexLabels] === "Name"
     , Inset[v["name"], Offset[ {12,12}, DynamicLocation[v["id"]]] ]  
     , Nothing
     ]
@@ -280,7 +280,7 @@ GraphFromEditorState[state_, 1]:=Module[{v,e,pos, graph}
 ; e = stateEdgeList @ state
 
 ; pos = If[
-    state["config", "keepVertexCoordinates"]  
+    state["config", "KeepVertexCoordinates"]  
   , stateGraphEmbedding @ state 
   , Automatic
   ]
@@ -288,7 +288,7 @@ GraphFromEditorState[state_, 1]:=Module[{v,e,pos, graph}
 ; graph = Graph[ v, e, VertexCoordinates -> pos]  
 
 ; If[
-    TrueQ @ state["config", "indexGraph"]
+    TrueQ @ state["config", "IndexGraph"]
   , graph = IndexGraph @ graph
   ] 
 
@@ -324,7 +324,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]]:= Module[
 
 ; state[ "config", "vCounter"] = Length@v
 ; state[ "config", "eCounter"] = Length@e
-; state[ "config", "defaultEdgeType"] = If[ UndirectedGraphQ @ g, "Undirected", "Directed"]      
+; state[ "config", DirectedEdges] = UndirectedGraphQ @ g
 
 ; geAction["UpdateRange", Dynamic @ state]
 
@@ -354,7 +354,7 @@ $namePatt = _ ;
 optionsToConfig // Options = Options @ IGGraphEditor;
 
 optionsToConfig[OptionsPattern[]]:= Association[
-  Decapitalize[ToString@#] -> OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
+  # -> OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
 ]
 
 
@@ -427,7 +427,6 @@ geAction["VertexClicked", Dynamic @ state_, v_Association]:= With[
 geAction["EdgeClicked", Dynamic @ state_, edge_Association]:=If[
   TrueQ @ CurrentValue["AltKey"]
 , geAction["RemoveEdge", Dynamic@state, edge]
-(*, geAction["ToggleEdgeType", Dynamic@state, edge]*)
 ]  
 
 
@@ -448,7 +447,7 @@ geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}]:=Module[{v
 
 ; If[ NumericQ @ #
   , newV["pos"] = Round[vertex["pos"], #]
-  ]& @ state["config", "quantizeVertexPosition"]
+  ]& @ state["config", "QuantizeVertexPosition"]
 
 ; state["vertex", id ] = vertex
 
@@ -458,7 +457,7 @@ geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}]:=Module[{v
   ]
   
 ; If[
-    state["config", "createVertexSelects"]
+    state["config", "CreateVertexSelects"]
   , geAction["Select", Dynamic @ state, id] 
   ]
   
@@ -500,7 +499,7 @@ geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String]:=Mod
   ]  
 
 ; eId = "e"<>ToString[++state["config", "eCounter"]]
-; type =   If[state["config", "defaultEdgeType"] === "Directed", Rule, UndirectedEdge]
+; type =   If[state["config", DirectedEdges], Rule, UndirectedEdge]
 
 ; state["edge", eId ] = createEdge[eId,  type[selectedV, clickedV] ]
   
@@ -556,11 +555,10 @@ geAction[args___]:=(Beep[]; Print @ Framed @ InputForm @ {args})
 
 newEdgeAllowedQ::usage = "Is supposed to test whether a new edge can be created";
 
-newEdgeAllowedQ[state_, v1_String, v2_String]:= Module[{newEdgeType,edges}
-, newEdgeType = state["config", "defaultEdgeType"]
-; edges = Values @ state["edge"]
+newEdgeAllowedQ[state_, v1_String, v2_String]:= Module[{edges}
+, edges = Values @ state["edge"]
 ; If[ 
-    newEdgeType === "Directed"
+    state["config", DirectedEdges]
   , Not @ MemberQ[ edges , KeyValuePattern[{"v1" -> v1, "v2" -> v2, "type" -> "v1"->"v2"}] ]  
   , Not @ MemberQ[ edges , KeyValuePattern[{   _ -> v1,  _   -> v2, "type" -> _UndirectedEdge}] ]  
   ]
