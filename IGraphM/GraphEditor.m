@@ -25,7 +25,7 @@ IGGraphEditor // Options = {
 , "IndexGraph"            -> False
 }
 
-SyntaxInformation[IGGraphEditor] = {"ArgumentsPattern" -> {OptionsPattern[]}};
+SyntaxInformation[IGGraphEditor] = {"ArgumentsPattern" -> {_., OptionsPattern[]}};
 
 IGGraphEditor /:
   MakeBoxes[IGGraphEditor[graph:(_|PatternSequence[]), opt:OptionsPattern[]], StandardForm] :=
