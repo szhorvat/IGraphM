@@ -316,7 +316,7 @@ GraphToEditorState[ opt:OptionsPattern[] ] := Module[{state}
 ]   
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
-  {state, v, e, pos, quant}
+  {state, v, e, pos(*, quant*)}
 , v = VertexList[g] 
 ; pos = GraphEmbedding @ g 
 (*; quant = OptionValue["QuantizeVertexPosition"]
@@ -325,7 +325,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 
 ; state = GraphToEditorState[opt]
 
-; state["vertex"] = Association @ Map[ #id -> # & ] @ MapThread[createVertex, {v, pos}] 
+; state["vertex"] = Association @ Map[ (#id -> #) & ] @ MapThread[createVertex, {v, pos}]
 ; state["edge"]   = toStateEdges[state, g] 
 
 ; state[ "config", "vCounter"] = Length@v
@@ -339,10 +339,10 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 
 toStateEdges[state_Association, graph_] := Module[{ }
 , edges = EdgeList @ graph
-; vertexRules = #name -> #id & /@ Values @ state["vertex"]
+; vertexRules = (#name -> #id) & /@ Values @ state["vertex"]
 ; edges = Replace[edges, vertexRules , {2}]
 
-; Association @ Map[ #id -> # & ] @ MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
+; Association @ Map[ (#id -> #) & ] @ MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
 
 ]
 
