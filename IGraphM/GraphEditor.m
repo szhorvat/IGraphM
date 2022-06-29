@@ -1,3 +1,5 @@
+(* ::Package:: *)
+
 (* Mathematica Package *)
 (* Created by Mathematica plugin for IntelliJ IDEA *)
 
@@ -11,13 +13,19 @@ PackageExport["IGGraphEditor"]
 
 (* Dev notes
  - foo[ Dynamic @ state_ ] is no better than HoldFirst etc. I just like this convention for GUI 
+ - state should not be modified during continuous actions
 *)
+
 IGGraphEditor::usage        =
     "IGGraphEditor[] typesets to an interactive graph editor.\n" <>
     "IGGraphEditor[graph] uses the given graph as the starting point.";
 IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed pairs are {1->2, 2->1}.";
 IGGraphEditor::unknownState = "Corrupted editor state."
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here."
+
+
+(* ::Subsection:: *)
+(*IGGraphEditor*)
 
 
 IGGraphEditor // Options = {
@@ -27,6 +35,7 @@ IGGraphEditor // Options = {
 (*, "QuantizeVertexPosition"-> False*)
 , "IndexGraph"            -> False
 , "VertexLabels"          -> False
+, ImageSize               -> Automatic
 }
 
 SyntaxInformation[IGGraphEditor] = {"ArgumentsPattern" -> {OptionsPattern[]}};
@@ -40,6 +49,10 @@ iGraphEditor // Options = Options @ IGGraphEditor;
 
 
 supportedGraphQ = ! MixedGraphQ[#] && SimpleGraphQ[#]&
+
+
+(* ::Subsection::Closed:: *)
+(*iGraphEditor*)
 
 
 iGraphEditor[graph:((_? supportedGraphQ)|PatternSequence[]), opt:OptionsPattern[]]:=Interpretation[
@@ -97,21 +110,143 @@ iGraphEditorPanel[Dynamic@state_]:=EventHandler[
   ]
 
 
-geGraphics[Dynamic @ state_ ]:= Graphics[
-  DynamicNamespace @ {
-  
-    geHighlightsPrimitives @ Dynamic @ state
+(* ::Subsection::Closed:: *)
+(*graphics*)
 
-  , Gray
 
-  , Dynamic @ geEdges @ Dynamic @ state  
+geGraphics[Dynamic @ state_ ]:= DynamicModule[{range}
+, DynamicWrapper[
+    Graphics[
+      DynamicNamespace @ {
+        geHighlightsPrimitives @ Dynamic @ state    
+      , Gray    
+      , Dynamic @ geEdges @ Dynamic @ state      
+      , Dynamic @ geVertices @ Dynamic @ state    
+      }
+    , PlotRange -> Dynamic @ range
+    , ImagePadding -> 14
+    , ImageSize -> state["config", "imageSize"]
+    ]
+  , range = state["config", "range"]
+  ]
+] (* PlotRange->Dynamic@state["config... updates at any unlreated event, vertex dragging included,
+     this DynamicModule @ DynamicWrapper is here to address a bug. Why does it help? Because WRI.
+   *)
 
-  , Dynamic @ Table[ geVertexShapeFunction[Dynamic@state, state["vertex", id] ], {id, Keys @ state["vertex"] }]
 
-  }
-, PlotRange -> Dynamic @ state["config", "coordinateBounds"]
-, ImagePadding -> 14
+(* ::Subsubsection:: *)
+(*vertex*)
+
+
+geVertices[Dynamic @ state_]:= Table[ 
+  geVertexShapeFunction[Dynamic@state, state["vertex", id] ]
+, {id, Keys @ state["vertex"] }
 ]
+
+
+geVertexShapeFunction[Dynamic @ state_, v_Association]:= 
+DynamicModule[
+  {x = v@"pos", ef = 1},
+Module[
+  {mouseDragged, quantization = state["config", "quantizeVertexPosition"]}
+
+, mouseDragged = If[ NumericQ @ #
+    , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], #])
+    , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
+  ] & @ quantization 
+
+; EventHandler[
+  { {EdgeForm @ AbsoluteThickness @ Dynamic @ ef
+  , DynamicName[ 
+      Disk[Dynamic[x], Offset[8]]
+    , v["id"]
+    ]
+  }
+  , If[ 
+      state["config", "vertexLabels"] === "Name"
+    , Inset[v["name"], Offset[ {12,12}, DynamicLocation[v["id"]]] ]  
+    , Nothing
+    ]
+  }
+, {
+    "MouseClicked" :> geAction["VertexClicked", Dynamic @ state, v]
+  , "MouseEntered" :> FEPrivate`Set[ef, 3]
+  , "MouseExited"  :> FEPrivate`Set[ef, 1]
+  , mouseDragged
+  , "MouseUp"      :> geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x]      
+  }
+  , PassEventsUp -> False
+  ]  
+]]
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*edges*)
+
+
+geEdges[Dynamic @ state_]:=Table[ 
+  geEdgeShapeFunction[ Dynamic@state,  state["edge", id]], {id, Keys @ state["edge"]}
+]  
+
+
+geEdgeShapeFunction[Dynamic @ state_, e_Association]:= DynamicModule[
+  {ef = 3}
+, EventHandler[
+      { AbsoluteThickness @ Dynamic @ ef
+      , edgeToPrimitive @ e        
+      }
+    , {
+        "MouseEntered" :> FEPrivate`Set[ef, 5]
+      , "MouseExited"  :> FEPrivate`Set[ef, 3]
+      , "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e])
+      }
+    , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
+    ]
+]
+
+
+edgeToPrimitive[e_]:=If[ 
+  e["shape"] =!= Automatic
+, e["shape"]
+, edgeTypeToPrimitive[e["type"]
+][
+    DynamicLocation[e["v1"], Automatic],
+    DynamicLocation[e["v2"], Automatic]
+  ]
+]  
+
+
+edgeTypeToPrimitive["v1"->"v2"]=Arrow[{#,#2}]&
+edgeTypeToPrimitive["v2"->"v1"]=Arrow[{#2,#}]&
+edgeTypeToPrimitive[UndirectedEdge["v1", "v2"]]=Line[{#,#2}]&
+
+
+(* ::Subsubsection::Closed:: *)
+(*selected*)
+
+
+geHighlightsPrimitives[Dynamic @ state_]:= With[{ selV := state["selectedVertex"] }
+, { Red, EdgeForm@Red,
+    Dynamic[
+      If[ 
+        stateHasSelectedVertex @ state
+      , { 
+          Disk[DynamicLocation[selV], Offset[12]]
+        , Dashed, Line[{
+            DynamicLocation[selV]
+          , FrontEnd`MousePosition["Graphics",DynamicLocation[selV]]
+          }]
+        }
+      , {}  
+      ]
+    ]
+}    
+]
+
+
+(* ::Subsection:: *)
+(*state*)
 
 
 $stateVersion = 1; 
@@ -170,11 +305,12 @@ GraphToEditorState[ opt:OptionsPattern[]]:=<|
         optionsToConfig[opt]
       , "vCounter"->0
       , "eCounter" ->0
-      , "coordinateBounds" -> {{-1, 1}, {-1, 1}}|>
+      , "range" -> {{-1, 1}, {-1, 1}}|>
     |>;
    
 
-GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]]:= Module[{state,v,e, pos, quant}
+GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]]:= Module[
+  {state,v,e, pos, quant}
 , v = VertexList[g] 
 ; pos = GraphEmbedding @ g 
 (*; quant = OptionValue["QuantizeVertexPosition"]
@@ -190,8 +326,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]]:= Module[{st
 ; state[ "config", "eCounter"] = Length@e
 ; state[ "config", "defaultEdgeType"] = If[ UndirectedGraphQ @ g, "Undirected", "Directed"]      
 
-
-; geAction["UpdateCoordinateBounds", Dynamic @ state]
+; geAction["UpdateRange", Dynamic @ state]
 
 ; state
 ]
@@ -219,101 +354,13 @@ $namePatt = _ ;
 optionsToConfig // Options = Options @ IGGraphEditor;
 
 optionsToConfig[OptionsPattern[]]:= Association[
-  Decapitalize[#] -> OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
+  Decapitalize[ToString@#] -> OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
 ]
 
 
-geVertexShapeFunction[Dynamic @ state_, v_Association]:= 
-DynamicModule[
-  {x = v@"pos", ef = 1},
-Module[
-  {mouseDragged, quantization = state["config", "quantizeVertexPosition"]}
+(* ::Subsection:: *)
+(*UI Actions*)
 
-, mouseDragged = If[ NumericQ @ #
-    , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], #])
-    , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
-  ] & @ quantization 
-
-; EventHandler[
-  { {EdgeForm @ AbsoluteThickness @ Dynamic @ ef
-  , DynamicName[ 
-      Disk[Dynamic[x], Offset[8]]
-    , v["id"]
-    ]
-  }
-  , If[ 
-      state["config", "vertexLabels"] === "Name"
-    , Inset[v["name"], Offset[ {12,12}, DynamicLocation[v["id"]]] ]  
-    , Nothing
-    ]
-  }
-, {
-    "MouseClicked" :> geAction["VertexClicked", Dynamic @ state, v]
-  , "MouseEntered" :> FEPrivate`Set[ef, 3]
-  , "MouseExited"  :> FEPrivate`Set[ef, 1]
-  , mouseDragged
-  , "MouseUp"      :> geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x]      
-  }
-  , PassEventsUp -> False
-  ]  
-]]
-
-
-
-geEdges[Dynamic @ state_]:=Table[ 
-  geEdgeShapeFunction[ Dynamic@state,  state["edge", id]], {id, Keys @ state["edge"]}
-]  
-
-
-geEdgeShapeFunction[Dynamic @ state_, e_Association]:= DynamicModule[
-  {ef = 3}
-, EventHandler[
-      { AbsoluteThickness @ Dynamic @ ef
-      , edgeToPrimitive @ e        
-      }
-    , {
-        "MouseEntered" :> FEPrivate`Set[ef, 5]
-      , "MouseExited"  :> FEPrivate`Set[ef, 3]
-      , "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e])
-      }
-    , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
-    ]
-]
-
-
-edgeToPrimitive[e_]:=If[ 
-  e["shape"] =!= Automatic
-, e["shape"]
-, edgeTypeToPrimitive[e["type"]
-][
-    DynamicLocation[e["v1"], Automatic],
-    DynamicLocation[e["v2"], Automatic]
-  ]
-]  
-
-
-edgeTypeToPrimitive["v1"->"v2"]=Arrow[{#,#2}]&
-edgeTypeToPrimitive["v2"->"v1"]=Arrow[{#2,#}]&
-edgeTypeToPrimitive[UndirectedEdge["v1", "v2"]]=Line[{#,#2}]&
-
-
-geHighlightsPrimitives[Dynamic @ state_]:= With[{ selV := state["selectedVertex"] }
-, { Red, EdgeForm@Red,
-    Dynamic[
-      If[ 
-        stateHasSelectedVertex @ state
-      , { 
-          Disk[DynamicLocation[selV], Offset[12]]
-        , Dashed, Line[{
-            DynamicLocation[selV]
-          , FrontEnd`MousePosition["Graphics",DynamicLocation[selV]]
-          }]
-        }
-      , {}  
-      ]
-    ]
-}    
-]
 
 (* a debug feature, enabled by default till we have a first version*)
 
@@ -331,20 +378,27 @@ Module[{$inside = False}
 ]
 ]
 
+
+(* ::Subsubsection:: *)
+(*UpdateVertexPosition*)
+
+
 geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}]:=(
   state["vertex", vId, "pos"] = pos
 ; If[
-    ! state["config", "inBoundsRMF"] @ pos
-  , geAction["UpdateCoordinateBounds", Dynamic @ state]  
+    ! state["config", "inRangeQ"] @ pos
+  , geAction["UpdateRange", Dynamic @ state]  
   ]  
 ; geAction["UpdateEdgesShapes", Dynamic @ state]
 )
 
-geAction["UpdateCoordinateBounds", Dynamic @ state_]:= (
-    state[ "config", "coordinateBounds"] = CoordinateBounds[ state//Query["vertex", All, "pos"], Scaled[0.05] ]
-  ; state[ "config", "inBoundsRMF" ] = RegionMember[ Rectangle @@ Transpose@ state[ "config", "coordinateBounds"]  ]
 
-)
+geAction["UpdateRange", Dynamic @ state_]:= Module[{newBounds}
+, newBounds = CoordinateBounds[ state//Query["vertex", All, "pos"], Scaled[0.05] ]
+; state[ "config", "range"] = newBounds
+; state[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ newBounds ]
+]
+
 
 geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
 
