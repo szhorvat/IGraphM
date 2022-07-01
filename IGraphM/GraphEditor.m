@@ -23,6 +23,9 @@ IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed 
 IGGraphEditor::unknownState = "Corrupted editor state."
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here."
 
+$narrowAspectRatioLimit = 10 (* plot range will be adjusted if the initial calculated as is above this limit *)
+$coordinateBoundsPadding =  Scaled[0.05] (* padding used for calculating plot range from vertices positions *)
+
 
 (* ::Subsection:: *)
 (*IGGraphEditor*)
@@ -110,7 +113,7 @@ iGraphEditorPanel[Dynamic@state_] := EventHandler[
   ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*graphics*)
 
 
@@ -129,7 +132,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[{range}
     ]
   , range = state["config", "range"]
   ]
-] (* PlotRange->Dynamic@state["config... updates at any unlreated event, vertex dragging included,
+] (* PlotRange->Dynamic@state["config... updates at any unrelated event, vertex dragging included,
      this DynamicModule @ DynamicWrapper is here to address a bug. Why does it help? Because WRI.
    *)
 
@@ -245,8 +248,8 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
 ]
 
 
-(* ::Subsection:: *)
-(*state*)
+(* ::Subsection::Closed:: *)
+(*state version*)
 
 
 $stateVersion = 1; 
@@ -269,6 +272,10 @@ geStateVersionCheck[ state : KeyValuePattern[{"version" -> v_}] ] :=
 
 geStateVersionCheck[___] :=
   Failure["GraphEditor", <|"MessageTemplate" -> IGGraphEditor::unknownState|>]
+
+
+(* ::Subsection::Closed:: *)
+(*from state*)
 
 
 GraphFromEditorState[state_Association] := GraphFromEditorState[state, Lookup[state, "version", 1]];
@@ -296,6 +303,17 @@ GraphFromEditorState[state_, 1] := Module[{v, e, pos, graph}
 ]
 
 
+(* ::Subsection:: *)
+(*to state*)
+
+
+optionsToConfig // Options = Options @ IGGraphEditor;
+
+optionsToConfig[OptionsPattern[]] := Association[
+  ToString[#] -> OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
+]
+
+
 GraphToEditorState[ opt:OptionsPattern[] ] := Module[{state}
 , state = <|
       "vertex"         -> <||>
@@ -315,6 +333,7 @@ GraphToEditorState[ opt:OptionsPattern[] ] := Module[{state}
 ; state
 ]   
 
+
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
   {state, v, e, pos(*, quant*)}
 , v = VertexList[g] 
@@ -333,15 +352,41 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ; state[ "config", "DirectedEdges"] = ! EmptyGraphQ @ g && DirectedGraphQ @ g
 
 ; geAction["UpdateRange", Dynamic @ state]
+; state = stateHandleNarrowRange @ state 
 
 ; state
 ]
+
+
+(* ::Subsection::Closed:: *)
+(*state helpers*)
+
+
+stateHandleNarrowRange[state_Association] := Module[
+  {range = state["config", "range"], lengths, aspectRatio, center, side, newState}
+  
+, lengths = #2-#& @@@ state["config", "range"]
+; aspectRatio = #2/# & @@ Sort @ Clip[lengths, {10.^(-15), Infinity}]
+
+; If[ aspectRatio < $narrowAspectRatioLimit
+  , Return[state, Module]
+  ]
+  
+; center = Mean @ Transpose @ range
+; side = Max @ lengths / 2.
+; range = Transpose[{{-1,-1},{1,1}}*side+{center,center}]
+
+; newState = state
+; newState[ "config", "range"] = range
+; newState[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ range ]
+; newState
+]
+
 
 toStateEdges[state_Association, graph_] := Module[{ }
 , edges = EdgeList @ graph
 ; vertexRules = (#name -> #id) & /@ Values @ state["vertex"]
 ; edges = Replace[edges, vertexRules , {2}]
-
 ; Association @ Map[ (#id -> #) & ] @ MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
 
 ]
@@ -355,33 +400,30 @@ stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"
 
 stateHasSelectedVertex[state_Association] := StringQ @ state["selectedVertex"]
 
-$namePatt = _ ;
-
-optionsToConfig // Options = Options @ IGGraphEditor;
-
-optionsToConfig[OptionsPattern[]] := Association[
-  ToString[#] -> OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
-]
-
 
 (* ::Subsection:: *)
 (*UI Actions*)
 
 
+(* ::Subsubsection::Closed:: *)
+(*$geDebug*)
+
+
 (* a debug feature, enabled by default till we have a first version*)
 
 If[ 
-  TrueQ @ $geDebug, 
-
-Module[{$inside = False}
-, geAction /: SetDelayed[geAction[args___], rhs_] /; !TrueQ[$inside] := Block[
-    {$inside = True}
-  , geAction[a:PatternSequence[args]]:=(
-      Print[Style[StringPadRight[{a}[[1]], 15], Bold], ":", {a}[[3;;]]]
-    ; rhs
-    )
+  TrueQ @ $geDebug
+  
+, geAction[args___]:=(Beep[]; Print @ Framed @ InputForm @ {args})
+; Module[{$inside = False}
+  , geAction /: SetDelayed[geAction[args___], rhs_] /; !TrueQ[$inside] := Block[
+      {$inside = True}
+    , geAction[a:PatternSequence[args]]:=(
+        Print[Style[StringPadRight[{a}[[1]], 16], Bold], ":", {a}[[3;;]]]
+      ; rhs
+      )
+    ]
   ]
-]
 ]
 
 
@@ -399,11 +441,19 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}]:=(
 )
 
 
+(* ::Subsubsection:: *)
+(*UpdateRange*)
+
+
 geAction["UpdateRange", Dynamic @ state_] := Module[{newBounds}
-, newBounds = CoordinateBounds[ state//Query["vertex", All, "pos"], Scaled[0.05] ]
+, newBounds = CoordinateBounds[ state//Query["vertex", All, "pos"], $coordinateBoundsPadding ]
 ; state[ "config", "range"] = newBounds
 ; state[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ newBounds ]
 ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*MouseClicked*)
 
 
 geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
@@ -419,6 +469,10 @@ geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
 ]
 
 
+(* ::Subsubsection::Closed:: *)
+(*VertexClicked*)
+
+
 geAction["VertexClicked", Dynamic @ state_, v_Association] := With[
   {  selectedV = state["selectedVertex"], clickedV = v["id"], hasSelectedVertex = stateHasSelectedVertex @ state }
 , Which[
@@ -430,16 +484,32 @@ geAction["VertexClicked", Dynamic @ state_, v_Association] := With[
 ]
 
 
+(* ::Subsubsection::Closed:: *)
+(*EdgeClicked*)
+
+
 geAction["EdgeClicked", Dynamic @ state_, edge_Association] := If[
   TrueQ @ CurrentValue["AltKey"]
 , geAction["RemoveEdge", Dynamic@state, edge]
 ]  
 
 
+(* ::Subsubsection::Closed:: *)
+(*Select*)
+
+
 geAction["Select", Dynamic @ state_, vId_String] := state["selectedVertex"] = vId;
 
 
+(* ::Subsubsection::Closed:: *)
+(*Unselect*)
+
+
 geAction["Unselect", Dynamic @ state_] := state["selectedVertex"] = Null
+
+
+(* ::Subsubsection::Closed:: *)
+(*AddVertex*)
 
 
 geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}] := Module[{vertex, name}
@@ -489,11 +559,19 @@ smallestMissingInteger[list_List] := Block[{n = 1}
 
 
 
+(* ::Subsubsection::Closed:: *)
+(*RemoveVertex*)
+
+
 geAction["RemoveVertex", Dynamic @ state_, v_] := With[{ id = v["id"]}
 , state["vertex"]  = KeyDrop[id] @ state["vertex"]
 ; state["edge"]    = DeleteCases[state["edge"], KeyValuePattern[{_ -> id}] ]
 ; If[ state["selectedVertex"] === id, geAction["Unselect", Dynamic @ state] ] 
 ]
+
+
+(* ::Subsubsection::Closed:: *)
+(*CreateEdge*)
 
 
 geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := Module[{eId, type}
@@ -515,10 +593,18 @@ geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := M
 ]
 
 
+(* ::Subsubsection::Closed:: *)
+(*RemoveEdge*)
+
+
 geAction["RemoveEdge", Dynamic @ state_, edge_Association]:=(
   state["edge"] = KeyDrop[edge["id"]] @ state["edge"]
 ; geAction["UpdateEdgesShapes", Dynamic @ state]  
 )
+
+
+(* ::Subsubsection::Closed:: *)
+(*ToggleEdgeType*)
 
 
 geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge", edge["id"], "type"] }
@@ -527,6 +613,10 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 
 
 (nextEdgeType[#]=#2)& @@@ Partition[{UndirectedEdge["v1", "v2"], "v1"->"v2", "v2"->"v1"}, 2, 1, {1, 1}]
+
+
+(* ::Subsubsection:: *)
+(*UpdateEdgesShapes*)
 
 
 (*(Hold|Dynamic) is there to workaround a bug with Interpretation's Initialization which inserts evaluated Dynamic's arguments*)
@@ -556,7 +646,23 @@ ToEdgeShapeFunction[Arrow[b_BezierCurve, ___], vertexEncoded_] := Arrow[b/.(vert
 ToEdgeShapeFunction[p_, ___]:=(Automatic);
 
 
-geAction[args___]:=(Beep[]; Print @ Framed @ InputForm @ {args})
+(* ::Section::Closed:: *)
+(*helpers*)
+
+
+$namePatt = _ ;
+
+
+createVertex[name:$namePatt, pos:{_, _}]:= <|"name"->name, "id" -> CreateUUID[],  "pos" -> pos|>
+
+
+createEdge[eId_String, (e_[v1_String,  v2_String])]:=<|
+    "v1"    -> v1
+  , "v2"    -> v2
+  , "id"    -> eId
+  , "type"  -> (e /. DirectedEdge->Rule)["v1", "v2"]
+  , "shape" -> Automatic
+  |>
 
 
 newEdgeAllowedQ::usage = "Is supposed to test whether a new edge can be created";
@@ -570,15 +676,3 @@ newEdgeAllowedQ[state_, v1_String, v2_String] := Module[{edges}
   ]
   
 ]
-
-
-createVertex[name:$namePatt, pos:{_, _}]:= <|"name"->name, "id" -> CreateUUID[],  "pos" -> pos|>
-
-
-createEdge[eId_String, (e_[v1_String,  v2_String])]:=<|
-    "v1"    -> v1
-  , "v2"    -> v2
-  , "id"    -> eId
-  , "type"  -> (e /. DirectedEdge->Rule)["v1", "v2"]
-  , "shape" -> Automatic
-  |>
