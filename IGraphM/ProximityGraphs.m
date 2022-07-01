@@ -236,19 +236,16 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
 
       centres1 = p + (r-1) (p-q);
       centres2 = q + (r-1) (q-p);
+
+      (* Increase distances by the standard relative tolerance to include boundaries. *)
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
-      (*
-         Ideally, we would pick those edges where there are precisely two points within the region.
-         These two points would be the endpoints of the edge. However, due to numerical precision issues,
-         in extreme cases one of these two points won't be picked up by nanoflann.
-         Therefore we pick not 2, but <= 2.
-         Note: UnitStep[0] == 1, so we subtract 3 to get <= 2.
-      *)
+      (* intersectionCounts[] excludes the edge endpoints, thus we only need to check
+         that the intersection is empty. *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        UnitStep[flann@"intersectionCounts"[centres1, centres2, dists] - 3],
+        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges]],
         0
       ]
     ]
@@ -260,18 +257,15 @@ igRelativeNeighborhoodGraphEdges[pts_] :=
     Module[{flann, edges, edgeLengths, p, q, dists},
       {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 2];
 
+      (* Decrease distances by the standard relative tolerance to include boundaries. *)
       dists = edgeLengths (1 - 10^Internal`$EqualTolerance $MachineEpsilon);
 
-      (*
-         Ideally, we would pick those edges where there are no points within the region.
-         Since the boundaries are excluded, the edge endpoints will not be detected as
-         part of the region.
-         Note: UnitStep[0] == 1, so we subtract 1 to get <= 0.
-      *)
+      (* intersectionCounts[] excludes the edge endpoints, thus we only need to check
+         that the intersection is empty. *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        UnitStep[flann@"intersectionCounts"[p, q, dists] - 1],
+        Unitize[flann@"intersectionCounts"[p, q, dists, edges]],
         0
       ]
     ]
@@ -317,19 +311,14 @@ igCircleBetaSkeletonEdges[pts_, beta_] :=
         centres1 = mid + perp;
         centres2 = mid - perp;
       ];
+
+      (* Increase distances by the standard relative tolerance to include boundaries. *)
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
-      (*
-         Ideally, we would pick those edges where there are precisely two points within the region.
-         These two points would be the endpoints of the edge. However, due to numerical precision issues,
-         in extreme cases one of these two points won't be picked up by nanoflann.
-         Therefore we pick not 2, but <= 2.
-         Note: UnitStep[0] == 1, so we subtract 3 to get <= 2.
-      *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        UnitStep[flann@"unionCounts"[centres1, centres2, dists] - 3],
+        Unitize[flann@"unionCounts"[centres1, centres2, dists, edges]],
         0
       ]
     ]
@@ -355,19 +344,14 @@ igGabrielGraphEdges[pts_] :=
 igGabrielGraphEdges[pts_] :=
     Module[{flann, edges, edgeLengths, p, q, dists},
       {edges, edgeLengths, p, q} = betaSkeletonEdgeSuperset[pts, 1];
+
+      (* Increase distances by the standard relative tolerance to include boundaries. *)
       dists = 0.5 edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
-      (*
-         Ideally, we would pick those edges where there are precisely two points within the region.
-         These two points would be the endpoints of the edge. However, due to numerical precision issues,
-         in extreme cases one of these two points won't be picked up by nanoflann.
-         Therefore we pick not 2, but <= 2.
-         Note: UnitStep[0] == 1, so we subtract 3 to get <= 2.
-      *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        UnitStep[flann@"neighborCounts"[(p+q)/2, dists] - 3],
+        Unitize[flann@"neighborCounts"[(p+q)/2, dists, edges]],
         0
       ]
     ]
@@ -388,19 +372,14 @@ igBetaSkeletonEdges0[pts_, beta_] :=
         centres1 = mid + perp;
         centres2 = mid - perp;
       ];
+
+      (* Increase distances by the standard relative tolerance to include boundaries. *)
       dists = r edgeLengths (1 + 10^Internal`$EqualTolerance $MachineEpsilon);
 
-      (*
-         Ideally, we would pick those edges where there are precisely two points within the region.
-         These two points would be the endpoints of the edge. However, due to numerical precision issues,
-         in extreme cases one of these two points won't be picked up by nanoflann.
-         Therefore we pick not 2, but <= 2.
-         Note: UnitStep[0] == 1, so we subtract 3 to get <= 2.
-      *)
       flann = makeFlann[pts];
       Pick[
         edges,
-        UnitStep[flann@"intersectionCounts"[centres1, centres2, dists] - 3],
+        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges]],
         0
       ]
     ]

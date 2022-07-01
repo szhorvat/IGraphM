@@ -107,13 +107,21 @@ public:
 
 
     // how many neighbours does each point have within the given distance?
-    mma::IntTensorRef neighborCounts(mma::RealMatrixRef pts, mma::RealTensorRef dists) {
+    mma::IntTensorRef neighborCounts(
+            mma::RealMatrixRef pts,
+            mma::RealTensorRef dists,
+            mma::IntMatrixRef edges) {
+
         mint n = dists.size();
 
         if (pts.cols() != 2)
             throw mma::LibraryError("neighborCounts: query points must be two-dimensional");
         if (pts.rows() != n)
             throw mma::LibraryError("neighborCounts: there must be the same number of query distances as query points");
+        if (edges.cols() != 2)
+            throw mma::LibraryError("neighborCounts: edge matrix must have two columns");
+        if (edges.rows() != n)
+            throw mma::LibraryError("neighborCounts: there must be the same number of edges points as query points");
 
         SearchParams params;
         std::vector<std::pair<mint, double>> ret_matches;
@@ -129,7 +137,13 @@ public:
 
             kdtree->radiusSearch(&pts(i,0), d*d, ret_matches, params);
 
-            res[i] = ret_matches.size();
+            mint count = ret_matches.size();
+            for (const auto &el : ret_matches) {
+                if (el.first == edges(i,0)-1 || el.first == edges(i,1)-1)
+                    count--;
+            }
+
+            res[i] = count;
         }
 
         return res;
@@ -137,7 +151,11 @@ public:
 
 
     // how many points are within the given radius of both centres?
-    mma::IntTensorRef intersectionCounts(mma::RealMatrixRef centres1, mma::RealMatrixRef centres2, mma::RealTensorRef dists) {
+    mma::IntTensorRef intersectionCounts(
+            mma::RealMatrixRef centres1, mma::RealMatrixRef centres2,
+            mma::RealTensorRef dists,
+            mma::IntMatrixRef edges) {
+
         mint n = dists.size();
 
         if (centres1.cols() != 2)
@@ -146,6 +164,10 @@ public:
             throw mma::LibraryError("intersectionCounts: query points must be two-dimensional");
         if (centres1.rows() != n || centres2.rows() != n)
             throw mma::LibraryError("intersectionCounts: there must be the same number of query distances as query points");
+        if (edges.cols() != 2)
+            throw mma::LibraryError("intersectionCounts: edge matrix must have two columns");
+        if (edges.rows() != n)
+            throw mma::LibraryError("intersectionCounts: there must be the same number of edges points as query points");
 
         SearchParams params;
         std::vector<std::pair<mint, double>> ret_matches;
@@ -163,6 +185,8 @@ public:
 
             mint count = 0;
             for (const auto &el : ret_matches) {
+                if (el.first == edges(i,0)-1 || el.first == edges(i,1)-1)
+                    continue; // do not count the endpoints of the edge we are testing
                 double pd2 =
                       sqr(ps->kdtree_get_pt(el.first, 0) - centres2(i, 0)) +
                       sqr(ps->kdtree_get_pt(el.first, 1) - centres2(i, 1));
@@ -180,7 +204,11 @@ public:
 
 
     // how many points are within the given radius of either centre?
-    mma::IntTensorRef unionCounts(mma::RealMatrixRef centres1, mma::RealMatrixRef centres2, mma::RealTensorRef dists) {
+    mma::IntTensorRef unionCounts(
+            mma::RealMatrixRef centres1, mma::RealMatrixRef centres2,
+            mma::RealTensorRef dists,
+            mma::IntMatrixRef edges) {
+
         mint n = dists.size();
 
         if (centres1.cols() != 2)
@@ -189,6 +217,10 @@ public:
             throw mma::LibraryError("unionCounts: query points must be two-dimensional");
         if (centres1.rows() != n || centres2.rows() != n)
             throw mma::LibraryError("unionCounts: there must be the same number of query distances as query points");
+        if (edges.cols() != 2)
+            throw mma::LibraryError("unionCounts: edge matrix must have two columns");
+        if (edges.rows() != n)
+            throw mma::LibraryError("unionCounts: there must be the same number of edges points as query points");
 
         SearchParams params;
         std::vector<std::pair<mint, double>> ret_matches;
@@ -204,17 +236,26 @@ public:
 
             // the number of points within |A union B| = |A| + |B| - |A intersect B|
 
+            // compute |A|
             kdtree->radiusSearch(&centres2(i,0), d*d, ret_matches, params);
             mint count = ret_matches.size();
 
+            // exclude edge endpoints from A
+            for (const auto &el : ret_matches) {
+                if (el.first == edges(i,0)-1 || el.first == edges(i,1)-1)
+                    count--;
+            }
+
+            // add |B|
             kdtree->radiusSearch(&centres1(i,0), d*d, ret_matches, params);
             count += ret_matches.size();
 
+            // subtract |A intersect B| as well exclude edge endpoints from B
             for (const auto &el : ret_matches) {
                 double pd2 =
                       sqr(ps->kdtree_get_pt(el.first, 0) - centres2(i, 0)) +
                       sqr(ps->kdtree_get_pt(el.first, 1) - centres2(i, 1));
-                if (pd2 < d*d)
+                if (pd2 < d*d || el.first == edges(i,0)-1 || el.first == edges(i,1)-1)
                     count--;
             }
 
