@@ -81,7 +81,7 @@ iGraphEditor[graph:((_? supportedGraphQ)|PatternSequence[]), opt:OptionsPattern[
     
   ]]
 
-; Deploy @  Panel[#, FrameMargins->0, BaseStyle->CacheGraphics->False]& @
+; Panel[#, FrameMargins->0, BaseStyle->CacheGraphics->False]& @
   PaneSelector[
   { 
     True -> Button[Dynamic @ error,  refresh[]  ]
