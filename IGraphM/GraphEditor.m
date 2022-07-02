@@ -24,7 +24,11 @@ IGGraphEditor::unknownState = "Corrupted editor state."
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here."
 
 $narrowAspectRatioLimit = 10 (* plot range will be adjusted if the initial calculated as is above this limit *)
-$coordinateBoundsPadding =  Scaled[0.05] (* padding used for calculating plot range from vertices positions *)
+$vertexEdgeThickness = 0.5
+$hoverVertexEdgeThickness = 1
+$edgeThickness = 1
+$activeEdgeThickness = 3
+$potentialEdgeColor = Purple
 
 
 (* ::Subsection:: *)
@@ -38,6 +42,7 @@ IGGraphEditor // Options = {
 , "IndexGraph"            -> False
 , "PerformanceLimit"      -> 450
 , VertexLabels            -> False
+, VertexSize              -> Small
 , DirectedEdges           -> False
 , ImageSize               -> Automatic
 }
@@ -146,7 +151,6 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[{range}
       , Dynamic @ geVertices @ Dynamic @ state    
       }
     , PlotRange -> Dynamic @ range
-    , ImagePadding -> 14
     , ImageSize -> state["config", "ImageSize"]
     ]
   , range = state["config", "range"]
@@ -167,8 +171,12 @@ geVertices[Dynamic @ state_] := Table[
 
 
 geVertexShapeFunction[Dynamic @ state_, v_Association] :=
+With[ {
+  nef = $vertexEdgeThickness
+, aef = $hoverVertexEdgeThickness  
+},
 DynamicModule[
-  {x = v@"pos", ef = 1},
+  {x = v@"pos", ef = nef},
 Module[
   {mouseDragged, quantization = state["config", "QuantizeVertexPosition"]}
 
@@ -180,7 +188,7 @@ Module[
 ; EventHandler[
   { {EdgeForm @ AbsoluteThickness @ Dynamic @ ef
   , DynamicName[ 
-      Disk[Dynamic[x], Offset[8]]
+      Disk[Dynamic[x], state["config", "realVertexSize"]]
     , v["id"]
     ]
   }
@@ -192,14 +200,14 @@ Module[
   }
 , {
     "MouseClicked" :> geAction["VertexClicked", Dynamic @ state, v]
-  , "MouseEntered" :> FEPrivate`Set[ef, 3]
-  , "MouseExited"  :> FEPrivate`Set[ef, 1]
+  , "MouseEntered" :> FEPrivate`Set[ef, aef]
+  , "MouseExited"  :> FEPrivate`Set[ef, nef]
   , mouseDragged
   , "MouseUp"      :> geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x]      
   }
   , PassEventsUp -> False
   ]  
-]]
+]]]
 
 
 
@@ -212,20 +220,26 @@ geEdges[Dynamic @ state_] := Table[
 ]  
 
 
-geEdgeShapeFunction[Dynamic @ state_, e_Association] := DynamicModule[
-  {ef = 3}
+geEdgeShapeFunction[Dynamic @ state_, e_Association] := 
+With[
+  { 
+    nef = $edgeThickness,
+    aef = $activeEdgeThickness
+  },
+DynamicModule[
+  {ef = nef}
 , EventHandler[
       { AbsoluteThickness @ Dynamic @ ef
       , edgeToPrimitive @ e        
       }
     , {
-        "MouseEntered" :> FEPrivate`Set[ef, 5]
-      , "MouseExited"  :> FEPrivate`Set[ef, 3]
+        "MouseEntered" :> FEPrivate`Set[ef, aef]
+      , "MouseExited"  :> FEPrivate`Set[ef, nef]
       , "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e])
       }
     , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
     ]
-]
+]]
 
 
 edgeToPrimitive[e_] := If[
@@ -249,15 +263,16 @@ edgeTypeToPrimitive[UndirectedEdge["v1", "v2"]]=Line[{#,#2}]&
 
 
 geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex"] }
-, { Red, EdgeForm@Red,
+, { $potentialEdgeColor,
     Dynamic[
       If[ 
         stateHasSelectedVertex @ state
       , { 
-          Disk[DynamicLocation[selV], Offset[12]]
-        , Dashed, Line[{
+          (*Disk[DynamicLocation[selV], 1.05 state["config", "realVertexSize"]]
+        , *)Dashed, Line[{
             DynamicLocation[selV]
           , FrontEnd`MousePosition["Graphics",DynamicLocation[selV]]
+          (*TODO: with multiple editors with selected nodes the line is shown of each one of them*)
           }]
         }
       , {}  
@@ -464,13 +479,22 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}]:=(
 (*UpdateRange*)
 
 
-geAction["UpdateRange", Dynamic @ state_] := Module[{newBounds}
-, newBounds = CoordinateBounds[ state//Query["vertex", All, "pos"], $coordinateBoundsPadding ]
+geAction["UpdateRange", Dynamic @ state_] := Module[
+  {newBounds, vs }
+, vs = vertexSizeMultiplier @ state["config", "VertexSize"] 
+; newBounds = CoordinateBounds[ state//Query["vertex", All, "pos"], Scaled[ 2.5 Max[vs, 0.05 ] ] ]
 ; state[ "config", "range"] = newBounds
 ; state[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ newBounds ]
+; state[ "config", "realVertexSize" ] = Norm[Transpose @ newBounds] * vertexSizeMultiplier @ state["config", "VertexSize"]
 ]
 
-
+vertexSizeMultiplier[vs_?NumericQ] := vs;
+vertexSizeMultiplier[vs_] := vs /. {
+  Tiny -> 0.005,
+  Small -> 0.015,
+  Medium -> 0.05,
+  Large -> 0.15 
+} /. Except[_?NumericQ] -> 0.05
 (* ::Subsubsection::Closed:: *)
 (*MouseClicked*)
 
