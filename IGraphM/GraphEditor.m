@@ -36,6 +36,7 @@ IGGraphEditor // Options = {
 , "CreateVertexSelects"   -> True
 (*, "QuantizeVertexPosition"-> False*)
 , "IndexGraph"            -> False
+, "PerformanceLimit"      -> 450
 , VertexLabels            -> False
 , DirectedEdges           -> False
 , ImageSize               -> Automatic
@@ -57,8 +58,18 @@ supportedGraphQ = ! MixedGraphQ[#] && SimpleGraphQ[#]&
 (* ::Subsection::Closed:: *)
 (*iGraphEditor*)
 
+editorFailure[ msg_String ] := Failure[
+  "GraphEditor"
+, <|"Message" -> "\[WarningSign] "<> msg |>
+]
 
-iGraphEditor[graph:((_? supportedGraphQ)|PatternSequence[]), opt:OptionsPattern[]] := Interpretation[
+iGraphEditor[graph:((_? supportedGraphQ)|PatternSequence[]), opt:OptionsPattern[]] := 
+With[
+  {
+    packageFailure = editorFailure["Failed to load IGraphM`, make sure it is installed."]
+  , performanceFailure = editorFailure["Too many vertices and edges. Change 'PerformanceLimit' if you want to try anyway."]
+  },
+Interpretation[
   { 
     state = GraphToEditorState[graph, opt]
   , error = False 
@@ -67,25 +78,33 @@ iGraphEditor[graph:((_? supportedGraphQ)|PatternSequence[]), opt:OptionsPattern[
 , refresh[] := Module[{temp}, Catch[
     If[
       Needs@"IGraphM`" === $Failed
-    , Throw[ error = Failure["GraphEditor", <|"Message" -> "\[WarningSign] Failed to load IGraphM`, make sure it is installed." |>]]
+    , Throw[ error = packageFailure]
     ]
   
   ; temp = geStateVersionCheck @ state
   ; If[ AssociationQ @ temp
     , state = temp
     , Throw[ error = temp]
-    ]  
+    ] 
+
+  ; If[ 
+      state["config", "vCounter"] + state["config", "eCounter"] > state["config", "PerformanceLimit"]
+    , Throw[ error =  performanceFailure]  
+    ]   
     
   ; error = False        
   ; geAction["UpdateEdgesShapes", Hold @ state]  
     
   ]]
 
-; Panel[#, FrameMargins->0, BaseStyle->CacheGraphics->False]& @
+; 
   PaneSelector[
   { 
-    True -> Button[Dynamic @ error,  refresh[]  ]
-  , False  -> Dynamic[Refresh[iGraphEditorPanel[Dynamic@state], None]]
+    True -> Button[Dynamic @ error,  refresh[], BaseStyle->15  ]
+  , False  -> Panel[
+      Dynamic[Refresh[iGraphEditorPanel[Dynamic@state], None]]
+    , FrameMargins->0, BaseStyle->CacheGraphics->False
+    ]
   }  
   , Dynamic[ MatchQ[_Failure] @ error ]
   , ImageSize->Automatic
@@ -95,7 +114,7 @@ iGraphEditor[graph:((_? supportedGraphQ)|PatternSequence[]), opt:OptionsPattern[
 , GraphFromEditorState @ state
   
 , Initialization :> refresh[]
-]
+]]
 
 
 iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> "Currently a Graph argument needs to be Simple And Not Mixed."|>]
