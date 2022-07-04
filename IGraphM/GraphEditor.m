@@ -680,10 +680,9 @@ geAction["UpdateEdgesShapes", (Hold|Dynamic) @ state_] := Module[
   (* There is a bug that makes both edges in Graph[{Tooltip[1 -> 2, "A"], Tooltip[1 -> 2, "B"]} ]
       labeled with a tooltip A, we need to handle this. *)
 ; edgesIdsCollections = Values @ state["edge"] // 
-    GroupBy[Key["edge"] -> Key["id"]] // Values //
+    GroupBy[Sort@*Key["edge"] -> Key["id"]] // Values //
     Map[#[[1]] -> # &] // 
     Association (* <|e1 -> {e1, e2, e3}, ... |>*)
-
 ; patchEdgeId[id_]:= ((edgesIdsCollections[id] = Rest @ # ; First @ #)&@ edgesIdsCollections[id])      
 ; primitives = Normal[ graphGraphics ] //
   Cases[#,Tooltip[prim_, eId_, ___] :> (<|"id" -> patchEdgeId @ eId,"primitive"->prim|>), Infinity]&
