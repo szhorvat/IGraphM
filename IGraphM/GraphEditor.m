@@ -272,8 +272,8 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
       If[ 
         stateHasSelectedVertex @ state
       , { 
-          (*Disk[DynamicLocation[selV], 1.05 state["config", "realVertexSize"]]
-        , *)Dashed, Line[{
+          Disk[DynamicLocation[selV],  1.25 * state["config", "realVertexSize"] ]
+        , Dashed, Line[{
             DynamicLocation[selV]
           , FrontEnd`MousePosition["Graphics",DynamicLocation[selV]]
           (*TODO: with multiple editors with selected nodes the line is shown of each one of them*)
