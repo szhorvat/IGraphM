@@ -6870,8 +6870,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<WorldWideWeb\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"e581ad0d-b4f6-402d-a05e-c04d1eb55f30"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"e581ad0d-b4f6-402d-a05e-c04d1eb55f30"],
 
 Cell[BoxData[
  RowBox[{"Histogram", "[", 
@@ -7631,14 +7631,13 @@ Cell[BoxData[
             2.688888888888889}, {3., 2.4000000000000004`}, {3.003491885339192,
              2.312557497376857}, {3.0139675413567715`, 2.2280077672852037`}, {
             3.0314269680527355`, 2.1463508097250426`}, {3.055870165427085, 
-            2.0675866246963714`}, {3.0872971334798205`, 
-            1.9917152121991917`}, {3.125707872210942, 1.9187365722335028`}, {
-            3.1711023816204484`, 1.8486507047993048`}, {3.223480661708341, 
-            1.7814576098965975`}, {3.282842712474619, 1.717157287525381}, {
-            3.393851032078711, 1.6061489679212886`}, {3.497028307546374, 
-            1.5029716924536258`}, {3.5923745388776087`, 1.407625461122392}, {
-            3.679889726072413, 1.3201102739275867`}, {3.7595738691307887`, 
-            1.240426130869211}, 
+            2.0675866246963714`}, {3.0872971334798205`, 1.9917152121991917`},
+             {3.125707872210942, 1.9187365722335028`}, {3.1711023816204484`, 
+            1.8486507047993048`}, {3.223480661708341, 1.7814576098965975`}, {
+            3.282842712474619, 1.717157287525381}, {3.393851032078711, 
+            1.6061489679212886`}, {3.497028307546374, 1.5029716924536258`}, {
+            3.5923745388776087`, 1.407625461122392}, {3.679889726072413, 
+            1.3201102739275867`}, {3.7595738691307887`, 1.240426130869211}, 
             DynamicLocation["VertexID$10", Automatic, Center]}]], 
          ArrowBox[{
            DynamicLocation["VertexID$10", Automatic, Center], 
@@ -9205,6 +9204,7 @@ Cell[BoxData[
            "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$1"], 
         TagBox[{
           TagBox[
+           
            DiskBox[{1.879421887793725, 0.6470298527326553}, {
             0.1421869442898585, 0.1421869442898585}], "DynamicName", BoxID -> 
            "VertexID$2"], 
@@ -12108,7 +12108,6 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
-                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -12148,6 +12147,7 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
+                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -12850,7 +12850,6 @@ Cell[BoxData[
             StripOnInput->False,
             ShowContents->False], InsetBox["1", {1.8812749619341707, 0.},
             BaseStyle->"Graphics"]}, {
-           
            StyleBox[
             DiskBox[{0.7724059938006376, 0.09750948642949642}, 
              0.125485749580099],
@@ -14940,8 +14939,7 @@ Cell[BoxData[
        AllowKernelInitialization->False,
        UnsavedVariables:>{$CellContext`flag}]],
      DefaultBaseStyle->{
-      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]}
-      ,
+      "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
      FormatType->TraditionalForm,
      FrameTicks->None,
      ImageSize->{113.30859375, Automatic}], ",", "5"}], 
@@ -24127,8 +24125,8 @@ Cell[TextData[{
  "."
 }], "Text",ExpressionUUID->"35c28e10-0ecf-4124-b128-24bfba50255a"],
 
-Cell["This is the network from the Moody-White paper:", "Text",ExpressionUUID->
- "1e4c02e1-254a-4808-a67a-a64d5c6b06db"],
+Cell["This is the network from the Moody-White paper:", \
+"Text",ExpressionUUID->"1e4c02e1-254a-4808-a67a-a64d5c6b06db"],
 
 Cell[CellGroupData[{
 
@@ -41185,8 +41183,7 @@ WLFXAQAAgD2R6H5y8kw+xl4IKrt06dL77/+ad14AAABAz7mdTrHXAgAAAKAQ
 uR0AAADoudPT5xraT06exV4LAAAAgHya28/OXjChAAAAAPSZJHZCOwAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQBf+AyIE0co=
-    "], {{0, 983}, {
-    1000, 0}}, {0, 255},
+    "], {{0, 983}, {1000, 0}}, {0, 255},
     ColorFunction->RGBColor],
    BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
    Selectable->False],
@@ -41366,7 +41363,7 @@ Cell[TextData[{
 into ",
  StyleBox["communities",
   FontSlant->"Italic"],
- ". It is defined as"
+ ". For undirected graphs, it is defined as"
 }], "Text",ExpressionUUID->"8205e9f5-dd64-4729-98e3-3be19d524013"],
 
 Cell[BoxData[
@@ -41459,8 +41456,8 @@ their own group than with other groups. For a given partitioning, it can be \
 computed using ",
  Cell[BoxData[
  "IGModularity"],ExpressionUUID->"0e1737c0-c6de-4542-bcfe-1a6de5696de6"],
- ". Community detection functions find a partitioning of the graph which \
-results in high modularity."
+ ". Most community detection methods aim find a partitioning of the graph \
+which results in high modularity."
 }], "Text",ExpressionUUID->"c11fee25-659a-49d2-9ede-c257fdd6356c"]
 }, Closed]],
 
@@ -41596,6 +41593,148 @@ Cell[BoxData[
 "Input",ExpressionUUID->"3f7514eb-2c6d-48c3-b0fe-3987fe1c043c"],
 
 Cell[TextData[{
+ Cell[BoxData["IGModularity"],
+  FormatType->StandardForm,ExpressionUUID->
+  "62d25615-b752-43b8-90cb-efd9a4d93da4"],
+ " computes the generalized modularity in undirected or directed graphs, \
+taking weights into account. For undirected graphs, it is defined as"
+}], "Text",ExpressionUUID->"39b18ea0-6670-404e-8ec0-f14e03c36f21"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{"Q", "=", 
+    RowBox[{
+     FractionBox["1", 
+      RowBox[{"2", "m"}]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       RowBox[{"i", ",", "j"}]], 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         SubscriptBox["A", 
+          RowBox[{"i", "\[InvisibleComma]", "j"}]], "-", 
+         RowBox[{"\[Gamma]", 
+          FractionBox[
+           RowBox[{
+            SubscriptBox["k", "i"], 
+            SubscriptBox["k", "j"]}], 
+           RowBox[{"2", "m"}]]}]}], ")"}], 
+       SubscriptBox["\[Delta]", 
+        RowBox[{
+         SubscriptBox["c", "i"], "\[InvisibleComma]", 
+         SubscriptBox["c", "j"]}]]}]}]}]}], ","}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"3ccc4d52-d7d0-45b9-9fbe-cc3bba372f5e"],
+
+Cell[TextData[{
+ "where ",
+ Cell[BoxData[
+  FormBox["m", TraditionalForm]],ExpressionUUID->
+  "54c8e5ff-2d12-4665-b0fc-10ea4fc806ee"],
+ " is the number of edges, ",
+ Cell[BoxData[
+  FormBox["A", TraditionalForm]],ExpressionUUID->
+  "3185eee4-0fdf-464b-b56e-e2e734cb8044"],
+ " is the adjacency matrix, ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["k", "i"], TraditionalForm]],ExpressionUUID->
+  "0aa643f5-da8a-444f-bb4e-0e6b14d14f47"],
+ " is the degree of node ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "838b97b5-9344-4504-b9db-05769a5a1b80"],
+ ", and ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["c", "i"], TraditionalForm]],ExpressionUUID->
+  "5a5eca64-9ba7-4117-995f-927a0f5bb774"],
+ " is the community that node ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "9b19ee50-f431-4ab7-ba3d-ac39e6f896fc"],
+ " belongs to. ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["\[Delta]", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
+  ExpressionUUID->"d92739f4-06f8-4884-82d2-f5b13b500be3"],
+ " is the Kronecker ",
+ Cell[BoxData[
+  FormBox["\[Delta]", TraditionalForm]],ExpressionUUID->
+  "4b958f3d-49ae-4f94-a4be-406f0e607b69"],
+ " symbol. For weighted graphs, ",
+ Cell[BoxData[
+  FormBox["A", TraditionalForm]],ExpressionUUID->
+  "2d52620f-97be-4acd-81c0-7b441e1dbb3b"],
+ " is the weighted adjacency matrix, ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["k", "i"], TraditionalForm]],ExpressionUUID->
+  "30d10231-0937-44c4-b035-53111569dd19"],
+ " are the sum of weights of edges incident on node ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "edc3ae5f-6ab0-4804-a4a1-1c54f128bb7d"],
+ ", and ",
+ Cell[BoxData[
+  FormBox["m", TraditionalForm]],ExpressionUUID->
+  "7fc486cf-ee0e-482e-b3d9-b8242dfc1b72"],
+ " is the sum of all weights. In the undirected case, ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["A", 
+    RowBox[{"i", "\[InvisibleComma]", "i"}]], TraditionalForm]],
+  ExpressionUUID->"3a499ab5-2023-4376-9a1c-ebc6466aaef4"],
+ " is assumed to contain twice the number of self-loops on vertex ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "bddba627-9d33-4263-9ce5-d628c06cc8ad"],
+ ", or twice their total weight in the weighted case. ",
+ Cell[BoxData[
+  FormBox["\[Gamma]", TraditionalForm]],ExpressionUUID->
+  "620dfc0b-ee30-403f-94db-89f46963a916"],
+ " is a resolution parameter, with ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"\[Gamma]", "=", "1"}], TraditionalForm]],ExpressionUUID->
+  "35208302-a1d7-409d-b31b-8512ebe22d59"],
+ " yielding the standard modularity."
+}], "Text",ExpressionUUID->"70260cd4-9f2e-4b5e-bd34-6be22760a30d"],
+
+Cell["The directed generalization is", \
+"Text",ExpressionUUID->"a647ee11-9567-4cc5-af14-09d69fd25951"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{"Q", "=", 
+   RowBox[{
+    FractionBox["1", "m"], 
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      RowBox[{"i", ",", "j"}]], 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+        SubscriptBox["A", 
+         RowBox[{"i", "\[InvisibleComma]", "j"}]], "-", 
+        RowBox[{"\[Gamma]", 
+         FractionBox[
+          RowBox[{
+           SubsuperscriptBox["k", "i", "out"], 
+           SubsuperscriptBox["k", "j", "in"]}], "m"]}]}], ")"}], 
+      RowBox[{
+       SubscriptBox["\[Delta]", 
+        RowBox[{
+         SubscriptBox["c", "i"], "\[InvisibleComma]", 
+         SubscriptBox["c", "j"]}]], "."}]}]}]}]}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"8fbcb31e-c99d-48d3-a210-29c0dfa55d1d"],
+
+Cell[TextData[{
+ "For simple graphs, ",
  Cell[BoxData[
   RowBox[{"IGModularity", "[", 
    RowBox[{"graph", ",", "communities"}], "]"}]],ExpressionUUID->
@@ -41606,8 +41745,76 @@ Cell[TextData[{
    RowBox[{"graph", ",", "communities", ",", 
     RowBox[{"\"\<Normalized\>\"", "\[Rule]", "False"}]}], "]"}]],
   ExpressionUUID->"5938fc9e-e6bc-4cbf-905f-0c56fa5f9a98"],
- "."
-}], "Text",ExpressionUUID->"d12a502c-09a3-4f88-874e-411636bfbd62"]
+ ". However, in contrast to ",
+ Cell[BoxData["GraphAssortativity"],
+  FormatType->StandardForm,ExpressionUUID->
+  "5a494796-dac4-465f-be65-ea740f13f26b"],
+ ", ",
+ Cell[BoxData["IGModularity"],
+  FormatType->StandardForm,ExpressionUUID->
+  "c097c1a4-9640-4196-9c52-4155d9376198"],
+ " does take self-loops and multi-edges into account."
+}], "Text",ExpressionUUID->"d12a502c-09a3-4f88-874e-411636bfbd62"],
+
+Cell["Available options are:", \
+"Text",ExpressionUUID->"b7c078d2-d355-40a8-acea-1a2104c9753c"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<Resolution\>\"", "->", "\[Gamma]"}]],
+  FormatType->StandardForm,ExpressionUUID->
+  "d5c55a1e-e362-4601-add4-c606c93cc1e3"],
+ " sets the resolution parameter. The default is 1."
+}], "Item",ExpressionUUID->"6a79b336-774c-4fbd-83fa-d7ce703dbc5a"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"DirectedEdges", "->", "False"}]],
+  FormatType->StandardForm,ExpressionUUID->
+  "d8c2e324-15f4-40f3-8492-8769902bfd7e"],
+ " ignores edge directions in directed graphs."
+}], "Item",ExpressionUUID->"278b46d4-2b6e-4c94-a8ec-ca96a5bcd995"],
+
+Cell["\<\
+Compute the modularity of a stochastic block model graph having three \
+partitions, each with 20 vertices.\
+\>", "Text",ExpressionUUID->"588ce43d-3b8a-430e-a4db-f236107c8700"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"g", "=", 
+   RowBox[{"IGStochasticBlockModelGame", "[", 
+    RowBox[{
+     RowBox[{"(", GridBox[{
+        {"0.1", "0.01", "0.015"},
+        {"0.01", "0.15", "0.01"},
+        {"0.015", "0.01", "0.2"}
+       }], ")"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"20", ",", "20", ",", "20"}], "}"}]}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"ee1f0e44-b590-4909-850e-2712e4f9ed18"],
+
+Cell[BoxData[
+ RowBox[{"IGModularity", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"VertexList", "[", "g", "]"}], ",", "20"}], "]"}]}], 
+  "]"}]], "Input",ExpressionUUID->"2afc7d68-c65c-42a9-8b63-09b9f2d8207b"],
+
+Cell["\<\
+Setting the resolution parameter to zero computes the fraction of \
+intra-community edges.\
+\>", "Text",ExpressionUUID->"491ecc37-7c1a-49fa-a0f5-240bd4534da3"],
+
+Cell[BoxData[
+ RowBox[{"IGModularity", "[", 
+  RowBox[{"g", ",", 
+   RowBox[{"Partition", "[", 
+    RowBox[{
+     RowBox[{"VertexList", "[", "g", "]"}], ",", "20"}], "]"}], ",", 
+   RowBox[{"\"\<Resolution\>\"", "->", "0"}]}], 
+  "]"}]], "Input",ExpressionUUID->"30d8ce21-8c49-4a3a-8cdf-5a5dc59febc1"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -41619,6 +41826,295 @@ Cell[BoxData[
  RowBox[{"?", 
   "IGCompareCommunities"}]], \
 "Input",ExpressionUUID->"1520b29f-9278-4f1b-865c-8d598f097d8d"],
+
+Cell[TextData[{
+ "Some of these measures are defined based on the entropy of a discrete \
+random variable associated with a given clustering ",
+ Cell[BoxData[
+  FormBox["C", TraditionalForm]],ExpressionUUID->
+  "5f85660d-dfa9-413c-a876-7c308e78ddb5"],
+ " of vertices. Let ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["p", "i"], TraditionalForm]],ExpressionUUID->
+  "02a7b9b4-eeec-4a8b-bc18-3872c5b513e3"],
+ " be the probability that a randomly picked vertex would be part of cluster ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "2538230e-4e0d-488a-b51d-1f049a16619a"],
+ ". Then the entropy of the clustering is"
+}], "Text",ExpressionUUID->"c817ae81-c32c-492f-9f6a-1208c480b9af"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{"H", "(", "C", ")"}], "=", 
+   RowBox[{"-", 
+    RowBox[{
+     SubscriptBox["\[Sum]", "i"], 
+     RowBox[{
+      SubscriptBox["p", "i"], "ln", " ", 
+      RowBox[{
+       SubscriptBox["p", "i"], "."}]}]}]}]}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"9d3a8509-3f77-4ae4-85c6-2fa00ab1a55e"],
+
+Cell[TextData[{
+ "Similarly, we can define the joint entropy of two clusterings ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["C", "1"], TraditionalForm]],ExpressionUUID->
+  "7c08a991-e424-4e18-b31f-04766146c12c"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["C", "2"], TraditionalForm]],ExpressionUUID->
+  "deedf815-88d2-4368-8b5b-ecf5b8767b38"],
+ " based on the probability ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["p", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
+  ExpressionUUID->"4fe71cfb-c92d-4f8a-ab1c-6203ad07ee37"],
+ " that a random vertex is part of cluster ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "ffb187bb-2723-46e0-88a3-3e1213f48b92"],
+ " in the first clustering and cluster ",
+ Cell[BoxData[
+  FormBox["j", TraditionalForm]],ExpressionUUID->
+  "ce25e7fa-daa2-4904-96ac-7374abc5e322"],
+ " in the second one:"
+}], "Text",ExpressionUUID->"4015ee0b-fafd-4ac3-b341-e2138eaacc19"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{"H", "(", 
+    RowBox[{
+     SubscriptBox["C", "1"], ",", 
+     SubscriptBox["C", "2"]}], ")"}], "=", 
+   RowBox[{"-", 
+    RowBox[{
+     SubscriptBox["\[Sum]", 
+      RowBox[{"i", ",", "j"}]], 
+     RowBox[{
+      SubscriptBox["p", 
+       RowBox[{"i", "\[InvisibleComma]", "j"}]], "ln", " ", 
+      RowBox[{
+       SubscriptBox["p", 
+        RowBox[{"i", "\[InvisibleComma]", "j"}]], "."}]}]}]}]}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"b9b690fb-25d1-49d0-a87b-981ddc73c430"],
+
+Cell[TextData[{
+ "The ",
+ StyleBox["mutual information",
+  FontWeight->"Bold"],
+ " of ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["C", "1"], TraditionalForm]],ExpressionUUID->
+  "94c6257b-6f50-4adc-86ed-a0fa0990216f"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["C", "2"], TraditionalForm]],ExpressionUUID->
+  "0d81d91a-0a13-4bba-b855-ababb1874fc6"],
+ " is then ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"MI", "(", 
+     RowBox[{
+      SubscriptBox["C", "1"], ",", 
+      SubscriptBox["C", "2"]}], ")"}], "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"H", "(", 
+       SubscriptBox["C", "1"], ")"}], "+", 
+      RowBox[{"H", "(", 
+       SubscriptBox["C", "2"], ")"}], "-", 
+      RowBox[{"H", "(", 
+       RowBox[{
+        SubscriptBox["C", "1"], ",", 
+        SubscriptBox["C", "2"]}], ")"}]}], ">=", "0"}]}], TraditionalForm]],
+  ExpressionUUID->"cca9e5c0-3481-42ca-a580-93224237a883"],
+ ". A large mutual information indicates a high overlap between the two \
+clusterings. The ",
+ StyleBox["normalized mutual information",
+  FontWeight->"Bold"],
+ ", as computed by igraph, is"
+}], "Text",ExpressionUUID->"af8535fc-7141-4531-8faf-77abbc2e7945"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{"NMI", "(", 
+    RowBox[{
+     SubscriptBox["C", "1"], ",", 
+     SubscriptBox["C", "2"]}], ")"}], "=", 
+   RowBox[{
+    FractionBox[
+     RowBox[{"2", 
+      RowBox[{"MI", "(", 
+       RowBox[{
+        SubscriptBox["C", "1"], ",", 
+        SubscriptBox["C", "2"]}], ")"}]}], 
+     RowBox[{
+      RowBox[{"H", "(", 
+       SubscriptBox["C", "1"], ")"}], "+", 
+      RowBox[{"H", "(", 
+       SubscriptBox["C", "2"], ")"}]}]], "."}]}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"89560090-fefd-4214-ba95-865d3210869e"],
+
+Cell[TextData[{
+ "It takes its value from the interval ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"0", ",", "1"}]}], "]"}], TraditionalForm]],ExpressionUUID->
+  "59a5a0c1-6b92-4756-87f2-eab70cc9e1e1"],
+ ", with 1 achieved when the two clusterings coincide."
+}], "Text",ExpressionUUID->"b5d9197b-2d60-4adc-b058-e5e9b2688e10"],
+
+Cell[TextData[{
+ "The ",
+ StyleBox["variation of information",
+  FontWeight->"Bold"],
+ " is defined as ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"VI", "(", 
+     RowBox[{
+      SubscriptBox["C", "1"], ",", 
+      SubscriptBox["C", "2"]}], ")"}], "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"H", "(", 
+         SubscriptBox["C", "1"], ")"}], "-", 
+        RowBox[{"MI", "(", 
+         RowBox[{
+          SubscriptBox["C", "1"], ",", 
+          SubscriptBox["C", "2"]}], ")"}]}], "]"}], "+", 
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"H", "(", 
+         SubscriptBox["C", "2"], ")"}], "-", 
+        RowBox[{"MI", "(", 
+         RowBox[{
+          SubscriptBox["C", "1"], ",", 
+          SubscriptBox["C", "2"]}], ")"}]}], "]"}]}], "=", 
+     RowBox[{
+      RowBox[{"2", 
+       RowBox[{"H", "(", 
+        RowBox[{
+         SubscriptBox["C", "1"], ",", 
+         SubscriptBox["C", "2"]}], ")"}]}], "-", 
+      RowBox[{"H", "(", 
+       SubscriptBox["C", "1"], ")"}], "-", 
+      RowBox[{"H", "(", 
+       SubscriptBox["C", "2"], ")"}]}]}]}], TraditionalForm]],ExpressionUUID->
+  "a3cace64-9751-4a1a-888c-5e09efb81440"],
+ ". Lower values of the variation of information indicate a smaller \
+difference between the two clusterings, with ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"VI", "=", "0"}], TraditionalForm]],ExpressionUUID->
+  "1e84e18d-4d2e-475b-a61e-9a25f02eba82"],
+ " achieved precisely when they coincide. "
+}], "Text",ExpressionUUID->"f6e79472-1507-4683-b5b4-83c983591bdb"],
+
+Cell[TextData[{
+ "The ",
+ StyleBox["Rand index",
+  FontWeight->"Bold"],
+ " is defined based on counting pairs of vertices that are within the same or \
+different clusters in the two clusterings. Let ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["a", "1"], TraditionalForm]],ExpressionUUID->
+  "ebbe7ba4-ea56-4585-8ffe-b68c3eddfd66"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["a", "2"], TraditionalForm]],ExpressionUUID->
+  "e4ada259-8e0d-4592-a5df-265224422ef4"],
+ " denote the number of pairs that are grouped together in ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["C", "1"], TraditionalForm]],ExpressionUUID->
+  "b1104d48-0410-41c7-91e1-115f88c1b398"],
+ " and ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["C", "2"], TraditionalForm]],ExpressionUUID->
+  "c5820211-396e-46ad-9913-5835f385043d"],
+ ", respectively. Then the Rand index is"
+}], "Text",ExpressionUUID->"1ea4cf27-0f25-4985-904c-048c406119a2"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   RowBox[{
+    RowBox[{"RI", "(", 
+     RowBox[{
+      SubscriptBox["C", "1"], ",", 
+      SubscriptBox["C", "2"]}], ")"}], "=", 
+    FractionBox[
+     RowBox[{
+      SubscriptBox["a", "1"], "+", 
+      SubscriptBox["a", "2"]}], 
+     RowBox[{"(", GridBox[{
+        {"n"},
+        {"2"}
+       }], ")"}]]}], ","}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"da65e391-b679-463e-b6dd-4039dcb600f1"],
+
+Cell[TextData[{
+ "where ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", GridBox[{
+      {"n"},
+      {"2"}
+     }], ")"}], TraditionalForm]],ExpressionUUID->
+  "785310ff-fa79-4537-b1aa-e80e8ca88a39"],
+ " is the total number of pairs of ",
+ Cell[BoxData[
+  FormBox["n", TraditionalForm]],ExpressionUUID->
+  "a15f0aea-2a70-49d1-9597-2f57780aee0d"],
+ " vertices. The value of the Rand index varies between 0 and 1. The ",
+ StyleBox["adjusted Rand index",
+  FontWeight->"Bold"],
+ ",",
+ " ",
+ Cell[BoxData[
+  FormBox["ARI", TraditionalForm]],ExpressionUUID->
+  "ff2e9554-ac0b-4fda-bb28-71153a6363e8"],
+ ", corrects the value based on the Rand index expected after after a random \
+rearrangement of the vertices, denoted ",
+ Cell[BoxData[
+  FormBox["ERI", TraditionalForm]],ExpressionUUID->
+  "6f0e4be5-98d8-4cbe-ae23-547d993d657b"],
+ ":"
+}], "Text",ExpressionUUID->"932cd86a-ca0c-4e8a-b1d3-65f20fda938d"],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{"ARI", " ", "=", " ", 
+   RowBox[{
+    FractionBox[
+     RowBox[{"RI", "-", "ERI"}], 
+     RowBox[{"1", "-", "ERI"}]], "."}]}], 
+  TraditionalForm]], \
+"DisplayFormula",ExpressionUUID->"e38e79fe-a2ab-4455-bb73-4eb2e3f34ceb"],
 
 Cell[BoxData[
  RowBox[{
@@ -48440,8 +48936,7 @@ K1nEgANDIHewBKP+wJwh/fZ4LCdqy/mPS4ffC904UwT2HJAoAjubFF9x84Cs
 82cxzYADIy73gX5sMhOfYa3ZB85/eNTHbYMBrQ2itXG6VjfmB0xL4zp9/vkr
 wdhMX27tgITDdUPRgGmpGkxRZVj8dfG96TfGlw6akfv2V1Sg9t/ysfcCU3Kb
 9LReMYL3TisP4sSoTFwxOGyz5edvOfcMAAAAAAAAABzwP+wUVmI=
-           "], {{0, 
-           314}, {360, 0}}, {0, 255},
+           "], {{0, 314}, {360, 0}}, {0, 255},
            ColorFunction->RGBColor],
           BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
           
@@ -48504,8 +48999,7 @@ lhJcbDyY+N55WoYIYDFelahZLbDSAAyqn/jUDcCax3WDnQ3ApspZT90ATGky
 dQAwSO5XxMrC9VvqBoDM3U4eUgC4Mjc6KBoApERlYLEBwJOz2KBuAHDdbmtQ
 NAB4EsWBugEgJl03xscDQAW5tGCxAeCWVyIoGgBuuYWCogEgh/eZc+oGgBz8
 7RXAA9QNAKUoGgAAAAAAAAAAAACAYf4G0E7JMg==
-           "], {{0, 164}, {360, 
-           0}}, {0, 255},
+           "], {{0, 164}, {360, 0}}, {0, 255},
            ColorFunction->RGBColor],
           BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
           
@@ -56665,8 +57159,8 @@ Cell[BoxData[
          RowBox[{"ImageSize", "\[Rule]", "20"}]}], "]"}], "&"}], "/@", 
       RowBox[{
        RowBox[{"IGVertexProp", "[", "VertexShape", "]"}], "[", "g", "]"}]}], 
-     ")"}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
+     ")"}]}], "]"}]}]], \
+"Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
 
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
@@ -58088,8 +58582,7 @@ in the future."
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"IGGraphEditor", "[", "]"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"IGGraphEditor", "[", "]"}]],ExpressionUUID->
   "82ede368-4515-4424-9a1a-acfdaf232cfd"],
  " typesets an interactive graph editor. To add or remove vertices, click \
 while holding down the Alt or Command key. To add edges, click the first, \
@@ -58098,9 +58591,7 @@ then the second vertex. To remove an edge, Alt-click it (or Command-click it)."
 
 Cell[TextData[{
  "Evaluating the editor using Shift-Enter creates a standard ",
- Cell[BoxData["Graph"],
-  FormatType->StandardForm,ExpressionUUID->
-  "a284a156-b257-498a-8aa8-bb23f96d4ce3"],
+ Cell[BoxData["Graph"],ExpressionUUID->"a284a156-b257-498a-8aa8-bb23f96d4ce3"],
  " object."
 }], "Text",ExpressionUUID->"e4664c9b-412f-4388-808a-db57a1f65b19"],
 
@@ -58110,12 +58601,10 @@ Cell["Available options:", \
 Cell[TextData[{
  Cell[BoxData[
   RowBox[{"\"\<DefaultEdgeType\>\"", "->", "\"\<Undirected\>\""}]],
-  FormatType->StandardForm,ExpressionUUID->
-  "86c3a1f6-ab0f-4d5e-ae82-7e0739797d80"],
+  ExpressionUUID->"86c3a1f6-ab0f-4d5e-ae82-7e0739797d80"],
  " adds undirected edges instead of the default ",
- Cell[BoxData["\"\<Directed\>\""],
-  FormatType->StandardForm,ExpressionUUID->
-  "94737dbf-c033-4b3c-91ad-ff9302ec73b2"],
+ Cell[BoxData[
+ "\"\<Directed\>\""],ExpressionUUID->"94737dbf-c033-4b3c-91ad-ff9302ec73b2"],
  " setting."
 }], "Item",ExpressionUUID->"2d49cf36-046f-4f87-921b-82758417cdfc"],
 
@@ -59047,6 +59536,7 @@ Cell[BoxData[
             "Graphics"]}, "DynamicName", BoxID -> "VertexLabelID$7"], 
          TagBox[{
            TagBox[
+            
             RectangleBox[{1.5653086565863823`, 1.565308656586382}, {
              1.868271644529426, 1.8682716445294258`}], "DynamicName", BoxID -> 
             "VertexID$8"], 
@@ -60225,7 +60715,7 @@ with this program.  If not, see ",
 }, Open  ]]
 },
 WindowSize->{899, 855},
-WindowMargins->{{Automatic, 118}, {Automatic, 0}},
+WindowMargins->{{Automatic, 101}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
 WindowStatusArea->None,
 PrintingCopies->1,
@@ -60275,7 +60765,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"13.0 for Mac OS X x86 (64-bit) (February 4, 2022)",
+FrontEndVersion->"13.1 for Mac OS X x86 (64-bit) (June 16, 2022)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -60296,7 +60786,7 @@ StyleDefinitions->Notebook[{
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> "13.0 for Mac OS X x86 (64-bit) (February 4, 2022)", 
+  FrontEndVersion -> "13.1 for Mac OS X x86 (64-bit) (June 16, 2022)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"],
 ExpressionUUID->"f2c61c1c-5321-4c3e-9047-2d29e9f66d92"
 ]
