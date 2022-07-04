@@ -523,7 +523,7 @@ geAction["VertexClicked", Dynamic @ state_, v_Association] := With[
   {  selectedV = state["selectedVertex"], clickedV = v["id"], hasSelectedVertex = stateHasSelectedVertex @ state }
 , Which[
     TrueQ @ CurrentValue["AltKey"], If[ Not @ hasSelectedVertex, geAction["RemoveVertex", Dynamic @ state, v], Beep[]]
-  , selectedV === clickedV        , geAction["Unselect", Dynamic @ state]
+  , selectedV === clickedV        , geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]
   , ! hasSelectedVertex           , geAction["Select", Dynamic @ state, clickedV]
   , True                          , geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]                                   
   ]
