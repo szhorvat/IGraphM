@@ -36,16 +36,17 @@ $potentialEdgeColor = Purple
 
 
 IGGraphEditor // Options = {
-  "KeepVertexCoordinates" -> True
-, "CreateVertexSelects"   -> True
-(*, "QuantizeVertexPosition"-> False*)
-, "IndexGraph"            -> False
-, "PerformanceLimit"      -> 450
-, VertexLabels            -> False
-, VertexSize              -> Small
-, DirectedEdges           -> False
+  "KeepVertexCoordinates" -> True (* bool *)
+, "CreateVertexSelects"   -> True (* bool *)
+, "SnapToGrid"            -> False (* bool *)
+, "IndexGraph"            -> False (* bool *)
+, "PerformanceLimit"      -> 450   (* _Integer *)
+, VertexLabels            -> False (* | "Name" *)
+, VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
+, DirectedEdges           -> False (* bool *)
 , ImageSize               -> Automatic
 }
+
 
 SyntaxInformation[IGGraphEditor] = {"ArgumentsPattern" -> {_., OptionsPattern[]}};
 
@@ -174,16 +175,17 @@ geVertexShapeFunction[Dynamic @ state_, v_Association] :=
 With[ {
   nef = $vertexEdgeThickness
 , aef = $hoverVertexEdgeThickness  
+, step = state["config", "snapStep"]
 },
 DynamicModule[
   {x = v@"pos", ef = nef},
 Module[
-  {mouseDragged, quantization = state["config", "QuantizeVertexPosition"]}
+  {mouseDragged}
 
-, mouseDragged = If[ NumericQ @ #
-    , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], #])
+, mouseDragged = If[ state["config", "snap"]
+    , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
     , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
-  ] & @ quantization 
+  ]
 
 ; EventHandler[
   { {EdgeForm @ AbsoluteThickness @ Dynamic @ ef
@@ -369,16 +371,16 @@ GraphToEditorState[ opt:OptionsPattern[] ] := Module[{state}
 
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
-  {state, v, e, pos(*, quant*)}
+  {state, v, e, pos }
 , v = VertexList[g] 
 ; pos = GraphEmbedding @ g 
-(*; quant = OptionValue["QuantizeVertexPosition"]
-; If[ NumericQ @ quant, pos = Round[pos, quant]]*)
 ; e = EdgeList[g] 
 
 ; state = GraphToEditorState[opt]
 
 ; state["vertex"] = Association @ Map[ (#id -> #) & ] @ MapThread[createVertex, {v, pos}]
+; state = stateSnapInit @ state
+
 ; state["edge"]   = toStateEdges[state, g] 
 
 ; state[ "config", "vCounter"] = Length@v
@@ -394,6 +396,23 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 
 (* ::Subsection::Closed:: *)
 (*state helpers*)
+
+stateSnapInit[state_Association] := Module[{config = state["config"] }
+
+, config["snap"] = config["SnapToGrid"] =!= False 
+
+; If[
+    config["snap"]
+  , config["snapStep"] = stateGetAutomaticSnapStep @ state
+  ]
+
+; <|state, "config" -> config |>     
+]
+
+
+
+stateGetAutomaticSnapStep[state_Association] := 
+  Round[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #)/25.] & @@@ state["config", "range"]
 
 
 stateHandleNarrowRange[state_Association] := Module[
@@ -564,9 +583,9 @@ geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}] := Module[
 ; vertex = createVertex[name, pos]
 ; id = vertex["id"]
 
-; If[ NumericQ @ #
-  , newV["pos"] = Round[vertex["pos"], #]
-  ]& @ state["config", "QuantizeVertexPosition"]
+; If[ state["config", "snap"]
+  , newV["pos"] = MapThread[Round, {vertex["pos"], state["config", "snapStep"]} ]
+  ]
 
 ; state["vertex", id ] = vertex
 
