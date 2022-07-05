@@ -179,17 +179,12 @@ With[ {
 , step = state["config", "snapStep"]
 },
 DynamicModule[
-  {x = v@"pos", ef = nef},
+  {x = v@"pos"},
 Module[
-  {mouseDragged}
+  {mouseDragged, graphics}
 
-, mouseDragged = If[ state["config", "snap"]
-    , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
-    , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
-  ]
-
-; EventHandler[
-  { {EdgeForm @ AbsoluteThickness @ Dynamic @ ef
+, graphics = { {
+    EdgeForm @ AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
   , DynamicName[ 
       Disk[Dynamic[x], state["config", "realVertexSize"]]
     , v["id"]
@@ -201,15 +196,21 @@ Module[
     , Nothing
     ]
   }
-, {
-    "MouseClicked" :> geAction["VertexClicked", Dynamic @ state, v]
-  , "MouseEntered" :> FEPrivate`Set[ef, aef]
-  , "MouseExited"  :> FEPrivate`Set[ef, nef]
-  , mouseDragged
-  , "MouseUp"      :> geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x]      
-  }
-  , PassEventsUp -> False
-  ]  
+  
+; mouseDragged = If[ state["config", "snap"]
+    , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
+    , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
+  ]
+
+; EventHandler[
+    graphics,
+    { "MouseClicked" :> geAction["VertexClicked", Dynamic @ state, v]
+    , "MouseUp"      :> geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x] 
+    , mouseDragged
+    },
+    PassEventsUp -> False
+  ]
+      (*I'd prefer clicked to be Queued but if I put it in an inner queued EventHandler then I can't block MouseUp from fireing*)
 ]]]
 
 
@@ -229,20 +230,14 @@ With[
     nef = $edgeThickness,
     aef = $activeEdgeThickness
   },
-DynamicModule[
-  {ef = nef}
-, EventHandler[
-      { AbsoluteThickness @ Dynamic @ ef
+  EventHandler[
+      { AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
       , edgeToPrimitive @ e        
       }
-    , {
-        "MouseEntered" :> FEPrivate`Set[ef, aef]
-      , "MouseExited"  :> FEPrivate`Set[ef, nef]
-      , "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e])
-      }
-    , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
-    ]
-]]
+  , { "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e]) }
+  , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
+  ]
+]
 
 
 edgeToPrimitive[e_] := If[
@@ -537,14 +532,26 @@ geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
 (*VertexClicked*)
 
 
-geAction["VertexClicked", Dynamic @ state_, v_Association] := With[
-  {  selectedV = state["selectedVertex"], clickedV = v["id"], hasSelectedVertex = stateHasSelectedVertex @ state }
-, Which[
-    TrueQ @ CurrentValue["AltKey"], If[ Not @ hasSelectedVertex, geAction["RemoveVertex", Dynamic @ state, v], Beep[]]
-  , selectedV === clickedV        , geAction["Unselect", Dynamic @ state]
-  , ! hasSelectedVertex           , geAction["Select", Dynamic @ state, clickedV]
-  , True                          , geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]                                   
+geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
+  {  selectedV = state["selectedVertex"], clickedV = v["id"]}
+
+, wasAnySelected  = stateHasSelectedVertex @ state
+; wasThisSelected = selectedV === clickedV
+
+; If[ TrueQ @ CurrentValue["AltKey"] && ! wasAnySelected
+  , Throw @ geAction["RemoveVertex", Dynamic @ state, v]
   ]
+
+; If[ wasThisSelected
+  , Throw @ geAction["Unselect", Dynamic @ state]
+  ]
+
+; If[  wasAnySelected
+  , Throw @ geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]
+  ]
+  
+; geAction["Select", Dynamic @ state, clickedV]
+ 
 ]
 
 
