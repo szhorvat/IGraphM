@@ -42,7 +42,8 @@
  *   - [C++ API documentation](https://jlblancoc.github.io/nanoflann/)
  */
 
-#pragma once
+#ifndef NANOFLANN_HPP_
+#define NANOFLANN_HPP_
 
 #include <algorithm>
 #include <array>
