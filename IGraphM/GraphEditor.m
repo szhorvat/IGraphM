@@ -29,6 +29,7 @@ $hoverVertexEdgeThickness = 1
 $edgeThickness = 1
 $activeEdgeThickness = 3
 $potentialEdgeColor = Purple
+$gridLinesCount = 20.
 
 
 (* ::Subsection:: *)
@@ -397,22 +398,23 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 (* ::Subsection::Closed:: *)
 (*state helpers*)
 
-stateSnapInit[state_Association] := Module[{config = state["config"] }
+stateSnapInit[state_Association] := Module[{config = state["config"], result = state }
 
 , config["snap"] = config["SnapToGrid"] =!= False 
 
 ; If[
     config["snap"]
   , config["snapStep"] = stateGetAutomaticSnapStep @ state
-  ]
+  ; result["vertex"] = <|#, "pos" -> Round[#pos, config["snapStep"]] |>& /@ state["vertex"]   
+  ] 
 
-; <|state, "config" -> config |>     
+; <|result, "config" -> config |>     
 ]
 
 
 
 stateGetAutomaticSnapStep[state_Association] := 
-  Round[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #)/25.] & @@@ state["config", "range"]
+  Ceiling[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #)/ $gridLinesCount] & @@@ state["config", "range"]
 
 
 stateHandleNarrowRange[state_Association] := Module[
