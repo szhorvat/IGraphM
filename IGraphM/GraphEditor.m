@@ -99,8 +99,11 @@ Interpretation[
     , Throw[ error =  performanceFailure]  
     ]   
     
-  ; error = False        
-  ; geAction["UpdateEdgesShapes", Hold @ state]  
+  ; error = False  
+
+  ; geAction["UpdateVertexSize", Symbol["Dynamic"] @ state]
+  ; geAction["UpdateEdgesShapes", Symbol["Dynamic"] @ state]  
+(*(Symbol) is there to workaround a bug with Interpretation's Initialization which inserts evaluated Dynamic's arguments*)
     
   ]]
 
@@ -361,7 +364,7 @@ GraphToEditorState[ opt:OptionsPattern[] ] := Module[{state}
       |>
     |>
 
-
+; state = stateSnapInit @ state
 ; state
 ]   
 
@@ -375,7 +378,6 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ; state = GraphToEditorState[opt]
 
 ; state["vertex"] = Association @ Map[ (#id -> #) & ] @ MapThread[createVertex, {v, pos}]
-; state = stateSnapInit @ state
 
 ; state["edge"]   = toStateEdges[state, g] 
 
@@ -499,11 +501,22 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}]:=(
 
 geAction["UpdateRange", Dynamic @ state_] := Module[
   {newBounds, vs }
-, vs = vertexSizeMultiplier @ state["config", "VertexSize"] 
-; newBounds = CoordinateBounds[ state//Query["vertex", All, "pos"], Scaled[ 2.5 Max[vs, 0.05 ] ] ]
+
+, embedding = state // Query["vertex", All, "pos"]
+; If[ Length[embedding ] < 1, Return[False, Module]]
+
+; vs = vertexSizeMultiplier @ state["config", "VertexSize"] 
+; newBounds = CoordinateBounds[ embedding, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
 ; state[ "config", "range"] = newBounds
 ; state[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ newBounds ]
-; state[ "config", "realVertexSize" ] = Norm[Transpose @ newBounds] * vertexSizeMultiplier @ state["config", "VertexSize"]
+; geAction["UpdateVertexSize", Dynamic @ state]
+]
+
+geAction["UpdateVertexSize", Dynamic @ state_ ] := With[{
+  boundingBox = Transpose @ state[ "config", "range"]
+, sizeMultiplier = vertexSizeMultiplier @ state["config", "VertexSize"]  
+}
+, state[ "config", "realVertexSize" ] = Norm[ boundingBox ] * sizeMultiplier
 ]
 
 vertexSizeMultiplier[vs_?NumericQ] := vs;
@@ -692,8 +705,7 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 (*UpdateEdgesShapes*)
 
 
-(*(Hold|Dynamic) is there to workaround a bug with Interpretation's Initialization which inserts evaluated Dynamic's arguments*)
-geAction["UpdateEdgesShapes", (Hold|Dynamic) @ state_] := Module[{primitives,  vertexEncoded, vertexList}
+geAction["UpdateEdgesShapes", Dynamic @ state_] := Module[{primitives,  vertexEncoded, vertexList}
 
 , primitives = extractEdgePrimitives @ state
 
