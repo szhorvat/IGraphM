@@ -383,7 +383,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 
 ; state[ "config", "vCounter"] = Length@v
 ; state[ "config", "eCounter"] = Length@e
-; state[ "config", "DirectedEdges"] = ! EmptyGraphQ @ g && DirectedGraphQ @ g
+; state[ "config", "DirectedEdges"] = Not @ UndirectedGraphQ @ g
 
 ; geAction["UpdateRange", Dynamic @ state]
 ; state = stateHandleNarrowRange @ state 
@@ -506,11 +506,28 @@ geAction["UpdateRange", Dynamic @ state_] := Module[
 ; If[ Length[embedding ] < 1, Return[False, Module]]
 
 ; vs = vertexSizeMultiplier @ state["config", "VertexSize"] 
-; newBounds = CoordinateBounds[ embedding, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
+; newBounds = handleDegeneratedRange @ CoordinateBounds[ embedding, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
+; 
 ; state[ "config", "range"] = newBounds
 ; state[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ newBounds ]
 ; geAction["UpdateVertexSize", Dynamic @ state]
 ]
+
+handleDegeneratedRange[range : {{xmin_, xmax_}, {ymin_, ymax_}}] := Module[{}
+, If[ xmin != xmax && ymin != ymax
+  , Return[ range, Module ]
+  ]
+
+; If[ xmin == xmax && ymin == ymax
+  , Return[{{xmin-1, xmax+1}, {ymin-1, ymax+1}}, Module]
+  ]
+
+; If[ xmin != xmax
+  , {{xmin, xmax}, {ymin-#, ymax+#}} & [ (xmax - xmin)/2 ]
+  , {{xmin-#, xmax+#}, {ymin, ymax}} & [ (ymax - ymin)/2 ]
+  ] 
+]
+
 
 geAction["UpdateVertexSize", Dynamic @ state_ ] := With[{
   boundingBox = Transpose @ state[ "config", "range"]
