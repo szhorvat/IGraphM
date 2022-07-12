@@ -7009,7 +7009,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -7021,7 +7021,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\n"}], "\[IndentingNewLine]", 
+   ";"}], "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -20946,7 +20946,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -20967,7 +20967,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\n", 
+  "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -41593,9 +41593,8 @@ Cell[BoxData[
 "Input",ExpressionUUID->"3f7514eb-2c6d-48c3-b0fe-3987fe1c043c"],
 
 Cell[TextData[{
- Cell[BoxData["IGModularity"],
-  FormatType->StandardForm,ExpressionUUID->
-  "62d25615-b752-43b8-90cb-efd9a4d93da4"],
+ Cell[BoxData[
+ "IGModularity"],ExpressionUUID->"62d25615-b752-43b8-90cb-efd9a4d93da4"],
  " computes the generalized modularity in undirected or directed graphs, \
 taking weights into account. For undirected graphs, it is defined as"
 }], "Text",ExpressionUUID->"39b18ea0-6670-404e-8ec0-f14e03c36f21"],
@@ -41746,13 +41745,11 @@ Cell[TextData[{
     RowBox[{"\"\<Normalized\>\"", "\[Rule]", "False"}]}], "]"}]],
   ExpressionUUID->"5938fc9e-e6bc-4cbf-905f-0c56fa5f9a98"],
  ". However, in contrast to ",
- Cell[BoxData["GraphAssortativity"],
-  FormatType->StandardForm,ExpressionUUID->
-  "5a494796-dac4-465f-be65-ea740f13f26b"],
+ Cell[BoxData[
+ "GraphAssortativity"],ExpressionUUID->"5a494796-dac4-465f-be65-ea740f13f26b"],
  ", ",
- Cell[BoxData["IGModularity"],
-  FormatType->StandardForm,ExpressionUUID->
-  "c097c1a4-9640-4196-9c52-4155d9376198"],
+ Cell[BoxData[
+ "IGModularity"],ExpressionUUID->"c097c1a4-9640-4196-9c52-4155d9376198"],
  " does take self-loops and multi-edges into account."
 }], "Text",ExpressionUUID->"d12a502c-09a3-4f88-874e-411636bfbd62"],
 
@@ -41761,16 +41758,14 @@ Cell["Available options are:", \
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"\"\<Resolution\>\"", "->", "\[Gamma]"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"\"\<Resolution\>\"", "->", "\[Gamma]"}]],ExpressionUUID->
   "d5c55a1e-e362-4601-add4-c606c93cc1e3"],
  " sets the resolution parameter. The default is 1."
 }], "Item",ExpressionUUID->"6a79b336-774c-4fbd-83fa-d7ce703dbc5a"],
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "->", "False"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"DirectedEdges", "->", "False"}]],ExpressionUUID->
   "d8c2e324-15f4-40f3-8492-8769902bfd7e"],
  " ignores edge directions in directed graphs."
 }], "Item",ExpressionUUID->"278b46d4-2b6e-4c94-a8ec-ca96a5bcd995"],
@@ -51088,8 +51083,8 @@ Cell[BoxData[
       RowBox[{"First", "[", "st", "]"}], ",", 
       RowBox[{"Last", "[", "st", "]"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
    RowBox[{"Frame", "\[Rule]", "True"}], ",", 
-   RowBox[{"FrameTicks", "\[Rule]", "True"}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",
+   RowBox[{"FrameTicks", "\[Rule]", "True"}]}], "\[IndentingNewLine]", "]"}]],
+  "Input",
  CellChangeTimes->{{3.7205304720332737`*^9, 3.7205305062953997`*^9}, {
   3.720530582743116*^9, 3.720530582854973*^9}, {3.720530634871773*^9, 
   3.720530635192234*^9}, {3.7205314138673*^9, 3.720531426313422*^9}, {
@@ -60714,6 +60709,7 @@ with this program.  If not, see ",
 }, Closed]]
 }, Open  ]]
 },
+WindowToolbars->{},
 WindowSize->{899, 855},
 WindowMargins->{{Automatic, 101}, {Automatic, 0}},
 WindowTitle->"IGraph/M Documentation",
