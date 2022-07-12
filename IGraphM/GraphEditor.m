@@ -691,28 +691,38 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 
 
 (*(Hold|Dynamic) is there to workaround a bug with Interpretation's Initialization which inserts evaluated Dynamic's arguments*)
-geAction["UpdateEdgesShapes", (Hold|Dynamic) @ state_] := Module[{primitives, graph, vertexEncoded, vertexList}
-, vertexList = state // Query["vertex", Values, "id"]
+geAction["UpdateEdgesShapes", (Hold|Dynamic) @ state_] := Module[{primitives,  vertexEncoded, vertexList}
 
+, primitives = extractEdgePrimitives @ state
+
+; vertexList = state // Query["vertex", Values, "id"]
 ; vertexEncoded = AssociationThread[
     ArrayComponents[vertexList] -> Thread[DynamicLocation[vertexList, Automatic]]
   ]
-      
 
-; graph = Graph[
-    vertexList
-  , state // Query["edge", Values, Tooltip[#type /. #,#id] &]
-  , VertexCoordinates->(state // Query["vertex", Values, "pos"])
-  ]
-  
-; primitives = Normal[ ToExpression@ToBoxes[graph] ]//
-  Cases[#,Tooltip[prim_, eId_, ___] :> (<|"id"->eId,"primitive"->prim|>), Infinity]&;
 ; ( state["edge", #id, "shape"] = ToEdgeShapeFunction[#primitive, vertexEncoded] )& /@ primitives        
 ]
 
+extractEdgePrimitives[state_]:=Module[{graph, vertexList, edgeList, embedding}
+
+, vertexList = state // Query["vertex", Values, "id"]
+; edgeList = state // Query["edge", Values, Tooltip[#type /. #,#id] &]
+; embedding = state // Query["vertex", Values, "pos"]
+
+; graph = Graph[vertexList, edgeList, VertexCoordinates->embedding]
+
+; Cases[
+    Normal @ ToExpression @ ToBoxes @ graph , #, Infinity
+  ]& /@ { 
+    Tooltip[prim_, eId_, ___] :> <| "id" -> eId, "primitive" -> prim |>
+  , TooltipBox[prim_, eId_, ___] :> <| "id" -> ToExpression @ eId, "primitive" -> (prim /. ArrowBox->Arrow /. BezierCurveBox -> BezierCurve) |>
+  } // Flatten
+  
+
+]
 
 
-ToEdgeShapeFunction[p:{Arrowheads[0.],Arrow[b_BezierCurve, ___]}, vertexEncoded_]:={Arrowheads[0.],Arrow[b/.(vertexEncoded)]};
+ToEdgeShapeFunction[p:{Arrowheads[0.], Arrow[b_BezierCurve, ___]}, vertexEncoded_]:={Arrowheads[0.],Arrow[b/.(vertexEncoded)]};
 ToEdgeShapeFunction[Arrow[b_BezierCurve, ___], vertexEncoded_] := Arrow[b/.(vertexEncoded)];
 ToEdgeShapeFunction[p_, ___]:=(Automatic);
 
