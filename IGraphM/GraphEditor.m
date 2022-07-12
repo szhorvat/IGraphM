@@ -428,7 +428,9 @@ stateHandleNarrowRange[state_Association] := Module[
 
 ; newState = state
 ; newState[ "config", "range"] = range
-; newState[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ range ]
+; newState[ "config", "inRangeQ" ] = Quiet @ RegionMember[ Rectangle @@ Transpose@ range ]
+  (* for e.g. 2-node graph the bounds are in fact 1D so region member complains, at least in 11.0
+     currently this issue does not cause problems other than that message *)
 ; newState
 ]
 
