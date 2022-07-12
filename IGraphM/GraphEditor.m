@@ -124,6 +124,7 @@ Interpretation[
 , GraphFromEditorState @ state
   
 , Initialization :> refresh[]
+, SynchronousInitialization -> False
 ]]
 
 
