@@ -47,3 +47,13 @@ VerificationTest[
 , True
 , TestID -> "Path graph narrow range"
 ]
+
+
+VerificationTest[
+  MatchQ[
+  IGraphM`GraphEditor`PackagePrivate`extractEdgePrimitives@toState@Graph@{1->2,2->1}
+, {KeyValuePattern[{"id" -> _String, "primitive" -> Verbatim[Arrow][_BezierCurve,_]}]..}  
+]
+, True
+, TestID -> "extractEdgePrimitives"
+]
