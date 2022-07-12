@@ -28,7 +28,7 @@ $vertexEdgeThickness = 0.5
 $hoverVertexEdgeThickness = 1
 $edgeThickness = 1
 $activeEdgeThickness = 3
-$potentialEdgeColor = Purple
+$potentialEdgeStyle = Directive[Purple, Dashed, Thick]
 $gridLinesCount = 20.
 
 
@@ -264,13 +264,13 @@ edgeTypeToPrimitive[UndirectedEdge["v1", "v2"]]=Line[{#,#2}]&
 
 
 geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex"] }
-, { $potentialEdgeColor,
+, { $potentialEdgeStyle,
     Dynamic[
       If[ 
         stateHasSelectedVertex @ state
       , { 
           (*Disk[DynamicLocation[selV], 1.05 state["config", "realVertexSize"]]
-        , *)Dashed, Line[{
+        , *) Line[{
             DynamicLocation[selV]
           , FrontEnd`MousePosition["Graphics",DynamicLocation[selV]]
           (*TODO: with multiple editors with selected nodes the line is shown of each one of them*)
