@@ -101,9 +101,11 @@ Interpretation[
     
   ; error = False  
 
-  ; geAction["UpdateVertexSize", Symbol["Dynamic"] @ state]
-  ; geAction["UpdateEdgesShapes", Symbol["Dynamic"] @ state]  
-(*(Symbol) is there to workaround a bug with Interpretation's Initialization which inserts evaluated Dynamic's arguments*)
+  ; geAction["UpdateVertexSize", Hold @ state]
+  ; geAction["UpdateEdgesShapes", Hold @  state]  
+    (*(Hold) is there to workaround a bug with Interpretation's Initialization 
+      which inserts evaluated Dynamic's arguments
+    *)
     
   ]]
 
@@ -124,7 +126,7 @@ Interpretation[
 , GraphFromEditorState @ state
   
 , Initialization :> refresh[]
-, SynchronousInitialization -> False
+
 ]]
 
 
@@ -530,11 +532,12 @@ handleDegeneratedRange[range : {{xmin_, xmax_}, {ymin_, ymax_}}] := Module[{}
 ]
 
 
-geAction["UpdateVertexSize", Dynamic @ state_ ] := With[{
+geAction["UpdateVertexSize", _ @ state_ ] := With[{ (* _ @ for interpretation bug fix *)
   boundingBox = Transpose @ state[ "config", "range"]
 , sizeMultiplier = vertexSizeMultiplier @ state["config", "VertexSize"]  
 }
 , state[ "config", "realVertexSize" ] = Norm[ boundingBox ] * sizeMultiplier
+
 ]
 
 vertexSizeMultiplier[vs_?NumericQ] := vs;
@@ -723,7 +726,7 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 (*UpdateEdgesShapes*)
 
 
-geAction["UpdateEdgesShapes", Dynamic @ state_] := Module[{primitives,  vertexEncoded, vertexList}
+geAction["UpdateEdgesShapes", _ @ state_] := Module[{primitives,  vertexEncoded, vertexList}
 
 , primitives = extractEdgePrimitives @ state
 
