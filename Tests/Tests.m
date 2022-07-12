@@ -6407,14 +6407,14 @@ MT[
 (* TODO *)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Proximity graphs*)
 
 
 MTSection["Proximity graphs"]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Common tests*)
 
 
@@ -6437,7 +6437,7 @@ MT[
 ]& /@ {IGDelaunayGraph, IGRelativeNeighborhoodGraph, IGGabrielGraph, IGLuneBetaSkeleton[#, 1.5]&, IGLuneBetaSkeleton[#, 0.5]&, IGCircleBetaSkeleton[#, 1.5]&, IGCircleBetaSkeleton[#, 0.5]&}
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGDelaunayGraph*)
 
 
@@ -6515,7 +6515,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGLuneBetaSkeleton*)
 
 
@@ -6612,7 +6612,7 @@ MT[
 
 MT[
   IGLuneBetaSkeleton[
-    N[PolyhedronData["Icosidodecahedron","Points"][[All,1]]],
+    N[PolyhedronData["Icosidodecahedron", "Vertices"]],
     1.5
   ],
   GraphData["IcosidodecahedralGraph"],
@@ -6701,7 +6701,7 @@ MT[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGGabrielGraph*)
 
 
@@ -6727,14 +6727,14 @@ MT[
 
 MT[
   IGGabrielGraph[
-    N[PolyhedronData["Icosidodecahedron","Points"][[All,1]]]
+    N[PolyhedronData["Icosidodecahedron", "Vertices"]]
   ],
   GraphData["IcosidodecahedralGraph"],
   SameTest -> IGIsomorphicQ
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGRelativeNeighborhoodGraph*)
 
 
@@ -6757,14 +6757,14 @@ MT[
 
 MT[
   IGRelativeNeighborhoodGraph[
-    N[PolyhedronData["Icosidodecahedron","Points"][[All,1]]]
+    N[PolyhedronData["Icosidodecahedron", "Vertices"]]
   ],
   GraphData["IcosidodecahedralGraph"],
   SameTest -> IGIsomorphicQ
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IGCircleBetaSkeleton*)
 
 
