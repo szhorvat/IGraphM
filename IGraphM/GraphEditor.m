@@ -25,11 +25,11 @@ IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working w
 
 $narrowAspectRatioLimit = 10 (* plot range will be adjusted if the initial calculated as is above this limit *)
 $vertexEdgeThickness = 0.5
-$hoverVertexEdgeThickness = 1
+$hoverVertexEdgeThickness = 2
 $edgeThickness = 1
 $activeEdgeThickness = 3
 $potentialEdgeStyle = Directive[Purple, Dashed, Thick]
-$gridLinesCount = 20.
+$gridLinesCount = 30.
 
 
 (* ::Subsection:: *)
@@ -42,7 +42,7 @@ IGGraphEditor // Options = {
 , "SnapToGrid"            -> False (* bool *)
 , "IndexGraph"            -> False (* bool *)
 , "PerformanceLimit"      -> 450   (* _Integer *)
-, VertexLabels            -> False (* | "Name" *)
+, VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
 , ImageSize               -> Automatic
@@ -130,10 +130,10 @@ Interpretation[
 ]]
 
 
-iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> "Currently a Graph argument needs to be Simple And Not Mixed."|>]
+iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> "The input graph must be simple and must not be mixed."|>]
 
 
-iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input"|>]
+iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input."|>]
 
 
 iGraphEditorPanel[Dynamic@state_] := EventHandler[
