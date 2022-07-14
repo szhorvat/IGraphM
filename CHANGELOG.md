@@ -52,7 +52,7 @@ Fixed:
 
 Other:
 
- - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it requires Wolfram Engine 13.0 or later.
+ - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it requires Wolfram Engine 12.2 or later.
  - More robust error handling: when certain serious errors occur in the igraph C library, the Mathematica kernel is no longer forced to shut down.
  - IGraph/M got leaner: smaller binary sizes.
  - Documentation improvements.
