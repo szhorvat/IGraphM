@@ -1,12 +1,16 @@
 ## Revision history for [IGraph/M](README.md)
 
-#### Unreleased
+#### 0.6.1 (unreleased)
+
+#### 0.6.0
 
 Added:
 
   - `IGHarmonicCentrality` and `IGHarmonicCentralityCutoff` compute the harmonic centrality and range-limited harmonic centrality.
   - `IGLinkRank` and `IGPersonalizedLinkRank` compute the equivalent of PageRank for edges.
+  - `IGNeighborhoodCloseness` computes the range-limited closeness centrality, as well as the number of vertices reachable within the given range.
   - `IGFamousGraph` exposes the igraph C library's built-in graph database.
+  - `IGPreferenceGame` and `IGAsymmetricPreferenceGame` create non-growing random graphs based on vertex types.
   - `IGReingoldTilford` and `IGReingoldTilfordCircular` now support the `DirectedEdges` option.
   - `IGFruchtermanReingold` now supports constraining the coordinates of a subset of vertices.
   - `IGPercolationCurve` for efficiently computing the size of the largest component as a function of mean degree while removing edges.
@@ -23,6 +27,7 @@ Changed:
     * `IGCloseness` now uses the distances only to reachable vertices when computing the closeness. In undirected disconnected graphs, it effectively computes the closeness per component. For isolated vertices (or sinks in directed graphs) it now returns `Indeterminate`.
     * `IGBetweenness` and `IGBetweennessCentralization` no longer uses the `Method` option. The calculations are always fast and precise. The precision has been improved.
     * `IGBetweennessEstimate`, `IGEdgeBetweennessEstimate` and `IGClosenessEstimate` have been renamed to `IGBetweennessCutoff`, `IGEdgeBetweennessCutoff` and `IGClosenessCutoff`.
+ - `IGRelativeNeighborhoodGraph` now assumes the `β -> 2`, `β < 2` limit instead of `β = 2`.
  - `IGGirth` now returns `Infinity` for the null graph.
  - `IGDiameter` now returns `Indeterminate` for the null graph.
  - `IGChordalQ`, `IGChordalCompletion` and `IGMaximumCardinalitySearch` now support non-simple graphs.
@@ -45,12 +50,14 @@ Fixed:
  - `IGCallawayTraisGame` no longer rejects zeros in the preference matrix.
  - An error would be triggered when some functions returned a zero-size matrix.
  - Fixed a memory leak in the Nauty format reader.
+ - Fixed a conflict with Mathematica 13.0's built-in isomorphism functions which could lead to a crash on Linux.
 
 Other:
 
- - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it required Wolfram Engine 12.3 or later.
+ - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it requires Wolfram Engine 12.2 or later.
  - More robust error handling: when certain serious errors occur in the igraph C library, the Mathematica kernel is no longer forced to shut down.
  - IGraph/M got leaner: smaller binary sizes.
+ - Documentation improvements.
 
 #### v0.5.1
 
