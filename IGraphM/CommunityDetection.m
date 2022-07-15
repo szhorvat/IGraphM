@@ -237,7 +237,7 @@ IGCompareCommunities::usage =
     "IGCompareCommunities[clusterdata1, clusterdata2, {method1, \[Ellipsis]}] compares two community structures using each given method.\n" <>
     "IGCompareCommunities[graph, communities1, communities2] compares two partitionings of the graph vertices into communities using all available methods.\n" <>
     "IGCompareCommunities[graph, communities1, communities2, method] compares two community structures using method.\n" <>
-    "IGCompareCommunities[graph, communities1, communities2, {method1, \[Ellipsis]}] compares two community structures using each given method.\n"
+    "IGCompareCommunities[graph, communities1, communities2, {method1, \[Ellipsis]}] compares two community structures using each given method.\n" <>
     "IGCompareCommunities[vertexList, communities1, communities2] uses the given vertex list.";
 
 igCompareCommunitiesMethods = {
