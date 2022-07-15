@@ -4,6 +4,17 @@ toState = IGraphM`GraphEditor`PackagePrivate`GraphToEditorState;
 
 
 VerificationTest[
+  {
+    SetOptions[IGGraphEditor,ImageSize->200]
+  , toState[]["config", "ImageSize"]
+  , SetOptions[IGGraphEditor,ImageSize->Automatic]
+  } [[2]]
+, 200
+, TestID -> "SetOptions"
+]
+
+
+VerificationTest[
   state = toState @ Graph[{1<->2}]
 ; state["config", "DirectedEdges"]
 , False

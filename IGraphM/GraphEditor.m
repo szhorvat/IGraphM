@@ -345,21 +345,17 @@ GraphFromEditorState[state_, 1] := Module[{v, e, pos, graph}
 (*to state*)
 
 
-optionsToConfig // Options = Options @ IGGraphEditor;
 
-optionsToConfig[OptionsPattern[]] := Association[
-  ToString[#] -> OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
-]
+GraphToEditorState[ ]:=GraphToEditorState @ Association @ Options @ IGGraphEditor
 
-
-GraphToEditorState[ opt:OptionsPattern[] ] := Module[{state}
+GraphToEditorState[ opts_Association ] := Module[{state}
 , state = <|
       "vertex"         -> <||>
     , "edge"           -> <||>
     , "selectedVertex" -> Null
     , "version"        -> $stateVersion
     , "config"         -> <|
-        optionsToConfig[opt]
+        optionsToConfig[opts]
       , "vCounter"->0
       , "eCounter" ->0
       , "range" -> {{-1, 1}, {-1, 1}}
@@ -372,13 +368,18 @@ GraphToEditorState[ opt:OptionsPattern[] ] := Module[{state}
 ]   
 
 
+
+optionsToConfig[options_Association] := KeyMap[ToString] @ options
+
+
+
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
   {state, v, e, pos }
 , v = VertexList[g] 
 ; pos = GraphEmbedding @ g 
 ; e = EdgeList[g] 
 
-; state = GraphToEditorState[opt]
+; state = GraphToEditorState[<| Options @ IGGraphEditor, opt |>]
 
 ; state["vertex"] = Association @ Map[ (#id -> #) & ] @ MapThread[createVertex, {v, pos}]
 
