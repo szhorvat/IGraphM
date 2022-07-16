@@ -3961,369 +3961,10 @@ Cell[CellGroupData[{
 Cell["IGPreferenceGame", \
 "Subsubsection",ExpressionUUID->"edfe4771-3ed1-44f9-a549-ee4276a5810b"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
  RowBox[{"?", 
   "IGPreferenceGame"}]], \
 "Input",ExpressionUUID->"519ea266-41d7-4f5d-a500-e1fbc8bde2f9"],
-
-Cell[BoxData[
- InterpretationBox[
-  StyleBox[
-   FrameBox[
-    DynamicModuleBox[{System`InformationDump`open$$ = False, 
-     System`InformationDump`mouseOver$$ = False}, 
-     PaneSelectorBox[{True->
-      TagBox[GridBox[{
-         {
-          ItemBox[
-           PaneBox[
-            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
-             StripOnInput->False,
-             BaseStyle -> None],
-            FrameMargins->{{4, 0}, {-1, 1}}],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           PaneBox[
-            
-            StyleBox["\<\"IGPreferenceGame[n, typeWeights, \
-preferenceMatrix]\"\>", "InformationUsageText",
-             StripOnInput->False,
-             LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}}],
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False]},
-         {
-          PaneBox[GridBox[{
-             {
-              
-              DynamicModuleBox[{System`InformationDump`open$$ = {
-               False, False, False, False, False, False}}, 
-               StyleBox[GridBox[{
-                  {
-                   TagBox[
-                    TooltipBox[
-                    
-                    StyleBox["\<\" Default Definitions\"\>", 
-                    "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"DefaultValues\"",
-                    TooltipStyle->"TextStyling"],
-                    Annotation[#, "DefaultValues", "Tooltip"]& ], 
-                   InterpretationBox[GridBox[{
-                    {
-                    RowBox[{
-                    RowBox[{
-                    "SyntaxInformation", "[", "IGPreferenceGame", "]"}], "=", 
-                    
-                    RowBox[{"{", 
-                    RowBox[{
-                    RowBox[{"\<\"ArgumentsPattern\"\>", "\[Rule]", 
-                    RowBox[{"{", 
-                    RowBox[{"_", ",", "_", ",", "_", ",", 
-                    RowBox[{"OptionsPattern", "[", "]"}]}], "}"}]}], ",", 
-                    RowBox[{"\<\"OptionNames\"\>", "\[Rule]", 
-                    RowBox[{"{", 
-                    
-                    RowBox[{"\<\"AlignmentPoint\"\>", 
-                    ",", "\<\"AnnotationRules\"\>", 
-                    ",", "\<\"AspectRatio\"\>", ",", "\<\"Axes\"\>", 
-                    ",", "\<\"AxesLabel\"\>", ",", "\<\"AxesOrigin\"\>", 
-                    ",", "\<\"AxesStyle\"\>", ",", "\<\"Background\"\>", 
-                    ",", "\<\"BaselinePosition\"\>", ",", "\<\"BaseStyle\"\>",
-                     ",", "\<\"ContentSelectable\"\>", 
-                    ",", "\<\"DirectedEdges\"\>", ",", "\<\"EdgeCapacity\"\>",
-                     ",", "\<\"EdgeCost\"\>", ",", "\<\"EdgeLabels\"\>", 
-                    ",", "\<\"EdgeLabelStyle\"\>", 
-                    ",", "\<\"EdgeShapeFunction\"\>", 
-                    ",", "\<\"EdgeStyle\"\>", ",", "\<\"EdgeWeight\"\>", 
-                    ",", "\<\"Editable\"\>", ",", "\<\"Epilog\"\>", 
-                    ",", "\<\"FormatType\"\>", ",", "\<\"Frame\"\>", 
-                    ",", "\<\"FrameLabel\"\>", ",", "\<\"FrameStyle\"\>", 
-                    ",", "\<\"FrameTicks\"\>", ",", "\<\"FrameTicksStyle\"\>",
-                     ",", "\<\"GraphHighlight\"\>", 
-                    ",", "\<\"GraphHighlightStyle\"\>", 
-                    ",", "\<\"GraphLayout\"\>", ",", "\<\"GraphRoot\"\>", 
-                    ",", "\<\"GraphStyle\"\>", ",", "\<\"GridLines\"\>", 
-                    ",", "\<\"GridLinesStyle\"\>", 
-                    ",", "\<\"ImageMargins\"\>", ",", "\<\"ImagePadding\"\>", 
-                    ",", "\<\"ImageSize\"\>", ",", "\<\"LabelStyle\"\>", 
-                    ",", "\<\"PerformanceGoal\"\>", ",", "\<\"PlotLabel\"\>", 
-                    ",", "\<\"PlotRange\"\>", 
-                    ",", "\<\"PlotRangeClipping\"\>", 
-                    ",", "\<\"PlotRangePadding\"\>", 
-                    ",", "\<\"PlotRegion\"\>", ",", "\<\"PlotTheme\"\>", 
-                    ",", "\<\"Prolog\"\>", ",", "\<\"Properties\"\>", 
-                    ",", "\<\"RotateLabel\"\>", ",", "\<\"SelfLoops\"\>", 
-                    ",", "\<\"Ticks\"\>", ",", "\<\"TicksStyle\"\>", 
-                    ",", "\<\"VertexCapacity\"\>", 
-                    ",", "\<\"VertexCoordinates\"\>", 
-                    ",", "\<\"VertexLabels\"\>", 
-                    ",", "\<\"VertexLabelStyle\"\>", 
-                    ",", "\<\"VertexShape\"\>", 
-                    ",", "\<\"VertexShapeFunction\"\>", 
-                    ",", "\<\"VertexSize\"\>", ",", "\<\"VertexStyle\"\>", 
-                    ",", "\<\"VertexWeight\"\>"}], "}"}]}]}], "}"}]}]},
-                    {" "}
-                    },
-                    BaselinePosition->{Baseline, {1, 1}},
-                    
-                    GridBoxAlignment->{
-                    "Columns" -> {{Left}}, "Rows" -> {{Baseline}}}],
-                    
-                    ColumnForm[{
-                    SyntaxInformation[IGraphM`IGPreferenceGame] = {
-                    "ArgumentsPattern" -> {
-                    Blank[], 
-                    Blank[], 
-                    Blank[], 
-                    OptionsPattern[]}, 
-                    "OptionNames" -> {
-                    "AlignmentPoint", "AnnotationRules", "AspectRatio", 
-                    "Axes", "AxesLabel", "AxesOrigin", "AxesStyle", 
-                    "Background", "BaselinePosition", "BaseStyle", 
-                    "ContentSelectable", "DirectedEdges", "EdgeCapacity", 
-                    "EdgeCost", "EdgeLabels", "EdgeLabelStyle", 
-                    "EdgeShapeFunction", "EdgeStyle", "EdgeWeight", 
-                    "Editable", "Epilog", "FormatType", "Frame", "FrameLabel",
-                     "FrameStyle", "FrameTicks", "FrameTicksStyle", 
-                    "GraphHighlight", "GraphHighlightStyle", "GraphLayout", 
-                    "GraphRoot", "GraphStyle", "GridLines", "GridLinesStyle", 
-                    "ImageMargins", "ImagePadding", "ImageSize", "LabelStyle",
-                     "PerformanceGoal", "PlotLabel", "PlotRange", 
-                    "PlotRangeClipping", "PlotRangePadding", "PlotRegion", 
-                    "PlotTheme", "Prolog", "Properties", "RotateLabel", 
-                    "SelfLoops", "Ticks", "TicksStyle", "VertexCapacity", 
-                    "VertexCoordinates", "VertexLabels", "VertexLabelStyle", 
-                    "VertexShape", "VertexShapeFunction", "VertexSize", 
-                    "VertexStyle", "VertexWeight"}}, 
-                    SpaceForm[1]}],
-                    Editable->False]},
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Options\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"Options\"",
-                    TooltipStyle->"TextStyling"],
-                    Annotation[#, "Options", "Tooltip"]& ], 
-                   RowBox[{"{", 
-                    RowBox[{
-                    RowBox[{"DirectedEdges", "\[Rule]", "False"}], ",", 
-                    RowBox[{"SelfLoops", "\[Rule]", "False"}]}], "}"}]},
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Attributes\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"Attributes\"",
-                    TooltipStyle->"TextStyling"],
-                    Annotation[#, "Attributes", "Tooltip"]& ], 
-                   RowBox[{"{", 
-                    RowBox[{"Protected", ",", "ReadProtected"}], "}"}]},
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"FullName\"",
-                    TooltipStyle->"TextStyling"],
-                    
-                    Annotation[#, "FullName", 
-                    "Tooltip"]& ], "\<\"IGraphM`IGPreferenceGame\"\>"}
-                 },
-                 AutoDelete->False,
-                 GridBoxAlignment->{"Columns" -> {Right, Left}},
-                 GridBoxDividers->None,
-                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
-                 GridBoxSpacings->{"Columns" -> {
-                    Offset[0.27999999999999997`], {
-                    Offset[0.5599999999999999]}, 
-                    Offset[0.27999999999999997`]}, "Rows" -> {
-                    Offset[0.2], {
-                    Offset[0.8]}, 
-                    Offset[0.2]}}], "DialogStyle",
-                StripOnInput->False],
-               DynamicModuleValues:>{}]}
-            },
-            DefaultBaseStyle->"Column",
-            GridBoxAlignment->{"Columns" -> {{Left}}},
-            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
-            
-            GridBoxItemSize->{
-             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
-            GridBoxSpacings->{"Columns" -> {
-                Offset[0.27999999999999997`], {
-                 Offset[0.5599999999999999]}, 
-                Offset[0.27999999999999997`]}, "Rows" -> {
-                Offset[0.2], {
-                 Offset[3.6]}, 
-                Offset[0.2]}}],
-           FrameMargins->{{6, 6}, {6, 3}}], ""},
-         {
-          ItemBox[
-           TagBox[
-            ButtonBox[
-             PaneSelectorBox[{False->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "UpPointerOpener"]], True->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
-              System`InformationDump`mouseOver$$]],
-             Alignment->Left,
-             Appearance->{"Default" -> None},
-             
-             ButtonFunction:>FEPrivate`Set[
-              System`InformationDump`open$$, False],
-             Evaluator->Automatic,
-             FrameMargins->{{9, 0}, {0, 0}},
-             ImageMargins->0,
-             ImageSize->Full,
-             Method->"Preemptive"],
-            
-            EventHandlerTag[{
-             "MouseEntered" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
-              "MouseExited" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
-              Method -> "Preemptive", PassEventsDown -> Automatic, 
-              PassEventsUp -> True}]],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], "\[SpanFromLeft]"}
-        },
-        AutoDelete->False,
-        FrameStyle->Directive[
-          GrayLevel[0.8], 
-          Thickness[Tiny]],
-        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
-        GridBoxDividers->{
-         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
-        GridBoxItemSize->{
-         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-       "Grid"], False->
-      TagBox[GridBox[{
-         {
-          ItemBox[
-           PaneBox[
-            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
-             StripOnInput->False],
-            FrameMargins->{{4, 0}, {-1, 1}}],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           PaneBox[
-            
-            StyleBox["\<\"IGPreferenceGame[n, typeWeights, \
-preferenceMatrix]\"\>", "InformationUsageText",
-             StripOnInput->False,
-             LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}}],
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           TagBox[
-            ButtonBox[
-             PaneSelectorBox[{False->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "DownPointerOpener"],
-               ImageSizeCache->{10., {2., 8.}}], True->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "DownPointerOpenerHot"],
-               ImageSizeCache->{10., {2., 8.}}]}, Dynamic[
-              System`InformationDump`mouseOver$$]],
-             Alignment->Left,
-             Appearance->{"Default" -> None},
-             
-             ButtonFunction:>FEPrivate`Set[
-              System`InformationDump`open$$, True],
-             Evaluator->Automatic,
-             FrameMargins->{{9, 0}, {0, 0}},
-             ImageMargins->0,
-             ImageSize->Full,
-             Method->"Preemptive"],
-            
-            EventHandlerTag[{
-             "MouseEntered" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
-              "MouseExited" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
-              Method -> "Preemptive", PassEventsDown -> Automatic, 
-              PassEventsUp -> True}]],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], "\[SpanFromLeft]"}
-        },
-        AutoDelete->False,
-        FrameStyle->Directive[
-          GrayLevel[0.8], 
-          Thickness[Tiny]],
-        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
-        GridBoxDividers->{
-         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
-        GridBoxItemSize->{
-         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-       "Grid"]}, Dynamic[System`InformationDump`open$$],
-      BaselinePosition->Baseline,
-      FrameMargins->0,
-      ImageSize->Automatic],
-     DynamicModuleValues:>{}],
-    BaseStyle->"InformationGridFrame",
-    StripOnInput->False], "InformationGridPlain",
-   StripOnInput->False],
-  InformationData[<|
-   "ObjectType" -> "Symbol", "Usage" -> 
-    "IGPreferenceGame[n, typeWeights, preferenceMatrix]", "Documentation" -> 
-    None, "OwnValues" -> None, "UpValues" -> None, "DownValues" -> None, 
-    "SubValues" -> None, "DefaultValues" -> 
-    Information`InformationValueForm[
-     DefaultValues, IGraphM`IGPreferenceGame, {
-      SyntaxInformation[IGraphM`IGPreferenceGame] -> {"ArgumentsPattern" -> {
-           Blank[], 
-           Blank[], 
-           Blank[], 
-           OptionsPattern[]}, 
-         "OptionNames" -> {
-          "AlignmentPoint", "AnnotationRules", "AspectRatio", "Axes", 
-           "AxesLabel", "AxesOrigin", "AxesStyle", "Background", 
-           "BaselinePosition", "BaseStyle", "ContentSelectable", 
-           "DirectedEdges", "EdgeCapacity", "EdgeCost", "EdgeLabels", 
-           "EdgeLabelStyle", "EdgeShapeFunction", "EdgeStyle", "EdgeWeight", 
-           "Editable", "Epilog", "FormatType", "Frame", "FrameLabel", 
-           "FrameStyle", "FrameTicks", "FrameTicksStyle", "GraphHighlight", 
-           "GraphHighlightStyle", "GraphLayout", "GraphRoot", "GraphStyle", 
-           "GridLines", "GridLinesStyle", "ImageMargins", "ImagePadding", 
-           "ImageSize", "LabelStyle", "PerformanceGoal", "PlotLabel", 
-           "PlotRange", "PlotRangeClipping", "PlotRangePadding", "PlotRegion",
-            "PlotTheme", "Prolog", "Properties", "RotateLabel", "SelfLoops", 
-           "Ticks", "TicksStyle", "VertexCapacity", "VertexCoordinates", 
-           "VertexLabels", "VertexLabelStyle", "VertexShape", 
-           "VertexShapeFunction", "VertexSize", "VertexStyle", 
-           "VertexWeight"}}}], "NValues" -> None, "FormatValues" -> None, 
-    "Options" -> {DirectedEdges -> False, SelfLoops -> False}, 
-    "Attributes" -> {Protected, ReadProtected}, "FullName" -> 
-    "IGraphM`IGPreferenceGame"|>, 
-   False]]], "Output",ExpressionUUID->"d9584a22-ddb1-4009-8924-15de6139a7c0"]
-}, Open  ]],
 
 Cell[TextData[{
  StyleBox["Experimental:",
@@ -4334,37 +3975,35 @@ Cell[TextData[{
 Cell[TextData[{
  Cell[BoxData[
   RowBox[{"IGPreferenceGame", "[", 
-   RowBox[{"n", ",", "w", ",", "p"}], "]"}]],
-  FormatType->StandardForm,ExpressionUUID->
+   RowBox[{"n", ",", "w", ",", "p"}], "]"}]],ExpressionUUID->
   "24e0ad40-50ae-415e-bca4-4b29c53eaffe"],
  " first samples ",
- Cell[BoxData["n"],
-  FormatType->StandardForm,ExpressionUUID->
-  "ea8bd737-3cb8-4389-89a1-7ab4fa1a78c9"],
+ Cell[BoxData["n"],ExpressionUUID->"ea8bd737-3cb8-4389-89a1-7ab4fa1a78c9"],
  " vertices of different types, each having type ",
- Cell[BoxData["i"],
-  FormatType->StandardForm,ExpressionUUID->
-  "6f0fe251-1de2-49dc-84a1-a97e8d32ece8"],
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "03a1b691-cb64-4046-ac80-d172da588261"],
  " with probability proportional to ",
  Cell[BoxData[
-  RowBox[{"w", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}]],
-  FormatType->StandardForm,ExpressionUUID->
-  "4e278f43-cb9b-4481-9a7c-324a4003724e"],
- ". Then it connects each pair of vertices having types ",
- Cell[BoxData["i"],
-  FormatType->StandardForm,ExpressionUUID->
-  "90fb4e86-3302-4ef3-982e-d0c7e931e8a7"],
+  FormBox[
+   SubscriptBox["w", "i"], TraditionalForm]],ExpressionUUID->
+  "4b2c345c-8942-4808-9767-f7d0f2a0e070"],
+ ". Then it connects vertices with types ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "5c272399-4c70-40c6-89c0-c6f09d866e7e"],
  " and ",
- Cell[BoxData["j"],
-  FormatType->StandardForm,ExpressionUUID->
-  "602a40a6-a194-4628-beea-3efeebb5db18"],
+ Cell[BoxData[
+  FormBox["j", TraditionalForm]],ExpressionUUID->
+  "5589c84d-d1d2-4c7a-8a68-3a626ad438b0"],
  " with probability ",
  Cell[BoxData[
-  RowBox[{"p", "\[LeftDoubleBracket]", 
-   RowBox[{"i", ",", "j"}], "\[RightDoubleBracket]"}]],
-  FormatType->StandardForm,ExpressionUUID->
-  "4a726a2b-5c15-4fda-adad-9b0b941271e2"],
- "."
+  FormBox[
+   SubscriptBox["p", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
+  ExpressionUUID->"dfaaca7d-6c03-4a17-acb2-8170fea79aaa"],
+ ". This is similar to a stochastic block model, but the vertex types are \
+chosen randomly."
 }], "Text",ExpressionUUID->"ad9884f9-5e39-4cf8-b01e-29a38d72252f"],
 
 Cell["The available options are:", \
@@ -4372,23 +4011,37 @@ Cell["The available options are:", \
 
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"DirectedEdges", "->", "True"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"DirectedEdges", "->", "True"}]],ExpressionUUID->
   "8ca278ca-0d56-4322-a1ac-ec21af821f01"],
  " creates a directed graph."
 }], "Item",ExpressionUUID->"f2e820e8-c119-4072-8147-b9f08b01e16f"],
 
-Cell[CellGroupData[{
-
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"SelfLoops", "->", "True"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"SelfLoops", "->", "True"}]],ExpressionUUID->
   "66bc4280-276c-45cf-b71a-4904afa0aedf"],
  " allows self-loops."
 }], "Item",ExpressionUUID->"4dfb5334-6891-4e36-acfc-e5a5970ee552"],
 
-Cell[CellGroupData[{
+Cell["\<\
+Generate a graph with three groups of vertices of different sizes, with \
+intra-group connections being much more frequent than inter-group ones.\
+\>", "Text",ExpressionUUID->"072a0e11-d4c0-49ec-b1ee-48b49bf89c60"],
+
+Cell[BoxData[
+ RowBox[{"IGPreferenceGame", "[", 
+  RowBox[{"60", ",", 
+   RowBox[{"{", 
+    RowBox[{"3", ",", "6", ",", "10"}], "}"}], ",", 
+   RowBox[{"0.05", "+", 
+    RowBox[{"0.5", 
+     RowBox[{"IdentityMatrix", "[", "3", "]"}]}]}]}], 
+  "]"}]], "Input",ExpressionUUID->"bfc8933d-e2bd-440b-bfc6-3815ebe4fefb"],
+
+Cell["\<\
+Generate a directed graph with low-probability intra-group connections and \
+high probability unidirectional inter-group connections.\
+\>", "Text",ExpressionUUID->"18a1b1f9-7ef0-45ec-9b9b-2dd71b873f84"],
 
 Cell[BoxData[
  RowBox[{"IGPreferenceGame", "[", 
@@ -4396,57 +4049,11 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{"0.3", ",", "0.7"}], "}"}], ",", 
    RowBox[{"(", GridBox[{
-      {"0.01", "0.3"},
-      {"0.3", "0.05"}
-     }], ")"}]}], 
-  "]"}]], "Input",ExpressionUUID->"bfc8933d-e2bd-440b-bfc6-3815ebe4fefb"],
-
-Cell[BoxData[
- GraphicsBox[
-  NamespaceBox["NetworkGraphics",
-   DynamicModuleBox[{Typeset`graph = HoldComplete[
-     Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-       20}, {Null, {{1, 2}, {2, 3}, {3, 14}, {2, 4}, {4, 19}, {2, 5}, {2, 
-       6}, {6, 16}, {8, 14}, {9, 16}, {9, 19}, {11, 14}, {2, 12}, {12, 19}, {
-       13, 16}, {14, 15}, {17, 19}, {14, 18}, {18, 19}, {16, 20}, {12, 15}, {
-       1, 17}}}]]}, 
-    TagBox[GraphicsGroupBox[GraphicsComplexBox[CompressedData["
-1:eJxTTMoPSmViYGAQAWIQvZBV7shtOy6HJq4zPu+nMB94M1U/au4WboesG88b
-gnu+7m93fV+ZxsTkELffkK3T6PP+zcnPzOeU8jvMDqouKH/3e3+5ydvaT808
-DhmaNT1rpW/sn96z/6CApLBDTd+1xKP6X/enQ8TtK1UEmPb+4zuQAOV/e8Fw
-YNp0hgN2mZ8l3+UKO/zcc0dw3WPGAwGP2a8ymfE7wNWvWydW9+2m/ZOkmy17
-jL/uvyz0xVB6NpvD12mzNLY3/tnvtktq/utJUg4WNdrrXG2+7r+VfPnmtsYv
-9p3lN7zU9/zeH6Ms8JN//1/7ea+n36p98Hs/p9XDXz6W4g4/H865a7L59/5V
-Oi7VHPY8DvJSH+dd/M5x4H1u6LsyOyYH8Xafuk09TAeUTGsXPVrA4yD5sPHO
-oalMB3pnb/C6tEHK4dFUJQmLLoYDAGzLn4Y=
-       "], {
-        {Hue[0.6, 0.7, 0.5], Opacity[0.7], Arrowheads[0.], 
-         ArrowBox[{{1, 2}, {1, 17}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {2, 12}, {
-          3, 14}, {4, 19}, {6, 16}, {8, 14}, {9, 16}, {9, 19}, {11, 14}, {12, 
-          15}, {12, 19}, {13, 16}, {14, 15}, {14, 18}, {16, 20}, {17, 19}, {
-          18, 19}}, 0.049979935339510784`]}, 
-        {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[0.7]}], 
-         DiskBox[1, 0.049979935339510784], DiskBox[2, 0.049979935339510784], 
-         DiskBox[3, 0.049979935339510784], DiskBox[4, 0.049979935339510784], 
-         DiskBox[5, 0.049979935339510784], DiskBox[6, 0.049979935339510784], 
-         DiskBox[7, 0.049979935339510784], DiskBox[8, 0.049979935339510784], 
-         DiskBox[9, 0.049979935339510784], DiskBox[10, 0.049979935339510784], 
-         DiskBox[11, 0.049979935339510784], DiskBox[12, 0.049979935339510784],
-          DiskBox[13, 0.049979935339510784], 
-         DiskBox[14, 0.049979935339510784], DiskBox[15, 0.049979935339510784],
-          DiskBox[16, 0.049979935339510784], 
-         DiskBox[17, 0.049979935339510784], DiskBox[18, 0.049979935339510784],
-          DiskBox[19, 0.049979935339510784], 
-         DiskBox[20, 0.049979935339510784]}}]],
-     MouseAppearanceTag["NetworkGraphics"]],
-    AllowKernelInitialization->False]],
-  DefaultBaseStyle->{
-   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
-  FormatType->TraditionalForm,
-  FrameTicks->
-   None]], "Output",ExpressionUUID->"099228a3-ad04-4111-9bd5-b5a73d9143b4"]
-}, Open  ]]
-}, Open  ]]
+      {"0.05", "0.3"},
+      {"0", "0.05"}
+     }], ")"}], ",", 
+   RowBox[{"DirectedEdges", "->", "True"}]}], 
+  "]"}]], "Input",ExpressionUUID->"661c0fa9-079e-4a4e-a5fb-773175b917b6"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -4454,368 +4061,10 @@ Cell[CellGroupData[{
 Cell["IGAsymmetricPreferenceGame", \
 "Subsubsection",ExpressionUUID->"19e22d59-95a1-4ea0-865d-7b8537b89579"],
 
-Cell[CellGroupData[{
-
 Cell[BoxData[
  RowBox[{"?", 
   "IGAsymmetricPreferenceGame"}]], \
 "Input",ExpressionUUID->"4ab27ed0-995f-4d8b-b51b-847a69345094"],
-
-Cell[BoxData[
- InterpretationBox[
-  StyleBox[
-   FrameBox[
-    DynamicModuleBox[{System`InformationDump`open$$ = False, 
-     System`InformationDump`mouseOver$$ = False}, 
-     PaneSelectorBox[{True->
-      TagBox[GridBox[{
-         {
-          ItemBox[
-           PaneBox[
-            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
-             StripOnInput->False,
-             BaseStyle -> None],
-            FrameMargins->{{4, 0}, {-1, 1}}],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           PaneBox[
-            
-            StyleBox["\<\"IGAsymmetricPreferenceGame[n, typeWeightsMatrix, \
-preferenceMatrix]\"\>", "InformationUsageText",
-             StripOnInput->False,
-             LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}}],
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False]},
-         {
-          PaneBox[GridBox[{
-             {
-              
-              DynamicModuleBox[{System`InformationDump`open$$ = {
-               False, False, False, False, False, False}}, 
-               StyleBox[GridBox[{
-                  {
-                   TagBox[
-                    TooltipBox[
-                    
-                    StyleBox["\<\" Default Definitions\"\>", 
-                    "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"DefaultValues\"",
-                    TooltipStyle->"TextStyling"],
-                    Annotation[#, "DefaultValues", "Tooltip"]& ], 
-                   InterpretationBox[GridBox[{
-                    {
-                    RowBox[{
-                    RowBox[{
-                    "SyntaxInformation", "[", "IGAsymmetricPreferenceGame", 
-                    "]"}], "=", 
-                    RowBox[{"{", 
-                    RowBox[{
-                    RowBox[{"\<\"ArgumentsPattern\"\>", "\[Rule]", 
-                    RowBox[{"{", 
-                    RowBox[{"_", ",", "_", ",", "_", ",", 
-                    RowBox[{"OptionsPattern", "[", "]"}]}], "}"}]}], ",", 
-                    RowBox[{"\<\"OptionNames\"\>", "\[Rule]", 
-                    RowBox[{"{", 
-                    
-                    RowBox[{"\<\"AlignmentPoint\"\>", 
-                    ",", "\<\"AnnotationRules\"\>", 
-                    ",", "\<\"AspectRatio\"\>", ",", "\<\"Axes\"\>", 
-                    ",", "\<\"AxesLabel\"\>", ",", "\<\"AxesOrigin\"\>", 
-                    ",", "\<\"AxesStyle\"\>", ",", "\<\"Background\"\>", 
-                    ",", "\<\"BaselinePosition\"\>", ",", "\<\"BaseStyle\"\>",
-                     ",", "\<\"ContentSelectable\"\>", 
-                    ",", "\<\"DirectedEdges\"\>", ",", "\<\"EdgeCapacity\"\>",
-                     ",", "\<\"EdgeCost\"\>", ",", "\<\"EdgeLabels\"\>", 
-                    ",", "\<\"EdgeLabelStyle\"\>", 
-                    ",", "\<\"EdgeShapeFunction\"\>", 
-                    ",", "\<\"EdgeStyle\"\>", ",", "\<\"EdgeWeight\"\>", 
-                    ",", "\<\"Editable\"\>", ",", "\<\"Epilog\"\>", 
-                    ",", "\<\"FormatType\"\>", ",", "\<\"Frame\"\>", 
-                    ",", "\<\"FrameLabel\"\>", ",", "\<\"FrameStyle\"\>", 
-                    ",", "\<\"FrameTicks\"\>", ",", "\<\"FrameTicksStyle\"\>",
-                     ",", "\<\"GraphHighlight\"\>", 
-                    ",", "\<\"GraphHighlightStyle\"\>", 
-                    ",", "\<\"GraphLayout\"\>", ",", "\<\"GraphRoot\"\>", 
-                    ",", "\<\"GraphStyle\"\>", ",", "\<\"GridLines\"\>", 
-                    ",", "\<\"GridLinesStyle\"\>", 
-                    ",", "\<\"ImageMargins\"\>", ",", "\<\"ImagePadding\"\>", 
-                    ",", "\<\"ImageSize\"\>", ",", "\<\"LabelStyle\"\>", 
-                    ",", "\<\"PerformanceGoal\"\>", ",", "\<\"PlotLabel\"\>", 
-                    ",", "\<\"PlotRange\"\>", 
-                    ",", "\<\"PlotRangeClipping\"\>", 
-                    ",", "\<\"PlotRangePadding\"\>", 
-                    ",", "\<\"PlotRegion\"\>", ",", "\<\"PlotTheme\"\>", 
-                    ",", "\<\"Prolog\"\>", ",", "\<\"Properties\"\>", 
-                    ",", "\<\"RotateLabel\"\>", ",", "\<\"SelfLoops\"\>", 
-                    ",", "\<\"Ticks\"\>", ",", "\<\"TicksStyle\"\>", 
-                    ",", "\<\"VertexCapacity\"\>", 
-                    ",", "\<\"VertexCoordinates\"\>", 
-                    ",", "\<\"VertexLabels\"\>", 
-                    ",", "\<\"VertexLabelStyle\"\>", 
-                    ",", "\<\"VertexShape\"\>", 
-                    ",", "\<\"VertexShapeFunction\"\>", 
-                    ",", "\<\"VertexSize\"\>", ",", "\<\"VertexStyle\"\>", 
-                    ",", "\<\"VertexWeight\"\>"}], "}"}]}]}], "}"}]}]},
-                    {" "}
-                    },
-                    BaselinePosition->{Baseline, {1, 1}},
-                    
-                    GridBoxAlignment->{
-                    "Columns" -> {{Left}}, "Rows" -> {{Baseline}}}],
-                    
-                    ColumnForm[{
-                    SyntaxInformation[IGraphM`IGAsymmetricPreferenceGame] = {
-                    "ArgumentsPattern" -> {
-                    Blank[], 
-                    Blank[], 
-                    Blank[], 
-                    OptionsPattern[]}, 
-                    "OptionNames" -> {
-                    "AlignmentPoint", "AnnotationRules", "AspectRatio", 
-                    "Axes", "AxesLabel", "AxesOrigin", "AxesStyle", 
-                    "Background", "BaselinePosition", "BaseStyle", 
-                    "ContentSelectable", "DirectedEdges", "EdgeCapacity", 
-                    "EdgeCost", "EdgeLabels", "EdgeLabelStyle", 
-                    "EdgeShapeFunction", "EdgeStyle", "EdgeWeight", 
-                    "Editable", "Epilog", "FormatType", "Frame", "FrameLabel",
-                     "FrameStyle", "FrameTicks", "FrameTicksStyle", 
-                    "GraphHighlight", "GraphHighlightStyle", "GraphLayout", 
-                    "GraphRoot", "GraphStyle", "GridLines", "GridLinesStyle", 
-                    "ImageMargins", "ImagePadding", "ImageSize", "LabelStyle",
-                     "PerformanceGoal", "PlotLabel", "PlotRange", 
-                    "PlotRangeClipping", "PlotRangePadding", "PlotRegion", 
-                    "PlotTheme", "Prolog", "Properties", "RotateLabel", 
-                    "SelfLoops", "Ticks", "TicksStyle", "VertexCapacity", 
-                    "VertexCoordinates", "VertexLabels", "VertexLabelStyle", 
-                    "VertexShape", "VertexShapeFunction", "VertexSize", 
-                    "VertexStyle", "VertexWeight"}}, 
-                    SpaceForm[1]}],
-                    Editable->False]},
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Options\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"Options\"",
-                    TooltipStyle->"TextStyling"],
-                    Annotation[#, "Options", "Tooltip"]& ], 
-                   RowBox[{"SelfLoops", "\[Rule]", "False"}]},
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Attributes\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"Attributes\"",
-                    TooltipStyle->"TextStyling"],
-                    Annotation[#, "Attributes", "Tooltip"]& ], 
-                   RowBox[{"{", 
-                    RowBox[{"Protected", ",", "ReadProtected"}], "}"}]},
-                  {
-                   TagBox[
-                    TooltipBox[
-                    StyleBox["\<\" Full Name\"\>", "InformationRowLabel",
-                    StripOnInput->False],
-                    "\"FullName\"",
-                    TooltipStyle->"TextStyling"],
-                    
-                    Annotation[#, "FullName", 
-                    "Tooltip"]& ], \
-"\<\"IGraphM`IGAsymmetricPreferenceGame\"\>"}
-                 },
-                 AutoDelete->False,
-                 GridBoxAlignment->{"Columns" -> {Right, Left}},
-                 GridBoxDividers->None,
-                 GridBoxItemSize->{"Columns" -> {Automatic, Automatic}},
-                 GridBoxSpacings->{"Columns" -> {
-                    Offset[0.27999999999999997`], {
-                    Offset[0.5599999999999999]}, 
-                    Offset[0.27999999999999997`]}, "Rows" -> {
-                    Offset[0.2], {
-                    Offset[0.8]}, 
-                    Offset[0.2]}}], "DialogStyle",
-                StripOnInput->False],
-               DynamicModuleValues:>{}]}
-            },
-            DefaultBaseStyle->"Column",
-            GridBoxAlignment->{"Columns" -> {{Left}}},
-            GridBoxDividers->{"Columns" -> {{False}}, "Rows" -> {{False}}},
-            
-            GridBoxItemSize->{
-             "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}},
-            GridBoxSpacings->{"Columns" -> {
-                Offset[0.27999999999999997`], {
-                 Offset[0.5599999999999999]}, 
-                Offset[0.27999999999999997`]}, "Rows" -> {
-                Offset[0.2], {
-                 Offset[3.6]}, 
-                Offset[0.2]}}],
-           FrameMargins->{{6, 6}, {6, 3}}], ""},
-         {
-          ItemBox[
-           TagBox[
-            ButtonBox[
-             PaneSelectorBox[{False->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "UpPointerOpener"]], True->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "UpPointerOpenerHot"]]}, Dynamic[
-              System`InformationDump`mouseOver$$]],
-             Alignment->Left,
-             Appearance->{"Default" -> None},
-             
-             ButtonFunction:>FEPrivate`Set[
-              System`InformationDump`open$$, False],
-             Evaluator->Automatic,
-             FrameMargins->{{9, 0}, {0, 0}},
-             ImageMargins->0,
-             ImageSize->Full,
-             Method->"Preemptive"],
-            
-            EventHandlerTag[{
-             "MouseEntered" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
-              "MouseExited" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
-              Method -> "Preemptive", PassEventsDown -> Automatic, 
-              PassEventsUp -> True}]],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], "\[SpanFromLeft]"}
-        },
-        AutoDelete->False,
-        FrameStyle->Directive[
-          GrayLevel[0.8], 
-          Thickness[Tiny]],
-        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
-        GridBoxDividers->{
-         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
-        GridBoxItemSize->{
-         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-       "Grid"], False->
-      TagBox[GridBox[{
-         {
-          ItemBox[
-           PaneBox[
-            StyleBox["\<\" Symbol\"\>", "InformationTitleText",
-             StripOnInput->False],
-            FrameMargins->{{4, 0}, {-1, 1}}],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           PaneBox[
-            
-            StyleBox["\<\"IGAsymmetricPreferenceGame[n, typeWeightsMatrix, \
-preferenceMatrix]\"\>", "InformationUsageText",
-             StripOnInput->False,
-             LineSpacing->{1.5, 1.5, 3.}],
-            FrameMargins->{{10, 10}, {8, 10}}],
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False], 
-          ItemBox["\<\"\"\>",
-           BaseStyle->"InformationUsageSubtitleBackground",
-           StripOnInput->False]},
-         {
-          ItemBox[
-           TagBox[
-            ButtonBox[
-             PaneSelectorBox[{False->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "DownPointerOpener"],
-               ImageSizeCache->{10., {2., 8.}}], True->
-              
-              DynamicBox[FEPrivate`FrontEndResource[
-               "FEBitmaps", "DownPointerOpenerHot"],
-               ImageSizeCache->{10., {2., 8.}}]}, Dynamic[
-              System`InformationDump`mouseOver$$]],
-             Alignment->Left,
-             Appearance->{"Default" -> None},
-             
-             ButtonFunction:>FEPrivate`Set[
-              System`InformationDump`open$$, True],
-             Evaluator->Automatic,
-             FrameMargins->{{9, 0}, {0, 0}},
-             ImageMargins->0,
-             ImageSize->Full,
-             Method->"Preemptive"],
-            
-            EventHandlerTag[{
-             "MouseEntered" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, True], 
-              "MouseExited" :> 
-              FEPrivate`Set[System`InformationDump`mouseOver$$, False], 
-              Method -> "Preemptive", PassEventsDown -> Automatic, 
-              PassEventsUp -> True}]],
-           BaseStyle->"InformationTitleBackground",
-           StripOnInput->False], "\[SpanFromLeft]"}
-        },
-        AutoDelete->False,
-        FrameStyle->Directive[
-          GrayLevel[0.8], 
-          Thickness[Tiny]],
-        GridBoxAlignment->{"Columns" -> {Left, Right}, "Rows" -> {{Center}}},
-        GridBoxDividers->{
-         "Columns" -> {{None}}, "Rows" -> {False, {True}, False}},
-        GridBoxItemSize->{
-         "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
-       "Grid"]}, Dynamic[System`InformationDump`open$$],
-      BaselinePosition->Baseline,
-      FrameMargins->0,
-      ImageSize->Automatic],
-     DynamicModuleValues:>{}],
-    BaseStyle->"InformationGridFrame",
-    StripOnInput->False], "InformationGridPlain",
-   StripOnInput->False],
-  InformationData[<|
-   "ObjectType" -> "Symbol", "Usage" -> 
-    "IGAsymmetricPreferenceGame[n, typeWeightsMatrix, preferenceMatrix]", 
-    "Documentation" -> None, "OwnValues" -> None, "UpValues" -> None, 
-    "DownValues" -> None, "SubValues" -> None, "DefaultValues" -> 
-    Information`InformationValueForm[
-     DefaultValues, IGraphM`IGAsymmetricPreferenceGame, {
-      SyntaxInformation[IGraphM`IGAsymmetricPreferenceGame] -> {
-        "ArgumentsPattern" -> {
-           Blank[], 
-           Blank[], 
-           Blank[], 
-           OptionsPattern[]}, 
-         "OptionNames" -> {
-          "AlignmentPoint", "AnnotationRules", "AspectRatio", "Axes", 
-           "AxesLabel", "AxesOrigin", "AxesStyle", "Background", 
-           "BaselinePosition", "BaseStyle", "ContentSelectable", 
-           "DirectedEdges", "EdgeCapacity", "EdgeCost", "EdgeLabels", 
-           "EdgeLabelStyle", "EdgeShapeFunction", "EdgeStyle", "EdgeWeight", 
-           "Editable", "Epilog", "FormatType", "Frame", "FrameLabel", 
-           "FrameStyle", "FrameTicks", "FrameTicksStyle", "GraphHighlight", 
-           "GraphHighlightStyle", "GraphLayout", "GraphRoot", "GraphStyle", 
-           "GridLines", "GridLinesStyle", "ImageMargins", "ImagePadding", 
-           "ImageSize", "LabelStyle", "PerformanceGoal", "PlotLabel", 
-           "PlotRange", "PlotRangeClipping", "PlotRangePadding", "PlotRegion",
-            "PlotTheme", "Prolog", "Properties", "RotateLabel", "SelfLoops", 
-           "Ticks", "TicksStyle", "VertexCapacity", "VertexCoordinates", 
-           "VertexLabels", "VertexLabelStyle", "VertexShape", 
-           "VertexShapeFunction", "VertexSize", "VertexStyle", 
-           "VertexWeight"}}}], "NValues" -> None, "FormatValues" -> None, 
-    "Options" -> {SelfLoops -> False}, 
-    "Attributes" -> {Protected, ReadProtected}, "FullName" -> 
-    "IGraphM`IGAsymmetricPreferenceGame"|>, 
-   False]]], "Output",ExpressionUUID->"90a43e59-52e2-4b47-9f89-964895f08d7d"]
-}, Open  ]],
 
 Cell[TextData[{
  StyleBox["Experimental:",
@@ -4824,27 +4073,72 @@ Cell[TextData[{
 }], "Text",ExpressionUUID->"fb7555ad-b955-46e7-8215-fa46b1284c8d"],
 
 Cell[TextData[{
- Cell[BoxData["IGAsymmetricPreferenceGame"],
-  FormatType->StandardForm,ExpressionUUID->
+ Cell[BoxData[
+  RowBox[{"IGAsymmetricPreferenceGame", "[", 
+   RowBox[{"n", ",", "w", ",", "p"}], "]"}]],ExpressionUUID->
   "72ba0bee-ab12-429e-852e-0ae8c0a908a4"],
  " is similar to ",
- Cell[BoxData["IGPreferenceGame"],
-  FormatType->StandardForm,ExpressionUUID->
+ Cell[BoxData[
+  RowBox[{"IGPreferenceGame", "[", 
+   RowBox[{"n", ",", "w", ",", "p"}], "]"}]],ExpressionUUID->
   "583df459-91c3-444c-b4bd-c4bac193c33b"],
- ", but it assigns a separate in-type and out-type to each vertex, and adds \
-directed edges based on connection preferences between types."
+ ", but it assigns a separate out-type and in-types to each vertex. The \
+probability of a vertex having out-type ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "acb2b256-8e21-448a-95c9-74df79e14c0e"],
+ " and in-type ",
+ Cell[BoxData[
+  FormBox["j", TraditionalForm]],ExpressionUUID->
+  "8f88bc14-8fd5-4cc7-8c6f-f36820277fdc"],
+ " is proportional to ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["w", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
+  ExpressionUUID->"25578bb7-90b4-459c-b0f8-77a96e575b17"],
+ ". The probability of connecting a vertex with out-type ",
+ Cell[BoxData[
+  FormBox["i", TraditionalForm]],ExpressionUUID->
+  "990324ee-ba09-40ff-972c-6079a255bf68"],
+ " to another one with in-type ",
+ Cell[BoxData[
+  FormBox["j", TraditionalForm]],ExpressionUUID->
+  "a4197d63-ff09-4c23-96ce-b40ecdf9f50c"],
+ " is ",
+ Cell[BoxData[
+  FormBox[
+   SubscriptBox["p", 
+    RowBox[{"i", "\[InvisibleComma]", "j"}]], TraditionalForm]],
+  ExpressionUUID->"94e03238-a7bd-4e74-8e59-b576cb4b1f82"],
+ "."
 }], "Text",ExpressionUUID->"1730ead9-000c-4a4a-adb4-cda56fd5b144"],
 
 Cell["The available options are:", \
 "Text",ExpressionUUID->"0c858ac1-4b61-4ad0-b1d7-44af1ddccb3e"],
 
+Cell[CellGroupData[{
+
 Cell[TextData[{
  Cell[BoxData[
-  RowBox[{"SelfLoops", "->", "True"}]],
-  FormatType->StandardForm,ExpressionUUID->
+  RowBox[{"SelfLoops", "->", "True"}]],ExpressionUUID->
   "d779a389-8782-41c1-92f4-766db05b633a"],
  " allows self-loops."
-}], "Item",ExpressionUUID->"67bcea51-42e3-45a9-9012-776e0a17484c"]
+}], "Item",ExpressionUUID->"67bcea51-42e3-45a9-9012-776e0a17484c"],
+
+Cell[BoxData[
+ RowBox[{"IGAsymmetricPreferenceGame", "[", 
+  RowBox[{"50", ",", 
+   RowBox[{"(", GridBox[{
+      {"0", "1"},
+      {"0", "2"}
+     }], ")"}], ",", 
+   RowBox[{"(", GridBox[{
+      {"0.1", "0.01"},
+      {"0.01", "0.1"}
+     }], ")"}]}], 
+  "]"}]], "Input",ExpressionUUID->"235021a9-398b-47e2-9519-48f8c11be1e4"]
+}, Open  ]]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -8652,16 +7946,41 @@ If the vertices are laid out from left to right in topological order, all \
 edges will point from left to right.\
 \>", "Text",ExpressionUUID->"a0abb2ee-fbc9-4b8f-8d2b-0d6efdec1f52"],
 
-Cell[BoxData[
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"curvedEdge", "[", "offset_", "]"}], "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"a_", ",", "___", ",", "b_"}], "}"}], ",", "___"}], "]"}], ":=", 
+  
+  RowBox[{"Arrow", "@", 
+   RowBox[{"BezierCurve", "[", 
+    RowBox[{"{", 
+     RowBox[{"a", ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"a", "+", "b"}], ")"}], "/", "2"}], "+", 
+       RowBox[{"offset", " ", 
+        RowBox[{"Reverse", "[", 
+         RowBox[{"b", "-", "a"}], "]"}]}]}], ",", "b"}], "}"}], 
+    "]"}]}]}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"Graph", "[", 
    RowBox[{"g", ",", "\[IndentingNewLine]", 
     RowBox[{"EdgeShapeFunction", "\[Rule]", 
-     RowBox[{"GraphElementData", "[", 
+     RowBox[{"curvedEdge", "[", 
+      RowBox[{"2", "/", "3"}], "]"}]}]}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "in", " ", "M12", ".0", " ", "or", " ", "later", " ", "simply", " ", 
+     "use", " ", 
+     RowBox[{"{", 
       RowBox[{"{", 
        RowBox[{"\"\<CurvedEdge\>\"", ",", 
-        RowBox[{"\"\<Curvature\>\"", "\[Rule]", "1.5"}]}], "}"}], "]"}]}]}], 
-   "\[IndentingNewLine]", "]"}], "//", 
+        RowBox[{"\"\<Curvature\>\"", "\[Rule]", "1.5"}]}], "}"}], "}"}]}], 
+    " ", "*)"}], "\[IndentingNewLine]", "]"}], "//", 
   RowBox[{"IGVertexMap", "[", 
    RowBox[{
     RowBox[{
@@ -8669,7 +7988,7 @@ Cell[BoxData[
       RowBox[{"#", ",", "0"}], "}"}], "&"}], ",", 
     RowBox[{"VertexCoordinates", "\[Rule]", 
      RowBox[{"IGTopologicalOrdering", "/*", "Ordering"}]}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"c1e44654-5a5e-4e35-865b-80e64e414264"],
+   "]"}]}]}], "Input",ExpressionUUID->"c1e44654-5a5e-4e35-865b-80e64e414264"],
 
 Cell[TextData[{
  "When the graph contains cycles, ",
@@ -9065,8 +8384,8 @@ Cell[BoxData[{
    RowBox[{"VertexLabels", "\[Rule]", 
     RowBox[{"{", 
      RowBox[{"VertexList", ",", "IGMaximumCardinalitySearch"}], "}"}]}], ",", 
-   "g"}], 
-  "]"}]}], "Input",ExpressionUUID->"bc502c44-47c4-4a78-a842-cbc442c2f99b"],
+   "g"}], "]"}]}], \
+"Input",ExpressionUUID->"bc502c44-47c4-4a78-a842-cbc442c2f99b"],
 
 Cell[TextData[{
  "Notice that vertex ",
@@ -13204,7 +12523,6 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
-                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -13216,6 +12534,7 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
+                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -13664,8 +12983,8 @@ Cell[BoxData[
   RowBox[{"g", ",", 
    RowBox[{"{", 
     RowBox[{"\"\<Anna\>\"", ",", "\"\<Nora\>\"", ",", "\"\<Larry\>\""}], 
-    "}"}]}], 
-  "]"}]], "Input",ExpressionUUID->"df2fa912-98f3-4bd5-8538-b9f7182063ff"],
+    "}"}]}], "]"}]], \
+"Input",ExpressionUUID->"df2fa912-98f3-4bd5-8538-b9f7182063ff"],
 
 Cell["But it is not minimal:", \
 "Text",ExpressionUUID->"16d31c07-8b38-4e8a-be5c-ee55e5f1e24a"],
