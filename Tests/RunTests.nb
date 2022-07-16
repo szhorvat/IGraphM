@@ -12,7 +12,7 @@ Cell["Restart the kernel before evaluating this notebook.", \
 "Text",ExpressionUUID->"ab995c80-1261-4e9b-a0aa-7e0daf7cbc81"],
 
 Cell[BoxData["Quit"], "Input",
- CellLabel->"In[10]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
+ CellLabel->"In[57]:=",ExpressionUUID->"709a1fff-fa64-468f-8263-06556aac858f"],
 
 Cell[BoxData["$Version"], "Input",
  CellLabel->"In[1]:=",ExpressionUUID->"a127ee06-90b7-4b5a-bec2-b48a708a3b5d"],
@@ -52,6 +52,27 @@ Cell[BoxData[
 Cell[BoxData[
  RowBox[{"IGraphM`Developer`GetInfo", "[", "]"}]], "Input",
  CellLabel->"In[10]:=",ExpressionUUID->"fd205d26-5c77-4015-bd7d-573598871284"],
+
+Cell["Check that all symbols have a usage message.", \
+"Text",ExpressionUUID->"ddb937a2-0ca8-488b-8b11-a304a877fcfe"],
+
+Cell[BoxData[
+ RowBox[{"Select", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Names", "[", "\"\<IGraphM`*\>\"", "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ToExpression", "[", "\[IndentingNewLine]", 
+     RowBox[{
+     "#", ",", "\[IndentingNewLine]", "InputForm", ",", "\[IndentingNewLine]", 
+      RowBox[{"Function", "[", 
+       RowBox[{"sym", ",", 
+        RowBox[{"Not", "@", 
+         RowBox[{"StringQ", "[", 
+          RowBox[{"sym", "::", "usage"}], "]"}]}], ",", "HoldAll"}], "]"}]}], 
+     "\[IndentingNewLine]", "]"}], "&"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
+ CellLabel->"In[17]:=",ExpressionUUID->"cd5874c5-d143-49ba-99b0-b397f6483114"],
 
 Cell["Check that the name of symbols matches their usage message.", \
 "Text",ExpressionUUID->"ecc0c256-e8de-4b32-8072-72ef92f9bcd4"],
@@ -106,8 +127,8 @@ Cell[BoxData[
     RowBox[{
      RowBox[{"ToExpression", "[", 
       RowBox[{"#", ",", "InputForm", ",", "SyntaxInformation"}], "]"}], "===", 
-     RowBox[{"{", "}"}]}], "&"}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
+     RowBox[{"{", "}"}]}], "&"}]}], "\[IndentingNewLine]", "]"}]], "Input",
+ CellLabel->"In[12]:=",ExpressionUUID->"a3cb6077-8bb0-4c98-b03d-ce2dfdee165e"],
 
 Cell["\<\
 Print all usage messages for eyeball verification and spellchecking.\
@@ -135,7 +156,7 @@ Cell[BoxData[
   "In[11]:=",ExpressionUUID->"36f91989-4cbd-4f05-bbf0-2634173bda3d"]
 },
 WindowSize->{907, 792},
-WindowMargins->{{150, Automatic}, {Automatic, 83}},
+WindowMargins->{{172, Automatic}, {Automatic, 0}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TaggingRules->{
  "SEUploaderLastUpdateCheck" -> 3.766254953638397`16.32848470505581*^9, 
@@ -147,7 +168,7 @@ SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
   "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
   "builtin"}},
-FrontEndVersion->"12.2 for Mac OS X x86 (64-bit) (December 12, 2020)",
+FrontEndVersion->"13.1 for Mac OS X x86 (64-bit) (June 16, 2022)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"bb39a162-8064-4a8d-aa80-de59318b4085"
 ]
