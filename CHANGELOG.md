@@ -2,6 +2,18 @@
 
 #### 0.6.1 (unreleased)
 
+Fixed:
+
+ - `IGCompareCommunities` had a corrupted usage message.
+ - Restored compatibiltiy with older Linux distros that use GCC 4.8, such as RHEL / CentOS 7.
+ - The Fruchterman-Reingold, Kamada-Kawai and DrL layouts now verify that all weights are positive.
+ - `IGAsymmetrixPreferenceGame` misinterpreted the type weight matrix.
+
+Other:
+
+ - Temporarily disables resizing in graph editor, as it interferes with vertex creation.
+ - Documentation improvements.
+
 #### 0.6.0
 
 This version is based on the 0.9 series of C/igraph.
