@@ -345,11 +345,13 @@ GraphFromEditorState[state_, 1] := Module[{v, e, pos, graph}
 (* ::Subsection:: *)
 (*to state*)
 
+standardizeOption[VertexLabels][val_] := Replace[val, Automatic -> "Name"]
+standardizeOption[_][val_] := val
 
 optionsToConfig // Options = Options @ IGGraphEditor;
 
 optionsToConfig[OptionsPattern[]] := Association[
-  ToString[#] -> OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
+  ToString[#] -> standardizeOption[#]@OptionValue[#] & /@ Keys @ Options[IGGraphEditor]
 ]
 
 
