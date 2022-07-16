@@ -51,4 +51,6 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
    * `IGZeroDiagonal` will crash with non-square sparse matrices in _Mathematica_ 11.1 and earlier. This is a bug in those versions of _Mathematica_.
 
+   * With Mathematica 13.1.0, evaluating cells may be very slow. [This is due to a bug in Mathematica's Front End.](https://mathematica.stackexchange.com/q/270894/12) One workaround is to disable command auto-completion.
+
    * See also https://github.com/szhorvat/IGraphM/issues
