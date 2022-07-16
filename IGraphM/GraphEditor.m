@@ -114,7 +114,7 @@ Interpretation[
   PaneSelector[
   {
     True -> Button[Dynamic @ error,  refresh[], BaseStyle -> 15]
-  , False -> Panel[
+  , False -> Deploy@Panel[
       Dynamic[Refresh[iGraphEditorPanel[Dynamic@state], None]]
     , FrameMargins -> 0, BaseStyle -> CacheGraphics->False
     ]
