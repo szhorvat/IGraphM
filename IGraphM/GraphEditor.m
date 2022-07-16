@@ -103,7 +103,7 @@ Interpretation[
   ; error = False
 
   ; geAction["UpdateVertexSize", Hold @ state]
-  ; geAction["UpdateEdgesShapes", Hold @  state]
+  ; geAction["UpdateEdgesShapes", Hold @ state]
     (*(Hold) is there to workaround a bug with Interpretation's Initialization
       which inserts evaluated Dynamic's arguments
     *)
