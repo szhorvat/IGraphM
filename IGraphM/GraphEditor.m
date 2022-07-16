@@ -17,7 +17,8 @@ PackageExport["IGGraphEditor"]
 *)
 
 IGGraphEditor::usage        =
-    "IGGraphEditor[] typesets to an interactive graph editor.\n" <>
+    "IGGraphEditor[] typesets to an interactive graph editor. Hold down " <>
+        If[$OperatingSystem === "MacOSX", "Command", "Alt"] <> " to add/remove vertices/edges.\n" <>
     "IGGraphEditor[graph] uses the given graph as the starting point.";
 IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed pairs are {1->2, 2->1}.";
 IGGraphEditor::unknownState = "Corrupted editor state."
