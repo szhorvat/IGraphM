@@ -141,7 +141,7 @@ iGraphEditorPanel[Dynamic@state_] := EventHandler[
   , "MouseClicked" :> (
       geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]]
     )
-  , PassEventsDown->True
+  , PassEventsDown -> FEPrivate`Not @ FrontEnd`CurrentValue["CommandKey"]
   ]
 
 
