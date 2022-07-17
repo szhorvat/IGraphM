@@ -1,17 +1,17 @@
 ## Revision history for [IGraph/M](README.md)
 
-#### 0.6.1 (unreleased)
+#### 0.6.1
 
 Fixed:
 
  - `IGCompareCommunities` had a corrupted usage message.
- - Restored compatibiltiy with older Linux distros that use GCC 4.8, such as RHEL / CentOS 7.
+ - Restored compatibility with older Linux distros that use GCC 4.8, such as RHEL / CentOS 7.
  - The Fruchterman-Reingold, Kamada-Kawai and DrL layouts now verify that all weights are positive.
  - `IGAsymmetrixPreferenceGame` misinterpreted the type weight matrix.
 
 Other:
 
- - Temporarily disables resizing in graph editor, as it interferes with vertex creation.
+ - Temporarily disabled resizing in graph editor, as it interferes with vertex creation.
  - Documentation improvements.
 
 #### 0.6.0
