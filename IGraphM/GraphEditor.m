@@ -136,13 +136,21 @@ iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> 
 iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input."|>]
 
 
-iGraphEditorPanel[Dynamic@state_] := EventHandler[
+iGraphEditorPanel[Dynamic@state_] := Module[{ isVertexSelected}
+, isVertexSelected := StringQ @ state @ "selectedVertex"
+; EventHandler[
     geGraphics @ Dynamic @ state
   , "MouseClicked" :> (
       geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]]
     )
-  , PassEventsDown -> FEPrivate`Not @ FrontEnd`CurrentValue["CommandKey"]
+  , PassEventsDown -> Dynamic @ Not @ Or[ 
+      CurrentValue["CommandKey"] , 
+      isVertexSelected
+    ]
   ]
+]
+
+(* Module.isVertexSelected ?! that's a patch to PassEventsDown's Bug #2187 *)
 
 
 (* ::Subsection:: *)
