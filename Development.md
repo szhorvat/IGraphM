@@ -13,99 +13,38 @@ Help is also very welcome with writing or editing documentation, adding examples
 
 ## Compiling igraph
 
-The following tools are required for building the igraph C library: a C++ compiler (gcc 4.8 works), `autoconf`, `automake`, `libtool`, `flex`, `bison`.
+The following tools are required for building the igraph C library: a C++ compiler with C++11 and C99 support, `cmake`, `flex`, `bison`. See the [installation instructions](https://igraph.org/c/html/latest/igraph-Installation.html) for the basic steps.
 
-### OS X and Linux
+On Windows, we use MSVC.
 
 In this guide, I will use `$HOME/local` as the installation directory for the various needed libraries.  You may want to use a different location for your system.
+
+#### Dependencies
+
+All igraph dependencies that are required for features that IGraph/M uses are already included with igraph.
 
 On OS X, set the following environment variable before compiling the libraries:
 
     export MACOSX_DEPLOYMENT_TARGET=10.9
 
-##### GMP
+#### Running CMake
 
-[Download GMP](https://gmplib.org/), extract it to a directory with no spaces in its path (!) and compile with
+Additional options to pass to CMake:
 
-    ./configure --prefix=$HOME/local --with-pic
-    make
-    make check
+ - It is recommended to use link-time optimization to achieve good performance, thus use `-DIGRAPH_ENABLE_LTO=ON`.
+ - We do not need GraphML support and want to avoid a dependency on libxml2, so use `-DIGRAPH_GRAPHML_SUPPORT=OFF`.
+ - On Linux and macOS, use `-DCMAKE_POSITION_INDEPENDENT_CODE=ON`, as we will eventually be creating a shared library.
+ - On Windows, use `-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded`, as this uses the `/MT` option, just like Mathematica's `CreateLibrary`.
 
-If the tests have passed, install it with `make install`.
+#### Compiling for release
 
-To maximize compatibility with different types of CPUs, consider using the `--host=...` option to the `configure` script. Use the output of `configfsf.guess` as the target host.
+When compiling for release, target the appropriate macOS version:
 
-##### GLPK
+    export MACOSX_DEPLOYMENT_TARGET=10.9
 
-igraph already includes GLPK, but an external GLPK can be used for improved performance in `IGCommunitiesOptimalModularity` and `IGFeedbackArcSet`.
+On Linux, make sure that `_GLIBCXX_USE_CXX11_ABI=0` is defined for broader compatibility. All dependencies, such as LEMON, should also be compiled with the same setting.
 
-If desired, [download GLPK](https://www.gnu.org/software/glpk/), and compile it the same way as GMP.
-
-    ./configure --prefix=$HOME/local --with-pic
-    make
-    make check
-
-If the tests have passed, install it with `make install`.
-
-When compiling igraph, pass `--with-external-glpk` to the `configure` script.
-
-##### igraph
-
-Clone [this fork of igraph](https://github.com/szhorvat/igraph) and check out the `IGraphM-040` branch. This fork is identical to the main igraph repository, except for a few small temporary patches that the latest version of IGraph/M may depend on. Compile as follows:
-
-    export CPPFLAGS=-I$HOME/local/include LDFLAGS=-L$HOME/local/lib
-    ./bootstrap.sh
-    ./configure --prefix=$HOME/local --with-pic  --disable-graphml
-    make
-    make check
-
-If the tests have passed, install it with `make install`.
-
-
-### Windows
-
-One option for compiling igraph on Windows is to use an MSYS shell to run the configure script.  Instructions for installing MSYS2 and the MinGW-w64 compiler are found at https://wiki.qt.io/MSYS2.  Install them in a directory with no spaces in its path.  The following instructions assume that libraries will be installed in `$HOME/local`.
-
-##### GMP
-
-Once the toolchain is set up, we can compile GMP.  [Download](https://gmplib.org/) and extract it.  Compile using
-
-    ./configure --prefix=$HOME/local
-    make
-    make check
-
-To maximize compatibility with different types of CPUs, consider using the `--host=...` option to the `configure` script. Use the output of `configfsf.guess` as the target host.
-
-If the tests have passed, install it with `make install`.
-
-##### GLPK
-
-igraph already includes GLPK, but an external GLPK can be used for improved performance in `IGCommunitiesOptimalModularity` and `IGFeedbackArcSet`.
-
-If desired, [download GLPK](https://www.gnu.org/software/glpk/), and compile it the same way as GMP.
-
-    ./configure --prefix=$HOME/local --disable-reentrant
-    make
-    make check
-
-If the tests have passed, install it with `make install`.
-
-When compiling igraph, pass `--with-external-glpk` to the `configure` script.
-
-##### igraph
-
-Clone [this fork of igraph](https://github.com/szhorvat/igraph) and check out the `IGraphM` branch. This fork is identical to the main igraph repository, except for a few small temporary patches that the latest version of IGraph/M may depend on.  Compile and install as follows:
-
-    export CPPFLAGS="-I$HOME/local/include -DMSDOS" LDFLAGS=-L$HOME/local/lib
-    ./bootstrap.sh
-    ./configure --prefix=$HOME/local --disable-graphml
-    make
-    make install
-
-This will produce a DLL named `libigraph-0.dll` in `$HOME/local/bin`.  It must be copied into `IGraphM/LibraryResources/Windows-x86-64`.  When using the above version of MinGW-w64, it is also necessary to copy the dependencies `libgcc_s_seh-1.dll`, `libstdc++-6.dll` and `libwinpthread-1.dll` to the same directory.
-
-IGraph/M needs to be told about what dependencies it has to load.  This is done by creating a file named `dependencies.m` in the same directory and adding `LibraryLoad` calls to it in the appropriate order.  For an example see `dependencies.m` on the `release` branch of the IGraph/M GitHub repo.
-
+For CMake, set `-DIGRAPH_OPENMP_SUPPORT=OFF` to disable OpenMP support, as it only provides a modest improvement for PageRank.
 
 ## Compiling LEMON
 
@@ -113,11 +52,13 @@ Follow the installation guide of LEMON: http://lemon.cs.elte.hu/trac/lemon/wiki/
 
 When running `cmake`, use the option `-DCMAKE_INSTALL_PREFIX:PATH=$HOME/local` to set the correct installation location.
 
-An example command that also disables unneeded dependencies is 
+An example command that also disables unneeded dependencies is
 
     cmake -DCMAKE_INSTALL_PREFIX=$HOME/local -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=True -DLEMON_ENABLE_GLPK=False -DLEMON_ENABLE_COIN=False -DLEMON_ENABLE_ILOG=False -DLEMON_ENABLE_SOPLEX=False ..
 
 When finished compiling, install it with `make install`.
+
+When compiling for release, edit `CMakeLists.txt` and set: `CMAKE_MINIMUM_REQUIRED(VERSION 3.15)`. This will allow `DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded` to take effect on Windows. Optionally, set `-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON` for better performance.
 
 
 ## Compiling IGraph/M
@@ -172,8 +113,8 @@ IGConnectedQ[g_?igGraphQ] :=
 
 The pattern `g_?igGraphQ` will only match `Graph` objects compatible with igraph.  `igMake` will convert a Mathematica graph to an `IG` object.  Calls to `IG` member functions must be wrapped in `check`, which will catch any library errors and `Throw` them as exceptions.  `catch` is always used at the outermost level to catch and handle these exceptions.
 
-`igMake` is able to handle and convert to igraph format any kind of Mathematica graph for which `igGraphQ` returns `True`.  It also transfers edge weights to igraph. 
- 
+`igMake` is able to handle and convert to igraph format any kind of Mathematica graph for which `igGraphQ` returns `True`.  It also transfers edge weights to igraph.
+
 When weights are not required, use `igMakeUnweighted` for better performance. `igMakeUnweighted` could be used for `IGConnectedQ`.
 
 **Note:** In the past, `igMake` used a much less efficient method to convert graphs. Special alternative functions were used for those cases when edge ordering did not need to be preserved. Thus you might come access `igMakeFast` and `igMakeFastWeighted` in the code base. Consider these equivalent to `igMakeUnweighted` and `igMake`, respectively.  
@@ -211,7 +152,7 @@ IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]
 
 Since the `IG` object is not created from an existing graph, we use `igMakeEmpty[]` to make an empty one. `igMakeEmpty[]` is equivalent to `Make["IG"]`, a construct you will be familiar with from [the LTemplate tutorial][1].
 
-`igToGraph` converts an `IG` object back to a Mathematica graph. 
+`igToGraph` converts an `IG` object back to a Mathematica graph.
 
 Most IGraph/M functions that create graphs take all standard `Graph` options such as `GraphLayout`, `VertexStyle`, etc.  These can be applied using `applyGraphOpt`, as in the example above.
 
