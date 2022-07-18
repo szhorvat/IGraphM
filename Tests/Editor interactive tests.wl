@@ -14,6 +14,9 @@ $Path,
 
 ClearAll["IGraphM`GraphEditor`*`*"]
 NotebookDelete@Cells@MessagesNotebook[]
+SetSelectedNotebook@MessagesNotebook[];
+SetSelectedNotebook@EvaluationNotebook[];
+FrontEndExecute[FrontEndToken["DeleteGeneratedCells"]]
 
 IGraphM`GraphEditor`PackagePrivate`$geDebug=True;
 <<IGraphM` 
@@ -37,7 +40,10 @@ SetOptions[IGGraphEditor,ImageSize->200];
 (*- Alt+click should not trigger orange resize frame, nor should discarding a potential edge.*)
 
 
-IGGraphEditor[Graph@{},ImageSize->200]
+IGGraphEditor[VertexSize->Small]
+
+
+IGGraphEditor[ImageSize->100]
 
 
 (* ::Text:: *)

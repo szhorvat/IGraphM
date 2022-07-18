@@ -24,7 +24,7 @@ IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed 
 IGGraphEditor::unknownState = "Corrupted editor state.";
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here.";
 
-$narrowAspectRatioLimit = 5; (* plot range will be adjusted if the initial calculated as is above this limit *)
+$narrowAspectRatioLimit = N @ GoldenRatio ^ 2; (* plot range will be adjusted if the initial calculated as is above this limit *)
 $vertexEdgeThickness = 0.5;
 $hoverVertexEdgeThickness = 2;
 $edgeThickness = 1;
@@ -46,7 +46,7 @@ IGGraphEditor // Options = {
 , VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
-, ImageSize               -> Automatic
+, ImageSize               -> 300
 };
 
 
@@ -114,7 +114,7 @@ Interpretation[
   PaneSelector[
   {
     True -> Button[Dynamic @ error,  refresh[], BaseStyle -> 15]
-  , False -> Deploy@Panel[
+  , False -> Panel[
       Dynamic[Refresh[iGraphEditorPanel[Dynamic@state], None]]
     , FrameMargins -> 0, BaseStyle -> CacheGraphics->False
     ]
@@ -137,41 +137,47 @@ iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> 
 iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input."|>]
 
 
-iGraphEditorPanel[Dynamic@state_] := Module[{ isVertexSelected}
-, isVertexSelected := StringQ @ state @ "selectedVertex"
-; EventHandler[
+iGraphEditorPanel[Dynamic@state_] := EventHandler[
     geGraphics @ Dynamic @ state
   , "MouseClicked" :> (
       geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]]
     )
-  , PassEventsDown -> Dynamic @ Echo@Not @ Or[ 
-      CurrentValue["CommandKey"] , 
-      isVertexSelected
-    ]
+  , PassEventsDown -> True
   ]
-]
-
-(* Module.isVertexSelected ?! that's a patch to PassEventsDown's Bug #2187 *)
-
 
 (* ::Subsection:: *)
 (*graphics*)
 
 
-geGraphics[Dynamic @ state_ ] := DynamicModule[{range}
-, DynamicWrapper[
-    Graphics[
-      DynamicNamespace @ {
-        geHighlightsPrimitives @ Dynamic @ state
-      , Gray
-      , Dynamic @ geEdges @ Dynamic @ state
-      , Dynamic @ geVertices @ Dynamic @ state
-      }
-    , PlotRange -> Dynamic @ range
-    , ImageSize -> state["config", "ImageSize"]
+geGraphics[Dynamic @ state_ ] := DynamicModule[
+  {range = state["config", "range"], size = state["config", "ImageSize"], graphicsSize}
+, Deploy @ EventHandler[
+    Pane[
+      DynamicWrapper[
+        Graphics[
+          DynamicNamespace @ {
+            geHighlightsPrimitives @ Dynamic @ state
+          , Gray
+          , Dynamic @ geEdges @ Dynamic @ state
+          , Dynamic @ geVertices @ Dynamic @ state
+          }
+        , PlotRange -> Dynamic @ range
+        , ImageSize -> Dynamic @ graphicsSize 
+        ]
+      , range = state["config", "range"]
+      ; graphicsSize = size = state["config", "ImageSize"]
+      , TrackedSymbols :> {state}
+      ]
+    , AppearanceElements -> {"ResizeArea"}  
+    , ImageSize -> Dynamic[
+        size
+      , (size = {1, 1/state["config", "aspectRatio"]} * #[[1]] )&
+      ]
     ]
-  , range = state["config", "range"]
+  , "MouseUp" :> (state["config", "ImageSize"] = size)
+  , PassEventsDown -> True
   ]
+
 ] (* PlotRange->Dynamic@state["config... updates at any unrelated event, vertex dragging included,
      this DynamicModule @ DynamicWrapper is here to address a bug. Why does it help? Because WRI.
    *)
@@ -280,9 +286,11 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
     Dynamic[
       If[
         stateHasSelectedVertex @ state
-      , {
-          (*Disk[DynamicLocation[selV], 1.05 state["config", "realVertexSize"]]
-        , *) Line[{
+      , {  
+          EdgeForm @ DeleteCases[$potentialEdgeStyle, _Dashing]
+        , EdgeForm @ AbsoluteThickness[ 3 * $hoverVertexEdgeThickness ]
+        , Disk[DynamicLocation[selV], state["config", "realVertexSize"]]
+        , Line[{
             DynamicLocation[selV]
           , FrontEnd`MousePosition["Graphics",DynamicLocation[selV]]
           (*TODO: with multiple editors with selected nodes the line is shown of each one of them*)
@@ -370,6 +378,7 @@ GraphToEditorState[ opts_Association ] := Module[{state}
       , "vCounter"->0
       , "eCounter" ->0
       , "range" -> {{-1, 1}, {-1, 1}}
+      , "aspectRatio" -> 1
       , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
       |>
     |>
@@ -401,7 +410,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ; state[ "config", "DirectedEdges"] = Not @ UndirectedGraphQ @ g
 
 ; geAction["UpdateRange", Dynamic @ state]
-; state = stateHandleNarrowRange @ state
+
 
 ; state
 ]
@@ -444,9 +453,6 @@ stateHandleNarrowRange[state_Association] := Module[
 
 ; newState = state
 ; newState[ "config", "range"] = range
-; newState[ "config", "inRangeQ" ] = Quiet @ RegionMember[ Rectangle @@ Transpose@ range ]
-  (* for e.g. 2-node graph the bounds are in fact 1D so region member complains, at least in 11.0
-     currently this issue does not cause problems other than that message *)
 ; newState
 ]
 
@@ -479,6 +485,8 @@ stateHasSelectedVertex[state_Association] := StringQ @ state["selectedVertex"]
 
 (* a debug feature, enabled by default till we have a first version*)
 
+$actionLevel = -1;
+
 If[
   TrueQ @ $geDebug
 
@@ -486,10 +494,17 @@ If[
 ; Module[{$inside = False}
   , geAction /: SetDelayed[geAction[args___], rhs_] /; !TrueQ[$inside] := Block[
       {$inside = True}
-    , geAction[a:PatternSequence[args]]:=(
-        Print[Style[StringPadRight[{a}[[1]], 16], Bold], ":", {a}[[3;;]]]
+    , geAction[a:PatternSequence[args]]:=Internal`InheritedBlock[{ $actionLevel = $actionLevel + 1},
+        Print[          
+          Style[
+            StringPadRight[
+              StringJoin @ ConstantArray["- ", $actionLevel] <> {a}[[1]]
+            , 24]
+          , Bold]
+        , ":", {a}[[3;;]]
+        ]
       ; rhs
-      )
+      ]
     ]
   ]
 ]
@@ -521,9 +536,14 @@ geAction["UpdateRange", Dynamic @ state_] := Module[
 
 ; vs = vertexSizeMultiplier @ state["config", "VertexSize"]
 ; newBounds = handleDegeneratedRange @ CoordinateBounds[ embedding, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
-;
+
+
 ; state[ "config", "range"] = newBounds
-; state[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ newBounds ]
+; state = stateHandleNarrowRange @ state
+
+; state[ "config", "aspectRatio"] = #/#2& @@ (#2-#& @@@ state[ "config", "range"])
+; state[ "config", "ImageSize" ] = {1, 1/state[ "config", "aspectRatio"]} * If[ListQ@#, First@#,#]& @ state[ "config", "ImageSize"]
+; state[ "config", "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[ "config", "range"] ]
 ; geAction["UpdateVertexSize", Dynamic @ state]
 ]
 
