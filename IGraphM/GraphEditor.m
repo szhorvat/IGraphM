@@ -24,7 +24,7 @@ IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed 
 IGGraphEditor::unknownState = "Corrupted editor state.";
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here.";
 
-$narrowAspectRatioLimit = 10; (* plot range will be adjusted if the initial calculated as is above this limit *)
+$narrowAspectRatioLimit = 5; (* plot range will be adjusted if the initial calculated as is above this limit *)
 $vertexEdgeThickness = 0.5;
 $hoverVertexEdgeThickness = 2;
 $edgeThickness = 1;
@@ -144,7 +144,7 @@ iGraphEditorPanel[Dynamic@state_] := Module[{ isVertexSelected}
   , "MouseClicked" :> (
       geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]]
     )
-  , PassEventsDown -> Dynamic @ Not @ Or[ 
+  , PassEventsDown -> Dynamic @ Echo@Not @ Or[ 
       CurrentValue["CommandKey"] , 
       isVertexSelected
     ]
@@ -357,7 +357,7 @@ standardizeOption[VertexLabels][val_] := Replace[val, Automatic -> "Name"]
 standardizeOption[_][val_] := val
 
 
-GraphToEditorState[ ]:=GraphToEditorState @ Association @ Options @ IGGraphEditor
+GraphToEditorState[ opt:OptionsPattern[] ]:=GraphToEditorState @ Association[ Options @ IGGraphEditor, opt ]
 
 GraphToEditorState[ opts_Association ] := Module[{state}
 , state = <|
