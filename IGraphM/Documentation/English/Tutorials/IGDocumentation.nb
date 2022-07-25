@@ -597,7 +597,43 @@ Cell[BoxData[
  RowBox[{
   RowBox[{"IGShorthand", "[", "\"\<1,2,3,4, 4-3-1-2-4\>\"", "]"}], "//", 
   "VertexList"}]], \
-"Input",ExpressionUUID->"8bc943b9-d7a1-4fb5-ad09-c2e381ae25ee"]
+"Input",ExpressionUUID->"8bc943b9-d7a1-4fb5-ad09-c2e381ae25ee"],
+
+Cell["\<\
+Create an interactive graph editor that dynamically visualizes betweenness.\
+\>", "Text",ExpressionUUID->"ababb56e-216e-4bea-a8bc-be07012cc713"],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"IGShorthand", "[", 
+     RowBox[{"spec", ",", 
+      RowBox[{"VertexSize", "->", 
+       RowBox[{"{", 
+        RowBox[{"\"\<Scaled\>\"", ",", "0.06"}], "}"}]}], ",", 
+      RowBox[{"EdgeStyle", "->", "Gray"}]}], "]"}], "//", 
+    "\[IndentingNewLine]", 
+    RowBox[{"IGVertexMap", "[", 
+     RowBox[{
+      RowBox[{"ColorData", "[", "\"\<NeonColors\>\"", "]"}], ",", 
+      RowBox[{"VertexStyle", "->", 
+       RowBox[{"IGBetweenness", "/*", "Rescale"}]}]}], "]"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"spec", ",", "\"\<1-2-3-1-4\>\""}], "}"}], ",", 
+     RowBox[{
+      RowBox[{"InputField", "[", 
+       RowBox[{"#", ",", "String", ",", 
+        RowBox[{"ContinuousAction", "->", "True"}]}], "]"}], "&"}]}], "}"}], 
+   ",", "\[IndentingNewLine]", 
+   RowBox[{"Initialization", ":>", 
+    RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellTags->
+  "DeleteOutput",ExpressionUUID->"9aef5fa9-ae41-45fd-9f6a-ac5f2391e9c3"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -7271,7 +7307,7 @@ Cell[BoxData[
 
 Cell["\<\
 Eigenvector centrality is based on the idea that the importance (centrality) \
-of a vertices should be affected not only by how many other vertices point to \
+of a vertex should be affected not only by how many other vertices point to \
 it, but also by the importance of its neighbours. The eigenvector centrality \
 of a vertex is proportional to the sum of centralities of its neighbours. \
 Mathematically, the eigenvector centrality is the leading eigenvector of the \
@@ -7373,7 +7409,7 @@ Cell[BoxData[
 Cell["Weighted graphs are supported.", \
 "Text",ExpressionUUID->"daa3101d-25bf-4d9b-a9cf-46f7a8301f10"]
 }, Closed]]
-}, Closed]],
+}, Open  ]],
 
 Cell[CellGroupData[{
 
@@ -12444,7 +12480,6 @@ Cell[BoxData[
             DynamicLocation["VertexID$4", Automatic, Center]}]}, {
           Arrowheads[{{0.04, 1, {
               GraphicsBox[
-               
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
@@ -12534,7 +12569,6 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
-                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -12601,6 +12635,7 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
+                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -13399,8 +13434,8 @@ Cell[BoxData[
            2.211248247845466, -1.0269675056790861`}}, 0.07833357806433489]}, 
          {Arrowheads[0.], 
           ArrowBox[{{1.2940029186334419`, -0.6035297525078438}, {
-           2.2111709478906807`, -0.1799097640846974}}, 
-           0.07833357806433489]}, 
+           2.2111709478906807`, -0.1799097640846974}}, 0.07833357806433489]}, 
+         
          {Arrowheads[0.], 
           ArrowBox[{{1.2940029186334419`, -0.6035297525078438}, {
            0.17990976408469717`, -0.6034512532051322}}, 0.07833357806433489]}, 
@@ -25005,8 +25040,9 @@ Cell[BoxData[{
      RowBox[{"IGLayoutGraphOpt", "[", 
       RowBox[{"#", ",", 
        RowBox[{"\"\<Continue\>\"", "\[Rule]", "True"}], ",", 
-       RowBox[{"\"\<MaxIterations\>\"", "\[Rule]", "80"}]}], "]"}], "&"}], 
-    ",", "g", ",", "40"}], "]"}]}]}], "Input",
+       RowBox[{"\"\<MaxIterations\>\"", "\[Rule]", "80"}], ",", 
+       RowBox[{"\"\<Align\>\"", "->", "False"}]}], "]"}], "&"}], ",", "g", 
+    ",", "40"}], "]"}]}]}], "Input",
  CellTags->
   "DeleteOutput",ExpressionUUID->"465afc33-3f39-4698-a39d-ef3aaf8f35c9"],
 
@@ -51169,7 +51205,10 @@ Cell[BoxData[
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"power", ",", "1"}], "}"}], ",", "0.5", ",", "3"}], "}"}]}], 
+      RowBox[{"power", ",", "1"}], "}"}], ",", "0.5", ",", "3"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Initialization", ":>", 
+    RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]}]}], 
   "\[IndentingNewLine]", "]"}]], "Input",
  CellTags->
   "DeleteOutput",ExpressionUUID->"86ac2404-e110-4562-91d3-73aa9e7ca00e"]
@@ -51295,8 +51334,8 @@ Cell[BoxData[
       RowBox[{"First", "[", "st", "]"}], ",", 
       RowBox[{"Last", "[", "st", "]"}]}], "]"}]}], ",", "\[IndentingNewLine]", 
    RowBox[{"Frame", "\[Rule]", "True"}], ",", 
-   RowBox[{"FrameTicks", "\[Rule]", "True"}]}], "\[IndentingNewLine]", "]"}]],
-  "Input",
+   RowBox[{"FrameTicks", "\[Rule]", "True"}]}], "\[IndentingNewLine]", 
+  "]"}]], "Input",
  CellChangeTimes->{{3.7205304720332737`*^9, 3.7205305062953997`*^9}, {
   3.720530582743116*^9, 3.720530582854973*^9}, {3.720530634871773*^9, 
   3.720530635192234*^9}, {3.7205314138673*^9, 3.720531426313422*^9}, {
@@ -51608,7 +51647,9 @@ Cell[BoxData[
    RowBox[{"IGLatticeMesh", "[", "type", "]"}], ",", 
    RowBox[{"{", 
     RowBox[{"type", ",", 
-     RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}]}], "]"}]], "Input",
+     RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}], ",", 
+   RowBox[{"Initialization", ":>", 
+    RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]}]}], "]"}]], "Input",
  CellTags->
   "DeleteOutput",ExpressionUUID->"895fdab5-a9da-4617-871b-e42df135007b"],
 
@@ -51798,8 +51839,10 @@ Cell[BoxData[
    "\[IndentingNewLine]", 
    RowBox[{"{", 
     RowBox[{"type", ",", 
-     RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}]}], "\[IndentingNewLine]", 
-  "]"}]], "Input",
+     RowBox[{"IGLatticeMesh", "[", "]"}]}], "}"}], ",", 
+   RowBox[{"Initialization", ":>", 
+    RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
  CellTags->
   "DeleteOutput",ExpressionUUID->"f962b869-6ad5-46d4-9ab7-c32d07753976"],
 
@@ -51951,8 +51994,11 @@ Cell[BoxData[{
    RowBox[{"{", 
     RowBox[{
      RowBox[{"{", 
-      RowBox[{"\[Alpha]", ",", "0.15"}], "}"}], ",", "0", ",", "0.3"}], 
-    "}"}]}], "\[IndentingNewLine]", "]"}]}], "Input",
+      RowBox[{"\[Alpha]", ",", "0.15"}], "}"}], ",", "0", ",", "0.3"}], "}"}],
+    ",", "\[IndentingNewLine]", 
+   RowBox[{"Initialization", ":>", 
+    RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]}]}], 
+  "\[IndentingNewLine]", "]"}]}], "Input",
  CellTags->
   "DeleteOutput",ExpressionUUID->"214a9d58-e302-493f-a1f4-784f3427fb89"]
 }, Closed]]
@@ -52934,7 +52980,84 @@ Cell[BoxData[
    RowBox[{"RandomPoint", "[", 
     RowBox[{
      RowBox[{"Ball", "[", "]"}], ",", "20"}], "]"}], ",", "0.5"}], 
-  "]"}]], "Input",ExpressionUUID->"60238501-3931-4991-bc40-bc210327497b"]
+  "]"}]], "Input",ExpressionUUID->"60238501-3931-4991-bc40-bc210327497b"],
+
+Cell["\<\
+Create a \[Beta]-skeleton interactively. Point can be dragged around. To \
+create or delete points, use \[CommandKey]-click on macOS, \[AltKey]-click on \
+Windows or \[ControlKey]-\[AltKey]-click on Linux.\
+\>", "Text",ExpressionUUID->"abef2491-3a16-4406-8aba-8fe31f3db672"],
+
+Cell[BoxData[
+ RowBox[{"DynamicModule", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"pt", "=", 
+      RowBox[{"CirclePoints", "[", 
+       RowBox[{"0.5", ",", "3"}], "]"}]}], ",", 
+     RowBox[{"beta", "=", "1.0"}]}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Grid", "[", 
+    RowBox[{"List", "/@", 
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Row", "[", 
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Text", "@", 
+           RowBox[{"HoldForm", "[", "\[Beta]", "]"}]}], ",", 
+          RowBox[{"Spacer", "[", "10", "]"}], ",", 
+          RowBox[{"Slider", "[", 
+           RowBox[{
+            RowBox[{"Dynamic", "[", "beta", "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"1", "/", "2"}], ",", "4"}], "}"}]}], "]"}], ",", 
+          RowBox[{"Spacer", "[", "10", "]"}], ",", 
+          RowBox[{"Text", "@", 
+           RowBox[{"Dynamic", "@", 
+            RowBox[{"NumberForm", "[", 
+             RowBox[{"beta", ",", 
+              RowBox[{"{", 
+               RowBox[{"3", ",", "3"}], "}"}]}], "]"}]}]}]}], "}"}], "]"}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"LocatorPane", "[", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"Dynamic", "[", "pt", "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"Dynamic", "@", 
+          RowBox[{"IGLuneBetaSkeleton", "[", 
+           RowBox[{"pt", ",", "beta", ",", "\[IndentingNewLine]", 
+            RowBox[{"PlotRange", "->", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "}"}]}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"PlotRangePadding", "->", "0"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"Frame", "->", "True"}], ",", "\[IndentingNewLine]", 
+            RowBox[{"FrameTicks", "->", "Automatic"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"GridLines", "->", "Automatic"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"GraphStyle", "->", "\"\<BasicBlack\>\""}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"ImageSize", "->", "Medium"}], ",", 
+            RowBox[{"VertexShape", "->", "None"}], ",", 
+            RowBox[{"VertexSize", "->", "0"}]}], "\[IndentingNewLine]", 
+           "]"}]}], ",", "\[IndentingNewLine]", 
+         RowBox[{"LocatorAutoCreate", "->", "True"}]}], "\[IndentingNewLine]",
+         "]"}]}], "\[IndentingNewLine]", "}"}]}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Initialization", ":>", 
+    RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]}]}], 
+  "\[IndentingNewLine]", "]"}]], "Input",
+ CellTags->
+  "DeleteOutput",ExpressionUUID->"fa8c14a3-1bcb-487a-a720-e6c70a2becd5"]
 }, Closed]],
 
 Cell[CellGroupData[{
@@ -58792,13 +58915,13 @@ Cell[TextData[{
   RowBox[{"IGGraphEditor", "[", "]"}]],ExpressionUUID->
   "82ede368-4515-4424-9a1a-acfdaf232cfd"],
  " typesets an interactive graph editor, which is convenient for creating \
-small graphs interactively. To add or remove vertices, click while holding \
-down the Alt or Command key. To add edges, click the first vertex to connect, \
-then the second one. To remove an edge, Alt-click it (or Command-click it)."
+small graphs interactively. To add or remove vertices, or remove edges, click \
+while holding down \[AltKey] (Windows and Linux) or \[CommandKey] (macOS). To \
+add edges, click the first vertex to connect, then the second one."
 }], "Text",ExpressionUUID->"c407c11c-5b74-460d-9cc7-403e775973a6"],
 
 Cell[TextData[{
- "Evaluating the editor using Shift-Enter creates a standard ",
+ "Evaluating the editor using \[ShiftKey]-\[EnterKey] creates a standard ",
  Cell[BoxData["Graph"],ExpressionUUID->"a284a156-b257-498a-8aa8-bb23f96d4ce3"],
  " object."
 }], "Text",ExpressionUUID->"e4664c9b-412f-4388-808a-db57a1f65b19"],
@@ -58885,7 +59008,9 @@ Cell["The editor can be used to modify an existing graph:", \
 
 Cell[BoxData[
  RowBox[{"IGGraphEditor", "[", 
-  RowBox[{"CycleGraph", "[", "5", "]"}], "]"}]], "Input",
+  RowBox[{
+   RowBox[{"CycleGraph", "[", "5", "]"}], ",", 
+   RowBox[{"VertexLabels", "->", "\"\<Name\>\""}]}], "]"}]], "Input",
  CellTags->
   "DeleteOutput",ExpressionUUID->"358aa7ee-4947-43b2-87b6-9c951ceeb891"]
 }, Closed]],
