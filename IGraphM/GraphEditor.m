@@ -23,6 +23,7 @@ IGGraphEditor::usage        =
 IGGraphEditor::multiEdge    = "Multi-edges are not supported yet. Only directed pairs are {1->2, 2->1}.";
 IGGraphEditor::unknownState = "Corrupted editor state.";
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here.";
+IGGraphEditor::nofe         = "The graph editor requires a notebook interface.";
 
 $narrowAspectRatioLimit = 10; (* plot range will be adjusted if the initial calculated as is above this limit *)
 $vertexEdgeThickness = 0.5;
@@ -51,6 +52,9 @@ IGGraphEditor // Options = {
 
 
 SyntaxInformation[IGGraphEditor] = {"ArgumentsPattern" -> {_., OptionsPattern[]}};
+
+(* Show warning when used without notebooks. *)
+IGGraphEditor[___] := Module[{}, If[Not@TrueQ[$Notebooks], Message[IGGraphEditor::nofe]]; Null /; False]
 
 IGGraphEditor /:
   MakeBoxes[IGGraphEditor[graph:(_|PatternSequence[]), opt:OptionsPattern[]], StandardForm] :=
