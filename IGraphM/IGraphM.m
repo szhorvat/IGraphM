@@ -1048,7 +1048,7 @@ igUnpackSetsHelper[verts_][packed_] :=
 PackageScope["vss"]
 vss::usage = "vss[graph][vertices]";
 vss[graph_][All] := {}
-vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, throw[$Failed]]
+vss[graph_][vl_List] := Check[VertexIndex[graph, #] - 1& /@ vl, throw[$Failed]]
 
 PackageScope["vs"]
 vs::usage = "vs[graph][vertex]";
