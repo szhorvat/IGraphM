@@ -18,9 +18,18 @@ Cell[BoxData["$Version"], "Input",
  CellLabel->"In[1]:=",ExpressionUUID->"a127ee06-90b7-4b5a-bec2-b48a708a3b5d"],
 
 Cell[BoxData[{
- RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], "\[IndentingNewLine]", 
- RowBox[{"<<", "MicroTest`"}]}], "Input",
- CellLabel->"In[2]:=",ExpressionUUID->"beaced15-7689-473c-bbb0-3134308362ce"],
+ RowBox[{
+  RowBox[{"AddPath", "[", "\"\<MicroTest\>\"", "]"}], " ", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"this", " ", "line", " ", "can", " ", "be", " ", "ignored"}], ",",
+     " ", 
+    RowBox[{
+    "but", " ", "make", " ", "sure", " ", "MicroTest", " ", "is", " ", "in", 
+     " ", "$Path"}]}], " ", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{"<<", 
+  "MicroTest`"}]}], \
+"Input",ExpressionUUID->"beaced15-7689-473c-bbb0-3134308362ce"],
 
 Cell[BoxData[
  RowBox[{
@@ -38,12 +47,18 @@ Cell[BoxData[
  RowBox[{"FindFile", "[", "\"\<IGraphM`\>\"", "]"}]], "Input",
  CellLabel->"In[7]:=",ExpressionUUID->"386b65bd-e1f9-4266-9bf6-2eeaeac0c57d"],
 
+Cell["Run the test suite.", \
+"Text",ExpressionUUID->"c46eed2f-9a8b-4014-9833-e501a00756d8"],
+
 Cell[BoxData[
  RowBox[{"AbsoluteTiming", "@", 
   RowBox[{"MTRun", "[", "\[IndentingNewLine]", 
    RowBox[{"Get", "[", "\"\<Tests.m\>\"", "]"}], "\[IndentingNewLine]", 
    "]"}]}]], "Input",
  CellLabel->"In[8]:=",ExpressionUUID->"69acd0fe-74d5-4037-829c-7bfa013beb69"],
+
+Cell["Show version and system information.", \
+"Text",ExpressionUUID->"e2a2f1e2-97cd-44c3-9694-9826c6530052"],
 
 Cell[BoxData[
  RowBox[{"IGVersion", "[", "]"}]], "Input",

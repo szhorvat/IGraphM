@@ -11,7 +11,6 @@ $Path,
 };
 
 
-
 ClearAll["IGraphM`GraphEditor`*`*"]
 NotebookDelete@Cells@MessagesNotebook[]
 SetSelectedNotebook@MessagesNotebook[];
@@ -19,23 +18,23 @@ SetSelectedNotebook@EvaluationNotebook[];
 FrontEndExecute[FrontEndToken["DeleteGeneratedCells"]]
 
 IGraphM`GraphEditor`PackagePrivate`$geDebug=True;
-<<IGraphM` 
+Get["IGraphM`"]
 IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
 
 
-TestReport@FileNameJoin[{NotebookDirectory[],"Editor.wl"}]
+TestReport@FileNameJoin[{NotebookDirectory[], "Editor.wl"}]
 
 
-SetOptions[IGGraphEditor,ImageSize->200];
+SetOptions[IGGraphEditor, ImageSize->200];
 
 
 (* ::Subsubsection:: *)
-(*Does it work at all*)
+(*Does it work at all?*)
 
 
 (* ::Text:: *)
 (*- Alt+Click build a graph*)
-(*- Evalute output to create a graph*)
+(*- Evaluate output to create a graph*)
 (*- Drag outside of range should extend the range @mouseUp*)
 (*- Alt+click should not trigger orange resize frame, nor should discarding a potential edge.*)
 
@@ -50,10 +49,9 @@ IGGraphEditor[ImageSize->100]
 (*- Is initial plot range adequate?*)
 
 
-{IGGraphEditor[IGGraphAtlas[123]],
-IGGraphEditor[Graph[{1,2},{}]] ,
- IGGraphEditor[Graph[{1,2},{1<->2}]]
-}
+{ IGGraphEditor[IGGraphAtlas[123]],
+  IGGraphEditor[Graph[{1, 2}, {}]],
+  IGGraphEditor[Graph[{1, 2}, {1<->2}]] }
 
 
 (* ::Subsubsection:: *)
@@ -64,38 +62,41 @@ IGGraphEditor[Graph[{1,2},{}]] ,
 (*Try to edit them*)
 
 
-{IGGraphEditor[Graph[{},{}]],
-IGGraphEditor[Graph[{1->2,2->1}]],
-IGGraphEditor[PathGraph@{1,2}],
-IGGraphEditor[Graph[{1},{}]]
-}
+{ IGGraphEditor[IGEmptyGraph[]],
+  IGGraphEditor[CompleteGraph[2, DirectedEdges -> True]],
+  IGGraphEditor[CompleteGraph[2]],
+  IGGraphEditor[IGEmptyGraph[1]] }
 
 
 (* ::Subsubsection:: *)
 (*Is it usable with larger graphs?*)
 
 
-g=IGLayoutTutte@IGEdgeMap[#^1.5&,EdgeWeight]@IGDistanceWeighted@IGLayoutTutte@Graph@EdgeList@GraphData["GreatRhombicosidodecahedralGraph"];
+g = IGLayoutTutte@IGEdgeMap[#^1.5&, EdgeWeight]@IGDistanceWeighted@IGLayoutTutte@Graph@EdgeList@GraphData["GreatRhombicosidodecahedralGraph"];
 
 
-IGGraphEditor@g
+IGGraphEditor[g]
 
 
-IGGraphEditor[GraphData["GreatRhombicosidodecahedralGraph"],VertexSize->Tiny]
+IGGraphEditor[GraphData["GreatRhombicosidodecahedralGraph"], VertexSize->Tiny]
 
 
-IGGraphEditor[ExampleData[{"NetworkGraph","DolphinSocialNetwork"}],VertexSize->Tiny,ImageSize->555]
+IGGraphEditor[ExampleData[{"NetworkGraph", "DolphinSocialNetwork"}], VertexSize->Tiny, ImageSize->555]
 
 
 (* ::Subsubsection:: *)
 (*Vertex size*)
 
 
-IGGraphEditor[Graph@{1->2,2->1},VertexSize->#,ImageSize->200]&/@{Tiny,Small,Medium,Large,0.2}
+IGGraphEditor[Graph@{1->2, 2->1}, VertexSize->#, ImageSize->200]& /@ {Tiny, Small, Medium, Large,0.2}
 
 
 (* ::Subsubsection:: *)
-(*multiedges*)
+(*Multi-edges*)
 
 
-IGGraphEditor[Graph[{1->1,1->1,1->1,2->2,1->2,1->2,1->2,2->3,3->1}],VertexLabels->"Name",ImageSize->800]
+IGGraphEditor[
+	Graph[{1->1, 1->1, 1->1, 2->2, 1->2, 1->2, 1->2, 2->3, 3->1}],
+	VertexLabels -> "Name",
+	ImageSize -> 800
+]

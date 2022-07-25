@@ -42,8 +42,19 @@ Cell[BoxData[{
       RowBox[{"FileNameJoin", "[", 
        RowBox[{"{", 
         RowBox[{"\"\<..\>\"", ",", "\"\<IGraphM\>\""}], "}"}], "]"}], ",", 
-      "Infinity"}], "]"}]}]}], ";"}]}], "Input",
- CellLabel->"In[3]:=",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
+      "Infinity"}], "]"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"files", "=", 
+   RowBox[{"Select", "[", 
+    RowBox[{"files", ",", 
+     RowBox[{
+      RowBox[{"Not", "@", 
+       RowBox[{"StringMatchQ", "[", 
+        RowBox[{
+         RowBox[{"AbsoluteFileName", "[", "#", "]"}], ",", 
+         "\"\<*GraphEditor.m*\>\""}], "]"}]}], "&"}]}], "]"}]}], 
+  ";"}]}], "Input",
+ CellLabel->"In[23]:=",ExpressionUUID->"ecb97323-5b7b-4875-ae19-96bd9ad6533e"],
 
 Cell[BoxData[
  RowBox[{"Column", "@", 
@@ -70,7 +81,42 @@ Cell[BoxData[
      RowBox[{"_", ",", 
       RowBox[{"{", "}"}]}], "]"}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
  
- CellLabel->"In[5]:=",ExpressionUUID->"8b9f9e58-afa1-4673-88b0-d8d5e1391716"]
+ CellLabel->
+  "In[27]:=",ExpressionUUID->"8b9f9e58-afa1-4673-88b0-d8d5e1391716"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Lint GraphEditor.m", \
+"Subsection",ExpressionUUID->"4635cf6a-4662-4b02-ba03-90def3c19895"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "@", 
+   RowBox[{"NotebookDirectory", "[", "]"}]}], ";"}], "\n", 
+ RowBox[{"CodeInspectSummarize", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"File", "@", 
+    RowBox[{"FileNameJoin", "[", 
+     RowBox[{"{", 
+      RowBox[{
+      "\"\<..\>\"", ",", "\"\<IGraphM\>\"", ",", "\"\<GraphEditor.m\>\""}], 
+      "}"}], "]"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"PerformanceGoal", "->", "\"\<Quality\>\""}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
+    RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"\"\<TagExclusions\>\"", "\[Rule]", 
+    RowBox[{"{", "\"\<DifferentLine\>\"", 
+     RowBox[{"(*", 
+      RowBox[{
+      "\"\<UnusedParameter\>\"", ",", "\"\<NonASCIICharacter\>\"", ",", 
+       "\"\<ImplicitTimesPseudoCall\>\""}], "*)"}], "}"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"ConfidenceLevel", "\[Rule]", "0.0"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",
+ CellLabel->
+  "In[32]:=",ExpressionUUID->"d3fa4bf9-8ae5-479d-b2a1-19cefdd0ec8b"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -90,15 +136,13 @@ Cell[BoxData[{
    "\[IndentingNewLine]", 
    RowBox[{"\"\<SeverityExclusions\>\"", "\[Rule]", 
     RowBox[{"{", "}"}]}], ",", "\[IndentingNewLine]", 
-   RowBox[{"ConfidenceLevel", "\[Rule]", "0.0"}], ",", "\[IndentingNewLine]", 
-   
    RowBox[{"\"\<TagExclusions\>\"", "\[Rule]", 
     RowBox[{"{", 
      RowBox[{"{", 
       RowBox[{"\"\<DuplicateKeys\>\"", ",", "\"\<ListOfRules\>\""}], "}"}], 
-     "}"}]}]}], "\[IndentingNewLine]", "]"}]}], "Input",
- CellLabel->
-  "In[42]:=",ExpressionUUID->"e26cbd1c-4b10-4a3c-8289-c32f15260698"]
+     "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"ConfidenceLevel", "\[Rule]", "0.0"}]}], "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"e26cbd1c-4b10-4a3c-8289-c32f15260698"]
 }, Open  ]]
 }, Open  ]]
 },
@@ -115,7 +159,7 @@ SpellingDictionaries->{"CorrectWords"->{
  "betweenness", "centralities", "biconnected", "subgraphs", "eigenvector", 
   "subgraph", "coloured", "subisomorphisms", "subisomorphism", "cocitation", 
   "builtin"}},
-FrontEndVersion->"12.3 for Mac OS X x86 (64-bit) (June 19, 2021)",
+FrontEndVersion->"13.1 for Mac OS X x86 (64-bit) (June 16, 2022)",
 StyleDefinitions->"Default.nb",
 ExpressionUUID->"a6eba230-c4a7-400d-aaa3-b6ab0ec650dc"
 ]
