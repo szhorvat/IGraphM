@@ -1,5 +1,20 @@
 ## Revision history for [IGraph/M](README.md)
 
+#### 0.6.2
+
+Changes:
+
+ - Re-enabled resizing for `IGGraphEditor[]`.
+ - `IGGraphEditor[]` now shows a warning when invoked without a notebook interface.
+
+Fixed:
+
+ - `IGCommunitiesSpinGlass` returned invalid results for the null and singleton graphs.
+
+Other:
+
+ - Documentation improvements.
+
 #### 0.6.1
 
 Fixed:
