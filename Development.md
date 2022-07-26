@@ -4,7 +4,7 @@ Contributions to IGraph/M are most welcome!
 
 IGraph/M serves both to expose the [igraph C library][3] to the Wolfram Language, as well as to provide independent graph theory and network analysis functionality.
 
-igraph is a large graph library with diverse functionality.  I primarily focused on providing an interface to functions that I need myself, and I do not have time to cover all igraph functions.  However, the main framework is there, and adding new functions is relatively quick and easy.
+igraph is a large graph library with diverse functionality.  IGraph/M primarily focuses on exposing those pieces of igraph functionality which are not already available in Mathematica. Not all igraph functions are included. However, the main framework is there, and adding new functions is relatively quick and easy.
 
 If you are interested in extending IGraph/M, send me an email to get technical guidance.  IGraph/M uses the [LTemplate package][1] to simplify writing LibraryLink code, and acts as a driver for LTemplate development.  I recommend starting by reading the LTemplate tutorial.
 
@@ -72,9 +72,9 @@ To compile IGraph/M, you will need:
 Then follow these steps:
 
  1. Clone the IGraphM repository and check out the `master` branch (do not use any other branch).
- 2. Edit `BuildSettings.m` and set the path to your igraph installation, where necessary.  The available options are the same as for [CreateLibrary](http://reference.wolfram.com/language/CCompilerDriver/ref/CreateLibrary.html).
- 3. Append the repository's root directory (i.e. the same directory where this `README.md` file is found) to Mathematica's `$Path`. At the same time, ensure that you do not have the paclet version installed. If you do, remove it with `PacletUninstall["IGraphM"]` before proceeding.
- 4. Load the package with ``<<IGraphM` ``.  It should automatically be compiled. It can also be recompiled using ``IGraphM`Developer`Recompile[]``.
+ 2. Edit `BuildSettings.m` and set the path to your igraph and LEMON installation, where necessary.  The available options are the same as for [CreateLibrary](http://reference.wolfram.com/language/CCompilerDriver/ref/CreateLibrary.html).
+ 3. Append the repository's root directory (i.e. the same directory where this `README.md` file is found) to Mathematica's `$Path`. At the same time, ensure that you do not have the IGraph/M paclet installed. If you do, remove it with `PacletUninstall["IGraphM"]` before proceeding. You can check which version of IGraph/M gets loaded on your system by evaluating ``FindFile["IGraphM`"]``.
+ 4. Load the package with ``<<IGraphM` ``.  It should automatically be compiled. It can also be recompiled manually using ``IGraphM`Developer`Recompile[]``.
 
 ## Adding new functions to IGraph/M
 
