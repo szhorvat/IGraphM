@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -110,7 +110,7 @@ IGMotifsVertexParticipation[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
       ];
       AssociationThread[
         VertexList[graph],
-        Round@Developer`FromPackedArray@check@ig@"motifsParticipation"[size, ConstantArray[0, size]]
+        Round@Developer`FromPackedArray@expectInfNaN@check@ig@"motifsParticipation"[size, ConstantArray[0, size]]
       ]
     ]
 

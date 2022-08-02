@@ -250,7 +250,7 @@ IGGraphAtlas[n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[Graph]
 
 PackageExport["IGFamousGraph"]
 IGFamousGraph::usage = "IGFamousGraph[name] returns the given graph from igraph's built-in database.";
-SyntaxInformation[IGFamousGraph] = {"ArgumentsPattern" -> {_}};
+SyntaxInformation[IGFamousGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGGraphAtlas, Graph]};
 IGFamousGraph[name_?StringQ, opt : OptionsPattern[Graph]] :=
     catch@Block[{ig = igMakeEmpty[]},
       check@ig@"famous"[name];

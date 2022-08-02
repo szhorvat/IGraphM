@@ -11,7 +11,7 @@ The IGraph/M package provides a [Wolfram Language](https://www.wolfram.com/) int
 
 ## 📦 Installation
 
-The system requirements are _Mathematica_ 10.0.2 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
+The system requirements are _Mathematica_ 11.0 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
 
 To install the package automatically, simply evaluate the following in _Mathematica_:
 
@@ -21,11 +21,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.5.1.paclet` was downloaded into the directory `~/Downloads`, evaluate:
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.6.2.paclet` was downloaded into the directory `~/Downloads`, evaluate:
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.5.1.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.6.2.paclet"]
 ```
 
 After installation, the package can now be loaded with:
@@ -90,4 +90,3 @@ IGraph/M is licensed under the [GNU GPLv3](https://opensource.org/licenses/gpl-3
 
  [ltemplate]: https://github.com/szhorvat/LTemplate/
  [main]: http://szhorvat.net/mathematica/IGraphM
-

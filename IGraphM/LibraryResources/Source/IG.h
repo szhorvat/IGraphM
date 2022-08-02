@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2020 Szabolcs Horvát.
+ * Copyright (c) 2016-2022 Szabolcs Horvát.
  *
  * See the file LICENSE.txt for copying permission.
  */
@@ -14,6 +14,7 @@
 #include <set>
 #include <tuple>
 #include <iomanip>
+#include <cmath>
 
 class IG;
 
@@ -735,6 +736,11 @@ public:
         igraph_arpack_options_t options;
         igraph_arpack_options_init(&options);
         igCheck(igraph_hub_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        if (value < -std::pow( std::numeric_limits<double>::epsilon(), 2.0/3 ) ) {
+            std::ostringstream msg;
+            msg << "Hub score eigenvalue should be positive, actual eigenvalue is " << value << ". Possible convergence problem.";
+            mma::message(msg.str(), mma::M_WARNING);
+        }
         return vector.makeMTensor();
     }
 
@@ -744,6 +750,11 @@ public:
         igraph_arpack_options_t options;
         igraph_arpack_options_init(&options);
         igCheck(igraph_authority_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        if (value < -std::pow( std::numeric_limits<double>::epsilon(), 2.0/3 ) ) {
+            std::ostringstream msg;
+            msg << "Authority score eigenvalue should be positive, actual eigenvalue is " << value << ". Possible convergence problem.";
+            mma::message(msg.str(), mma::M_WARNING);
+        }
         return vector.makeMTensor();
     }
 
@@ -1247,10 +1258,12 @@ public:
                 switch (vcount) {
                 case 3: return directed ? 16 : 4;
                 case 4: return directed ? 218 : 11;
+                case 5:
+                    if (! directed) return 34;
+                case 6:
+                    if (! directed) return 156;
                 default:
-                    /* We are relying on igraph_motifs_randesu_callback() reporting an error below
-                       if a wrong motif size argument was passed in. */
-                    return 1;
+                    throw mma::LibraryError("Unsupported motif size.");
                 }
             }
         };
@@ -1305,6 +1318,73 @@ public:
                     mat(i,5) = IGRAPH_NAN;
                 }
                 break;
+            case 5:
+                if (! dir) {
+                    mat(i,0) = IGRAPH_NAN;
+                    mat(i,1) = IGRAPH_NAN;
+                    mat(i,2) = IGRAPH_NAN;
+                    mat(i,3) = IGRAPH_NAN;
+                    mat(i,4) = IGRAPH_NAN;
+                    mat(i,5) = IGRAPH_NAN;
+                    mat(i,6) = IGRAPH_NAN;
+                    mat(i,7) = IGRAPH_NAN;
+                    mat(i,8) = IGRAPH_NAN;
+                    mat(i,9) = IGRAPH_NAN;
+                    mat(i,10) = IGRAPH_NAN;
+                    mat(i,12) = IGRAPH_NAN;
+                    mat(i,19) = IGRAPH_NAN;
+                    break;
+                }
+                /* otherwise fall through to default */
+            case 6:
+                if (! dir) {
+                    mat(i,0) = IGRAPH_NAN;
+                    mat(i,1) = IGRAPH_NAN;
+                    mat(i,2) = IGRAPH_NAN;
+                    mat(i,3) = IGRAPH_NAN;
+                    mat(i,4) = IGRAPH_NAN;
+                    mat(i,5) = IGRAPH_NAN;
+                    mat(i,6) = IGRAPH_NAN;
+                    mat(i,7) = IGRAPH_NAN;
+                    mat(i,8) = IGRAPH_NAN;
+                    mat(i,9) = IGRAPH_NAN;
+                    mat(i,10) = IGRAPH_NAN;
+                    mat(i,11) = IGRAPH_NAN;
+                    mat(i,12) = IGRAPH_NAN;
+                    mat(i,13) = IGRAPH_NAN;
+                    mat(i,14) = IGRAPH_NAN;
+                    mat(i,15) = IGRAPH_NAN;
+                    mat(i,16) = IGRAPH_NAN;
+                    mat(i,17) = IGRAPH_NAN;
+                    mat(i,18) = IGRAPH_NAN;
+                    mat(i,19) = IGRAPH_NAN;
+                    mat(i,20) = IGRAPH_NAN;
+                    mat(i,21) = IGRAPH_NAN;
+                    mat(i,22) = IGRAPH_NAN;
+                    mat(i,23) = IGRAPH_NAN;
+                    mat(i,24) = IGRAPH_NAN;
+                    mat(i,25) = IGRAPH_NAN;
+                    mat(i,26) = IGRAPH_NAN;
+                    mat(i,27) = IGRAPH_NAN;
+                    mat(i,28) = IGRAPH_NAN;
+                    mat(i,29) = IGRAPH_NAN;
+                    mat(i,30) = IGRAPH_NAN;
+                    mat(i,31) = IGRAPH_NAN;
+                    mat(i,32) = IGRAPH_NAN;
+                    mat(i,33) = IGRAPH_NAN;
+                    mat(i,35) = IGRAPH_NAN;
+                    mat(i,38) = IGRAPH_NAN;
+                    mat(i,44) = IGRAPH_NAN;
+                    mat(i,50) = IGRAPH_NAN;
+                    mat(i,51) = IGRAPH_NAN;
+                    mat(i,54) = IGRAPH_NAN;
+                    mat(i,74) = IGRAPH_NAN;
+                    mat(i,77) = IGRAPH_NAN;
+                    mat(i,89) = IGRAPH_NAN;
+                    mat(i,120) = IGRAPH_NAN;
+                    break;
+                }
+                /* otherwise fall through to default */
             default:
                 massert("motifsParticipation: this line should never be reached");
             }
@@ -1398,6 +1478,126 @@ public:
         return res.makeMTensor();
     }
 
+    // Shortest path tree
+
+    mma::IntTensorRef shortestPathTreeEdges(mint from) const {
+        igLongVector pred_e;
+
+        igCheck(igraph_get_shortest_paths(
+                    &graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    IGRAPH_OUT,
+                    nullptr, &pred_e.vec));
+
+        return pred_e.makeMTensor();
+    }
+
+    mma::IntTensorRef shortestPathTreeEdgesDijkstra(mint from) const {
+        igLongVector pred_e;
+
+        igCheck(igraph_get_shortest_paths_dijkstra(
+                    &graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    nullptr, &pred_e.vec));
+
+        return pred_e.makeMTensor();
+    }
+
+    mma::IntTensorRef shortestPathTreeEdgesBellmanFord(mint from) const {
+        igLongVector pred_e;
+
+        igCheck(igraph_get_shortest_paths_bellman_ford(
+                    &graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    nullptr, &pred_e.vec));
+
+        return pred_e.makeMTensor();
+    }
+
+    // note that this is a constructor!
+    void shortestPathTree(const IG &ig, mint from) {
+        igLongVector pred_v;
+
+        igCheck(igraph_get_shortest_paths_dijkstra(
+                    &ig.graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    &pred_v.vec, nullptr));
+
+        igVector edges;
+        edges.reserve(2*ig.vertexCount());
+
+        for (mint v=0; v < pred_v.size(); ++v) {
+            mint u = pred_v[v];
+            if (u >= 0) {
+                edges.push_back(u);
+                edges.push_back(v);
+            }
+        }
+
+        fromEdgeList(edges, ig.vertexCount(), true);
+    }
+
+    // note that this is a constructor!
+    void shortestPathTreeDijkstra(const IG &ig, mint from) {
+        igLongVector pred_v, pred_e;
+
+        igCheck(igraph_get_shortest_paths_dijkstra(
+                    &ig.graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    &pred_v.vec, &pred_e.vec));
+
+        igVector edges;
+        edges.reserve(2*ig.vertexCount());
+
+        weighted = true;
+        weights.reserve(2*ig.vertexCount());
+
+        for (mint v=0; v < pred_v.size(); ++v) {
+            mint u = pred_v[v];
+            if (u >= 0) {
+                edges.push_back(u);
+                edges.push_back(v);
+                weights.push_back(ig.weights[pred_e[v]]);
+            }
+        }
+
+        fromEdgeList(edges, ig.vertexCount(), true);
+    }
+
+    // note that this is a constructor!
+    void shortestPathTreeBellmanFord(const IG &ig, mint from) {
+        igLongVector pred_v, pred_e;
+
+        igCheck(igraph_get_shortest_paths_dijkstra(
+                    &ig.graph, nullptr, nullptr,
+                    from, igraph_vss_all(),
+                    passWeights(), IGRAPH_OUT,
+                    &pred_v.vec, &pred_e.vec));
+
+        igVector edges;
+        edges.reserve(2*ig.vertexCount());
+
+        weighted = true;
+        weights.reserve(2*ig.vertexCount());
+
+        for (mint v=0; v < pred_v.size(); ++v) {
+            mint u = pred_v[v];
+            if (u >= 0) {
+                edges.push_back(u);
+                edges.push_back(v);
+                weights.push_back(ig.weights[pred_e[v]]);
+            }
+        }
+
+        fromEdgeList(edges, ig.vertexCount(), true);
+    }
+
+    // Neighbourhoods
+
     mma::RealTensorRef neighborhoodSize(mma::RealTensorRef vs, mint mindist, mint maxdist, mint mode) const {
         igVector res;
         igraph_vector_t vsvec = igVectorView(vs);
@@ -1423,6 +1623,8 @@ public:
 
         return res.makeMTensor();
     }
+
+    // Shortest path length histograms
 
     mma::RealTensorRef shortestPathCounts() const {
         igVector res;
@@ -1514,6 +1716,8 @@ public:
         mma::IntTensorRef res = mma::makeVector<mint>(hist.size(), hist.data());
         return res;
     }
+
+    // Diameter
 
     double diameter(bool components) const {
         double diam;
@@ -3041,8 +3245,7 @@ public:
             }
         }
 
-        destroy();
-        igConstructorCheck(igraph_create(&graph, &igedges.vec, vcount, false));
+        fromEdgeList(igedges, vcount, false);
 
         weighted = true;
         weights.resize(result.size());
@@ -3135,8 +3338,7 @@ public:
             }
         }
 
-        destroy();
-        igConstructorCheck(igraph_create(&graph, &igedges.vec, vcount, true));
+        fromEdgeList(igedges, vcount, true);
 
         weighted = true;
         weights.resize(result.size());
@@ -3459,6 +3661,32 @@ public:
         return res;
     }
 
+    double assortativityNominal(mma::RealTensorRef types, bool directed) const {
+        igraph_vector_t types_vec = igVectorView(types);
+        igraph_real_t res;
+
+        igCheck(igraph_assortativity_nominal(&graph, &types_vec, &res, directed));
+
+        return res;
+    }
+
+    double assortativityValued(mma::RealTensorRef values, mma::RealTensorRef values_in, bool directed) const {
+        igraph_vector_t values_vec = igVectorView(values);
+        igraph_vector_t values_in_vec = igVectorView(values_in);
+        igraph_real_t res;
+
+        igCheck(igraph_assortativity(&graph, &values_vec, directed ? &values_in_vec : nullptr, &res, directed));
+
+        return res;
+    }
+
+    double assortativityDegree(bool directed) const {
+        igraph_real_t res;
+
+        igCheck(igraph_assortativity_degree(&graph, &res, directed));
+
+        return res;
+    }
 };
 
 #endif // IG_H

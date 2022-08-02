@@ -186,7 +186,12 @@ template = LTemplate["IGraphM",
         LFun["upperPos", {{Integer, 2, "Constant"}, True|False (* diagonal *)}, {Integer, 1}],
         LFun["nondiagPos", {{Integer, 2, "Constant"}}, {Integer, 1}],
 
-        LFun["fromNauty", {"UTF8String"}, {Integer, 1}]
+        (* Nauty / Graph6 *)
+
+        LFun["fromNauty", {"UTF8String"}, {Integer, 1}],
+
+        (* Percolation *)
+        LFun["percolationCurve", {{Integer, 2, "Constant"}, Integer}, {Real, 2}]
       }
     ],
 
@@ -397,6 +402,10 @@ template = LTemplate["IGraphM",
         LFun["shortestPathsDijkstra", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathsBellmanFord", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathsJohnson", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
+
+        LFun["shortestPathTreeEdges", {Integer (* from *)}, {Integer, 1}],
+        LFun["shortestPathTreeEdgesDijkstra", {Integer (* from *)}, {Integer, 1}],
+        LFun["shortestPathTreeEdgesBellmanFord", {Integer (* from *)}, {Integer, 1}],
 
         LFun["diameter", {True|False (* by components *)}, Real],
         LFun["findDiameter", {True|False (* by components *)}, {Real, 1}],
@@ -664,16 +673,22 @@ template = LTemplate["IGraphM",
         LFun["setPoints", {{Real, 2, "Constant"}}, "Void"],
         LFun["query", {{Real, 1, "Constant"} (* centre *), Real (* distance *)}, {Integer, 1}],
         LFun["queryMultiple", {{Real, 2, "Constant"} (* centres *), {Real, 1, "Constant"} (* distances *)}, {Integer, 1}],
-        LFun["neighborCounts", {{Real, 2, "Constant"} (* centres *), {Real, 1, "Constant"}}, {Integer, 1}],
+        LFun["neighborCounts",
+          {{Real, 2, "Constant"} (* centres *),
+           {Real, 1, "Constant"} (* distances *),
+           {Integer, 2, "Constant"} (* edges *)},
+          {Integer, 1}],
         LFun["intersectionCounts",
           {{Real, 2, "Constant"} (* centres1 *),
            {Real, 2, "Constant"} (* centres2 *),
-           {Real, 1, "Constant"} (* distances *)},
+           {Real, 1, "Constant"} (* distances *),
+           {Integer, 2, "Constant"} (* edges *)},
           {Integer, 1}],
         LFun["unionCounts",
           {{Real, 2, "Constant"} (* centres1 *),
            {Real, 2, "Constant"} (* centres2 *),
-           {Real, 1, "Constant"} (* distances *)},
+           {Real, 1, "Constant"} (* distances *),
+           {Integer, 2, "Constant"} (* edges *)},
           {Integer, 1}]
       }
     ],
@@ -683,16 +698,22 @@ template = LTemplate["IGraphM",
         LFun["setPoints", {{Real, 2, "Constant"}}, "Void"],
         LFun["query", {{Real, 1, "Constant"} (* centre *), Real (* distance *)}, {Integer, 1}],
         LFun["queryMultiple", {{Real, 2, "Constant"} (* centres *), {Real, 1, "Constant"} (* distances *)}, {Integer, 1}],
-        LFun["neighborCounts", {{Real, 2, "Constant"} (* centres *), {Real, 1, "Constant"}}, {Integer, 1}],
+        LFun["neighborCounts",
+          {{Real, 2, "Constant"} (* centres *),
+           {Real, 1, "Constant"} (* distances *),
+           {Integer, 2, "Constant"} (* edges *)},
+          {Integer, 1}],
         LFun["intersectionCounts",
           {{Real, 2, "Constant"} (* centres1 *),
            {Real, 2, "Constant"} (* centres2 *),
-           {Real, 1, "Constant"} (* distances *)},
+           {Real, 1, "Constant"} (* distances *),
+           {Integer, 2, "Constant"} (* edges *)},
           {Integer, 1}],
         LFun["unionCounts",
           {{Real, 2, "Constant"} (* centres1 *),
            {Real, 2, "Constant"} (* centres2 *),
-           {Real, 1, "Constant"} (* distances *)},
+           {Real, 1, "Constant"} (* distances *),
+           {Integer, 2, "Constant"} (* edges *)},
           {Integer, 1}]
       }
     ]
@@ -1034,7 +1055,7 @@ igUnpackSetsHelper[verts_][packed_] :=
 PackageScope["vss"]
 vss::usage = "vss[graph][vertices]";
 vss[graph_][All] := {}
-vss[graph_][vs_List] := Check[VertexIndex[graph, #] - 1& /@ vs, throw[$Failed]]
+vss[graph_][vl_List] := Check[VertexIndex[graph, #] - 1& /@ vl, throw[$Failed]]
 
 PackageScope["vs"]
 vs::usage = "vs[graph][vertex]";

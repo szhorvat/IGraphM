@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -72,6 +72,63 @@ igDistanceMatrixJohnson[graph_, from_, to_] :=
       expectInfNaN@fixInfNaN@check@ig@"shortestPathsJohnson"[from, to]
     ]
 
+(***** Shortest path tree *****)
+
+PackageExport["IGShortestPathTree"]
+IGShortestPathTree::usage = "IGShortestPathTree[graph, vertex] give the shortest path tree of graph rooted in vertex.";
+
+Options[IGShortestPathTree] = {Method -> Automatic};
+igShortestPathTreeMethods = <|
+  "Unweighted" -> igSPTUnweighted,
+  "Dijkstra" -> igSPTDijkstra,
+  "BellmanFord" -> igSPTBellmanFord
+|>;
+
+SyntaxInformation[IGShortestPathTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGShortestPathTree, Graph]};
+
+IGShortestPathTree::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igShortestPathTreeMethods], InputForm] <> ".";
+
+IGShortestPathTree[graph_?igGraphQ, from_, opt : OptionsPattern[{IGShortestPathTree, Graph}]] :=
+    catch@Module[{method = OptionValue[Method]},
+      If[Not@MemberQ[Keys[igDistanceMatrixMethods] ~Join~ {Automatic}, method],
+        Message[IGShortestPathTree::bdmtd, method];
+        Return[$Failed]
+      ];
+      If[method === Automatic,
+        method = Which[
+          Not@IGEdgeWeightedQ[graph], "Unweighted",
+          TrueQ[Min@igEdgeWeights[graph] >= 0], "Dijkstra",
+          True, "BellmanFord"
+        ]
+      ];
+      applyGraphOpt[opt]@igShortestPathTreeMethods[method][graph, vs[graph][from]]
+    ]
+
+removeZeroes[vec_] := Delete[vec, Position[vec, 0]]
+
+igSPTUnweighted[graph_, from_] :=
+    Block[{ig = igMakeUnweighted[graph]},
+      IGTakeSubgraph[
+        graph,
+        EdgeList[graph][[ removeZeroes@check@igIndexVec@ig@"shortestPathTreeEdges"[from] ]]
+      ]
+    ]
+
+igSPTDijkstra[graph_, from_] :=
+    Block[{ig = igMake[graph]},
+      IGTakeSubgraph[
+        graph,
+        EdgeList[graph][[ removeZeroes@check@igIndexVec@ig@"shortestPathTreeEdgesDijkstra"[from] ]]
+      ]
+    ]
+
+igSPTBellmanFord[graph_, from_] :=
+    Block[{ig = igMake[graph]},
+      IGTakeSubgraph[
+        graph,
+        EdgeList[graph][[ removeZeroes@check@igIndexVec@ig@"shortestPathTreeEdgesBellmanFord"[from] ]]
+      ]
+    ]
 
 (***** Path length histograms and averages ****)
 
@@ -221,8 +278,8 @@ PackageExport["IGAverageLocalEfficiency"]
 IGAverageLocalEfficiency::usage =
     "IGAverageLocalEfficiency[graph] gives the average local efficiency of graph.\n" <>
     "IGAverageLocalEfficiency[graph, \"Out\"] uses outgoing edges to define the neighbourhood in a directed graph.";
-SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 Options[IGAverageLocalEfficiency] = { DirectedEdges -> True };
+SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGAverageLocalEfficiency[graph_?igGraphQ, mode_String : "All", OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[graph]},
       check@ig@"averageLocalEfficiency"[OptionValue[DirectedEdges], encodeNeighborMode[mode]]
@@ -265,8 +322,8 @@ IGDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 igDiameterUnweighted[graph_, bycomp_] :=
-    Block[{ig = igMakeFast[graph]},
-      sck@ig@"diameter"[bycomp]
+    catch@Block[{ig = igMakeFast[graph]},
+      Round@check@ig@"diameter"[bycomp]
     ]
 
 igDiameterDijkstra[graph_, bycomp_] :=

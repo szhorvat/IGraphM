@@ -1421,6 +1421,24 @@ MT[
 ]
 
 
+(* ::Subsubsection::Closed:: *)
+(*IGFamousGraph*)
+
+
+MT[
+  IGFamousGraph["Herschel"],
+  GraphData["HerschelGraph"],
+  SameTest -> IGIsomorphicQ
+]
+
+
+MT[
+  IGFamousGraph["SmallestCyclicGroup"],
+  GraphData["SmallestCyclicGroupGraph"],
+  SameTest -> IGIsomorphicQ
+]
+
+
 (* ::Section::Closed:: *)
 (*Creation: random*)
 
@@ -3659,6 +3677,39 @@ MT[
 
 
 (* ::Subsubsection::Closed:: *)
+(*IGHarmonicCentrality*)
+
+
+MT[
+  IGHarmonicCentrality[IGEmptyGraph[]],
+  {}
+]
+
+MT[
+  IGHarmonicCentrality[IGEmptyGraph[3]],
+  {0., 0., 0.}
+]
+
+
+harmonicCentr[g_?GraphQ] := 
+  Mean/@(1/MapThread[Delete,{GraphDistanceMatrix[g],Range@VertexCount[g]}])
+
+
+MT[
+  IGHarmonicCentrality[#],
+  harmonicCentr[#],
+  SameTest -> Equal
+]& /@ {ugs, dgs, wugs, wdgs, umulti, dmulti, umulti2, dmulti2}
+
+
+(* ::Subsubsection:: *)
+(*IGHarmonicCentralityCutoff*)
+
+
+(* TODO *)
+
+
+(* ::Subsubsection::Closed:: *)
 (*PageRank*)
 
 
@@ -4260,6 +4311,16 @@ MT[
 ]
 
 MT[
+  IGMotifs[dolphin, 5],
+  {Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, 508, Indeterminate, 5821, 871, 6189, 1878, 642, 595, Indeterminate, 2158, 666, 229, 6, 48, 110, 142, 223, 129, 29, 65, 8, 26, 3}
+]
+
+MT[
+  IGMotifs[dolphin, 6],
+  {Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, Indeterminate, 223, Indeterminate, 4767, 577, Indeterminate, 3227, 15550, 3826, 815, 555, Indeterminate, 2641, 637, 208, 846, 630, Indeterminate, Indeterminate, 14644, 1351, Indeterminate, 3970, 15807, 1395, 9356, 2513, 729, 652, 36, 189, 151, 1678, 893, 243, 5678, 971, 1095, 505, 105, 223, Indeterminate, 1460, 34, Indeterminate, 1353, 284, 455, 98, 1767, 619, 266, 9, 86, 75, 141, Indeterminate, 562, 149, 96, 31, 0, 12, 218, 110, 79, 67, 36, 85, 0, 21, 239, 543, 118, 11, 74, 331, 52, 57, 43, 34, 1, 26, 7, 16, 0, 28, Indeterminate, 572, 198, 126, 66, 10, 35, 95, 33, 63, 25, 39, 9, 32, 31, 5, 7, 0, 0, 0, 7, 0, 0, 2, 5, 8, 5, 0, 14, 1, 1, 4, 0, 2, 1, 0}
+]
+
+MT[
   IGMotifs[empty, 3],
   {Indeterminate, Indeterminate, 0, 0}
 ]
@@ -4304,6 +4365,12 @@ MT[
   3800
 ]
 
+(* values greater than what is supported by IGMotifs *)
+MT[
+  IGMotifsTotalCount[dolphin, 8],
+  2683740
+]
+
 MT[
   IGMotifsTotalCount[empty, 3],
   0
@@ -4312,6 +4379,53 @@ MT[
 MT[
   IGMotifsTotalCount[edgeless, 3],
   0
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*IGMotifsVertexParticipation*)
+
+
+MT[
+  IGMotifsVertexParticipation[IGEmptyGraph[], 3],
+  <||>
+]
+
+MT[
+  IGMotifsVertexParticipation[IGEmptyGraph[3], 3],
+  <|1 -> {Indeterminate, Indeterminate, 0, 0}, 2 -> {Indeterminate, Indeterminate, 0, 0}, 3 -> {Indeterminate, Indeterminate, 0, 0}|>
+]
+
+MT[
+  IGMotifsVertexParticipation[Graph[{1 -> 2}], 3],
+  <|1 -> {Indeterminate, Indeterminate, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 2 -> {Indeterminate, Indeterminate, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}|>
+]
+
+
+MT[
+  IGMotifsVertexParticipation[Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, {1 -> 4, 1 -> 5, 2 -> 1, 2 -> 4, 2 -> 5, 2 -> 9, 3 -> 5, 5 -> 2, 6 -> 3, 7 -> 3, 7 -> 8, 7 -> 9, 8 -> 1, 8 -> 4, 8 -> 7, 9 -> 7, 10 -> 1, 10 -> 5, 10 -> 7, 10 -> 9}], 3],
+  <|1 -> {Indeterminate, Indeterminate, 4, Indeterminate, 2, 0, 4, 3, 0, 1, 0, 0, 1, 0, 0, 0}, 2 -> {Indeterminate, Indeterminate, 4, Indeterminate, 0, 3, 2, 1, 0, 2, 0, 0, 1, 0, 0, 0}, 3 -> {Indeterminate, Indeterminate, 3, Indeterminate, 3, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0}, 4 -> {Indeterminate, Indeterminate, 1, Indeterminate, 1, 0, 2, 2, 0, 2, 0, 0, 0, 0, 0, 0}, 5 -> {Indeterminate, Indeterminate, 2, Indeterminate, 3, 2, 3, 1, 0, 2, 0, 0, 1, 0, 0, 0}, 6 -> {Indeterminate, Indeterminate, 1, Indeterminate, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 7 -> {Indeterminate, Indeterminate, 1, Indeterminate, 2, 2, 2, 0, 1, 4, 1, 0, 0, 0, 0, 0}, 8 -> {Indeterminate, Indeterminate, 3, Indeterminate, 1, 1, 0, 1, 0, 3, 1, 0, 0, 0, 0, 0}, 9 -> {Indeterminate, Indeterminate, 1, Indeterminate, 0, 1, 4, 0, 1, 2, 1, 0, 0, 0, 0, 0}, 10 -> {Indeterminate, Indeterminate, 4, Indeterminate, 2, 2, 4, 1, 1, 0, 0, 0, 0, 0, 0, 0}|>
+]
+
+
+MT[
+  IGMotifsVertexParticipation[CompleteGraph[4], 3],
+  <|1 -> {Indeterminate, Indeterminate, 0, 3}, 2 -> {Indeterminate, Indeterminate, 0, 3}, 3 -> {Indeterminate, Indeterminate, 0, 3}, 4 -> {Indeterminate, Indeterminate, 0, 3}|>
+]
+
+
+MT[
+  IGMotifsVertexParticipation[CompleteGraph[5, DirectedEdges -> True], 4],
+  <|1 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 2 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 3 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 4 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}, 5 -> {Indeterminate, Indeterminate, Indeterminate, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, Indeterminate, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, Indeterminate, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Indeterminate, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4}|>
+]
+
+
+Table[
+  MT[
+    Total@IGMotifsVertexParticipation[dolphin, k] / k,
+    IGMotifs[dolphin, k]
+  ],
+  {k, 3, 6}
 ]
 
 
@@ -6412,9 +6526,7 @@ MT[
 bsPoints = {{-0.59, -0.09}, {0.07, 0.85}, {-0.48, -0.22}, {0.56, -0.12}, {0.02, -0.35}, {-0.05, 1.}, {-0.76, 0.32}, {-0.37, 0.}, {-0.03, 0.39}, {-0.65, -0.49}, {-0.06, 0.6}, {-0.53, 0.76}, {0.91, -0.25}, {0.22, -0.72}, {0.27, -0.18}, {-0.75, -0.3}, {0.85, 0.09}, {0.63, 0.2}, {0.57, 0.16}, {-0.43, -0.51}};
 
 
-MT[
-  IGLuneBetaSkeleton[bsPoints, 0.8],
-  Graph@{1 <-> 3, 1 <-> 7, 1 <-> 8, 1 <-> 10, 1 <-> 16, 2 <-> 6, 2 <-> 11,
+bsRes08 = Graph@{1 <-> 3, 1 <-> 7, 1 <-> 8, 1 <-> 10, 1 <-> 16, 2 <-> 6, 2 <-> 11,
     2 <-> 12, 2 <-> 18, 2 <-> 19, 3 <-> 5, 3 <-> 8, 3 <-> 10, 3 <-> 16,
     3 <-> 20, 4 <-> 9, 4 <-> 13, 4 <-> 14, 4 <-> 15, 4 <-> 17, 4 <-> 18,
     4 <-> 19, 5 <-> 8, 5 <-> 9, 5 <-> 14, 5 <-> 15, 5 <-> 20, 6 <-> 11,
@@ -6422,18 +6534,36 @@ MT[
     8 <-> 12, 8 <-> 15, 8 <-> 19, 9 <-> 11, 9 <-> 12, 9 <-> 15, 9 <-> 18,
     9 <-> 19, 10 <-> 16, 10 <-> 20, 11 <-> 12, 11 <-> 18, 11 <-> 19,
     13 <-> 14, 13 <-> 17, 13 <-> 18, 13 <-> 19, 14 <-> 15, 14 <-> 20,
-    15 <-> 19, 16 <-> 20, 17 <-> 18, 17 <-> 19, 18 <-> 19},
+    15 <-> 19, 16 <-> 20, 17 <-> 18, 17 <-> 19, 18 <-> 19};
+
+MT[
+  IGLuneBetaSkeleton[bsPoints, 0.8],
+  bsRes08,
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGLuneBetaSkeleton[bsPoints + 100000.0, 0.8],
+  bsRes08,
   SameTest -> IGSameGraphQ
 ]
 
 
-MT[
-  IGLuneBetaSkeleton[bsPoints, 1.5],
-  Graph@{10 <-> 16, 3 <-> 16, 3 <-> 8, 1 <-> 3, 1 <-> 16, 11 <-> 12, 8 <-> 9,
+bsRes15 = Graph@{10 <-> 16, 3 <-> 16, 3 <-> 8, 1 <-> 3, 1 <-> 16, 11 <-> 12, 8 <-> 9,
     1 <-> 7, 5 <-> 14, 4 <-> 13, 4 <-> 15, 9 <-> 15, 17 <-> 18,
     18 <-> 19, 3 <-> 20, 5 <-> 8, 1 <-> 8, 10 <-> 20, 9 <-> 11, 2 <-> 6,
     7 <-> 12, 5 <-> 20, 5 <-> 15, 9 <-> 19, 6 <-> 12, 2 <-> 11,
-    13 <-> 17, 4 <-> 19},
+    13 <-> 17, 4 <-> 19};
+
+MT[
+  IGLuneBetaSkeleton[bsPoints, 1.5],
+  bsRes15,
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGLuneBetaSkeleton[bsPoints + 100000.0, 1.5],
+  bsRes15,
   SameTest -> IGSameGraphQ
 ]
 
@@ -6453,6 +6583,120 @@ MT[
 MT[
   IGLuneBetaSkeleton[GraphEmbedding@IGTriangularLattice[4], 1.99],
   IGTriangularLattice[4],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGLuneBetaSkeleton[GraphEmbedding@IGTriangularLattice[4], 2],
+  IGEmptyGraph@VertexCount@IGTriangularLattice[4],
+  SameTest -> IGSameGraphQ
+]
+
+
+(* ::Text:: *)
+(*Rectangular lattice in 2D and 3D*)
+
+
+MT[
+  IGLuneBetaSkeleton[Tuples[Range[3], {2}], 2],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9}, {1 <-> 4, 5 <-> 6, 1 <-> 2, 2 <-> 5, 5 <-> 8, 4 <-> 7, 6 <-> 9, 2 <-> 3, 4 <-> 5, 7 <-> 8, 8 <-> 9, 3 <-> 6}],
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGLuneBetaSkeleton[Tuples[Range[3], {3}], 2],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27}, {17 <-> 18, 1 <-> 10, 10 <-> 13, 12 <-> 21, 4 <-> 5, 11 <-> 20, 15 <-> 24, 11 <-> 14, 14 <-> 23, 14 <-> 17, 23 <-> 26, 14 <-> 15, 12 <-> 15, 22 <-> 25, 20 <-> 23, 19 <-> 22, 13 <-> 14, 15 <-> 18, 2 <-> 3, 1 <-> 2, 10 <-> 11, 11 <-> 12, 10 <-> 19, 13 <-> 22, 16 <-> 17, 13 <-> 16, 5 <-> 14, 4 <-> 7, 17 <-> 26, 2 <-> 11, 6 <-> 15, 8 <-> 17, 9 <-> 18, 4 <-> 13, 1 <-> 4, 19 <-> 20, 22 <-> 23, 23 <-> 24, 20 <-> 21, 2 <-> 5, 16 <-> 25, 5 <-> 6, 5 <-> 8, 18 <-> 27, 21 <-> 24, 24 <-> 27, 26 <-> 27, 25 <-> 26, 3 <-> 6, 8 <-> 9, 7 <-> 8, 3 <-> 12, 7 <-> 16, 6 <-> 9}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGLuneBetaSkeleton[
+    N[PolyhedronData["Icosidodecahedron", "Vertices"]],
+    1.5
+  ],
+  GraphData["IcosidodecahedralGraph"],
+  SameTest -> IGIsomorphicQ
+]
+
+
+bsPts3D = {
+  {0, 0, 0}, {4, 6, -9}, {9, 9, 9}, {-8, -5, 2}, {5, 4, 4}, {-4, 2, 5}, {8, -2, 7}, 
+  {-2, -5, 7}, {-5, -5, -10}, {-6, 7, 3}, {4, -9, 10}, {-1, 7, 10}, {-7, -2, -3}, 
+  {6, 5, -3}, {-8, -9, 8}, {6, -9, -5}, {-8, 2, -5}, {4, -2, -5}, {-7, 5, -10}, 
+  {2, -10, -2}, {7, 9, 3}, {-10, -6, -9}, {7, 10, -3}, {-2, 4, -10}, {-3, 9, -5}, 
+  {3, -8, 4}, {-2, -9, 3}, {-7, -3, 10}, {4, -1, 2}, {-1, -6, -1}, {9, -5, -2}
+} / 10.0;
+
+bsRes3D10 = Graph@{
+  21 <-> 23, 20 <-> 26, 24 <-> 25, 14 <-> 25, 5 <-> 29, 2 <-> 18, 11 <-> 26, 7 <-> 8, 2 <-> 14, 
+  1 <-> 18, 6 <-> 28, 26 <-> 30, 14 <-> 23, 4 <-> 6, 14 <-> 29, 4 <-> 27, 5 <-> 21, 18 <-> 24, 
+  26 <-> 29, 3 <-> 21, 6 <-> 10, 9 <-> 22, 16 <-> 20, 5 <-> 6, 4 <-> 30, 8 <-> 11, 26 <-> 27, 
+  10 <-> 25, 18 <-> 29, 18 <-> 20, 5 <-> 7, 7 <-> 29, 20 <-> 30, 4 <-> 13, 1 <-> 25, 2 <-> 23, 
+  7 <-> 26, 27 <-> 30, 5 <-> 14, 1 <-> 14, 13 <-> 22, 1 <-> 24, 9 <-> 24, 1 <-> 6, 1 <-> 29, 
+  1 <-> 4, 9 <-> 30, 4 <-> 28, 8 <-> 28, 6 <-> 8, 1 <-> 30, 9 <-> 18, 20 <-> 27, 8 <-> 27, 
+  4 <-> 8, 9 <-> 19, 19 <-> 25, 9 <-> 13, 19 <-> 24, 6 <-> 13, 1 <-> 13, 7 <-> 11, 2 <-> 24, 
+  16 <-> 18, 14 <-> 21, 14 <-> 18, 18 <-> 30, 23 <-> 25, 18 <-> 31, 3 <-> 12, 13 <-> 30, 
+  26 <-> 31, 16 <-> 31, 10 <-> 17, 6 <-> 12, 9 <-> 16, 5 <-> 12, 8 <-> 26, 7 <-> 31, 8 <-> 29, 
+  1 <-> 8, 4 <-> 15, 15 <-> 27, 15 <-> 28, 17 <-> 25, 2 <-> 25, 3 <-> 5, 10 <-> 12, 29 <-> 31, 
+  13 <-> 17, 17 <-> 19, 8 <-> 15
+};
+
+bsRes3D15 = Graph@{
+  21 <-> 23, 20 <-> 26, 24 <-> 25, 5 <-> 29, 11 <-> 26, 2 <-> 14, 1 <-> 18, 6 <-> 28, 14 <-> 23, 
+  4 <-> 6, 4 <-> 27, 5 <-> 21, 26 <-> 29, 3 <-> 21, 6 <-> 10, 9 <-> 22, 16 <-> 20, 4 <-> 30, 
+  26 <-> 27, 10 <-> 25, 18 <-> 29, 7 <-> 29, 20 <-> 30, 4 <-> 13, 1 <-> 25, 27 <-> 30, 5 <-> 14, 
+  1 <-> 14, 13 <-> 22, 9 <-> 24, 1 <-> 6, 1 <-> 29, 8 <-> 28, 6 <-> 8, 1 <-> 30, 9 <-> 18, 8 <-> 27, 
+  4 <-> 8, 19 <-> 25, 9 <-> 13, 19 <-> 24, 1 <-> 13, 7 <-> 11, 2 <-> 24, 16 <-> 18, 14 <-> 18, 
+  18 <-> 30, 18 <-> 31, 13 <-> 30, 16 <-> 31, 10 <-> 17, 6 <-> 12, 5 <-> 12, 4 <-> 15, 15 <-> 27, 
+  15 <-> 28, 29 <-> 31, 13 <-> 17, 17 <-> 19, 8 <-> 15
+};
+
+bsRes3DRNG = Graph@{
+  21 <-> 23, 20 <-> 26, 24 <-> 25, 5 <-> 29, 11 <-> 26, 2 <-> 14, 1 <-> 18, 14 <-> 23, 4 <-> 27, 
+  5 <-> 21, 26 <-> 29, 3 <-> 21, 6 <-> 10, 9 <-> 22, 16 <-> 20, 26 <-> 27, 10 <-> 25, 7 <-> 29, 
+  20 <-> 30, 4 <-> 13, 27 <-> 30, 5 <-> 14, 13 <-> 22, 1 <-> 6, 1 <-> 29, 8 <-> 28, 6 <-> 8, 1 <-> 30, 
+  8 <-> 27, 19 <-> 24, 2 <-> 24, 14 <-> 18, 18 <-> 31, 13 <-> 30, 16 <-> 31, 6 <-> 12, 5 <-> 12, 
+  4 <-> 15, 15 <-> 28, 13 <-> 17, 17 <-> 19
+};
+
+
+MT[
+  IGLuneBetaSkeleton[bsPts3D, 1],
+  bsRes3D10,
+  SameTest -> IGSameGraphQ
+]
+
+(* Temporarily disabled, see issue #117 *)
+(*
+MT[
+  IGLuneBetaSkeleton[bsPts3D + 100000.0, 1],
+  bsRes3D10,
+  SameTest -> IGSameGraphQ
+]
+*)
+
+MT[
+  IGLuneBetaSkeleton[bsPts3D, 1.5],
+  bsRes3D15,
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGLuneBetaSkeleton[bsPts3D + 100000.0, 1.5],
+  bsRes3D15,
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRelativeNeighborhoodGraph[bsPts3D],
+  bsRes3DRNG,
+  SameTest -> IGSameGraphQ
+]
+
+MT[
+  IGRelativeNeighborhoodGraph[bsPts3D + 100000.0],
+  bsRes3DRNG,
   SameTest -> IGSameGraphQ
 ]
 
@@ -6481,6 +6725,15 @@ MT[
 ]
 
 
+MT[
+  IGGabrielGraph[
+    N[PolyhedronData["Icosidodecahedron", "Vertices"]]
+  ],
+  GraphData["IcosidodecahedralGraph"],
+  SameTest -> IGIsomorphicQ
+]
+
+
 (* ::Subsubsection::Closed:: *)
 (*IGRelativeNeighborhoodGraph*)
 
@@ -6497,8 +6750,17 @@ MT[
 
 MT[
   IGRelativeNeighborhoodGraph@GraphEmbedding@IGTriangularLattice[5],
-  IGEmptyGraph@VertexCount@IGTriangularLattice[5],
+  IGTriangularLattice[5],
   SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGRelativeNeighborhoodGraph[
+    N[PolyhedronData["Icosidodecahedron", "Vertices"]]
+  ],
+  GraphData["IcosidodecahedralGraph"],
+  SameTest -> IGIsomorphicQ
 ]
 
 

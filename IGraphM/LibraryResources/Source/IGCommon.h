@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2020 Szabolcs Horvát.
+ * Copyright (c) 2016-2022 Szabolcs Horvát.
  *
  * See the file LICENSE.txt for copying permission.
  */
@@ -25,13 +25,25 @@ static_assert(sizeof(igraph_integer_t) == 4, "IGraphM assumes igraph_integer_t t
 static_assert(std::is_same<int, igraph_bool_t>::value, "IGraphM assumes igraph_bool_t to be int.");
 // See mlstream extractors, which are defined for integer types of particular widths.
 
+/************************
+ **** Error checking ****
+ ************************/
+
+// check igraph's error codes and abort if necessary
+inline void igCheck(int err) {
+    if (! err) return;
+    std::ostringstream msg;
+    msg << "igraph returned with error: " << igraph_strerror(err) << ".";
+    throw mma::LibraryError(msg.str());
+}
+
 
 /*******************************
  **** RAII for igraph types ****
  *******************************/
 
 inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
-    static double dummy = 0.0; // work around igraph not liking zero-length vectors will NULL pointers
+    static double dummy = 0.0; // work around igraph not liking zero-length vectors with NULL pointers
     igraph_vector_t vec;
     mint len = t.length();
     igraph_vector_view(&vec, len == 0 ? &dummy : t.data(), len);
@@ -78,11 +90,14 @@ public:
     const igraph_real_t & operator [] (size_t i) const { return begin()[i]; }
 
     void clear() { igraph_vector_clear(&vec); }
-    void resize(long newsize) { igraph_vector_resize(&vec, newsize); }
+    void resize(long newsize) { igCheck(igraph_vector_resize(&vec, newsize)); }
+    void reserve(long newsize) { igCheck(igraph_vector_reserve(&vec, newsize)); }
+
+    void push_back(igraph_real_t el) { igCheck(igraph_vector_push_back(&vec, el)); }
 
     void copyFromMTensor(mma::RealTensorRef t) {
         igraph_vector_t from = igVectorView(t);
-        igraph_vector_update(&vec, &from);
+        igCheck(igraph_vector_update(&vec, &from));
     }
 
     mma::RealTensorRef makeMTensor() const { return mma::makeVector<double>(length(), begin()); }
@@ -115,8 +130,51 @@ public:
     igraph_integer_t & operator [] (size_t i) { return begin()[i]; }
     const igraph_integer_t & operator [] (size_t i) const { return begin()[i]; }
 
-    void clear() { igraph_vector_int_clear(&vec); }
-    void resize(long newsize) { igraph_vector_int_resize(&vec, newsize); }
+    void clear() { igraph_vector_int_clear(&vec); }    
+    void resize(long newsize) { igCheck(igraph_vector_int_resize(&vec, newsize)); }
+    void reserve(long newsize) { igCheck(igraph_vector_int_reserve(&vec, newsize)); }
+
+    void push_back(igraph_real_t el) { igCheck(igraph_vector_int_push_back(&vec, el)); }
+
+    void copyFromMTensor(mma::IntTensorRef t) {
+        resize(t.length());
+        std::copy(t.begin(), t.end(), begin());
+    }
+
+    mma::IntTensorRef makeMTensor() const { return mma::makeVector<mint>(length(), begin()); }
+};
+
+
+// RAII for igraph_vector_long_t
+class igLongVector {
+
+    // avoid accidental implicit copy
+    igLongVector(const igLongVector &) = delete;
+    igLongVector & operator = (const igLongVector &) = delete;
+
+public:
+    igraph_vector_long_t vec;
+
+    igLongVector() { igraph_vector_long_init(&vec, 0); }
+    ~igLongVector() { igraph_vector_long_destroy(&vec); }
+
+    long length() const { return vec.end - vec.stor_begin; }
+    long size() const { return length(); }
+
+    long *begin() { return vec.stor_begin; }
+    long *end() { return vec.end; }
+
+    const long *begin() const { return vec.stor_begin; }
+    const long *end() const { return vec.end; }
+
+    long & operator [] (size_t i) { return begin()[i]; }
+    const long & operator [] (size_t i) const { return begin()[i]; }
+
+    void clear() { igraph_vector_long_clear(&vec); }
+    void resize(long newsize) { igCheck(igraph_vector_long_resize(&vec, newsize)); }
+    void reserve(long newsize) { igCheck(igraph_vector_long_reserve(&vec, newsize)); }
+
+    void push_back(igraph_real_t el) { igCheck(igraph_vector_long_push_back(&vec, el)); }
 
     void copyFromMTensor(mma::IntTensorRef t) {
         resize(t.length());
@@ -152,7 +210,10 @@ public:
     const igraph_bool_t *end() const { return vec.end; }
 
     void clear() { igraph_vector_bool_clear(&vec); }
-    void resize(long newsize) { igraph_vector_bool_resize(&vec, newsize); }
+    void resize(long newsize) { igCheck(igraph_vector_bool_resize(&vec, newsize)); }
+    void reserve(long newsize) { igCheck(igraph_vector_bool_reserve(&vec, newsize)); }
+
+    void push_back(igraph_real_t el) { igCheck(igraph_vector_bool_push_back(&vec, el)); }
 
     mma::IntTensorRef makeMTensor() const { return mma::makeVector<mint>(length(), begin()); }
 };
@@ -187,12 +248,12 @@ public:
 
     void copyFromMTensor(mma::RealMatrixRef t) {
         igraph_vector_t from = igVectorView(t);
-        igraph_vector_update(&mat.data, &from);
+        igCheck(igraph_vector_update(&mat.data, &from));
         // Mathematica uses row-major storage, igraph uses column-major storage
         // thus we need to reverse the row/column counts, then transpose
         mat.nrow = t.cols();
         mat.ncol = t.rows();
-        igraph_matrix_transpose(&mat);
+        igCheck(igraph_matrix_transpose(&mat));
     }
 
     mma::RealMatrixRef makeMTensor() const { return mma::makeMatrixTransposed<double>(mat.nrow, mat.ncol, begin()); }
@@ -450,15 +511,6 @@ inline mlStream & operator >> (mlStream &ml, igBoolVector &vec) {
 /*********************************
  **** Other utility functions ****
  *********************************/
-
-// check igraph's error codes and abort if necessary
-inline void igCheck(int err) {
-    if (! err) return;
-    std::ostringstream msg;
-    msg << "igraph returned with error: " << igraph_strerror(err) << ".";
-    throw mma::LibraryError(msg.str());
-}
-
 
 // packs an igList (usually representing vertex or edge sets) into
 // a single IntTensor for fast transfer

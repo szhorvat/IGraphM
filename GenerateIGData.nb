@@ -1,11 +1,7 @@
 Notebook[{
-
-Cell[CellGroupData[{
 Cell[BoxData[
- RowBox[{"<<", "IGraphM`"}]], "Input"],
-
-Cell[BoxData["\<\"Evaluate IGDocumentation[] to get started.\"\>"], "Print"]
-}, Open  ]],
+ RowBox[{"Needs", "[", "\"\<IGraphM`\>\"", "]"}]], "Input",
+ CellLabel->"In[56]:=",ExpressionUUID->"df6af029-314a-42b3-8404-6071dee0ccd0"],
 
 Cell[BoxData[
  RowBox[{
@@ -25,7 +21,8 @@ Cell[BoxData[
     "]"}]}]}]], "Input",
  CellChangeTimes->{{3.675143799751005*^9, 3.675143849046874*^9}, {
   3.6751438794092607`*^9, 3.675143944286613*^9}, {3.675144162840683*^9, 
-  3.675144164761527*^9}}],
+  3.675144164761527*^9}},
+ CellLabel->"In[57]:=",ExpressionUUID->"39ab1fe9-9aa2-410e-9e88-9a9b105cbaff"],
 
 Cell[BoxData[
  RowBox[{
@@ -66,7 +63,8 @@ Cell[BoxData[
       RowBox[{"0", ",", "n"}], "]"}]}], "\[IndentingNewLine]", 
     "]"}]}]}]], "Input",
  CellChangeTimes->{{3.678171532445856*^9, 3.678171598859295*^9}, {
-  3.67817164106927*^9, 3.678171796222328*^9}}],
+  3.67817164106927*^9, 3.678171796222328*^9}},
+ CellLabel->"In[58]:=",ExpressionUUID->"db5e4072-54ca-470d-b6cd-bce4bf8c2a71"],
 
 Cell[BoxData[
  RowBox[{
@@ -103,7 +101,8 @@ Cell[BoxData[
       RowBox[{"graphs", ",", "CanonicalGraph"}], "]"}]}]}], 
    "\[IndentingNewLine]", "]"}]}]], "Input",
  CellChangeTimes->{{3.6751445951220512`*^9, 3.675144633474648*^9}, 
-   3.675144838053624*^9}],
+   3.675144838053624*^9},
+ CellLabel->"In[59]:=",ExpressionUUID->"f10201d9-c287-4b10-9e65-23b19849dcac"],
 
 Cell[BoxData[
  RowBox[{
@@ -137,7 +136,8 @@ Cell[BoxData[
      "\[IndentingNewLine]", 
      RowBox[{"DeleteDuplicatesBy", "[", 
       RowBox[{"graphs", ",", "CanonicalGraph"}], "]"}]}]}], 
-   "\[IndentingNewLine]", "]"}]}]], "Input"],
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellLabel->"In[60]:=",ExpressionUUID->"25d89d32-d1d8-4226-bd0f-c746d3cfadc4"],
 
 Cell[CellGroupData[{
 
@@ -180,19 +180,24 @@ Cell[BoxData[{
      RowBox[{"SortBy", "[", 
       RowBox[{
        RowBox[{"allDirectedGraphs", "[", "4", "]"}], ",", "IGIsoclass"}], 
-      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}]}], "Input"],
+      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}]}], "Input",
+ CellLabel->"In[61]:=",ExpressionUUID->"3ad529ff-49ed-48f2-bedd-e7b91cbc3b27"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.001439`", ",", "Null"}], "}"}]], "Output"],
+  RowBox[{"0.001866`", ",", "Null"}], "}"}]], "Output",
+ CellLabel->"Out[61]=",ExpressionUUID->"c7ef73fa-734e-4278-9a32-9f997a625db5"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.017336`", ",", "Null"}], "}"}]], "Output"],
+  RowBox[{"0.020889`", ",", "Null"}], "}"}]], "Output",
+ CellLabel->"Out[62]=",ExpressionUUID->"09d9992a-a604-450a-b6ae-2eb41214938c"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"1.014957`", ",", "Null"}], "}"}]], "Output"]
+  RowBox[{"1.064653`", ",", "Null"}], "}"}]], "Output",
+ CellLabel->
+  "Out[63]=",ExpressionUUID->"8fd9728d-5a0b-433f-a8b5-f4d7cccc91c0"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -236,19 +241,60 @@ Cell[BoxData[{
      RowBox[{"SortBy", "[", 
       RowBox[{
        RowBox[{"allUndirectedGraphs", "[", "4", "]"}], ",", "IGIsoclass"}], 
-      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}]}], "Input"],
+      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"u5", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Graph", "[", 
+       RowBox[{"#", ",", 
+        RowBox[{"VertexCoordinates", "\[Rule]", 
+         RowBox[{"CirclePoints", "[", "5", "]"}]}]}], "]"}], "&"}], "/@", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"allUndirectedGraphs", "[", "5", "]"}], ",", "IGIsoclass"}], 
+      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"u6", "=", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Graph", "[", 
+       RowBox[{"#", ",", 
+        RowBox[{"VertexCoordinates", "\[Rule]", 
+         RowBox[{"CirclePoints", "[", "6", "]"}]}]}], "]"}], "&"}], "/@", 
+     RowBox[{"SortBy", "[", 
+      RowBox[{
+       RowBox[{"allUndirectedGraphs", "[", "6", "]"}], ",", "IGIsoclass"}], 
+      "]"}]}]}], ";"}], "//", "AbsoluteTiming"}]}], "Input",
+ CellLabel->"In[64]:=",ExpressionUUID->"708f79e3-abd0-40f3-be09-c9dc4e7a6885"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.001142`", ",", "Null"}], "}"}]], "Output"],
+  RowBox[{"0.001161`", ",", "Null"}], "}"}]], "Output",
+ CellLabel->"Out[64]=",ExpressionUUID->"607f5bc7-0512-4ef7-b175-8ea7406a0264"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.003578`", ",", "Null"}], "}"}]], "Output"],
+  RowBox[{"0.004184`", ",", "Null"}], "}"}]], "Output",
+ CellLabel->"Out[65]=",ExpressionUUID->"87195e52-3ae1-4093-8ee3-7d85fc45f846"],
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"0.019168`", ",", "Null"}], "}"}]], "Output"]
+  RowBox[{"0.029806`", ",", "Null"}], "}"}]], "Output",
+ CellLabel->"Out[66]=",ExpressionUUID->"8fec5b66-1ee0-4cfa-ac3b-a9f8c43e9686"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.335428`", ",", "Null"}], "}"}]], "Output",
+ CellLabel->"Out[67]=",ExpressionUUID->"188f25e8-5bf0-46d1-8cf3-c609ce39022d"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"10.365798`", ",", "Null"}], "}"}]], "Output",
+ CellLabel->
+  "Out[68]=",ExpressionUUID->"8aaaaf67-1cb9-4027-903b-e62ee16600fe"]
 }, Open  ]],
 
 Cell[BoxData[
@@ -261,7 +307,8 @@ Cell[BoxData[
      "\"\<021D\>\"", ",", "\"\<030T\>\"", ",", "\"\<120D\>\"", ",", 
      "\"\<111U\>\"", ",", "\"\<201\>\"", ",", "\"\<030C\>\"", ",", 
      "\"\<120C\>\"", ",", "\"\<120U\>\"", ",", "\"\<210\>\"", ",", 
-     "\"\<300\>\""}], "}"}]}], ";"}]], "Input"],
+     "\"\<300\>\""}], "}"}]}], ";"}]], "Input",
+ CellLabel->"In[69]:=",ExpressionUUID->"7e2473da-3592-4f96-9124-ad6776fb7398"],
 
 Cell[BoxData[{
  RowBox[{
@@ -275,7 +322,8 @@ Cell[BoxData[{
   RowBox[{"Export", "[", 
    RowBox[{"filename", ",", 
     RowBox[{"Compress", "[", "data", "]"}], ",", "\"\<String\>\""}], 
-   "]"}]}]}], "Input"],
+   "]"}]}]}], "Input",
+ CellLabel->"In[70]:=",ExpressionUUID->"0e50f5ac-db44-4d16-b513-449607180ee7"],
 
 Cell[BoxData[
  RowBox[{
@@ -284,7 +332,8 @@ Cell[BoxData[
     RowBox[{"{", 
      RowBox[{
       RowBox[{"NotebookDirectory", "[", "]"}], ",", "\"\<IGraphM\>\""}], 
-     "}"}], "]"}]}], ";"}]], "Input"],
+     "}"}], "]"}]}], ";"}]], "Input",
+ CellLabel->"In[72]:=",ExpressionUUID->"f5ccd16c-bf02-4ec8-bd41-067aba505f10"],
 
 Cell[CellGroupData[{
 
@@ -317,24 +366,37 @@ Cell[BoxData[
       RowBox[{"{", 
        RowBox[{"\"\<AllUndirectedGraphs\>\"", ",", "4"}], "}"}], "\[Rule]", 
       "u4"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<AllUndirectedGraphs\>\"", ",", "5"}], "}"}], "\[Rule]", 
+      "u5"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"\"\<AllUndirectedGraphs\>\"", ",", "6"}], "}"}], "\[Rule]", 
+      "u6"}], ",", "\[IndentingNewLine]", 
      RowBox[{"\"\<MANTriadLabels\>\"", "\[Rule]", 
       RowBox[{"AssociationThread", "[", 
        RowBox[{"MANlabels", ",", "m3"}], "]"}]}]}], "\[IndentingNewLine]", 
-    "|>"}]}], "\[IndentingNewLine]", "]"}]], "Input"],
+    "|>"}]}], "\[IndentingNewLine]", "]"}]], "Input",
+ CellLabel->"In[73]:=",ExpressionUUID->"ab46b946-53c9-43c1-a12a-4fbcf5fd97f8"],
 
-Cell[BoxData["\<\"IGData.mz\"\>"], "Output"]
+Cell[BoxData["\<\"IGData.mz\"\>"], "Output",
+ CellLabel->
+  "Out[73]=",ExpressionUUID->"4607c685-2377-4f88-bab4-7bba963d9d86"]
 }, Open  ]],
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"ResetDirectory", "[", "]"}], ";"}]], "Input"]
+  RowBox[{"ResetDirectory", "[", "]"}], ";"}]], "Input",
+ CellLabel->
+  "In[74]:=",ExpressionUUID->"a0f61f89-1ce0-4679-9880-a2161e686f4b"]
 },
 WindowSize->{950, 721},
 WindowMargins->{{206, Automatic}, {Automatic, 34}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 13, \
-2016)",
-StyleDefinitions->"Default.nb"
+FrontEndVersion->"13.0 for Mac OS X x86 (64-bit) (December 2, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"e866a327-4222-4c5b-9b23-5aa78821729d"
 ]
 

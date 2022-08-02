@@ -168,7 +168,7 @@ SyntaxInformation[IGNeighborhoodCloseness] = {"ArgumentsPattern" -> {_, _, _., O
 IGNeighborhoodCloseness[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
 IGNeighborhoodCloseness[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
     catch@Block[{ig = igMakeFastWeighted[g]},
-      expectInfNaN@fixInfNaN@check@ig@"neighborhoodCloseness"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]]
+      MapAt[Round, expectInfNaN@fixInfNaN@check@ig@"neighborhoodCloseness"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]], 2]
     ]
 
 PackageExport["IGHarmonicCentralityCutoff"]

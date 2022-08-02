@@ -4,7 +4,7 @@
 
 Paclet[
     Name -> "IGraphM",
-    Version -> "0.5.1",
+    Version -> "0.6.2",
     MathematicaVersion -> "11.0+",
     Description -> "IGraph/M \[Dash] the igraph interface for Mathematica.",
     Creator -> "Szabolcs Horvát <szhorvat@gmail.com>",
@@ -12,7 +12,7 @@ Paclet[
     Thumbnail -> "Logo.png",
     "Icon" -> "Logo.png",
     "Keywords" -> {"igraph", "graph theory", "network analysis"},
-    SystemID -> {"MacOSX-x86-64", "Windows-x86-64", "Linux-x86-64", "Linux-ARM"},
+    SystemID -> {"MacOSX-x86-64", "MacOSX-ARM64", "Windows-x86-64", "Linux-x86-64", "Linux-ARM"},
     Extensions -> 
         {    
             {"Kernel", Root -> ".", Context -> "IGraphM`"},

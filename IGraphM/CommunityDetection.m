@@ -113,6 +113,13 @@ IGClusterData[asc_?AssociationQ]["Tree"] :=
 
 IGClusterData[asc_?AssociationQ]["ElementCount"] := Length[asc["Elements"]]
 
+plogp::usage = "plogp[p] computes p*Log[p] for p > 0 and returns 0 for  p == 0.";
+plogp[p_] /; p == 0 := 0
+plogp[p_] := p Log[p]
+
+IGClusterData[asc_?AssociationQ]["Entropy"] :=
+    -Total[plogp /@ ( (Length /@ asc["Communities"]) / Length[asc["Elements"]] )]
+
 IGClusterData[asc_?AssociationQ][key_String] := Lookup[asc, key, Message[IGClusterData::noprop, key]; $Failed]
 
 IGClusterData[asc_?AssociationQ][keys_List] := IGClusterData[asc] /@ keys
@@ -230,7 +237,8 @@ IGCompareCommunities::usage =
     "IGCompareCommunities[clusterdata1, clusterdata2, {method1, \[Ellipsis]}] compares two community structures using each given method.\n" <>
     "IGCompareCommunities[graph, communities1, communities2] compares two partitionings of the graph vertices into communities using all available methods.\n" <>
     "IGCompareCommunities[graph, communities1, communities2, method] compares two community structures using method.\n" <>
-    "IGCompareCommunities[graph, communities1, communities2, {method1, \[Ellipsis]}] compares two community structures using each given method.";
+    "IGCompareCommunities[graph, communities1, communities2, {method1, \[Ellipsis]}] compares two community structures using each given method.\n" <>
+    "IGCompareCommunities[vertexList, communities1, communities2] uses the given vertex list.";
 
 igCompareCommunitiesMethods = {
   "VariationOfInformation",
@@ -262,6 +270,14 @@ IGCompareCommunities[graph_?igGraphQ, comm1 : {__List}, comm2 : {__List}, method
 
 IGCompareCommunities[graph_?igGraphQ, comm1 : {__List}, comm2 : {__List}, method_String] :=
     catch@igCompareCommunities[VertexList[graph], comm1, comm2, method]
+
+IGCompareCommunities[elems_List, comm1 : {__List}, comm2 : {__List}, methods : {__String} : igCompareCommunitiesMethods] :=
+    catch[
+      Join @@ (igCompareCommunities[elems, comm1, comm2, #]& /@ methods)
+    ]
+
+IGCompareCommunities[elems_List, comm1 : {__List}, comm2 : {__List}, method_String] :=
+    catch@igCompareCommunities[elems, comm1, comm2, method]
 
 IGCompareCommunities::diff = "The compared cluster objects must contain exactly the same elements"
 

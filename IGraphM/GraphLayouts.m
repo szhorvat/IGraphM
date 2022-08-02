@@ -133,7 +133,7 @@ SyntaxInformation[IGLayoutKamadaKawai] = {"ArgumentsPattern" -> {_, OptionsPatte
 
 IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai,Graph}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
-      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 50 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> Max[1, VertexCount[graph]]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai"[continueLayout[graph, OptionValue["Continue"], scale],
@@ -154,7 +154,7 @@ SyntaxInformation[IGLayoutKamadaKawai3D] = {"ArgumentsPattern" -> {_, OptionsPat
 
 IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai3D,Graph3D}]] :=
     catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
-      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 10 VertexCount[graph]];
+      maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 50 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> Max[1, VertexCount[graph]]];
       applyGraphOpt3D[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutKamadaKawai3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
@@ -323,27 +323,24 @@ IGLayoutMDS[graph_?igGraphQ, dim : (2|3) : 2, Optional[distMatrix_?SquareMatrixQ
 PackageExport["IGLayoutReingoldTilford"]
 IGLayoutReingoldTilford::usage = "IGLayoutReingoldTilford[graph, options] lays out a tree using the Reingold–Tilford algorithm.";
 
-(* TODO: Do this in C eventually as a workaround for connectedGraphComponents/Subgraph unreliability *)
-chooseRoots[graph_?UndirectedGraphQ] := First@GraphCenter[#]& /@ WeaklyConnectedGraphComponents[graph]
-chooseRoots[graph_? (IGForestQ[#, "Out"]&)] := First@TopologicalSort[#]& /@ WeaklyConnectedGraphComponents[graph]
-chooseRoots[graph_? (IGForestQ[#, "In"]&)] := Last@TopologicalSort[#]& /@ WeaklyConnectedGraphComponents[graph]
-chooseRoots[graph_] := First@GraphCenter[#]& /@ WeaklyConnectedGraphComponents@UndirectedGraph[graph]
-
 Options[IGLayoutReingoldTilford] = {
-  "RootVertices" -> Automatic, "Rotation" -> 0,
-  "LayerHeight" -> 1, "LeafDistance" -> 1
+  "RootVertices" -> Automatic,
+  "Rotation" -> 0,
+  "LayerHeight" -> 1,
+  "LeafDistance" -> 1,
+  DirectedEdges -> True
 };
 
 SyntaxInformation[IGLayoutReingoldTilford] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilford, Graph]};
 
 IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilford,Graph}]] :=
     catch@Block[{ig = igMakeFast[graph], roots},
-      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> chooseRoots[graph]];
+      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
         Composition[
           RotationTransform[OptionValue["Rotation"]],
           ScalingTransform[{OptionValue["LeafDistance"], -OptionValue["LayerHeight"]}]
-        ] @ check@ig@"layoutReingoldTilford"[roots, False]
+        ] @ check@ig@"layoutReingoldTilford"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 
@@ -351,15 +348,19 @@ IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldT
 PackageExport["IGLayoutReingoldTilfordCircular"]
 IGLayoutReingoldTilfordCircular::usage = "IGLayoutReingoldTilfordCircular[graph, options] lays out a tree radially using the Reingold–Tilford algorithm.";
 
-Options[IGLayoutReingoldTilfordCircular] = { "RootVertices" -> Automatic, "Rotation" -> 0 };
+Options[IGLayoutReingoldTilfordCircular] = {
+  "RootVertices" -> Automatic,
+  "Rotation" -> 0,
+  DirectedEdges -> True
+};
 
 SyntaxInformation[IGLayoutReingoldTilfordCircular] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilfordCircular, Graph]};
 
 IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilfordCircular,Graph}]] :=
     catch@Block[{ig = igMakeFast[graph], roots},
-      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> chooseRoots[graph]];
+      roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
-        RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, False]
+        RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
       ]
     ]
 

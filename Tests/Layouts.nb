@@ -12,10 +12,6 @@ Cell[CellGroupData[{
 Cell["Setup", \
 "Subsection",ExpressionUUID->"9a0a3a98-b72f-4a78-b0a5-3e16aad7e43f"],
 
-Cell[BoxData["Quit"], "Input",
- CellLabel->
-  "In[136]:=",ExpressionUUID->"b4cc94ed-bd4a-4970-96be-22addf32b933"],
-
 Cell[BoxData[
  RowBox[{"Off", "[", 
   RowBox[{"General", "::", "stop"}], "]"}]], "Input",
@@ -334,7 +330,8 @@ WindowSize->{1067, 1266},
 WindowMargins->{{20, Automatic}, {Automatic, 44}},
 PrivateNotebookOptions->{"FileOutlineCache"->False},
 TrackCellChangeTimes->False,
-FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 11, 2019)",
-StyleDefinitions->"Default.nb"
+FrontEndVersion->"13.1 for Mac OS X x86 (64-bit) (June 16, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"2e9455e4-968f-4f90-8f22-f252bee4b3c3"
 ]
 

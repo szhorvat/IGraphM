@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2020 Szabolcs Horvát.
+ * Copyright (c) 2019-2022 Szabolcs Horvát.
  *
  * See the file LICENSE.txt for copying permission.
  */
@@ -71,9 +71,14 @@ igraph_real_t igraph_rng_Mma_get_real(void *state) {
     MArgument_getRealAddress(FPA[1]) = &hi;
     MArgument_getRealAddress(FPA[2]) = &res;
 
-    int err = randomReal(mma::libData, 2, FPA, FPA[2]);
-    if (err)
-        throw mma::LibraryError("RNG: Error calling RandomReal.", err);
+    // Ensure sampling from half-open interval [0, 1).
+    // It is not documented whether RandomReal[] may return an exact 1.0,
+    // so we guard against this possibility.
+    do {
+        int err = randomReal(mma::libData, 2, FPA, FPA[2]);
+        if (err)
+            throw mma::LibraryError("RNG: Error calling RandomReal.", err);
+    } while (res == 1.0);
 
     mma::libData->compileLibraryFunctions->WolframLibraryData_cleanUp(mma::libData, 1);
 

@@ -1,11 +1,50 @@
 ## Revision history for [IGraph/M](README.md)
 
-#### Unreleased
+#### 0.6.2
+
+Changes:
+
+ - Re-enabled resizing for `IGGraphEditor[]`.
+ - `IGGraphEditor[]` now shows a warning when invoked without a notebook interface.
+
+Fixed:
+
+ - `IGCommunitiesSpinGlass` returned invalid results for the null and singleton graphs.
+
+Other:
+
+ - Documentation improvements.
+
+#### 0.6.1
+
+Fixed:
+
+ - `IGCompareCommunities` had a corrupted usage message.
+ - Restored compatibility with older Linux distros that use GCC 4.8, such as RHEL / CentOS 7.
+ - The Fruchterman-Reingold, Kamada-Kawai and DrL layouts now verify that all weights are positive.
+ - `IGAsymmetrixPreferenceGame` misinterpreted the type weight matrix.
+
+Other:
+
+ - Temporarily disabled resizing in graph editor, as it interferes with vertex creation.
+ - Documentation improvements.
+
+#### 0.6.0
+
+This version is based on the 0.9 series of C/igraph.
 
 Added:
 
   - `IGHarmonicCentrality` and `IGHarmonicCentralityCutoff` compute the harmonic centrality and range-limited harmonic centrality.
   - `IGLinkRank` and `IGPersonalizedLinkRank` compute the equivalent of PageRank for edges.
+  - `IGNeighborhoodCloseness` computes the range-limited closeness centrality, as well as the number of vertices reachable within the given range.
+  - `IGFamousGraph` exposes the igraph C library's built-in graph database.
+  - `IGPreferenceGame` and `IGAsymmetricPreferenceGame` create non-growing random graphs based on vertex types.
+  - `IGReingoldTilford` and `IGReingoldTilfordCircular` now support the `DirectedEdges` option.
+  - `IGFruchtermanReingold` now supports constraining the coordinates of a subset of vertices.
+  - `IGPercolationCurve` for efficiently computing the size of the largest component as a function of mean degree while removing edges.
+  - `IGShortestPathTree` for computing a shortest path tree rooted in a given vertex.
+  - `IGGraphEditor` is an experimental interactive graph editor.
   - Experimental progress reporting functionality through functions in the ``IGraphM`Progress` `` context.
 
 Changed:
@@ -17,10 +56,16 @@ Changed:
     * `IGCloseness` now uses the distances only to reachable vertices when computing the closeness. In undirected disconnected graphs, it effectively computes the closeness per component. For isolated vertices (or sinks in directed graphs) it now returns `Indeterminate`.
     * `IGBetweenness` and `IGBetweennessCentralization` no longer uses the `Method` option. The calculations are always fast and precise. The precision has been improved.
     * `IGBetweennessEstimate`, `IGEdgeBetweennessEstimate` and `IGClosenessEstimate` have been renamed to `IGBetweennessCutoff`, `IGEdgeBetweennessCutoff` and `IGClosenessCutoff`.
+ - `IGRelativeNeighborhoodGraph` now assumes the `β -> 2`, `β < 2` limit instead of `β = 2`.
  - `IGGirth` now returns `Infinity` for the null graph.
  - `IGDiameter` now returns `Indeterminate` for the null graph.
  - `IGChordalQ`, `IGChordalCompletion` and `IGMaximumCardinalitySearch` now support non-simple graphs.
+ - `IGReingoldTilford` and `IGReingoldTilfordCircular` use a new automatic root selection algorithm. The root selection heuristic may change in the future without notice. Specify roots manually for a consistent result.
+ - `IGPotentiallyConnectedQ` no longer supports directed sequences. This feature was flawed in 0.5. It may be re-added in a future version.
+ - `IGLayoutKamadaKawai` and `IGLayoutKamadaKawai3D` perform more iterations by default, and produce more pleasing layouts.
+ - `IGPersonalizedPageRank` allows specifying the reset weights as an association from vertex names to values.
  - LAD isomorphism functions now support self-loops.
+ - Motif finder functions now support size 5 and 6 undirected motifs.
  - The behaviour of the random number generator is now consistent between platforms, meaning that with a given seed, a randomized IGraph/M function will return the same result on all platforms. However, result will now be different from version 0.5 for the same seed.
 
 Fixed:
@@ -30,12 +75,19 @@ Fixed:
  - Several community detection functions did not handle zero or one-vertex graphs correctly.
  - `IGVertexMap` would evaluate the mapped functions twice instead of once.
  - `IGMaximumCardinalitySearch` returned incorrect ranks for graphs whose vertex names differed from their vertex indices.
+ - `IGDistanceWeighted` no longer fails on edgeless graphs.
+ - `IGCallawayTraisGame` no longer rejects zeros in the preference matrix.
+ - An error would be triggered when some functions returned a zero-size matrix.
+ - Fixed a memory leak in the Nauty format reader.
+ - `IGMotifsVertexParticipation` would fail with Mathematica 12.2 or later.
+ - Fixed a conflict with Mathematica 13.0's built-in isomorphism functions which could lead to a crash on Linux.
 
 Other:
 
- - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it required Wolfram Engine 12.1 or later.
- - More robust error handling: when certain serious error occur in the igraph C library, the Mathematica kernel is no longer forced to shut down.
+ - IGraph/M now requires Mathematica 11.0 or later; on the Raspberry Pi it requires Wolfram Engine 12.2 or later.
+ - More robust error handling: when certain serious errors occur in the igraph C library, the Mathematica kernel is no longer forced to shut down.
  - IGraph/M got leaner: smaller binary sizes.
+ - Documentation improvements.
 
 #### v0.5.1
 
