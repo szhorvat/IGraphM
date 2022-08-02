@@ -25,8 +25,8 @@ class IG {
 
     void empty() { igraph_empty(&graph, 0, false); }   
 
-    void igConstructorCheck(int err) {
-        if (! err) return;
+    void igConstructorCheck(igraph_error_t err) {
+        if (err == IGRAPH_SUCCESS) return;
         empty(); // make sure 'graph' is not left uninitialized
         std::ostringstream msg;
         msg << "igraph returned with error: " << igraph_strerror(err) << ".";
@@ -44,7 +44,7 @@ class IG {
 
     /* Community detection helpers */
 
-    void computeMembership(const igraph_integer_t n_communities, const igMatrix &merges, igVector &membership) const {
+    void computeMembership(const igraph_integer_t n_communities, const igIntMatrix &merges, igIntVector &membership) const {
         igraph_integer_t vc = igraph_vcount(&graph);
         igCheck(igraph_community_to_membership(
                     &merges.mat, vc, vc - n_communities /* steps */,
@@ -98,14 +98,14 @@ public:
 
     // Create (basic)
 
-    void fromEdgeList(mma::RealTensorRef v, mint n, bool directed) {
+    void fromEdgeList(mma::IntTensorRef v, mint n, bool directed) {
         destroy();
-        igraph_vector_t edgelist = igVectorView(v);
+        igraph_vector_int_t edgelist = igIntVectorView(v);
         igConstructorCheck(igraph_create(&graph, &edgelist, n, directed));
     }
 
     // this overload is used in the implementation of other functions
-    void fromEdgeList(const igVector &edges, mint n, bool directed) {
+    void fromEdgeList(const igIntVector &edges, mint n, bool directed) {
         destroy();
         igConstructorCheck(igraph_create(&graph, &edges.vec, n, directed));
     }
@@ -120,10 +120,10 @@ public:
 
     void fromEdgeListML(MLINK link);
 
-    void realizeDegreeSequence(mma::RealTensorRef outdegs, mma::RealTensorRef indegs, bool loops, bool multi, mint method) {
+    void realizeDegreeSequence(mma::IntTensorRef outdegs, mma::IntTensorRef indegs, bool loops, bool multi, mint method) {
         destroy();
-        igraph_vector_t out = igVectorView(outdegs);
-        igraph_vector_t in = igVectorView(indegs);        
+        igraph_vector_int_t out = igIntVectorView(outdegs);
+        igraph_vector_int_t in = igIntVectorView(indegs);
 
         igraph_edge_type_sw_t et = (loops ? IGRAPH_LOOPS_SW : IGRAPH_SIMPLE_SW) | (multi ? IGRAPH_MULTI_SW : IGRAPH_SIMPLE_SW);
 
@@ -138,12 +138,13 @@ public:
         igConstructorCheck(igraph_realize_degree_sequence(&graph, &out, indegs.size() == 0 ? nullptr : &in, et, ig_method));
     }
 
-    void fromLCF(mint n, mma::RealTensorRef v, mint repeats) {
+    void fromLCF(mint n, mma::IntTensorRef v, mint repeats) {
         destroy();
-        igraph_vector_t shifts = igVectorView(v);
+        igraph_vector_int_t shifts = igIntVectorView(v);
         igConstructorCheck(igraph_lcf_vector(&graph, n, &shifts, repeats));
     }
 
+    /* TODO support granular periodicity */
     void makeLattice(mma::RealTensorRef dims, mint nei, bool directed, bool mutual, bool periodic) {
         destroy();
         igraph_vector_t igdims = igVectorView(dims);
@@ -168,7 +169,7 @@ public:
 
     void tree(mint n, mint k, bool directed) {
         destroy();
-        igConstructorCheck(igraph_tree(&graph, n, k, directed ? IGRAPH_TREE_OUT : IGRAPH_TREE_UNDIRECTED));    
+        igConstructorCheck(igraph_kary_tree(&graph, n, k, directed ? IGRAPH_TREE_OUT : IGRAPH_TREE_UNDIRECTED));
     }   
 
     void fromPrufer(mma::IntTensorRef prufer) {
@@ -199,8 +200,8 @@ public:
         igConstructorCheck(igraph_de_bruijn(&graph, m, n));
     }
 
-    void extendedChordalRing(mint n, mma::RealMatrixRef mat, bool directed, bool selfLoops, bool multiEdges) {
-        igMatrix w;
+    void extendedChordalRing(mint n, mma::IntMatrixRef mat, bool directed, bool selfLoops, bool multiEdges) {
+        igIntMatrix w;
 
         destroy();
         w.copyFromMTensor(mat);
@@ -277,20 +278,20 @@ public:
         igConstructorCheck(igraph_tree_game(&graph, n, directed, ig_method));
     }
 
-    void degreeSequenceGame(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, mint method) {
-        igraph_vector_t ig_indeg = igVectorView(indeg);
-        igraph_vector_t ig_outdeg = igVectorView(outdeg);
+    void degreeSequenceGame(mma::IntTensorRef outdeg, mma::IntTensorRef indeg, mint method) {
+        igraph_vector_int_t ig_indeg = igIntVectorView(indeg);
+        igraph_vector_int_t ig_outdeg = igIntVectorView(outdeg);
         igraph_degseq_t ig_method;
         switch (method) {
-        case 0: ig_method = IGRAPH_DEGSEQ_SIMPLE; break;
-        case 1: ig_method = IGRAPH_DEGSEQ_SIMPLE_NO_MULTIPLE; break;
+        case 0: ig_method = IGRAPH_DEGSEQ_CONFIGURATION; break;
+        case 1: ig_method = IGRAPH_DEGSEQ_FAST_HEUR_SIMPLE; break;
         case 2: ig_method = IGRAPH_DEGSEQ_VL; break;
-        case 3: ig_method = IGRAPH_DEGSEQ_SIMPLE_NO_MULTIPLE_UNIFORM; break;
+        case 3: ig_method = IGRAPH_DEGSEQ_CONFIGURATION_SIMPLE; break;
         default: throw mma::LibraryError("degreeSequenceGame: unknown method option.");
         }
 
         destroy();
-        int err;
+        igraph_error_t err;
         if (indeg.length() == 0)
             err = igraph_degree_sequence_game(&graph, &ig_outdeg, nullptr, ig_method);
         else
@@ -362,9 +363,9 @@ public:
         return coord;
     }
 
-    void barabasiAlbertGame(mint n, double power, double A, mint m, mma::RealTensorRef mtens, bool directed, bool totalDegree, mint method) {
+    void barabasiAlbertGame(mint n, double power, double A, mint m, mma::IntTensorRef mtens, bool directed, bool totalDegree, mint method) {
         destroy();
-        igraph_vector_t mvec = igVectorView(mtens);
+        igraph_vector_int_t mvec = igIntVectorView(mtens);
         igraph_barabasi_algorithm_t algo;
         switch (method) {
         case 0: algo = IGRAPH_BARABASI_BAG; break;
@@ -378,9 +379,9 @@ public:
         igConstructorCheck(igraph_barabasi_game(&graph, n, power, m, &mvec, totalDegree, A, directed, algo, nullptr));
     }
 
-    void barabasiAlbertGameWithStartingGraph(mint n, double power, double A, mint m, mma::RealTensorRef mtens, bool directed, bool totalDegree, mint method, IG &start) {
+    void barabasiAlbertGameWithStartingGraph(mint n, double power, double A, mint m, mma::IntTensorRef mtens, bool directed, bool totalDegree, mint method, IG &start) {
         destroy();
-        igraph_vector_t mvec = igVectorView(mtens);
+        igraph_vector_int_t mvec = igIntVectorView(mtens);
         igraph_barabasi_algorithm_t algo;
         switch (method) {
         case 0: algo = IGRAPH_BARABASI_BAG; break;
@@ -467,7 +468,7 @@ public:
     // Structure
 
     mma::RealTensorRef edgeList() const {
-        igVector vec;
+        igIntVector vec;
         igCheck(igraph_get_edgelist(&graph, &vec.vec, false));
         mma::RealMatrixRef res = mma::makeMatrix<double>(vec.length() / 2, 2);
         std::copy(vec.begin(), vec.end(), res.begin());
@@ -522,9 +523,9 @@ public:
 
     // Centrality measures
 
-    mma::RealTensorRef betweenness(bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef betweenness(bool normalized, mma::IntTensorRef vs) const {
         igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_betweenness(
                 &graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
                 true, passWeights()));
@@ -544,11 +545,11 @@ public:
         return t;
     }
 
-    mma::RealTensorRef subsetBetweenness(bool normalized, mma::RealTensorRef vs, mma::RealTensorRef sources, mma::RealTensorRef targets) const {
+    mma::RealTensorRef subsetBetweenness(bool normalized, mma::IntTensorRef vs, mma::IntTensorRef sources, mma::IntTensorRef targets) const {
         igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
-        igraph_vector_t s = igVectorView(sources);
-        igraph_vector_t t = igVectorView(targets);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
+        igraph_vector_int_t s = igIntVectorView(sources);
+        igraph_vector_int_t t = igIntVectorView(targets);
         igCheck(
             igraph_betweenness_subset(
                         &graph, &res.vec,
@@ -559,6 +560,7 @@ public:
                     );
         auto result = res.makeMTensor();
         if (normalized) {
+            double vcount = vertexCount();
             double scount = sources.size();
             double tcount = targets.size();
             double norm = 1.0;
@@ -593,10 +595,10 @@ public:
         return t;
     }
 
-    mma::RealTensorRef subsetEdgeBetweenness(bool normalized, mma::RealTensorRef sources, mma::RealTensorRef targets) const {
+    mma::RealTensorRef subsetEdgeBetweenness(bool normalized, mma::IntTensorRef sources, mma::IntTensorRef targets) const {
         igVector res;
-        igraph_vector_t s = igVectorView(sources);
-        igraph_vector_t t = igVectorView(targets);
+        igraph_vector_int_t s = igIntVectorView(sources);
+        igraph_vector_int_t t = igIntVectorView(targets);
         igCheck(
             igraph_edge_betweenness_subset(
                         &graph, &res.vec,
@@ -608,18 +610,18 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef closeness(bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef closeness(bool normalized, mma::IntTensorRef vs) const {
         igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_closeness(
                 &graph, &res.vec, nullptr, nullptr, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
                 IGRAPH_OUT, passWeights(), normalized));
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef harmonicCentrality(bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef harmonicCentrality(bool normalized, mma::IntTensorRef vs) const {
         igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_harmonic_centrality(
                 &graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec),
                 IGRAPH_OUT, passWeights(), normalized));
@@ -707,7 +709,7 @@ public:
         igVector strength;
         igCheck(igraph_strength(&graph, &strength.vec, igraph_vss_all(), mode, IGRAPH_LOOPS, passWeights()));
 
-        igVector out_edges;
+        igIntVector out_edges;
         mint vcount = vertexCount();
         for (mint v=0; v < vcount; ++v) {
             igCheck(igraph_incident(&graph, &out_edges.vec, v, mode));
@@ -766,9 +768,9 @@ public:
 
     // Range-limited centrality measures
 
-    mma::RealTensorRef betweennessCutoff(double cutoff, bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef betweennessCutoff(double cutoff, bool normalized, mma::IntTensorRef vs) const {
         igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_betweenness_cutoff(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), true, passWeights(), cutoff));
         auto t = res.makeMTensor();
         if (normalized) {
@@ -805,26 +807,28 @@ public:
         return t;
     }
 
-    mma::RealTensorRef closenessCutoff(double cutoff, bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef closenessCutoff(double cutoff, bool normalized, mma::IntTensorRef vs) const {
         igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_closeness_cutoff(&graph, &res.vec, nullptr, nullptr, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, passWeights(), normalized, cutoff));
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef neighborhoodCloseness(double cutoff, bool normalized, mma::RealTensorRef vs) const {
-        igVector res, reachable;
-        igraph_vector_t vsvec = igVectorView(vs);
+    mma::RealTensorRef neighborhoodCloseness(double cutoff, bool normalized, mma::IntTensorRef vs) const {
+        igVector res;
+        igIntVector reachable;
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_closeness_cutoff(&graph, &res.vec, &reachable.vec, nullptr, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, passWeights(), normalized, cutoff));
         auto ret = mma::makeMatrix<double>(2, res.size());
         std::copy(res.begin(), res.end(), ret.data());
+        /* TODO copying integers into real matrix */
         std::copy(reachable.begin(), reachable.end(), ret.data() + res.size());
         return ret;
     }
 
-    mma::RealTensorRef harmonicCentralityCutoff(double cutoff, bool normalized, mma::RealTensorRef vs) const {
+    mma::RealTensorRef harmonicCentralityCutoff(double cutoff, bool normalized, mma::IntTensorRef vs) const {
         igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_harmonic_centrality_cutoff(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, passWeights(), normalized, cutoff));
         return res.makeMTensor();
     }
@@ -908,9 +912,9 @@ public:
 
     // Isomorphism (bliss)
 
-    mma::RealTensorRef blissCanonicalPermutation(mint splitting, mma::IntTensorRef col) const {
-        igVector vec;
-        igIntVector colvec;
+    /* TODO check permutation direction */
+    mma::IntTensorRef blissCanonicalPermutation(mint splitting, mma::IntTensorRef col) const {
+        igIntVector vec, colvec;
         colvec.copyFromMTensor(col);
         igCheck(igraph_canonical_permutation(&graph, col.length() == 0 ? nullptr : &colvec.vec, &vec.vec, blissIntToSplitting(splitting), nullptr));
         return vec.makeMTensor();
@@ -928,20 +932,20 @@ public:
         return res;
     }
 
-    mma::RealTensorRef blissFindIsomorphism(IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
+    mma::IntTensorRef blissFindIsomorphism(IG &ig, mint splitting, mma::IntTensorRef col1, mma::IntTensorRef col2) {
         igraph_bool_t res;
         igIntVector colvec1, colvec2;
         colvec1.copyFromMTensor(col1);
         colvec2.copyFromMTensor(col2);
         emptyMatchDirectedness(ig);
-        igVector map;
+        igIntVector map;
         igCheck(igraph_isomorphic_bliss(
                     &graph, &ig.graph, col1.length() == 0 ? nullptr : &colvec1.vec, col2.length() == 0 ? nullptr : &colvec2.vec,
                     &res, &map.vec, nullptr, blissIntToSplitting(splitting), nullptr, nullptr));
         if (res)
             return map.makeMTensor();
         else
-            return mma::makeVector<double>(0);
+            return mma::makeVector<mint>(0);
     }
 
     void blissAutomorphismCount(MLINK link) const {
@@ -1100,9 +1104,9 @@ public:
             ml << mlSymbol("False");
     }
 
-    mma::RealTensorRef ladGetSubisomorphism(IG &ig, bool induced) {
+    mma::IntTensorRef ladGetSubisomorphism(IG &ig, bool induced) {
         igraph_bool_t iso;
-        igVector map;
+        igIntVector map;
         emptyMatchDirectedness(ig);
         igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, nullptr, &iso, &map.vec, nullptr, induced, 0));
         return map.makeMTensor();
@@ -1205,14 +1209,14 @@ public:
 
     // see also dagQ() under Testing
 
-    mma::RealTensorRef topologicalSorting() const {
-        igVector vec;
+    mma::IntTensorRef topologicalSorting() const {
+        igIntVector vec;
         igCheck(igraph_topological_sorting(&graph, &vec.vec, IGRAPH_OUT));
         return vec.makeMTensor();
     }
 
-    mma::RealTensorRef feedbackArcSet(bool exact) const {
-        igVector vec;
+    mma::IntTensorRef feedbackArcSet(bool exact) const {
+        igIntVector vec;
         igCheck(igraph_feedback_arc_set(&graph, &vec.vec, passWeights(), exact ? IGRAPH_FAS_EXACT_IP : IGRAPH_FAS_APPROX_EADES));
         return vec.makeMTensor();
     }
@@ -1407,10 +1411,10 @@ public:
         return res;
     }
 
-    mint motifsEstimateVerts(mint size, mma::RealTensorRef cut_prob, mma::RealTensorRef vs) const {
+    mint motifsEstimateVerts(mint size, mma::RealTensorRef cut_prob, mma::IntTensorRef vs) const {
         igraph_integer_t res;
         igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
-        igraph_vector_t ig_vs = igVectorView(vs);
+        igraph_vector_int_t ig_vs = igIntVectorView(vs);
         igCheck(igraph_motifs_randesu_estimate(&graph, &res, size, &ig_cut_prob, 0, &ig_vs));
         return res;
     }
@@ -1421,8 +1425,8 @@ public:
         return vec.makeMTensor();
     }
 
-    mma::RealTensorRef countAdjacentTriangles(mma::RealTensorRef vs) const {
-        igraph_vector_t vsvec = igVectorView(vs);
+    mma::RealTensorRef countAdjacentTriangles(mma::IntTensorRef vs) const {
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igVector res;
         igCheck(igraph_adjacent_triangles(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
         return res.makeMTensor();
@@ -1430,11 +1434,11 @@ public:
 
     // Shortest paths
 
-    mma::RealMatrixRef shortestPaths(mma::RealTensorRef from, mma::RealTensorRef to) const {
+    mma::RealMatrixRef shortestPaths(mma::IntTensorRef from, mma::IntTensorRef to) const {
         igMatrix res;
-        igraph_vector_t fromv = igVectorView(from);
-        igraph_vector_t tov   = igVectorView(to);
-        igCheck(igraph_shortest_paths(
+        igraph_vector_int_t fromv = igIntVectorView(from);
+        igraph_vector_int_t tov   = igIntVectorView(to);
+        igCheck(igraph_distances(
                     &graph, &res.mat,
                     from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
                     to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
@@ -1442,11 +1446,11 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef shortestPathsDijkstra(mma::RealTensorRef from, mma::RealTensorRef to) const {
+    mma::RealTensorRef shortestPathsDijkstra(mma::IntTensorRef from, mma::IntTensorRef to) const {
         igMatrix res;
-        igraph_vector_t fromv = igVectorView(from);
-        igraph_vector_t tov   = igVectorView(to);
-        igCheck(igraph_shortest_paths_dijkstra(
+        igraph_vector_int_t fromv = igIntVectorView(from);
+        igraph_vector_int_t tov   = igIntVectorView(to);
+        igCheck(igraph_distances_dijkstra(
                     &graph, &res.mat,
                     from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
                     to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
@@ -1454,11 +1458,11 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef shortestPathsBellmanFord(mma::RealTensorRef from, mma::RealTensorRef to) const {
+    mma::RealTensorRef shortestPathsBellmanFord(mma::IntTensorRef from, mma::IntTensorRef to) const {
         igMatrix res;
-        igraph_vector_t fromv = igVectorView(from);
-        igraph_vector_t tov   = igVectorView(to);
-        igCheck(igraph_shortest_paths_bellman_ford(
+        igraph_vector_int_t fromv = igIntVectorView(from);
+        igraph_vector_int_t tov   = igIntVectorView(to);
+        igCheck(igraph_distances_bellman_ford(
                     &graph, &res.mat,
                     from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
                     to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
@@ -1466,11 +1470,11 @@ public:
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef shortestPathsJohnson(mma::RealTensorRef from, mma::RealTensorRef to) const {
+    mma::RealTensorRef shortestPathsJohnson(mma::IntTensorRef from, mma::IntTensorRef to) const {
         igMatrix res;
-        igraph_vector_t fromv = igVectorView(from);
-        igraph_vector_t tov   = igVectorView(to);
-        igCheck(igraph_shortest_paths_johnson(
+        igraph_vector_int_t fromv = igIntVectorView(from);
+        igraph_vector_int_t tov   = igIntVectorView(to);
+        igCheck(igraph_distances_johnson(
                     &graph, &res.mat,
                     from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
                     to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
@@ -1481,7 +1485,7 @@ public:
     // Shortest path tree
 
     mma::IntTensorRef shortestPathTreeEdges(mint from) const {
-        igLongVector pred_e;
+        igIntVector pred_e;
 
         igCheck(igraph_get_shortest_paths(
                     &graph, nullptr, nullptr,
@@ -1493,7 +1497,7 @@ public:
     }
 
     mma::IntTensorRef shortestPathTreeEdgesDijkstra(mint from) const {
-        igLongVector pred_e;
+        igIntVector pred_e;
 
         igCheck(igraph_get_shortest_paths_dijkstra(
                     &graph, nullptr, nullptr,
@@ -1505,7 +1509,7 @@ public:
     }
 
     mma::IntTensorRef shortestPathTreeEdgesBellmanFord(mint from) const {
-        igLongVector pred_e;
+        igIntVector pred_e;
 
         igCheck(igraph_get_shortest_paths_bellman_ford(
                     &graph, nullptr, nullptr,
@@ -1518,7 +1522,7 @@ public:
 
     // note that this is a constructor!
     void shortestPathTree(const IG &ig, mint from) {
-        igLongVector pred_v;
+        igIntVector pred_v;
 
         igCheck(igraph_get_shortest_paths_dijkstra(
                     &ig.graph, nullptr, nullptr,
@@ -1526,7 +1530,7 @@ public:
                     passWeights(), IGRAPH_OUT,
                     &pred_v.vec, nullptr));
 
-        igVector edges;
+        igIntVector edges;
         edges.reserve(2*ig.vertexCount());
 
         for (mint v=0; v < pred_v.size(); ++v) {
@@ -1542,7 +1546,7 @@ public:
 
     // note that this is a constructor!
     void shortestPathTreeDijkstra(const IG &ig, mint from) {
-        igLongVector pred_v, pred_e;
+        igIntVector pred_v, pred_e;
 
         igCheck(igraph_get_shortest_paths_dijkstra(
                     &ig.graph, nullptr, nullptr,
@@ -1550,7 +1554,7 @@ public:
                     passWeights(), IGRAPH_OUT,
                     &pred_v.vec, &pred_e.vec));
 
-        igVector edges;
+        igIntVector edges;
         edges.reserve(2*ig.vertexCount());
 
         weighted = true;
@@ -1570,7 +1574,7 @@ public:
 
     // note that this is a constructor!
     void shortestPathTreeBellmanFord(const IG &ig, mint from) {
-        igLongVector pred_v, pred_e;
+        igIntVector pred_v, pred_e;
 
         igCheck(igraph_get_shortest_paths_dijkstra(
                     &ig.graph, nullptr, nullptr,
@@ -1578,7 +1582,7 @@ public:
                     passWeights(), IGRAPH_OUT,
                     &pred_v.vec, &pred_e.vec));
 
-        igVector edges;
+        igIntVector edges;
         edges.reserve(2*ig.vertexCount());
 
         weighted = true;
@@ -1598,16 +1602,16 @@ public:
 
     // Neighbourhoods
 
-    mma::RealTensorRef neighborhoodSize(mma::RealTensorRef vs, mint mindist, mint maxdist, mint mode) const {
-        igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
+    mma::IntTensorRef neighborhoodSize(mma::IntTensorRef vs, mint mindist, mint maxdist, mint mode) const {
+        igIntVector res;
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_neighborhood_size(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), maxdist, igNeighborMode(mode, "neighborhoodSize"), mindist));
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef averageNeighborDegree(mma::RealTensorRef vs, mint neiMode, mint degMode) const {
+    mma::RealTensorRef averageNeighborDegree(mma::IntTensorRef vs, mint neiMode, mint degMode) const {
         igVector res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         const char *context = "average neighbor degree";
 
         igCheck(igraph_avg_nearest_neighbor_degree(&graph, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), igNeighborMode(neiMode, context), igNeighborMode(degMode, context), &res.vec, nullptr, passWeights()));
@@ -1633,6 +1637,7 @@ public:
         return res.makeMTensor();
     }
 
+    /* TODO better way in 0.10? */
     mma::RealTensorRef shortestPathCounts2(mma::IntTensorRef vs) const {
         if (vs.length() == 0)
             return shortestPathCounts();
@@ -1646,7 +1651,7 @@ public:
         for (auto vertex : vs) {
             mma::check_abort();
 
-            igCheck(igraph_shortest_paths(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(vertex)), igraph_vss_all(), IGRAPH_OUT));
+            igCheck(igraph_distances(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(vertex)), igraph_vss_all(), IGRAPH_OUT));
 
             for (igraph_integer_t i=0; i < vc; ++i) {
                 igraph_real_t l = VECTOR(mat.mat.data)[i];
@@ -1669,7 +1674,8 @@ public:
         return mma::makeVector<double>(counts.size(), counts.data());
     }
 
-    mma::IntTensorRef shortestPathWeightedHistogram(double binsize, mma::RealTensorRef from, mma::RealTensorRef to, mint method) const {
+    /* Better way in 0.10? TODO */
+    mma::IntTensorRef shortestPathWeightedHistogram(double binsize, mma::RealTensorRef from, mma::IntTensorRef to, mint method) const {
         if (weighted && igraph_vector_min(&weights.vec) < 0)
             throw mma::LibraryError("shortestPathWeightedHistogram: Negative edge weights are not supported.");
 
@@ -1677,7 +1683,7 @@ public:
         igMatrix mat;
 
         const bool toall = to.length() == 0;
-        igraph_vector_t tov = igVectorView(to);
+        igraph_vector_int_t tov = igIntVectorView(to);
         const mint tolen = toall ? vertexCount() : to.length();
 
         for (mint i=0; i < from.length(); ++i) {
@@ -1685,10 +1691,10 @@ public:
 
             switch (method) {
             case 0:
-                igCheck(igraph_shortest_paths_dijkstra(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(from[i])), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
+                igCheck(igraph_distances_dijkstra(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(from[i])), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
                 break;
             case 1:
-                igCheck(igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(from[i])), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
+                igCheck(igraph_distances_bellman_ford(&graph, &mat.mat, igraph_vss_1(igraph_integer_t(from[i])), toall ? igraph_vss_all() : igraph_vss_vector(&tov), passWeights(), IGRAPH_OUT));
                 break;
             default:
                 throw mma::LibraryError("shortestPathWeightedHistogram: Unknown method.");
@@ -1725,15 +1731,15 @@ public:
         return diam;
     }
 
-    mma::RealTensorRef findDiameter(bool components) const {
-        igVector vertex_path;
+    mma::IntTensorRef findDiameter(bool components) const {
+        igIntVector vertex_path;
         igCheck(igraph_diameter(&graph, nullptr, nullptr, nullptr, &vertex_path.vec, nullptr, true, components));
         return vertex_path.makeMTensor();
     }
 
     /* TODO */
-    mma::RealTensorRef findDiameterEdges(bool components) const {
-        igVector edge_path;
+    mma::IntTensorRef findDiameterEdges(bool components) const {
+        igIntVector edge_path;
         igCheck(igraph_diameter(&graph, nullptr, nullptr, nullptr, nullptr, &edge_path.vec, true, components));
         return edge_path.makeMTensor();
     }
@@ -1744,15 +1750,15 @@ public:
         return diam;
     }
 
-    mma::RealTensorRef findDiameterDijkstra(bool components) const {
-        igVector vertex_path;
+    mma::IntTensorRef findDiameterDijkstra(bool components) const {
+        igIntVector vertex_path;
         igCheck(igraph_diameter_dijkstra(&graph, passWeights(), nullptr, nullptr, nullptr, &vertex_path.vec, nullptr, true, components));
         return vertex_path.makeMTensor();
     }
 
     /* TODO */
-    mma::RealTensorRef findDiameterDijkstraEdges(bool components) const {
-        igVector edge_path;
+    mma::IntTensorRef findDiameterDijkstraEdges(bool components) const {
+        igIntVector edge_path;
         igCheck(igraph_diameter_dijkstra(&graph, passWeights(), nullptr, nullptr, nullptr, nullptr, &edge_path.vec, true, components));
         return edge_path.makeMTensor();
     }
@@ -1766,9 +1772,9 @@ public:
         return diam;
     }
 
-    mma::RealTensorRef findPseudoDiameter(mint start, bool components) const {
+    mma::IntTensorRef findPseudoDiameter(mint start, bool components) const {
         igraph_integer_t from, to;
-        igVector vertex_path;
+        igIntVector vertex_path;
 
         igCheck(igraph_pseudo_diameter(&graph, nullptr, start, &from, &to, true, components));
 
@@ -1786,9 +1792,9 @@ public:
         return diam;
     }
 
-    mma::RealTensorRef findPseudoDiameterDijkstra(mint start, bool components) const {
+    mma::IntTensorRef findPseudoDiameterDijkstra(mint start, bool components) const {
         igraph_integer_t from, to;
-        igVector vertex_path;
+        igIntVector vertex_path;
 
         igCheck(igraph_pseudo_diameter_dijkstra(&graph, passWeights(), nullptr, start, &from, &to, true, components));
 
@@ -1812,6 +1818,7 @@ public:
         return res;
     }
 
+    /* TODO simplify for 0.10 */
     double averagePathLengthWeighted(mint method, bool components) const {
         /* method values:
          * 0 - unweighted
@@ -1841,10 +1848,10 @@ public:
                 break;
             */
             case 2:
-                igCheck(igraph_shortest_paths_bellman_ford(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights(), IGRAPH_OUT));
+                igCheck(igraph_distances_bellman_ford(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights(), IGRAPH_OUT));
                 break;
             case 3:
-                igCheck(igraph_shortest_paths_johnson(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights()));
+                igCheck(igraph_distances_johnson(&graph, &mat.mat, igraph_vss_1(i), igraph_vss_all(), passWeights()));
                 break;
             }
 
@@ -1869,9 +1876,9 @@ public:
         return res;
     }
 
-    mma::RealTensorRef localEfficiency(mma::RealTensorRef vs, bool directed, mint mode) const {
+    mma::RealTensorRef localEfficiency(mma::IntTensorRef vs, bool directed, mint mode) const {
         igVector vec;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_local_efficiency(&graph, &vec.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), passWeights(), directed, igNeighborMode(mode, "local efficiency")));
         return vec.makeMTensor();
     }
@@ -1888,8 +1895,8 @@ public:
         return res;
     }
 
-    mma::RealTensorRef eccentricity(mma::RealTensorRef vs) const {
-        igraph_vector_t vsvec = igVectorView(vs);
+    mma::RealTensorRef eccentricity(mma::IntTensorRef vs) const {
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igVector res;
         igCheck(igraph_eccentricity(&graph, &res.vec, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT));
         return res.makeMTensor();
@@ -2188,18 +2195,18 @@ public:
     }
      */
 
-    mma::RealTensorRef layoutReingoldTilford(mma::RealTensorRef roots, bool directed) const {
+    mma::RealTensorRef layoutReingoldTilford(mma::IntTensorRef roots, bool directed) const {
         igMatrix mat;
-        igraph_vector_t rootvec = igVectorView(roots);
+        igraph_vector_int_t rootvec = igIntVectorView(roots);
         igCheck(igraph_layout_reingold_tilford(
                 &graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL,
                 roots.length() == 0 ? nullptr : &rootvec, nullptr));
         return mat.makeMTensor();
     }
 
-    mma::RealTensorRef layoutReingoldTilfordCircular(mma::RealTensorRef roots, bool directed) const {
+    mma::RealTensorRef layoutReingoldTilfordCircular(mma::IntTensorRef roots, bool directed) const {
         igMatrix mat;
-        igraph_vector_t rootvec = igVectorView(roots);
+        igraph_vector_int_t rootvec = igIntVectorView(roots);
         igCheck(igraph_layout_reingold_tilford_circular(
                 &graph, &mat.mat, directed ? IGRAPH_OUT : IGRAPH_ALL,
                 roots.length() == 0 ? nullptr : &rootvec, nullptr));
@@ -2223,7 +2230,7 @@ public:
         igraph_layout_drl_options_t options;
         igCheck(igraph_layout_drl_options_init(&options, templ));
 
-        igCheck(igraph_layout_drl(&graph, &mat.mat, use_seed, &options, passWeights(), nullptr));
+        igCheck(igraph_layout_drl(&graph, &mat.mat, use_seed, &options, passWeights()));
 
         return mat.makeMTensor();
     }
@@ -2258,7 +2265,7 @@ public:
         igraph_layout_drl_options_t options;
         igCheck(igraph_layout_drl_options_init(&options, templ));
 
-        igCheck(igraph_layout_drl_3d(&graph, &mat.mat, use_seed, &options, passWeights(), nullptr));
+        igCheck(igraph_layout_drl_3d(&graph, &mat.mat, use_seed, &options, passWeights()));
 
         return mat.makeMTensor();
     }
@@ -2313,45 +2320,45 @@ public:
 
     // Similarity measures
 
-    mma::RealTensorRef similarityCocitation(mma::RealTensorRef vs) const {
+    mma::RealTensorRef similarityCocitation(mma::IntTensorRef vs) const {
         igMatrix mat;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_cocitation(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
         return mat.makeMTensor();
     }
 
-    mma::RealTensorRef similarityBibcoupling(mma::RealTensorRef vs) const {
+    mma::RealTensorRef similarityBibcoupling(mma::IntTensorRef vs) const {
         igMatrix mat;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_bibcoupling(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec)));
         return mat.makeMTensor();
     }
 
-    mma::RealTensorRef similarityJaccard(mma::RealTensorRef vs, bool loops) const {
+    mma::RealTensorRef similarityJaccard(mma::IntTensorRef vs, bool loops) const {
         igMatrix mat;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_similarity_jaccard(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, loops));
         return mat.makeMTensor();
     }
 
-    mma::RealTensorRef similarityDice(mma::RealTensorRef vs, bool loops) const {
+    mma::RealTensorRef similarityDice(mma::IntTensorRef vs, bool loops) const {
         igMatrix mat;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_similarity_dice(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT, loops));
         return mat.makeMTensor();
     }
 
-    mma::RealTensorRef similarityInverseLogWeighted(mma::RealTensorRef vs) const {
+    mma::RealTensorRef similarityInverseLogWeighted(mma::IntTensorRef vs) const {
         igMatrix mat;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
         igCheck(igraph_similarity_inverse_log_weighted(&graph, &mat.mat, vs.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&vsvec), IGRAPH_OUT));
         return mat.makeMTensor();
     }
 
     // Chordal graphs
 
-    mma::RealTensorRef maximumCardinalitySearch() const {
-        igVector vec;
+    mma::IntTensorRef maximumCardinalitySearch() const {
+        igIntVector vec;
         igCheck(igraph_maximum_cardinality_search(&graph, &vec.vec, nullptr));
         return vec.makeMTensor();
     }
@@ -2362,9 +2369,9 @@ public:
         return res;
     }
 
-    mma::RealTensorRef chordalCompletion() const {
+    mma::IntTensorRef chordalCompletion() const {
         igraph_bool_t chordal;
-        igVector fillin;
+        igIntVector fillin;
         igCheck(igraph_is_chordal(&graph, nullptr, nullptr, &chordal, &fillin.vec, nullptr));
         return fillin.makeMTensor();
     }
@@ -2383,17 +2390,17 @@ public:
         return packListIntoIntTensor(list);
     }
 
-    bool separatorQ(mma::RealTensorRef vs) const {
+    bool separatorQ(mma::IntTensorRef vs) const {
         igraph_bool_t res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
 
         igCheck(igraph_is_separator(&graph, igraph_vss_vector(&vsvec), &res));
         return res;
     }
 
-    bool minSeparatorQ(mma::RealTensorRef vs) const {
+    bool minSeparatorQ(mma::IntTensorRef vs) const {
         igraph_bool_t res;
-        igraph_vector_t vsvec = igVectorView(vs);
+        igraph_vector_int_t vsvec = igIntVectorView(vs);
 
         igCheck(igraph_is_minimal_separator(&graph, igraph_vss_vector(&vsvec), &res));
         return res;
@@ -2415,8 +2422,8 @@ public:
         igConstructorCheck(igraph_dominator_tree(&ig.graph, root, nullptr, &graph, nullptr, IGRAPH_OUT));
     }
 
-    mma::RealTensorRef immediateDominators(mint root) const {
-        igVector dom;
+    mma::IntTensorRef immediateDominators(mint root) const {
+        igIntVector dom;
         igCheck(igraph_dominator_tree(&graph, root, &dom.vec, nullptr, nullptr, IGRAPH_OUT));
         for (auto &el : dom) {
             if (! (el >= 0))
@@ -2496,15 +2503,15 @@ public:
         return value;
     }
 
-    mma::RealTensorRef minCut() const {
-        igVector cut;
+    mma::IntTensorRef minCut() const {
+        igIntVector cut;
         double value;
         igCheck(igraph_mincut(&graph, &value, nullptr, nullptr, &cut.vec, passWeights()));
         return cut.makeMTensor();
     }
 
-    mma::RealTensorRef minCutST(mint s, mint t) const {
-        igVector cut;
+    mma::IntTensorRef minCutST(mint s, mint t) const {
+        igIntVector cut;
         double value;
         igCheck(igraph_st_mincut(&graph, &value, &cut.vec, nullptr, nullptr, s, t, passWeights()));
         return cut.makeMTensor();
@@ -2526,8 +2533,8 @@ public:
 
     // Connected components
 
-    mma::RealTensorRef articulationPoints() const {
-        igVector vec;
+    mma::IntTensorRef articulationPoints() const {
+        igIntVector vec;
         igCheck(igraph_articulation_points(&graph, &vec.vec));
         return vec.makeMTensor();
     }
@@ -2558,15 +2565,15 @@ public:
         return count == 1;
     }
 
-    mma::RealTensorRef bridges() const {
-        igVector res;
+    mma::IntTensorRef bridges() const {
+        igIntVector res;
         igCheck(igraph_bridges(&graph, &res.vec));
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef connectedComponentSizes(bool mode) const {
-        igVector csize;
-        igCheck(igraph_clusters(&graph, nullptr, &csize.vec, nullptr, mode ? IGRAPH_STRONG : IGRAPH_WEAK));
+    mma::IntTensorRef connectedComponentSizes(bool mode) const {
+        igIntVector csize;
+        igCheck(igraph_connected_components(&graph, nullptr, &csize.vec, nullptr, mode ? IGRAPH_STRONG : IGRAPH_WEAK));
         return csize.makeMTensor();
     }
 
@@ -2596,13 +2603,14 @@ public:
         return res;
     }
 
+    /* TODO review, check parents vector */
     void cohesiveBlocks(MLINK link) const {
         mlStream ml{link, "cohesiveBlocks"};
         ml >> mlCheckArgs(0);
 
         igList blocks;
-        igVector cohesion;
-        igVector parents;
+        igIntVector cohesion;
+        igIntVector parents;
 
         igCheck(igraph_cohesive_blocks(&graph, &blocks.list, &cohesion.vec, &parents.vec, nullptr));
 
@@ -2654,13 +2662,14 @@ public:
 
     // Community detection
 
-    double modularity(mma::RealTensorRef t, double resolution, bool directed) const {
-        igraph_vector_t membership = igVectorView(t);
+    double modularity(mma::IntTensorRef t, double resolution, bool directed) const {
+        igraph_vector_int_t membership = igIntVectorView(t);
         double Q;
         igCheck(igraph_modularity(&graph, &membership, passWeights(), resolution, directed, &Q));
         return Q;
     }
 
+    /* TODO complete */
     /*
     mma::IntTensorRef splitJoinDistance(mma::RealTensorRef c1, mma::RealTensorRef c2) const {
         igraph_integer_t d1, d2;
@@ -2682,8 +2691,9 @@ public:
         igraph_integer_t n_communities;
         ml >> mlCheckArgs(1) >> n_communities;
 
-        igVector result, betweenness, bridges, membership, modularity;
-        igMatrix merges;
+        igVector result, betweenness, modularity;
+        igIntVector bridges, membership;
+        igIntMatrix merges;
 
         if (n_communities == 0) { // automatic communities based on max modularity
             igCheck(igraph_community_edge_betweenness(
@@ -2716,8 +2726,9 @@ public:
         igraph_integer_t steps, n_communities;
         ml >> mlCheckArgs(2) >> steps >> n_communities;
 
-        igVector modularity, membership;
-        igMatrix merges;
+        igVector modularity;
+        igIntVector membership;
+        igIntMatrix merges;
 
         if (n_communities == 0) {
             igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, &modularity.vec, &membership.vec));
@@ -2738,7 +2749,7 @@ public:
         ml >> mlCheckArgs(0);
 
         igVector modularity, membership;
-        igMatrix merges;
+        igIntMatrix merges;
 
         igCheck(igraph_community_fastgreedy(&graph, passWeights(), &merges.mat, &modularity.vec, &membership.vec));
 
@@ -2773,7 +2784,7 @@ public:
         ml >> mlCheckArgs(4) >> resolution >> beta >> method >> vertexWeight;
 
         switch (method) {
-        case 1: /* degree/strength */
+        case 1: /* degree/strength */ /* TODO simplify strength/degree calls */
             if (weightedQ()) {
                 igraph_strength(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true, passWeights());
                 double total_edge_weight = 0.0;
@@ -2783,7 +2794,7 @@ public:
             }
             else
             {
-                igraph_degree(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true);
+                igraph_strength(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true, nullptr);
                 resolution = 0.5*resolution / edgeCount();
             }
             break;
@@ -2920,8 +2931,9 @@ public:
         igraph_arpack_options_t options;
         igraph_arpack_options_init(&options);
 
-        igVector membership, finalMembership, eigenvalues;
-        igMatrix merges;
+        igIntVector membership, finalMembership;
+        igVector eigenvalues;
+        igIntMatrix merges;
         igList eigenvectors;
         igraph_real_t modularity;
 
@@ -2970,9 +2982,9 @@ public:
     // Unfold tree
 
     // note this is a constructor!
-    mma::RealTensorRef unfoldTree(const IG &source, mma::RealTensorRef troots, bool directed) {
-        igraph_vector_t roots = igVectorView(troots);
-        igVector mapping;
+    mma::IntTensorRef unfoldTree(const IG &source, mma::IntTensorRef troots, bool directed) {
+        igraph_vector_int_t roots = igIntVectorView(troots);
+        igIntVector mapping;
         destroy();
         igConstructorCheck(igraph_unfold_tree(&source.graph, &graph, directed ? IGRAPH_OUT : IGRAPH_ALL, &roots, &mapping.vec));
         return mapping.makeMTensor();
@@ -2995,7 +3007,7 @@ public:
         igBoolVector types(typevec.length());
         std::copy(typevec.begin(), typevec.end(), types.begin());
 
-        igVector mult1, mult2;
+        igIntVector mult1, mult2;
 
         igCheck(igraph_bipartite_projection(&graph, &types.vec, &p1.graph, &p2.graph, &mult1.vec, &mult2.vec, -1));
 
@@ -3009,15 +3021,15 @@ public:
     // Contract vertices
 
     // note this is a constructor!
-    void contractVertices(mma::RealTensorRef t) {
-        igraph_vector_t mapping = igVectorView(t);
+    void contractVertices(mma::IntTensorRef t) {
+        igraph_vector_int_t mapping = igIntVectorView(t);
         igCheck(igraph_contract_vertices(&graph, &mapping, nullptr));
     }
 
     // Random walks
 
-    mma::RealTensorRef randomWalk(mint start, mint steps) const {
-        igVector walk;
+    mma::IntTensorRef randomWalk(mint start, mint steps) const {
+        igIntVector walk;
 
         /* Use random_edge_walk for the weighted case until random_wakl gets support for weights.
          * This is fine, as random_edge_walk returns the same result as random_walk if the weight
@@ -3025,11 +3037,12 @@ public:
          */
         if (weightedQ()) {
             if (steps == 0)
-                return mma::makeVector<double>(0);
+                return mma::makeVector<mint>(0);
 
+            /* TODO deprecated */
             igCheck(igraph_random_edge_walk(&graph, passWeights(), &walk.vec, start, IGRAPH_OUT, steps-1, IGRAPH_RANDOM_WALK_STUCK_RETURN));
 
-            auto result = mma::makeVector<double>(walk.length() + 1);
+            auto result = mma::makeVector<mint>(walk.length() + 1);
             long last = start;
             result[0] = last;
             for (mint i=1; i < result.size(); ++i) {
@@ -3038,27 +3051,29 @@ public:
             }
             return result;
         } else {
+            /* TODO update arg list */
             igCheck(igraph_random_walk(&graph, &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
             return walk.makeMTensor();
         }
     }
 
-    mma::RealTensorRef randomEdgeWalk(mint start, mint steps) const {
-        igVector walk;
+    mma::IntTensorRef randomEdgeWalk(mint start, mint steps) const {
+        igIntVector walk;
+        /* TODO update deprecated */
         igCheck(igraph_random_edge_walk(&graph, passWeights(), &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
         return walk.makeMTensor();
     }
 
     // Spanning tree
 
-    mma::RealTensorRef spanningTree() const {
-        igVector vector;
+    mma::IntTensorRef spanningTree() const {
+        igIntVector vector;
         igCheck(igraph_minimum_spanning_tree(&graph, &vector.vec, passWeights()));
         return vector.makeMTensor();
     }
 
-    mma::RealTensorRef randomSpanningTree(mint vid) const {
-        igVector vector;
+    mma::IntTensorRef randomSpanningTree(mint vid) const {
+        igIntVector vector;
         igCheck(igraph_random_spanning_tree(&graph, &vector.vec, vid));
         return vector.makeMTensor();
     }
@@ -3073,8 +3088,8 @@ public:
 
     // Coreness
 
-    mma::RealTensorRef coreness(mint mode) const {
-        igVector cores;
+    mma::IntTensorRef coreness(mint mode) const {
+        igIntVector cores;
         igraph_neimode_t m;
         switch (mode) {
         case 1:
@@ -3098,8 +3113,8 @@ public:
         return closed ? has_cycle : has_path;
     }
 
-    mma::RealTensorRef eulerianPath(bool closed) const {
-        igVector edges;
+    mma::IntTensorRef eulerianPath(bool closed) const {
+        igIntVector edges;
 
         if (closed)
             igCheck(igraph_eulerian_cycle(&graph, &edges.vec, nullptr));
@@ -3109,8 +3124,8 @@ public:
         return edges.makeMTensor();
     }
 
-    mma::RealTensorRef eulerianPathVertices(bool closed) const {
-        igVector vertices;
+    mma::IntTensorRef eulerianPathVertices(bool closed) const {
+        igIntVector vertices;
 
         if (closed)
             igCheck(igraph_eulerian_cycle(&graph, nullptr, &vertices.vec));
@@ -3236,7 +3251,7 @@ public:
         for (const auto &s : inclist)
             result.insert(s.begin(), s.end());
 
-        igVector igedges(2*result.size());
+        igIntVector igedges(2*result.size());
         {
             mint i=0;
             for (const auto &e : result) {
@@ -3329,7 +3344,7 @@ public:
         for (const auto &s : inclist_in)
             result.insert(s.begin(), s.end());
 
-        igVector igedges(2*result.size());
+        igIntVector igedges(2*result.size());
         {
             mint i=0;
             for (const auto &e : result) {
@@ -3425,6 +3440,7 @@ public:
 
     // check if a graph is perfect
     // this function assumes the input to be undirected, simple, connected
+    /* TODO use 0.10 function */
     bool perfectQ() { /* TODO: re-add const once ladSubisomoprhic could be made const */
         // bipartite graphs and chordal graphs are perfect
         if (bipartiteQ() || chordalQ())
@@ -3457,7 +3473,7 @@ public:
         start = start % 2 == 0 ? start+1 : start+2;
         IG cycle;
         for (mint s = start; s <= vcount; s += 2) {
-            igVector edges(2*s);
+            igIntVector edges(2*s);
             for (int i=0; i < s; ++i) {
                 edges[2*i] = i;
                 edges[2*i + 1] = i+1 < s ? i+1 : 0;
@@ -3500,10 +3516,10 @@ public:
 
         // We verify that each bi-connected component is either K_2 or an induced cycle.
         // Knowing that the component is biconnected, it is sufficient to check that E <= V.
-        long no_comps = vertex_comps.size();
-        for (long i=0; i < no_comps; ++i) {
-            igraph_integer_t vcount = igraph_vector_size(vertex_comps[i]);
-            igraph_integer_t ecount = igraph_vector_size(edge_comps[i]);
+        igraph_integer_t no_comps = vertex_comps.size();
+        for (igraph_integer_t i=0; i < no_comps; ++i) {
+            igraph_integer_t vcount = igraph_vector_int_size(vertex_comps[i]);
+            igraph_integer_t ecount = igraph_vector_int_size(edge_comps[i]);
 
             if (ecount > vcount)
                 return false;
@@ -3536,8 +3552,8 @@ public:
         // Knowing that the component is biconnected, it is sufficient to check that E <= V.
         long no_comps = vertex_comps.size();
         for (long i=0; i < no_comps; ++i) {
-            igraph_integer_t vcount = igraph_vector_size(vertex_comps[i]);
-            igraph_integer_t ecount = igraph_vector_size(edge_comps[i]);
+            igraph_integer_t vcount = igraph_vector_int_size(vertex_comps[i]);
+            igraph_integer_t ecount = igraph_vector_int_size(edge_comps[i]);
 
             if (ecount > vcount)
                 return false;
@@ -3558,7 +3574,7 @@ public:
         if (! directedQ() || ! treeQ(IGRAPH_OUT))
             throw mma::LibraryError("strahlerNumber: the graph is not a directed out-tree.");
 
-        igVector degree;
+        igIntVector degree;
         igCheck(igraph_degree(&graph, &degree.vec, igraph_vss_all(), IGRAPH_IN, false));
 
         // Find the root---this will not go out of bounds since we already verified that the graph is an out-tree.
@@ -3567,7 +3583,7 @@ public:
             if (degree[root] == 0)
                 break;
 
-        igVector postorder, parent;
+        igIntVector postorder, parent;
         igCheck(igraph_dfs(&graph, root, IGRAPH_OUT, false, nullptr, &postorder.vec, &parent.vec, nullptr, nullptr, nullptr, nullptr));
 
         auto res = mma::makeVector<mint>(postorder.length());
@@ -3661,21 +3677,23 @@ public:
         return res;
     }
 
-    double assortativityNominal(mma::RealTensorRef types, bool directed) const {
-        igraph_vector_t types_vec = igVectorView(types);
+    /* TODO extra 'normalized' arg was added */
+    double assortativityNominal(mma::IntTensorRef types, bool directed, bool normalized) const {
+        igraph_vector_int_t types_vec = igIntVectorView(types);
         igraph_real_t res;
 
-        igCheck(igraph_assortativity_nominal(&graph, &types_vec, &res, directed));
+        igCheck(igraph_assortativity_nominal(&graph, &types_vec, &res, directed, normalized));
 
         return res;
     }
 
-    double assortativityValued(mma::RealTensorRef values, mma::RealTensorRef values_in, bool directed) const {
+    /* TODO extra 'normalized' arg was added */
+    double assortativityValued(mma::RealTensorRef values, mma::RealTensorRef values_in, bool directed, bool normalized) const {
         igraph_vector_t values_vec = igVectorView(values);
         igraph_vector_t values_in_vec = igVectorView(values_in);
         igraph_real_t res;
 
-        igCheck(igraph_assortativity(&graph, &values_vec, directed ? &values_in_vec : nullptr, &res, directed));
+        igCheck(igraph_assortativity(&graph, &values_vec, directed ? &values_in_vec : nullptr, &res, directed, normalized));
 
         return res;
     }

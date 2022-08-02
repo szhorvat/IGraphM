@@ -21,8 +21,8 @@ extern "C" { // workaround for igraph_version() C++ compatibility bug in igraph 
 
 
 static_assert(std::is_same<double, igraph_real_t>::value, "IGraphM assumes igraph_real_t to be double.");
-static_assert(sizeof(igraph_integer_t) == 4, "IGraphM assumes igraph_integer_t to be 32-bit.");
-static_assert(std::is_same<int, igraph_bool_t>::value, "IGraphM assumes igraph_bool_t to be int.");
+static_assert(sizeof(igraph_integer_t) == sizeof(mint), "IGraphM assumes igraph_integer_t to have the same size as mint.");
+static_assert(std::is_same<bool, igraph_bool_t>::value, "IGraphM assumes igraph_bool_t to be bool.");
 // See mlstream extractors, which are defined for integer types of particular widths.
 
 /************************
@@ -30,8 +30,8 @@ static_assert(std::is_same<int, igraph_bool_t>::value, "IGraphM assumes igraph_b
  ************************/
 
 // check igraph's error codes and abort if necessary
-inline void igCheck(int err) {
-    if (! err) return;
+inline void igCheck(igraph_error_t err) {
+    if (err == IGRAPH_SUCCESS) return;
     std::ostringstream msg;
     msg << "igraph returned with error: " << igraph_strerror(err) << ".";
     throw mma::LibraryError(msg.str());
@@ -50,6 +50,14 @@ inline igraph_vector_t igVectorView(mma::RealTensorRef t) {
     return vec;
 }
 
+inline igraph_vector_int_t igIntVectorView(mma::IntTensorRef t) {
+    static igraph_integer_t dummy = 0; // work around igraph not liking zero-length vectors with NULL pointers
+    igraph_vector_int_t vec;
+    mint len = t.length();
+    igraph_vector_int_view(&vec, len == 0 ? &dummy : t.data(), len);
+    return vec;
+}
+
 
 // RAII for igraph_vector_t
 class igVector {
@@ -63,11 +71,11 @@ public:
         source.vec.stor_begin = nullptr;
     }
 
-    igVector(const igraph_vector_t *source) { igraph_vector_copy(&vec, source); }
+    igVector(const igraph_vector_t *source) { igraph_vector_init_copy(&vec, source); }
 
-    explicit igVector(long len) { igraph_vector_init(&vec, len); }
+    explicit igVector(igraph_integer_t len) { igraph_vector_init(&vec, len); }
 
-    igVector(const igVector &igv) : igVector() { igraph_vector_copy(&vec, &igv.vec); }
+    igVector(const igVector &igv) : igVector() { igraph_vector_init_copy(&vec, &igv.vec); }
 
     igVector & operator = (const igVector &igv) {
         igraph_vector_update(&vec, &igv.vec);
@@ -77,8 +85,8 @@ public:
     // it is safe to call igraph_vector_destroy on a vector where vec.stor_begin == NULL
     ~igVector() { igraph_vector_destroy(&vec); }
 
-    long length() const { return vec.end - vec.stor_begin; }
-    long size() const { return length(); }
+    igraph_integer_t length() const { return vec.end - vec.stor_begin; }
+    igraph_integer_t size() const { return length(); }
 
     igraph_real_t *begin() { return vec.stor_begin; }
     igraph_real_t *end() { return vec.end; }
@@ -90,8 +98,8 @@ public:
     const igraph_real_t & operator [] (size_t i) const { return begin()[i]; }
 
     void clear() { igraph_vector_clear(&vec); }
-    void resize(long newsize) { igCheck(igraph_vector_resize(&vec, newsize)); }
-    void reserve(long newsize) { igCheck(igraph_vector_reserve(&vec, newsize)); }
+    void resize(igraph_integer_t newsize) { igCheck(igraph_vector_resize(&vec, newsize)); }
+    void reserve(igraph_integer_t newsize) { igCheck(igraph_vector_reserve(&vec, newsize)); }
 
     void push_back(igraph_real_t el) { igCheck(igraph_vector_push_back(&vec, el)); }
 
@@ -106,6 +114,7 @@ public:
 
 // RAII for igraph_vector_int_t
 // note that igraph_integer_t and mint may not be the same type
+/* TODO move constructor like igVector */
 class igIntVector {
 
     // avoid accidental implicit copy
@@ -118,8 +127,10 @@ public:
     igIntVector() { igraph_vector_int_init(&vec, 0); }
     ~igIntVector() { igraph_vector_int_destroy(&vec); }
 
-    long length() const { return vec.end - vec.stor_begin; }
-    long size() const { return length(); }
+    explicit igIntVector(igraph_integer_t len) { igraph_vector_int_init(&vec, len); }
+
+    igraph_integer_t length() const { return vec.end - vec.stor_begin; }
+    igraph_integer_t size() const { return length(); }
 
     igraph_integer_t *begin() { return vec.stor_begin; }
     igraph_integer_t *end() { return vec.end; }
@@ -131,8 +142,8 @@ public:
     const igraph_integer_t & operator [] (size_t i) const { return begin()[i]; }
 
     void clear() { igraph_vector_int_clear(&vec); }    
-    void resize(long newsize) { igCheck(igraph_vector_int_resize(&vec, newsize)); }
-    void reserve(long newsize) { igCheck(igraph_vector_int_reserve(&vec, newsize)); }
+    void resize(igraph_integer_t newsize) { igCheck(igraph_vector_int_resize(&vec, newsize)); }
+    void reserve(igraph_integer_t newsize) { igCheck(igraph_vector_int_reserve(&vec, newsize)); }
 
     void push_back(igraph_real_t el) { igCheck(igraph_vector_int_push_back(&vec, el)); }
 
@@ -145,44 +156,7 @@ public:
 };
 
 
-// RAII for igraph_vector_long_t
-class igLongVector {
 
-    // avoid accidental implicit copy
-    igLongVector(const igLongVector &) = delete;
-    igLongVector & operator = (const igLongVector &) = delete;
-
-public:
-    igraph_vector_long_t vec;
-
-    igLongVector() { igraph_vector_long_init(&vec, 0); }
-    ~igLongVector() { igraph_vector_long_destroy(&vec); }
-
-    long length() const { return vec.end - vec.stor_begin; }
-    long size() const { return length(); }
-
-    long *begin() { return vec.stor_begin; }
-    long *end() { return vec.end; }
-
-    const long *begin() const { return vec.stor_begin; }
-    const long *end() const { return vec.end; }
-
-    long & operator [] (size_t i) { return begin()[i]; }
-    const long & operator [] (size_t i) const { return begin()[i]; }
-
-    void clear() { igraph_vector_long_clear(&vec); }
-    void resize(long newsize) { igCheck(igraph_vector_long_resize(&vec, newsize)); }
-    void reserve(long newsize) { igCheck(igraph_vector_long_reserve(&vec, newsize)); }
-
-    void push_back(igraph_real_t el) { igCheck(igraph_vector_long_push_back(&vec, el)); }
-
-    void copyFromMTensor(mma::IntTensorRef t) {
-        resize(t.length());
-        std::copy(t.begin(), t.end(), begin());
-    }
-
-    mma::IntTensorRef makeMTensor() const { return mma::makeVector<mint>(length(), begin()); }
-};
 
 
 // RAII for igraph_vector_bool_t
@@ -196,12 +170,12 @@ public:
 
     igraph_vector_bool_t vec;
 
-    explicit igBoolVector(long len) { igraph_vector_bool_init(&vec, len); }
+    explicit igBoolVector(igraph_integer_t len) { igraph_vector_bool_init(&vec, len); }
     igBoolVector() { igraph_vector_bool_init(&vec, 0); }
     ~igBoolVector() { igraph_vector_bool_destroy(&vec); }
 
-    long length() const { return vec.end - vec.stor_begin; }
-    long size() const { return length(); }
+    igraph_integer_t length() const { return vec.end - vec.stor_begin; }
+    igraph_integer_t size() const { return length(); }
 
     igraph_bool_t *begin() { return vec.stor_begin; }
     igraph_bool_t *end() { return vec.end; }
@@ -210,8 +184,8 @@ public:
     const igraph_bool_t *end() const { return vec.end; }
 
     void clear() { igraph_vector_bool_clear(&vec); }
-    void resize(long newsize) { igCheck(igraph_vector_bool_resize(&vec, newsize)); }
-    void reserve(long newsize) { igCheck(igraph_vector_bool_reserve(&vec, newsize)); }
+    void resize(igraph_integer_t newsize) { igCheck(igraph_vector_bool_resize(&vec, newsize)); }
+    void reserve(igraph_integer_t newsize) { igCheck(igraph_vector_bool_reserve(&vec, newsize)); }
 
     void push_back(igraph_real_t el) { igCheck(igraph_vector_bool_push_back(&vec, el)); }
 
@@ -233,9 +207,9 @@ public:
     igMatrix() { igraph_matrix_init(&mat, 0, 0); }
     ~igMatrix() { igraph_matrix_destroy(&mat); }
 
-    long length() const { return mat.data.end - mat.data.stor_begin; }
-    long nrow() const { return mat.nrow; }
-    long ncol() const { return mat.ncol; }
+    igraph_integer_t length() const { return mat.data.end - mat.data.stor_begin; }
+    igraph_integer_t nrow() const { return mat.nrow; }
+    igraph_integer_t ncol() const { return mat.ncol; }
 
     igraph_real_t *begin() { return mat.data.stor_begin; }
     igraph_real_t *end() { return mat.data.end; }
@@ -254,6 +228,47 @@ public:
         mat.nrow = t.cols();
         mat.ncol = t.rows();
         igCheck(igraph_matrix_transpose(&mat));
+    }
+
+    mma::RealMatrixRef makeMTensor() const { return mma::makeMatrixTransposed<double>(mat.nrow, mat.ncol, begin()); }
+};
+
+
+// RAII for igraph_maxtrix_t
+class igIntMatrix {
+
+    // avoid accidental implicit copy
+    igIntMatrix(const igIntMatrix &) = delete;
+    igIntMatrix & operator = (const igIntMatrix &) = delete;
+
+public:
+
+    igraph_matrix_int_t mat;
+
+    igIntMatrix() { igraph_matrix_int_init(&mat, 0, 0); }
+    ~igIntMatrix() { igraph_matrix_int_destroy(&mat); }
+
+    igraph_integer_t length() const { return mat.data.end - mat.data.stor_begin; }
+    igraph_integer_t nrow() const { return mat.nrow; }
+    igraph_integer_t ncol() const { return mat.ncol; }
+
+    igraph_integer_t *begin() { return mat.data.stor_begin; }
+    igraph_integer_t *end() { return mat.data.end; }
+
+    const igraph_integer_t *begin() const { return mat.data.stor_begin; }
+    const igraph_integer_t *end() const { return mat.data.end; }
+
+    igraph_integer_t & operator () (size_t i, size_t j) { return MATRIX(mat, i, j); }
+    const igraph_integer_t & operator () (size_t i, size_t j) const { return MATRIX(mat, i, j); }
+
+    void copyFromMTensor(mma::IntMatrixRef t) {
+        igraph_vector_int_t from = igIntVectorView(t);
+        igCheck(igraph_vector_int_update(&mat.data, &from));
+        // Mathematica uses row-major storage, igraph uses column-major storage
+        // thus we need to reverse the row/column counts, then transpose
+        mat.nrow = t.cols();
+        mat.ncol = t.rows();
+        igCheck(igraph_matrix_int_transpose(&mat));
     }
 
     mma::RealMatrixRef makeMTensor() const { return mma::makeMatrixTransposed<double>(mat.nrow, mat.ncol, begin()); }
@@ -293,8 +308,8 @@ public:
         list.end = list.stor_begin;
     }
 
-    long length() const { return list.end - list.stor_begin; }
-    long size() const { return length(); }
+    igraph_integer_t length() const { return list.end - list.stor_begin; }
+    igraph_integer_t size() const { return length(); }
 
     void push(igraph_vector_t *vec) { igraph_vector_ptr_push_back(&list, vec); }
 
@@ -304,12 +319,33 @@ public:
     const ElemType **begin() const { return reinterpret_cast<const ElemType **>(list.stor_begin); }
     const ElemType **end() const { return reinterpret_cast<const ElemType **>(list.end); }
 
-    const ElemType *operator [] (long i) const { return static_cast<const ElemType *>(list.stor_begin[i]); }
+    const ElemType *operator [] (igraph_integer_t i) const { return static_cast<const ElemType *>(list.stor_begin[i]); }
 };
 
 
-typedef igPtrVector<igraph_vector_t, igraph_vector_destroy> igList;
+// typedef igPtrVector<igraph_vector_t, igraph_vector_destroy> igList;
 typedef igPtrVector<igraph_t, igraph_destroy> igGraphList;
+
+/* TODO rename to igIntVectorList */
+class igList {
+public:
+    igraph_vector_int_list_t list;
+
+    igList() { igraph_vector_int_list_init(&list, 0); }
+    ~igList() { igraph_vector_int_list_destroy(&list); }
+
+    void clear() {
+        igraph_vector_int_list_clear(&list);
+    }
+
+    igraph_integer_t length() const { return list.end - list.stor_begin; }
+    igraph_integer_t size() const { return length(); }
+
+    const igraph_vector_int_t *operator [] (igraph_integer_t i) const {
+        /* TODO safety! use API? */
+        return &list.stor_begin[i];
+    }
+};
 
 
 /* Generic wrapper for existing instances of igraph vector types */
