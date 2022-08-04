@@ -10,7 +10,6 @@
 #include "IGEmbedding.h"
 
 #include "LTemplate.h"
-#include "mlstream.h"
 
 // WolframLibrary.h defines True and False, which conflicts with LEMON.
 // Thus we undefine them here.

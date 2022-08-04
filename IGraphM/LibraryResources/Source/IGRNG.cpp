@@ -27,7 +27,7 @@ void rng_Mma_get_function_pointers() {
 }
 
 
-int igraph_rng_Mma_init(void **state) {
+igraph_error_t igraph_rng_Mma_init(void **state) {
     IGRAPH_ERROR("Mathematica RNG error, unsupported function 'init' called.", IGRAPH_EINTERNAL);
     return IGRAPH_SUCCESS;
 }
@@ -37,15 +37,15 @@ void igraph_rng_Mma_destroy(void *state) {
     IGRAPH_FATAL("Mathematica RNG error, unsupported function 'destroy' called.");
 }
 
-int igraph_rng_Mma_seed(void *state, unsigned long int seed) {
+igraph_error_t igraph_rng_Mma_seed(void *state, igraph_uint_t seed) {
     IGRAPH_ERROR("Mathematica RNG error, unsupported function 'seed' called.", IGRAPH_EINTERNAL);
     return IGRAPH_SUCCESS;
 }
 
-unsigned long int igraph_rng_Mma_get(void *state) {
+igraph_uint_t igraph_rng_Mma_get(void *state) {
     MArgument FPA[3];
 
-    mint lo = 0, hi = rng_Mma_max_int;
+    mint lo = 0, hi = IGRAPH_INTEGER_MAX;
     mint res;
 
     MArgument_getIntegerAddress(FPA[0]) = &lo;
@@ -107,18 +107,19 @@ igraph_real_t igraph_rng_Mma_get_norm(void *state) {
 
 static const igraph_rng_type_t igraph_rngtype_Mma = {
     /* name= */      "Mathematica",
-    /* min=  */      0,
-    /* max=  */      rng_Mma_max_int,
+    /* bits= */      IGRAPH_INTEGER_SIZE,
     /* init= */      igraph_rng_Mma_init,
     /* destroy= */   igraph_rng_Mma_destroy,
     /* seed= */      igraph_rng_Mma_seed,
     /* get= */       igraph_rng_Mma_get,
+    /* get_int= */   nullptr, // TODO
     /* get_real= */  igraph_rng_Mma_get_real,
     /* get_norm= */  igraph_rng_Mma_get_norm,
-    /* get_geom= */  0,
-    /* get_binom= */ 0,
-    /* get_exp= */   0,
-    /* get_gamma= */ 0
+    /* get_geom= */  nullptr,
+    /* get_binom= */ nullptr,
+    /* get_exp= */   nullptr,
+    /* get_gamma= */ nullptr,
+    /* get_pois= */  nullptr
 };
 
 

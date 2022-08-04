@@ -146,9 +146,9 @@ public:
         massert(false);
     }
 
-    bool graphicalQ(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, bool directed, bool loops, bool multi) {
-        igraph_vector_t ig_outdeg = igVectorView(outdeg);
-        igraph_vector_t ig_indeg  = igVectorView(indeg);
+    bool graphicalQ(mma::IntTensorRef outdeg, mma::IntTensorRef indeg, bool directed, bool loops, bool multi) {
+        igraph_vector_int_t ig_outdeg = igIntVectorView(outdeg);
+        igraph_vector_int_t ig_indeg  = igIntVectorView(indeg);
         igraph_bool_t res;
         igraph_edge_type_sw_t et = (loops ? IGRAPH_LOOPS_SW : IGRAPH_SIMPLE_SW) | (multi ? IGRAPH_MULTI_SW : IGRAPH_SIMPLE_SW);
         if (! directed)
@@ -158,9 +158,9 @@ public:
         return res;
     }
 
-    bool bigraphicalQ(mma::RealTensorRef deg1, mma::RealTensorRef deg2, bool multi) {
-        igraph_vector_t ig_deg1 = igVectorView(deg1);
-        igraph_vector_t ig_deg2 = igVectorView(deg2);
+    bool bigraphicalQ(mma::IntTensorRef deg1, mma::IntTensorRef deg2, bool multi) {
+        igraph_vector_int_t ig_deg1 = igIntVectorView(deg1);
+        igraph_vector_int_t ig_deg2 = igIntVectorView(deg2);
         igraph_bool_t res;
         igCheck(igraph_is_bigraphical(&ig_deg1, &ig_deg2, multi ? IGRAPH_MULTI_SW : IGRAPH_SIMPLE_SW, &res));
         return res;
@@ -227,7 +227,7 @@ public:
         return true;
     }
 
-    double compareCommunities(mma::RealTensorRef c1, mma::RealTensorRef c2, mint m) const {
+    double compareCommunities(mma::IntTensorRef c1, mma::IntTensorRef c2, mint m) const {
         igraph_community_comparison_t method;
         switch (m) {
         case 0: method = IGRAPH_COMMCMP_VI; break;
@@ -238,8 +238,8 @@ public:
         default: throw mma::LibraryError("Invalid community comparison method.");
         }
 
-        igraph_vector_t comm1 = igVectorView(c1);
-        igraph_vector_t comm2 = igVectorView(c2);
+        igraph_vector_int_t comm1 = igIntVectorView(c1);
+        igraph_vector_int_t comm2 = igIntVectorView(c2);
         double res;
         igCheck(igraph_compare_communities(&comm1, &comm2, &res, method));
         return res;

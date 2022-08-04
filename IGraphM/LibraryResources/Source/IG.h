@@ -145,9 +145,9 @@ public:
     }
 
     /* TODO support granular periodicity */
-    void makeLattice(mma::RealTensorRef dims, mint nei, bool directed, bool mutual, bool periodic) {
+    void makeLattice(mma::IntTensorRef dims, mint nei, bool directed, bool mutual, bool periodic) {
         destroy();
-        igraph_vector_t igdims = igVectorView(dims);
+        igraph_vector_int_t igdims = igIntVectorView(dims);
         igConstructorCheck(igraph_lattice(&graph, &igdims, nei, directed, mutual, periodic));
     }
 
@@ -1124,7 +1124,7 @@ public:
         emptyMatchDirectedness(ig);
 
         igraph_bool_t iso;
-        igVector map;
+        igIntVector map;
         igCheck(igraph_subisomorphic_lad(&ig.graph, &graph, &domain.list, &iso, &map.vec, nullptr, induced, 0));
 
         ml.newPacket();
@@ -1250,15 +1250,15 @@ public:
         igraph_vector_t ig_cut_prob = igVectorView(cut_prob);
 
         struct MotifCounter {
-            static igraph_bool_t handler(const igraph_t *, igraph_vector_t *vids, int isoclass, void *data) {
+            static igraph_error_t handler(const igraph_t *, igraph_vector_int_t *vids, igraph_integer_t isoclass, void *data) {
                 auto *mat = static_cast<mma::RealMatrixRef *>(data);
-                long len = igraph_vector_size(vids);
-                for (int i=0; i < len; ++i)
+                igraph_integer_t len = igraph_vector_int_size(vids);
+                for (igraph_integer_t i=0; i < len; ++i)
                     (*mat)(VECTOR(*vids)[i], isoclass) += 1;
-                return false;
+                return IGRAPH_SUCCESS;
             }
 
-            static int isoclass_count(bool directed, int vcount) {
+            static igraph_integer_t isoclass_count(bool directed, igraph_integer_t vcount) {
                 switch (vcount) {
                 case 3: return directed ? 16 : 4;
                 case 4: return directed ? 218 : 11;
@@ -1834,11 +1834,11 @@ public:
             throw mma::LibraryError("averagePathLengthWeighted: Unknown method.");
 
         igMatrix mat;
-        int n = vertexCount();
+        igraph_integer_t n = vertexCount();
 
-        long cnt = 0;
+        igraph_integer_t cnt = 0;
         double sum = 0.0;
-        for (int i=0; i < n; ++i) {
+        for (igraph_integer_t i=0; i < n; ++i) {
             mma::check_abort();
 
             switch (method) {
@@ -1855,7 +1855,7 @@ public:
                 break;
             }
 
-            for (int j=0; j < mat.ncol(); ++j)
+            for (igraph_integer_t j=0; j < mat.ncol(); ++j)
                 if (i != j) {
                     if (VECTOR(mat.mat.data)[j] != IGRAPH_INFINITY) {
                         cnt += 1;
@@ -2636,7 +2636,7 @@ public:
         mlStream ml{link, "graphletProject"};
 
         igList cliques;
-        int niter;
+        igraph_integer_t niter;
 
         ml >> mlCheckArgs(2) >> cliques >> niter;
 
@@ -2649,7 +2649,7 @@ public:
 
     void graphlets(MLINK link) const {
         mlStream ml{link, "graphlets"};
-        int niter;
+        igraph_integer_t niter;
         ml >> mlCheckArgs(1) >> niter;
 
         igVector mu;
@@ -2691,8 +2691,8 @@ public:
         igraph_integer_t n_communities;
         ml >> mlCheckArgs(1) >> n_communities;
 
-        igVector result, betweenness, modularity;
-        igIntVector bridges, membership;
+        igVector betweenness, modularity;
+        igIntVector result, bridges, membership;
         igIntMatrix merges;
 
         if (n_communities == 0) { // automatic communities based on max modularity
@@ -2748,7 +2748,8 @@ public:
         mlStream ml{link, "communityFastGreedy"};
         ml >> mlCheckArgs(0);
 
-        igVector modularity, membership;
+        igVector modularity;
+        igIntVector membership;
         igIntMatrix merges;
 
         igCheck(igraph_community_fastgreedy(&graph, passWeights(), &merges.mat, &modularity.vec, &membership.vec));
@@ -2763,8 +2764,9 @@ public:
         double resolution;
         ml >> mlCheckArgs(1) >> resolution;
 
-        igVector modularity, membership;
-        igMatrix memberships;
+        igVector modularity;
+        igIntVector membership;
+        igIntMatrix memberships;
 
         igCheck(igraph_community_multilevel(&graph, passWeights(), resolution, &membership.vec, &memberships.mat, &modularity.vec));
 
@@ -2812,7 +2814,7 @@ public:
             throw mma::LibraryError("communityLeiden: Invalid vertex weight computation method.");
         }
 
-        igVector membership;
+        igIntVector membership;
         igraph_integer_t nb_clusters;
         igraph_real_t quality;
 
@@ -2829,18 +2831,20 @@ public:
     void communityLabelPropagation(MLINK link) const {
         mlStream ml{link, "communityLabelPropagation"};
 
-        igVector initial;
+        igIntVector initial;
         igBoolVector fixed;
         ml >> mlCheckArgs(2) >> initial >> fixed;
 
-        igVector membership;
+        igIntVector membership;
         double modularity;
 
         igCheck(igraph_community_label_propagation(
-                    &graph, &membership.vec, passWeights(),
+                    &graph, &membership.vec, IGRAPH_OUT, passWeights(),
                     initial.length() == 0 ? nullptr : &initial.vec,
-                    fixed.length() == 0 ? nullptr : &fixed.vec,
-                    &modularity));
+                    fixed.length() == 0 ? nullptr : &fixed.vec));
+
+        /* TODO remove modularity calc, to match 0.10 C core */
+        igraph_modularity(&graph, &membership.vec, passWeights(), 1, IGRAPH_DIRECTED, &modularity);
 
         ml.newPacket();
         ml << mlHead("List", 2) << membership << modularity;
@@ -2849,11 +2853,11 @@ public:
     void communityInfoMAP(MLINK link) const {
         mlStream ml{link, "communityInfoMAP"};
 
-        int trials;
+        igraph_integer_t trials;
         igVector v_weights;
         ml >> mlCheckArgs(2) >> trials >> v_weights;
 
-        igVector membership;
+        igIntVector membership;
         double codelen;
 
         igCheck(igraph_community_infomap(
@@ -2868,7 +2872,7 @@ public:
         mlStream ml{link, "communityOptimalModularity"};
         ml >> mlCheckArgs(0);
 
-        igVector membership;
+        igIntVector membership;
         double modularity;
 
         igCheck(igraph_community_optimal_modularity(&graph, &modularity, &membership.vec, passWeights()));
@@ -2909,7 +2913,7 @@ public:
         }
 
         double modularity, temperature;
-        igVector membership;
+        igIntVector membership;
 
         igCheck(igraph_community_spinglass(
                     &graph, passWeights(),
@@ -2934,7 +2938,7 @@ public:
         igIntVector membership, finalMembership;
         igVector eigenvalues;
         igIntMatrix merges;
-        igList eigenvectors;
+        igVectorList eigenvectors;
         igraph_real_t modularity;
 
         if (n_communities == 0) {
@@ -2971,9 +2975,12 @@ public:
         igraph_integer_t nc;
         ml >> mlCheckArgs(1) >> nc;
 
-        igVector membership;
+        igIntVector membership;
         igraph_real_t modularity;
-        igCheck(igraph_community_fluid_communities(&graph, nc, &membership.vec, &modularity));
+        igCheck(igraph_community_fluid_communities(&graph, nc, &membership.vec));
+
+        /* TODO: should no longer calculate modularity since it's not done in C core */
+        igCheck(igraph_modularity(&graph, &membership.vec, nullptr, 1, IGRAPH_UNDIRECTED, &modularity));
 
         ml.newPacket();
         ml << mlHead("List", 2) << membership << modularity;
@@ -3043,7 +3050,7 @@ public:
             igCheck(igraph_random_edge_walk(&graph, passWeights(), &walk.vec, start, IGRAPH_OUT, steps-1, IGRAPH_RANDOM_WALK_STUCK_RETURN));
 
             auto result = mma::makeVector<mint>(walk.length() + 1);
-            long last = start;
+            igraph_integer_t last = start;
             result[0] = last;
             for (mint i=1; i < result.size(); ++i) {
                 last = IGRAPH_OTHER(&graph, walk[i-1], last);
@@ -3051,8 +3058,8 @@ public:
             }
             return result;
         } else {
-            /* TODO update arg list */
-            igCheck(igraph_random_walk(&graph, &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
+            /* TODO support weights */
+            igCheck(igraph_random_walk(&graph, /* weights */ nullptr, &walk.vec, nullptr, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
             return walk.makeMTensor();
         }
     }
@@ -3167,7 +3174,7 @@ public:
                     comps.push_back(i);
                     igraph_vector_int_t *neighbors = igraph_adjlist_get(&al, i);
                     mint ncount = igraph_vector_int_size(neighbors);
-                    for (long j=0; j < ncount; ++j) {
+                    for (igraph_integer_t j=0; j < ncount; ++j) {
                         igraph_integer_t v = VECTOR(*neighbors)[j];
                         if (degrees[v] > 0) {
                             degrees[v]--;
@@ -3190,7 +3197,7 @@ public:
         struct edge {
             igraph_integer_t v1, v2;
             double weight;
-            int key; // the key serves to distinguish parallel eges
+            igraph_integer_t key; // the key serves to distinguish parallel eges
 
             bool operator < (const edge &e) const {
                 return std::tie(v1, v2, weight, key) < std::tie(e.v1, e.v2, e.weight, e.key);
@@ -3219,7 +3226,7 @@ public:
         // later they can be deleted in pure Mathematica code.
         std::vector<mint> deletedVertices;
 
-        int key = ecount;
+        igraph_integer_t key = ecount;
         for (igraph_integer_t v=0; v < inclist.size(); ++v) {
             auto &es = inclist[v];
             // smooth degree-2 vertices
@@ -3278,7 +3285,7 @@ public:
         struct edge {
             igraph_integer_t v1, v2;
             double weight;
-            int key; // the key serves to distinguish parallel eges
+            igraph_integer_t key; // the key serves to distinguish parallel eges
 
             bool operator < (const edge &e) const {
                 return std::tie(v1, v2, weight, key) < std::tie(e.v1, e.v2, e.weight, e.key);
@@ -3308,7 +3315,7 @@ public:
         // later they can be deleted in pure Mathematica code.
         std::vector<mint> deletedVertices;
 
-        int key = ecount;
+        igraph_integer_t key = ecount;
         for (igraph_integer_t v=0; v < inclist_out.size(); ++v) {
             auto &es_out = inclist_out[v];
             auto &es_in = inclist_in[v];
@@ -3373,8 +3380,8 @@ public:
         igCheck(igraph_simplify(&graph, true, true, nullptr));
         igCheck(igraph_to_directed(&graph, IGRAPH_TO_DIRECTED_MUTUAL));
 
-        long ecount = edgeCount();
-        long vcount = vertexCount();
+        igraph_integer_t ecount = edgeCount();
+        igraph_integer_t vcount = vertexCount();
 
         if (coord.cols() != 2)
             throw mma::LibraryError("coordinatesToEmbedding: Two-dimensional coordinates expected.");
@@ -3387,13 +3394,13 @@ public:
 
         std::vector<double> angles(ecount);
 
-        for (long i=0; i < ecount; ++i) {
+        for (igraph_integer_t i=0; i < ecount; ++i) {
             igraph_integer_t from = IGRAPH_FROM(&graph, i), to = IGRAPH_TO(&graph, i);
 
             angles[i] = std::atan2(coord(to,1) - coord(from,1), coord(to,0) - coord(from,0));
         }
 
-        for (long i=0; i < vcount; ++i) {
+        for (igraph_integer_t i=0; i < vcount; ++i) {
             igraph_vector_int_t *edges = igraph_inclist_get(&inclist, i);
 
             std::sort(VECTOR(*edges), VECTOR(*edges) + igraph_vector_int_size(edges),
@@ -3401,12 +3408,12 @@ public:
         }
 
         std::vector<std::vector<mint>> emb(vcount);
-        for (long i=0; i < vcount; ++i) {
+        for (igraph_integer_t i=0; i < vcount; ++i) {
             igraph_vector_int_t *edges = igraph_inclist_get(&inclist, i);
 
-            long ncount = igraph_vector_int_size(edges);
+            igraph_integer_t ncount = igraph_vector_int_size(edges);
             emb[i].reserve(ncount);
-            for (long j=0; j < ncount; ++j)
+            for (igraph_integer_t j=0; j < ncount; ++j)
                 emb[i].push_back(IGRAPH_TO(&graph, VECTOR(*edges)[j]));
         }
 
@@ -3474,7 +3481,7 @@ public:
         IG cycle;
         for (mint s = start; s <= vcount; s += 2) {
             igIntVector edges(2*s);
-            for (int i=0; i < s; ++i) {
+            for (igraph_integer_t i=0; i < s; ++i) {
                 edges[2*i] = i;
                 edges[2*i + 1] = i+1 < s ? i+1 : 0;
             }
@@ -3550,8 +3557,8 @@ public:
 
         // We verify that each bi-connected component is either K_2 or an induced cycle.
         // Knowing that the component is biconnected, it is sufficient to check that E <= V.
-        long no_comps = vertex_comps.size();
-        for (long i=0; i < no_comps; ++i) {
+        igraph_integer_t no_comps = vertex_comps.size();
+        for (igraph_integer_t i=0; i < no_comps; ++i) {
             igraph_integer_t vcount = igraph_vector_int_size(vertex_comps[i]);
             igraph_integer_t ecount = igraph_vector_int_size(edge_comps[i]);
 
@@ -3578,7 +3585,7 @@ public:
         igCheck(igraph_degree(&graph, &degree.vec, igraph_vss_all(), IGRAPH_IN, false));
 
         // Find the root---this will not go out of bounds since we already verified that the graph is an out-tree.
-        long root;
+        igraph_integer_t root;
         for (root=0; root < degree.length(); ++root)
             if (degree[root] == 0)
                 break;
@@ -3589,8 +3596,8 @@ public:
         auto res = mma::makeVector<mint>(postorder.length());
         std::fill(res.begin(), res.end(), 1);
 
-        for (long c : postorder) {
-            long p = parent[c];
+        for (igraph_integer_t c : postorder) {
+            igraph_integer_t p = parent[c];
             if (res[p] <= res[c])
                 res[p] = res[c] + 1;
         }

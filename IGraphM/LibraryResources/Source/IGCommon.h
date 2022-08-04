@@ -25,6 +25,35 @@ static_assert(sizeof(igraph_integer_t) == sizeof(mint), "IGraphM assumes igraph_
 static_assert(std::is_same<bool, igraph_bool_t>::value, "IGraphM assumes igraph_bool_t to be bool.");
 // See mlstream extractors, which are defined for integer types of particular widths.
 
+// 'mlint' is the MathLink integer type that has the same size as igraph_integer_t
+// Note that this may not be identical to igraph_integer_t. For example,
+// igraph_integer_t may be 'long long' while mlint may be mlint64 = long,
+// both 64-bit, yet considered distinct by the compiler.
+#if IGRAPH_INTEGER_SIZE == 32
+typedef int mlint;
+#define MLGetIGInteger MLGetInteger32
+#define MLGetIGIntegerList MLGetInteger32List
+#define MLReleaseIGIntegerList MLReleaseInteger32List
+#define MLPutIGIntegerList MLPutInteger32List
+#define MLGetIGIntegerArray MLGetInteger32Array
+#define MLReleaseIGIntegerArray MLReleaseInteger32Array
+#define MLPutIGIntegerArray MLPutInteger32Array
+#elif IGRAPH_INTEGER_SIZE == 64
+typedef mlint64 mlint;
+#define MLGetIGInteger MLGetInteger64
+#define MLGetIGIntegerList MLGetInteger64List
+#define MLReleaseIGIntegerList MLReleaseInteger64List
+#define MLPutIGIntegerList MLPutInteger64List
+#define MLGetIGIntegerArray MLGetInteger64Array
+#define MLReleaseIGIntegerArray MLReleaseInteger64Array
+#define MLPutIGIntegerArray MLPutInteger64Array
+#else
+#error "IGraph/M expected IGRAPH_INTEGER_SIZE to be either 32 or 64."
+#endif
+
+static_assert(sizeof(mlint) == sizeof(igraph_integer_t), "Mismatch in 'mlint' and 'igraph_integer_t' sizes.");
+
+
 /************************
  **** Error checking ****
  ************************/
@@ -119,13 +148,22 @@ class igIntVector {
 
     // avoid accidental implicit copy
     igIntVector(const igIntVector &) = delete;
-    igIntVector & operator = (const igIntVector &) = delete;
 
 public:
     igraph_vector_int_t vec;
 
     igIntVector() { igraph_vector_int_init(&vec, 0); }
     ~igIntVector() { igraph_vector_int_destroy(&vec); }
+
+    igIntVector(igIntVector &&source) noexcept {
+        vec = source.vec;
+        source.vec.stor_begin = nullptr;
+    }
+
+    igIntVector & operator = (const igIntVector &igv) {
+        igraph_vector_int_update(&vec, &igv.vec);
+        return *this;
+    }
 
     explicit igIntVector(igraph_integer_t len) { igraph_vector_int_init(&vec, len); }
 
@@ -154,9 +192,6 @@ public:
 
     mma::IntTensorRef makeMTensor() const { return mma::makeVector<mint>(length(), begin()); }
 };
-
-
-
 
 
 // RAII for igraph_vector_bool_t
@@ -338,10 +373,35 @@ public:
         igraph_vector_int_list_clear(&list);
     }
 
+    void reserve(igraph_integer_t capacity) {
+        /* TODO check error */
+        igraph_vector_int_list_reserve(&list, capacity);
+    }
+
     igraph_integer_t length() const { return list.end - list.stor_begin; }
     igraph_integer_t size() const { return length(); }
 
     const igraph_vector_int_t *operator [] (igraph_integer_t i) const {
+        /* TODO safety! use API? */
+        return &list.stor_begin[i];
+    }
+};
+
+class igVectorList {
+public:
+    igraph_vector_list_t list;
+
+    igVectorList() { igraph_vector_list_init(&list, 0); }
+    ~igVectorList() { igraph_vector_list_destroy(&list); }
+
+    void clear() {
+        igraph_vector_list_clear(&list);
+    }
+
+    igraph_integer_t length() const { return list.end - list.stor_begin; }
+    igraph_integer_t size() const { return length(); }
+
+    const igraph_vector_t *operator [] (igraph_integer_t i) const {
         /* TODO safety! use API? */
         return &list.stor_begin[i];
     }
@@ -411,10 +471,7 @@ inline mlStream & operator << (mlStream &ml, const igVector &vec) { return ml <<
 
 
 inline mlStream & operator << (mlStream &ml, const igraph_vector_int_t &vec) {
-    static_assert(
-            sizeof(int) == sizeof(igraph_integer_t) && sizeof(int) == 4,
-            "igraph_integer_t size not suitable for MLPutInteger32List");
-    if (! MLPutInteger32List(ml.link(), vec.stor_begin, vec.end - vec.stor_begin))
+    if (! MLPutIGIntegerList(ml.link(), reinterpret_cast<mlint64 *>(vec.stor_begin), vec.end - vec.stor_begin))
         ml.error("cannot return integer vector");
     return ml;
 }
@@ -424,15 +481,24 @@ inline mlStream & operator << (mlStream &ml, const igIntVector &vec) { return ml
 
 
 inline mlStream & operator << (mlStream &ml, const igList &list) {
-    long len = list.length();
+    igraph_integer_t len = list.length();
     if (! MLPutFunction(ml.link(), "List", len))
         ml.error("cannot return vector list");
-    for (int i=0; i < len; ++i)
-        ml << *static_cast<igraph_vector_t *>(VECTOR(list.list)[i]);
+    for (igraph_integer_t i=0; i < len; ++i)
+        ml << VECTOR(list.list)[i]; /* TODO safe API */
     return ml;
 }
 
+inline mlStream & operator << (mlStream &ml, const igVectorList &list) {
+    igraph_integer_t len = list.length();
+    if (! MLPutFunction(ml.link(), "List", len))
+        ml.error("cannot return vector list");
+    for (igraph_integer_t i=0; i < len; ++i)
+        ml << VECTOR(list.list)[i]; /* TODO safe API */
+    return ml;
+}
 
+/* TODO protect against larger-than-int array sizes */
 inline mlStream & operator << (mlStream &ml, const igMatrix &mat) {
     int ok;
 
@@ -457,28 +523,49 @@ inline mlStream & operator << (mlStream &ml, const igMatrix &mat) {
     return ml;
 }
 
+/* TODO protect against larger-than-int array sizes */
+inline mlStream & operator << (mlStream &ml, const igIntMatrix &mat) {
+    int ok;
+
+    int dims[2];
+    dims[0] = mat.ncol();
+    dims[1] = mat.nrow();
+    if (mat.nrow() == 0) {
+        // 0-column matrices are represented as {{}, ... {}} in Mathematica.
+        // However, 0-row matrices can only be represented as {}, which
+        // loses the column-count information, and cannot be Transpose[]d
+        // to a 0-column matrix. Therefore, we do the transposition
+        // manually by swapping dimensions (which is safe since there are no
+        // elements in the matrix).
+        std::swap(dims[0], dims[1]);
+        ok = MLPutIGIntegerArray(ml.link(), reinterpret_cast<const mlint64 *>(mat.begin()), dims, nullptr, 2);
+    } else {
+        ok = MLPutFunction(ml.link(), "Transpose", 1) &&
+             MLPutIGIntegerArray(ml.link(), reinterpret_cast<const mlint64 *>(mat.begin()), dims, nullptr, 2);
+    }
+    if (! ok)
+        ml.error("cannot return matrix");
+    return ml;
+}
+
 
 inline mlStream & operator >> (mlStream &ml, igList &list) {
     int len;
     if (! MLTestHead(ml.link(), "List", &len))
         ml.error("List of lists expected");
     list.clear();
-    igraph_vector_ptr_resize(&list.list, len); // TODO check success
+    list.reserve(len);
     for (int i=0; i < len; ++i) {
-        igraph_vector_t *vec = static_cast<igraph_vector_t *>(igraph_malloc(sizeof(igraph_vector_t)));
-        double *data;
+        igraph_vector_int_t vec;
+        mlint *data;
         int listlen;
-        if (! MLGetReal64List(ml.link(), &data, &listlen)) {
-            // restore the pointer vector to a consistent state so that its destructor won't fail
-            igraph_free(vec);
-            list.list.end = list.list.stor_begin + i;
-
+        if (! MLGetIGIntegerList(ml.link(), &data, &listlen)) {
             // raise error
             ml.error("Real64List expected in list of lists");
         }
-        igraph_vector_init(vec, listlen); // TODO check success
-        std::copy(data, data+listlen, vec->stor_begin);
-        MLReleaseReal64List(ml.link(), data, listlen);
+        igraph_vector_int_init_array(&vec, reinterpret_cast<igraph_integer_t *>(data), listlen); // TODO check success
+        igraph_vector_int_list_push_back(&list.list, &vec);
+        MLReleaseIGIntegerList(ml.link(), data, listlen);
         VECTOR(list.list)[i] = vec;
     }
     return ml;
@@ -519,27 +606,34 @@ inline mlStream & operator >> (mlStream &ml, igMatrix &mat) {
 }
 
 inline mlStream & operator >> (mlStream &ml, igIntVector &vec) {
-    int *data;
+    mlint *data;
     int length;
-    // igraph_integer_t is an int, so we try to use the corresponding MathLink type: Integer32
-    if (! MLGetInteger32List(ml.link(), &data, &length))
+    if (! MLGetIGIntegerList(ml.link(), &data, &length))
         ml.error("Integer32List expected");
     vec.resize(length);
     std::copy(data, data+length, vec.begin());
-    MLReleaseInteger32List(ml.link(), data, length);
+    MLReleaseIGIntegerList(ml.link(), data, length);
     return ml;
 }
 
 
 inline mlStream & operator >> (mlStream &ml, igBoolVector &vec) {
-    int *data;
+    unsigned char *data;
     int length;
-    // igraph_bool_t is an int, so we try to use the corresponding MathLink type: Integer32
-    if (! MLGetInteger32List(ml.link(), &data, &length))
+    // igraph_bool_t is a bool, so we use the smallest MathLink type: Integer8
+    if (! MLGetInteger8List(ml.link(), &data, &length))
         ml.error("Integer32List expected");
     vec.resize(length);
     std::copy(data, data+length, vec.begin());
-    MLReleaseInteger32List(ml.link(), data, length);
+    MLReleaseInteger8List(ml.link(), data, length);
+    return ml;
+}
+
+
+inline mlStream & operator >> (mlStream &ml, igraph_bool_t &b) {
+    unsigned char c;
+    MLGetInteger8(ml.link(), &c);
+    b = c;
     return ml;
 }
 
@@ -551,11 +645,11 @@ inline mlStream & operator >> (mlStream &ml, igBoolVector &vec) {
 // packs an igList (usually representing vertex or edge sets) into
 // a single IntTensor for fast transfer
 inline mma::IntTensorRef packListIntoIntTensor(const igList &list) {
-    std::vector<mint> lengths;
-    long list_length = list.length();
+    std::vector<igraph_integer_t> lengths;
+    igraph_integer_t list_length = list.length();
     mint total_length = 0;
-    for (int i=0; i < list_length; ++i) {
-        mint len = igraph_vector_size(static_cast<igraph_vector_t *>(VECTOR(list.list)[i]));
+    for (igraph_integer_t i=0; i < list_length; ++i) {
+        igraph_integer_t len = igraph_vector_int_size(&VECTOR(list.list)[i]); /* TODO proper API */
         total_length += len;
         total_length += 1;
         lengths.push_back(len);
@@ -565,8 +659,8 @@ inline mma::IntTensorRef packListIntoIntTensor(const igList &list) {
     t[0] = list_length;
     std::copy(lengths.begin(), lengths.end(), t.begin() + 1);
     mint *ptr = t.begin() + 1 + list_length;
-    for (int i=0; i < list_length; ++i) {
-        double *b = &VECTOR(*static_cast<igraph_vector_t *>(VECTOR(list.list)[i]))[0];
+    for (igraph_integer_t i=0; i < list_length; ++i) {
+        igraph_integer_t *b = &VECTOR(VECTOR(list.list)[i])[0]; /* TODO proper API */
         std::copy(b, b+lengths[i], ptr);
         ptr += lengths[i];
     }

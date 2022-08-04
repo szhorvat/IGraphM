@@ -35,7 +35,7 @@ static inline bool is_punctuated(const char *str) {
     return false;
 }
 
-int igInterruptionHandler(void *) {
+igraph_error_t igInterruptionHandler(void *) {
     if (mma::libData->AbortQ()) {
         IGRAPH_FINALLY_FREE();
         return IGRAPH_INTERRUPTED;
@@ -97,7 +97,7 @@ void igFatalHandler(const char *reason, const char *file, int line) {
 
 double progress_reporting_granularity = 1.0;
 
-int igProgressHandler(const char *message, igraph_real_t percent, void *data) {
+igraph_error_t igProgressHandler(const char *message, igraph_real_t percent, void *data) {
     static igraph_real_t last_percent = 100;
 
     // Only report progress if it has increased by at least the given granularity,
