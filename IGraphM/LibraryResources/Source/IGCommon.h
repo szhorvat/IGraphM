@@ -160,6 +160,8 @@ public:
         source.vec.stor_begin = nullptr;
     }
 
+    igIntVector(const igraph_vector_int_t *source) { igraph_vector_int_init_copy(&vec, source); }
+
     igIntVector & operator = (const igIntVector &igv) {
         igraph_vector_int_update(&vec, &igv.vec);
         return *this;
@@ -358,8 +360,26 @@ public:
 };
 
 
-// typedef igPtrVector<igraph_vector_t, igraph_vector_destroy> igList;
-typedef igPtrVector<igraph_t, igraph_destroy> igGraphList;
+class igGraphList {
+public:
+    igraph_graph_list_t list;
+
+    igGraphList() { igraph_graph_list_init(&list, 0); }
+    ~igGraphList() { igraph_graph_list_destroy(&list); }
+
+    void clear() {
+        igraph_graph_list_clear(&list);
+    }
+
+    igraph_integer_t length() const { return list.end - list.stor_begin; }
+    igraph_integer_t size() const { return length(); }
+
+    const igraph_t *operator [] (igraph_integer_t i) const {
+        /* TODO safety! use API? */
+        return &list.stor_begin[i];
+    }
+};
+
 
 /* TODO rename to igIntVectorList */
 class igList {
@@ -604,6 +624,29 @@ inline mlStream & operator >> (mlStream &ml, igMatrix &mat) {
     MLReleaseReal64Array(ml.link(), data, dims, heads, depth);
     return ml;
 }
+
+
+inline mlStream & operator >> (mlStream &ml, igIntMatrix &mat) {
+    mlint *data;
+    int *dims;
+    char **heads;
+    int depth;
+    if (! MLGetIGIntegerArray(ml.link(), &data, &dims, &heads, &depth))
+        ml.error("Integer matrix expected");
+    if (depth != 2)
+        ml.error("Integer matrix expected, depth doesn't match");
+
+    int length = 1;
+    for (int i=0; i < depth; ++i)
+        length *= dims[i];
+    igraph_vector_int_resize(&mat.mat.data, length);
+    std::copy(data, data+length, mat.begin());
+    mat.mat.nrow = dims[1];
+    mat.mat.ncol = dims[0];
+    MLReleaseIGIntegerArray(ml.link(), data, dims, heads, depth);
+    return ml;
+}
+
 
 inline mlStream & operator >> (mlStream &ml, igIntVector &vec) {
     mlint *data;

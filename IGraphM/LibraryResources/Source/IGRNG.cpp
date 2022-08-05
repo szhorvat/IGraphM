@@ -107,7 +107,7 @@ igraph_real_t igraph_rng_Mma_get_norm(void *state) {
 
 static const igraph_rng_type_t igraph_rngtype_Mma = {
     /* name= */      "Mathematica",
-    /* bits= */      IGRAPH_INTEGER_SIZE,
+    /* bits= */      IGRAPH_INTEGER_SIZE - 1,
     /* init= */      igraph_rng_Mma_init,
     /* destroy= */   igraph_rng_Mma_destroy,
     /* seed= */      igraph_rng_Mma_seed,
@@ -134,12 +134,8 @@ void rngInit() {
     static igraph_rng_t rng_Default = *igraph_rng_default();
     static igraph_rng_t rng_Mma = {
         &igraph_rngtype_Mma,
-        0,
-        // prevent re-seeding after setting new generator; see RNG_BEGIN()
-        // 0 = non-default
-        // 1 = default, not yet seeded
-        // 2 = default, already seeded
-        /* def= */ 0
+        nullptr,
+        true
     };
 
     rng_array[0] = &rng_Mma;         // Mathematica's RNG

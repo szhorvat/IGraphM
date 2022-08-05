@@ -44,7 +44,7 @@ igraph_error_t igInterruptionHandler(void *) {
 }
 
 
-void igWarningHandler(const char *reason, const char *file, int line, int /* igraph_errno */) {
+void igWarningHandler(const char *reason, const char *file, int line) {
     std::ostringstream msg;
     msg << file << ":" << line << " - " << reason;
     // If the message is not puncutated, add a fullstop.
@@ -54,7 +54,7 @@ void igWarningHandler(const char *reason, const char *file, int line, int /* igr
 }
 
 
-void igErrorHandler(const char *reason, const char *file, int line, int /* igraph_errno */) {
+void igErrorHandler(const char *reason, const char *file, int line, igraph_error_t) {
     // avoid printing empty messages
     if (strlen(reason) != 0) {
         std::ostringstream msg;

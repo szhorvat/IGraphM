@@ -900,9 +900,9 @@ public:
         return res;
     }
 
-    mma::RealTensorRef getIsomorphism(IG &ig);
+    mma::IntTensorRef getIsomorphism(IG &ig);
 
-    mma::RealTensorRef getSubisomorphism(IG &ig);
+    mma::IntTensorRef getSubisomorphism(IG &ig);
 
     mint isoclass() const {
         igraph_integer_t res;
@@ -1675,7 +1675,7 @@ public:
     }
 
     /* Better way in 0.10? TODO */
-    mma::IntTensorRef shortestPathWeightedHistogram(double binsize, mma::RealTensorRef from, mma::IntTensorRef to, mint method) const {
+    mma::IntTensorRef shortestPathWeightedHistogram(double binsize, mma::IntTensorRef from, mma::IntTensorRef to, mint method) const {
         if (weighted && igraph_vector_min(&weights.vec) < 0)
             throw mma::LibraryError("shortestPathWeightedHistogram: Negative edge weights are not supported.");
 
@@ -1889,8 +1889,8 @@ public:
         return res;
     }
 
-    mint girth() const {
-        igraph_integer_t res;
+    double girth() const {
+        igraph_real_t res;
         igCheck(igraph_girth(&graph, &res, nullptr));
         return res;
     }

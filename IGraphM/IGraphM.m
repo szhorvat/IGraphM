@@ -152,13 +152,13 @@ template = LTemplate["IGraphM",
         (* Graph related functions that do not use the IG data structure *)
 
         LFun["erdosGallai", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
-        LFun["graphicalQ", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), True|False (* directed *), True|False (* loops *), True|False (* multi *)}, True|False],
-        LFun["bigraphicalQ", {{Real, 1, "Constant"} (* deg1 *), {Real, 1, "Constant"} (* deg2 *), True|False (* multi *)}, True|False],
+        LFun["graphicalQ", {{Integer, 1, "Constant"} (* outdeg *), {Integer, 1, "Constant"} (* indeg *), True|False (* directed *), True|False (* loops *), True|False (* multi *)}, True|False],
+        LFun["bigraphicalQ", {{Integer, 1, "Constant"} (* deg1 *), {Integer, 1, "Constant"} (* deg2 *), True|False (* multi *)}, True|False],
 
         LFun["splitQ", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
         LFun["thresholdQ", {{Integer, 1} (* not "Constant" because it gets modified *)}, True|False],
 
-        LFun["compareCommunities", {{Real, 1, "Constant"}, {Real, 1, "Constant"}, Integer (* method *)}, Real],
+        LFun["compareCommunities", {{Integer, 1, "Constant"}, {Integer, 1, "Constant"}, Integer (* method *)}, Real],
 
         LFun["incidenceToEdgeList", {{LType[SparseArray, Integer], "Constant"}, True|False}, {Integer, 2}],
 
@@ -203,16 +203,16 @@ template = LTemplate["IGraphM",
         LFun["fromIncidenceMatrix", {{LType[SparseArray, Integer], "Constant"}, True|False (* directed *)}, "Void"],
         LFun["makeEdgeless", {Integer (* vertex count *)}, "Void"],
         (* LFun["fromEdgeListML", LinkObject], *)
-        LFun["realizeDegreeSequence", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), True|False (* loops *), True|False (* multi *), Integer (* method *)}, "Void"],
-        LFun["fromLCF", {Integer, {Real, 1, "Constant"}, Integer}, "Void"],
-        LFun["makeLattice", {{Real, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
+        LFun["realizeDegreeSequence", {{Integer, 1, "Constant"} (* outdeg *), {Integer, 1, "Constant"} (* indeg *), True|False (* loops *), True|False (* multi *), Integer (* method *)}, "Void"],
+        LFun["fromLCF", {Integer, {Integer, 1, "Constant"}, Integer}, "Void"],
+        LFun["makeLattice", {{Integer, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
         LFun["kautz", {Integer, Integer}, "Void"],
         LFun["tree", {Integer, Integer, True|False (* directed *)}, "Void"],
         LFun["fromPrufer", {{Integer, 1, "Constant"}}, "Void"],
         LFun["completeGraph", {Integer, True|False (* directed *), True|False (* loops *)}, "Void"],
         LFun["completeCitationGraph", {Integer, True|False (* directed *)}, "Void"],
         LFun["deBruijn", {Integer, Integer}, "Void"],
-        LFun["extendedChordalRing", {Integer, {Real, 2}, True|False (* directed *), True|False (* self loops *), True|False (* multiple edges *)}, "Void"],
+        LFun["extendedChordalRing", {Integer, {Integer, 2}, True|False (* directed *), True|False (* self loops *), True|False (* multiple edges *)}, "Void"],
         LFun["graphAtlas", {Integer}, "Void"],
         LFun["famous", {"UTF8String"}, "Void"],
 
@@ -231,7 +231,7 @@ template = LTemplate["IGraphM",
         (* Games *)
 
         LFun["treeGame", {Integer (* n *), True|False (* directed *), Integer (* method *)}, "Void"],
-        LFun["degreeSequenceGame", {{Real, 1, "Constant"} (* outdeg *), {Real, 1, "Constant"} (* indeg *), Integer (* method *)}, "Void"],
+        LFun["degreeSequenceGame", {{Integer, 1, "Constant"} (* outdeg *), {Integer, 1, "Constant"} (* indeg *), Integer (* method *)}, "Void"],
         LFun["kRegularGame", {Integer, Integer, True|False (* directed *), True|False (* multiple *)}, "Void"],
         LFun["stochasticBlockModel", {{Real, 2, "Constant"}, {Integer, 1, "Constant"}, True|False (* directed *), True|False (* loops *)}, "Void"],
         LFun["forestFireGame", {Integer (* vertex count *), Real (* fwprob *), Real (* bwratio *), Integer (* nambs *), True|False (* directed *)}, "Void"],
@@ -244,8 +244,8 @@ template = LTemplate["IGraphM",
 
         LFun["geometricGame", {Integer (* n *), Real (* radius *), True|False (* periodic *)}, {Real, 2} (* coordinates *)],
 
-        LFun["barabasiAlbertGame", {Integer (* n *), Real (* power *), Real (* A *), Integer (* m *), {Real, 1, "Constant"} (* mvec *), True|False (* directed *), True|False (* totalDegree *), Integer (* method *)}, "Void"],
-        LFun["barabasiAlbertGameWithStartingGraph", {Integer (* n *), Real (* power *), Real (* A *), Integer (* m *), {Real, 1, "Constant"} (* mvec *), True|False (* directed *), True|False (* totalDegree *), Integer (* method *), LExpressionID["IG"]}, "Void"],
+        LFun["barabasiAlbertGame", {Integer (* n *), Real (* power *), Real (* A *), Integer (* m *), {Integer, 1, "Constant"} (* mvec *), True|False (* directed *), True|False (* totalDegree *), Integer (* method *)}, "Void"],
+        LFun["barabasiAlbertGameWithStartingGraph", {Integer (* n *), Real (* power *), Real (* A *), Integer (* m *), {Integer, 1, "Constant"} (* mvec *), True|False (* directed *), True|False (* totalDegree *), Integer (* method *), LExpressionID["IG"]}, "Void"],
 
         LFun["wattsStrogatzGame", {Integer (* dim *), Integer (* size *), Integer (* radius *), Real (* p *), True|False (* loops *), True|False (* multiple *)}, "Void"],
 
@@ -289,18 +289,18 @@ template = LTemplate["IGraphM",
 
         (* Centrality *)
 
-        LFun["betweenness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
-        LFun["subsetBetweenness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *), {Real, 1, "Constant"} (* sources *), {Real, 1, "Constant"} (* targets *)}, {Real, 1}],
+        LFun["betweenness", {True|False (* normalized *), {Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["subsetBetweenness", {True|False (* normalized *), {Integer, 1, "Constant"} (* vertices *), {Integer, 1, "Constant"} (* sources *), {Integer, 1, "Constant"} (* targets *)}, {Real, 1}],
         LFun["edgeBetweenness", {True|False (* normalized *)}, {Real, 1}],
-        LFun["subsetEdgeBetweenness", {True|False (* normalized *), {Real, 1, "Constant"} (* sources *), {Real, 1, "Constant"} (* targets *)}, {Real, 1}],
-        LFun["closeness", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
-        LFun["harmonicCentrality", {True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["subsetEdgeBetweenness", {True|False (* normalized *), {Integer, 1, "Constant"} (* sources *), {Integer, 1, "Constant"} (* targets *)}, {Real, 1}],
+        LFun["closeness", {True|False (* normalized *), {Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["harmonicCentrality", {True|False (* normalized *), {Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
-        LFun["betweennessCutoff", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["betweennessCutoff", {Real (* cutoff *), True|False (* normalized *), {Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
         LFun["edgeBetweennessCutoff", {Real (* cutoff *), True|False (* normalized *)}, {Real, 1}],
-        LFun["closenessCutoff", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
-        LFun["neighborhoodCloseness", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
-        LFun["harmonicCentralityCutoff", {Real (* cutoff *), True|False (* normalized *), {Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["closenessCutoff", {Real (* cutoff *), True|False (* normalized *), {Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["neighborhoodCloseness", {Real (* cutoff *), True|False (* normalized *), {Integer, 1, "Constant"} (* vertices *)}, {Real, 2}],
+        LFun["harmonicCentralityCutoff", {Real (* cutoff *), True|False (* normalized *), {Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
         LFun["personalizedPageRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *)}, {Real, 1}],
         LFun["personalizedLinkRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *)}, {Real, 1}],
@@ -327,13 +327,13 @@ template = LTemplate["IGraphM",
 
         LFun["isomorphic", {LExpressionID["IG"]}, True|False],
         LFun["subisomorphic", {LExpressionID["IG"]}, True|False],
-        LFun["getIsomorphism", {LExpressionID["IG"]}, {Real, 1}],
-        LFun["getSubisomorphism", {LExpressionID["IG"]}, {Real, 1}],
+        LFun["getIsomorphism", {LExpressionID["IG"]}, {Integer, 1}],
+        LFun["getSubisomorphism", {LExpressionID["IG"]}, {Integer, 1}],
         LFun["isoclass", {}, Integer],
 
-        LFun["blissCanonicalPermutation", {Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* colour *)}, {Real, 1}],
+        LFun["blissCanonicalPermutation", {Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* colour *)}, {Integer, 1}],
         LFun["blissIsomorphic", {LExpressionID["IG"], Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* color1 *), {Integer, 1, "Constant"} (* color 2 *)}, True|False],
-        LFun["blissFindIsomorphism", {LExpressionID["IG"], Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* color1 *), {Integer, 1, "Constant"} (* color 2 *)}, {Real, 1}],
+        LFun["blissFindIsomorphism", {LExpressionID["IG"], Integer (* splitting heuristics *), {Integer, 1, "Constant"} (* color1 *), {Integer, 1, "Constant"} (* color 2 *)}, {Integer, 1}],
         LFun["blissAutomorphismCount", LinkObject],
         LFun["blissAutomorphismGroup", LinkObject],
 
@@ -348,7 +348,7 @@ template = LTemplate["IGraphM",
 
         LFun["ladSubisomorphic", {LExpressionID["IG"], True|False (* induced *)}, True|False],
         LFun["ladSubisomorphicColored", LinkObject],
-        LFun["ladGetSubisomorphism", {LExpressionID["IG"], True|False (* induced *)}, {Real, 1}],
+        LFun["ladGetSubisomorphism", {LExpressionID["IG"], True|False (* induced *)}, {Integer, 1}],
         LFun["ladGetSubisomorphismColored", LinkObject],
         LFun["ladFindSubisomorphisms", LinkObject],
         LFun["ladCountSubisomorphisms", {LExpressionID["IG"], True|False (* induced *)}, Integer],
@@ -365,8 +365,8 @@ template = LTemplate["IGraphM",
 
         (* Topological sorting and directed acyclic graphs *)
 
-        LFun["topologicalSorting", {}, {Real, 1}],
-        LFun["feedbackArcSet", {True|False (* exact? *)}, {Real, 1}],
+        LFun["topologicalSorting", {}, {Integer, 1}],
+        LFun["feedbackArcSet", {True|False (* exact? *)}, {Integer, 1}],
 
         (* Motifs and subgraph counts *)
 
@@ -375,47 +375,47 @@ template = LTemplate["IGraphM",
         LFun["motifs", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, {Real, 1}],
         LFun["motifsNo", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, Integer],
         LFun["motifsEstimate", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *), Integer (* sample_size *)}, Integer],
-        LFun["motifsEstimateVerts", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *), {Real, 1, "Constant"} (* vertex indices *)}, Integer],
+        LFun["motifsEstimateVerts", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *), {Integer, 1, "Constant"} (* vertex indices *)}, Integer],
         LFun["motifsParticipation", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, {Real, 2}],
 
         LFun["triangles", {}, {Integer, 1}],
-        LFun["countAdjacentTriangles", {{Real, 1, "Constant"} (* vertices *)}, {Real, 1}],
+        LFun["countAdjacentTriangles", {{Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
 
         (* Shortest paths *)
 
-        LFun["shortestPaths", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPaths", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathCounts", {}, {Real, 1}],
         LFun["shortestPathCounts2", {{Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
-        LFun["neighborhoodSize", {{Real, 1, "Constant"} (* vertices *), Integer (* mindist *), Integer (* maxdist *), Integer (* mode *)}, {Real, 1}],
-        LFun["averageNeighborDegree", {{Real, 1, "Constant"} (* vertices *), Integer (* neighbour mode *), Integer (* degree mode *)}, {Real, 1}],
+        LFun["neighborhoodSize", {{Integer, 1, "Constant"} (* vertices *), Integer (* mindist *), Integer (* maxdist *), Integer (* mode *)}, {Integer, 1}],
+        LFun["averageNeighborDegree", {{Integer, 1, "Constant"} (* vertices *), Integer (* neighbour mode *), Integer (* degree mode *)}, {Real, 1}],
         LFun["averageDegreeConnectivity", {Integer (* neighbour mode *), Integer (* degree mode *)}, {Real, 1}],
-        LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
+        LFun["shortestPathWeightedHistogram", {Real (* bin size *), {Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *), Integer (* method *)}, {Integer, 1}],
         (* LFun["averagePathLength", {}, Real], *) (* currently not in use; averagePathLengthWeighted() will call averagePathLength() in C code when needed *)
         LFun["averagePathLengthWeighted", {Integer (* method *), True|False (* by components *)}, Real],
         LFun["globalEfficiency", {}, Real],
-        LFun["localEfficiency", {{Real, 1, "Constant"} (* vertices *), True|False (* directed *), Integer (* mode *)}, {Real, 1}],
+        LFun["localEfficiency", {{Integer, 1, "Constant"} (* vertices *), True|False (* directed *), Integer (* mode *)}, {Real, 1}],
         LFun["averageLocalEfficiency", {True|False (* directed *), Integer (* mode *)}, Real],
-        LFun["girth", {}, Integer],
+        LFun["girth", {}, Real],
         LFun["radius", {}, Real],
-        LFun["eccentricity", {{Real, 1, "Constant"}}, {Real, 1}],
+        LFun["eccentricity", {{Integer, 1, "Constant"}}, {Real, 1}],
 
-        LFun["shortestPathsDijkstra", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
-        LFun["shortestPathsBellmanFord", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
-        LFun["shortestPathsJohnson", {{Real, 1, "Constant"} (* from *), {Real, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPathsDijkstra", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPathsBellmanFord", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPathsJohnson", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
 
         LFun["shortestPathTreeEdges", {Integer (* from *)}, {Integer, 1}],
         LFun["shortestPathTreeEdgesDijkstra", {Integer (* from *)}, {Integer, 1}],
         LFun["shortestPathTreeEdgesBellmanFord", {Integer (* from *)}, {Integer, 1}],
 
         LFun["diameter", {True|False (* by components *)}, Real],
-        LFun["findDiameter", {True|False (* by components *)}, {Real, 1}],
+        LFun["findDiameter", {True|False (* by components *)}, {Integer, 1}],
         LFun["diameterDijkstra", {True|False (* by components *)}, Real],
-        LFun["findDiameterDijkstra", {True|False (* by components *)}, {Real, 1}],
+        LFun["findDiameterDijkstra", {True|False (* by components *)}, {Integer, 1}],
 
         LFun["pseudoDiameter", {Integer (* start *), True|False (* by components *)}, Real],
-        LFun["findPseudoDiameter", {Integer (* start *), True|False (* by components *)}, {Real, 1}],
+        LFun["findPseudoDiameter", {Integer (* start *), True|False (* by components *)}, {Integer, 1}],
         LFun["pseudoDiameterDijkstra", {Integer (* start *), True|False (* by components *)}, Real],
-        LFun["findPseudoDiameterDijkstra", {Integer (* start *), True|False (* by components *)}, {Real, 1}],
+        LFun["findPseudoDiameterDijkstra", {Integer (* start *), True|False (* by components *)}, {Integer, 1}],
 
         (* Cliques *)
 
@@ -499,8 +499,8 @@ template = LTemplate["IGraphM",
 
         (* LFun["layoutMDS", {{Real, 2, "Constant"}, Integer}, {Real, 2}], *)
 
-        LFun["layoutReingoldTilford", {{Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
-        LFun["layoutReingoldTilfordCircular", {{Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
+        LFun["layoutReingoldTilford", {{Integer, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
+        LFun["layoutReingoldTilfordCircular", {{Integer, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 2}],
 
         LFun["layoutDrL", {{Real, 2, "Constant"} (* initial positions *), True|False (* use initial *), Integer (* settings template *)}, {Real, 2}],
         LFun["layoutDrL3D", {{Real, 2, "Constant"} (* initial positions *), True|False (* use initial *), Integer (* settings template *)}, {Real, 2}],
@@ -516,24 +516,24 @@ template = LTemplate["IGraphM",
 
         (* Similarity *)
 
-        LFun["similarityCocitation", {{Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
-        LFun["similarityBibcoupling", {{Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
-        LFun["similarityJaccard", {{Real, 1, "Constant"} (* vertices *), True|False (* self loops *)}, {Real, 2}],
-        LFun["similarityDice", {{Real, 1, "Constant"} (* vertices *), True|False (* self loops *)}, {Real, 2}],
-        LFun["similarityInverseLogWeighted", {{Real, 1, "Constant"} (* vertices *)}, {Real, 2}],
+        LFun["similarityCocitation", {{Integer, 1, "Constant"} (* vertices *)}, {Real, 2}],
+        LFun["similarityBibcoupling", {{Integer, 1, "Constant"} (* vertices *)}, {Real, 2}],
+        LFun["similarityJaccard", {{Integer, 1, "Constant"} (* vertices *), True|False (* self loops *)}, {Real, 2}],
+        LFun["similarityDice", {{Integer, 1, "Constant"} (* vertices *), True|False (* self loops *)}, {Real, 2}],
+        LFun["similarityInverseLogWeighted", {{Integer, 1, "Constant"} (* vertices *)}, {Real, 2}],
 
         (* Chordal graphs *)
 
-        LFun["maximumCardinalitySearch", {}, {Real, 1}],
+        LFun["maximumCardinalitySearch", {}, {Integer, 1}],
         LFun["chordalQ", {}, True|False],
-        LFun["chordalCompletion", {}, {Real, 1}],
+        LFun["chordalCompletion", {}, {Integer, 1}],
 
         (* Vertex separators *)
 
         LFun["minimumSizeSeparators", {}, {Integer, 1}],
         LFun["minimalSeparators", {}, {Integer, 1}],
-        LFun["separatorQ", {{Real, 1, "Constant"}}, True|False],
-        LFun["minSeparatorQ", {{Real, 1, "Constant"}}, True|False],
+        LFun["separatorQ", {{Integer, 1, "Constant"}}, True|False],
+        LFun["minSeparatorQ", {{Integer, 1, "Constant"}}, True|False],
 
         LFun["vertexConnectivity", {}, Integer],
         LFun["edgeConnectivity", {}, Integer],
@@ -543,12 +543,12 @@ template = LTemplate["IGraphM",
 
         (* Connected components *)
 
-        LFun["articulationPoints", {}, {Real, 1}],
+        LFun["articulationPoints", {}, {Integer, 1}],
         LFun["biconnectedComponents", {}, {Integer, 1}],
         LFun["biconnectedEdgeComponents", {}, {Integer, 1}],
         LFun["biconnectedQ", {}, True|False],
-        LFun["bridges", {}, {Real, 1}],
-        LFun["connectedComponentSizes", {True|False (* strongly connected? *)}, {Real, 1}],
+        LFun["bridges", {}, {Integer, 1}],
+        LFun["connectedComponentSizes", {True|False (* strongly connected? *)}, {Integer, 1}],
 
         (* Graphlets *)
 
@@ -558,7 +558,7 @@ template = LTemplate["IGraphM",
 
         (* Community detection *)
 
-        LFun["modularity", {{Real, 1, "Constant"} (* membership *), Real (* resolution *), True|False (* directed *)}, Real],
+        LFun["modularity", {{Integer, 1, "Constant"} (* membership *), Real (* resolution *), True|False (* directed *)}, Real],
         LFun["communityEdgeBetweenness", LinkObject],
         LFun["communityWalktrap", LinkObject],
         LFun["communityFastGreedy", LinkObject],
@@ -576,7 +576,7 @@ template = LTemplate["IGraphM",
         LFun["gomoryHuTree", {LExpressionID["IG"]}, {Real, 1}],
 
         LFun["dominatorTree", {LExpressionID["IG"], Integer (* root *)}, "Void"],
-        LFun["immediateDominators", {Integer (* root *)}, {Real, 1}],
+        LFun["immediateDominators", {Integer (* root *)}, {Integer, 1}],
 
         (* LFun["maxFlowMatrix", {Integer (* s *), Integer (* t *)}, LType[SparseArray, Real, 2]], *)
         LFun["maxFlow", {Integer (* s *), Integer (* t *), {Real, 1, "Constant"} (* capacities *)}, {Real, 1}],
@@ -584,14 +584,14 @@ template = LTemplate["IGraphM",
 
         LFun["minCutValue", {}, Real],
         LFun["minCutValueST", {Integer (* s *), Integer (* t *)}, Real],
-        LFun["minCut", {}, {Real, 1}],
-        LFun["minCutST", {Integer (* s *), Integer (* t *)}, {Real, 1}],
+        LFun["minCut", {}, {Integer, 1}],
+        LFun["minCutST", {Integer (* s *), Integer (* t *)}, {Integer, 1}],
         LFun["allCutsST", {Integer (* s *), Integer (* t *)}, {Integer, 1}],
         LFun["allMinCutsST", {Integer (* s *), Integer (* t *)}, {Integer, 1}],
 
         (* Unfold tree *)
 
-        LFun["unfoldTree", {LExpressionID["IG"], {Real, 1, "Constant"} (* roots *), True|False (* directed *)}, {Real, 1}],
+        LFun["unfoldTree", {LExpressionID["IG"], {Integer, 1, "Constant"} (* roots *), True|False (* directed *)}, {Integer, 1}],
 
         (* Bipartite graphs *)
 
@@ -599,26 +599,26 @@ template = LTemplate["IGraphM",
         LFun["bipartiteProjection", {{Integer, 1}, LExpressionID["IG"], LExpressionID["IG"]}, {Integer, 1}],
 
         (* Vertex contraction *)
-        LFun["contractVertices", {{Real, 1, "Constant"}}, "Void"],
+        LFun["contractVertices", {{Integer, 1, "Constant"}}, "Void"],
 
         (* Random walk *)
-        LFun["randomWalk", {Integer (* start vertex *), Integer (* steps *)}, {Real, 1}],
-        LFun["randomEdgeWalk", {Integer (* start vertex *), Integer (* steps *)}, {Real, 1}],
+        LFun["randomWalk", {Integer (* start vertex *), Integer (* steps *)}, {Integer, 1}],
+        LFun["randomEdgeWalk", {Integer (* start vertex *), Integer (* steps *)}, {Integer, 1}],
 
         (* Spanning tree *)
-        LFun["spanningTree", {}, {Real, 1}],
-        LFun["randomSpanningTree", {Integer (* 0-based vertex id *)}, {Real, 1}],
+        LFun["spanningTree", {}, {Integer, 1}],
+        LFun["randomSpanningTree", {Integer (* 0-based vertex id *)}, {Integer, 1}],
 
         (* Coreness *)
-        LFun["coreness", {Integer (* mode *)}, {Real, 1}],
+        LFun["coreness", {Integer (* mode *)}, {Integer, 1}],
 
         (* Colouring *)
         LFun["vertexColoring", {}, {Integer, 1}],
 
         (* Eulerian paths *)
         LFun["eulerianQ", {True|False (* closed *)}, True|False],
-        LFun["eulerianPath", {True|False (* closed *)}, {Real, 1}],
-        LFun["eulerianPathVertices", {True|False (* closed *)}, {Real, 1}],
+        LFun["eulerianPath", {True|False (* closed *)}, {Integer, 1}],
+        LFun["eulerianPathVertices", {True|False (* closed *)}, {Integer, 1}],
 
         (* Other functions *)
 

@@ -11,7 +11,7 @@
 /**** Create (basic) ****/
 
 void IG::fromIncidenceMatrix(mma::SparseMatrixRef<mint> im, bool directed) {
-    igVector edgeList(2*im.cols());
+    igIntVector edgeList(2*im.cols());
     if (directed) {
         for (auto it = im.begin(); it != im.end(); ++it) {
             switch (*it) {
@@ -58,7 +58,7 @@ void IG::fromIncidenceMatrix(mma::SparseMatrixRef<mint> im, bool directed) {
 
 void IG::fromEdgeListML(MLINK link) {
     mlStream ml{link, "fromEdgeListML"};
-    igMatrix mat;
+    igIntMatrix mat;
     igraph_bool_t directed;
     igraph_integer_t n;
     ml >> mlCheckArgs(3) >> n >> directed;
@@ -73,7 +73,7 @@ void IG::fromEdgeListML(MLINK link) {
     }
     ml >> mat;
 
-    for (double *v = mat.begin(); v != mat.end(); ++v) {
+    for (igraph_integer_t *v = mat.begin(); v != mat.end(); ++v) {
         (*v) -= 1;
     }
 
@@ -107,7 +107,7 @@ void IG::mycielski() {
     igCheck(igraph_add_vertices(&graph, vcount+1, nullptr));
     igraph_integer_t w = 2*vcount;
 
-    igVector edges(2*(vcount + 2*ecount));
+    igIntVector edges(2*(vcount + 2*ecount));
     igraph_integer_t ec = 0;
     for (igraph_integer_t u=vcount; u < w; ++u) {
         edges[ec++] = w;
@@ -164,11 +164,11 @@ bool IG::forestQ(mint mode) const {
 
 /**** Isomorphism ****/
 
-mma::RealTensorRef IG::getIsomorphism(IG &ig) {
+mma::IntTensorRef IG::getIsomorphism(IG &ig) {
     emptyMatchDirectedness(ig);
 
     igraph_bool_t iso;
-    igVector map;
+    igIntVector map;
 
     if (multiQ() || ig.multiQ()) {
         IG g1, g2;
@@ -189,7 +189,7 @@ mma::RealTensorRef IG::getIsomorphism(IG &ig) {
     if (iso)
         return map.makeMTensor();
     else
-        return mma::makeVector<double>(0);
+        return mma::makeVector<mint>(0);
 }
 
 
@@ -219,11 +219,11 @@ struct ColorReducedMultigraphIsoCompat {
 };
 
 
-mma::RealTensorRef IG::getSubisomorphism(IG &ig) {
+mma::IntTensorRef IG::getSubisomorphism(IG &ig) {
     emptyMatchDirectedness(ig);
 
     igraph_bool_t iso;
-    igVector map;
+    igIntVector map;
 
     if (! (simpleQ() && ig.simpleQ())) {
         IG g1, g2;
@@ -247,7 +247,7 @@ mma::RealTensorRef IG::getSubisomorphism(IG &ig) {
     if (iso)
         return map.makeMTensor();
     else
-        return mma::makeVector<double>(0);
+        return mma::makeVector<mint>(0);
 }
 
 
@@ -258,7 +258,7 @@ void IG::vf2FindIsomorphisms(MLINK link) {
     igIntVector vc1, vc2, ec1, ec2;
 
     struct VF2data {
-        std::list<igVector> list;
+        std::list<igIntVector> list;
         mlint64 remaining; // remaining number of isomorphisms to find, negative value will run until all are found
     } vf2data;
 
@@ -268,15 +268,15 @@ void IG::vf2FindIsomorphisms(MLINK link) {
     emptyMatchDirectedness(ig);
 
     struct {
-        static igraph_bool_t handle(const igraph_vector_t *map12,  const igraph_vector_t * /* map21 */, void *arg) {
+        static igraph_error_t handle(const igraph_vector_int_t *map12,  const igraph_vector_int_t * /* map21 */, void *arg) {
             VF2data &data = *static_cast<VF2data *>(arg);
             data.list.push_back(map12);
             data.remaining--;
-            return data.remaining != 0; // negative will run until all are found
+            return data.remaining == 0 ? IGRAPH_STOP : IGRAPH_SUCCESS; // negative will run until all are found
         }
     } isohandler;
 
-    igCheck(igraph_isomorphic_function_vf2(
+    igCheck(igraph_get_isomorphisms_vf2_callback(
                 &graph, &ig.graph,
                 vc1.length() == 0 ? nullptr : &vc1.vec, vc2.length() == 0 ? nullptr : &vc2.vec,
                 ec1.length() == 0 ? nullptr : &ec1.vec, ec2.length() == 0 ? nullptr : &ec2.vec,
@@ -294,7 +294,7 @@ void IG::vf2FindSubisomorphisms(MLINK link) {
     igIntVector vc1, vc2, ec1, ec2;
 
     struct VF2data {
-        std::list<igVector> list;
+        std::list<igIntVector> list;
         mlint64 remaining; // remaining number of isomorphisms to find, negative value will run until all are found
     } vf2data;
 
@@ -304,15 +304,15 @@ void IG::vf2FindSubisomorphisms(MLINK link) {
     emptyMatchDirectedness(ig);
 
     struct IsoHandler {
-        static igraph_bool_t handle(const igraph_vector_t * /* map12 */,  const igraph_vector_t *map21, void *arg) {
+        static igraph_error_t handle(const igraph_vector_int_t * /* map12 */,  const igraph_vector_int_t *map21, void *arg) {
             VF2data &data = *static_cast<VF2data *>(arg);
             data.list.push_back(map21);
             data.remaining--;
-            return data.remaining != 0; // negative will run until all are found
+            return data.remaining == 0 ? IGRAPH_STOP : IGRAPH_SUCCESS; // negative will run until all are found
         }
     };
 
-    igCheck(igraph_subisomorphic_function_vf2(
+    igCheck(igraph_get_subisomorphisms_vf2_callback (
                 &graph, &ig.graph,
                 vc1.length() == 0 ? nullptr : &vc1.vec, vc2.length() == 0 ? nullptr : &vc2.vec,
                 ec1.length() == 0 ? nullptr : &ec1.vec, ec2.length() == 0 ? nullptr : &ec2.vec,
@@ -397,7 +397,7 @@ void IG::intersectionArray(MLINK link) const {
     // get shortest path matrix
     // TODO refactor code so that the entire matrix does not need to be kept in memory
     igMatrix dm;
-    igCheck(igraph_shortest_paths(&graph, &dm.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
+    igCheck(igraph_distances(&graph, &dm.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
 
     // compute graph diameter
     igraph_real_t diam = 0;
@@ -898,7 +898,7 @@ bool IG::distanceTransitiveQ(mint splitting) const {
     // Not a high priority because the orbit calculation already takes vcount^2 memory,
     // and the automorphism group computation usually takes longer than the distance matrix computation.
     igMatrix dm;
-    igCheck(igraph_shortest_paths(&graph, &dm.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
+    igCheck(igraph_distances(&graph, &dm.mat, igraph_vss_all(), igraph_vss_all(), IGRAPH_OUT));
 
     std::set<igraph_real_t> ds;
     for (const auto &el : repr) {
