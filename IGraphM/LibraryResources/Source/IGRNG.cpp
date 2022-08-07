@@ -45,7 +45,32 @@ igraph_error_t igraph_rng_Mma_seed(void *state, igraph_uint_t seed) {
 igraph_uint_t igraph_rng_Mma_get(void *state) {
     MArgument FPA[3];
 
-    mint lo = 0, hi = IGRAPH_INTEGER_MAX;
+    // Use a full 32-bit range regardless of whether mint/igraph_integer_t
+    // are 32-bit or 64-bit. This is to ensure the same random sequence on
+    // all platforms. We assume that int is 32-bit.
+    mint lo = INT_MIN, hi = INT_MAX;
+    mint res;
+
+    MArgument_getIntegerAddress(FPA[0]) = &lo;
+    MArgument_getIntegerAddress(FPA[1]) = &hi;
+    MArgument_getIntegerAddress(FPA[2]) = &res;
+
+    int err = randomInteger(mma::libData, 2, FPA, FPA[2]);
+    if (err)
+        throw mma::LibraryError("RNG: Error calling RandomInteger", err);
+
+    mma::libData->compileLibraryFunctions->WolframLibraryData_cleanUp(mma::libData, 1);
+
+    // Transfer 32 bits stored in a signed type into an unsigned one.
+    unsigned int u = (int) res;
+
+    return res;
+}
+
+igraph_integer_t igraph_rng_Mma_get_int(void *state, igraph_integer_t l, igraph_integer_t h) {
+    MArgument FPA[3];
+
+    mint lo = l, hi = h;
     mint res;
 
     MArgument_getIntegerAddress(FPA[0]) = &lo;
@@ -107,12 +132,12 @@ igraph_real_t igraph_rng_Mma_get_norm(void *state) {
 
 static const igraph_rng_type_t igraph_rngtype_Mma = {
     /* name= */      "Mathematica",
-    /* bits= */      IGRAPH_INTEGER_SIZE - 1,
+    /* bits= */      32,
     /* init= */      igraph_rng_Mma_init,
     /* destroy= */   igraph_rng_Mma_destroy,
     /* seed= */      igraph_rng_Mma_seed,
     /* get= */       igraph_rng_Mma_get,
-    /* get_int= */   nullptr, // TODO
+    /* get_int= */   igraph_rng_Mma_get_int,
     /* get_real= */  igraph_rng_Mma_get_real,
     /* get_norm= */  igraph_rng_Mma_get_norm,
     /* get_geom= */  nullptr,
@@ -122,8 +147,12 @@ static const igraph_rng_type_t igraph_rngtype_Mma = {
     /* get_pois= */  nullptr
 };
 
+/* Pointers to each available RNG */
+static igraph_rng_t *rng_array[5];
 
-static igraph_rng_t *rng_array[2];
+/* Pointers to the RNG types for not-yet-initialized generators
+ * or NULL for already initialized ones. */
+static const igraph_rng_type_t *rng_type[5];
 
 
 /* Public functions */
@@ -137,9 +166,15 @@ void rngInit() {
         nullptr,
         true
     };
+    static igraph_rng_t rng_MT19937;
+    static igraph_rng_t rng_PCG32;
+    static igraph_rng_t rng_PCG64;
 
-    rng_array[0] = &rng_Mma;         // Mathematica's RNG
-    rng_array[1] = &rng_Default;     // igraph's default RNG
+    rng_array[0] = &rng_Mma;     rng_type[0] = nullptr; // Mathematica's RNG
+    rng_array[1] = &rng_Default; rng_type[1] = nullptr; // igraph's default RNG
+    rng_array[2] = &rng_MT19937; rng_type[2] = &igraph_rngtype_mt19937;
+    rng_array[3] = &rng_PCG32;   rng_type[3] = &igraph_rngtype_pcg32;
+    rng_array[4] = &rng_PCG64;   rng_type[4] = &igraph_rngtype_pcg64;
 
     rng_Mma_get_function_pointers();
 
@@ -151,8 +186,12 @@ void rngInit() {
 }
 
 void rngSet(mint id) {
-    if (id < 0 || id >= sizeof(rng_array) / sizeof(igraph_rng_t *))
+    if (id < 0 || id >= sizeof(rng_array) / sizeof(rng_array[0]))
         throw mma::LibraryError("setRng: invalid random number generator ID");
+    if (rng_type[id] != nullptr) {
+        igCheck(igraph_rng_init(rng_array[id], rng_type[id])); // expected to fail for PCG64 on 32-bit systems
+        rng_type[id] = nullptr; // mark as already initialized
+    }
     igraph_rng_set_default(rng_array[id]);
 }
 

@@ -1143,7 +1143,13 @@ IGSeedRandom::usage =
 Options[IGSeedRandom] = { Method -> Automatic };
 SyntaxInformation[IGSeedRandom] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
-igRandomMethods = <|"Mathematica" -> 0, "WolframLanguage" -> 0, "igraph" -> 1, "IGraph" -> 1|>;
+igRandomMethods = <|
+  "Mathematica" -> 0, "WolframLanguage" -> 0,
+  "igraph" -> 1, "IGraph" -> 1,
+  "MT19937" -> 2,
+  "PCG32" -> 3,
+  "PCG64" -> 4
+|>;
 IGSeedRandom::nogen =
     "`1` is not a valid random number generator type. Valid types are: " <>
     StringJoin@Riffle[Keys@DeleteDuplicates[igRandomMethods], ", "] <>
