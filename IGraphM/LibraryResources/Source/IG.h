@@ -146,9 +146,13 @@ public:
 
     /* TODO support granular periodicity */
     void makeLattice(mma::IntTensorRef dims, mint nei, bool directed, bool mutual, bool periodic) {
-        destroy();
         igraph_vector_int_t igdims = igIntVectorView(dims);
-        igConstructorCheck(igraph_lattice(&graph, &igdims, nei, directed, mutual, periodic));
+        igBoolVector p;
+        p.resize(dims.size());
+        igraph_vector_bool_fill(&p.vec, periodic);
+
+        destroy();
+        igConstructorCheck(igraph_square_lattice(&graph, &igdims, nei, directed, mutual, &p.vec));
     }
 
     void graphAtlas(mint n) {
@@ -3036,39 +3040,16 @@ public:
     // Random walks
 
     mma::IntTensorRef randomWalk(mint start, mint steps) const {
-        igIntVector walk;
+        igIntVector vertex_walk;
 
-        /* Use random_edge_walk for the weighted case until random_wakl gets support for weights.
-         * This is fine, as random_edge_walk returns the same result as random_walk if the weight
-         * vector contains all 1s and the igraph RNG is seeded with the same value.
-         */
-        if (weightedQ()) {
-            if (steps == 0)
-                return mma::makeVector<mint>(0);
-
-            /* TODO deprecated */
-            igCheck(igraph_random_edge_walk(&graph, passWeights(), &walk.vec, start, IGRAPH_OUT, steps-1, IGRAPH_RANDOM_WALK_STUCK_RETURN));
-
-            auto result = mma::makeVector<mint>(walk.length() + 1);
-            igraph_integer_t last = start;
-            result[0] = last;
-            for (mint i=1; i < result.size(); ++i) {
-                last = IGRAPH_OTHER(&graph, walk[i-1], last);
-                result[i] = last;
-            }
-            return result;
-        } else {
-            /* TODO support weights */
-            igCheck(igraph_random_walk(&graph, /* weights */ nullptr, &walk.vec, nullptr, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
-            return walk.makeMTensor();
-        }
+        igCheck(igraph_random_walk(&graph, passWeights(), &vertex_walk.vec, nullptr, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
+        return vertex_walk.makeMTensor();
     }
 
     mma::IntTensorRef randomEdgeWalk(mint start, mint steps) const {
-        igIntVector walk;
-        /* TODO update deprecated */
-        igCheck(igraph_random_edge_walk(&graph, passWeights(), &walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
-        return walk.makeMTensor();
+        igIntVector edge_walk;
+        igCheck(igraph_random_walk(&graph, passWeights(), nullptr, &edge_walk.vec, start, IGRAPH_OUT, steps, IGRAPH_RANDOM_WALK_STUCK_RETURN));
+        return edge_walk.makeMTensor();
     }
 
     // Spanning tree
