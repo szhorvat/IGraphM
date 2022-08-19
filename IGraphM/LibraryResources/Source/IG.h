@@ -1227,10 +1227,10 @@ public:
 
     // Motifs and subgraph counts
 
-    mma::IntTensorRef dyadCensus() const {
-        igraph_integer_t mut, asym, none;
+    mma::RealTensorRef dyadCensus() const {
+        igraph_real_t mut, asym, none;
         igCheck(igraph_dyad_census(&graph, &mut, &asym, &none));
-        mma::IntTensorRef res = mma::makeVector<mint>(3);
+        auto res = mma::makeVector<double>(3);
         res[0] = mut;
         res[1] = asym;
         res[2] = none;

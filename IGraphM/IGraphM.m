@@ -370,7 +370,7 @@ template = LTemplate["IGraphM",
 
         (* Motifs and subgraph counts *)
 
-        LFun["dyadCensus", {}, {Integer, 1}],
+        LFun["dyadCensus", {}, {Real, 1}],
         LFun["triadCensus", {}, {Real, 1}],
         LFun["motifs", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, {Real, 1}],
         LFun["motifsNo", {Integer (* size *), {Real, 1, "Constant"} (* cut_prob *)}, Integer],
