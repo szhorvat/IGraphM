@@ -1081,6 +1081,17 @@ Which[
 ];
 
 
+PackageScope["igSimpleGraph"]
+igSimpleGraph::usage = "igSimpleGraph[graph]";
+If[$VersionNumber >= 12.0,
+  (* In M12.0 and later SimpleGraph preserves properties, which makes it slow.
+     We disable this when not needed, for better performance. *)
+  igSimpleGraph[graph_] := SimpleGraph[graph, Properties -> None]
+  ,
+  igSimpleGraph = SimpleGraph
+];
+
+
 (***** Progress reporting *****)
 
 IGraphM`Progress`Message::usage = "IGraphM`Progress`Message is the current progress message.";
