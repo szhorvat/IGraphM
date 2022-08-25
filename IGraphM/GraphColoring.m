@@ -53,7 +53,7 @@ igKVertexColoring[graph_, k_, clique_] :=
       If[Length[clique] > k, Return[{}]];
       n = k VertexCount[graph];
       edges = Complement[
-        Sort /@ IGIndexEdgeList@SimpleGraph[graph],
+        Sort /@ IGIndexEdgeList@igSimpleGraph[graph],
         Sort /@ Subsets[clique, {2}]
       ];
       satExpr = And @@ Flatten[{
@@ -273,7 +273,7 @@ IGPerfectQ::undir = "The input graph must be undirected.";
 SyntaxInformation[IGPerfectQ] = {"ArgumentsPattern" -> {_}};
 IGPerfectQ[graph_?EmptyGraphQ] := True
 IGPerfectQ[graph_?UndirectedGraphQ] :=
-    catch@With[{g = IndexGraph@SimpleGraph[graph]}, (* IndexGraph is to work around the unreliability of Subgraph with arbitrary vertex names *)
+    catch@With[{g = IndexGraph@igSimpleGraph[graph]}, (* IndexGraph is to work around the unreliability of Subgraph with arbitrary vertex names *)
       AllTrue[ConnectedComponents[g], check@igPerfectQ@igSubgraph[g, #]&]
     ]
 IGPerfectQ[graph_?GraphQ] := (Message[IGPerfectQ::undir]; False)

@@ -386,7 +386,4 @@ IGIsolatedVertexList::usage = "IGIsolatedVertexList[graph] gives the list of iso
 
 SyntaxInformation[IGIsolatedVertexList] = {"ArgumentsPattern" -> {_}};
 (* Use SimpleGraph so that vertices with only self-loops can be included. *)
-If[$VersionNumber >= 12.0,
-  IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree@SimpleGraph[g, Properties -> None], 0],
-  IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree@SimpleGraph[g], 0]
-]
+IGIsolatedVertexList[g_?GraphQ] := Pick[VertexList[g], VertexDegree@igSimpleGraph[g], 0]
