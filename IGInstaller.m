@@ -5,20 +5,21 @@
 (* :Date: 2018-11-28 *)
 
 (* :Mathematica Version: 10.0 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 (* This is the official installer script for IGraph/M, located at https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m *)
 
-If[Not@OrderedQ[{10.0, 2}, {$VersionNumber, $ReleaseNumber}],
-  (* Note: This is a bit sloppy as the $Version of 10.0.1 is also shown as 10.0, with no release number. *)
-  Print["IGraph/M requires Mathematica 10.0.2 or later. You are current running Mathematica ", $Version];
+If[Not@OrderedQ[{11.0, 0}, {$VersionNumber, $ReleaseNumber}],
+  (* Note: This is a bit sloppy as the $Version of 10.0.1 is also shown as 10.0, with no release number.
+   * Recent versions include the release number in $Version. *)
+  Print["IGraph/M requires Mathematica 11.0 or later. You are current running Mathematica ", $Version];
   Abort[]
 ]
 
 (* On the Raspberry Pi, we generally support only the latest version of the Wolfram Engine. *)
 If[$SystemID === "Linux-ARM",
-  If[Not@OrderedQ[{12.0, 0}, {$VersionNumber, $ReleaseNumber}],
-    Print["On the Raspberry Pi, IGraph/M requires the Wolfram Engine 12.0 or later. You are currently running the Wolfram Engine ", $Version];
+  If[Not@OrderedQ[{12.2, 0}, {$VersionNumber, $ReleaseNumber}],
+    Print["On the Raspberry Pi, IGraph/M requires the Wolfram Engine 12.2 or later. You are currently running the Wolfram Engine ", $Version];
     Abort[]
   ]
 ]
