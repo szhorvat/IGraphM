@@ -2,7 +2,7 @@
 [![GitHub (pre-)release](https://img.shields.io/github/release/szhorvat/IGraphM/all.svg)](https://github.com/szhorvat/IGraphM/releases)
 [![GitHub All Releases](https://img.shields.io/github/downloads/szhorvat/IGraphM/total.svg)](https://github.com/szhorvat/IGraphM/releases)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/szhorvat/IGraphM#contributions)
-[![DOI](https://zenodo.org/badge/41793262.svg)](https://zenodo.org/badge/latestdoi/41793262)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1134932.svg)](https://doi.org/10.5281/zenodo.1134932)
 
 # [IGraph/M – igraph for _Mathematica_][main]
 
@@ -69,7 +69,7 @@ In order of increasing difficulty, help is needed with the following tasks:
  - Create examples for the documentation or edit the documentation.
  - Write formal unit tests.
  - Implement new functions in pure Wolfram Language code.
- - Expose more igraph library functions to IGraph/M (C++ knowledge required)
+ - Expose more igraph library functions to IGraph/M (C++ knowledge required).
  - Implement entirely new functions in C++.
 
 If you are interested in contributing, send me an email for guidance. Evaluate the following in _Mathematica_ to get my email address:
