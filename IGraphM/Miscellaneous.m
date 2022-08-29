@@ -254,3 +254,29 @@ IGCactusQ[graph_?UndirectedGraphQ] :=
 IGCactusQ::dirg = "IGCactusQ is not implemented for directed graphs.";
 IGCactusQ[_?DirectedGraphQ] := (Message[IGCactusQ::dirg]; $Failed)
 IGCactusQ[_] := False
+
+
+PackageExport["IGFundamentalCycles"]
+IGFundamentalCycle::usage =
+    "IGFundamentalCycle[graph]\n" <>
+    "IGFundamentalCycle[{graph, vertex}]\n";
+Options[IGFundamentalCycles] = { "Cutoff" -> Infinity };
+SyntaxInformation[IGFundamentalCycles] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGFundamentalCycles[{graph_?igGraphQ, v_}, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+       igUnpackIndices@check@ig@"fundamentalCycles"[vs[graph][v], infToNeg@OptionValue["Cutoff"]]
+    ]
+IGFundamentalCycles[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+       igUnpackIndices@check@ig@"fundamentalCycles"[-1, infToNeg@OptionValue["Cutoff"]]
+    ]
+
+
+PackageExport["IGMinimumCycleBasis"]
+IGMinimumCycleBasis::usage = "IGMinimumCycleBasis[graph]";
+Options[IGMinimumCycleBasis] = { "Cutoff" -> Infinity, "Complete" -> True };
+SyntaxInformation[IGMinimumCycleBasis] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGMinimumCycleBasis[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMakeUnweighted[graph]},
+       igUnpackIndices@check@ig@"minimumCycleBasis"[infToNeg@OptionValue["Cutoff"], OptionValue["Complete"]]
+    ]

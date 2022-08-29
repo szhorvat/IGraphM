@@ -23,7 +23,7 @@ class IG {
     igVector weights;
     bool weighted;
 
-    void empty() { igraph_empty(&graph, 0, false); }   
+    void empty() { igraph_empty(&graph, 0, false); }
 
     void igConstructorCheck(igraph_error_t err) {
         if (err == IGRAPH_SUCCESS) return;
@@ -174,7 +174,7 @@ public:
     void tree(mint n, mint k, bool directed) {
         destroy();
         igConstructorCheck(igraph_kary_tree(&graph, n, k, directed ? IGRAPH_TREE_OUT : IGRAPH_TREE_UNDIRECTED));
-    }   
+    }
 
     void fromPrufer(mma::IntTensorRef prufer) {
         destroy();
@@ -349,7 +349,7 @@ public:
         igConstructorCheck(igraph_erdos_renyi_game_gnp(&graph, n, p, directed, loops));
     }
 
-    mma::RealTensorRef geometricGame(mint n, double radius, bool periodic) {        
+    mma::RealTensorRef geometricGame(mint n, double radius, bool periodic) {
         destroy();
         igVector x, y;
         igConstructorCheck(igraph_grg_game(
@@ -3692,6 +3692,19 @@ public:
         igCheck(igraph_assortativity_degree(&graph, &res, directed));
 
         return res;
+    }
+
+    mma::IntTensorRef fundamentalCycles(mint v, mint cutoff) const {
+        igList list;
+        igCheck(igraph_fundamental_cycles(&graph, &list.list, v, cutoff, nullptr));
+        return packListIntoIntTensor(list);
+    }
+
+    /* TODO expose use cycle order */
+    mma::IntTensorRef minimumCycleBasis(mint cutoff, bool complete) const {
+        igList list;
+        igCheck(igraph_minimum_cycle_basis(&graph, &list.list, cutoff, complete, false, nullptr));
+        return packListIntoIntTensor(list);
     }
 };
 

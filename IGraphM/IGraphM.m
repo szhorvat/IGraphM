@@ -639,7 +639,10 @@ template = LTemplate["IGraphM",
 
         LFun["sirProcess", LinkObject],
 
-        LFun["localDensity", {}, {Real, 1}]
+        LFun["localDensity", {}, {Real, 1}],
+
+        LFun["fundamentalCycles", {Integer (* start *), Integer (* cutoff *)}, {Integer, 1}],
+        LFun["minimumCycleBasis", {Integer (* cutoff *), True|False (* complete *)}, {Integer, 1}]
       }
     ],
 
@@ -1043,6 +1046,17 @@ igUnpackVertexSet[emb_?AssociationQ][packed_] := igUnpackSetsHelper[Keys[emb]][p
 PackageScope["igUnpackEdgeSet"]
 igUnpackEdgeSet::usage = "igUnpackEdgeSet[graph][packed]";
 igUnpackEdgeSet[graph_?GraphQ][packed_] := igUnpackSetsHelper[EdgeList[graph]][packed]
+
+PackageScope["igUnpackIndices"]
+igUnpackIndices::usage = "igUnpackIndices[n][packged]";
+igUnpackIndices[packed_] :=
+    With[{len = First[packed]},
+      partitionRagged[
+        1 + packed[[len + 2 ;; All]],
+        packed[[2 ;; len + 1]]
+      ]
+    ]
+
 igUnpackSetsHelper[verts_][packed_] :=
     With[{len = First[packed]},
       partitionRagged[
