@@ -5,21 +5,22 @@
 (* :Author: szhorvat *)
 (* :Date: 2016-12-02 *)
 
+(* This script uses https://github.com/szhorvat/PackageTools *)
+
 (* This script requires the following versions of Mathematica:
- * 10.0 for writing 10.0-compatible notebooks
- * 11.0 for evaluating the documentation notebook and obtaining a result that renders correctly in 10.x
+ * 11.0 for evaluating the documentation notebook and writing it in a 11.0-compatible form
  * 11.1 for creating old-style documentation indexes
  * 11.2 for creating new-style documentation indexes
  *)
 
 $appName = "IGraphM";
-$LTemplateRepo = "~/Repos/LTemplate";
+$LTemplateRepo = "~/Repos/LTemplate"; (* location of the LTemplate repository *)
 
 Print["\nScript running in Mathematica ", $Version, ".\n"];
 
 (* Prints an error message and aborts the script *)
 printAbort[str_] := (Print["ABORTING: ", Style[str, Red, Bold]]; Quit[])
-If[$VersionNumber < 10.0, printAbort["Mathematica 10.0 or later required."]]
+If[$VersionNumber < 11.0, printAbort["Mathematica 11.0 or later required."]]
 
 
 (* Determine script directory, whether the script is run in the terminal,
@@ -234,7 +235,7 @@ With[{taggingRules = taggingRules},
         NBSetOptions[StyleDefinitions -> NBImport["Stylesheet.nb"]]
       ]["IGDocumentation.nb"];
     ],
-    "11.0" (* write notebooks with 10.0 to avoid InsufficientVersionWarning *)
+    "11.0" (* write notebooks with 11.0 to avoid InsufficientVersionWarning *)
   ]
 ]
 
