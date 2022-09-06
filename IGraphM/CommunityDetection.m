@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2019-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2019-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -221,7 +221,7 @@ Options[IGModularity] = { "Resolution" -> 1, DirectedEdges -> False };
 SyntaxInformation[IGModularity] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGModularity[graph_?igGraphQ, clusters_?igClusterDataQ, opt : OptionsPattern[]] := IGModularity[graph, clusters["Communities"], opt]
 IGModularity[graph_?igGraphQ, communities : {__List}, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       check@ig@"modularity"[
         communitiesToMembershipChecked[VertexList[graph], communities],
         OptionValue["Resolution"],
@@ -329,7 +329,7 @@ IGCommunitiesWalktrap::usage =
 Options[IGCommunitiesWalktrap] = { "ClusterCount" -> Automatic };
 SyntaxInformation[IGCommunitiesWalktrap] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGCommunitiesWalktrap[graph_?igGraphQ, steps : _?Internal`PositiveMachineIntegerQ : 4, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], merges, modularity, membership, clusterCount},
+    catch@Module[{ig = igMake[graph], merges, modularity, membership, clusterCount},
       clusterCount = OptionValue["ClusterCount"];
       If[clusterCount === Automatic,
         clusterCount = 0
@@ -354,7 +354,7 @@ IGCommunitiesGreedy::usage = "IGCommunitiesGreedy[graph] finds communities using
 
 SyntaxInformation[IGCommunitiesGreedy] = {"ArgumentsPattern" -> {_}};
 IGCommunitiesGreedy[graph_?igGraphQ] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], merges, modularity, membership},
+    catch@Module[{ig = igMake[graph], merges, modularity, membership},
       {merges, modularity, membership} = check@ig@"communityFastGreedy"[];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
@@ -370,7 +370,7 @@ IGCommunitiesOptimalModularity::usage = "IGCommunitiesOptimalModularity[graph] f
 
 SyntaxInformation[IGCommunitiesOptimalModularity] = {"ArgumentsPattern" -> {_}};
 IGCommunitiesOptimalModularity[graph_?igGraphQ] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership},
+    catch@Module[{ig = igMake[graph], modularity, membership},
       {modularity, membership} = check@ig@"communityOptimalModularity"[];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
@@ -386,7 +386,7 @@ IGCommunitiesMultilevel::usage = "IGCommunitiesMultilevel[graph] finds communiti
 Options[IGCommunitiesMultilevel] = { "Resolution" -> 1 };
 SyntaxInformation[IGCommunitiesMultilevel] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGCommunitiesMultilevel[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, memberships},
+    catch@Module[{ig = igMake[graph], modularity, membership, memberships},
       {modularity, membership, memberships} = check@ig@"communityMultilevel"[N@OptionValue["Resolution"]];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],
@@ -410,7 +410,7 @@ leidenMethods = <| "NormalizedStrength" -> 1, "Constant" -> 2, "VertexWeight" ->
 
 SyntaxInformation[IGCommunitiesLeiden] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGCommunitiesLeiden[graph_?igGraphQ, OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], membership, quality},
+    catch@Module[{ig = igMake[graph], membership, quality},
       {membership, quality} = check@ig@"communityLeiden"[
         N@OptionValue["Resolution"], N@OptionValue["Beta"],
         Lookup[leidenMethods, OptionValue[VertexWeight], 0],
@@ -433,7 +433,7 @@ SyntaxInformation[IGCommunitiesLabelPropagation] = {"ArgumentsPattern" -> {_, Op
 IGCommunitiesLabelPropagation::invopt = "The option value `` is not valid.";
 
 IGCommunitiesLabelPropagation[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], membership, modularity, initial, fixed, vl},
+    catch@Module[{ig = igMake[graph], membership, modularity, initial, fixed, vl},
       initial = OptionValue["Initial"];
       fixed = OptionValue["Fixed"];
       vl = VertexList[graph];
@@ -473,7 +473,7 @@ IGCommunitiesInfoMAP::usage =
 
 SyntaxInformation[IGCommunitiesInfoMAP] = {"ArgumentsPattern" -> {_, _.}};
 IGCommunitiesInfoMAP[graph_?igGraphQ, trials_ : 10] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], membership, codeLength, vertexWeights},
+    catch@Module[{ig = igMake[graph], membership, codeLength, vertexWeights},
       vertexWeights = If[IGVertexWeightedQ[graph], igVertexWeights[graph], {}];
       {membership, codeLength} = check@ig@"communityInfoMAP"[trials, vertexWeights];
       igClusterData[graph]@<|
@@ -511,7 +511,7 @@ amendUsage[IGCommunitiesSpinGlass,
 ];
 
 IGCommunitiesSpinGlass[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, temp, method},
+    catch@Module[{ig = igMake[graph], modularity, membership, temp, method},
       method = OptionValue[Method];
       If[method === Automatic,
         method = If[
@@ -544,7 +544,7 @@ Options[IGCommunitiesLeadingEigenvector] = { "Steps" -> Automatic, "ClusterCount
 SyntaxInformation[IGCommunitiesLeadingEigenvector] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
 IGCommunitiesLeadingEigenvector[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], modularity, membership, finalMembership, merges, eval, evec, clusterCount},
+    catch@Module[{ig = igMake[graph], modularity, membership, finalMembership, merges, eval, evec, clusterCount},
       clusterCount = OptionValue["ClusterCount"];
       If[clusterCount === Automatic,
         clusterCount = 0
@@ -575,7 +575,7 @@ IGCommunitiesFluid::usage = "IGCommunitiesFluid[graph, clusterCount] finds commu
 
 SyntaxInformation[IGCommunitiesFluid] = {"ArgumentsPattern" -> {_, _}};
 IGCommunitiesFluid[graph_?igGraphQ, clusterCount_] :=
-    catch@Module[{ig = igMakeFast[graph], membership, modularity},
+    catch@Module[{ig = igMakeUnweighted[graph], membership, modularity},
       {membership, modularity} = check@ig@"communityFluid"[clusterCount];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],

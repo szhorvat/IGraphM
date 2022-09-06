@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -15,10 +15,10 @@ Package["IGraphM`"]
 
 (* for those that return a list of vectors *)
 similarityFunction1[name_, post_ : Identity][graph_, All] :=
-    catch@Block[{ig = igMakeFast[graph]}, post@check@ig@name[{}] ]
+    catch@Block[{ig = igMakeUnweighted[graph]}, post@check@ig@name[{}] ]
 similarityFunction1[name_, post_ : Identity][graph_, {}] := {}
 similarityFunction1[name_, post_ : Identity][graph_, vs_List] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       post@check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]] ]
     ]
 similarityFunction1[name_, post_ : Identity][graph_, v_] := similarityFunction1[name, First @* post][graph, {v}]
@@ -56,10 +56,10 @@ IGInverseLogWeightedSimilarity[graph_?igGraphQ, vs_ : All] := similarityFunction
 
 (* for those that return a matrix *)
 similarityFunction2[name_][graph_, All, loops_] :=
-    catch@Block[{ig = igMakeFast[graph]}, check@ig@name[{}, loops] ]
+    catch@Block[{ig = igMakeUnweighted[graph]}, check@ig@name[{}, loops] ]
 similarityFunction2[name_][graph_, {}, loops_] := {}
 similarityFunction2[name_][graph_, vs_List, loops_] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@name[ Check[VertexIndex[graph, #] - 1& /@ vs, Return[$Failed, Block]], loops ]
     ]
 

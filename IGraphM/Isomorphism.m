@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -91,7 +91,7 @@ IGGetIsomorphism::usage = "IGGetIsomorphism[graph1, graph2] gives one isomorphis
 SyntaxInformation[IGGetIsomorphism] = {"ArgumentsPattern" -> {_, _}};
 IGGetIsomorphism[graph1_?IGNullGraphQ, igraph2_?IGNullGraphQ] := {<||>}
 IGGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ] :=
-    catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], result},
+    catch@Block[{ig1 = igMakeUnweighted[graph1], ig2 = igMakeUnweighted[graph2], result},
       result = igIndexVec@check@ig1@"getIsomorphism"[ManagedLibraryExpressionID[ig2]];
       If[result === {}, Return[{}]];
       List@AssociationThread[
@@ -107,7 +107,7 @@ IGGetSubisomorphism::usage = "IGGetSubisomorphism[subgraph, graph] gives one sub
 SyntaxInformation[IGGetSubisomorphism] = {"ArgumentsPattern" -> {_, _}};
 IGGetSubisomorphism[subgraph_?IGNullGraphQ, graph_?igGraphQ] := {<||>}
 IGGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ] :=
-    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
+    catch@Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph], result},
       result = igIndexVec@check@ig1@"getSubisomorphism"[ManagedLibraryExpressionID[ig2]];
       If[result === {}, Return[{}]];
       List@AssociationThread[
@@ -121,7 +121,7 @@ PackageExport["IGIsoclass"]
 IGIsoclass::usage = "IGIsoclass[graph] gives the isomorphism class of the graph. Used as the index into the vector returned by motif finding functions. See IGData to get lists of graphs ordered by isoclass.";
 
 SyntaxInformation[IGIsoclass] = {"ArgumentsPattern" -> {_}};
-IGIsoclass[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"isoclass"[]]
+IGIsoclass[graph_?igGraphQ] := Block[{ig = igMakeUnweighted[graph]}, sck@ig@"isoclass"[]]
 
 
 (* Helper functions for handling vertex and edge colours *)
@@ -220,7 +220,7 @@ amendUsage[IGBlissCanonicalLabeling,
 Options[IGBlissCanonicalLabeling] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissCanonicalLabeling] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       blissCheckMulti[graph];
       AssociationThread[
         VertexList[graph],
@@ -228,7 +228,7 @@ IGBlissCanonicalLabeling[graph_?igGraphQ, opt : OptionsPattern[]] :=
       ]
     ]
 IGBlissCanonicalLabeling[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph], vcol},
+    catch@Block[{ig = igMakeUnweighted[graph], vcol},
       blissCheckMulti[graph];
       vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
       AssociationThread[
@@ -247,12 +247,12 @@ IGBlissCanonicalPermutation::usage =
 Options[IGBlissCanonicalPermutation] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissCanonicalPermutation] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissCanonicalPermutation[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       blissCheckMulti[graph];
       InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
     ]
 IGBlissCanonicalPermutation[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph], vcol},
+    catch@Block[{ig = igMakeUnweighted[graph], vcol},
       blissCheckMulti[graph];
       vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
       InversePermutation@igIndexVec@check@ig@"blissCanonicalPermutation"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
@@ -296,12 +296,12 @@ IGBlissIsomorphicQ::usage =
 Options[IGBlissIsomorphicQ] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissIsomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 IGBlissIsomorphicQ[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2]},
+    catch@Block[{ig1 = igMakeUnweighted[graph1], ig2 = igMakeUnweighted[graph2]},
       blissCheckMulti /@ {graph1, graph2};
       check@ig1@"blissIsomorphic"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}, {}]
     ]
 IGBlissIsomorphicQ[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGraphQ, col2 : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], vcol1, vcol2},
+    catch@Block[{ig1 = igMakeUnweighted[graph1], ig2 = igMakeUnweighted[graph2], vcol1, vcol2},
       blissCheckMulti /@ {graph1, graph2};
       vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, {col1}, "VertexColors"];
       vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, {col2}, "VertexColors"];
@@ -318,7 +318,7 @@ Options[IGBlissGetIsomorphism] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissGetIsomorphism] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 IGBlissGetIsomorphism[graph1_?IGNullGraphQ, graph2_?IGNullGraphQ] := {<||>}
 IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], result},
+    catch@Block[{ig1 = igMakeUnweighted[graph1], ig2 = igMakeUnweighted[graph2], result},
       blissCheckMulti /@ {graph1, graph2};
       result = igIndexVec@check@ig1@"blissFindIsomorphism"[ManagedLibraryExpressionID[ig2], Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}, {}];
       If[result === {}, Return[{}]];
@@ -328,7 +328,7 @@ IGBlissGetIsomorphism[graph1_?igGraphQ, graph2_?igGraphQ, opt : OptionsPattern[]
       ]
     ]
 IGBlissGetIsomorphism[{graph1_?igGraphQ, col1 : OptionsPattern[]}, {graph2_?igGraphQ, col2 : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph1], ig2 = igMakeFast[graph2], result, vcol1, vcol2},
+    catch@Block[{ig1 = igMakeUnweighted[graph1], ig2 = igMakeUnweighted[graph2], result, vcol1, vcol2},
       blissCheckMulti /@ {graph1, graph2};
       vcol1 = parseVertexColors[graph1]@OptionValue[defaultBlissColors, {col1}, "VertexColors"];
       vcol2 = parseVertexColors[graph2]@OptionValue[defaultBlissColors, {col2}, "VertexColors"];
@@ -353,13 +353,13 @@ IGBlissAutomorphismCount::usage =
 Options[IGBlissAutomorphismCount] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissAutomorphismCount] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 IGBlissAutomorphismCount[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       blissCheckMulti[graph];
       ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
     ]
 
 IGBlissAutomorphismCount[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph], vcol},
+    catch@Block[{ig = igMakeUnweighted[graph], vcol},
       blissCheckMulti[graph];
       vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
       ToExpression@check@ig@"blissAutomorphismCount"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
@@ -378,13 +378,13 @@ Options[IGBlissAutomorphismGroup] = { "SplittingHeuristics" -> "FirstLargest" };
 SyntaxInformation[IGBlissAutomorphismGroup] = {"ArgumentsPattern" -> {{__}, OptionsPattern[]}};
 
 IGBlissAutomorphismGroup[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       blissCheckMulti[graph];
       toPermGroup@igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], {}]
     ]
 
 IGBlissAutomorphismGroup[{graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph], vcol},
+    catch@Block[{ig = igMakeUnweighted[graph], vcol},
       blissCheckMulti[graph];
       vcol = parseVertexColors[graph]@OptionValue[defaultBlissColors, {col}, "VertexColors"];
       toPermGroup@igIndexVec@check@ig@"blissAutomorphismGroup"[Lookup[blissSplittingHeuristics, OptionValue["SplittingHeuristics"], -1], vcol]
@@ -605,7 +605,7 @@ Options[IGLADSubisomorphicQ] = { "Induced" -> False };
 SyntaxInformation[IGLADSubisomorphicQ] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 
 IGLADSubisomorphicQ[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
+    Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph]},
       sck@ig1@"ladSubisomorphic"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]]
     ]
 
@@ -617,7 +617,7 @@ IGLADSubisomorphicQ[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igG
         If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
         IGLADSubisomorphicQ[subgraph, graph, opt]
         ,
-        Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
+        Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph]},
           check@ig1@"ladSubisomorphicColored"[
             ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"],
             Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub
@@ -636,7 +636,7 @@ Options[IGLADGetSubisomorphism] = { "Induced" -> False };
 SyntaxInformation[IGLADGetSubisomorphism] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 
 IGLADGetSubisomorphism[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
+    catch@Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph], result},
       result = igIndexVec@check@ig1@"ladGetSubisomorphism"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]];
       If[result === {}, Return@If[IGNullGraphQ[subgraph], {<||>}, {}]];
       List@AssociationThread[
@@ -653,7 +653,7 @@ IGLADGetSubisomorphism[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?
         If[vcol =!= vcolsub, Message[IGraphM::vcmm]];
         IGLADGetSubisomorphism[subgraph, graph, opt]
         ,
-        Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
+        Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph], result},
           result = igIndexVec@check@ig1@"ladGetSubisomorphismColored"[
             ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"],
             Flatten@Position[vcol, #, {1}] - 1& /@ vcolsub
@@ -678,7 +678,7 @@ SyntaxInformation[IGLADFindSubisomorphisms] = {"ArgumentsPattern" -> {{__}, {__}
 
 IGLADFindSubisomorphisms[subgraph_?IGNullGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] := {<||>} 
 IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result},
+    catch@Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph], result},
       result = igIndexVec@check@ig1@"ladFindSubisomorphisms"[ManagedLibraryExpressionID[ig2], Boole@TrueQ@OptionValue["Induced"], {}];
       AssociationThread[
         VertexList[subgraph],
@@ -687,7 +687,7 @@ IGLADFindSubisomorphisms[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPatte
     ]
 
 IGLADFindSubisomorphisms[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], result, vcol, vcolsub, domain},
+    catch@Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph], result, vcol, vcolsub, domain},
       vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, {col}, "VertexColors"];
       vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, {colsub}, "VertexColors"];
       If[IGNullGraphQ[subgraph], Return[{<||>}]]; (* special case: one match for the null pattern for consistency *)
@@ -714,12 +714,12 @@ Options[IGLADSubisomorphismCount] = { "Induced" -> False };
 SyntaxInformation[IGLADSubisomorphismCount] = {"ArgumentsPattern" -> {{__}, {__}, OptionsPattern[]}};
 
 IGLADSubisomorphismCount[subgraph_?igGraphQ, graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph]},
+    Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph]},
       sck@ig1@"ladCountSubisomorphisms"[ManagedLibraryExpressionID[ig2], OptionValue["Induced"]]
     ]
 
 IGLADSubisomorphismCount[{subgraph_?igGraphQ, colsub : OptionsPattern[]}, {graph_?igGraphQ, col : OptionsPattern[]}, opt : OptionsPattern[]] :=
-    catch@Block[{ig1 = igMakeFast[graph], ig2 = igMakeFast[subgraph], vcol, vcolsub, domain},
+    catch@Block[{ig1 = igMakeUnweighted[graph], ig2 = igMakeUnweighted[subgraph], vcol, vcolsub, domain},
       vcol    = parseVertexColors[graph]@OptionValue[defaultLADColors, {col}, "VertexColors"];
       vcolsub = parseVertexColors[subgraph]@OptionValue[defaultLADColors, {colsub}, "VertexColors"];
       If[vcol === {} || vcolsub === {},
@@ -750,7 +750,7 @@ IGSelfComplementaryQ::usage = "IGSelfComplementaryQ[graph] tests if graph is sel
 IGSelfComplementaryQ::nmg = "`1` is not a simple graph.";
 SyntaxInformation[IGSelfComplementaryQ] = {"ArgumentsPattern" -> {_}};
 IGSelfComplementaryQ[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       If[Not@SimpleGraphQ[graph],
         Message[IGSelfComplementaryQ::nmg, OutputForm[graph]];
         throw[$Failed]

@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -49,7 +49,7 @@ IGCoreness::usage =
 corenessModes = <|"In" -> -1, "Out" -> 1, "All" -> 0|>;
 SyntaxInformation[IGCoreness] = {"ArgumentsPattern" -> {_, _.}};
 expr : IGCoreness[graph_?igGraphQ, mode_String : "All"] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"coreness"[Lookup[corenessModes, mode, Message[IGCoreness::inv, HoldForm@OutputForm[expr], mode, "parameter"]; throw[$Failed]]]
     ]
 addCompletion[IGCoreness, {0, {"In", "Out", "All"}}]
@@ -166,7 +166,7 @@ IGAverageNeighborDegree::usage =
 SyntaxInformation[IGAverageNeighborDegree] = {"ArgumentsPattern" -> {_, _., _., _.}};
 IGAverageNeighborDegree[graph_?igGraphQ, {}, degMode_String : "Out", neiMode : _String | Automatic : Automatic] := {}
 IGAverageNeighborDegree[graph_?igGraphQ, vs : (_List | All) : All, degMode_String : "Out", neiMode : _String | Automatic : Automatic] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       expectInfNaN@fixInfNaN@check@ig@"averageNeighborDegree"[vss[graph][vs], encodeNeighborMode@Replace[neiMode, Automatic -> degMode], encodeNeighborMode[degMode]]
     ]
 addCompletion[IGAverageNeighborDegree, {0, 0, {"In", "Out", "All"}, {"In", "Out", "All"}}]
@@ -180,7 +180,7 @@ IGAverageDegreeConnectivity::usage =
 
 SyntaxInformation[IGAverageDegreeConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
 IGAverageDegreeConnectivity[graph_?igGraphQ, degMode_String : "Out", neiMode : _String | Automatic : Automatic] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       expectInfNaN@fixInfNaN@check@ig@"averageDegreeConnectivity"[encodeNeighborMode@Replace[neiMode, Automatic -> degMode], encodeNeighborMode[degMode]]
     ]
 addCompletion[IGAverageDegreeConnectivity, {0, {"In", "Out", "All"}, {"In", "Out", "All"}}]
@@ -229,7 +229,7 @@ IGTreelikeComponents::usage = "IGTreelikeComponents[graph] returns the vertices 
 
 SyntaxInformation[IGTreelikeComponents] = {"ArgumentsPattern" -> {_}};
 IGTreelikeComponents[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igVertexNames[graph]@igIndexVec@check@ig@"treelikeComponents"[]
     ]
 

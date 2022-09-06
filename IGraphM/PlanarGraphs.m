@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-23 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -177,7 +177,7 @@ IGCoordinatesToEmbedding::usage =
 
 SyntaxInformation[IGCoordinatesToEmbedding] = {"ArgumentsPattern" -> {_, _.}};
 IGCoordinatesToEmbedding[graph_?igGraphQ, coords_] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       AssociationThread[VertexList[graph], igUnpackVertexSet[graph]@check@ig@"coordinatesToEmbedding"[coords]]
     ]
 IGCoordinatesToEmbedding[graph_?igGraphQ] := IGCoordinatesToEmbedding[graph, GraphEmbedding[graph]]

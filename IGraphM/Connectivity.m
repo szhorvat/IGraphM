@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -19,7 +19,7 @@ PackageExport["IGConnectedQ"]
 IGConnectedQ::usage = "IGConnectedQ[graph] tests if graph is strongly connected.";
 
 SyntaxInformation[IGConnectedQ] = {"ArgumentsPattern" -> {_}};
-igConnectedQ[g_] := Block[{ig = igMakeFast[g]}, check@ig@"connectedQ"[True]]
+igConnectedQ[g_] := Block[{ig = igMakeUnweighted[g]}, check@ig@"connectedQ"[True]]
 IGConnectedQ[g_?igGraphQ] := catch@cachedFun[igConnectedQ][g]
 IGConnectedQ[_] := False
 
@@ -28,7 +28,7 @@ PackageExport["IGWeaklyConnectedQ"]
 IGWeaklyConnectedQ::usage = "IGWeaklyConnectedQ[graph] tests if graph is weakly connected.";
 
 SyntaxInformation[IGWeaklyConnectedQ] = {"ArgumentsPattern" -> {_}};
-igWeaklyConnectedQ[g_] := Block[{ig = igMakeFast[g]}, check@ig@"connectedQ"[False]]
+igWeaklyConnectedQ[g_] := Block[{ig = igMakeUnweighted[g]}, check@ig@"connectedQ"[False]]
 IGWeaklyConnectedQ[g_?igGraphQ] := catch@cachedFun[igWeaklyConnectedQ][g]
 IGWeaklyConnectedQ[_] := False
 
@@ -38,7 +38,7 @@ IGBiconnectedQ::usage = "IGBiconnectedQ[graph] tests if graph is biconnected.";
 
 SyntaxInformation[IGBiconnectedQ] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedQ[graph_?igGraphQ] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"biconnectedQ"[]
     ]
 IGBiconnectedQ[_] := False (* for non-graphs *)
@@ -58,7 +58,7 @@ IGMinimumSeparators::usage = "IGMinimumSeparators[graph] gives all separator ver
 
 SyntaxInformation[IGMinimumSeparators] = {"ArgumentsPattern" -> {_}};
 IGMinimumSeparators[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast@UndirectedGraph[graph]},
+    catch@Block[{ig = igMakeUnweighted@UndirectedGraph[graph]},
       igUnpackVertexSet[graph]@check@ig@"minimumSizeSeparators"[]
     ]
 
@@ -68,7 +68,7 @@ IGMinimalSeparators::usage = "IGMinimalSeparators[graph] gives all minimal separ
 
 SyntaxInformation[IGMinimalSeparators] = {"ArgumentsPattern" -> {_}};
 IGMinimalSeparators[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"minimalSeparators"[]
     ]
 
@@ -78,7 +78,7 @@ IGVertexSeparatorQ::usage = "IGVertexSeparatorQ[graph, {vertex1, vertex2, \[Elli
 
 SyntaxInformation[IGVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};
 IGVertexSeparatorQ[graph_?igGraphQ, vs_List] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"separatorQ"[vss[graph][vs]]
     ]
 
@@ -88,7 +88,7 @@ IGMinimalVertexSeparatorQ::usage = "IGMinimalVertexSeparatorQ[graph, {vertex1, v
 
 SyntaxInformation[IGMinimalVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};
 IGMinimalVertexSeparatorQ[graph_?igGraphQ, vs_List] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"minSeparatorQ"[vss[graph][vs]]
     ]
 
@@ -100,7 +100,7 @@ IGArticulationPoints::usage = "IGArticulationPoints[graph] gives the articulatio
 
 SyntaxInformation[IGArticulationPoints] = {"ArgumentsPattern" -> {_}};
 IGArticulationPoints[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igVertexNames[graph]@igIndexVec@check@ig@"articulationPoints"[]
     ]
 
@@ -110,7 +110,7 @@ IGBiconnectedComponents::usage = "IGBiconnectedComponents[graph] gives the verti
 
 SyntaxInformation[IGBiconnectedComponents] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedComponents[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"biconnectedComponents"[]
     ]
 
@@ -119,7 +119,7 @@ IGBiconnectedEdgeComponents::usage = "IGBiconnectedEdgeComponents[graph] gives t
 
 SyntaxInformation[IGBiconnectedEdgeComponents] = {"ArgumentsPattern" -> {_}};
 IGBiconnectedEdgeComponents[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackEdgeSet[graph]@check@ig@"biconnectedEdgeComponents"[]
     ]
 
@@ -139,7 +139,7 @@ IGConnectedComponentSizes::usage = "IGConnectedComponentSizes[graph] gives the s
 
 SyntaxInformation[IGConnectedComponentSizes] = {"ArgumentsPattern" -> {_}};
 IGConnectedComponentSizes[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Reverse@Sort@Round@check@ig@"connectedComponentSizes"[True]
     ]
 
@@ -149,7 +149,7 @@ IGWeaklyConnectedComponentSizes::usage = "IGWeaklyConnectedComponentSizes[graph]
 
 SyntaxInformation[IGWeaklyConnectedComponentSizes] = {"ArgumentsPattern" -> {_}};
 IGWeaklyConnectedComponentSizes[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Reverse@Sort@Round@check@ig@"connectedComponentSizes"[False]
     ]
 
@@ -164,12 +164,12 @@ IGVertexConnectivity::usage =
 SyntaxInformation[IGVertexConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
 
 IGVertexConnectivity[graph_?igGraphQ] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"vertexConnectivity"[]
     ]
 
 IGVertexConnectivity[graph_?igGraphQ, s_, t_] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"vertexConnectivityST"[vs[graph][s], vs[graph][t]]
     ]
 
@@ -182,12 +182,12 @@ IGEdgeConnectivity::usage =
 SyntaxInformation[IGEdgeConnectivity] = {"ArgumentsPattern" -> {_, _., _.}};
 
 IGEdgeConnectivity[graph_?igGraphQ] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"edgeConnectivity"[]
     ]
 
 IGEdgeConnectivity[graph_?igGraphQ, s_, t_] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"edgeConnectivityST"[vs[graph][s], vs[graph][t]]
     ]
 
@@ -198,7 +198,7 @@ IGCohesiveBlocks::usage = "IGCohesiveBlocks[graph] gives the cohesive block stru
 IGCohesiveBlocks::badarg = "The input must be a simple undirected graph.";
 SyntaxInformation[IGCohesiveBlocks] = {"ArgumentsPattern" -> {_}};
 IGCohesiveBlocks[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph], blocks, cohesion, parents},
+    catch@Block[{ig = igMakeUnweighted[graph], blocks, cohesion, parents},
       If[Not@SimpleGraphQ[graph], Message[IGCohesiveBlocks::badarg]; Return[$Failed]];
       {blocks, cohesion, parents} = check@ig@"cohesiveBlocks"[];
       {igVertexNames[graph] /@ igIndexVec[blocks], Round[cohesion](*, igIndexVec[parents]*)}
@@ -214,11 +214,11 @@ IGMinimumCutValue::usage =
 
 SyntaxInformation[IGMinimumCutValue] = {"ArgumentsPattern" -> {_, _., _.}};
 IGMinimumCutValue[graph_?igGraphQ] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       sck@ig@"minCutValue"[]
     ]
 IGMinimumCutValue[graph_?igGraphQ, s_, t_] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       check@ig@"minCutValueST"[vs[graph][s], vs[graph][t]]
     ]
 

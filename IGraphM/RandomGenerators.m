@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -187,7 +187,7 @@ igBarabasiAlbertGame[n_, m_, {power_, a_}, directed_, totalDegree_, method_, ini
           Message[IGBarabasiAlbertGame::bdstart];
           throw[$Failed]
         ];
-        start = igMakeFast[initial];
+        start = igMakeUnweighted[initial];
         check@ig@"barabasiAlbertGameWithStartingGraph"[
           n, power, a,
           If[ListQ[m], 0, m], If[ListQ[m], m, {}],
