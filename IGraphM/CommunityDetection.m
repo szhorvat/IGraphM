@@ -293,7 +293,7 @@ IGCompareCommunities[c1_?igClusterDataQ, c2_?igClusterDataQ, method_String] := I
 PackageExport["IGCommunitiesEdgeBetweenness"]
 IGCommunitiesEdgeBetweenness::usage = "IGCommunitiesEdgeBetweenness[graph] finds communities using the Girvan–Newman algorithm.";
 
-(* Note: edge ordering matters, use igMake instead of igMakeFastWeighted. *)
+(* Note: edge ordering matters *)
 Options[IGCommunitiesEdgeBetweenness] = { "ClusterCount" -> Automatic };
 SyntaxInformation[IGCommunitiesEdgeBetweenness] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGCommunitiesEdgeBetweenness[graph_?igGraphQ, OptionsPattern[]] :=

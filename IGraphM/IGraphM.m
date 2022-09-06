@@ -820,75 +820,13 @@ IGraphM::mixed = "Mixed graphs are not supported by IGraph/M. Use DirectedGraph 
 
 (***** Helper functions *****)
 
-
-(* Get an IG compatible edge list. *)
-(* This implementation attempts to select the fastest method based on the internal representation
-   of the graph. With the "Simple" representation, IndexGraph is very fast. With "Incidence" it's
-   slower than the Lookup method. With "NullGraph", performance doesn't matter.
-
-   While GraphComputation`GraphRepresentation is an internal undocumented function, hopefully this
-   is robust against changes as both branches of the If are valid ways to retrieve
-   the edge list for any graph. They only differ in performance.
-*)
-(*
-igEdgeList[graph_] :=
-    Developer`ToPackedArray@If[GraphComputation`GraphRepresentation[graph] === "Simple",
-      Flatten[EdgeList@IndexGraph[graph, 0], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
-      ,
-      Lookup[
-        AssociationThread[VertexList[graph], Range@VertexCount[graph] - 1],
-        Flatten[EdgeList[graph], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
-      ]
-    ]
-*)
-(* igEdgeList[graph_] := List @@@ EdgeList@IndexGraph[graph, 0]; *)
-
-(* Not currently in use; was originally used in igMake and related functions.
- * See igraphGlobal@"incidenceToEdgeList" for a faster solution if need arises in the future. *)
-(* Thanks to Carl Woll for the following implementation idea: http://community.wolfram.com/groups/-/m/t/1250373 *)
-(*
-igEdgeList[graph_?EmptyGraphQ] := {}
-igEdgeList[graph_?MultigraphQ] :=
-    Developer`ToPackedArray@Lookup[
-      AssociationThread[VertexList[graph], Range@VertexCount[graph] - 1],
-      Flatten[EdgeList[graph], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
-    ]
-igEdgeList[graph_?UndirectedGraphQ] :=
-    With[{sa = UpperTriangularize@WeightedAdjacencyMatrix[graph, EdgeWeight -> Range@EdgeCount[graph]]},
-      sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
-    ]
-igEdgeList[graph_?DirectedGraphQ] :=
-    With[{sa = WeightedAdjacencyMatrix[graph, EdgeWeight -> Range@EdgeCount[graph]]},
-      sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
-    ]
-*)
-
-
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
 PackageScope["igIndexVec"]
 igIndexVec::usage = "igIndexVec[expr]";
 igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
 igIndexVec[arr_] := 1 + Round[arr]
 
-(* igEdgeWeightedQ: We only want edge-weighted graphs, not vertex weighted ones. *)
-(* igEdgeWeightedQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &; *)
-
 IGraphM::invw = "Invalid edge weight vector. Edge weights will be ignored.";
-
-(* Create IG object from Mathematica Graph. Must be used when edge ordering matters. *)
-(*
-igMake[g_] :=
-    With[{ig = Make["IG"]},
-      ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
-      If[IGEdgeWeightedQ[g],
-        Check[
-          ig@"setWeights"[igEdgeWeights[g]],
-          Message[IGraphM::invw]
-        ]
-      ];
-      ig
-    ]
-*)
 
 PackageScope["igMakeEmpty"]
 igMakeEmpty::usage = "igMakeEmpty[] creates an empty IG object.";
