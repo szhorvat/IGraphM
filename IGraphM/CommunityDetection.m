@@ -403,6 +403,7 @@ IGCommunitiesLeiden::usage = "IGCommunitiesLeiden[graph] finds communities using
 Options[IGCommunitiesLeiden] = {
   "Resolution" -> 1,
   "Beta" -> 0.01,
+  "Iterations" -> 2,
   VertexWeight -> "NormalizedStrength"
 };
 
@@ -414,7 +415,8 @@ IGCommunitiesLeiden[graph_?igGraphQ, OptionsPattern[]] :=
       {membership, quality} = check@ig@"communityLeiden"[
         N@OptionValue["Resolution"], N@OptionValue["Beta"],
         Lookup[leidenMethods, OptionValue[VertexWeight], 0],
-        If[OptionValue[VertexWeight] === "VertexWeight", igVertexWeights[graph], {}]
+        If[OptionValue[VertexWeight] === "VertexWeight", igVertexWeights[graph], {}],
+        Replace[OptionValue["Iterations"], Automatic -> -1] (* TODO check for no negative value *)
       ];
       igClusterData[graph]@<|
         "Communities" -> communitiesFromMembership[graph, membership],

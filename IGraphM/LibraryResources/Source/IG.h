@@ -2782,12 +2782,13 @@ public:
         mlStream ml{link, "communityLeiden"};
 
         igraph_real_t resolution, beta;
+        igraph_integer_t iterations;
         mint method;
 
         igVector vertexWeight;
         igraph_vector_t *vertex_weight_ptr = &vertexWeight.vec;
 
-        ml >> mlCheckArgs(4) >> resolution >> beta >> method >> vertexWeight;
+        ml >> mlCheckArgs(5) >> resolution >> beta >> method >> vertexWeight >> iterations;
 
         switch (method) {
         case 1: /* degree/strength */ /* TODO simplify strength/degree calls */
@@ -2825,7 +2826,7 @@ public:
         igCheck(igraph_community_leiden(
                     &graph, passWeights(), vertex_weight_ptr,
                     resolution, beta,
-                    false, &membership.vec,
+                    false, iterations, &membership.vec,
                     &nb_clusters, &quality));
 
         ml.newPacket();
