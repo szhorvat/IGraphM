@@ -8,7 +8,7 @@
 
 (* :Package Version: %%version%% *)
 (* :Mathematica Version: %%mathversion%% *)
-(* :Copyright: (c) 2015-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2015-2022 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://szhorvat.net/mathematica/IGraphM  *)
 
@@ -933,63 +933,6 @@ igMakeUnweighted[g_] :=
       ];
       ig
     ]
-
-(*
-(* Fast version. Use only for unweighted graphs and when edge ordering doesn't matter. *)
-igMakeFast[g_?MultigraphQ] := igMake[g]
-igMakeFast[g_?EmptyGraphQ] :=
-    With[{ig = Make["IG"]},
-      ig@"fromEdgeList"[{}, VertexCount[g], False];
-      ig
-    ]
-igMakeFast[g_] :=
-    With[{ig = Make["IG"]},
-      If[DirectedGraphQ[g], (* empty graphs handled as undirected above *)
-        ig@"fromEdgeList"[AdjacencyMatrix[g]["NonzeroPositions"] - 1, VertexCount[g], True],
-        ig@"fromEdgeList"[UpperTriangularize[AdjacencyMatrix[g]]["NonzeroPositions"] - 1, VertexCount[g], False]
-      ];
-      ig
-    ]
-*)
-PackageScope["igMakeFast"]
-igMakeFast::usage = "igMakeFast[graph]";
-igMakeFast = igMakeUnweighted; (* IncidenceMatrix-based igMake is faster than the above igMakeFast implementation *)
-
-(*
-(* Fast version. Use for graphs that may be weighted when edge ordering doesn't matter. *)
-igMakeFastWeighted[g_?MultigraphQ] := igMake[g]
-igMakeFastWeighted[g_?EmptyGraphQ] :=
-    With[{ig = Make["IG"]},
-      ig@"fromEdgeList"[{}, VertexCount[g], False];
-      ig
-    ]
-igMakeFastWeighted[g_] :=
-    With[{ig = Make["IG"]},
-      If[IGEdgeWeightedQ[g],
-        If[DirectedGraphQ[g], (* empty graphs handled as undirected above *)
-          With[{wam = WeightedAdjacencyMatrix[g]},
-            ig@"fromEdgeList"[wam["NonzeroPositions"] - 1, VertexCount[g], True];
-            Check[ig@"setWeights"[wam["NonzeroValues"]], Message[IGraphM::invw]]
-          ]
-          ,
-          With[{wam = UpperTriangularize@WeightedAdjacencyMatrix[g]},
-            ig@"fromEdgeList"[wam["NonzeroPositions"] - 1, VertexCount[g], False];
-            Check[ig@"setWeights"[wam["NonzeroValues"]], Message[IGraphM::invw]]
-          ]
-        ]
-        ,
-        If[DirectedGraphQ[g],
-          ig@"fromEdgeList"[AdjacencyMatrix[g]["NonzeroPositions"] - 1, VertexCount[g], True],
-          ig@"fromEdgeList"[UpperTriangularize[AdjacencyMatrix[g]]["NonzeroPositions"] - 1, VertexCount[g], False]
-        ];
-      ];
-      ig
-    ]
-*)
-PackageScope["igMakeFastWeighted"]
-igMakeFastWeighted::usage = "igMakeFastWeighted[graph]";
-igMakeFastWeighted = igMake; (* IncidenceMatrix-based igMake is faster than the above igMakeFast implementation *)
-
 
 (* Create Mathematica Graph from IG object. *)
 PackageScope["igToGraph"]

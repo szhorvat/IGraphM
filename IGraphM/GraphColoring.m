@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -18,7 +18,7 @@ IGVertexColoring::usage = "IGVertexColoring[graph] gives a vertex colouring of g
 
 SyntaxInformation[IGVertexColoring] = {"ArgumentsPattern" -> {_}};
 IGVertexColoring[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       1 + check@ig@"vertexColoring"[]
     ]
 
@@ -37,7 +37,7 @@ Options[IGKVertexColoring] = { "ForcedColoring" -> Automatic };
 SyntaxInformation[IGKVertexColoring] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGKVertexColoring[graph_?EmptyGraphQ, k_Integer?Positive, OptionsPattern[]] := {ConstantArray[1, VertexCount[graph]]}
 IGKVertexColoring[graph_?igGraphQ, 2, OptionsPattern[]] :=
-    Block[{ig = igMakeFast[graph], parts},
+    Block[{ig = igMakeUnweighted[graph], parts},
       parts = ig@"bipartitePartitions"[];
       If[MatchQ[parts, _LibraryFunctionError],
         {},
@@ -280,6 +280,6 @@ IGPerfectQ[graph_?GraphQ] := (Message[IGPerfectQ::undir]; False)
 IGPerfectQ[_] := False
 
 igPerfectQ[graph_] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       check@ig@"perfectQ"[]
     ]

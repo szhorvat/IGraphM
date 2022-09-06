@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -27,7 +27,7 @@ IGConnectNeighborhood::usage =
 
 SyntaxInformation[IGConnectNeighborhood] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGConnectNeighborhood[graph_?igGraphQ, k : _?Internal`NonNegativeMachineIntegerQ : 2, opt : OptionsPattern[Graph]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"connectNeighborhood"[k];
       applyGraphOpt[opt][igToGraphWithNames[ig, VertexList[graph]]]
     ]
@@ -38,7 +38,7 @@ IGMycielskian::usage = "IGMycielskian[graph] returns the Mycielskian of graph.";
 
 SyntaxInformation[IGMycielskian] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGMycielskian[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"mycielski"[];
       applyGraphOpt[opt]@igToGraph[ig]
     ]
@@ -53,7 +53,7 @@ IGVertexContract::vset = "`` must be a list of disjoint vertex sets.";
 Options[IGVertexContract] = { SelfLoops -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated" };
 SyntaxInformation[IGVertexContract] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGVertexContract, Graph]};
 IGVertexContract[graph_?igGraphQ, sets : {___List}, opt : OptionsPattern[{IGVertexContract, Graph}]] :=
-    catch@Module[{ig = igMakeFast[graph], allElements = Join @@ sets, fullSets, g, self, multi},
+    catch@Module[{ig = igMakeUnweighted[graph], allElements = Join @@ sets, fullSets, g, self, multi},
       If[Not@DuplicateFreeQ[allElements],
         Message[IGVertexContract::vset, sets];
         throw[$Failed]

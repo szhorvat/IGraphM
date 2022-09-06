@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -22,7 +22,7 @@ IGRewire::multi = "The input is a multigraph. Multi-edges are never created duri
 Options[IGRewire] = { SelfLoops -> False };
 SyntaxInformation[IGRewire] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewire, Graph]};
 IGRewire[g_?igGraphQ, n_?Internal`NonNegativeMachineIntegerQ, opt : OptionsPattern[{IGRewire, Graph}]] :=
-    catch@Block[{ig = igMakeFast[g]},
+    catch@Block[{ig = igMakeUnweighted[g]},
       If[MultigraphQ[g], Message[IGRewire::multi]];
       check@ig@"rewire"[n, OptionValue[SelfLoops]];
       applyGraphOpt[opt]@igToGraphWithNames[ig, VertexList[g]]
@@ -38,7 +38,7 @@ IGRewireEdges::usage =
 Options[IGRewireEdges] = { SelfLoops -> False, MultiEdges -> False, "MultipleEdges" -> "Deprecated" };
 SyntaxInformation[IGRewireEdges] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[IGRewireEdges, Graph]};
 IGRewireEdges[g_?igGraphQ, p_?Internal`RealValuedNumericQ, mode : "All"|"In"|"Out" : "All", opt : OptionsPattern[{IGRewireEdges, Graph}]] :=
-    catch@Block[{ig = igMakeFast[g]},
+    catch@Block[{ig = igMakeUnweighted[g]},
       Switch[mode,
         "All",
         check@ig@"rewireEdges"[p, OptionValue[SelfLoops], multiEdgesOptionReplace@OptionValue[MultiEdges]]

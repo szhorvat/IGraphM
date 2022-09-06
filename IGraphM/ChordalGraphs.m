@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -18,7 +18,7 @@ IGChordalQ::usage = "IGChordalQ[graph] tests if graph is chordal.";
 
 SyntaxInformation[IGChordalQ] = {"ArgumentsPattern" -> {_}};
 IGChordalQ[graph_?igGraphQ] :=
-    Block[{ig = igMakeFast[graph]}, ig@"chordalQ"[]]
+    Block[{ig = igMakeUnweighted[graph]}, ig@"chordalQ"[]]
 IGChordalQ[_] := False
 
 
@@ -27,7 +27,7 @@ IGMaximumCardinalitySearch::usage = "IGMaximumCardinalitySearch[graph] assigns a
 
 SyntaxInformation[IGMaximumCardinalitySearch] = {"ArgumentsPattern" -> {_}};
 IGMaximumCardinalitySearch[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igIndexVec@check@ig@"maximumCardinalitySearch"[]
     ]
 
@@ -36,7 +36,7 @@ IGChordalCompletion::usage = "IGChordalCompletion[graph] gives a set of edges th
 
 SyntaxInformation[IGChordalCompletion] = {"ArgumentsPattern" -> {_}};
 IGChordalCompletion[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph], result},
+    catch@Block[{ig = igMakeUnweighted[graph], result},
       result = check@ig@"chordalCompletion"[];
       If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge] @@@ Partition[igVertexNames[graph]@igIndexVec[result], 2]
     ]

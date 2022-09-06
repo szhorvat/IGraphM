@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -22,7 +22,7 @@ Options[IGBetweenness] = { Normalized -> False };
 SyntaxInformation[IGBetweenness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGBetweenness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
 IGBetweenness[g_?igGraphQ, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       check@ig@"betweenness"[
         OptionValue[Normalized],
         vss[g][vs]
@@ -82,7 +82,7 @@ Options[IGCloseness] = { Normalized -> True };
 SyntaxInformation[IGCloseness] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGCloseness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
 IGCloseness[g_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       expectInfNaN@fixInfNaN@check@ig@"closeness"[OptionValue[Normalized], vss[g][vs]]
     ]
 
@@ -96,7 +96,7 @@ Options[IGHarmonicCentrality] = { Normalized -> True };
 SyntaxInformation[IGHarmonicCentrality] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGHarmonicCentrality[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}
 IGHarmonicCentrality[g_?igGraphQ, vs : (_List | All) : All, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       check@ig@"harmonicCentrality"[OptionValue[Normalized], vss[g][vs]]
     ]
 
@@ -110,7 +110,7 @@ Options[IGBetweennessCutoff] = { Normalized -> False };
 SyntaxInformation[IGBetweennessCutoff] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 IGBetweennessCutoff[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
 IGBetweennessCutoff[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       check@ig@"betweennessCutoff"[
         infToNeg[cutoff],
         OptionValue[Normalized],
@@ -148,7 +148,7 @@ Options[IGClosenessCutoff] = { Normalized -> True };
 SyntaxInformation[IGClosenessCutoff] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 IGClosenessCutoff[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
 IGClosenessCutoff[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       expectInfNaN@fixInfNaN@check@ig@"closenessCutoff"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]]
     ]
 
@@ -167,7 +167,7 @@ Options[IGNeighborhoodCloseness] = { Normalized -> True };
 SyntaxInformation[IGNeighborhoodCloseness] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 IGNeighborhoodCloseness[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
 IGNeighborhoodCloseness[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       MapAt[Round, expectInfNaN@fixInfNaN@check@ig@"neighborhoodCloseness"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]], 2]
     ]
 
@@ -180,7 +180,7 @@ Options[IGHarmonicCentralityCutoff] = { Normalized -> True };
 SyntaxInformation[IGHarmonicCentralityCutoff] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 IGHarmonicCentralityCutoff[g_?igGraphQ, cutoff_?NonNegative, {}, opt : OptionsPattern[]] := {}
 IGHarmonicCentralityCutoff[g_?igGraphQ, cutoff_?NonNegative, vs : (_List | All) : All, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       If[VertexCount[g] == 1, Developer`FromPackedArray, Identity] @ (* prevent {Indeterminate} packed array, which may misbehave, for single-vertex graph *)
         check@ig@"harmonicCentralityCutoff"[infToNeg[cutoff], OptionValue[Normalized], vss[g][vs]]
     ]
@@ -199,7 +199,7 @@ SyntaxInformation[IGPageRank] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}
 amendUsage[IGPageRank, "Available Method options: <*DeleteCases[igPageRankMethods, \"PowerIteration\"]*>."];
 
 IGPageRank[graph_?igGraphQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
+    catch@Block[{ig = igMake[graph], method, methodOptions = {}},
       method = OptionValue[Method];
       If[ListQ[method],
         {method, methodOptions} = {First[method], Rest[method]};
@@ -220,7 +220,7 @@ SyntaxInformation[IGLinkRank] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}
 amendUsage[IGLinkRank, "Available Method options: <*DeleteCases[igPageRankMethods, \"PowerIteration\"]*>."];
 
 IGLinkRank[graph_?igGraphQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
+    catch@Block[{ig = igMake[graph], method, methodOptions = {}},
       method = OptionValue[Method];
       If[ListQ[method],
         {method, methodOptions} = {First[method], Rest[method]};
@@ -243,7 +243,7 @@ SyntaxInformation[IGPersonalizedPageRank] = {"ArgumentsPattern" -> {_, _, _., Op
 IGPersonalizedPageRank::invarg = "Second argument must be a vector of the same length as the vertex count of the graph.";
 
 IGPersonalizedPageRank[graph_?igGraphQ, reset_?VectorQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
+    catch@Block[{ig = igMake[graph], method, methodOptions = {}},
       method = OptionValue[Method];
       If[ListQ[method],
         {method, methodOptions} = {First[method], Rest[method]};
@@ -273,7 +273,7 @@ SyntaxInformation[IGPersonalizedLinkRank] = {"ArgumentsPattern" -> {_, _, _., Op
 IGPersonalizedLinkRank::invarg = IGPersonalizedPageRank::invarg;
 
 IGPersonalizedLinkRank[graph_?igGraphQ, reset_?VectorQ, damping : _?NumericQ : 0.85, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], method, methodOptions = {}},
+    catch@Block[{ig = igMake[graph], method, methodOptions = {}},
       method = OptionValue[Method];
       If[ListQ[method],
         {method, methodOptions} = {First[method], Rest[method]};
@@ -297,7 +297,7 @@ IGEigenvectorCentrality::usage = "IGEigenvectorCentrality[graph] gives the eigen
 Options[IGEigenvectorCentrality] = { DirectedEdges -> True, "Normalized" -> True };
 SyntaxInformation[IGEigenvectorCentrality] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGEigenvectorCentrality[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       sck@ig@"eigenvectorCentrality"[OptionValue[DirectedEdges], OptionValue["Normalized"]]
     ]
 
@@ -308,7 +308,7 @@ IGHubScore::usage = "IGHubScore[graph] gives Kleinberg's hub score for each vert
 Options[IGHubScore] = { "Normalized" -> True };
 SyntaxInformation[IGHubScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGHubScore[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       sck@ig@"hubScore"[OptionValue["Normalized"]]
     ]
 
@@ -319,7 +319,7 @@ IGAuthorityScore::usage = "IGAuthorityScore[graph] gives Kleinberg's authority s
 Options[IGAuthorityScore] = { "Normalized" -> True };
 SyntaxInformation[IGAuthorityScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGAuthorityScore[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       sck@ig@"authorityScore"[OptionValue["Normalized"]]
     ]
 
@@ -329,7 +329,7 @@ IGConstraintScore::usage = "IGConstraintScore[graph] returns Burt's constraint s
 
 SyntaxInformation[IGConstraintScore] = {"ArgumentsPattern" -> {_}};
 IGConstraintScore[graph_?igGraphQ] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       sck@ig@"constraintScore"[]
     ]
 
@@ -344,7 +344,7 @@ IGDegreeCentralization::usage =
 Options[IGDegreeCentralization] = { Normalized -> True, SelfLoops -> True };
 SyntaxInformation[IGDegreeCentralization] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGDegreeCentralization[graph_?igGraphQ, mode : _String : "All", opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"degreeCentralization"[encodeNeighborMode[mode], OptionValue[SelfLoops], OptionValue[Normalized]]
     ]
 addCompletion[IGDegreeCentralization, {0, {"In", "Out", "All"}}]
@@ -356,7 +356,7 @@ IGBetweennessCentralization::usage = "IGBetweennessCentralization[graph] gives t
 Options[IGBetweennessCentralization] = { Normalized -> True };
 SyntaxInformation[IGBetweennessCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGBetweennessCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"betweennessCentralization"[
         OptionValue[Normalized]
       ]
@@ -369,7 +369,7 @@ IGClosenessCentralization::usage = "IGClosenessCentralization[graph] gives the g
 Options[IGClosenessCentralization] = { Normalized -> True };
 SyntaxInformation[IGClosenessCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGClosenessCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"closenessCentralization"[OptionValue[Normalized]]
     ]
 
@@ -380,6 +380,6 @@ IGEigenvectorCentralization::usage = "IGEigenvectorCentralization[graph] gives t
 Options[IGEigenvectorCentralization] = { Normalized -> True, Scaled -> True };
 SyntaxInformation[IGEigenvectorCentralization] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGEigenvectorCentralization[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"eigenvectorCentralization"[OptionValue[Scaled], OptionValue[Normalized]]
     ]

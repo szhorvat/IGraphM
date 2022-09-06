@@ -17,7 +17,7 @@ PackageExport["IGDyadCensus"]
 IGDyadCensus::usage = "IGDyadCensus[graph] classifies dyad in the graph into mutual, asymmetric or null states.";
 
 SyntaxInformation[IGDyadCensus] = {"ArgumentsPattern" -> {_}};
-IGDyadCensus[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, AssociationThread[{"Mutual", "Asymmetric", "Null"}, Round@ig@"dyadCensus"[]]]
+IGDyadCensus[graph_?igGraphQ] := Block[{ig = igMakeUnweighted[graph]}, AssociationThread[{"Mutual", "Asymmetric", "Null"}, Round@ig@"dyadCensus"[]]]
 
 
 PackageExport["IGTriadCensus"]
@@ -25,7 +25,7 @@ IGTriadCensus::usage = "IGTriadCensus[graph] classifies triads in the graph into
 
 SyntaxInformation[IGTriadCensus] = {"ArgumentsPattern" -> {_}};
 IGTriadCensus[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       AssociationThread[
         {"003", "012", "102", "021D", "021U", "021C", "111D", "111U", "030T", "030C", "201", "120D", "120U", "120C", "210", "300"},
         Round@check@ig@"triadCensus"[]
@@ -41,7 +41,7 @@ IGMotifs::usage =
 Options[IGMotifs] = { DirectedEdges -> Automatic };
 SyntaxInformation[IGMotifs] = {"ArgumentsPattern" -> {_, _, _., OptionsPattern[]}};
 IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Switch[OptionValue[DirectedEdges],
         True, ig@"makeDirected"[],
         False, ig@"makeUndirected"[]
@@ -49,7 +49,7 @@ IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, opt : OptionsPattern[
       Round@Developer`FromPackedArray@expectInfNaN@check@ig@"motifs"[size, ConstantArray[0, size]]
     ]
 IGMotifs[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Switch[OptionValue[DirectedEdges],
         True, ig@"makeDirected"[],
         False, ig@"makeUndirected"[]
@@ -65,11 +65,11 @@ IGMotifsTotalCount::usage =
 
 SyntaxInformation[IGMotifsTotalCount] = {"ArgumentsPattern" -> {_, _, _.}};
 IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"motifsNo"[size, ConstantArray[0, size]]
     ]
 IGMotifsTotalCount[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"motifsNo"[size, cutprob]
     ]
 
@@ -82,19 +82,19 @@ IGMotifsTotalCountEstimate::usage =
 
 SyntaxInformation[IGMotifsTotalCountEstimate] = {"ArgumentsPattern" -> {_, _, _, _.}};
 IGMotifsTotalCountEstimate[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"motifsEstimate"[size, ConstantArray[0, size], sampleSize]
     ]
 IGMotifsTotalCountEstimate[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, sampleSize_?Internal`PositiveIntegerQ, cutprob_?nonNegVecQ] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"motifsEstimate"[size, cutprob, sampleSize]
     ]
 IGMotifsTotalCountEstimate[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, vs_List] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"motifsEstimateVerts"[size, ConstantArray[0, size], vss[graph][vs]]
     ]
 IGMotifsTotalCountEstimate[graph_?igGraphQ, size_?Internal`PositiveIntegerQ, vs_List, cutprob_?nonNegVecQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"motifsEstimateVerts"[size, cutprob, vss[graph][vs]]
     ]
 
@@ -103,7 +103,7 @@ Options[IGMotifsVertexParticipation] = { DirectedEdges -> Automatic };
 SyntaxInformation[IGMotifsVertexParticipation] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}};
 IGMotifsVertexParticipation::usage = "IGMotifsVertexParticipation[graph, motifSize] counts the number of times each vertex occurs in each motif.";
 IGMotifsVertexParticipation[graph_?igGraphQ, size_?Internal`PositiveIntegerQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Switch[OptionValue[DirectedEdges],
         True, ig@"makeDirected"[],
         False, ig@"makeUndirected"[]
@@ -120,7 +120,7 @@ IGTriangles::usage = "IGTriangles[graph] lists all triangles in the graph. Edge 
 
 SyntaxInformation[IGTriangles] = {"ArgumentsPattern" -> {_}};
 IGTriangles[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Partition[igVertexNames[graph]@igIndexVec@check@ig@"triangles"[], 3]
     ]
 
@@ -132,7 +132,7 @@ IGAdjacentTriangleCount::usage =
     "IGAdjacentTriangleCount[graph, {vertex1, vertex2, \[Ellipsis]}] counts the triangles the specified vertices participate in.";
 
 igAdjacentTriangleCount[graph_, vs_] :=
-    (* no catch *) Block[{ig = igMakeFast[graph]},
+    (* no catch *) Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"countAdjacentTriangles"[vss[graph][vs]]
     ]
 
@@ -147,7 +147,7 @@ IGTriangleFreeQ::usage = "IGTriangleFreeQ[graph] tests if graph is triangle-free
 
 SyntaxInformation[IGTriangleFreeQ] = {"ArgumentsPattern" -> {_}};
 IGTriangleFreeQ[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Total[check@ig@"countAdjacentTriangles"[{}]] == 0
     ]
 IGTriangleFreeQ[_] := False

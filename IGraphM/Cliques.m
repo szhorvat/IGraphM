@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -29,7 +29,7 @@ IGCliques[graph_, {size_}] := IGCliques[graph, {size, size}]
 IGCliques[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igCliques[graph, {min, infToZero[max]}]
 igCliques[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"cliques"[min, max]
     ]
 
@@ -48,7 +48,7 @@ IGCliqueSizeCounts[graph_, {size_}] := IGCliqueSizeCounts[graph, {size, size}]
 IGCliqueSizeCounts[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igCliqueSizeCounts[graph, {min, infToZero[max]}]
 igCliqueSizeCounts[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"cliqueDistribution"[min, max]
     ]
 
@@ -67,7 +67,7 @@ IGMaximalCliqueSizeCounts[graph_, {size_}] := IGMaximalCliqueSizeCounts[graph, {
 IGMaximalCliqueSizeCounts[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igMaximalCliqueSizeCounts[graph, {min, infToZero[max]}]
 igMaximalCliqueSizeCounts[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"maximalCliqueDistribution"[min, max]
     ]
 
@@ -86,7 +86,7 @@ IGMaximalCliques[graph_, {size_}] := IGMaximalCliques[graph, {size, size}]
 IGMaximalCliques[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igMaximalCliques[graph, {min, infToZero[max]}]
 igMaximalCliques[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"maximalCliques"[min, max]
     ]
 
@@ -105,7 +105,7 @@ IGMaximalCliquesCount[graph_, {size_}] := IGMaximalCliquesCount[graph, {size, si
 IGMaximalCliquesCount[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igMaximalCliquesCount[graph, {min, infToZero[max]}]
 igMaximalCliquesCount[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"maximalCliquesCount"[min, max]
     ]
 
@@ -115,7 +115,7 @@ IGLargestCliques::usage = "IGLargestCliques[graph] gives the largest cliques in 
 
 SyntaxInformation[IGLargestCliques] = {"ArgumentsPattern" -> {_}};
 IGLargestCliques[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"largestCliques"[]
     ]
 
@@ -124,7 +124,7 @@ PackageExport["IGCliqueNumber"]
 IGCliqueNumber::usage = "IGCliqueNumber[graph] gives the clique number of graph. The clique number is the size of the largest clique.";
 
 SyntaxInformation[IGCliqueNumber] = {"ArgumentsPattern" -> {_}};
-IGCliqueNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"cliqueNumber"[]]
+IGCliqueNumber[graph_?igGraphQ] := Block[{ig = igMakeUnweighted[graph]}, sck@ig@"cliqueNumber"[]]
 
 
 PackageExport["IGWeightedCliques"]
@@ -134,7 +134,7 @@ SyntaxInformation[IGWeightedCliques] = {"ArgumentsPattern" -> {_, {_, _}}};
 IGWeightedCliques[graph_?igGraphQ, {min_?Internal`NonNegativeMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     If[IGVertexWeightedQ[graph], igCliquesWeighted, igCliques][graph, {min, infToZero[max]}]
 igCliquesWeighted[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"cliquesWeighted"[min, max, igVertexWeights[graph], False]
     ]
 
@@ -146,7 +146,7 @@ SyntaxInformation[IGMaximalWeightedCliques] = {"ArgumentsPattern" -> {_, {_, _}}
 IGMaximalWeightedCliques[graph_?igGraphQ, {min_?Internal`NonNegativeMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     If[IGVertexWeightedQ[graph], igMaximalCliquesWeighted, igMaximalCliques][graph, {min, infToZero[max]}]
 igMaximalCliquesWeighted[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"cliquesWeighted"[min, max, igVertexWeights[graph], True (* maximal *)]
     ]
 
@@ -158,7 +158,7 @@ SyntaxInformation[IGLargestWeightedCliques] = {"ArgumentsPattern" -> {_}};
 IGLargestWeightedCliques[graph_?igGraphQ] :=
     If[IGVertexWeightedQ[graph], igLargestCliquesWeighted, IGLargestCliques][graph]
 igLargestCliquesWeighted[graph_] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"largestCliquesWeighted"[igVertexWeights[graph]]
     ]
 
@@ -170,7 +170,7 @@ SyntaxInformation[IGWeightedCliqueNumber] = {"ArgumentsPattern" -> {_}};
 IGWeightedCliqueNumber[graph_?igGraphQ] :=
     If[IGVertexWeightedQ[graph], igMaximumCliqueWeight, IGCliqueNumber][graph]
 igMaximumCliqueWeight[graph_] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"cliqueNumberWeighted"[igVertexWeights[graph]]
     ]
 
@@ -193,7 +193,7 @@ IGIndependentVertexSets[graph_, {size_}] := IGIndependentVertexSets[graph, {size
 IGIndependentVertexSets[graph_?igGraphQ, {min_?Internal`PositiveMachineIntegerQ, max : (_?Internal`PositiveMachineIntegerQ | Infinity)}] /; max >= min :=
     igIndependentVertexSets[graph, {min, infToZero[max]}]
 igIndependentVertexSets[graph_, {min_, max_}] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"independentVertexSets"[min, max]
     ]
 
@@ -203,7 +203,7 @@ IGLargestIndependentVertexSets::usage = "IGLargestIndependentVertexSets[graph] g
 
 SyntaxInformation[IGLargestIndependentVertexSets] = {"ArgumentsPattern" -> {_}};
 IGLargestIndependentVertexSets[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"largestIndependentVertexSets"[]
     ]
 
@@ -213,7 +213,7 @@ IGMaximalIndependentVertexSets::usage = "IGMaximalIndependentVertexSets[graph] g
 
 SyntaxInformation[IGMaximalIndependentVertexSets] = {"ArgumentsPattern" -> {_}};
 IGMaximalIndependentVertexSets[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igUnpackVertexSet[graph]@check@ig@"maximalIndependentVertexSets"[]
     ]
 
@@ -222,4 +222,4 @@ PackageExport["IGIndependenceNumber"]
 IGIndependenceNumber::usage = "IGIndependenceNumber[graph] gives the independence number of graph. The independence number is the size of the largest independent vertex set.";
 
 SyntaxInformation[IGIndependenceNumber] = {"ArgumentsPattern" -> {_}};
-IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMakeFast[graph]}, sck@ig@"independenceNumber"[]]
+IGIndependenceNumber[graph_?igGraphQ] := Block[{ig = igMakeUnweighted[graph]}, sck@ig@"independenceNumber"[]]

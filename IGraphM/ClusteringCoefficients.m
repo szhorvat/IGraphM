@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -19,7 +19,7 @@ IGGlobalClusteringCoefficient::usage = "IGGlobalClusteringCoefficient[graph] giv
 Options[IGGlobalClusteringCoefficient] = { "ExcludeIsolates" -> False };
 SyntaxInformation[IGGlobalClusteringCoefficient] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGGlobalClusteringCoefficient[graph_?igGraphQ, OptionsPattern[]] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"transitivityUndirected"[OptionValue["ExcludeIsolates"]]
     ]
 
@@ -31,7 +31,7 @@ Options[IGLocalClusteringCoefficient] = { "ExcludeIsolates" -> False };
 SyntaxInformation[IGLocalClusteringCoefficient] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 (* See https://github.com/igraph/igraph/issues/907 for why SimpleGraph and UndirectedGraph are needed. *)
 IGLocalClusteringCoefficient[graph_?igGraphQ, OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFast[SimpleGraph@UndirectedGraph[graph]]},
+    catch@Block[{ig = igMakeUnweighted[SimpleGraph@UndirectedGraph[graph]]},
       expectInfNaN@fixInfNaN@check@ig@"transitivityLocalUndirected"[OptionValue["ExcludeIsolates"]]
     ]
 
@@ -42,7 +42,7 @@ IGAverageLocalClusteringCoefficient::usage = "IGAverageLocalClusteringCoefficien
 Options[IGAverageLocalClusteringCoefficient] = { "ExcludeIsolates" -> False };
 SyntaxInformation[IGAverageLocalClusteringCoefficient] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGAverageLocalClusteringCoefficient[graph_?igGraphQ, OptionsPattern[]] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       sck@ig@"transitivityAverageLocalUndirected"[OptionValue["ExcludeIsolates"]]
     ]
 
@@ -53,6 +53,6 @@ IGWeightedClusteringCoefficient::usage = "IGWeightedClusteringCoefficient[graph]
 Options[IGWeightedClusteringCoefficient] = { "ExcludeIsolates" -> False };
 SyntaxInformation[IGWeightedClusteringCoefficient] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGWeightedClusteringCoefficient[graph_?igGraphQ, OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       expectInfNaN@fixInfNaN@check@ig@"transitivityBarrat"[OptionValue["ExcludeIsolates"]]
     ]
