@@ -39,7 +39,7 @@ Options[IGSubsetBetweenness] = { Normalized -> False };
 SyntaxInformation[IGSubsetBetweenness] = {"ArgumentsPattern" -> {_, _, _, _., OptionsPattern[]}};
 (*IGSubsetBetweenness[g_?igGraphQ, {}, opt : OptionsPattern[]] := {}*)
 IGSubsetBetweenness[g_?igGraphQ, s_List, t_List, vs : (_List | All) : All,  opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       check@ig@"subsetBetweenness"[
         OptionValue[Normalized],
         vss[g][vs], vss[g][s], vss[g][t]
@@ -55,7 +55,7 @@ IGSubsetEdgeBetweenness::usage =
 Options[IGSubsetEdgeBetweenness] = { Normalized -> False };
 SyntaxInformation[IGSubsetEdgeBetweenness] = {"ArgumentsPattern" -> {_, _, _, OptionsPattern[]}};
 IGSubsetEdgeBetweenness[g_?igGraphQ, s_List, t_List, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[g]},
+    catch@Block[{ig = igMake[g]},
       check@ig@"subsetEdgeBetweenness"[
         OptionValue[Normalized],
         vss[g][s], vss[g][t]
