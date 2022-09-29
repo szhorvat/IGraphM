@@ -91,7 +91,8 @@ Interpretation[
   }
 , refresh[] := Module[{temp}
   , Catch[
-      If[ Needs@"IGraphM`" === $Failed, Throw[ error = packageFailure]]
+      error = False
+    ; If[ Needs@"IGraphM`" === $Failed, Throw[ error = packageFailure]]
 
     ; temp = geStateVersionCheck @ state
     ; If[ AssociationQ @ temp, state = temp, Throw[ error = temp] ]
@@ -464,18 +465,23 @@ Table[
 ]
 
 
-geEdgeShapeFunction[Dynamic @ state_, e_Association] :=
-With[
-  {
-    nef = $edgeThickness,
-    aef = $activeEdgeThickness
-  },
-  EventHandler[
-      { AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
-      , edgeToPrimitive @ e
-      }
+geEdgeShapeFunction[Dynamic @ state_, e_Association] := EventHandler[
+    edgeHoverWrapper @ edgeToPrimitive @ e      
   , { "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e]) }
   , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
+  ]
+
+
+edgeHoverWrapper[primitive_]:=  {
+  AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], $activeEdgeThickness, $edgeThickness ] ]
+, primitive
+}
+
+
+If[ $VersionNumber > 12
+, edgeHoverWrapper[primitive_Arrow]:=  Mouseover[
+    {AbsoluteThickness @ $edgeThickness, primitive},
+    {AbsoluteThickness @ $activeEdgeThickness, primitive}
   ]
 ]
 
