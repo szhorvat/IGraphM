@@ -414,9 +414,9 @@ With[ {
 , step = state["snapStep"]
 },
 DynamicModule[
-  {x = v@"pos"},
+  {x = v@"pos", task},
 Module[
-  {mouseDragged, graphics}
+  {graphics}
 
 , graphics = { {
     EdgeForm @ AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
@@ -425,26 +425,27 @@ Module[
     , v["id"]
     ]
   }
-  , If[
+  , If[ (*TODO, this could be a separate collection, like vertex/edges, so it could be toggled 
+          with lower overhead *)
       state["VertexLabels"] === "Name"
     , Inset[v["name"], Offset[ {12, 12}, DynamicLocation[v["id"]]] ]
     , Nothing
     ]
   }
 
-; mouseDragged = If[ state[ "snap"]
-    , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
-    , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
-  ]
 
 ; EventHandler[
     graphics,
-    { "MouseClicked" :> geAction["VertexClicked", Dynamic @ state, v]
-    , "MouseUp"      :> geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x]
-    , mouseDragged
+    { "MouseClicked" :> (TaskRemove @ task; geAction["VertexClicked", Dynamic @ state, v] )
+    , "MouseUp"      :> (task = SessionSubmit @ ScheduledTask[ geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x] , {0.1}])
+    , If[ state[ "snap"]
+      , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
+      , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
+      ]
     },
     PassEventsUp -> False
   ]
+      (*ScheduledTask stuff is here to prevent MouseUp firing if MouseClicked is going to happen*)
       (*I'd prefer clicked to be Queued but if I put it in an inner queued EventHandler then I can't block MouseUp from fireing*)
 ]]]
 
