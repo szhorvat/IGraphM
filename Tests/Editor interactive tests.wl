@@ -17,7 +17,8 @@ SetSelectedNotebook@MessagesNotebook[];
 SetSelectedNotebook@EvaluationNotebook[];
 FrontEndExecute[FrontEndToken["DeleteGeneratedCells"]]
 
-IGraphM`GraphEditor`PackagePrivate`$geDebug=False;
+IGraphM`GraphEditor`PackagePrivate`$geDebug=True;
+IGraphM`GraphEditor`PackagePrivate`$logTimings=False;
 IGraphM`GraphEditor`PackagePrivate`$logDynamic=True;
 Get["IGraphM`"]
 IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
@@ -44,9 +45,13 @@ SetOptions[IGGraphEditor, ImageSize->200];
 (*- Alt+click should not trigger orange resize frame, nor should discarding a potential edge.*)
 (*- Click on vertex should not trigger update vertex position*)
 (*- Hover over edge/vertex should thicken it.*)
+(*- Are curved edges redrawn @mouseUp?*)
 
 
-IGGraphEditor[VertexSize->Small, "SnapToGrid"->True]
+IGGraphEditor[Graph@{1->2,2->1},VertexSize->Small, "DirectedEdges"->True]
+
+
+\[AliasDelimiter]
 
 
 IGraphM`PreciseTracking`PackagePrivate`$TrackedTargets

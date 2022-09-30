@@ -558,7 +558,7 @@ If[
       , Module[{result, start = AbsoluteTime[]}
         , logAction[a]
         ; result = rhs
-        ; Print[StringJoin@ConstantArray["  ", $actionLevel], "timing: ", AbsoluteTime[] - start, "[s]"]
+        ; If[$logTimings, Print[StringJoin@ConstantArray["  ", $actionLevel], "timing: ", AbsoluteTime[] - start, "[s]"]]
         ; result  
         ]      
       ]
