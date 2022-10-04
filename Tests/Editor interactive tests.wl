@@ -27,7 +27,7 @@ IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
 TestReport@FileNameJoin[{NotebookDirectory[], "Editor.wl"}]
 
 
-SetOptions[IGGraphEditor, ImageSize->200];
+SetOptions[IGGraphEditor, ImageSize->Automatic];
 
 
 (* ::Subsection:: *)
@@ -51,9 +51,6 @@ SetOptions[IGGraphEditor, ImageSize->200];
 IGGraphEditor[Graph@{1->2,2->1},VertexSize->Small, "DirectedEdges"->True]
 
 
-\[AliasDelimiter]
-
-
 IGraphM`PreciseTracking`PackagePrivate`$TrackedTargets
 
 
@@ -75,6 +72,9 @@ IGGraphEditor[ImageSize->100]
 
 (* ::Text:: *)
 (*Try to edit them*)
+
+
+IGGraphEditor[CompleteGraph[2, DirectedEdges -> True]]
 
 
 { IGGraphEditor[IGEmptyGraph[]],
