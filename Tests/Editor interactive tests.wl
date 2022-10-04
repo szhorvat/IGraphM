@@ -17,9 +17,9 @@ SetSelectedNotebook@MessagesNotebook[];
 SetSelectedNotebook@EvaluationNotebook[];
 FrontEndExecute[FrontEndToken["DeleteGeneratedCells"]]
 
-IGraphM`GraphEditor`PackagePrivate`$geDebug=True;
+IGraphM`GraphEditor`PackagePrivate`$geDebug=False;
 IGraphM`GraphEditor`PackagePrivate`$logTimings=False;
-IGraphM`GraphEditor`PackagePrivate`$logDynamic=True;
+IGraphM`GraphEditor`PackagePrivate`$logDynamic=False;
 Get["IGraphM`"]
 IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
 
