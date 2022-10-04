@@ -69,7 +69,7 @@ iGraphEditor // Options = Options @ IGGraphEditor;
 supportedGraphQ = ! MixedGraphQ[#] && SimpleGraphQ[#]&;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*iGraphEditor*)
 
 
@@ -166,7 +166,7 @@ iGraphEditorPanel[Dynamic@state_] := EventHandler[
 (*State*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*state version*)
 
 
@@ -199,7 +199,7 @@ geStateVersionCheck[___] :=
   Failure["GraphEditor", <|"MessageTemplate" -> IGGraphEditor::unknownState|>]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*from state*)
 
 
@@ -228,7 +228,7 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*to state*)
 
 
@@ -357,7 +357,7 @@ stateHasCurvedEdges[state_Association]:= state[ "DirectedEdges"]
 (*graphics*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*geGraphics*)
 
 
@@ -533,7 +533,7 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
 (*UI Actions*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*$geDebug*)
 
 
@@ -611,7 +611,7 @@ geAction["UpdateRange", Dynamic @ state_] := Module[
 ; state = stateHandleNarrowRange @ state
 
 ; state[  "aspectRatio"] = #/#2& @@ (#2-#& @@@ state[ "range"])
-; state[  "ImageSize" ] = {1, 1/state[  "aspectRatio"]} * If[ListQ@#, First@#,#]& @ state[ "ImageSize"]
+; state[  "ImageSize" ] = {1, 1/state[  "aspectRatio"]} * If[ListQ@#, First@#,# /. Automatic -> 300]& @ state[ "ImageSize"] 
 ; state[  "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[  "range"] ]
 ; geAction["UpdateVertexSize", Dynamic @ state]
 ]
@@ -717,7 +717,7 @@ geAction["Select", Dynamic @ state_, vId_String] := state["selectedVertex"] = vI
 geAction["Unselect", Dynamic @ state_] := state["selectedVertex"] = Null
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*AddVertex*)
 
 
@@ -790,15 +790,15 @@ geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := M
   ; Message[IGGraphEditor::multiEdge]
   ; Return[$Failed, Module]
   ]
+; eId = CreateUUID["e-"]
 
-; eId = "e"<>ToString[++state[ "eCounter"]]
 ; type =   If[state["DirectedEdges"], Rule, UndirectedEdge]
 
 ; state["edge", eId ] = createEdge[eId,  type[selectedV, clickedV] ]
+; state["eCounter"]++
 
 ; geAction["Unselect", Dynamic @ state]
 ; geAction["UpdateEdgesShapes", Dynamic @ state]
-
 ]
 
 
@@ -825,7 +825,7 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 (nextEdgeType[#]=#2)& @@@ Partition[{UndirectedEdge["v1", "v2"], "v1"->"v2", "v2"->"v1"}, 2, 1, {1, 1}]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateEdgesShapes*)
 
 
@@ -841,6 +841,9 @@ geAction["UpdateEdgesShapes", _ @ state_] := Module[{primitives,  vertexEncoded,
   ]
 
 ; ( state["edge", #id, "shape"] = ToEdgeShapeFunction[#primitive, vertexEncoded] )& /@ primitives
+(* nested tracking is not supported yet so we need to manually trigger all edges update 
+   we keep using eCounter for triggers because general mutations of .edges should not trigger updates *)
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["eCounter"]]
 ]
 
 
@@ -867,7 +870,7 @@ ToEdgeShapeFunction[Arrow[b_BezierCurve, ___], vertexEncoded_] := Arrow[b /. ver
 ToEdgeShapeFunction[p_, ___] := Automatic;
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*helpers*)
 
 
