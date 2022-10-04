@@ -472,10 +472,15 @@ geEdgeShapeFunction[Dynamic @ state_, e_Association] := EventHandler[
   ]
 
 
-edgeHoverWrapper[primitive_]:=  {
-  AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], $activeEdgeThickness, $edgeThickness ] ]
+edgeHoverWrapper[primitive_]:=  With[
+  {
+    nef = $edgeThickness,
+    aef = $activeEdgeThickness
+  },{
+  AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
 , primitive
 }
+]
 
 
 If[ $VersionNumber > 12
