@@ -437,8 +437,8 @@ Module[
 
 ; EventHandler[
     graphics,
-    { "MouseClicked" :> (TaskRemove @ task; geAction["VertexClicked", Dynamic @ state, v] )
-    , "MouseUp"      :> (task = SessionSubmit @ ScheduledTask[ geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x] , {0.1}])
+    { "MouseClicked" :> (RemoveScheduledTask @ task; geAction["VertexClicked", Dynamic @ state, v] )
+    , "MouseUp"      :> (task = RunScheduledTask[ geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x] , {0.1}])
     , If[ state[ "snap"]
       , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
       , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
