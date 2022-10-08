@@ -1,8 +1,27 @@
 ## Revision history for [IGraph/M](README.md)
 
+#### 0.6.3 (unreleased)
+
+Changed:
+
+ - When an invalid vertex is passed to IGraph/M functions, now the message shown is `IGraphM::invv` instead of `VertexIndex::inv`.
+
+Fixed:
+
+ - In rare cases, vertex names that were lists of other vertex names in the same graph were misinterpreted. This affected only Mathematica 12.0 and later.
+ - `IGCommunitiesLeadingEigenvector` is less likely to fail to converge now.
+ - `IGCommunitiesLeadingEigenvector` now respects random seeds set in Mathematica. These affect only the random starting vector it uses internally, which can very rarely cause non-deterministic output.
+ - `IGBarabasiAlbertGame` no longer accepts negative or zero exponents, as these were not handled correctly.
+ - `IGBridges` is no longer prone to stack overflow when given very large graphs.
+
+Other:
+
+ - Performance improvements for `IGGraphEditor`.
+ - Documentation improvements.
+
 #### 0.6.2
 
-Changes:
+Changed:
 
  - Re-enabled resizing for `IGGraphEditor[]`.
  - `IGGraphEditor[]` now shows a warning when invoked without a notebook interface.
@@ -22,7 +41,7 @@ Fixed:
  - `IGCompareCommunities` had a corrupted usage message.
  - Restored compatibility with older Linux distros that use GCC 4.8, such as RHEL / CentOS 7.
  - The Fruchterman-Reingold, Kamada-Kawai and DrL layouts now verify that all weights are positive.
- - `IGAsymmetrixPreferenceGame` misinterpreted the type weight matrix.
+ - `IGAsymmetricPreferenceGame` misinterpreted the type weight matrix.
 
 Other:
 
