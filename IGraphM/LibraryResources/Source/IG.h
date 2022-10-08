@@ -3553,7 +3553,7 @@ public:
             massert(int_count % 2 == 0);
             int_count /= 2;
 
-            res[i] = ext_count == 0 ? 0.0 : double(int_count) / double(int_count + ext_count);
+            res[i] = int_count == 0 ? 0.0 : double(int_count) / double(int_count + ext_count);
         }
 
         return res;
