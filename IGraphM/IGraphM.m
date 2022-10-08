@@ -938,50 +938,60 @@ igUnpackSetsHelper[verts_][packed_] :=
 
 IGraphM::invv = "The vertex `1` does not exist in the graph.";
 
-PackageScope["vss"]
-vss::usage = "vss[graph][vertices] converts a list of vertices to zero-based vertex indices.";
+PackageScope["vss1"]
+vss1::usage = "vss1[graph][vertices] converts a list of vertices to one-based vertex indices.";
 
-vss[graph_][All] := {}
-vss[graph_][{}] := {}
+vss1[graph_][{}] := {}
 If[$VersionNumber >= 12,
-  vss[graph_][vl_List] :=
-      With[{x = Quiet@VertexIndex[graph, vl]},
-        Switch[x,
-          _List, x - 1,
-          _Integer, vs[graph] /@ vl,
+  vss1[graph_][vl_List] :=
+      With[{indices = Quiet@VertexIndex[graph, vl]},
+        Switch[indices,
+          _List, indices,
+          _Integer, vs1[graph] /@ vl,
           _, Message[IGraphM::invv, SelectFirst[vl, Not@VertexQ[graph, #] &]]; throw[$Failed]
         ]
       ];
   ,
-  vss[graph_][vl_List] :=
+  vss1[graph_][vl_List] :=
       Quiet[
         Check[
-          VertexIndex[graph, #] - 1& /@ vl,
+          VertexIndex[graph, #]& /@ vl,
           Message[IGraphM::invv, SelectFirst[vl, Not@VertexQ[graph, #] &]]; throw[$Failed]
         ],
         VertexIndex::inv
       ]
 ]
 
-PackageScope["vs"]
-vs::usage = "vs[graph][vertex] converts a single vertex to a zero-based vertex index.";
+PackageScope["vss"]
+vss::usage = "vss[graph][vertices] converts a list of vertices to zero-based vertex indices.";
+
+vss[graph_][All] := {} (* many functions use {} to represent all vertices; this is only available with vss[] not with vss1[] *)
+vss[graph_][v_] := vss1[graph][v] - 1
+
+PackageScope["vs1"]
+vs1::usage = "vs1[graph][vertex] converts a single vertex to a one-based vertex index.";
 
 If[$VersionNumber >= 12,
-  vs[graph_][v_] :=
+  vs1[graph_][v_] :=
       If[VertexQ[graph, v],
-        VertexIndex[graph, v] - 1,
+        VertexIndex[graph, v],
         Message[IGraphM::invv, v]; throw[$Failed]
       ];
   ,
-  vs[graph_][v_] :=
+  vs1[graph_][v_] :=
       Quiet[
         Check[
-          VertexIndex[graph, v] - 1,
+          VertexIndex[graph, v],
           Message[IGraphM::invv, v]; throw[$Failed]
         ],
         VertexIndex::inv
       ];
 ]
+
+PackageScope["vs"]
+vs::usage = "vs[graph][vertex] converts a single vertex to a zero-based vertex index.";
+
+vs[graph_][v_] := vs1[graph][v] - 1
 
 (* Workarounds for Subgraph problems and cross-version changes. *)
 PackageScope["igSubgraph"]
