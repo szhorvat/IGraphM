@@ -485,6 +485,74 @@ MT[
 
 
 (* ::Section::Closed:: *)
+(*Internal*)
+
+
+MTSection["Internal"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*VertexIndex*)
+
+
+vig1 = Graph[{"a", "b"}, {"a" <-> "b"}];
+vig2 = Graph[{{"a", "b"}, "a", "b"}, {{"a", "b"} <-> "a", "a" <-> "b"}];
+
+
+MT[
+  IGraphM`PackageScope`vs[vig1] /@ {"a", "b"},
+  {0, 1}
+]
+
+
+MT[
+  IGraphM`PackageScope`catch[IGraphM`PackageScope`vs[vig1][{"a", "b"}]],
+  $Failed,
+  {IGraphM::invv}
+]
+
+
+MT[
+  IGraphM`PackageScope`vs[vig2] /@ {{"a", "b"}, "a", "b"},
+  {0, 1, 2}
+]
+
+
+MT[
+  IGraphM`PackageScope`vss[vig1][{"a", "b"}],
+  {0, 1}
+]
+
+MT[
+  IGraphM`PackageScope`vss[vig1][{"b"}],
+  {1}
+]
+
+
+MT[
+  IGraphM`PackageScope`vss[vig2][{"a", "b"}],
+  {1, 2}
+]
+
+MT[
+  IGraphM`PackageScope`vss[vig2][{"a", "b", {"a", "b"}}],
+  {1, 2, 0}
+]
+
+MT[
+  IGraphM`PackageScope`vss[vig2][{"b"}],
+  {2}
+]
+
+
+MT[
+  IGraphM`PackageScope`catch[IGraphM`PackageScope`vss[vig1][{{"a", "b"}}]],
+  $Failed,
+  {IGraphM::invv}
+]
+
+
+(* ::Section::Closed:: *)
 (*Undirected*)
 
 
@@ -1782,7 +1850,7 @@ MT[
 MT[
   IGRandomWalk[Graph[{"a" <-> "b"}], "x", 100],
   $Failed,
-  {VertexIndex::inv}
+  {IGraphM::invv}
 ]
 
 
@@ -2740,14 +2808,14 @@ MT[
 MT[
   IGSpanningTreeCount[Graph[{1 -> 2, 2 -> 1}], 3],
   $Failed,
-  {VertexIndex::inv}
+  {IGraphM::invv}
 ]
 
 
 MT[
   IGSpanningTreeCount[Graph[{1 <-> 2}], 3],
   $Failed,
-  {VertexIndex::inv}
+  {IGraphM::invv}
 ]
 
 
@@ -4920,7 +4988,7 @@ MT[
 MT[
   IGVertexSeparatorQ[IGEmptyGraph[], {1}],
   $Failed,
-  {VertexIndex::inv}
+  {IGraphM::invv}
 ]
 
 

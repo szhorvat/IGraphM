@@ -926,15 +926,62 @@ igUnpackSetsHelper[verts_][packed_] :=
     ]
 
 (* Convert vertex list to IG format *)
+
+(* Since M12.0, VertexIndex[] can take a list of vertices as the second argument.
+   However, it does not provide a way to disambiguate whether one is looking for
+   a single vertex or a list. This makes it unpredictable with graphs whose
+   vertices may be lists, e.g. Graph[{"a" <-> "b", {"a", "b"} <-> "b"}].
+   Furthermore, the error messages it issues always refer to a single vertex,
+   even if a list was passed as second argument. The below implementations
+   attempt to work around these problems while still making use of the
+   last-based VertexIndex syntax to provide the best possible performance. *)
+
+IGraphM::invv = "The vertex `1` does not exist in the graph.";
+
 PackageScope["vss"]
-vss::usage = "vss[graph][vertices]";
+vss::usage = "vss[graph][vertices] converts a list of vertices to zero-based vertex indices.";
+
 vss[graph_][All] := {}
-vss[graph_][vl_List] := Check[VertexIndex[graph, #] - 1& /@ vl, throw[$Failed]]
+vss[graph_][{}] := {}
+If[$VersionNumber >= 12,
+  vss[graph_][vl_List] :=
+      With[{x = Quiet@VertexIndex[graph, vl]},
+        Switch[x,
+          _List, x - 1,
+          _Integer, vs[graph] /@ vl,
+          _, Message[IGraphM::invv, SelectFirst[vl, Not@VertexQ[graph, #] &]]; throw[$Failed]
+        ]
+      ];
+  ,
+  vss[graph_][vl_List] :=
+      Quiet[
+        Check[
+          VertexIndex[graph, #] - 1& /@ vl,
+          Message[IGraphM::invv, SelectFirst[vl, Not@VertexQ[graph, #] &]]; throw[$Failed]
+        ],
+        VertexIndex::inv
+      ]
+]
 
 PackageScope["vs"]
-vs::usage = "vs[graph][vertex]";
-vs[graph_][v_] := Check[VertexIndex[graph, v] - 1, throw[$Failed]]
+vs::usage = "vs[graph][vertex] converts a single vertex to a zero-based vertex index.";
 
+If[$VersionNumber >= 12,
+  vs[graph_][v_] :=
+      If[VertexQ[graph, v],
+        VertexIndex[graph, v] - 1,
+        Message[IGraphM::invv, v]; throw[$Failed]
+      ];
+  ,
+  vs[graph_][v_] :=
+      Quiet[
+        Check[
+          VertexIndex[graph, v] - 1,
+          Message[IGraphM::invv, v]; throw[$Failed]
+        ],
+        VertexIndex::inv
+      ];
+]
 
 (* Workarounds for Subgraph problems and cross-version changes. *)
 PackageScope["igSubgraph"]
