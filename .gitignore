@@ -1,5 +1,7 @@
 IGraphM.iml
-.idea
+/.idea
+/build-*
+.project
 IGraphM.config
 IGraphM.creator
 IGraphM.files
