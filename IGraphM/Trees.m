@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -24,7 +24,7 @@ IGTreeQ::usage =
 
 SyntaxInformation[IGTreeQ] = {"ArgumentsPattern" -> {_, _.}};
 IGTreeQ[graph_?igGraphQ, mode_String : "Out"] :=
-    Block[{ig = igMakeFast[graph]}, sck@ig@"treeQ"[encodeNeighborMode[mode]]]
+    Block[{ig = igMakeUnweighted[graph]}, sck@ig@"treeQ"[encodeNeighborMode[mode]]]
 IGTreeQ[_, _ : "Out"] := False
 addCompletion[IGTreeQ, {0, {"In", "Out", "All"}}]
 
@@ -38,7 +38,7 @@ IGForestQ::usage =
 
 SyntaxInformation[IGForestQ] = {"ArgumentsPattern" -> {_, _.}};
 IGForestQ[graph_?igGraphQ, mode_String : "Out"] :=
-    Block[{ig = igMakeFast[graph]}, sck@ig@"forestQ"[encodeNeighborMode[mode]]]
+    Block[{ig = igMakeUnweighted[graph]}, sck@ig@"forestQ"[encodeNeighborMode[mode]]]
 IGForestQ[_, _ : "Out"] := False
 addCompletion[IGForestQ, {0, {"In", "Out", "All"}}]
 
@@ -118,7 +118,7 @@ IGSpanningTreeCount[graph_?DirectedGraphQ] :=
     ]
 IGSpanningTreeCount[graph_?GraphQ, v_] :=
     catch@Module[{i, km},
-      Check[i = VertexIndex[graph, v], throw[$Failed]];
+      i = vs1[graph][v];
       If[VertexCount[graph] == 1,
         1,
         km = IGKirchhoffMatrix[graph, "In"];
@@ -135,7 +135,7 @@ IGUnfoldTree::usage = "IGUnfoldTree[graph, {root1, root2, \[Ellipsis]}] performs
 Options[IGUnfoldTree] = { DirectedEdges -> True };
 SyntaxInformation[IGUnfoldTree] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGUnfoldTree, Graph]};
 IGUnfoldTree[graph_?GraphQ, roots_List, opt : OptionsPattern[{IGUnfoldTree, Graph}]] :=
-    catch@Block[{new = igMakeEmpty[], ig = igMakeFast[graph], mapping, tree},
+    catch@Block[{new = igMakeEmpty[], ig = igMakeUnweighted[graph], mapping, tree},
       mapping = igIndexVec@check@new@"unfoldTree"[ManagedLibraryExpressionID[ig], vss[graph][roots], OptionValue[DirectedEdges]];
       tree = igToGraph[new];
       applyGraphOpt[opt]@Graph[tree, Properties -> Thread[VertexList[tree] -> List /@ Thread["OriginalVertex" -> igVertexNames[graph][mapping]]]]
@@ -146,6 +146,6 @@ PackageExport["IGStrahlerNumber"]
 IGStrahlerNumber::usage = "IGStrahlerNumber[tree] gives the Horton–Strahler number of each vertex in a directed out-tree.";
 SyntaxInformation[IGStrahlerNumber] = {"ArgumentsPattern" -> {_}};
 IGStrahlerNumber[g_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[g]},
+    catch@Block[{ig = igMakeUnweighted[g]},
       check@ig@"strahlerNumber"[]
     ]

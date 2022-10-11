@@ -21,11 +21,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.6.2.paclet` was downloaded into the directory `~/Downloads`, evaluate:
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.6.3.paclet` was downloaded into the directory `~/Downloads`, evaluate:
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.6.2.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.6.3.paclet"]
 ```
 
 After installation, the package can now be loaded with:
@@ -83,6 +83,14 @@ C++ programmers should look at [Development.md](Development.md) for additional i
 
  - [Support and Troubleshooting](SUPPORT.md)
  - [Revision history](CHANGELOG.md)
+
+
+## 🎓 Citing
+
+If you use IGraph/M in any academic publications, please cite:
+
+ - Sz. Horvát, J. Podkalicki, G. Csárdi, T. Nepusz, V. Traag, F. Zanini, D. Noom, IGraph/M: graph theory and network analysis for Mathematica, preprint (2022). http://dx.doi.org/10.48550/arXiv.2209.09145
+
 
 ## ⚖️ License
 

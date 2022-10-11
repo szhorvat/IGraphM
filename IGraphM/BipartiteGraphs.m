@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2019-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2019-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -20,7 +20,7 @@ IGBipartiteQ::usage =
 
 SyntaxInformation[IGBipartiteQ] = {"ArgumentsPattern" -> {_, _.}};
 IGBipartiteQ::bdprt = "`` are not two disjoint subsets of the graph vertices."
-IGBipartiteQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"bipartiteQ"[]]
+IGBipartiteQ[g_?igGraphQ] := Block[{ig = igMakeUnweighted[g]}, sck@ig@"bipartiteQ"[]]
 IGBipartiteQ[g_?igGraphQ, {vertices1_List, vertices2_List}] :=
     With[{vertexList = VertexList[g]},
       If[Not[SubsetQ[vertexList, vertices1] && SubsetQ[vertexList, vertices2] && Intersection[vertices1, vertices2] === {}],
@@ -39,7 +39,7 @@ IGBipartitePartitions::usage =
 SyntaxInformation[IGBipartitePartitions] = {"ArgumentsPattern" -> {_, _.}};
 IGBipartitePartitions::nbipart = "The graph is not bipartite.";
 IGBipartitePartitions[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph], parts},
+    catch@Block[{ig = igMakeUnweighted[graph], parts},
       parts = ig@"bipartitePartitions"[];
       If[MatchQ[parts, _LibraryFunctionError],
         Message[IGBipartitePartitions::nbipart];
@@ -48,13 +48,13 @@ IGBipartitePartitions[graph_?igGraphQ] :=
       {Pick[VertexList[graph], parts, 0], Pick[VertexList[graph], parts, 1]}
     ]
 IGBipartitePartitions[graph_?igGraphQ, vertex_] :=
-    catch@Block[{ig = igMakeFast[graph], parts, ind},
+    catch@Block[{ig = igMakeUnweighted[graph], parts, ind},
       parts = ig@"bipartitePartitions"[];
       If[MatchQ[parts, _LibraryFunctionError],
         Message[IGBipartitePartitions::nbipart];
         throw[$Failed]
       ];
-      Check[ind = VertexIndex[graph, vertex], throw[$Failed]];
+      ind = vs1[graph][vertex];
       {Pick[VertexList[graph], parts, parts[[ind]] ], Pick[VertexList[graph], parts, 1 - parts[[ind]] ]}
     ]
 
@@ -67,7 +67,7 @@ IGBipartiteProjections::usage =
 IGBipartiteProjections::bdpart = "`1` is not a valid partitioning of the vertices `2`.";
 SyntaxInformation[IGBipartiteProjections] = {"ArgumentsPattern" -> {_, _.}};
 IGBipartiteProjections[graph_?igGraphQ, parts : {vertices1_List, vertices2_List}] :=
-    catch@Module[{ig = igMakeFast[graph], ig1 = igMakeEmpty[], ig2 = igMakeEmpty[], weights},
+    catch@Module[{ig = igMakeUnweighted[graph], ig1 = igMakeEmpty[], ig2 = igMakeEmpty[], weights},
       If[Not[Sort[Join@@parts] === Sort@VertexList[graph]],
         Message[IGBipartiteProjections::bdpart, parts, VertexList[graph]];
         throw[$Failed]
@@ -99,7 +99,7 @@ IGBipartiteIncidenceMatrix::empty   = "One of the graph partitions is empty.";
 SyntaxInformation[IGBipartiteIncidenceMatrix] = {"ArgumentsPattern" -> {_, _.}};
 
 IGBipartiteIncidenceMatrix[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph], parts, posIndex},
+    catch@Block[{ig = igMakeUnweighted[graph], parts, posIndex},
       parts = ig@"bipartitePartitions"[];
       If[MatchQ[parts, _LibraryFunctionError],
         Message[IGBipartiteIncidenceMatrix::nbipart];

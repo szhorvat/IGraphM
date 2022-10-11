@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2020-03-23 *)
-(* :Copyright: (c) 2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2020-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -21,7 +21,7 @@ SyntaxInformation[IGDirectedAcyclicGraphQ] = {"ArgumentsPattern" -> {_}};
    but are transferred as undirected to igraph. Therefore dagQ() would return
    False. We catch these early and return True. *)
 IGDirectedAcyclicGraphQ[g_?EmptyGraphQ] := True
-IGDirectedAcyclicGraphQ[g_?igGraphQ] := Block[{ig = igMakeFast[g]}, sck@ig@"dagQ"[]]
+IGDirectedAcyclicGraphQ[g_?igGraphQ] := Block[{ig = igMakeUnweighted[g]}, sck@ig@"dagQ"[]]
 IGDirectedAcyclicGraphQ[_] := False
 
 
@@ -34,7 +34,7 @@ SyntaxInformation[IGTopologicalOrdering] = {"ArgumentsPattern" -> {_}};
 (* Catch edgeless graphs early. See comment for IGDirectedAcyclicGraphQ[] *)
 IGTopologicalOrdering[graph_?EmptyGraphQ] := Range@VertexCount[graph]
 IGTopologicalOrdering[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       igIndexVec@check@ig@"topologicalSorting"[]
     ]
 

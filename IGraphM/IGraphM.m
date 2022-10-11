@@ -8,7 +8,7 @@
 
 (* :Package Version: %%version%% *)
 (* :Mathematica Version: %%mathversion%% *)
-(* :Copyright: (c) 2015-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2015-2022 Szabolcs Horvát *)
 (* :Keywords: igraph, graphs, networks, LibraryLink *)
 (* :Discussion: igraph interface for Mathematica, see http://szhorvat.net/mathematica/IGraphM  *)
 
@@ -820,75 +820,13 @@ IGraphM::mixed = "Mixed graphs are not supported by IGraph/M. Use DirectedGraph 
 
 (***** Helper functions *****)
 
-
-(* Get an IG compatible edge list. *)
-(* This implementation attempts to select the fastest method based on the internal representation
-   of the graph. With the "Simple" representation, IndexGraph is very fast. With "Incidence" it's
-   slower than the Lookup method. With "NullGraph", performance doesn't matter.
-
-   While GraphComputation`GraphRepresentation is an internal undocumented function, hopefully this
-   is robust against changes as both branches of the If are valid ways to retrieve
-   the edge list for any graph. They only differ in performance.
-*)
-(*
-igEdgeList[graph_] :=
-    Developer`ToPackedArray@If[GraphComputation`GraphRepresentation[graph] === "Simple",
-      Flatten[EdgeList@IndexGraph[graph, 0], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
-      ,
-      Lookup[
-        AssociationThread[VertexList[graph], Range@VertexCount[graph] - 1],
-        Flatten[EdgeList[graph], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
-      ]
-    ]
-*)
-(* igEdgeList[graph_] := List @@@ EdgeList@IndexGraph[graph, 0]; *)
-
-(* Not currently in use; was originally used in igMake and related functions.
- * See igraphGlobal@"incidenceToEdgeList" for a faster solution if need arises in the future. *)
-(* Thanks to Carl Woll for the following implementation idea: http://community.wolfram.com/groups/-/m/t/1250373 *)
-(*
-igEdgeList[graph_?EmptyGraphQ] := {}
-igEdgeList[graph_?MultigraphQ] :=
-    Developer`ToPackedArray@Lookup[
-      AssociationThread[VertexList[graph], Range@VertexCount[graph] - 1],
-      Flatten[EdgeList[graph], 1, If[DirectedGraphQ[graph], DirectedEdge, UndirectedEdge]]
-    ]
-igEdgeList[graph_?UndirectedGraphQ] :=
-    With[{sa = UpperTriangularize@WeightedAdjacencyMatrix[graph, EdgeWeight -> Range@EdgeCount[graph]]},
-      sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
-    ]
-igEdgeList[graph_?DirectedGraphQ] :=
-    With[{sa = WeightedAdjacencyMatrix[graph, EdgeWeight -> Range@EdgeCount[graph]]},
-      sa["NonzeroPositions"][[Ordering @ sa["NonzeroValues"]]] - 1
-    ]
-*)
-
-
 (* Convert IG format vertex or edge index vector to Mathematica format. *)
 PackageScope["igIndexVec"]
 igIndexVec::usage = "igIndexVec[expr]";
 igIndexVec[expr_LibraryFunctionError] := expr (* hack: allows LibraryFunctionError to fall through *)
 igIndexVec[arr_] := 1 + Round[arr]
 
-(* igEdgeWeightedQ: We only want edge-weighted graphs, not vertex weighted ones. *)
-(* igEdgeWeightedQ = WeightedGraphQ[#] && PropertyValue[#, EdgeWeight] =!= Automatic &; *)
-
 IGraphM::invw = "Invalid edge weight vector. Edge weights will be ignored.";
-
-(* Create IG object from Mathematica Graph. Must be used when edge ordering matters. *)
-(*
-igMake[g_] :=
-    With[{ig = Make["IG"]},
-      ig@"fromEdgeList"[igEdgeList[g], VertexCount[g], igDirectedQ[g]];
-      If[IGEdgeWeightedQ[g],
-        Check[
-          ig@"setWeights"[igEdgeWeights[g]],
-          Message[IGraphM::invw]
-        ]
-      ];
-      ig
-    ]
-*)
 
 PackageScope["igMakeEmpty"]
 igMakeEmpty::usage = "igMakeEmpty[] creates an empty IG object.";
@@ -923,63 +861,6 @@ igMakeUnweighted[g_] :=
       ];
       ig
     ]
-
-(*
-(* Fast version. Use only for unweighted graphs and when edge ordering doesn't matter. *)
-igMakeFast[g_?MultigraphQ] := igMake[g]
-igMakeFast[g_?EmptyGraphQ] :=
-    With[{ig = Make["IG"]},
-      ig@"fromEdgeList"[{}, VertexCount[g], False];
-      ig
-    ]
-igMakeFast[g_] :=
-    With[{ig = Make["IG"]},
-      If[DirectedGraphQ[g], (* empty graphs handled as undirected above *)
-        ig@"fromEdgeList"[AdjacencyMatrix[g]["NonzeroPositions"] - 1, VertexCount[g], True],
-        ig@"fromEdgeList"[UpperTriangularize[AdjacencyMatrix[g]]["NonzeroPositions"] - 1, VertexCount[g], False]
-      ];
-      ig
-    ]
-*)
-PackageScope["igMakeFast"]
-igMakeFast::usage = "igMakeFast[graph]";
-igMakeFast = igMakeUnweighted; (* IncidenceMatrix-based igMake is faster than the above igMakeFast implementation *)
-
-(*
-(* Fast version. Use for graphs that may be weighted when edge ordering doesn't matter. *)
-igMakeFastWeighted[g_?MultigraphQ] := igMake[g]
-igMakeFastWeighted[g_?EmptyGraphQ] :=
-    With[{ig = Make["IG"]},
-      ig@"fromEdgeList"[{}, VertexCount[g], False];
-      ig
-    ]
-igMakeFastWeighted[g_] :=
-    With[{ig = Make["IG"]},
-      If[IGEdgeWeightedQ[g],
-        If[DirectedGraphQ[g], (* empty graphs handled as undirected above *)
-          With[{wam = WeightedAdjacencyMatrix[g]},
-            ig@"fromEdgeList"[wam["NonzeroPositions"] - 1, VertexCount[g], True];
-            Check[ig@"setWeights"[wam["NonzeroValues"]], Message[IGraphM::invw]]
-          ]
-          ,
-          With[{wam = UpperTriangularize@WeightedAdjacencyMatrix[g]},
-            ig@"fromEdgeList"[wam["NonzeroPositions"] - 1, VertexCount[g], False];
-            Check[ig@"setWeights"[wam["NonzeroValues"]], Message[IGraphM::invw]]
-          ]
-        ]
-        ,
-        If[DirectedGraphQ[g],
-          ig@"fromEdgeList"[AdjacencyMatrix[g]["NonzeroPositions"] - 1, VertexCount[g], True],
-          ig@"fromEdgeList"[UpperTriangularize[AdjacencyMatrix[g]]["NonzeroPositions"] - 1, VertexCount[g], False]
-        ];
-      ];
-      ig
-    ]
-*)
-PackageScope["igMakeFastWeighted"]
-igMakeFastWeighted::usage = "igMakeFastWeighted[graph]";
-igMakeFastWeighted = igMake; (* IncidenceMatrix-based igMake is faster than the above igMakeFast implementation *)
-
 
 (* Create Mathematica Graph from IG object. *)
 PackageScope["igToGraph"]
@@ -1045,15 +926,72 @@ igUnpackSetsHelper[verts_][packed_] :=
     ]
 
 (* Convert vertex list to IG format *)
+
+(* Since M12.0, VertexIndex[] can take a list of vertices as the second argument.
+   However, it does not provide a way to disambiguate whether one is looking for
+   a single vertex or a list. This makes it unpredictable with graphs whose
+   vertices may be lists, e.g. Graph[{"a" <-> "b", {"a", "b"} <-> "b"}].
+   Furthermore, the error messages it issues always refer to a single vertex,
+   even if a list was passed as second argument. The below implementations
+   attempt to work around these problems while still making use of the
+   last-based VertexIndex syntax to provide the best possible performance. *)
+
+IGraphM::invv = "The vertex `1` does not exist in the graph.";
+
+PackageScope["vss1"]
+vss1::usage = "vss1[graph][vertices] converts a list of vertices to one-based vertex indices.";
+
+vss1[graph_][{}] := {}
+If[$VersionNumber >= 12,
+  vss1[graph_][vl_List] :=
+      With[{indices = Quiet@VertexIndex[graph, vl]},
+        Switch[indices,
+          _List, indices,
+          _Integer, vs1[graph] /@ vl,
+          _, Message[IGraphM::invv, SelectFirst[vl, Not@VertexQ[graph, #] &]]; throw[$Failed]
+        ]
+      ];
+  ,
+  vss1[graph_][vl_List] :=
+      Quiet[
+        Check[
+          VertexIndex[graph, #]& /@ vl,
+          Message[IGraphM::invv, SelectFirst[vl, Not@VertexQ[graph, #] &]]; throw[$Failed]
+        ],
+        VertexIndex::inv
+      ]
+]
+
 PackageScope["vss"]
-vss::usage = "vss[graph][vertices]";
-vss[graph_][All] := {}
-vss[graph_][vl_List] := Check[VertexIndex[graph, #] - 1& /@ vl, throw[$Failed]]
+vss::usage = "vss[graph][vertices] converts a list of vertices to zero-based vertex indices.";
+
+vss[graph_][All] := {} (* many functions use {} to represent all vertices; this is only available with vss[] not with vss1[] *)
+vss[graph_][v_] := vss1[graph][v] - 1
+
+PackageScope["vs1"]
+vs1::usage = "vs1[graph][vertex] converts a single vertex to a one-based vertex index.";
+
+If[$VersionNumber >= 12,
+  vs1[graph_][v_] :=
+      If[VertexQ[graph, v],
+        VertexIndex[graph, v],
+        Message[IGraphM::invv, v]; throw[$Failed]
+      ];
+  ,
+  vs1[graph_][v_] :=
+      Quiet[
+        Check[
+          VertexIndex[graph, v],
+          Message[IGraphM::invv, v]; throw[$Failed]
+        ],
+        VertexIndex::inv
+      ];
+]
 
 PackageScope["vs"]
-vs::usage = "vs[graph][vertex]";
-vs[graph_][v_] := Check[VertexIndex[graph, v] - 1, throw[$Failed]]
+vs::usage = "vs[graph][vertex] converts a single vertex to a zero-based vertex index.";
 
+vs[graph_][v_] := vs1[graph][v] - 1
 
 (* Workarounds for Subgraph problems and cross-version changes. *)
 PackageScope["igSubgraph"]

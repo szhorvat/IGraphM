@@ -3510,54 +3510,7 @@ public:
     // Let k be the number of edges within the neighbourhood of a vertex
     // and m be the number of edges of its neighbourhood which connect to
     // outside of this neighbourhood. Then the local density is k / (m + k).
-    mma::RealTensorRef localDensity() const {
-        // TODO self-loop and multi-edge handling.
-
-        igraph_adjlist_t al;
-        igraph_adjlist_init(&graph, &al, IGRAPH_ALL, IGRAPH_NO_LOOPS, IGRAPH_MULTIPLE);
-
-        mint n = vertexCount();
-
-        auto res = mma::makeVector<double>(n);
-
-        std::vector<mint> nei_flags(n);
-
-        for (mint i=0; i < n; ++i) {
-            mint int_count = 0, ext_count = 0;
-
-            igraph_vector_int_t *i_neis = igraph_adjlist_get(&al, i);
-            mint di = igraph_vector_int_size(i_neis);
-
-            // mark neighbours of i
-            for (mint j=0; j < di; ++j) {
-                nei_flags[ VECTOR(*i_neis)[j] ] = i+1;
-            }
-            for (mint j=0; j < di; ++j) {
-                auto v = VECTOR(*i_neis)[j];
-                igraph_vector_int_t *v_neis = igraph_adjlist_get(&al, v);
-                mint dv = igraph_vector_int_size(v_neis);
-
-                for (mint k=0; k < dv; ++k) {
-                    mint u = VECTOR(*v_neis)[k];
-
-                    if (nei_flags[u] == i+1) {
-                        int_count += 1;
-                    } else if (u == i) {
-                        int_count += 2;
-                    } else {
-                        ext_count++;
-                    }
-                }
-            }
-
-            massert(int_count % 2 == 0);
-            int_count /= 2;
-
-            res[i] = ext_count == 0 ? 0.0 : double(int_count) / double(int_count + ext_count);
-        }
-
-        return res;
-    }
+    mma::RealTensorRef localDensity() const;
 
     double assortativityNominal(mma::RealTensorRef types, bool directed) const {
         igraph_vector_t types_vec = igVectorView(types);

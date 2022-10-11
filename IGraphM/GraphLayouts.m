@@ -3,7 +3,7 @@
 
 (* :Author: szhorvat *)
 (* :Date: 2018-10-24 *)
-(* :Copyright: (c) 2018-2020 Szabolcs Horvát *)
+(* :Copyright: (c) 2018-2022 Szabolcs Horvát *)
 
 Package["IGraphM`"]
 
@@ -67,7 +67,7 @@ IGLayoutRandom::usage = "IGLayoutRandom[graph] lays out vertices randomly in the
 
 SyntaxInformation[IGLayoutRandom] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGLayoutRandom[graph_?igGraphQ, opt : OptionsPattern[Graph]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       applyGraphOpt[opt]@setVertexCoords[graph, check@ig@"layoutRandom"[]]
     ]
 
@@ -78,7 +78,7 @@ IGLayoutCircle::usage = "IGLayoutCircle[graph] lays out vertices on a circle.";
 Options[IGLayoutCircle] = { "Rotation" -> 0, Reverse -> False };
 SyntaxInformation[IGLayoutCircle] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutCircle, Graph]};
 IGLayoutCircle[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutCircle, Graph}]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       applyGraphOpt[opt]@setVertexCoords[
         graph,
         Composition[
@@ -94,7 +94,7 @@ IGLayoutSphere::usage = "IGLayoutSphere[graph] lays out vertices approximately u
 
 SyntaxInformation[IGLayoutSphere] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph3D]};
 IGLayoutSphere[graph_?igGraphQ, opt : OptionsPattern[Graph3D]] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       applyGraphOpt3D[opt]@setVertexCoords3D[graph, check@ig@"layoutSphere"[]]
     ]
 
@@ -111,7 +111,7 @@ Options[IGLayoutGraphOpt] = {
 SyntaxInformation[IGLayoutGraphOpt] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutGraphOpt, Graph]};
 
 IGLayoutGraphOpt[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGraphOpt,Graph}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.01},
+    catch@Block[{ig = igMake[graph], scale = 0.01},
       applyGraphOpt[opt]@setVertexCoords[graph,
           scale align[OptionValue["Align"]]@check@ig@"layoutGraphOpt"[continueLayout[graph, OptionValue["Continue"], scale],
             OptionValue["MaxIterations"], OptionValue["NodeCharge"], OptionValue["NodeMass"],
@@ -132,7 +132,7 @@ Options[IGLayoutKamadaKawai] = {
 SyntaxInformation[IGLayoutKamadaKawai] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutKamadaKawai, Graph]};
 
 IGLayoutKamadaKawai[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai,Graph}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
+    catch@Block[{ig = igMake[graph], maxiter, kkconst, scale = 0.5},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 50 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> Max[1, VertexCount[graph]]];
       applyGraphOpt[opt]@setVertexCoords[graph,
@@ -153,7 +153,7 @@ Options[IGLayoutKamadaKawai3D] = {
 SyntaxInformation[IGLayoutKamadaKawai3D] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutKamadaKawai3D, Graph3D]};
 
 IGLayoutKamadaKawai3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutKamadaKawai3D,Graph3D}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], maxiter, kkconst, scale = 0.5},
+    catch@Block[{ig = igMake[graph], maxiter, kkconst, scale = 0.5},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 50 VertexCount[graph]];
       kkconst = Replace[OptionValue["KamadaKawaiConstant"], Automatic :> Max[1, VertexCount[graph]]];
       applyGraphOpt3D[opt]@setVertexCoords3D[graph,
@@ -213,7 +213,7 @@ Options[IGLayoutFruchtermanReingold] = {
 SyntaxInformation[IGLayoutFruchtermanReingold] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutFruchtermanReingold, Graph]};
 
 IGLayoutFruchtermanReingold[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruchtermanReingold,Graph}]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], scale = 0.25, constraints, cons, al},
+    catch@Module[{ig = igMake[graph], scale = 0.25, constraints, cons, al},
       constraints = Replace[OptionValue["Constraints"], None -> <||>];
       cons = Length[constraints] > 0;
       al = Replace[OptionValue["Align"], Automatic -> Not[cons]];
@@ -239,7 +239,7 @@ Options[IGLayoutFruchtermanReingold3D] = {
 SyntaxInformation[IGLayoutFruchtermanReingold3D] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutFruchtermanReingold3D, Graph3D]};
 
 IGLayoutFruchtermanReingold3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutFruchtermanReingold3D,Graph3D}]] :=
-    catch@Module[{ig = igMakeFastWeighted[graph], scale = 0.25, constraints, cons, al},
+    catch@Module[{ig = igMake[graph], scale = 0.25, constraints, cons, al},
       constraints = Replace[OptionValue["Constraints"], None -> <||>];
       cons = Length[constraints] > 0;
       al = Replace[OptionValue["Align"], Automatic -> Not[cons]];
@@ -264,7 +264,7 @@ Options[IGLayoutGEM] = {
 SyntaxInformation[IGLayoutGEM] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutGEM, Graph]};
 
 IGLayoutGEM[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutGEM,Graph}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], maxiter, maxtemp, inittemp, scale = 3*^-3},
+    catch@Block[{ig = igMake[graph], maxiter, maxtemp, inittemp, scale = 3*^-3},
       maxiter = Replace[OptionValue["MaxIterations"], Automatic :> 40 VertexCount[graph]^2];
       maxtemp = Replace[OptionValue["MaxTemperature"], Automatic :> Max[1, VertexCount[graph]]];
       inittemp = Replace[OptionValue["InitTemperature"], Automatic :> Max[1, Sqrt@VertexCount[graph]]];
@@ -289,7 +289,7 @@ Options[IGLayoutDavidsonHarel] = {
 SyntaxInformation[IGLayoutDavidsonHarel] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutDavidsonHarel, Graph]};
 
 IGLayoutDavidsonHarel[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDavidsonHarel,Graph}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], tuneiter, edgelenw, edgecrossw, edgedistw, dens, scale = 0.1},
+    catch@Block[{ig = igMake[graph], tuneiter, edgelenw, edgecrossw, edgedistw, dens, scale = 0.1},
       dens = If[VertexCount[graph] <= 1, 0, GraphDensity[graph]];
       tuneiter = Replace[OptionValue["FineTuningIterations"], Automatic :> Max[10, Round@Log[2, VertexCount[graph]]]];
       edgelenw = Replace[OptionValue["EdgeLengthWeight"], Automatic :> dens/10];
@@ -334,7 +334,7 @@ Options[IGLayoutReingoldTilford] = {
 SyntaxInformation[IGLayoutReingoldTilford] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilford, Graph]};
 
 IGLayoutReingoldTilford[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilford,Graph}]] :=
-    catch@Block[{ig = igMakeFast[graph], roots},
+    catch@Block[{ig = igMakeUnweighted[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
         Composition[
@@ -357,7 +357,7 @@ Options[IGLayoutReingoldTilfordCircular] = {
 SyntaxInformation[IGLayoutReingoldTilfordCircular] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGLayoutReingoldTilfordCircular, Graph]};
 
 IGLayoutReingoldTilfordCircular[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutReingoldTilfordCircular,Graph}]] :=
-    catch@Block[{ig = igMakeFast[graph], roots},
+    catch@Block[{ig = igMakeUnweighted[graph], roots},
       roots = vss[graph]@Replace[OptionValue["RootVertices"], Automatic :> {}];
       applyGraphOpt[opt]@setVertexCoords[graph,
         RotationTransform[OptionValue["Rotation"]] @ check@ig@"layoutReingoldTilfordCircular"[roots, OptionValue[DirectedEdges]]
@@ -385,7 +385,7 @@ amendUsage[#, "Possible values for the \"Settings\" option are <*igLayoutDrLSett
 IGLayoutDrL::conn = "IGLayoutDrL may fail on disconnected graphs. Use on connected graphs only.";
 
 IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL,Graph}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.25},
+    catch@Block[{ig = igMake[graph], scale = 0.25},
       If[Not@WeaklyConnectedGraphQ[graph], Message[IGLayoutDrL::conn]];
       applyGraphOpt[opt]@setVertexCoords[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL"[continueLayout[graph, OptionValue["Continue"], scale],
@@ -397,7 +397,7 @@ IGLayoutDrL[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL,Graph}]] :=
 IGLayoutDrL3D::conn = IGLayoutDrL::conn;
 
 IGLayoutDrL3D[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutDrL3D,Graph3D}]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], scale = 0.25},
+    catch@Block[{ig = igMake[graph], scale = 0.25},
       If[Not@WeaklyConnectedGraphQ[graph], Message[IGLayoutDrL3D::conn]];
       applyGraphOpt[opt]@setVertexCoords3D[graph,
         scale align[OptionValue["Align"]]@check@ig@"layoutDrL3D"[continueLayout3D[graph, OptionValue["Continue"], scale],
@@ -497,7 +497,7 @@ IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Grap
         isolated = Pick[VertexList[graph], VertexDegree[graph], 0];
         connected = unsortedComplement[VertexList[graph], isolated];
         sg = igSubgraph[graph, connected];
-        ig = igMakeFast[sg];
+        ig = igMakeUnweighted[sg];
         If[Not@ig@"bipartiteQ"[],
           Message[IGLayoutBipartite::notbp];
           Return[$Failed]
@@ -511,7 +511,7 @@ IGLayoutBipartite[graph_?igGraphQ, opt : OptionsPattern[{IGLayoutBipartite, Grap
         connected = Join @@ parts;
         isolated = Complement[VertexList[graph], connected];
         sg = igSubgraph[graph, connected];
-        ig = igMakeFast[sg];
+        ig = igMakeUnweighted[sg];
         types = communitiesToMembership[VertexList[sg], parts];
       ];
 

@@ -46,10 +46,7 @@ IGAdjacencyMatrixPlot[graph_?GraphQ, vs : (_List | All) : All, opt : OptionsPatt
         ];
         throw[$Failed]
       ];
-      If[vs === All,
-        vind = All,
-        Check[vind = VertexIndex[graph, #]& /@ vs, throw[$Failed]];
-      ];
+      vind = If[vs === All, All, vss1[graph][vs]];
       am = am[[vind, vind]];
 
       bigGraphQ = Length[am] > $sizeLimit;

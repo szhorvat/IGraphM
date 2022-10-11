@@ -53,22 +53,22 @@ IGDistanceMatrix[graph_?igGraphQ, from : (_List | All) : All, to : (_List | All)
     ]
 
 igDistanceMatrixUnweighted[graph_, from_, to_] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       Round@expectInfNaN@fixInfNaN@check@ig@"shortestPaths"[from, to]
     ]
 
 igDistanceMatrixDijkstra[graph_, from_, to_] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       expectInfNaN@fixInfNaN@check@ig@"shortestPathsDijkstra"[from, to]
     ]
 
 igDistanceMatrixBellmanFord[graph_, from_, to_] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       expectInfNaN@fixInfNaN@check@ig@"shortestPathsBellmanFord"[from, to]
     ]
 
 igDistanceMatrixJohnson[graph_, from_, to_] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       expectInfNaN@fixInfNaN@check@ig@"shortestPathsJohnson"[from, to]
     ]
 
@@ -139,12 +139,12 @@ IGDistanceCounts::usage =
 
 SyntaxInformation[IGDistanceCounts] = {"ArgumentsPattern" -> {_, _.}};
 IGDistanceCounts[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"shortestPathCounts"[]
     ]
 IGDistanceCounts[graph_?igGraphQ, {}] := {}
 IGDistanceCounts[graph_?igGraphQ, vs : (_List | All)] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"shortestPathCounts2"[vss[graph][vs]]
     ]
 
@@ -160,7 +160,7 @@ IGNeighborhoodSize::usage =
     "IGNeighborhoodSize[graph, All, {min, max}, mode] uses the given mode, \"In\", \"Out\" or \"All\", when finding neighbours in directed graphs.";
 
 igNeighborhoodSize[graph_, vs_, {min_, max_}, mode_] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"neighborhoodSize"[vss[graph][vs], min, max, encodeNeighborMode[mode]]
     ]
 
@@ -193,7 +193,7 @@ SyntaxInformation[IGDistanceHistogram] = {"ArgumentsPattern" -> {_, _, _., _., O
 igDistanceHistogramMethods = <| "Dijkstra" -> 0, "BellmanFord" -> 1 |>;
 amendUsage[IGDistanceHistogram, "Available Method options: <*Keys[igDistanceHistogramMethods]*>."];
 IGDistanceHistogram[graph_?igGraphQ, binsize_?positiveNumericQ, from : (_List | All) : All, to : (_List | All) : All, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], fromidx, toidx},
+    catch@Block[{ig = igMake[graph], fromidx, toidx},
       If[from === {} || to === {},
         Return[{}]
       ];
@@ -226,7 +226,7 @@ Options[IGAveragePathLength] = {
 SyntaxInformation[IGAveragePathLength] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 amendUsage[IGAveragePathLength, "Available Method options: <*Keys[igAveragePathLengthMethods]*>."]
 IGAveragePathLength[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph], method = OptionValue[Method]},
+    catch@Block[{ig = igMake[graph], method = OptionValue[Method]},
       (* Automatic method selection:
           - non-weighted graph: "Unweighted"
           - weighted graph with non-negative weights: "Dijkstra"
@@ -253,7 +253,7 @@ PackageExport["IGGlobalEfficiency"]
 IGGlobalEfficiency::usage = "IGGlobalEfficiency[graph] gives the global efficiency of graph.";
 SyntaxInformation[IGGlobalEfficiency] = {"ArgumentsPattern" -> {_}};
 IGGlobalEfficiency[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       check@ig@"globalEfficiency"[]
     ]
 
@@ -267,7 +267,7 @@ Options[IGLocalEfficiency] = { DirectedEdges -> True };
 SyntaxInformation[IGLocalEfficiency] = {"ArgumentsPattern" -> {_, _., _., OptionsPattern[]}};
 IGLocalEfficiency[graph_?igGraphQ, {}, mode_String : "All", OptionsPattern[]] := {}
 IGLocalEfficiency[graph_?igGraphQ, vs : (_List | All) : All, mode_String : "All", OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       (* Infinities may be returned when some of the edge weights are zero. *)
       expectInfNaN@fixInfNaN@check@ig@"localEfficiency"[vss[graph][vs], OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]
@@ -281,7 +281,7 @@ IGAverageLocalEfficiency::usage =
 Options[IGAverageLocalEfficiency] = { DirectedEdges -> True };
 SyntaxInformation[IGAverageLocalEfficiency] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};
 IGAverageLocalEfficiency[graph_?igGraphQ, mode_String : "All", OptionsPattern[]] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       check@ig@"averageLocalEfficiency"[OptionValue[DirectedEdges], encodeNeighborMode[mode]]
     ]
 addCompletion[IGAverageLocalEfficiency, {0, {"Out", "In", "All"}}]
@@ -322,12 +322,12 @@ IGDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 igDiameterUnweighted[graph_, bycomp_] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"diameter"[bycomp]
     ]
 
 igDiameterDijkstra[graph_, bycomp_] :=
-    Block[{ig = igMakeFastWeighted[graph]},
+    Block[{ig = igMake[graph]},
       sck@ig@"diameterDijkstra"[bycomp]
     ]
 
@@ -365,12 +365,12 @@ IGFindDiameter[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 igFindDiameterUnweighted[graph_, bycomp_] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       igVertexNames[graph]@igIndexVec@check@ig@"findDiameter"[bycomp]
     ]
 
 igFindDiameterDijkstra[graph_, bycomp_] :=
-    catch@Block[{ig = igMakeFastWeighted[graph]},
+    catch@Block[{ig = igMake[graph]},
       igVertexNames[graph]@igIndexVec@check@ig@"findDiameterDijkstra"[bycomp]
     ]
 
@@ -382,7 +382,7 @@ IGGirth::usage = "IGGirth[graph] returns the length of the shortest cycle of the
 
 SyntaxInformation[IGGirth] = {"ArgumentsPattern" -> {_}};
 IGGirth[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Replace[check@ig@"girth"[], 0 -> Infinity]
     ]
 
@@ -396,7 +396,7 @@ IGEccentricity::usage =
     "IGEccentricity[graph, {vertex1, vertex2, \[Ellipsis]}] returns the eccentricity of the given vertices.";
 
 igEccentricity[graph_, vs_] :=
-    Block[{ig = igMakeFast[graph]},
+    Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"eccentricity"[vss[graph][vs]]
     ]
 
@@ -411,6 +411,6 @@ IGRadius::usage = "IGRadius[graph] returns the unweighted graph radius.";
 
 SyntaxInformation[IGRadius] = {"ArgumentsPattern" -> {_}};
 IGRadius[graph_?igGraphQ] :=
-    catch@Block[{ig = igMakeFast[graph]},
+    catch@Block[{ig = igMakeUnweighted[graph]},
       Round@check@ig@"radius"[]
     ]

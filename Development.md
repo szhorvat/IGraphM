@@ -115,9 +115,7 @@ The pattern `g_?igGraphQ` will only match `Graph` objects compatible with igraph
 
 `igMake` is able to handle and convert to igraph format any kind of Mathematica graph for which `igGraphQ` returns `True`.  It also transfers edge weights to igraph.
 
-When weights are not required, use `igMakeUnweighted` for better performance. `igMakeUnweighted` could be used for `IGConnectedQ`.
-
-**Note:** In the past, `igMake` used a much less efficient method to convert graphs. Special alternative functions were used for those cases when edge ordering did not need to be preserved. Thus you might come access `igMakeFast` and `igMakeFastWeighted` in the code base. Consider these equivalent to `igMakeUnweighted` and `igMake`, respectively.  
+When weights are not required, use `igMakeUnweighted` for better performance. `igMakeUnweighted` could be used for `IGConnectedQ`.  
 
 #### Working with edge weights
 
