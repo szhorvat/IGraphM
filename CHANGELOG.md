@@ -1,6 +1,6 @@
 ## Revision history for [IGraph/M](README.md)
 
-#### 0.6.3 (unreleased)
+#### 0.6.3
 
 Changed:
 
