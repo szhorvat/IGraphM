@@ -552,6 +552,7 @@ template = LTemplate["IGraphM",
         (* Community detection *)
 
         LFun["modularity", {{Real, 1, "Constant"} (* membership *), Real (* resolution *), True|False (* directed *)}, Real],
+        LFun["modularityMatrix", {Real (* resolution *), True|False (* directed *)}, {Real, 2}],
         LFun["communityEdgeBetweenness", LinkObject],
         LFun["communityWalktrap", LinkObject],
         LFun["communityFastGreedy", LinkObject],
