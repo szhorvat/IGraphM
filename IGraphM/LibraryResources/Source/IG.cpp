@@ -910,3 +910,62 @@ bool IG::distanceTransitiveQ(mint splitting) const {
 
     return true;
 }
+
+
+mma::RealTensorRef IG::localDensity() const {
+    igraph_adjlist_t al;
+    igraph_adjlist_init(&graph, &al, IGRAPH_ALL, IGRAPH_LOOPS, IGRAPH_MULTIPLE);
+
+    mint n = vertexCount();
+
+    auto res = mma::makeVector<double>(n);
+
+    std::vector<mint> nei_mask(n); // marks neighbours of a vertex
+    std::vector<mint> nei_done(n); // marks neighbours which have already been processed
+
+    for (mint i=0; i < n; ++i) {
+        mint int_count = 0, ext_count = 0;
+
+        igraph_vector_int_t *i_neis = igraph_adjlist_get(&al, i);
+        mint di = igraph_vector_int_size(i_neis);
+
+        // mark neighbours of i
+        for (mint j=0; j < di; ++j) {
+            nei_mask[ VECTOR(*i_neis)[j] ] = i+1;
+        }
+        nei_mask[i] = i+1;
+
+        int_count += di;
+        nei_done[i] = i+1;
+
+        for (mint j=0; j < di; ++j) {
+            auto v = VECTOR(*i_neis)[j];
+            igraph_vector_int_t *v_neis = igraph_adjlist_get(&al, v);
+            mint dv = igraph_vector_int_size(v_neis);
+
+            // only consider each neighbour once
+            if (nei_done[v] == i+1)
+                continue;
+            else
+                nei_done[v] = i+1;
+
+            for (mint k=0; k < dv; ++k) {
+                mint u = VECTOR(*v_neis)[k];
+
+                if (nei_mask[u] == i+1) {
+                    int_count += 1;
+                } else {
+                    ext_count += 1;
+                }
+            }
+        }
+
+        massert(int_count % 2 == 0);
+        int_count /= 2;
+
+        // return zero for isolated vertices.
+        res[i] = int_count == 0 ? 0.0 : double(int_count) / double(int_count + ext_count);
+    }
+
+    return res;
+}

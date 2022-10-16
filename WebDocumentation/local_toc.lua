@@ -79,10 +79,10 @@ local function head_add_backlink (head)
     head.content:extend(
       {
         pandoc.Link(
-          "▴",
+          pandoc.Span("▴", {class = 'link-back-triangle'}),
           "#" .. parents[head.identifier],
           "",
-          pandoc.Attr("", {'link-back'})
+          {class = 'link-back'}
         )
       }
     )

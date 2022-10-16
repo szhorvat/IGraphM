@@ -77,6 +77,7 @@ PackageExport["IGVertexSeparatorQ"]
 IGVertexSeparatorQ::usage = "IGVertexSeparatorQ[graph, {vertex1, vertex2, \[Ellipsis]}] tests if the given set of vertices disconnects the graph. Edge directions are ignored.";
 
 SyntaxInformation[IGVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};
+IGVertexSeparatorQ[graph_?igGraphQ, {}] := False
 IGVertexSeparatorQ[graph_?igGraphQ, vs_List] :=
     catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"separatorQ"[vss[graph][vs]]
@@ -87,6 +88,7 @@ PackageExport["IGMinimalVertexSeparatorQ"]
 IGMinimalVertexSeparatorQ::usage = "IGMinimalVertexSeparatorQ[graph, {vertex1, vertex2, \[Ellipsis]}] tests if the given vertex set is a minimal separator. Edge directions are ignored.";
 
 SyntaxInformation[IGMinimalVertexSeparatorQ] = {"ArgumentsPattern" -> {_, _}};
+IGMinimalVertexSeparatorQ[graph_?igGraphQ, {}] := False
 IGMinimalVertexSeparatorQ[graph_?igGraphQ, vs_List] :=
     catch@Block[{ig = igMakeUnweighted[graph]},
       check@ig@"minSeparatorQ"[vss[graph][vs]]

@@ -118,7 +118,7 @@ IGSpanningTreeCount[graph_?DirectedGraphQ] :=
     ]
 IGSpanningTreeCount[graph_?GraphQ, v_] :=
     catch@Module[{i, km},
-      Check[i = VertexIndex[graph, v], throw[$Failed]];
+      i = vs1[graph][v];
       If[VertexCount[graph] == 1,
         1,
         km = IGKirchhoffMatrix[graph, "In"];
