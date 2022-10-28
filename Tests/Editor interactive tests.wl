@@ -17,7 +17,7 @@ SetSelectedNotebook@MessagesNotebook[];
 SetSelectedNotebook@EvaluationNotebook[];
 FrontEndExecute[FrontEndToken["DeleteGeneratedCells"]]
 
-IGraphM`GraphEditor`PackagePrivate`$geDebug=False;
+IGraphM`GraphEditor`PackagePrivate`$geDebug=True;
 IGraphM`GraphEditor`PackagePrivate`$logTimings=False;
 IGraphM`GraphEditor`PackagePrivate`$logDynamic=False;
 Get["IGraphM`"]
@@ -112,8 +112,7 @@ IGGraphEditor[Graph@{1->2, 2->1}, VertexSize->#, ImageSize->200]& /@ {Tiny, Smal
 
 IGGraphEditor[
 	Graph[{1->1, 1->1, 1->1, 2->2, 1->2, 1->2, 1->2, 2->3, 3->1}],
-	VertexLabels -> "Name",
-	ImageSize -> 800
+	VertexLabels -> "Name"	
 ]
 
 
@@ -137,12 +136,3 @@ IGGraphEditor[Graph[{1->2,2->3,3->1}]]
 
 
 Graph[{1->2,2->1,3->1}]//SimpleGraphQ
-
-
-MultigraphQ
-
-
-Names["*`$TrackedTargets"]
-
-
-IGraphM`PreciseTracking`PackagePrivate`$TrackedTargets
