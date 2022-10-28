@@ -399,16 +399,31 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
 (*vertex*)
 
 
-geVertices[Dynamic @ state_] := PDynamic[
-dynamicLog["vertices"];
-Table[
-  geVertexShapeFunction[Dynamic@state, state[["vertex", pos ]]  ]
-, {pos, state["vCounter"] }
-]
+geVertices[Dynamic @ state_] := DynamicModule[{vertexMoved}
+, DynamicWrapper[
+    PDynamic[
+      dynamicLog["vertices"]
+    ; Table[
+        geVertexShapeFunction[Dynamic@state, state[["vertex", pos ]] , Dynamic @ vertexMoved ]
+      , {pos, state["vCounter"] }
+      ]
+    ]
+  , If[ ListQ @ vertexMoved
+    , geAction["UpdateVertexPosition", Dynamic @ state, ##& @@ vertexMoved] 
+    ; vertexMoved=Null
+    ]
+  , TrackedSymbols :> {vertexMoved  }
+  ]
 ]
 
+(* This should've been Dynamic @ Table only but I needed to add this 'listener' because 
+   geAction comming from the ScheduledTask itself breaks DynamicModule variable system and
+   DynamicModuleBox values wouldn't be updated resulting in the vertex possition being out of sync
+   after move up... Amd we need scheduled tasks becasue of other bug :heart:
+*)
 
-geVertexShapeFunction[Dynamic @ state_, v_Association] :=
+
+geVertexShapeFunction[Dynamic @ state_, v_Association, Dynamic @ vertexMoved_] :=
 With[ {
   nef = $vertexEdgeThickness
 , aef = $hoverVertexEdgeThickness
@@ -438,7 +453,7 @@ Module[
 ; EventHandler[
     graphics,
     { "MouseClicked" :> (RemoveScheduledTask @ task; geAction["VertexClicked", Dynamic @ state, v] )
-    , "MouseUp"      :> (task = RunScheduledTask[ geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x] , {0.1}])
+    , "MouseUp"      :> (task = RunScheduledTask[ vertexMoved = {v["id"], x} , {0.1}])
     , If[ state[ "snap"]
       , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
       , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
