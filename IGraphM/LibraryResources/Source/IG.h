@@ -1713,7 +1713,7 @@ public:
                         continue;
                 }
                 double length = VECTOR(mat.mat.data)[j];
-                if (igraph_is_inf(length))
+                if (isinf(length))
                     continue;
                 mint idx = std::floor(length / binsize);
                 if (idx >= hist.size()) {
