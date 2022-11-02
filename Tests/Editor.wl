@@ -60,9 +60,12 @@ VerificationTest[
 ]
 
 
+IGraphM`GraphEditor`PackagePrivate`extractEdgePrimitives@toState@Graph@{1->2,2->1}
+
+
 VerificationTest[
   MatchQ[
-  IGraphM`GraphEditor`PackagePrivate`extractEdgePrimitives@toState@Graph@{1->2,2->1}
+  IGraphM`GraphEditor`PackagePrivate`extractEdgePrimitives[toState@Graph@{1->2,2->1}]["rawEdges"]
 , {KeyValuePattern[{"id" -> _String, "primitive" -> Verbatim[Arrow][_BezierCurve,_]}]..}  
 ]
 , True

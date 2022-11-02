@@ -27,6 +27,9 @@ IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
 TestReport@FileNameJoin[{NotebookDirectory[], "Editor.wl"}]
 
 
+FileNameJoin[{NotebookDirectory[], "Editor.wl"}]//NotebookOpen
+
+
 SetOptions[IGGraphEditor, ImageSize->Automatic];
 
 
@@ -41,11 +44,15 @@ SetOptions[IGGraphEditor, ImageSize->Automatic];
 (* ::Text:: *)
 (*- Alt+Click build a graph*)
 (*- Evaluate output to create a graph*)
+(*    - pay attention, is the embedding the same after you drag a vertex and valuate the editor?*)
 (*- Drag outside of range should extend the range @mouseUp*)
 (*- Alt+click should not trigger orange resize frame, nor should discarding a potential edge.*)
 (*- Click on vertex should not trigger update vertex position*)
 (*- Hover over edge/vertex should thicken it.*)
 (*- Are curved edges redrawn @mouseUp?*)
+
+
+IGGraphEditor[Graph@{1\[UndirectedEdge]2},VertexSize->Small, "DirectedEdges"->True]
 
 
 IGGraphEditor[Graph@{1->2,2->1},VertexSize->Small, "DirectedEdges"->True]
@@ -63,7 +70,11 @@ IGGraphEditor[ImageSize->100]
 
 { IGGraphEditor[IGGraphAtlas[123]],
   IGGraphEditor[Graph[{1, 2}, {}]],
-  IGGraphEditor[Graph[{1, 2}, {1<->2}]] }
+  IGGraphEditor[Graph[{1, 2}, {1<->2}]],
+  IGGraphEditor[
+	Graph[{1->1, 1->1, 1->1, 2->2, 1->2, 1->2, 1->2, 2->3, 3->1}],
+	VertexLabels -> "Name"	
+] }
 
 
 (* ::Subsubsection:: *)

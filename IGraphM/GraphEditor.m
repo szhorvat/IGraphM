@@ -36,6 +36,89 @@ $potentialEdgeStyle = Directive[Purple, Dashed, Thick];
 $gridLinesCount = 30.;
 
 
+(* ::Subsection::Closed:: *)
+(*Helpers*)
+
+
+es6Decorate // Attributes={HoldAll};
+
+es6Decorate[f_Symbol]:=(
+
+  f /: SetDelayed[
+    f[ Verbatim[Association][spec__] ]
+    , rhs_
+  ]:=With[
+    { pattern    = es6ExtractPattern[spec]
+      , heldSymbols = es6ExtractSymbols[spec]
+      , heldValues  = es6ExtractValues[spec]
+    }
+    , es6Decorate[f, rhs, pattern, heldSymbols, heldValues]
+  ]
+);
+
+es6Decorate[foo_Symbol,rhs_,pattern_, Hold[symbols___], Hold[values___]]:=(
+  SetDelayed @@ Hold[
+    foo[$ES6asso:pattern],
+    Block[{symbols}, Unevaluated[rhs] /. Thread[{symbols}->{values}] ]
+  ]
+)
+
+es6ExtractPattern[spec__]:= KeyValuePattern[
+  es6PatternToPattern /@ {spec}
+]
+
+es6ExtractSymbols[spec__]:= Apply[Join][
+  es6PatternToHeldSymbol /@ {spec}
+]
+
+es6ExtractValues[spec__]:= Apply[Join][
+  es6PatternToHeldValue /@ {spec}
+]
+
+With[
+  { vPatt = Verbatim[Pattern]
+    , vOpt  = Verbatim[Optional]
+    , hPatt = HoldPattern
+  }
+  ,
+
+  (* a_ a_H *)
+  es6PatternToPattern[    hPatt @ vPatt[s_Symbol, b_Blank] ] := symbolName[s] -> b;
+  (* "a" \[Rule] b_ *)
+  es6PatternToPattern[    sym_String -> Except[_Optional] ]:= sym -> Blank[];
+  es6PatternToPattern[ ___ ] = Sequence[];
+
+
+
+  es6PatternToHeldSymbol[ hPatt @ vPatt[s_Symbol, _]      ] := Hold[s];
+  es6PatternToHeldSymbol[ hPatt @ vOpt[p_, _]      ] := es6PatternToHeldSymbol @ p;
+  es6PatternToHeldSymbol[ _String -> p_ ]:= es6PatternToHeldSymbol @ p;
+  es6PatternToHeldSymbol[ ___ ]:=Hold[];
+
+
+
+  (* s_ ==> ass["s"] *)
+  es6PatternToHeldValue[  hPatt @ vPatt[s_Symbol, _]      ] := With[{sym = symbolName@s}
+    , Hold @ $ES6asso @ sym
+  ];
+  (* s_:default ==> Lookup[asso, "s", default] *)
+  es6PatternToHeldValue[  hPatt @ vOpt[vPatt[s_Symbol, _Blank], default_] ] := With[{sym = symbolName@s}
+    , Hold @ Lookup[$ES6asso, sym, default]
+  ];
+  (* S \[Rule] s_ *)
+  es6PatternToHeldValue[ key_ -> hPatt @ vPatt[_, _Blank] ]:= Hold @ $ES6asso @ key;
+
+  (* S \[Rule] s_:default *)
+  es6PatternToHeldValue[ key_ -> hPatt @ vOpt[vPatt[_, _Blank], default_] ]:=
+    Hold @ Lookup[$ES6asso, key, default];
+  es6PatternToHeldValue[  ___     ] := Hold[];
+];
+
+symbolName = Function[s, SymbolName @ Unevaluated[s], HoldFirst];
+
+
+
+
 (* ::Subsection:: *)
 (*IGGraphEditor*)
 
@@ -69,7 +152,7 @@ iGraphEditor // Options = Options @ IGGraphEditor;
 supportedGraphQ = MatchQ[_Graph];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*iGraphEditor*)
 
 
@@ -228,7 +311,7 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*to state*)
 
 
@@ -349,15 +432,17 @@ stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"
 stateHasSelectedVertex[state_Association] := StringQ @ state["selectedVertex"]
 
 
-stateHasCurvedEdges[state_Association]:= state[ "DirectedEdges"] 
-(*TODO: obviously this needs to be more precise, this is a first approximation, at least until we support multigraphs*)
+stateHasCurvedEdges[state_Association]:= True
+(*TODO: obviously this needs to be more precise, this is a first approximation, at least until we support multigraphs
+  
+*)
 
 
 (* ::Subsection:: *)
 (*graphics*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*geGraphics*)
 
 
@@ -395,7 +480,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
    *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*vertex*)
 
 
@@ -437,7 +522,7 @@ Module[
 , graphics = { {
     EdgeForm @ AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
   , DynamicName[
-      Disk[Dynamic[x], state["realVertexSize"]]
+      Disk[Dynamic[x], PDynamic@state["realVertexSize"]]
     , v["id"]
     ]
   }
@@ -616,19 +701,22 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 )
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*UpdateRange*)
 
 
 geAction["UpdateRange", Dynamic @ state_] := Module[
-  {newBounds, vs }
+  {newBounds, vs, embedding, bounds }
 
-, embedding = state // Query["vertex", All, "pos"]
-; If[ Length[embedding ] < 1, Return[False, Module]]
+, (*embedding = state // Query["vertex", All, "pos"]
+; If[ Length[embedding ] < 1, Return[False, Module]]*)
+
+bounds = Lookup[state, "coordinateBounds", CoordinateBounds @ state[["vertex", All, "pos"]] ]
 
 ; vs = vertexSizeMultiplier @ state[ "VertexSize"]
-; newBounds = handleDegeneratedRange @ CoordinateBounds[ embedding, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
+; newBounds = handleDegeneratedRange @ CoordinateBounds[ Transpose @ bounds, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
 
+; If[ AllTrue[ newBounds, state["inRangeQ"]],  Return[False, Module]]
 
 ; state[ "range"] = newBounds
 ; state = stateHandleNarrowRange @ state
@@ -638,6 +726,7 @@ geAction["UpdateRange", Dynamic @ state_] := Module[
 ; state[  "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[  "range"] ]
 ; geAction["UpdateVertexSize", Dynamic @ state]
 ]
+
 
 handleDegeneratedRange[range : {{xmin_, xmax_}, {ymin_, ymax_}}] := Module[{}
 , If[ xmin != xmax && ymin != ymax
@@ -653,6 +742,10 @@ handleDegeneratedRange[range : {{xmin_, xmax_}, {ymin_, ymax_}}] := Module[{}
   , {{xmin-#, xmax+#}, {ymin, ymax}} & [ (ymax - ymin)/2 ]
   ]
 ]
+
+
+(* ::Subsubsection:: *)
+(*UpdateVertexSize*)
 
 
 geAction["UpdateVertexSize", _ @ state_ ] := With[{ (* _ @ for interpretation bug fix *)
@@ -695,6 +788,8 @@ geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
 
 geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
   {  selectedV = state["selectedVertex"], clickedV = v["id"]}
+, Module[
+  {wasAnySelected, wasThisSelected}  
 
 , wasAnySelected  = stateHasSelectedVertex @ state
 ; wasThisSelected = selectedV === clickedV
@@ -703,9 +798,9 @@ geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
   , Throw @ geAction["RemoveVertex", Dynamic @ state, v]
   ]
 
-; If[ wasThisSelected
+(*; If[ wasThisSelected
   , Throw @ geAction["Unselect", Dynamic @ state]
-  ]
+  ]*)
 
 ; If[  wasAnySelected
   , Throw @ geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]
@@ -713,7 +808,7 @@ geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
 
 ; geAction["Select", Dynamic @ state, clickedV]
 
-]
+]]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -740,7 +835,7 @@ geAction["Select", Dynamic @ state_, vId_String] := state["selectedVertex"] = vI
 geAction["Unselect", Dynamic @ state_] := state["selectedVertex"] = Null
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*AddVertex*)
 
 
@@ -846,83 +941,145 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 (*UpdateEdgesShapes*)
 
 
-geAction["UpdateEdgesShapes", _ @ state_] := Module[{edges,  vertexEncoded, vertexList}
+geAction["UpdateEdgesShapes", _ @ state_] := Module[{coordinates,edges,  vertexEncoded, vertexList}
 
 , If[ ! stateHasCurvedEdges @ state, Return[False, Module]]
 
-; edges = extractEdgePrimitives @ state
+; {edges, coordinates} = Lookup[extractEdgePrimitives @ state, {"rawEdges", "coordinates"}]
 
 ; ( state["edge", #id, "shape" ] = #shape;  ) & /@ edges 
+
 (* nested tracking is not supported yet so we need to manually trigger all edges update 
    we keep using eCounter for triggers because general mutations of .edges should not trigger updates *)
 ; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["eCounter"]]
+
+; state["coordinateBounds"] =  CoordinateBounds @ coordinates
+; geAction["UpdateRange", Dynamic @ state]
 ]
 
-extractEdgePrimitives[state_] := Module[{graph, graphGraphics, coordinates, coordinatesRules, vertexList, edgeList, embedding, primitives, vertexEncoded}
+
+extractEdgePrimitives[state_] := Module[{ data = state }
+
+, data = processGraphBoxes @ data
+
+; data = patchEdgeIds @ data
+; data = patchCurveNormal @ data
+
+; data = addEdgesShapes @ data
+
+; data
+]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*processGraphBoxes*)
+
+
+processGraphBoxes[state_]:=Module[{vertexList, edgeList, embedding, graph, graphGraphics, rawEdges}
 
 , vertexList = state // Query["vertex", Values, "id"]
-; edgeList = state // Query["edge", Values, Tooltip[#edge, #id] &]
-; embedding = state // Query["vertex", Values, "pos"]
+; edgeList   = state // Query["edge", Values, Tooltip[#edge, #id] &]
+; embedding  = state // Query["vertex", Values, "pos"]
 
 ; graph = Graph[vertexList, edgeList, VertexCoordinates -> embedding]
 
 ; graphGraphics = ToExpression @ ToBoxes @ graph
 
-; primitives = Cases[
+; rawEdges = Cases[
     Normal @ graphGraphics , #, Infinity
   ]& /@ {
     Tooltip[prim_, eId_, ___] :> <| "id" -> eId, "primitive" -> prim |>
   , TooltipBox[prim_, eId_, ___] :> <| "id" -> ToExpression @ eId, "primitive" -> (prim /. ArrowBox -> Arrow /. BezierCurveBox -> BezierCurve) |>
   } // Flatten
-
-; primitives = patchEdgeIds[state, primitives]
-
-
-; vertexEncoded = AssociationThread[
-    ArrayComponents[vertexList] -> Thread[DynamicLocation[vertexList, Automatic]]
-  ]
-
-
-; coordinates = graphGraphics // 
-    First @ Cases[#, Verbatim[GraphicsComplex][pts_, ___] :> pts, Infinity] & 
-; coordinatesRules = coordinates // AssociationThread[ArrayComponents[#, 1] -> #] &  
-; coordinatesRules = <|coordinatesRules, vertexEncoded|>    
-; primitives = primitives /. Arrow[BezierCurve[a : {___}, opt___], r___] :> RuleCondition[
-    Arrow[BezierCurve[a /. coordinatesRules, opt], r]
-  ]
-
-; <|#, "shape" -> ToEdgeShapeFunction[#primitive, vertexEncoded] |>& /@ primitives
+  
+; <|  state
+  ,  <|vertexList, edgeList, embedding, graph, graphGraphics, rawEdges |> // ToKeyValue 
+  |>
 
 ]
 
 
+(* ::Subsubsubsection::Closed:: *)
+(*patchCurveNormal*)
+
+
+(* similar bug to this https://mathematica.stackexchange.com/q/105184/5478 *)
+
+patchCurveNormal // es6Decorate
+
+patchCurveNormal[ <|rawEdges_, vertexList_, graphGraphics_|> ]:= Module[
+
+  {patchedEdges,vertexEncoded, coordinates, coordinatesRules }
+  
+, vertexEncoded = AssociationThread[
+    ArrayComponents[vertexList] -> Thread[DynamicLocation[vertexList, Automatic]]
+  ]
+
+; coordinates = graphGraphics // 
+    First @ Cases[#, Verbatim[GraphicsComplex][pts_, ___] :> pts, Infinity] & 
+    
+; coordinatesRules = coordinates // AssociationThread[ArrayComponents[#, 1] -> #] &  
+; coordinatesRules = <|coordinatesRules, vertexEncoded|>    
+
+; patchedEdges = rawEdges /. Arrow[BezierCurve[a : {___}, opt___], r___] :> RuleCondition[
+    Arrow[BezierCurve[a /. coordinatesRules, opt], r]
+  ] 
+  
+; <| $ES6asso
+   , "rawEdges" -> patchedEdges
+   , <| vertexEncoded, coordinates, coordinatesRules |> // ToKeyValue
+  |>  
+]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*patchEdgeIds*)
 
 
 (* There is a bug that makes both edges in Graph[{Tooltip[1 -> 2, "A"], Tooltip[1 -> 2, "B"]} ]
       labeled with a tooltip A, we need to handle this. *)
-patchEdgeIds[state_, primitives_]:=Module[{edgesIdsCollections, patchEdgeId}
+      
+patchEdgeIds // es6Decorate
+patchEdgeIds[ <|edge_, rawEdges_|> ]:=Module[{edgesIdsCollections, patchEdgeId, patchedEdges}
 
-, edgesIdsCollections = Values @ state["edge"] // 
+, edgesIdsCollections = Values @ edge // 
     GroupBy[standardizeEdge@*Key["edge"] -> Key["id"]] // Values //
     Map[#[[1]] -> # &] // 
     Association (* <|e1 -> {e1, e2, e3}, ... |>*)
+
+
 ; patchEdgeId[id_]:= With[{idCollection = edgesIdsCollections[id]}
-  , edgesIdsCollections[id] = Rest @ idCollection 
+  , edgesIdsCollections[id] = Rest @ idCollection   
   ; First @ idCollection
   ]
 
-; MapAt[ patchEdgeId, primitives, {All, "id" }]
+; patchedEdges = MapAt[ patchEdgeId, rawEdges, {All, "id" }]
+
+; <| $ES6asso, "rawEdges" -> patchedEdges |>  
 ]
 
+
 standardizeEdge[e_UndirectedEdge]:=Sort @ e
-standardizeEdge[e_]:=e
+standardizeEdge[directed_[v1_, v2_]]:= {v1, v2}
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*addEdgesShapes*)
+
+
+addEdgesShapes // es6Decorate
+addEdgesShapes[ <|vertexEncoded_, rawEdges_|> ]:= <|
+  $ES6asso
+, "rawEdges" -> ( <|#, "shape" -> ToEdgeShapeFunction[#primitive, vertexEncoded] |>& /@ rawEdges )
+|>
+
 
 ToEdgeShapeFunction[p : {Arrowheads[0.], Arrow[b_BezierCurve, ___]}, vertexEncoded_] := {Arrowheads[0.], Arrow[b /. vertexEncoded]};
 ToEdgeShapeFunction[Arrow[b_BezierCurve, ___], vertexEncoded_] := Arrow[b /. vertexEncoded];
 ToEdgeShapeFunction[p_, ___] := Automatic;
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*helpers*)
 
 
@@ -939,3 +1096,17 @@ createEdge[eId_String, edge:(e_[v1_String,  v2_String])] := <|
   |>
 
 
+ToKeyValue::usage = "ToKeyValue[symbol] is a small utility that generates \"symbol\" -> symbol which shortens association assembling.";
+
+ToKeyValue // Attributes = {HoldAll, Listable};
+
+ToKeyValue[sym_Symbol]:= SymbolToKeyName[sym] -> sym;
+
+ToKeyValue[Association[spec__Symbol] ]:= Association @ ToKeyValue @ {spec}
+
+
+SymbolToKeyName::usage = "SymbolToKeyName[symbol_] generates symbol's symbol name and trims '$..nnn' if present";
+
+SymbolToKeyName // Attributes = {HoldAll};
+
+SymbolToKeyName[sym_Symbol]:= StringTrim[SymbolName @ Unevaluated @ sym, "$".. ~~ DigitCharacter..];
