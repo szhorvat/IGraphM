@@ -146,9 +146,9 @@ public:
         if (d <= 0)
             throw mma::LibraryError("query: query distance must be positive");
 
-        std::vector<std::pair<mint, double>> ret_matches;
+        std::vector<ResultItem<mint, double>> ret_matches;
 
-        SearchParams params;
+        SearchParameters params;
 
         kdtree->radiusSearch(pt.data(), d*d, ret_matches, params);
 
@@ -169,8 +169,8 @@ public:
         std::vector<mint> results;
         std::vector<mint> sizes;
 
-        SearchParams params;
-        std::vector<std::pair<mint, double>> ret_matches;
+        SearchParameters params;
+        std::vector<ResultItem<mint, double>> ret_matches;
 
         for (mint i=0; i < pts.rows(); ++i) {
             double d = dists[i];
@@ -215,7 +215,7 @@ public:
         if (edges.rows() != n)
             throw mma::LibraryError("neighborCounts: there must be the same number of edges points as query points");
 
-        SearchParams params;
+        SearchParameters params;
 
         auto res = mma::makeVector<mint>(n);
         LTGuard<mma::IntTensorRef> res_guard(res);
@@ -257,7 +257,7 @@ public:
         if (edges.rows() != n)
             throw mma::LibraryError("intersectionCounts: there must be the same number of edges points as query points");
 
-        SearchParams params;
+        SearchParameters params;
 
         auto res = mma::makeVector<mint>(n);
         LTGuard<mma::IntTensorRef> res_guard(res); // automatically free 'mat' upon premature exit from the function
@@ -310,7 +310,7 @@ public:
         if (edges.rows() != n)
             throw mma::LibraryError("unionCounts: there must be the same number of edges points as query points");
 
-        SearchParams params;
+        SearchParameters params;
         params.sorted = false;
 
         auto res = mma::makeVector<mint>(n);
