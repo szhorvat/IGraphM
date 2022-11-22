@@ -259,7 +259,7 @@ IGCactusQ[_] := False
 PackageExport["IGFundamentalCycles"]
 IGFundamentalCycles::usage =
     "IGFundamentalCycles[graph]\n" <>
-    "IGFundamentalCycles[{graph, vertex}]\n";
+    "IGFundamentalCycles[{graph, vertex}]";
 Options[IGFundamentalCycles] = { "Cutoff" -> Infinity };
 SyntaxInformation[IGFundamentalCycles] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGFundamentalCycles[{graph_?igGraphQ, v_}, opt : OptionsPattern[]] :=
