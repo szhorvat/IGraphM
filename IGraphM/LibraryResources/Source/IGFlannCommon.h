@@ -14,13 +14,24 @@
 template<typename T>
 inline T sqr(T x) { return x*x; }
 
+// Eculidean distance in 2D
+template<typename T>
+inline T sqdist2(const T *pt1, const T *pt2) {
+    return sqr(pt1[0] - pt2[0]) + sqr(pt1[1] - pt2[1]);
+}
+
+// Eculidean distance in 3D
+template<typename T>
+inline T sqdist3(const T *pt1, const T *pt2) {
+    return sqr(pt1[0] - pt2[0]) + sqr(pt1[1] - pt2[1]) + sqr(pt1[2] - pt2[2]);
+}
+
 
 // Point set to be used with nanoflann
 // Supports both 2D and 3D point sets
-class PointSet {
+struct PointSet {
     mma::RealMatrixRef pts;
 
-public:
     PointSet(mma::RealMatrixRef pts) : pts(pts.clone()) { }
 
     ~PointSet() { pts.free(); }

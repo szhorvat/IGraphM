@@ -6877,10 +6877,52 @@ MT[
 
 
 MT[
+  IGCircleBetaSkeleton[bsPoints, 1],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {10 <-> 16, 3 <-> 16, 3 <-> 10, 3 <-> 8, 1 <-> 3, 1 <-> 16, 11 <-> 12, 8 <-> 9, 1 <-> 7, 3 <-> 5, 5 <-> 14, 4 <-> 13, 4 <-> 15, 9 <-> 15, 17 <-> 18, 18 <-> 19, 3 <-> 20, 5 <-> 8, 1 <-> 8, 10 <-> 20, 9 <-> 11, 2 <-> 6, 7 <-> 12, 5 <-> 20, 5 <-> 15, 4 <-> 17, 9 <-> 19, 6 <-> 12, 2 <-> 11, 13 <-> 17, 4 <-> 19}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
   IGCircleBetaSkeleton[bsPoints, 1.1],
   Graph@{10 <-> 16, 1 <-> 3, 11 <-> 12, 8 <-> 9, 1 <-> 7, 5 <-> 14, 4 <-> 13,
     4 <-> 15, 17 <-> 18, 18 <-> 19, 3 <-> 20, 10 <-> 20, 9 <-> 11,
     2 <-> 6, 7 <-> 12, 5 <-> 15, 2 <-> 11, 13 <-> 17, 4 <-> 19},
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 1.2],
+  IGCircleBetaSkeleton[bsPoints+1*^6, 1.2],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 1.5],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {10 <-> 16, 1 <-> 3, 4 <-> 15, 18 <-> 19, 9 <-> 11, 2 <-> 6, 5 <-> 15, 2 <-> 11}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 1.8],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {18 <-> 19, 9 <-> 11, 2 <-> 6, 5 <-> 15}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 2.5],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {18 <-> 19, 9 <-> 11}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 4.61],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {}],
   SameTest -> IGSameGraphQ
 ]
 
