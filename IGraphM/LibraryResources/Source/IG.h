@@ -155,6 +155,11 @@ public:
         igConstructorCheck(igraph_square_lattice(&graph, &igdims, nei, directed, mutual, &p.vec));
     }
 
+    void makeTriLattice(mma::IntTensorRef dims, bool directed, bool mutual) {
+        igraph_vector_int_t igdims = igIntVectorView(dims);
+        igConstructorCheck(igraph_triangular_lattice(&graph, &igdims, directed, mutual));
+    }
+
     void graphAtlas(mint n) {
         destroy();
         igConstructorCheck(igraph_atlas(&graph, n));
