@@ -8,8 +8,8 @@
 #define IG_FLANN3D_H
 
 #include "nanoflann.hpp"
+#include "IGCommon.h"
 #include "IGFlannCommon.h"
-#include <LTemplate.h>
 #include <vector>
 
 using namespace nanoflann;
@@ -31,6 +31,91 @@ class IGFlann3D {
         delete kdtree;
         delete ps;
     }
+
+
+    class NeighborCounts {
+        const double radius; // L2 search radius
+        const bool short_circuit; // whether to stop after one point has been found
+        const mint v1, v2; // edge endpoits; excluded from the count
+        const PointSet *ps;
+
+        mint count;
+
+    public:
+        NeighborCounts(
+                    double radius_, bool short_circuit_,
+                    mint v1_, mint v2_, const PointSet *ps_)
+            : radius(radius_), short_circuit(short_circuit_), v1(v1_), v2(v2_), ps(ps_)
+        {
+            init();
+        }
+
+        void init() { clear(); }
+        void clear() { count = 0; }
+
+        size_t size() const { return count; }
+
+        bool full() const { return true; }
+
+        bool addPoint(double dist, mint index) {
+            if (dist < radius && index != v1 && index != v2) {
+                count++;
+                if (short_circuit)
+                    return false;
+            }
+            return true;
+        }
+
+        double worstDist() const { return radius; }
+    };
+
+
+    class IntersectionCounts {
+        const double radius; // L2 search radius
+        const double beta_radius;
+        const bool short_circuit; // whether to stop after one point has been found
+        const mint v1, v2; // edge endpoits; excluded from the count
+        const double *centre1, *centre2; // disc centres
+        const PointSet *ps;
+
+        size_t count;
+
+    public:
+        IntersectionCounts(
+                    double radius_, double beta_radius_,
+                    bool short_circuit_,
+                    mint v1_, mint v2_, const double *centre1_, const double *centre2_, const PointSet *ps_)
+            : radius(radius_), beta_radius(beta_radius_),
+              short_circuit(short_circuit_),
+              v1(v1_), v2(v2_),
+              centre1(centre1_), centre2(centre2_), ps(ps_)
+        {
+            init();
+        }
+
+        void init() { clear(); }
+        void clear() { count = 0; }
+
+        size_t size() const { return count; }
+
+        bool full() const { return true; }
+
+        bool addPoint(double dist, mint index) {
+            if (dist < radius && index != v1 && index != v2) {
+                double pd1 = sqdist3(&ps->pts(index,0), centre1);
+                double pd2 = sqdist3(&ps->pts(index,0), centre2);
+                if (pd1 < beta_radius && pd2 < beta_radius) {
+                    count++;
+                    if (short_circuit)
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        double worstDist() const { return radius; }
+    };
+
 
 public:
 
@@ -107,10 +192,13 @@ public:
 
 
     // how many neighbours does each point have within the given distance?
+    // if short_circuit == true then 1 will be returned whenever at least one point exists
+    // edge endpoints are excluded
     mma::IntTensorRef neighborCounts(
             mma::RealMatrixRef pts,
             mma::RealTensorRef dists,
-            mma::IntMatrixRef edges) {
+            mma::IntMatrixRef edges,
+            bool short_circuit) {
 
         mint n = dists.size();
 
@@ -127,34 +215,31 @@ public:
         std::vector<std::pair<mint, double>> ret_matches;
 
         auto res = mma::makeVector<mint>(n);
+        LTGuard<mma::IntTensorRef> res_guard(res);
 
         for (mint i=0; i < n; ++i) {
             double d = dists[i];
             if (d <= 0) {
-                res.free(); // result vector will not be returned, so free it
                 throw mma::LibraryError("neighborCounts: query distances must be positive");
             }
 
-            kdtree->radiusSearch(&pts(i,0), d*d, ret_matches, params);
-
-            mint count = ret_matches.size();
-            for (const auto &el : ret_matches) {
-                if (el.first == edges(i,0)-1 || el.first == edges(i,1)-1)
-                    count--;
-            }
-
-            res[i] = count;
+            NeighborCounts nc(d*d, short_circuit, edges(i,0)-1, edges(i,1)-1, ps);
+            res[i] = kdtree->radiusSearchCustomCallback(&pts(i,0), nc, params);
         }
 
+        res_guard.deactivate();
         return res;
     }
 
 
     // how many points are within the given radius of both centres?
+    // if short_circuit == true then 1 will be returned whenever at least one point exists
+    // edge endpoints are excluded
     mma::IntTensorRef intersectionCounts(
             mma::RealMatrixRef centres1, mma::RealMatrixRef centres2,
             mma::RealTensorRef dists,
-            mma::IntMatrixRef edges) {
+            mma::IntMatrixRef edges,
+            bool short_circuit) {
 
         mint n = dists.size();
 
@@ -173,33 +258,30 @@ public:
         std::vector<std::pair<mint, double>> ret_matches;
 
         auto res = mma::makeVector<mint>(n);
+        LTGuard<mma::IntTensorRef> res_guard(res); // automatically free 'mat' upon premature exit from the function
 
         for (mint i=0; i < n; ++i) {
             double d = dists[i];
             if (d <= 0) {
-                res.free(); // result vector will not be returned, so free it
                 throw mma::LibraryError("intersectionCounts: query distances must be positive");
             }
 
-            kdtree->radiusSearch(&centres1(i,0), d*d, ret_matches, params);
+            // midpoint between the two centres
+            double c[3] = { 0.5*(centres1(i,0) + centres2(i,0)),
+                            0.5*(centres1(i,1) + centres2(i,1)),
+                            0.5*(centres1(i,2) + centres2(i,2)) };
 
-            mint count = 0;
-            for (const auto &el : ret_matches) {
-                if (el.first == edges(i,0)-1 || el.first == edges(i,1)-1)
-                    continue; // do not count the endpoints of the edge we are testing
-                double pd2 =
-                      sqr(ps->kdtree_get_pt(el.first, 0) - centres2(i, 0)) +
-                      sqr(ps->kdtree_get_pt(el.first, 1) - centres2(i, 1)) +
-                      sqr(ps->kdtree_get_pt(el.first, 2) - centres2(i, 2));
-                if (pd2 < d*d)
-                    count++;
-            }
+            // squared radius of the lune's bounding ball
+            // this is the squared half height of the lune
+            double r2 = d*d - sqdist3(c, &centres1(i,0));
 
-            res[i] = count;
+            IntersectionCounts ic(r2, d*d, short_circuit, edges(i,0)-1, edges(i,1)-1, &centres1(i, 0), &centres2(i, 0), ps);
+            res[i] = kdtree->radiusSearchCustomCallback(c, ic, params);
 
             mma::check_abort();
         }
 
+        res_guard.deactivate();
         return res;
     }
 
@@ -208,7 +290,8 @@ public:
     mma::IntTensorRef unionCounts(
             mma::RealMatrixRef centres1, mma::RealMatrixRef centres2,
             mma::RealTensorRef dists,
-            mma::IntMatrixRef edges) {
+            mma::IntMatrixRef edges,
+            bool short_circuit) {
 
         mint n = dists.size();
 
@@ -224,46 +307,31 @@ public:
             throw mma::LibraryError("unionCounts: there must be the same number of edges points as query points");
 
         SearchParams params;
-        std::vector<std::pair<mint, double>> ret_matches;
+        params.sorted = false;
 
         auto res = mma::makeVector<mint>(n);
+        LTGuard<mma::IntTensorRef> res_guard(res);
 
         for (mint i=0; i < n; ++i) {
             double d = dists[i];
             if (d <= 0) {
-                res.free(); // result vector will not be returned, so free it
                 throw mma::LibraryError("unionCounts: query distances must be positive");
             }
 
+            // full counting not currently implemented; an implementation can be based on:
             // the number of points within |A union B| = |A| + |B| - |A intersect B|
 
-            // compute |A|
-            kdtree->radiusSearch(&centres2(i,0), d*d, ret_matches, params);
-            mint count = ret_matches.size();
+            NeighborCounts nc(d*d, /* short_circuit */ true, edges(i,0)-1, edges(i,1)-1, ps);
+            res[i] = kdtree->radiusSearchCustomCallback(&centres1(i,0), nc, params);
 
-            // exclude edge endpoints from A
-            for (const auto &el : ret_matches) {
-                if (el.first == edges(i,0)-1 || el.first == edges(i,1)-1)
-                    count--;
+            if (! res[i]) {
+                nc.clear();
+
+                res[i] = kdtree->radiusSearchCustomCallback(&centres2(i,0), nc, params);
             }
-
-            // add |B|
-            kdtree->radiusSearch(&centres1(i,0), d*d, ret_matches, params);
-            count += ret_matches.size();
-
-            // subtract |A intersect B| as well exclude edge endpoints from B
-            for (const auto &el : ret_matches) {
-                double pd2 =
-                      sqr(ps->kdtree_get_pt(el.first, 0) - centres2(i, 0)) +
-                      sqr(ps->kdtree_get_pt(el.first, 1) - centres2(i, 1)) +
-                      sqr(ps->kdtree_get_pt(el.first, 2) - centres2(i, 2));
-                if (pd2 < d*d || el.first == edges(i,0)-1 || el.first == edges(i,1)-1)
-                    count--;
-            }
-
-            res[i] = count;
         }
 
+        res_guard.deactivate();
         return res;
     }
 

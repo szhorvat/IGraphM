@@ -245,7 +245,7 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges]],
+        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges, True]],
         0
       ]
     ]
@@ -265,7 +265,7 @@ igRelativeNeighborhoodGraphEdges[pts_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"intersectionCounts"[p, q, dists, edges]],
+        Unitize[flann@"intersectionCounts"[p, q, dists, edges, True]],
         0
       ]
     ]
@@ -318,7 +318,7 @@ igCircleBetaSkeletonEdges[pts_, beta_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"unionCounts"[centres1, centres2, dists, edges]],
+        Unitize[flann@"unionCounts"[centres1, centres2, dists, edges, True]],
         0
       ]
     ]
@@ -351,7 +351,7 @@ igGabrielGraphEdges[pts_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"neighborCounts"[(p+q)/2, dists, edges]],
+        Unitize[flann@"neighborCounts"[(p+q)/2, dists, edges, True]],
         0
       ]
     ]
@@ -379,7 +379,7 @@ igBetaSkeletonEdges0[pts_, beta_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges]],
+        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges, True]],
         0
       ]
     ]
