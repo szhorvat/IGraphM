@@ -447,3 +447,39 @@ IGGabrielGraph::usage = "IGGabrielGraph[points] gives the Gabriel graph of the g
 SyntaxInformation[IGGabrielGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
     igLuneBetaSkeleton[pts, 1, opt]
+
+
+PackageExport["IGBetaWeightedGabrielGraph"]
+IGBetaWeightedGabrielGraph::usage = "IGBetaWeightedGabrielGraph[points]";
+
+SyntaxInformation[IGBetaWeightedGabrielGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
+IGBetaWeightedGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), beta : _?Positive : Infinity, opt : OptionsPattern[Graph]] :=
+    catch@Module[{edges, flann, betas, mask},
+      Switch[Dimensions[pts],
+        {_, 2},
+        edges = check@delaunayEdges2D[pts];
+        dim = 2;
+        ,
+        {_, 3},
+        edges = check@delaunayEdges3D[pts];
+        dim = 3;
+        ,
+        _,
+        Message[IGraphM::bsdim3];
+        throw[$Failed]
+      ];
+
+      flann = makeFlann[pts];
+
+      betas = fixInfNaN@expectInfNaN@check@flann@"edgeBetas"[edges, infToNeg[beta]];
+      mask = Unitize[betas];
+
+      Graph[
+        Range@Length[pts],
+        Pick[edges, mask, 1],
+        DirectedEdges -> False,
+        opt,
+        EdgeWeight -> Pick[betas, mask, 1],
+        VertexCoordinates -> pts
+      ]
+    ]

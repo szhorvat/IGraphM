@@ -339,6 +339,110 @@ public:
         return res;
     }
 
+    mma::RealTensorRef edgeBetas(mma::IntMatrixRef edges, double maxBeta) {
+        mint n = edges.rows();
+
+        if (edges.cols() != 2)
+            throw mma::LibraryError("edgeBetas: edge matrix must have two columns");
+
+        if (maxBeta < 0)
+            maxBeta = std::numeric_limits<double>::infinity();
+
+        SearchParameters params;
+
+        class BetaFinder {
+            const double max_beta;
+            const mint ai, bi;
+            const PointSet *ps;
+            const double ab2;
+
+            double smallest_beta;
+            double max_radius;
+
+        public:
+
+            BetaFinder(double max_beta, mint v1, mint v2, const PointSet *ps) :
+                max_beta(max_beta), ai(v1), bi(v2), ps(ps),
+                ab2(sqdist2(&ps->pts(ai,0), &ps->pts(bi,0)))
+            {
+                init();
+            }
+
+            void init() { clear(); }
+            void clear() {
+                smallest_beta = std::numeric_limits<double>::infinity();
+                max_radius = luneHalfHeight2(max_beta);
+            }
+
+            bool full() const { return true; }
+
+            size_t size() const { return 1; }
+
+            double luneHalfHeight2(double beta) const {
+                if (beta == 0) return 0;
+                return (ab2 / 4) * (2*beta - 1);
+            }
+
+            double pointBeta(mint index) const {
+                double ap2 = sqdist2(&ps->pts(ai,0), &ps->pts(index,0));
+                double bp2 = sqdist2(&ps->pts(bi,0), &ps->pts(index,0));
+
+                if (ap2 > bp2)
+                    std::swap(ap2, bp2);
+
+                double denom = ab2 + ap2 - bp2;
+
+                if (denom <= 0)
+                    return std::numeric_limits<double>::infinity();
+
+                double beta = 2*ap2 / denom;
+
+                return beta <= 1 ? 0 : beta;
+            }
+
+            bool addPoint(double dist, mint index) {
+
+                //mma::mout << "considering " << index << ", dist = " << dist << ", max_radius = " << max_radius << std::endl;
+                if (dist < max_radius) {
+                    double beta = pointBeta(index);
+                    //mma::mout << "beta = " << beta << std::endl;
+
+                    if (beta < smallest_beta && beta < max_beta) {
+                        smallest_beta = beta;
+                        max_radius = luneHalfHeight2(beta);
+                    }
+                }
+
+                return true;
+            }
+
+            double worstDist() const { return max_radius; }
+
+            double const thresholdBeta() const { return smallest_beta; }
+        };
+
+        auto res = mma::makeVector<double>(n);
+        LTGuard<mma::RealTensorRef> res_guard(res);
+
+        for (mint i=0; i < n; ++i) {
+            mint ai = edges(i,0)-1;
+            mint bi = edges(i,1)-1;
+
+            BetaFinder bf(maxBeta, ai, bi, ps);
+
+            double c[2] = { 0.5*(ps->pts(ai,0) + ps->pts(bi,0)),
+                            0.5*(ps->pts(ai,1) + ps->pts(bi,1)) };
+
+            kdtree->radiusSearchCustomCallback(c, bf, params);
+
+            res[i] = bf.thresholdBeta();
+
+            mma::check_abort();
+        }
+
+        res_guard.deactivate();
+        return res;
+    }
 };
 
 #endif // IG_FLANN2D_H
