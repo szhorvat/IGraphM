@@ -689,7 +689,8 @@ template = LTemplate["IGraphM",
           {Integer, 1}],
         LFun["edgeBetas",
           {{Integer, 2, "Constant"} (* edges *),
-           Real (* maxBeta *)},
+           Real (* maxBeta *),
+           Real (* tolerance *)},
           {Real, 1}]
       }
     ],
@@ -721,7 +722,8 @@ template = LTemplate["IGraphM",
           {Integer, 1}],
         LFun["edgeBetas",
           {{Integer, 2, "Constant"} (* edges *),
-           Real (* maxBeta *)},
+           Real (* maxBeta *),
+           Real (* tolerance *)},
           {Real, 1}]
       }
     ]

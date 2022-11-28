@@ -471,7 +471,7 @@ IGBetaWeightedGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), beta : _?Positi
 
       flann = makeFlann[pts];
 
-      betas = fixInfNaN@expectInfNaN@check@flann@"edgeBetas"[edges, infToNeg[beta]];
+      betas = fixInfNaN@expectInfNaN@check@flann@"edgeBetas"[edges, infToNeg[beta], 10^Internal`$EqualTolerance $MachineEpsilon];
       mask = Unitize[betas];
 
       Graph[

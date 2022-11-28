@@ -339,7 +339,7 @@ public:
         return res;
     }
 
-    mma::RealTensorRef edgeBetas(mma::IntMatrixRef edges, double maxBeta) {
+    mma::RealTensorRef edgeBetas(mma::IntMatrixRef edges, double maxBeta, double tol) {
         mint n = edges.rows();
 
         if (edges.cols() != 2)
@@ -352,6 +352,7 @@ public:
 
         class BetaFinder {
             const double max_beta;
+            const double tol;
             const mint ai, bi;
             const PointSet *ps;
             const double ab2;
@@ -361,8 +362,8 @@ public:
 
         public:
 
-            BetaFinder(double max_beta, mint v1, mint v2, const PointSet *ps) :
-                max_beta(max_beta), ai(v1), bi(v2), ps(ps),
+            BetaFinder(double max_beta, double tol, mint v1, mint v2, const PointSet *ps) :
+                max_beta(max_beta), tol(tol), ai(v1), bi(v2), ps(ps),
                 ab2(sqdist2(&ps->pts(ai,0), &ps->pts(bi,0)))
             {
                 init();
@@ -397,7 +398,7 @@ public:
 
                 double beta = 2*ap2 / denom;
 
-                return beta <= 1 ? 0 : beta;
+                return beta < 1 + tol ? 0 : beta;
             }
 
             bool addPoint(double dist, mint index) {
@@ -428,7 +429,7 @@ public:
             mint ai = edges(i,0)-1;
             mint bi = edges(i,1)-1;
 
-            BetaFinder bf(maxBeta, ai, bi, ps);
+            BetaFinder bf(maxBeta, tol, ai, bi, ps);
 
             double c[2] = { 0.5*(ps->pts(ai,0) + ps->pts(bi,0)),
                             0.5*(ps->pts(ai,1) + ps->pts(bi,1)) };
