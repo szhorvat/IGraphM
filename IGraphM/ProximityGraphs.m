@@ -450,10 +450,11 @@ IGGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]
 
 
 PackageExport["IGBetaWeightedGabrielGraph"]
-IGBetaWeightedGabrielGraph::usage = "IGBetaWeightedGabrielGraph[points]";
+IGBetaWeightedGabrielGraph::usage = "IGBetaWeightedGabrielGraph[points] gives a Gabriel graph of points with edge weights representing β values where the corresponding edge would disappear from a lune-based β-skeleton.";
 
-SyntaxInformation[IGBetaWeightedGabrielGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
-IGBetaWeightedGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), beta : _?Positive : Infinity, opt : OptionsPattern[Graph]] :=
+Options[IGBetaWeightedGabrielGraph] = { "BetaCutoff" -> Infinity };
+SyntaxInformation[IGBetaWeightedGabrielGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[{IGBetaWeightedGabrielGraph, Graph}]};
+IGBetaWeightedGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[{IGBetaWeightedGabrielGraph, Graph}]] :=
     catch@Module[{edges, flann, betas, mask},
       Switch[Dimensions[pts],
         {_, 2},
@@ -471,14 +472,14 @@ IGBetaWeightedGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), beta : _?Positi
 
       flann = makeFlann[pts];
 
-      betas = fixInfNaN@expectInfNaN@check@flann@"edgeBetas"[edges, infToNeg[beta], 10^Internal`$EqualTolerance $MachineEpsilon];
+      betas = fixInfNaN@expectInfNaN@check@flann@"edgeBetas"[edges, infToNeg@OptionValue["BetaCutoff"], 10^Internal`$EqualTolerance $MachineEpsilon];
       mask = Unitize[betas];
 
       Graph[
         Range@Length[pts],
         Pick[edges, mask, 1],
         DirectedEdges -> False,
-        opt,
+        FilterRules[{opt}, Options[Graph]],
         EdgeWeight -> Pick[betas, mask, 1],
         VertexCoordinates -> pts
       ]
