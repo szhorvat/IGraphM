@@ -230,6 +230,20 @@ IGModularity[graph_?igGraphQ, communities : {__List}, opt : OptionsPattern[]] :=
     ]
 
 
+PackageExport["IGModularityMatrix"]
+IGModularityMatrix::usage = "IGModularityMatrix[graph] gives the modularity matrix of graph.";
+
+Options[IGModularityMatrix] = { "Resolution" -> 1, DirectedEdges -> False };
+SyntaxInformation[IGModularityMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGModularityMatrix[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@Block[{ig = igMake[graph]},
+      check@ig@"modularityMatrix"[
+        OptionValue["Resolution"],
+        Replace[OptionValue[DirectedEdges], Automatic -> UndirectedGraphQ[graph]]
+      ]
+    ]
+
+
 PackageExport["IGCompareCommunities"]
 IGCompareCommunities::usage =
     "IGCompareCommunities[clusterdata1, clusterdata2] compares two community structures given as IGClusterData objects using all available methods.\n" <>

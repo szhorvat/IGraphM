@@ -2559,6 +2559,12 @@ public:
         return Q;
     }
 
+    mma::RealMatrixRef modularityMatrix(double resolution, bool directed) const {
+        igMatrix mm;
+        igCheck(igraph_modularity_matrix(&graph, passWeights(), resolution, &mm.mat, directed));
+        return mm.makeMTensor();
+    }
+
     /*
     mma::IntTensorRef splitJoinDistance(mma::RealTensorRef c1, mma::RealTensorRef c2) const {
         igraph_integer_t d1, d2;

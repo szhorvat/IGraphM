@@ -11,7 +11,7 @@ The IGraph/M package provides a [Wolfram Language](https://www.wolfram.com/) int
 
 ## 📦 Installation
 
-The system requirements are _Mathematica_ 11.0 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi.
+The system requirements are _Mathematica_ 11.0 or later, 64-bit Windows/macOS/Linux, or Raspberry Pi. Note that currently the Wolfram Cloud does not support LibraryLink, therefore IGraph/M does not run on the Wolfram Cloud.
 
 To install the package automatically, simply evaluate the following in _Mathematica_:
 

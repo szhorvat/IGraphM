@@ -428,7 +428,7 @@ div.local-toc-2 > ul > li {
 
 /* hide up-arrows in ToC */
 
-#TOC a > span:last-child {
+#TOC a > span.link-back-triangle {
     display: none;
 }
 

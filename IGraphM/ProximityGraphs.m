@@ -245,7 +245,7 @@ igLuneBetaSkeletonEdges[pts_, beta_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges]],
+        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges, True]],
         0
       ]
     ]
@@ -265,7 +265,7 @@ igRelativeNeighborhoodGraphEdges[pts_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"intersectionCounts"[p, q, dists, edges]],
+        Unitize[flann@"intersectionCounts"[p, q, dists, edges, True]],
         0
       ]
     ]
@@ -318,7 +318,7 @@ igCircleBetaSkeletonEdges[pts_, beta_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"unionCounts"[centres1, centres2, dists, edges]],
+        Unitize[flann@"unionCounts"[centres1, centres2, dists, edges, True]],
         0
       ]
     ]
@@ -351,7 +351,7 @@ igGabrielGraphEdges[pts_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"neighborCounts"[(p+q)/2, dists, edges]],
+        Unitize[flann@"neighborCounts"[(p+q)/2, dists, edges, True]],
         0
       ]
     ]
@@ -379,7 +379,7 @@ igBetaSkeletonEdges0[pts_, beta_] :=
       flann = makeFlann[pts];
       Pick[
         edges,
-        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges]],
+        Unitize[flann@"intersectionCounts"[centres1, centres2, dists, edges, True]],
         0
       ]
     ]
@@ -447,3 +447,40 @@ IGGabrielGraph::usage = "IGGabrielGraph[points] gives the Gabriel graph of the g
 SyntaxInformation[IGGabrielGraph] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[Graph]] :=
     igLuneBetaSkeleton[pts, 1, opt]
+
+
+PackageExport["IGBetaWeightedGabrielGraph"]
+IGBetaWeightedGabrielGraph::usage = "IGBetaWeightedGabrielGraph[points] gives a Gabriel graph of points with edge weights representing β values where the corresponding edge would disappear from a lune-based β-skeleton.";
+
+Options[IGBetaWeightedGabrielGraph] = { "BetaCutoff" -> Infinity };
+SyntaxInformation[IGBetaWeightedGabrielGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[{IGBetaWeightedGabrielGraph, Graph}]};
+IGBetaWeightedGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[{IGBetaWeightedGabrielGraph, Graph}]] :=
+    catch@Module[{edges, flann, betas, mask},
+      Switch[Dimensions[pts],
+        {_, 2},
+        edges = check@delaunayEdges2D[pts];
+        dim = 2;
+        ,
+        {_, 3},
+        edges = check@delaunayEdges3D[pts];
+        dim = 3;
+        ,
+        _,
+        Message[IGraphM::bsdim3];
+        throw[$Failed]
+      ];
+
+      flann = makeFlann[pts];
+
+      betas = fixInfNaN@expectInfNaN@check@flann@"edgeBetas"[edges, infToNeg@OptionValue["BetaCutoff"], 10^Internal`$EqualTolerance $MachineEpsilon];
+      mask = Unitize[betas];
+
+      Graph[
+        Range@Length[pts],
+        Pick[edges, mask, 1],
+        DirectedEdges -> False,
+        FilterRules[{opt}, Options[Graph]],
+        EdgeWeight -> Pick[betas, mask, 1],
+        VertexCoordinates -> pts
+      ]
+    ]
