@@ -11,6 +11,7 @@ Added:
 
 Other:
 
+ - Documentation improvements
  - Significant performance improvements for the calculation of lune and circle based β skeletons when using large β values.
 
 #### 0.6.3
