@@ -1,5 +1,11 @@
 ## Revision history for [IGraph/M](README.md)
 
+#### 0.6.4.1
+
+Fixed:
+
+ - This release updated the macOS binary for Apple Silicon to fix an issue when using Mathematica 13.2.0 on macOS 13.1. Other platforms are not affected. Thanks to Jari Kirma for help with tracking down this issue!
+
 #### 0.6.4
 
 Added:
