@@ -21,11 +21,11 @@ Get["https://raw.githubusercontent.com/szhorvat/IGraphM/master/IGInstaller.m"]
 
 IGraph/M can also be installed manually in the same way as any _Mathematica_ application distributed as a paclet.
 
-Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.6.4.paclet` was downloaded into the directory `~/Downloads`, evaluate:
+Download the `.paclet` file from [the GitHub releases page](https://github.com/szhorvat/IGraphM/releases), and [install it using the `PacletInstall` function in Mathematica](http://mathematica.stackexchange.com/q/141887/12).  For example, assuming that the file `IGraphM-0.6.4.1.paclet` was downloaded into the directory `~/Downloads`, evaluate:
 
 ```mathematica
 Needs["PacletManager`"]
-PacletInstall["~/Downloads/IGraphM-0.6.4.paclet"]
+PacletInstall["~/Downloads/IGraphM-0.6.4.1.paclet"]
 ```
 
 After installation, the package can now be loaded with:
