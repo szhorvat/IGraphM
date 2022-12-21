@@ -54,7 +54,7 @@ unsigned long int igraph_rng_Mma_get(void *state) {
 
     int err = randomInteger(mma::libData, 2, FPA, FPA[2]);
     if (err)
-        throw mma::LibraryError("RNG: Error calling RandomInteger", err);
+        IGRAPH_FATALF("RNG: Error calling RandomInteger, code %d.", err);
 
     mma::libData->compileLibraryFunctions->WolframLibraryData_cleanUp(mma::libData, 1);
 
@@ -65,7 +65,7 @@ igraph_real_t igraph_rng_Mma_get_real(void *state) {
     MArgument FPA[3];
 
     mreal lo = 0.0, hi = 1.0;
-    mreal res;
+    mreal res = -1.0;
 
     MArgument_getRealAddress(FPA[0]) = &lo;
     MArgument_getRealAddress(FPA[1]) = &hi;
@@ -77,8 +77,10 @@ igraph_real_t igraph_rng_Mma_get_real(void *state) {
     do {
         int err = randomReal(mma::libData, 2, FPA, FPA[2]);
         if (err)
-            throw mma::LibraryError("RNG: Error calling RandomReal.", err);
+            IGRAPH_FATALF("RNG: Error calling RandomReal, code %d.", err);
     } while (res == 1.0);
+    IGRAPH_ASSERT(res >= 0.0);
+    IGRAPH_ASSERT(res < 1.0);
 
     mma::libData->compileLibraryFunctions->WolframLibraryData_cleanUp(mma::libData, 1);
 
@@ -97,7 +99,7 @@ igraph_real_t igraph_rng_Mma_get_norm(void *state) {
 
     int err = randomNormal(mma::libData, 2, FPA, FPA[2]);
     if (err)
-        throw mma::LibraryError("RNG: Error calling RandomNormal.", err);
+        IGRAPH_FATALF("RNG: Error calling RandomNormal, code %d.", err);
 
     mma::libData->compileLibraryFunctions->WolframLibraryData_cleanUp(mma::libData, 1);
 

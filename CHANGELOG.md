@@ -1,5 +1,11 @@
 ## Revision history for [IGraph/M](README.md)
 
+#### 0.6.5
+
+Other:
+
+ - Improved error checking and added more internal consistency checks to help debug issues with recent Mathematica versions.
+
 #### 0.6.4
 
 Added:
