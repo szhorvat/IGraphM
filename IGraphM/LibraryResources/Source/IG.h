@@ -252,11 +252,11 @@ public:
     // Change directedness
 
     void makeDirected() {
-        igraph_to_directed(&graph, IGRAPH_TO_DIRECTED_MUTUAL);
+        igCheck(igraph_to_directed(&graph, IGRAPH_TO_DIRECTED_MUTUAL));
     }
 
     void makeUndirected() {
-        igraph_to_undirected(&graph, IGRAPH_TO_UNDIRECTED_COLLAPSE, nullptr);
+        igCheck(igraph_to_undirected(&graph, IGRAPH_TO_UNDIRECTED_COLLAPSE, nullptr));
     }
 
     // Create (games)
@@ -290,12 +290,10 @@ public:
         }
 
         destroy();
-        int err;
-        if (indeg.length() == 0)
-            err = igraph_degree_sequence_game(&graph, &ig_outdeg, nullptr, ig_method);
-        else
-            err = igraph_degree_sequence_game(&graph, &ig_outdeg, &ig_indeg, ig_method);
-        igConstructorCheck(err);
+        igConstructorCheck(igraph_degree_sequence_game(
+                               &graph,
+                               &ig_outdeg, indeg.length() > 0 ? &ig_indeg : nullptr,
+                               ig_method));
     }
 
     void kRegularGame(mint n, mint k, bool directed, bool multiple) {
@@ -379,7 +377,6 @@ public:
     }
 
     void barabasiAlbertGameWithStartingGraph(mint n, double power, double A, mint m, mma::RealTensorRef mtens, bool directed, bool totalDegree, mint method, IG &start) {
-        destroy();
         igraph_vector_t mvec = igVectorView(mtens);
         igraph_barabasi_algorithm_t algo;
         switch (method) {
@@ -394,7 +391,9 @@ public:
         if (start.edgeCount() > 0)
             directed = start.directedQ();
         else if (directed)
-            igraph_to_directed(&start.graph, IGRAPH_TO_DIRECTED_ARBITRARY);
+            igCheck(igraph_to_directed(&start.graph, IGRAPH_TO_DIRECTED_ARBITRARY));
+
+        destroy();
         igConstructorCheck(igraph_barabasi_game(&graph, n, power, m, &mvec, totalDegree, A, directed, algo, &start.graph));
     }
 
@@ -2629,7 +2628,7 @@ public:
             igCheck(igraph_community_walktrap(&graph, passWeights(), steps, &merges.mat, nullptr, nullptr));
             computeMembership(n_communities, merges, membership);
             modularity.resize(1);
-            igraph_modularity(&graph, &membership.vec, passWeights(), /* resolution= */ 1, /* directed= */ false, modularity.begin() /* ptr to first vec elem */);
+            igCheck(igraph_modularity(&graph, &membership.vec, passWeights(), /* resolution= */ 1, /* directed= */ false, modularity.begin() /* ptr to first vec elem */));
         }
 
         ml.newPacket();
@@ -2679,7 +2678,7 @@ public:
         switch (method) {
         case 1: /* degree/strength */
             if (weightedQ()) {
-                igraph_strength(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true, passWeights());
+                igCheck(igraph_strength(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true, passWeights()));
                 double total_edge_weight = 0.0;
                 for (const auto &w : weights)
                     total_edge_weight += w;
@@ -2687,7 +2686,7 @@ public:
             }
             else
             {
-                igraph_degree(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true);
+                igCheck(igraph_degree(&graph, vertex_weight_ptr, igraph_vss_all(), IGRAPH_ALL, /* loops = */ true));
                 resolution = 0.5*resolution / edgeCount();
             }
             break;
@@ -3272,7 +3271,7 @@ public:
             throw mma::LibraryError("coordinatesToEmbedding: The number of coordinate-pairs should be the same as the vertex count.");
 
         igraph_inclist_t inclist;
-        igraph_inclist_init(&graph, &inclist, IGRAPH_OUT, IGRAPH_NO_LOOPS);
+        igCheck(igraph_inclist_init(&graph, &inclist, IGRAPH_OUT, IGRAPH_NO_LOOPS));
 
         std::vector<double> angles(ecount);
 
@@ -3417,7 +3416,7 @@ public:
     }
 
     bool nonSimpleCactusQ() {
-        igraph_simplify(&graph, /* multiple= */ false, /* loops= */ true, nullptr);
+        igCheck(igraph_simplify(&graph, /* multiple= */ false, /* loops= */ true, nullptr));
 
         // An upper bound on the number of edges when multi-edges are allowed is E <= 2*(V-1)
         // The cactus with the most edges is like an a tree with each edge having multiplicity 2.

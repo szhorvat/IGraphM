@@ -145,14 +145,14 @@ bool IG::forestQ(mint mode) const {
     igGraphList components;
 
     // connected components with less than 3 vertices are always trees, even if directed
-    igraph_decompose(&graph, &components.list, IGRAPH_WEAK, -1, 3);
+    igCheck(igraph_decompose(&graph, &components.list, IGRAPH_WEAK, -1, 3));
 
     bool res = true;
 
     long n = components.length();
     for (long i=0; i < n; ++i) {
         igraph_bool_t is_tree;
-        igraph_is_tree(components[i], &is_tree, nullptr, imode);
+        igCheck(igraph_is_tree(components[i], &is_tree, nullptr, imode));
         res = res && is_tree;
         if (! res)
             break;
@@ -914,7 +914,7 @@ bool IG::distanceTransitiveQ(mint splitting) const {
 
 mma::RealTensorRef IG::localDensity() const {
     igraph_adjlist_t al;
-    igraph_adjlist_init(&graph, &al, IGRAPH_ALL, IGRAPH_LOOPS, IGRAPH_MULTIPLE);
+    igCheck(igraph_adjlist_init(&graph, &al, IGRAPH_ALL, IGRAPH_LOOPS, IGRAPH_MULTIPLE));
 
     mint n = vertexCount();
 
@@ -966,6 +966,8 @@ mma::RealTensorRef IG::localDensity() const {
         // return zero for isolated vertices.
         res[i] = int_count == 0 ? 0.0 : double(int_count) / double(int_count + ext_count);
     }
+
+    igraph_adjlist_destroy(&al);
 
     return res;
 }
