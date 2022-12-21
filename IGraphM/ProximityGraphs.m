@@ -455,7 +455,7 @@ IGBetaWeightedGabrielGraph::usage = "IGBetaWeightedGabrielGraph[points] gives a 
 Options[IGBetaWeightedGabrielGraph] = { "BetaCutoff" -> Infinity };
 SyntaxInformation[IGBetaWeightedGabrielGraph] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[{IGBetaWeightedGabrielGraph, Graph}]};
 IGBetaWeightedGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPattern[{IGBetaWeightedGabrielGraph, Graph}]] :=
-    catch@Module[{edges, flann, betas, mask},
+    catch@Module[{edges, flann, betas, mask, cutoff = OptionValue["BetaCutoff"]},
       Switch[Dimensions[pts],
         {_, 2},
         edges = check@delaunayEdges2D[pts];
@@ -472,7 +472,12 @@ IGBetaWeightedGabrielGraph[pts : {} | _?(MatrixQ[#, NumericQ]&), opt : OptionsPa
 
       flann = makeFlann[pts];
 
-      betas = fixInfNaN@expectInfNaN@check@flann@"edgeBetas"[edges, infToNeg@OptionValue["BetaCutoff"], 10^Internal`$EqualTolerance $MachineEpsilon];
+      If[Not@TrueQ[cutoff >= 1],
+        Message[IGBetaWeightedGabrielGraph::invopt, cutoff, "\"BetaCutoff\"", Infinity];
+        cutoff = Infinity;
+      ];
+
+      betas = fixInfNaN@expectInfNaN@check@flann@"edgeBetas"[edges, infToNeg[cutoff], 10^Internal`$EqualTolerance $MachineEpsilon];
       mask = Unitize[betas];
 
       Graph[
