@@ -80,7 +80,7 @@ Load the package:
 
 ```
 In[1]:= << IGraphM`
-Out[1]= IGraph/M 0.6.4 (December 17, 2022)
+Out[1]= IGraph/M 0.6.5 (December 21, 2022)
         Evaluate IGDocumentation[] to get started.
 ```
 
