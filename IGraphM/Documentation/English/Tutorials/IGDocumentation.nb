@@ -7091,8 +7091,8 @@ Cell[BoxData[
    RowBox[{"ExampleData", "[", 
     RowBox[{"{", 
      RowBox[{"\"\<NetworkGraph\>\"", ",", "\"\<WorldWideWeb\>\""}], "}"}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"e581ad0d-b4f6-402d-a05e-c04d1eb55f30"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"e581ad0d-b4f6-402d-a05e-c04d1eb55f30"],
 
 Cell[BoxData[
  RowBox[{"Histogram", "[", 
@@ -7230,7 +7230,7 @@ Cell[BoxData[{
     RowBox[{
      RowBox[{"#", "/", 
       RowBox[{"Max", "[", "#", "]"}]}], "&"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"g", "=", 
@@ -7242,7 +7242,7 @@ Cell[BoxData[{
       RowBox[{"EdgeStyle", "\[Rule]", "Thick"}], ",", 
       RowBox[{"VertexSize", "\[Rule]", "Large"}], ",", 
       RowBox[{"GraphStyle", "\[Rule]", "\"\<BasicBlack\>\""}]}], "]"}]}], 
-   ";"}], "\[IndentingNewLine]"}], "\n", 
+   ";"}], "\n"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"g", "//", 
    RowBox[{"IGEdgeMap", "[", 
@@ -12480,7 +12480,6 @@ Cell[BoxData[
             DynamicLocation["VertexID$4", Automatic, Center]}]}, {
           Arrowheads[{{0.04, 1, {
               GraphicsBox[
-               
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
@@ -12636,6 +12635,7 @@ Cell[BoxData[
               GraphicsBox[
                
                FilledCurveBox[{{{0, 2, 0}, {0, 1, 0}, {0, 1, 
+                
                 0}}}, {{{-0.6666528591843921, -0.3333333333333333}, \
 {-0.533327810340424, 6.903741136987662*^-6}, {-0.6666528591843921, 
                 0.3333333333333333}, {0., 6.903741136987662*^-6}}}]], 
@@ -13434,8 +13434,8 @@ Cell[BoxData[
            2.211248247845466, -1.0269675056790861`}}, 0.07833357806433489]}, 
          {Arrowheads[0.], 
           ArrowBox[{{1.2940029186334419`, -0.6035297525078438}, {
-           2.2111709478906807`, -0.1799097640846974}}, 
-           0.07833357806433489]}, 
+           2.2111709478906807`, -0.1799097640846974}}, 0.07833357806433489]}, 
+         
          {Arrowheads[0.], 
           ArrowBox[{{1.2940029186334419`, -0.6035297525078438}, {
            0.17990976408469717`, -0.6034512532051322}}, 0.07833357806433489]}, 
@@ -21193,7 +21193,7 @@ Cell[BoxData[{
         RowBox[{"\"\<Paulus\>\"", ",", 
          RowBox[{"{", 
           RowBox[{"25", ",", "1"}], "}"}]}], "}"}], "]"}]}], "}"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{
    RowBox[{"functions", "=", 
@@ -21214,7 +21214,7 @@ Cell[BoxData[{
       RowBox[{
       "\"\<distance transitive\>\"", "->", "IGDistanceTransitiveQ"}]}], 
      "\[IndentingNewLine]", "\[RightAssociation]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"TableForm", "[", "\[IndentingNewLine]", 
    RowBox[{
@@ -24372,8 +24372,8 @@ Cell[TextData[{
  "."
 }], "Text",ExpressionUUID->"35c28e10-0ecf-4124-b128-24bfba50255a"],
 
-Cell["This is the network from the Moody-White paper:", "Text",ExpressionUUID->
- "1e4c02e1-254a-4808-a67a-a64d5c6b06db"],
+Cell["This is the network from the Moody-White paper:", \
+"Text",ExpressionUUID->"1e4c02e1-254a-4808-a67a-a64d5c6b06db"],
 
 Cell[CellGroupData[{
 
@@ -41431,8 +41431,7 @@ WLFXAQAAgD2R6H5y8kw+xl4IKrt06dL77/+ad14AAABAz7mdTrHXAgAAAKAQ
 uR0AAADoudPT5xraT06exV4LAAAAgHya28/OXjChAAAAAPSZJHZCOwAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQBf+AyIE0co=
-    "], {{0, 983}, {
-    1000, 0}}, {0, 255},
+    "], {{0, 983}, {1000, 0}}, {0, 255},
     ColorFunction->RGBColor],
    BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
    Selectable->False],
@@ -49324,8 +49323,7 @@ K1nEgANDIHewBKP+wJwh/fZ4LCdqy/mPS4ffC904UwT2HJAoAjubFF9x84Cs
 82cxzYADIy73gX5sMhOfYa3ZB85/eNTHbYMBrQ2itXG6VjfmB0xL4zp9/vkr
 wdhMX27tgITDdUPRgGmpGkxRZVj8dfG96TfGlw6akfv2V1Sg9t/ysfcCU3Kb
 9LReMYL3TisP4sSoTFwxOGyz5edvOfcMAAAAAAAAABzwP+wUVmI=
-           "], {{0, 
-           314}, {360, 0}}, {0, 255},
+           "], {{0, 314}, {360, 0}}, {0, 255},
            ColorFunction->RGBColor],
           BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
           
@@ -49388,8 +49386,7 @@ lhJcbDyY+N55WoYIYDFelahZLbDSAAyqn/jUDcCax3WDnQ3ApspZT90ATGky
 dQAwSO5XxMrC9VvqBoDM3U4eUgC4Mjc6KBoApERlYLEBwJOz2KBuAHDdbmtQ
 NAB4EsWBugEgJl03xscDQAW5tGCxAeCWVyIoGgBuuYWCogEgh/eZc+oGgBz8
 7RXAA9QNAKUoGgAAAAAAAAAAAACAYf4G0E7JMg==
-           "], {{0, 164}, {360, 
-           0}}, {0, 255},
+           "], {{0, 164}, {360, 0}}, {0, 255},
            ColorFunction->RGBColor],
           BoxForm`ImageTag["Byte", ColorSpace -> "RGB", Interleaving -> True],
           
@@ -51220,8 +51217,8 @@ Cell["The available options are:", \
 
 Cell[TextData[{
  Cell[BoxData[
- "\"\<OuterFace\>\""],ExpressionUUID->
-  "562fbf42-a641-493d-9cac-3758f846e83b"],
+ "\"\<OuterFace\>\""],ExpressionUUID->"562fbf42-a641-493d-9cac-3758f846e83b"],
+ 
  " sets the planar graph face to use as the outer face for the layout. The \
 vertices of the face can be given in any order.  Use ",
  Cell[BoxData[
@@ -53707,6 +53704,128 @@ Cell[BoxData[
     RowBox[{"MultinormalDistribution", "@", 
      RowBox[{"IdentityMatrix", "[", "3", "]"}]}], ",", "100"}], 
    "]"}]}]], "Input",ExpressionUUID->"28a9ec0e-2953-4ead-9755-1586c69acf3f"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["IGBetaWeightedGabrielGraph", \
+"Subsubsection",ExpressionUUID->"db4f343b-bfd1-42ce-8247-3ba24436a217"],
+
+Cell[BoxData[
+ RowBox[{"?", 
+  "IGBetaWeightedGabrielGraph"}]], \
+"Input",ExpressionUUID->"1e5a37ad-ca3b-4c27-9bcf-e9d8d278c30e"],
+
+Cell[TextData[{
+ StyleBox["Experimental: ",
+  FontWeight->"Bold"],
+ "This is experimental functionality that may change in the future."
+}], "Text",ExpressionUUID->"b23e501c-3990-4a8c-8abe-5f80f57cf92d"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"IGBetaWeightedGabrielGraph", "[", "points", "]"}]],ExpressionUUID->
+  "2924083d-9f1d-4db3-832e-5969a64a3785"],
+ " produces a Gabriel graph in which edge weights represent threshold \[Beta] \
+values for lune-based \[Beta]-skeletons. Each edge is present in \
+\[Beta]-skeletons having a \[Beta] parameter smaller than the threshold \
+stored in its weight."
+}], "Text",ExpressionUUID->"fa116a7a-0d91-415d-a9a7-c10cce4515c6"],
+
+Cell["Available options:", \
+"Text",ExpressionUUID->"b7dbae34-8373-468f-ad59-21d19bf2be42"],
+
+Cell[TextData[{
+ Cell[BoxData[
+  RowBox[{"\"\<BetaCutoff\>\"", "->", "cutoff"}]],ExpressionUUID->
+  "f894016f-075e-41d2-8438-d0efab750234"],
+ " only computes threshold \[Beta] values up ",
+ Cell[BoxData[
+ "cutoff"],ExpressionUUID->"e8b21d85-bedf-4f4a-9fde-26258f3a7572"],
+ ". Larger thresholds will be returned as ",
+ Cell[BoxData[
+ "Infinity"],ExpressionUUID->"0f9baed6-51e6-4b8d-94b1-127f99e4945a"],
+ ". This option is intended to increase performance: the lower the cutoff, \
+the faster the computation. The default value is ",
+ Cell[BoxData[
+ "Infinity"],ExpressionUUID->"a41eade4-91ef-4c3f-9993-3638e5baa9b4"],
+ ", i.e. no cutoff."
+}], "Item",ExpressionUUID->"4dfd6d39-ebda-4e10-ae1b-7383adf5981a"],
+
+Cell["Colour edges by their inverse threshold \[Beta] values:", \
+"Text",ExpressionUUID->"b8439bc6-3b7e-453b-9cfb-2afa75b4c97c"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"pts", "=", 
+   RowBox[{"RandomPoint", "[", 
+    RowBox[{
+     RowBox[{"Disk", "[", "]"}], ",", "60"}], "]"}]}], 
+  ";"}]], "Input",ExpressionUUID->"18ad3596-8988-41a4-a1d3-333022108062"],
+
+Cell[BoxData[
+ RowBox[{"g", "=", 
+  RowBox[{
+   RowBox[{"IGBetaWeightedGabrielGraph", "[", 
+    RowBox[{"pts", ",", 
+     RowBox[{"GraphStyle", "->", "\"\<ThickEdge\>\""}]}], "]"}], "//", 
+   RowBox[{"IGEdgeMap", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{"ColorData", "[", "\"\<Rainbow\>\"", "]"}], "[", 
+       RowBox[{"1", "/", "#"}], "]"}], "&"}], ",", 
+     RowBox[{"EdgeStyle", "->", 
+      RowBox[{"IGEdgeProp", "[", "EdgeWeight", "]"}]}]}], 
+    "]"}]}]}]], \
+"Input",ExpressionUUID->"5cd7ddf7-7141-4412-8be2-fb474e1f6f3d"],
+
+Cell["\<\
+Plot the edge count of a lune-based \[Beta]-skeleton of the same points as a \
+function of \[Beta]:\
+\>", "Text",ExpressionUUID->"46738a13-9236-4229-b864-37fcfd076021"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"thresholds", "=", 
+   RowBox[{
+    RowBox[{"IGEdgeProp", "[", "EdgeWeight", "]"}], "[", "g", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"ListLogLogPlot", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Reverse", "@", 
+       RowBox[{"Sort", "[", "thresholds", "]"}]}], ",", 
+      RowBox[{"Range", "@", 
+       RowBox[{"Length", "[", "thresholds", "]"}]}]}], "}"}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"AxesLabel", "->", 
+    RowBox[{"{", 
+     RowBox[{"\"\<\[Beta]\>\"", ",", "\"\<edge count\>\""}], "}"}]}]}], 
+  "\[IndentingNewLine]", 
+  "]"}]}], "Input",ExpressionUUID->"71ca5bdc-2af5-43c2-aa38-e23666816874"],
+
+Cell["\<\
+Show a percolation curve corresponding to edge removal in order of reverse \
+threshold \[Beta]:\
+\>", "Text",ExpressionUUID->"72e4f939-0208-44fd-b916-b7974fe34421"],
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "@", 
+  RowBox[{"IGPercolationCurve", "@", 
+   RowBox[{"Reverse", "@", 
+    RowBox[{"SortBy", "[", 
+     RowBox[{
+      RowBox[{"EdgeList", "[", "g", "]"}], ",", 
+      RowBox[{
+       RowBox[{"PropertyValue", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"g", ",", "#"}], "}"}], ",", "EdgeWeight"}], "]"}], "&"}]}],
+      "]"}]}]}]}]], \
+"Input",ExpressionUUID->"d8ba4cd5-3d25-4158-be62-faeb9061355f"]
 }, Closed]]
 }, Closed]]
 }, Closed]],
@@ -56451,7 +56570,6 @@ Cell[BoxData[
           
           AspectRatio->1,
           Frame->True,
-          
           FrameStyle->RGBColor[
            0.6666666666666667, 0.2587966666666667, 0.18560333333333334`],
           FrameTicks->None,
@@ -57636,8 +57754,8 @@ Cell[BoxData[
          RowBox[{"ImageSize", "\[Rule]", "20"}]}], "]"}], "&"}], "/@", 
       RowBox[{
        RowBox[{"IGVertexProp", "[", "VertexShape", "]"}], "[", "g", "]"}]}], 
-     ")"}]}], 
-   "]"}]}]], "Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
+     ")"}]}], "]"}]}]], \
+"Input",ExpressionUUID->"280bf18d-f0e9-43ba-b43f-ef6446d6fe2a"],
 
 Cell[BoxData[
  RowBox[{"IGAdjacencyMatrixPlot", "[", 
@@ -59415,7 +59533,7 @@ Cell[BoxData[{
         RowBox[{"1", "\[UndirectedEdge]", "2"}], ",", 
         RowBox[{"3", "\[UndirectedEdge]", "4"}]}], "}"}], ",", 
       RowBox[{"VertexLabels", "->", "Automatic"}]}], "]"}]}], ";"}], 
-  "\n"}], "\[IndentingNewLine]", 
+  "\[IndentingNewLine]"}], "\n", 
  RowBox[{
   RowBox[{"IGCanonicalLabeledGraph", "[", "g1", "]"}], "===", 
   RowBox[{
@@ -59484,13 +59602,24 @@ Cell["This function discards edge tags.", \
 "Text",ExpressionUUID->"e0df7c67-d8d9-4acc-b8c7-cf909c35aa76"],
 
 Cell[TextData[{
+ Cell[BoxData[
+ "IGCanonicalLabeledEdgeList"],ExpressionUUID->
+  "c4b65885-bb9a-4da7-a598-f65d9170b9db"],
+ " is useful in conjunction with ",
+ ButtonBox["DeleteDuplicatesBy",
+  BaseStyle->"Link",
+  ButtonData->"paclet:ref/DeleteDuplicatesBy"],
+ "."
+}], "Text",ExpressionUUID->"fb189590-9fcd-4322-bd2f-6f5aed8f76a8"],
+
+Cell[TextData[{
  "Highlight all distinct ",
  Cell[BoxData[
   FormBox[
    SubscriptBox["K", 
     RowBox[{"3", ",", "3"}]], TraditionalForm]],ExpressionUUID->
   "10de9702-8b7d-4a72-a9c9-eb8d90fd6efc"],
- " subgraphs of a Queen graph."
+ " subgraphs of a Queen graph:"
 }], "Text",ExpressionUUID->"3ff02e36-0637-465d-942a-3e0b3440ae70"],
 
 Cell[BoxData[{
@@ -59698,8 +59827,8 @@ Cell[BoxData[
     RowBox[{"g", ",", 
      RowBox[{
       RowBox[{"IGVertexProp", "[", "\"\<Type\>\"", "]"}], "[", "g", "]"}]}], 
-    "]"}]}], 
-  ";"}]], "Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
+    "]"}]}], ";"}]], \
+"Input",ExpressionUUID->"c6818e7c-cd9d-4810-b3ad-455ed9bf4881"],
 
 Cell["\<\
 Verify that the graph is bipartite according to this partitioning.\
@@ -61380,8 +61509,9 @@ Cell[TextData[{
  ")"
 }], "Item",ExpressionUUID->"74ac2818-6172-4bd5-8395-a9b4bf1a167c"],
 
-Cell["To cite IGraph/M in a publication, please refer to:", \
-"Text",ExpressionUUID->"044fbe24-02a7-4739-afa2-6fe90823b56a"],
+Cell[TextData[StyleBox["To cite IGraph/M in a publication, please refer to:",
+ FontWeight->
+  "Bold"]], "Text",ExpressionUUID->"044fbe24-02a7-4739-afa2-6fe90823b56a"],
 
 Cell[TextData[{
  "Sz. Horv\[AAcute]t, J. Podkalicki, G. Cs\[AAcute]rdi, T. Nepusz, V. Traag, \
@@ -61493,7 +61623,7 @@ CellLabelAutoDelete->True,
 ShowCellTags->True,
 TrackCellChangeTimes->False,
 GraphicsBoxOptions->{ImageSizeRaw->250},
-FrontEndVersion->"13.0 for Mac OS X x86 (64-bit) (February 4, 2022)",
+FrontEndVersion->"13.1 for Mac OS X x86 (64-bit) (June 16, 2022)",
 StyleDefinitions->Notebook[{
    Cell[
     StyleData[StyleDefinitions -> "Default.nb"]], 
@@ -61514,7 +61644,7 @@ StyleDefinitions->Notebook[{
       Cell[
        StyleData["Hyperlink", "Printout"], FontColor -> 
        RGBColor[0.269993, 0.308507, 0.6]]}, Open]]}, Visible -> False, 
-  FrontEndVersion -> "13.0 for Mac OS X x86 (64-bit) (February 4, 2022)", 
+  FrontEndVersion -> "13.1 for Mac OS X x86 (64-bit) (June 16, 2022)", 
   StyleDefinitions -> "PrivateStylesheetFormatting.nb"],
 ExpressionUUID->"f2c61c1c-5321-4c3e-9047-2d29e9f66d92"
 ]

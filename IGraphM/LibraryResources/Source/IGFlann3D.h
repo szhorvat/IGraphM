@@ -142,9 +142,9 @@ public:
         if (d <= 0)
             throw mma::LibraryError("query: query distance must be positive");
 
-        std::vector<std::pair<mint, double>> ret_matches;
+        std::vector<ResultItem<mint, double>> ret_matches;
 
-        SearchParams params;
+        SearchParameters params;
 
         kdtree->radiusSearch(pt.data(), d*d, ret_matches, params);
 
@@ -165,8 +165,8 @@ public:
         std::vector<mint> results;
         std::vector<mint> sizes;
 
-        SearchParams params;
-        std::vector<std::pair<mint, double>> ret_matches;
+        SearchParameters params;
+        std::vector<ResultItem<mint, double>> ret_matches;
 
         for (mint i=0; i < pts.rows(); ++i) {
             double d = dists[i];
@@ -211,7 +211,7 @@ public:
         if (edges.rows() != n)
             throw mma::LibraryError("neighborCounts: there must be the same number of edges points as query points");
 
-        SearchParams params;
+        SearchParameters params;
         std::vector<std::pair<mint, double>> ret_matches;
 
         auto res = mma::makeVector<mint>(n);
@@ -254,7 +254,7 @@ public:
         if (edges.rows() != n)
             throw mma::LibraryError("intersectionCounts: there must be the same number of edges points as query points");
 
-        SearchParams params;
+        SearchParameters params;
         std::vector<std::pair<mint, double>> ret_matches;
 
         auto res = mma::makeVector<mint>(n);
@@ -306,7 +306,7 @@ public:
         if (edges.rows() != n)
             throw mma::LibraryError("unionCounts: there must be the same number of edges points as query points");
 
-        SearchParams params;
+        SearchParameters params;
         params.sorted = false;
 
         auto res = mma::makeVector<mint>(n);
@@ -335,6 +335,112 @@ public:
         return res;
     }
 
+    mma::RealTensorRef edgeBetas(mma::IntMatrixRef edges, double maxBeta, double tol) {
+        mint n = edges.rows();
+
+        if (edges.cols() != 2)
+            throw mma::LibraryError("edgeBetas: edge matrix must have two columns");
+
+        if (maxBeta < 0)
+            maxBeta = std::numeric_limits<double>::infinity();
+
+        SearchParameters params;
+
+        class BetaFinder {
+            const double max_beta;
+            const double tol;
+            const mint ai, bi;
+            const PointSet *ps;
+            const double ab2;
+
+            double smallest_beta;
+            double max_radius;
+
+        public:
+
+            BetaFinder(double max_beta, double tol, mint v1, mint v2, const PointSet *ps) :
+                max_beta(max_beta), tol(tol), ai(v1), bi(v2), ps(ps),
+                ab2(sqdist3(&ps->pts(ai,0), &ps->pts(bi,0)))
+            {
+                init();
+            }
+
+            void init() { clear(); }
+            void clear() {
+                smallest_beta = std::numeric_limits<double>::infinity();
+                max_radius = luneHalfHeight2(max_beta);
+            }
+
+            bool full() const { return true; }
+
+            size_t size() const { return 1; }
+
+            double luneHalfHeight2(double beta) const {
+                if (beta == 0) return 0;
+                return (ab2 / 4) * (2*beta - 1);
+            }
+
+            double pointBeta(mint index) const {
+                double ap2 = sqdist3(&ps->pts(ai,0), &ps->pts(index,0));
+                double bp2 = sqdist3(&ps->pts(bi,0), &ps->pts(index,0));
+
+                if (ap2 > bp2)
+                    std::swap(ap2, bp2);
+
+                double denom = ab2 + ap2 - bp2;
+
+                if (denom <= 0)
+                    return std::numeric_limits<double>::infinity();
+
+                double beta = 2*ap2 / denom;
+
+                return beta < 1 + tol ? 0 : beta;
+            }
+
+            bool addPoint(double dist, mint index) {
+
+                //mma::mout << "considering " << index << ", dist = " << dist << ", max_radius = " << max_radius << std::endl;
+                if (dist < max_radius) {
+                    double beta = pointBeta(index);
+                    //mma::mout << "beta = " << beta << std::endl;
+
+                    if (beta < smallest_beta && beta < max_beta) {
+                        smallest_beta = beta;
+                        max_radius = luneHalfHeight2(beta);
+                    }
+                }
+
+                return true;
+            }
+
+            double worstDist() const { return max_radius; }
+
+            double const thresholdBeta() const { return smallest_beta; }
+        };
+
+        auto res = mma::makeVector<double>(n);
+        LTGuard<mma::RealTensorRef> res_guard(res);
+
+        for (mint i=0; i < n; ++i) {
+            mint ai = edges(i,0)-1;
+            mint bi = edges(i,1)-1;
+
+            BetaFinder bf(maxBeta, tol, ai, bi, ps);
+
+            double c[3] = { 0.5*(ps->pts(ai,0) + ps->pts(bi,0)),
+                            0.5*(ps->pts(ai,1) + ps->pts(bi,1)),
+                            0.5*(ps->pts(ai,2) + ps->pts(bi,2)) };
+
+            kdtree->radiusSearchCustomCallback(c, bf, params);
+
+            res[i] = bf.thresholdBeta();
+
+            mma::check_abort();
+        }
+
+        res_guard.deactivate();
+        return res;
+    }
 };
 
 #endif // IG_FLANN3D_H

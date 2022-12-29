@@ -1,5 +1,25 @@
 ## Revision history for [IGraph/M](README.md)
 
+#### 0.6.5
+
+Other:
+
+ - Improved error checking and added more internal consistency checks to help debug issues with recent Mathematica versions.
+
+#### 0.6.4
+
+Added:
+
+ - `IGBetaWeightedGabrielGraph` for computing the β value where each edge of a lune-based β-skeleton would disappear (experimental function).
+ - `IGModularityMatrix` gives the modularity matrix of a network.
+ - `IGCanonicalLabeledGraph` creates a canonical representation of a labeled graph without changing vertex names. Graphs which are considered equivalent by `IGSameGraphQ` have the same canonical representation. It is intended for removing duplicate graphs using `DeleteDuplicatesBy`.
+ - `IGCanonicalEdgeList` creates a canonical representation of an edge list, in a manner similar to `IGCanonicalLabeledGraph`.
+
+Other:
+
+ - Documentation improvements
+ - Significant performance improvements for the calculation of lune and circle based β skeletons when using large β values.
+
 #### 0.6.3
 
 Changed:
