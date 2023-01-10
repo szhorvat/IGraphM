@@ -89,7 +89,7 @@ C++ programmers should look at [Development.md](Development.md) for additional i
 
 If you use IGraph/M in any academic publications, please cite:
 
- - Sz. Horvát, J. Podkalicki, G. Csárdi, T. Nepusz, V. Traag, F. Zanini, D. Noom, IGraph/M: graph theory and network analysis for Mathematica, preprint (2022). http://dx.doi.org/10.48550/arXiv.2209.09145
+ - Sz. Horvát, J. Podkalicki, G. Csárdi, T. Nepusz, V. Traag, F. Zanini, D. Noom, IGraph/M: graph theory and network analysis for Mathematica, Journal of Open Source Software, 8(81), 4899 (2023). https://doi.org/10.21105/joss.04899
 
 
 ## ⚖️ License
