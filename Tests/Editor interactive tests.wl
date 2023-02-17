@@ -19,7 +19,7 @@ FrontEndExecute[FrontEndToken["DeleteGeneratedCells"]]
 
 IGraphM`GraphEditor`PackagePrivate`$geDebug=True;
 IGraphM`GraphEditor`PackagePrivate`$logTimings=False;
-IGraphM`GraphEditor`PackagePrivate`$logDynamic=False;
+IGraphM`GraphEditor`PackagePrivate`$logDynamic=True;
 Get["IGraphM`"]
 IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
 
@@ -77,7 +77,7 @@ IGGraphEditor[ImageSize->100]
 ] }
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Different input graphs*)
 
 
@@ -94,7 +94,7 @@ IGGraphEditor[CompleteGraph[2, DirectedEdges -> True]]
   IGGraphEditor[IGEmptyGraph[1]] }
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Is it usable with larger graphs?*)
 
 
@@ -110,7 +110,7 @@ IGGraphEditor[GraphData["GreatRhombicosidodecahedralGraph"], VertexSize->Tiny]
 IGGraphEditor[ExampleData[{"NetworkGraph", "DolphinSocialNetwork"}], VertexSize->Tiny, ImageSize->555]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Vertex size*)
 
 

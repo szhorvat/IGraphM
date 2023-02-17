@@ -152,7 +152,7 @@ iGraphEditor // Options = Options @ IGGraphEditor;
 supportedGraphQ = MatchQ[_Graph];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*iGraphEditor*)
 
 
@@ -187,10 +187,7 @@ Interpretation[
 ; PaneSelector[
   {
     True -> Button[Dynamic @ error,  refresh[], BaseStyle -> 15]
-  , False -> Panel[
-      Dynamic[Refresh[iGraphEditorPanel[Dynamic@state], None]]
-    , FrameMargins -> 0, BaseStyle -> CacheGraphics->False
-    ]
+  , False -> Dynamic[Refresh[iGraphEditorPanel[Dynamic@state], None]]
   }
   , Dynamic[ MatchQ[_Failure] @ error ]
   , ImageSize -> Automatic
@@ -235,21 +232,58 @@ iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> 
 iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input."|>]
 
 
-iGraphEditorPanel[Dynamic@state_] := EventHandler[
-    geGraphics @ Dynamic @ state
-  , "MouseClicked" :> (
-      geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]]
-    )
-  , PassEventsDown -> True
-  ]
+iGraphEditorPanel[Dynamic@state_] := Grid[{
+  {
+    iGraphGraphicsPanel @ Dynamic @ state
+  , iGraphMenu @ Dynamic @ state  
+  }
+, { 
+    iGraphModeSetter @ Dynamic @ state
+  , ""   
+  }
+}, Alignment->{Left,Top}, Spacings->{0,0}]
 
+
+
+iGraphModeSetter[Dynamic@state_]:=SetterBar[Dynamic@state["editorMode"], {"draw" -> "Draw", "edit" -> "Edit", "config" -> "Config"}]
+
+
+iGraphMenu[Dynamic[state_]]:=PaneSelector[
+{ "draw" -> Column[{
+    menuButton["Adjust range", Appearance->"FramedPalette"],
+    menuButton["Hide controls", Appearance->"FramedPalette"]
+  }, Left, Spacings->0]
+, "edit" -> Panel[Pane["Selected element prop editor", ImageSize-> ({Automatic, state["ImageSize"][[2]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
+, "config" -> Panel[Pane[
+    Column[{
+      "Editor config",
+      Dataset @ state[[{"version","vCounter","eCounter","range","aspectRatio", "editorMode"}]]      
+      }, Left], ImageSize-> ({Automatic, state["ImageSize"][[2]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
+}
+, PDynamic @ state["editorMode"]
+]
+
+menuButton // Attributes = {HoldRest}
+menuButton[args___]:=Button[args, Appearance->"FramedPalette"]
+
+
+iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
+      EventHandler[
+    geGraphics @ Dynamic @ state
+  , {
+      "MouseClicked" :> ( geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]] )    
+    }
+  , PassEventsDown -> True  
+  ]
+    , FrameMargins -> 0, BaseStyle -> CacheGraphics->False
+    ]
 
 
 (* ::Subsection:: *)
 (*State*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*state version*)
 
 
@@ -311,7 +345,7 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*to state*)
 
 
@@ -333,6 +367,7 @@ GraphToEditorState[ opts_Association ] := Module[{state}
     , "range" -> {{-1, 1}, {-1, 1}}
     , "aspectRatio" -> 1
     , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
+    , "editorMode" -> "draw"
   |>
 
 ; state = stateSnapInit @ state
@@ -368,7 +403,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*state helpers*)
 
 
@@ -442,7 +477,7 @@ stateHasCurvedEdges[state_Association]:= True
 (*graphics*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*geGraphics*)
 
 
@@ -475,7 +510,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
   , PassEventsDown -> True
   ]
 
-] (* PlotRange->Dynamic@state["config... updates at any unrelated event, vertex dragging included,
+] (* PlotRange->Dynamic@state["range"] updates at any unrelated event, vertex dragging included,
      this DynamicModule @ DynamicWrapper is here to address a bug. Why does it help? Because WRI.
    *)
 
@@ -541,7 +576,7 @@ Module[
     , "MouseUp"      :> (task = RunScheduledTask[ vertexMoved = {v["id"], x} , {0.1}])
     , If[ state[ "snap"]
       , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
-      , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
+      , "MouseDragged" :> Set[x , CurrentValue[{"MousePosition", "Graphics"}] ]
       ]
     },
     PassEventsUp -> False
@@ -701,7 +736,7 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 )
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateRange*)
 
 
@@ -744,7 +779,7 @@ handleDegeneratedRange[range : {{xmin_, xmax_}, {ymin_, ymax_}}] := Module[{}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateVertexSize*)
 
 
