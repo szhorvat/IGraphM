@@ -606,7 +606,7 @@ Table[
 
 
 geEdgeShapeFunction[Dynamic @ state_, e_Association] := EventHandler[
-    edgeHoverWrapper @ edgeToPrimitive @ e      
+    edgeHoverWrapper @ edgeToPrimitive @ e /. Arrowheads[0.] -> Arrowheads[0.00001] (*patch #2748 :heart: *)    
   , { "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e]) }
   , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
   ]
@@ -623,7 +623,7 @@ edgeHoverWrapper[primitive_]:=  With[
 ]
 
 
-If[ $VersionNumber > 12
+If[ 12 < $VersionNumber < 13.2
 , edgeHoverWrapper[primitive_Arrow]:=  Mouseover[
     {AbsoluteThickness @ $edgeThickness, primitive},
     {AbsoluteThickness @ $activeEdgeThickness, primitive}
@@ -697,9 +697,7 @@ If[
 If[
   TrueQ @ $geDebug
 
-, geAction[args___] := (Beep[]; Print @ Framed @ InputForm @ {args})
-
-; Module[{$inside = False}
+, Module[{$inside = False}
   , geAction /: SetDelayed[geAction[args___], rhs_] /; !TrueQ[$inside] := Block[
       {$inside = True}
     , geAction[a:PatternSequence[args]]:=Internal`InheritedBlock[{ $actionLevel = $actionLevel + 1}
@@ -1156,6 +1154,21 @@ ToEdgeShapeFunction[p : {Arrowheads[0.], Arrow[b_BezierCurve, ___]}, vertexEncod
 ToEdgeShapeFunction[Arrow[b_BezierCurve, ___], vertexEncoded_] := Arrow[b /. vertexEncoded];
 ToEdgeShapeFunction[p_, ___] := Automatic;
 
+
+(* ::Subsubsection::Closed:: *)
+(*actions fallthrough*)
+
+(* This has to be here becasue of a weird specificity of args___ vs PatternSequence *)
+(* SetDelayed can't be used because it is decorated in debug mode *)
+If[
+  TrueQ @ $geDebug
+
+,  DownValues[geAction] = Append[ 
+     DownValues[geAction]
+   , HoldPattern[geAction[args___] ] :> (Beep[]; Print @ Framed @ InputForm @ {args})
+   ]
+
+]
 
 (* ::Section::Closed:: *)
 (*helpers*)
