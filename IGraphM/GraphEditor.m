@@ -1,5 +1,9 @@
 (* ::Package:: *)
 
+(* ::Subsection::Closed:: *)
+(*Package Export*)
+
+
 (* Mathematica Package *)
 (* Created by Mathematica plugin for IntelliJ IDEA *)
 
@@ -119,7 +123,7 @@ symbolName = Function[s, SymbolName @ Unevaluated[s], HoldFirst];
 
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*IGGraphEditor*)
 
 
@@ -250,17 +254,18 @@ iGraphModeSetter[Dynamic@state_]:=SetterBar[Dynamic@state["editorMode"], {"draw"
 
 iGraphMenu[Dynamic[state_]]:=PaneSelector[
 { "draw" -> Column[{
-    menuButton["Adjust range", Appearance->"FramedPalette"],
+    menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],
     menuButton["Hide controls", Appearance->"FramedPalette"]
   }, Left, Spacings->0]
-, "edit" -> Panel[Pane["Selected element prop editor", ImageSize-> ({Automatic, state["ImageSize"][[2]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
+, "edit" -> Panel[Pane["Selected element prop editor", ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
 , "config" -> Panel[Pane[
     Column[{
       "Editor config",
       Dataset @ state[[{"version","vCounter","eCounter","range","aspectRatio", "editorMode"}]]      
-      }, Left], ImageSize-> ({Automatic, state["ImageSize"][[2]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
+      }, Left], ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
 }
 , PDynamic @ state["editorMode"]
+, ImageSize->Automatic
 ]
 
 menuButton // Attributes = {HoldRest}
@@ -279,7 +284,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
     ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*State*)
 
 
@@ -369,6 +374,8 @@ GraphToEditorState[ opts_Association ] := Module[{state}
     , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
     , "editorMode" -> "draw"
   |>
+
+; state["ImageSize"] = state["ImageSize"] // Replace[ { Automatic -> 300, n_?NumericQ :> {n,n} } ] 
 
 ; state = stateSnapInit @ state
 ; state
@@ -501,10 +508,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
       , TrackedSymbols :> {state}
       ]
     , AppearanceElements -> {"ResizeArea"}  
-    , ImageSize -> Dynamic[
-        size
-      , (size = {1, 1/state["aspectRatio"]} * #[[1]] )&
-      ]
+    , ImageSize -> Dynamic[size]
     ]
   , "MouseUp" :> (state["ImageSize"] = size)
   , PassEventsDown -> True
@@ -582,7 +586,8 @@ Module[
     PassEventsUp -> False
   ]
       (*ScheduledTask stuff is here to prevent MouseUp firing if MouseClicked is going to happen*)
-      (*I'd prefer clicked to be Queued but if I put it in an inner queued EventHandler then I can't block MouseUp from fireing*)
+      (*I'd prefer clicked to be Queued but if I put it in an inner queued EventHandler 
+        then I can't block MouseUp from firing*)
 ]]]
 
 
@@ -740,26 +745,64 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 (*UpdateRange*)
 
 
-geAction["UpdateRange", Dynamic @ state_] := Module[
-  {newBounds, vs, embedding, bounds }
+(* bounds      = {{x1,x2}, {y1, y2}} = (plot)range*)
+(* boundig box = {{x1,y1}, {x2, y2}}*)
+geAction["UpdateRange", Dynamic @ state_, force_:False] := Module[
+  {newBounds, embedding, bounds }
+
 
 , (*embedding = state // Query["vertex", All, "pos"]
 ; If[ Length[embedding ] < 1, Return[False, Module]]*)
 
-bounds = Lookup[state, "coordinateBounds", CoordinateBounds @ state[["vertex", All, "pos"]] ]
+bounds = Lookup[  state, "coordinateBounds", 
+  state["coordinateBounds"] = CoordinateBounds @ state[["vertex", All, "pos"]] 
+]
 
-; vs = vertexSizeMultiplier @ state[ "VertexSize"]
-; newBounds = handleDegeneratedRange @ CoordinateBounds[ Transpose @ bounds, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
+; newBounds = handleDegeneratedRange @ respectVertexSize[ bounds , state["VertexSize"] ]
 
-; If[ AllTrue[ newBounds, state["inRangeQ"]],  Return[False, Module]]
+; If[ ! force && AllTrue[ Transpose @ newBounds, state["inRangeQ"]],  Return[False, Module]]
 
-; state[ "range"] = newBounds
-; state = stateHandleNarrowRange @ state
 
-; state[  "aspectRatio"] = #/#2& @@ (#2-#& @@@ state[ "range"])
-; state[  "ImageSize" ] = {1, 1/state[  "aspectRatio"]} * If[ListQ@#, First@#,# /. Automatic -> 300]& @ state[ "ImageSize"] 
+; state["range"] = adjustRangeToImageSize[ newBounds, state["ImageSize"] ]
+
 ; state[  "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[  "range"] ]
-; geAction["UpdateVertexSize", Dynamic @ state]
+(* ; geAction["UpdateVertexSize", Dynamic @ state] *)
+]
+
+
+(* I don't like when UI's aspect ration changes unless it was done explicitly by draggin Pane's resize control*)
+(* So we need to pad vertically or horizontally the minimal range in order to match ImageSize aspect ratio.*)
+
+adjustRangeToImageSize[ bounds: {{x1_, x2_}, {y1_, y2_}}, size: {w_, h_}]:= Module[
+  {rangeRatio, sizeRatio, newWidth, newHeight, centerWidth, centerHeigth, x1p, x2p, y1p, y2p}
+
+, rangeRatio = (y2-y1)/(x2-x1) (*degenerate case should be handled before*)
+; sizeRatio = h/w
+; If[ 
+    sizeRatio < rangeRatio (*pad horizontally*)
+
+  , newWidth = w/h (y2-y1)
+  ; centerWidth = .5 (x1+x2)
+  ; x1p = centerWidth - .5 newWidth
+  ; x2p = centerWidth + .5 newWidth
+  ; {y1p, y2p} = {y1, y2}
+
+  , newHeight = h/w (x2-x1)
+  ; centerHeigth = .5 (y2-y1)
+  ; y1p = centerHeigth - .5 newHeight
+  ; y2p = centerHeigth + .5 newHeight
+  ; {x1p, x2p} = {x1, x2}
+  ]
+  (* I guess 5y ago I could write a one line vector calculation but now...*)
+; {rangeRatio, sizeRatio, newWidth, newHeight, centerWidth, centerHeigth, x1p, x2p, y1p, y2p}
+  
+; {{x1p, x2p}, {y1p, y2p}}    
+
+]
+
+respectVertexSize[bounds_, vertexSize_]:=With[
+  { vs =  vertexSizeMultiplier @ vertexSize }
+, CoordinateBounds[ Transpose @ bounds, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
 ]
 
 
