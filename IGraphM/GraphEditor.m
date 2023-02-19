@@ -273,15 +273,9 @@ menuButton[args___]:=Button[args, Appearance->"FramedPalette"]
 
 
 iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
-      EventHandler[
-    geGraphics @ Dynamic @ state
-  , {
-      "MouseClicked" :> ( geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]] )    
-    }
-  , PassEventsDown -> True  
-  ]
-    , FrameMargins -> 0, BaseStyle -> CacheGraphics->False
-    ]
+  geGraphics @ Dynamic @ state
+, FrameMargins -> 0, BaseStyle -> CacheGraphics->False
+]
 
 
 (* ::Subsection::Closed:: *)
@@ -510,7 +504,12 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
     , AppearanceElements -> {"ResizeArea"}  
     , ImageSize -> Dynamic[size]
     ]
-  , "MouseUp" :> (state["ImageSize"] = size)
+  , {
+      "MouseUp" :> If[ size != state["ImageSize"],  geAction["PaneResized", Dynamic @ state, size] ]      
+    , "MouseClicked" :> ( 
+        geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]] 
+      )    
+  }
   , PassEventsDown -> True
   ]
 
@@ -678,11 +677,7 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
 
 
 (* ::Subsection:: *)
-(*UI Actions*)
-
-
-(* ::Subsubsection::Closed:: *)
-(*$geDebug*)
+(*Logging*)
 
 
 (* a debug feature, enabled by default till we have a first version*)
@@ -723,6 +718,20 @@ logAction[head_, state_, args___]:= With[
     }, BaseStyle->LineBreakWithin->False]
   ]
 ]
+
+(* ::Subsection::Closed:: *)
+
+(*Events*)
+
+(* ::Subsubsection::Closed:: *)
+
+(*PaneResized*)
+
+geAction["PaneResized", Dynamic @ state_, size_] := (
+  
+    state["ImageSize"] = size
+  ; geAction["UpdateRange", Dynamic @ state, True]  
+)
 
 
 (* ::Subsubsection::Closed:: *)
@@ -786,7 +795,7 @@ adjustRangeToImageSize[ bounds: {{x1_, x2_}, {y1_, y2_}}, size: {w_, h_}]:= Modu
   ; {y1p, y2p} = {y1, y2}
 
   , newHeight = h/w (x2-x1)
-  ; centerHeigth = .5 (y2-y1)
+  ; centerHeigth = .5 (y2+y1)
   ; y1p = centerHeigth - .5 newHeight
   ; y2p = centerHeigth + .5 newHeight
   ; {x1p, x2p} = {x1, x2}
