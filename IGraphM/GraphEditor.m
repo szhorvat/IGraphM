@@ -253,15 +253,32 @@ iGraphModeSetter[Dynamic@state_]:=SetterBar[Dynamic@state["editorMode"], {"draw"
 
 
 iGraphMenu[Dynamic[state_]]:=PaneSelector[
-{ "draw" -> Column[{
-    menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],
-    menuButton["Hide controls", Appearance->"FramedPalette"]
-  }, Left, Spacings->0]
-, "edit" -> Panel[Pane["Selected element prop editor", ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
-, "config" -> Panel[Pane[
-    Column[{
-      "Editor config",
-      Dataset @ state[[{"version","vCounter","eCounter","range","aspectRatio", "editorMode"}]]      
+{ "draw" -> Column[
+    {
+      menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],
+      menuButton["Hide controls", Appearance->"FramedPalette", Enabled->False]
+    }
+  , Left
+  , Spacings->0
+  ]
+, "edit" -> Panel[
+    Pane[
+      PDynamic @ If[
+        AssociationQ @ state["selectedObject"]
+      , PDynamic[dynamicLog["selectedObject"]; state["selectedObject"]  ]
+      , "Click on object"
+      ]
+    , ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })
+    ]
+  , ImageMargins -> {0,0}
+  , FrameMargins->{0,0}
+  ]
+, "config" -> Panel[
+    Pane[
+      Column[{
+        "Editor config"
+      , Dataset @ state[[{"version","vCounter","eCounter","range","aspectRatio", "editorMode"}]]      
+      , Grid[{{"VertexLabels: ", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}]}}]
       }, Left], ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
 }
 , PDynamic @ state["editorMode"]
@@ -367,6 +384,7 @@ GraphToEditorState[ opts_Association ] := Module[{state}
     , "aspectRatio" -> 1
     , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
     , "editorMode" -> "draw"
+    , "selectedObject" -> Null
   |>
 
 ; state["ImageSize"] = state["ImageSize"] // Replace[ { Automatic -> 300, n_?NumericQ :> {n,n} } ] 
@@ -564,11 +582,11 @@ Module[
     , v["id"]
     ]
   }
-  , If[ (*TODO, this could be a separate collection, like vertex/edges, so it could be toggled 
+  , PDynamic@If[ (*TODO, this could be a separate collection, like vertex/edges, so it could be toggled 
           with lower overhead *)
       state["VertexLabels"] === "Name"
     , Inset[v["name"], Offset[ {12, 12}, DynamicLocation[v["id"]]] ]
-    , Nothing
+    , {}
     ]
   }
 
@@ -735,6 +753,84 @@ geAction["PaneResized", Dynamic @ state_, size_] := (
 
 
 (* ::Subsubsection::Closed:: *)
+(*MouseClicked*)
+
+
+geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
+
+, If[ 
+    state["editorMode"] === "edit"
+  , Return @ geAction["UnselectObject", Dynamic @ state]
+  ]
+
+; If[
+    Not @ CurrentValue["AltKey"]
+  , geAction["Unselect", Dynamic @ state]
+  ; Return[Null, Module]
+  ]
+
+; newV = geAction["AddVertex", Dynamic @ state, pos ]
+
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*VertexClicked*)
+
+
+geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
+  {  selectedV = state["selectedVertex"], clickedV = v["id"]}  
+, Module[
+  {wasAnySelected, wasThisSelected}  
+
+, If[ state["editorMode"] === "edit"
+  , Return @ geAction["SelectObject", Dynamic @ state, v]
+  ]
+
+; wasAnySelected  = stateHasSelectedVertex @ state
+; wasThisSelected = selectedV === clickedV
+
+; If[ TrueQ @ CurrentValue["AltKey"] && ! wasAnySelected
+  , Throw @ geAction["RemoveVertex", Dynamic @ state, v]
+  ]
+
+(*; If[ wasThisSelected
+  , Throw @ geAction["Unselect", Dynamic @ state]
+  ]*)
+
+; If[  wasAnySelected
+  , Throw @ geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]
+  ]
+
+; geAction["Select", Dynamic @ state, clickedV]
+
+]]
+
+geAction["SelectObject", Dynamic @ state_, v_Association]:= state["selectedObject"] = v
+geAction["UnselectObject", Dynamic @ state_]:= state["selectedObject"] = Null
+
+
+(* ::Subsubsection::Closed:: *)
+(*EdgeClicked*)
+
+
+geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
+, If[ state["editorMode"] === "edit"
+  , Return @ geAction["SelectObject", Dynamic @ state, edge]
+  ]
+
+; If[
+    TrueQ @ CurrentValue["AltKey"]
+  , geAction["RemoveEdge", Dynamic@state, edge]
+  ]
+]
+
+
+(* ::Subsection::Closed:: *)
+
+(*Actions*)
+
+(* ::Subsubsection::Closed:: *)
 (*UpdateVertexPosition*)
 
 
@@ -850,60 +946,6 @@ vertexSizeMultiplier[vs_] := vs /. {
 } /. Except[_?NumericQ] -> 0.05
 
 
-(* ::Subsubsection::Closed:: *)
-(*MouseClicked*)
-
-
-geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
-
-, If[
-    Not @ CurrentValue["AltKey"]
-  , geAction["Unselect", Dynamic @ state]
-  ; Return[Null, Module]
-  ]
-
-; newV = geAction["AddVertex", Dynamic @ state, pos ]
-
-]
-
-
-(* ::Subsubsection::Closed:: *)
-(*VertexClicked*)
-
-
-geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
-  {  selectedV = state["selectedVertex"], clickedV = v["id"]}
-, Module[
-  {wasAnySelected, wasThisSelected}  
-
-, wasAnySelected  = stateHasSelectedVertex @ state
-; wasThisSelected = selectedV === clickedV
-
-; If[ TrueQ @ CurrentValue["AltKey"] && ! wasAnySelected
-  , Throw @ geAction["RemoveVertex", Dynamic @ state, v]
-  ]
-
-(*; If[ wasThisSelected
-  , Throw @ geAction["Unselect", Dynamic @ state]
-  ]*)
-
-; If[  wasAnySelected
-  , Throw @ geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]
-  ]
-
-; geAction["Select", Dynamic @ state, clickedV]
-
-]]
-
-
-(* ::Subsubsection::Closed:: *)
-(*EdgeClicked*)
-
-
-geAction["EdgeClicked", Dynamic @ state_, edge_Association] := If[
-  TrueQ @ CurrentValue["AltKey"]
-, geAction["RemoveEdge", Dynamic@state, edge]
-]
 
 
 (* ::Subsubsection::Closed:: *)
