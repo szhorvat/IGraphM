@@ -37,7 +37,7 @@ $hoverVertexEdgeThickness = 2;
 $edgeThickness = 1;
 $activeEdgeThickness = 3;
 $potentialEdgeStyle = Directive[Purple, Dashed, Thick];
-$gridLinesCount = 30.;
+
 
 
 (* ::Subsection::Closed:: *)
@@ -131,6 +131,8 @@ IGGraphEditor // Options = {
   "KeepVertexCoordinates" -> True (* bool *)
 , "CreateVertexSelects"   -> True (* bool *)
 , "SnapToGrid"            -> False (* bool *)
+, "ShowSnapGrid"          -> False (* bool *)
+, "SnapDensity"           -> 30 (* _?NumberQ | {_, _}  [ approx grid lines / dimension]*)
 , "IndexGraph"            -> False (* bool *)
 , "PerformanceLimit"      -> 450   (* _Integer *)
 , VertexLabels            -> None (* | "Name" *)
@@ -249,19 +251,12 @@ iGraphEditorPanel[Dynamic@state_] := Grid[{
 
 
 
-iGraphModeSetter[Dynamic@state_]:=SetterBar[Dynamic@state["editorMode"], {"draw" -> "Draw", "edit" -> "Edit", "config" -> "Config"}]
+iGraphModeSetter[Dynamic@state_]:=SetterBar[Dynamic@state["editorMode"], {"draw" -> "Draw", "edit" -> "Annotate"}]
 
 
-iGraphMenu[Dynamic[state_]]:=PaneSelector[
-{ "draw" -> Column[
-    {
-      menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],
-      menuButton["Hide controls", Appearance->"FramedPalette", Enabled->False]
-    }
-  , Left
-  , Spacings->0
-  ]
-, "edit" -> Panel[
+iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
+{ 
+  "edit" -> Panel[
     Pane[
       PDynamic @ If[
         AssociationQ @ state["selectedObject"]
@@ -273,20 +268,29 @@ iGraphMenu[Dynamic[state_]]:=PaneSelector[
   , ImageMargins -> {0,0}
   , FrameMargins->{0,0}
   ]
-, "config" -> Panel[
+, "draw" -> Panel[
     Pane[
       Grid[{
-          {Style["Editor config", Bold], SpanFromLeft}
+          { menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],      
+            SpanFromLeft
+          }
         , {}  
         , {"Vertices count:", PDynamic@state["vCounter"]}  
         , {"Edges count:", PDynamic@state["eCounter"]}  
         , {"VertexLabels:", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}]}
         , {"VertexSize:", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large }]}
         , {}
+        , {"SnapToGrid", Checkbox @ Dynamic[ state["SnapToGrid"], {Automatic, geAction["UpdateSnapState", Dynamic @ state]&}] }
+        , {"Show snap grid", Checkbox[ Dynamic @ state["ShowSnapGrid"], Enabled -> PDynamic @ state["SnapToGrid"]] }
+        , {"Snap density", PDynamic @ state["SnapDensity"] }
+        , {}
         , {"UI Version", state["version"] }
+        , { menuButton["Copy state", CopyToClipboard @ RawBoxes @ ToBoxes @ Iconize @ state, Appearance->"FramedPalette"],      
+            SpanFromLeft
+          }
         
         }
-      , Alignment -> {Left, Center}
+      , Alignment -> {Left, Center}, Spacings -> {1,1}
       ]
     , FrameMargins -> 10
     ]
@@ -398,6 +402,7 @@ GraphToEditorState[ opts_Association ] := Module[{state}
     , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
     , "editorMode" -> "draw"
     , "selectedObject" -> Null
+
   |>
 
 ; state["ImageSize"] = state["ImageSize"] // Replace[ { Automatic -> 300, n_?NumericQ :> {n,n} } ] 
@@ -454,7 +459,7 @@ stateSnapInit[state_Association] := Module[{newState = state }
 
 
 stateGetAutomaticSnapStep[state_Association] :=
-  Ceiling[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #)/ $gridLinesCount] & @@@ state["range"]
+  Ceiling[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #)/ state["SnapDensity"]] & @@@ state["range"]
 
 
 stateHandleNarrowRange[state_Association] := Module[
@@ -520,7 +525,8 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
       DynamicWrapper[
         Graphics[
           DynamicNamespace @ {
-            geHighlightsPrimitives @ Dynamic @ state
+            geSnapGrid @ Dynamic @ state
+          , geHighlightsPrimitives @ Dynamic @ state
           , Gray
           , geEdges @ Dynamic @ state
           , geVertices @ Dynamic @ state
@@ -610,7 +616,7 @@ Module[
     , "MouseUp"      :> (task = RunScheduledTask[ vertexMoved = {v["id"], x} , {0.1}])
     , If[ state[ "snap"]
       , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
-      , "MouseDragged" :> Set[x , CurrentValue[{"MousePosition", "Graphics"}] ]
+      , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
       ]
     },
     PassEventsUp -> False
@@ -677,7 +683,33 @@ edgeToPrimitive[e_] := Module[{shapeFunction}
 edgeTypeToPrimitive[(Rule|DirectedEdge)[_,_]]=Arrow[{#,#2}]&
 edgeTypeToPrimitive[_[_, _]]=Line[{#,#2}]&
 
+(* ::Subsubsection::Closed:: *)
+(*snap grid*)
 
+geSnapGrid[Dynamic @ state_] := With[{ selV := state["selectedVertex"] }
+, { $potentialEdgeStyle,
+    PDynamic[
+      dynamicLog["snap grid"];
+      If[
+        TrueQ @ state["ShowSnapGrid"] && Not @ MissingQ @ state["snapStep"] 
+      , snapGridPrimitives @ state
+      , {}
+      ]
+    ]
+}
+]
+
+snapGridPrimitives[state_]:= {
+  AbsolutePointSize[0.5], Gray,
+  Point @ Tuples @ MapThread[
+    Range[
+      Floor[#[[1]], #2],
+      Ceiling[#[[2]], #2],
+      #2
+      ] &
+    , {state["range"], state["snapStep"]}
+ ]
+}
 
 
 (* ::Subsubsection::Closed:: *)
@@ -857,8 +889,23 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 )
 
 
+
 (* ::Subsubsection::Closed:: *)
-(*UpdateRange*)
+(*UpdateSnapState*)
+
+geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
+, modified = stateSnapInit @ state 
+; state["snap"] = modified["snap"]
+; state["snapStep"] = modified["snapStep"]
+; If[ 
+    state["snap"]
+  , state["vertex"] = modified["vertex"]  
+  , state["ShowSnapGrid"] = False
+  ]
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["vCounter"]]  
+]
+
+
 
 
 (* bounds      = {{x1,x2}, {y1, y2}} = (plot)range*)
