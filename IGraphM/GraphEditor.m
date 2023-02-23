@@ -135,6 +135,7 @@ IGGraphEditor // Options = {
 , "SnapDensity"           -> 30 (* _?NumberQ | {_, _}  [ approx grid lines / dimension]*)
 , "IndexGraph"            -> False (* bool *)
 , "PerformanceLimit"      -> 450   (* _Integer *)
+, "ShowSidePanel"         -> False
 , VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
@@ -241,11 +242,11 @@ iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input."|>]
 iGraphEditorPanel[Dynamic@state_] := Grid[{
   {
     iGraphGraphicsPanel @ Dynamic @ state
-  , iGraphMenu @ Dynamic @ state  
+  , PDynamic @ If[ state["ShowSidePanel"], iGraphMenu @ Dynamic @ state  , Spacer[{0,0}]]
   }
 , { 
-    iGraphModeSetter @ Dynamic @ state
-  , ""   
+    PDynamic @ If[ state["ShowSidePanel"], iGraphModeSetter @ Dynamic @ state  , Spacer[{0,0}]]    
+  , SpanFromAbove 
   }
 }, Alignment->{Left,Top}, Spacings->{.3,.3}]
 
@@ -530,6 +531,14 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
           , Gray
           , geEdges @ Dynamic @ state
           , geVertices @ Dynamic @ state
+          , Inset[
+              Button[
+                Style["\[Congruent]",18]
+              , state["ShowSidePanel"] = !state["ShowSidePanel"]
+              , ContentPadding->False, Appearance->"FramedPalette"
+              ]
+            , {Right, Top}, {Right, Top}
+            ]
           }
         , PlotRange -> Dynamic @ range
         , ImageSize -> Dynamic @ graphicsSize 

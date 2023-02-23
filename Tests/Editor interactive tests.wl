@@ -55,6 +55,15 @@ SetOptions[IGGraphEditor, ImageSize->Automatic];
 IGGraphEditor[Graph@{1\[UndirectedEdge]2},VertexSize->Small, "DirectedEdges"->True]
 
 
+Panel@Graphics[{
+Point[{0,0}],
+Inset[Button[Style["\[Congruent]",18],ContentPadding->False, Appearance->"FramedPalette"],
+{Right, Top}, {Right, Top}]
+}
+]
+
+
+
 IGGraphEditor[Graph@{1->2,2->1},VertexSize->Small, "DirectedEdges"->True]
 
 
@@ -94,7 +103,7 @@ IGGraphEditor[CompleteGraph[2, DirectedEdges -> True]]
   IGGraphEditor[IGEmptyGraph[1]] }
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Is it usable with larger graphs?*)
 
 
