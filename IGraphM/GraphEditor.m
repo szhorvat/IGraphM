@@ -245,7 +245,7 @@ iGraphEditorPanel[Dynamic@state_] := Grid[{
     iGraphModeSetter @ Dynamic @ state
   , ""   
   }
-}, Alignment->{Left,Top}, Spacings->{0,0}]
+}, Alignment->{Left,Top}, Spacings->{.3,.3}]
 
 
 
@@ -265,7 +265,7 @@ iGraphMenu[Dynamic[state_]]:=PaneSelector[
     Pane[
       PDynamic @ If[
         AssociationQ @ state["selectedObject"]
-      , PDynamic[dynamicLog["selectedObject"]; state["selectedObject"]  ]
+      , PDynamic[dynamicLog["selectedObject"]; Grid @ MapApply[List] @ Normal @ state["selectedObject"]  ]
       , "Click on object"
       ]
     , ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })
@@ -275,11 +275,24 @@ iGraphMenu[Dynamic[state_]]:=PaneSelector[
   ]
 , "config" -> Panel[
     Pane[
-      Column[{
-        "Editor config"
-      , Dataset @ state[[{"version","vCounter","eCounter","range","aspectRatio", "editorMode"}]]      
-      , Grid[{{"VertexLabels: ", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}]}}]
-      }, Left], ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })],ImageMargins -> {0,0}, FrameMargins->{0,0}]
+      Grid[{
+          {Style["Editor config", Bold], SpanFromLeft}
+        , {}  
+        , {"Vertices count:", PDynamic@state["vCounter"]}  
+        , {"Edges count:", PDynamic@state["eCounter"]}  
+        , {"VertexLabels:", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}]}
+        , {"VertexSize:", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large }]}
+        , {}
+        , {"UI Version", state["version"] }
+        
+        }
+      , Alignment -> {Left, Center}
+      ]
+    , FrameMargins -> 10
+    ]
+  , ImageMargins -> {0,0}
+  , FrameMargins->{0,0}
+  ]
 }
 , PDynamic @ state["editorMode"]
 , ImageSize->Automatic
@@ -585,7 +598,7 @@ Module[
   , PDynamic@If[ (*TODO, this could be a separate collection, like vertex/edges, so it could be toggled 
           with lower overhead *)
       state["VertexLabels"] === "Name"
-    , Inset[v["name"], Offset[ {12, 12}, DynamicLocation[v["id"]]] ]
+    , Inset[v["name"], DynamicLocation@v["id"] + state["realVertexSize"]/1.2, {Left, Bottom} ]
     , {}
     ]
   }
@@ -869,7 +882,7 @@ bounds = Lookup[  state, "coordinateBounds",
 ; state["range"] = adjustRangeToImageSize[ newBounds, state["ImageSize"] ]
 
 ; state[  "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[  "range"] ]
-(* ; geAction["UpdateVertexSize", Dynamic @ state] *)
+; geAction["UpdateVertexSize", Dynamic @ state] 
 ]
 
 
