@@ -1028,15 +1028,13 @@ geAction["Unselect", Dynamic @ state_] := state["selectedVertex"] = Null
 
 geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}] := Module[{vertex, name}
 
-, state[ "vCounter"]++
-
-; name = Check[generateUniqueVertexName @ state, CreateUUID[]]
+, name = Check[generateUniqueVertexName @ state, CreateUUID[]]
 
 ; vertex = createVertex[name, pos]
 ; id = vertex["id"]
 
 ; If[ state["snap"]
-  , newV["pos"] = MapThread[Round, {vertex["pos"], state[ "snapStep"]} ]
+  , vertex["pos"] = MapThread[Round, {vertex["pos"], state[ "snapStep"]} ]
   ]
 
 ; state["vertex", id ] = vertex
@@ -1051,6 +1049,7 @@ geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}] := Module[
   , geAction["Select", Dynamic @ state, id]
   ]
 
+; state[ "vCounter"]++
 ; vertex
 ]
 
