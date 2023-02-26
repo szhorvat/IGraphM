@@ -31,6 +31,8 @@ IGGraphEditor::unknownState = "Corrupted editor state.";
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here.";
 IGGraphEditor::nofe         = "The graph editor requires a notebook interface.";
 
+IGGraphEditor::invLayout    = "Layout -> `` can't be used for this graph.";
+
 $narrowAspectRatioLimit = N @ GoldenRatio ^ 2; (* plot range will be adjusted if the initial calculated as is above this limit *)
 $vertexEdgeThickness = 0.5;
 $hoverVertexEdgeThickness = 2;
@@ -159,7 +161,7 @@ iGraphEditor // Options = Options @ IGGraphEditor;
 supportedGraphQ = MatchQ[_Graph];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*iGraphEditor*)
 
 
@@ -252,7 +254,15 @@ iGraphEditorPanel[Dynamic@state_] := Grid[{
 
 
 
-iGraphModeSetter[Dynamic@state_]:=SetterBar[Dynamic@state["editorMode"], {"draw" -> "Draw", "edit" -> "Annotate"}]
+iGraphModeSetter[Dynamic@state_]:= Row[{
+  SetterBar[Dynamic@state["editorMode"], {"draw" -> "Draw", "edit" -> "Annotate"}]
+, Spacer @ 20
+, Row[{
+    "#v=", PDynamic@state["vCounter"]
+    , Spacer @ 10
+  , "#e=", PDynamic@state["eCounter"]    
+}, BaseStyle->{FontColor -> GrayLevel@.8}]
+}]
 
 
 iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
@@ -275,9 +285,7 @@ iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
           { menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],      
             SpanFromLeft
           }
-        , {}  
-        , {"Vertices count:", PDynamic@state["vCounter"]}  
-        , {"Edges count:", PDynamic@state["eCounter"]}  
+        , {}         
         , {"VertexLabels:", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}]}
         , {"VertexSize:", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large }]}
         , {}
@@ -289,6 +297,10 @@ iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
         , { menuButton["Copy state", CopyToClipboard @ RawBoxes @ ToBoxes @ Iconize @ state, Appearance->"FramedPalette"],      
             SpanFromLeft
           }
+        , { "GraphLayout:", SpanFromLeft}  
+        , { layoutController @ Dynamic @ state,      
+            SpanFromLeft
+          }  
         
         }
       , Alignment -> {Left, Center}, Spacings -> {1,1}
@@ -306,6 +318,21 @@ iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
 menuButton // Attributes = {HoldRest}
 menuButton[args___]:=Button[args, Appearance->"FramedPalette"]
 
+
+layoutController[ Dynamic @ state_ ]:=PopupMenu[
+  Dynamic[ state["GraphLayout"], geAction["SetLayout", Dynamic @ state, #]& ],
+  $availableLayouts,
+  PDynamic @ state["GraphLayout"]
+]
+
+$availableLayouts = {"SpringElectricalEmbedding", "SpringEmbedding", \
+"HighDimensionalEmbedding", "LayeredEmbedding", \
+"LayeredDigraphEmbedding", "BalloonEmbedding", "RadialEmbedding", \
+"SpiralEmbedding", "BipartiteEmbedding", "CircularEmbedding", \
+"CircularMultipartiteEmbedding", "DiscreteSpiralEmbedding", \
+"GridEmbedding", "LinearEmbedding", "MultipartiteEmbedding", \
+"PlanarEmbedding", "StarEmbedding", "SpectralEmbedding", \
+"TutteEmbedding"};
 
 iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
   geGraphics @ Dynamic @ state
@@ -395,6 +422,7 @@ GraphToEditorState[ opts_Association ] := Module[{state}
     , "edge"           -> <||>
     , "selectedVertex" -> Null
     , "version"        -> $stateVersion
+    , "GraphLayout"    -> Automatic
     , optionsToConfig[opts]
     , "vCounter"->0
     , "eCounter" ->0
@@ -504,14 +532,20 @@ stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"
 
 stateHasSelectedVertex[state_Association] := StringQ @ state["selectedVertex"]
 
+(*TODO: make it persist and update on relevant actions*)
+stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 
-stateHasCurvedEdges[state_Association]:= True
-(*TODO: obviously this needs to be more precise, this is a first approximation, at least until we support multigraphs
-  
-*)
+, edgeList = state // Query["edge", Values, "edge"]
+
+; If[ MemberQ[ edgeList, _[ id_, id_ ] ], Return @ True]
+
+  (*are there multiple edges between the same pair of vertices? *)
+; state["eCounter"] != Length @ DeleteDuplicates[Sort /@ List @@@ edgeList]
+
+]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*graphics*)
 
 
@@ -692,8 +726,11 @@ edgeToPrimitive[e_] := Module[{shapeFunction}
 edgeTypeToPrimitive[(Rule|DirectedEdge)[_,_]]=Arrow[{#,#2}]&
 edgeTypeToPrimitive[_[_, _]]=Line[{#,#2}]&
 
+
+
 (* ::Subsubsection::Closed:: *)
 (*snap grid*)
+
 
 geSnapGrid[Dynamic @ state_] := With[{ selV := state["selectedVertex"] }
 , { $potentialEdgeStyle,
@@ -748,7 +785,7 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Logging*)
 
 
@@ -791,13 +828,15 @@ logAction[head_, state_, args___]:= With[
   ]
 ]
 
-(* ::Subsection::Closed:: *)
 
+
+(* ::Subsection::Closed:: *)
 (*Events*)
 
-(* ::Subsubsection::Closed:: *)
 
+(* ::Subsubsection::Closed:: *)
 (*PaneResized*)
+
 
 geAction["PaneResized", Dynamic @ state_, size_] := (
   
@@ -880,9 +919,9 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
 ]
 
 
-(* ::Subsection::Closed:: *)
-
+(* ::Subsection:: *)
 (*Actions*)
+
 
 (* ::Subsubsection::Closed:: *)
 (*UpdateVertexPosition*)
@@ -890,6 +929,7 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
 
 geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
   state["vertex", vId, "pos"] = pos
+; state["GraphLayout"] = Automatic  
 ; If[
     ! state["inRangeQ"] @ pos
   , geAction["UpdateRange", Dynamic @ state]
@@ -901,6 +941,7 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 
 (* ::Subsubsection::Closed:: *)
 (*UpdateSnapState*)
+
 
 geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
 , modified = stateSnapInit @ state 
@@ -1132,7 +1173,7 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 (nextEdgeType[#]=#2)& @@@ Partition[{UndirectedEdge["v1", "v2"], "v1"->"v2", "v2"->"v1"}, 2, 1, {1, 1}]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*UpdateEdgesShapes*)
 
 
@@ -1140,7 +1181,7 @@ geAction["UpdateEdgesShapes", _ @ state_] := Module[{coordinates,edges,  vertexE
 
 , If[ ! stateHasCurvedEdges @ state, Return[False, Module]]
 
-; {edges, coordinates} = Lookup[extractEdgePrimitives @ state, {"rawEdges", "coordinates"}]
+; {edges, coordinates} = Lookup[stateCreateAndDestructureGraph @ state, {"edgePrimitives", "coordinates"}]
 
 ; ( state["edge", #id, "shape" ] = #shape;  ) & /@ edges 
 
@@ -1152,79 +1193,159 @@ geAction["UpdateEdgesShapes", _ @ state_] := Module[{coordinates,edges,  vertexE
 ; geAction["UpdateRange", Dynamic @ state]
 ]
 
+(* ::Subsubsection:: *)
+(*SetLayout*)
 
-extractEdgePrimitives[state_] := Module[{ data = state }
+geAction["SetLayout", Dynamic @ state_, layout_String] := Module[{graphData, oldLayout = state["GraphLayout"]}
 
-, data = processGraphBoxes @ data
+, If[ layout === oldLayout, Return @ Null ]
 
-; data = patchEdgeIds @ data
-; data = patchCurveNormal @ data
+; state["GraphLayout"] = layout
+; graphData = stateCreateAndDestructureGraph @ state
+; If[ graphData === $Failed
+  , state["GraphLayout"] = oldLayout
+  ; Message[IGGraphEditor::invLayout, layout]
+  ; Return @ $Failed
+  ]
 
-; data = addEdgesShapes @ data
+; ( state["vertex", #id, "pos" ] = #pos;  ) & /@ graphData["vertexPrimitives"] 
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["vCounter"]]
+
+; If[ stateHasCurvedEdges @ state
+  , ( state["edge", #id, "shape" ] = #shape;  ) & /@ graphData["edgePrimitives"] 
+  ; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["eCounter"]]
+  ]
+
+; state["coordinateBounds"] =  CoordinateBounds @ graphData["coordinates"]
+; geAction["UpdateRange", Dynamic @ state, True]
+]
+
+
+(* ::Subsubsubsection:: *)
+(*stateCreateAndDestructureGraph*)
+
+
+stateCreateAndDestructureGraph[state_]:= Module[{processingData}
+
+, processingData = state
+; processingData["annotatedVertices"] = state // Query["vertex", Values, Tooltip[#id, #id]& ]
+; processingData["annotatedEdges"]    = state // Query["edge", Values, Tooltip[#edge, #id]& ]
+
+; processingData["annotatedGraph"] = createAnnotatedGraph @ processingData /. $Failed :> Return @ $Failed
+
+; processingData["graphGraphics"] = ToExpression @ ToBoxes @ processingData["annotatedGraph"]
+
+; extractGraphPrimitives @ processingData
+]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*createAnnotatedGraph*)
+
+
+createAnnotatedGraph // es6Decorate
+createAnnotatedGraph[<|vertex_,  annotatedVertices_, annotatedEdges_,"GraphLayout" -> gLayout_:Automatic|>]:= Module[
+  {layout, embedding, graph}
+, layout = gLayout
+; embedding = If[ 
+    Not @ StringQ @ layout 
+  , layout = Automatic
+  ; embedding = vertex // Query[Values, "pos"]
+  , embedding = Automatic
+  ]
+
+; graph = Graph[
+    annotatedVertices, annotatedEdges, GraphLayout -> layout, VertexCoordinates -> embedding
+  ]
+
+; If[ Not @ MatrixQ @ GraphEmbedding @ graph && Not @ EmptyGraphQ @ graph
+  , Return @ $Failed
+  ]  
+
+; graph  
+]
+
+
+(* ::Subsubsubsection:: *)
+(*extractGraphPrimitives*)
+
+(* curved edges seem to always be Arrow@BezierCurve, with Arrowheads[0.] if needed *)
+
+extractGraphPrimitives // es6Decorate
+extractGraphPrimitives[<| graphGraphics_, edge_, vertex_ |>]:= Module[  {data}
+  
+, data = $ES6asso
+; data["normalGraphics"] = Normal @ graphGraphics
+; data["hasGraphicsComplex"] = Not @ FreeQ[graphGraphics, GraphicsComplex]
+
+
+
+; data["vertexPrimitives"] = extractVertexPrimitives @ data
+; data["vertexEncoded"] = encodeVertices @ data (* <| 1 -> DynamicLocation[`id`], ...|>*)
+
+; data["edgePrimitives"] = extractEdgePrimitives @ data (* shapes with numeric coordinates *)
+; data["edgePrimitives"] = patchEdgeIds @ data (* bug fix for duplicated ids *)
+
+; data["coordinates"] = extractAllCoordinates @ data
+
+
+; If[ data["hasGraphicsComplex"]
+  , data = patchCurveNormal @ data (*bug fix for not Normal @ Arrow @ BezierCurve *)   
+  ]
+
+; data["edgePrimitives"] = addEdgesShapes @ data (* e.shape /. {vertexPos -> DynLoc[vId], ...}*)
 
 ; data
 ]
 
+extractAllCoordinates // es6Decorate
+extractAllCoordinates[ <| graphGraphics_, hasGraphicsComplex_, vertexPrimitives_ |>]:= Module[
+  {}
+,  If[ hasGraphicsComplex
+   , Return @ First @ Cases[graphGraphics, Verbatim[GraphicsComplex][pts_, ___] :> pts, Infinity]  
+   ]
 
-(* ::Subsubsubsection::Closed:: *)
-(*processGraphBoxes*)
-
-
-processGraphBoxes[state_]:=Module[{vertexList, edgeList, embedding, graph, graphGraphics, rawEdges}
-
-, vertexList = state // Query["vertex", Values, "id"]
-; edgeList   = state // Query["edge", Values, Tooltip[#edge, #id] &]
-; embedding  = state // Query["vertex", Values, "pos"]
-
-; graph = Graph[vertexList, edgeList, VertexCoordinates -> embedding]
-
-; graphGraphics = ToExpression @ ToBoxes @ graph
-
-; rawEdges = Cases[
-    Normal @ graphGraphics , #, Infinity
-  ]& /@ {
-    Tooltip[prim_, eId_, ___] :> <| "id" -> eId, "primitive" -> prim |>
-  , TooltipBox[prim_, eId_, ___] :> <| "id" -> ToExpression @ eId, "primitive" -> (prim /. ArrowBox -> Arrow /. BezierCurveBox -> BezierCurve) |>
-  } // Flatten
-  
-; <|  state
-  ,  <|vertexList, edgeList, embedding, graph, graphGraphics, rawEdges |> // ToKeyValue 
-  |>
-
+; vertexPrimitives[[All, "pos"]] (*TODO: extract from edges as well, for curved stuff*)
 ]
 
 
-(* ::Subsubsubsection::Closed:: *)
-(*patchCurveNormal*)
+encodeVertices // es6Decorate
+encodeVertices[ <|vertex_|> ]:=Module[{vertexIds}
+,  vertexIds = vertex // Query[ Values, "id"]
 
-
-(* similar bug to this https://mathematica.stackexchange.com/q/105184/5478 *)
-
-patchCurveNormal // es6Decorate
-
-patchCurveNormal[ <|rawEdges_, vertexList_, graphGraphics_|> ]:= Module[
-
-  {patchedEdges,vertexEncoded, coordinates, coordinatesRules }
-  
-, vertexEncoded = AssociationThread[
-    ArrayComponents[vertexList] -> Thread[DynamicLocation[vertexList, Automatic]]
+;  AssociationThread[
+    ArrayComponents[vertexIds] -> Thread[DynamicLocation[vertexIds, Automatic]]
   ]
-
-; coordinates = graphGraphics // 
-    First @ Cases[#, Verbatim[GraphicsComplex][pts_, ___] :> pts, Infinity] & 
-    
-; coordinatesRules = coordinates // AssociationThread[ArrayComponents[#, 1] -> #] &  
-; coordinatesRules = <|coordinatesRules, vertexEncoded|>    
-
-; patchedEdges = rawEdges /. Arrow[BezierCurve[a : {___}, opt___], r___] :> RuleCondition[
-    Arrow[BezierCurve[a /. coordinatesRules, opt], r]
-  ] 
-  
-; <| $ES6asso
-   , "rawEdges" -> patchedEdges
-   , <| vertexEncoded, coordinates, coordinatesRules |> // ToKeyValue
-  |>  
 ]
+
+(* ::Subsubsubsection::Closed:: *)
+(*extractVertexPrimitives*)
+
+extractVertexPrimitives // es6Decorate
+extractVertexPrimitives[<|normalGraphics_ |>]:= Flatten[
+  Cases[ Normal @ normalGraphics , #, Infinity]& /@ $vertexPrimitiveRules
+]
+
+
+$vertexPrimitiveRules = { 
+  Tooltip[prim : Disk[pos_,___], vId_, ___] :> <| "id" -> vId, "pos" -> pos |>
+}  ;
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*extractEdgePrimitives*)
+
+extractEdgePrimitives // es6Decorate
+
+extractEdgePrimitives[<|normalGraphics_|>]:=Module[{}
+, Cases[  normalGraphics , #, Infinity]& /@ $edgePrimitiveRules // Flatten
+]
+
+
+$edgePrimitiveRules = { (*Don't remember why I have a rule for *Boxes*)
+  Tooltip[prim:Except[_Disk], eId_, ___] :> <| "id" -> eId, "primitive" -> prim |>
+, TooltipBox[prim:Except[_DiskBox], eId_, ___] :> <| "id" -> ToExpression @ eId, "primitive" -> (prim /. ArrowBox -> Arrow /. BezierCurveBox -> BezierCurve) |>
+}  ;
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -1232,10 +1353,10 @@ patchCurveNormal[ <|rawEdges_, vertexList_, graphGraphics_|> ]:= Module[
 
 
 (* There is a bug that makes both edges in Graph[{Tooltip[1 -> 2, "A"], Tooltip[1 -> 2, "B"]} ]
-      labeled with a tooltip A, we need to handle this. *)
-      
+      labeled with a tooltip A, we need to handle this. *) 
+
 patchEdgeIds // es6Decorate
-patchEdgeIds[ <|edge_, rawEdges_|> ]:=Module[{edgesIdsCollections, patchEdgeId, patchedEdges}
+patchEdgeIds[ <|edgePrimitives_, edge_|> ]:=Module[{edgesIdsCollections, patchEdgeId, patchedEdges}
 
 , edgesIdsCollections = Values @ edge // 
     GroupBy[standardizeEdge@*Key["edge"] -> Key["id"]] // Values //
@@ -1248,9 +1369,7 @@ patchEdgeIds[ <|edge_, rawEdges_|> ]:=Module[{edgesIdsCollections, patchEdgeId, 
   ; First @ idCollection
   ]
 
-; patchedEdges = MapAt[ patchEdgeId, rawEdges, {All, "id" }]
-
-; <| $ES6asso, "rawEdges" -> patchedEdges |>  
+; MapAt[ patchEdgeId, edgePrimitives, {All, "id" }]
 ]
 
 
@@ -1258,24 +1377,72 @@ standardizeEdge[e_UndirectedEdge]:=Sort @ e
 standardizeEdge[directed_[v1_, v2_]]:= {v1, v2}
 
 
+(* ::Subsubsubsection:: *)
+(*patchCurveNormal*)
+
+
+(* similar bug to this https://mathematica.stackexchange.com/q/105184/5478 
+   no need for cases where GraphicsComplex was not produced in the first place,
+   like for LinearEmbedding
+*)
+
+patchCurveNormal // es6Decorate
+
+patchCurveNormal[ <| edgePrimitives_, hasGraphicsComplex_, coordinates_, vertexEncoded_,  graphGraphics_|> ]:= Module[
+
+  {  data }
+  
+, data = $ES6asso
+; If[ Not @ hasGraphicsComplex, Return @ data]
+
+    
+; data["coordinatesRules"] = coordinates // AssociationThread[ArrayComponents[#, 1] -> #] &    
+; data["coordinatesRules"] = <|data["coordinatesRules"], vertexEncoded|>    
+
+; data["edgePrimitives"] = edgePrimitives /. 
+    Arrow[BezierCurve[a : {___}, opt___], r___] :> RuleCondition[
+    Arrow[BezierCurve[a /. data["coordinatesRules"], opt], r]
+  ] 
+  
+; data
+  
+]
+
+
+
 (* ::Subsubsubsection::Closed:: *)
 (*addEdgesShapes*)
 
+(* main point is to remove Arrow end offset and to recognize Automatic / straight edges
+   replacement is only helping with cases where original Graph had no GraphicsComplex and there
+   are still explicit coordinates at edge ends instead of _DynamicLocation
+*)
 
 addEdgesShapes // es6Decorate
-addEdgesShapes[ <|vertexEncoded_, rawEdges_|> ]:= <|
-  $ES6asso
-, "rawEdges" -> ( <|#, "shape" -> ToEdgeShapeFunction[#primitive, vertexEncoded] |>& /@ rawEdges )
-|>
+addEdgesShapes[ <|edgePrimitives_, vertexPrimitives_ |>]:= With[
+  { positionRules = #pos -> DynamicLocation[#id, Automatic] & /@ vertexPrimitives }
+
+, Map[
+    <|#, "shape" -> ToEdgeShapeFunction[#primitive, positionRules] |>& 
+  , edgePrimitives 
+  ]
+]
 
 
-ToEdgeShapeFunction[p : {Arrowheads[0.], Arrow[b_BezierCurve, ___]}, vertexEncoded_] := {Arrowheads[0.], Arrow[b /. vertexEncoded]};
-ToEdgeShapeFunction[Arrow[b_BezierCurve, ___], vertexEncoded_] := Arrow[b /. vertexEncoded];
+ToEdgeShapeFunction[p : {Arrowheads[0.], Arrow[BezierCurve[pts_, opts___], ___]}, positionRules_] := {
+  Arrowheads[0.], Arrow[BezierCurve[pts /. positionRules, opts]]
+  };
+
+ToEdgeShapeFunction[Arrow[BezierCurve[pts_, opts___], ___], positionRules_] := Arrow[
+  BezierCurve[pts /. positionRules, opts]
+  ];
+
 ToEdgeShapeFunction[p_, ___] := Automatic;
 
 
 (* ::Subsubsection::Closed:: *)
 (*actions fallthrough*)
+
 
 (* This has to be here becasue of a weird specificity of args___ vs PatternSequence *)
 (* SetDelayed can't be used because it is decorated in debug mode *)
@@ -1288,6 +1455,8 @@ If[
    ]
 
 ]
+
+
 
 (* ::Section::Closed:: *)
 (*helpers*)
