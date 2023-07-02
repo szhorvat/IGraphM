@@ -22,7 +22,7 @@ Switch[$OperatingSystem,
       "-framework Accelerate", (* for BLAS and LAPACK *)
       If[$SystemID === "MacOSX-ARM64",
         "-mmacosx-version-min=11",
-        "-mmacosx-version-min=10.9" (* earliest supported macOS version---required for C++11 *)
+        "-mmacosx-version-min=10.10" (* earliest supported macOS version---required for C++11 *)
       ],
       With[{res = Quiet@RunProcess[{"xcrun", "--sdk", "macosx", "--show-sdk-path"}]},
         (* If the SDK version can be determined, use it. igraph will be compiled with this SDK by default,
