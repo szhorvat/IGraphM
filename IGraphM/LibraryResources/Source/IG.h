@@ -964,7 +964,7 @@ public:
         igIntVector colors;
         ml >> mlCheckArgs(2) >> splitting >> colors;
 
-        igCheck(igraph_automorphisms(&graph, colors.length() == 0 ? nullptr : &colors.vec, blissIntToSplitting(splitting), &info));
+        igCheck(igraph_count_automorphisms(&graph, colors.length() == 0 ? nullptr : &colors.vec, blissIntToSplitting(splitting), &info));
 
         ml.newPacket();
         ml << info.group_size;
