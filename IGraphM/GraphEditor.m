@@ -358,7 +358,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*State*)
 
 
@@ -567,7 +567,7 @@ stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 (*graphics*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*geGraphics*)
 
 
@@ -617,7 +617,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
    *)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*vertex*)
 
 
@@ -634,7 +634,7 @@ geVertices[Dynamic @ state_] := DynamicModule[{vertexMoved}
     , geAction["UpdateVertexPosition", Dynamic @ state, ##& @@ vertexMoved] 
     ; vertexMoved=Null
     ]
-  , TrackedSymbols :> {vertexMoved  }
+  , TrackedSymbols :> { vertexMoved }
   ]
 ]
 
@@ -853,7 +853,7 @@ logAction[head_, state_, args___]:= With[
 (*Events*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*PaneResized*)
 
 
@@ -942,7 +942,7 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
 (*Actions*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*UpdateVertexPosition*)
 
 
@@ -977,6 +977,10 @@ geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
 
 
 
+(* ::Subsubsection:: *)
+(*UpdateRange*)
+
+
 (* bounds      = {{x1,x2}, {y1, y2}} = (plot)range*)
 (* boundig box = {{x1,y1}, {x2, y2}}*)
 geAction["UpdateRange", Dynamic @ state_, force_:False] := Module[
@@ -987,7 +991,7 @@ geAction["UpdateRange", Dynamic @ state_, force_:False] := Module[
 ; If[ Length[embedding ] < 1, Return[False, Module]]*)
 
 bounds = Lookup[  state, "coordinateBounds", 
-  state["coordinateBounds"] = CoordinateBounds @ state[["vertex", All, "pos"]] 
+  state["coordinateBounds"] = CoordinateBounds[ state[["vertex", All, "pos"]]  ] /. {} -> {{0,1},{0,1}}
 ]
 
 ; newBounds = handleDegeneratedRange @ respectVertexSize[ bounds , state["VertexSize"] ]
@@ -1192,7 +1196,7 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 (nextEdgeType[#]=#2)& @@@ Partition[{UndirectedEdge["v1", "v2"], "v1"->"v2", "v2"->"v1"}, 2, 1, {1, 1}]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateEdgesShapes*)
 
 
@@ -1214,7 +1218,7 @@ geAction["UpdateEdgesShapes", _ @ state_] := Module[{coordinates,edges,  vertexE
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*SetLayout*)
 
 
