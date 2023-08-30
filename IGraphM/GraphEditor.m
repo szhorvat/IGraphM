@@ -168,6 +168,10 @@ supportedGraphQ = MatchQ[_Graph];
 (*iGraphEditor*)
 
 
+(* ::Subsubsection::Closed:: *)
+(*iGraphEditor*)
+
+
 editorFailure[ msg_String ] := Failure[
   "GraphEditor"
 , <|"Message" -> "\[WarningSign] "<> msg |>
@@ -214,6 +218,16 @@ Interpretation[
 ]]
 
 
+iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> "The input graph must be simple and must not be mixed."|>]
+
+
+iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input."|>]
+
+
+(* ::Subsubsection::Closed:: *)
+(*iGraphEditorInitialization*)
+
+
 iGraphEditorInitialization // Attributes = {HoldAll}
 iGraphEditorInitialization[state_, error_]:=Module[
   {perfFailure = editorFailure["Too many vertices and edges. Increase \"PerformanceLimit\" option to try anyway."]}
@@ -238,10 +252,8 @@ iGraphEditorDeinitialization // Attributes = {HoldAll}
 iGraphEditorDeinitialization[state_]:= StopTracking @ state
 
 
-iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> "The input graph must be simple and must not be mixed."|>]
-
-
-iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input."|>]
+(* ::Subsubsection::Closed:: *)
+(*iGraphEditorPanel*)
 
 
 iGraphEditorPanel[Dynamic@state_] := Grid[{
@@ -257,11 +269,14 @@ iGraphEditorPanel[Dynamic@state_] := Grid[{
 
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*iGraphModeSetter*)
 
 
-iGraphModeSetter[Dynamic@state_]:= Row[{
+rawPanel = Panel[##, ImageMargins->{0,0}, FrameMargins->{0,0}]&
+
+
+iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
   SetterBar[Dynamic@state["editorMode"], {"draw" -> "Draw", "edit" -> "Annotate"}]
 , Spacer @ 20
 , Row[{
@@ -278,51 +293,42 @@ iGraphModeSetter[Dynamic@state_]:= Row[{
 
 iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
 { 
-  "edit" -> Panel[
-    Pane[
+  "edit" -> rawPanel @ Pane[
       PDynamic @ If[
         AssociationQ @ state["selectedObject"]
       , PDynamic[dynamicLog["selectedObject"]; Grid @ MapApply[List] @ Normal @ state["selectedObject"]  ]
       , "Click on object"
       ]
     , ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })
-    ]
-  , ImageMargins -> {0,0}
-  , FrameMargins->{0,0}
-  ]
-, "draw" -> Panel[
-    Pane[
+    ]  
+, "draw" -> rawPanel @ Pane[
       Grid[{
-          { menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],      
-            SpanFromLeft
-          }
-        , {}  
-        , {"EdgeColor", ColorSetter[Dynamic @ state["EdgeColor"]]}       
-        , {"VertexColor", ColorSetter[Dynamic @ state["VertexColor"]]}       
-        , {"VertexLabels:", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}]}
-        , {"VertexSize:", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large }]}
+          {"VertexLabels", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}, ImageSize->{{80, All}, All}]}
+        , {"VertexSize", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large },ImageSize->{{80, All}, All}]}
+        , {"EdgeColor", ColorSetter[Dynamic @ state["EdgeColor"], ImageSize -> Tiny]}       
+        , {"VertexColor", ColorSetter[Dynamic @ state["VertexColor"], ImageSize -> Tiny]}       
         , {}
         , {"SnapToGrid", Checkbox @ Dynamic[ state["SnapToGrid"], {Automatic, geAction["UpdateSnapState", Dynamic @ state]&}] }
         , {"Show snap grid", Checkbox[ Dynamic @ state["ShowSnapGrid"], Enabled -> PDynamic @ state["SnapToGrid"]] }
         , {"Snap density", PDynamic @ state["SnapDensity"] }
-        , {}
+        , { menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],      
+            SpanFromLeft
+          }
+        
+        , { "GraphLayout:", SpanFromLeft}  
+        , { layoutController @ Dynamic @ state, SpanFromLeft }  
+        
         , {"UI Version", state["version"] }
         , { menuButton["Copy state", CopyToClipboard @ RawBoxes @ ToBoxes @ Iconize @ state, Appearance->"FramedPalette"],      
             SpanFromLeft
           }
-        , { "GraphLayout:", SpanFromLeft}  
-        , { layoutController @ Dynamic @ state,      
-            SpanFromLeft
-          }  
+        
         
         }
       , Alignment -> {Left, Center}, Spacings -> {1,1}
       ]
     , FrameMargins -> 10
     ]
-  , ImageMargins -> {0,0}
-  , FrameMargins->{0,0}
-  ]
 }
 , PDynamic @ state["editorMode"]
 , ImageSize->Automatic
@@ -571,7 +577,7 @@ stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 (*graphics*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*geGraphics*)
 
 
@@ -868,7 +874,7 @@ logAction[head_, state_, args___]:= With[
 (*Events*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*PaneResized*)
 
 
@@ -957,7 +963,7 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
 (*Actions*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateVertexPosition*)
 
 
@@ -992,7 +998,7 @@ geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateRange*)
 
 
