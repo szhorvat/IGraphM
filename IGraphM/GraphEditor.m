@@ -138,6 +138,8 @@ IGGraphEditor // Options = {
 , "IndexGraph"            -> False (* bool *)
 , "PerformanceLimit"      -> 450   (* _Integer *)
 , "ShowSidePanel"         -> False
+, "VertexColor"           -> Gray
+, "EdgeColor"             -> Gray
 , VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
@@ -270,7 +272,7 @@ iGraphModeSetter[Dynamic@state_]:= Row[{
 }]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*iGraphMenu*)
 
 
@@ -294,7 +296,9 @@ iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
           { menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],      
             SpanFromLeft
           }
-        , {}         
+        , {}  
+        , {"EdgeColor", ColorSetter[Dynamic @ state["EdgeColor"]]}       
+        , {"VertexColor", ColorSetter[Dynamic @ state["VertexColor"]]}       
         , {"VertexLabels:", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}]}
         , {"VertexSize:", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large }]}
         , {}
@@ -348,7 +352,7 @@ $availableLayouts = {"SpringElectricalEmbedding", "SpringEmbedding", \
 "TutteEmbedding"};
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*iGraphGraphicsPanel*)
 
 
@@ -362,7 +366,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
 (*State*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*state version*)
 
 
@@ -424,7 +428,7 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*to state*)
 
 
@@ -567,7 +571,7 @@ stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 (*graphics*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*geGraphics*)
 
 
@@ -577,21 +581,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
     Pane[
       DynamicWrapper[
         Graphics[
-          DynamicNamespace @ {
-            geSnapGrid @ Dynamic @ state
-          , geHighlightsPrimitives @ Dynamic @ state
-          , Gray
-          , geEdges @ Dynamic @ state
-          , geVertices @ Dynamic @ state
-          , Inset[
-              Button[
-                Style["\[Congruent]",18]
-              , state["ShowSidePanel"] = !state["ShowSidePanel"]
-              , ContentPadding->False, Appearance->"FramedPalette"
-              ]
-            , {Right, Top}, {Right, Top}
-            ]
-          }
+          DynamicNamespace @ geGraphicsPrimitives @ Dynamic @ state 
         , PlotRange -> Dynamic @ range
         , ImageSize -> Dynamic @ graphicsSize 
         , Prolog    -> state["Prolog"]
@@ -615,6 +605,31 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
 ] (* PlotRange->Dynamic@state["range"] updates at any unrelated event, vertex dragging included,
      this DynamicModule @ DynamicWrapper is here to address a bug. Why does it help? Because WRI.
    *)
+
+
+geGraphicsPrimitives[ Dynamic @ state_ ]:= {
+            geSnapGrid @ Dynamic @ state
+            
+          , geHighlightsPrimitives @ Dynamic @ state
+          
+          , PDynamic @ state["EdgeColor"]
+          , geEdges @ Dynamic @ state
+          
+          , PDynamic @ state["VertexColor"]
+          , geVertices @ Dynamic @ state
+          
+          , sidePanelToggler @ Dynamic @ state
+          }
+
+
+sidePanelToggler[ Dynamic @ state_ ]:= Inset[
+              Button[
+                Style["\[Congruent]",18]
+              , state["ShowSidePanel"] = !state["ShowSidePanel"]
+              , ContentPadding->False, Appearance->"FramedPalette"
+              ]
+            , {Right, Top}, {Right, Top}
+            ]
 
 
 (* ::Subsubsection::Closed:: *)
