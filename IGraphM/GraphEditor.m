@@ -125,7 +125,7 @@ symbolName = Function[s, SymbolName @ Unevaluated[s], HoldFirst];
 
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*IGGraphEditor*)
 
 
@@ -142,6 +142,7 @@ IGGraphEditor // Options = {
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
 , ImageSize               -> 300
+, Prolog                  -> {}
 };
 
 
@@ -161,7 +162,7 @@ iGraphEditor // Options = Options @ IGGraphEditor;
 supportedGraphQ = MatchQ[_Graph];
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*iGraphEditor*)
 
 
@@ -254,6 +255,10 @@ iGraphEditorPanel[Dynamic@state_] := Grid[{
 
 
 
+(* ::Subsubsection::Closed:: *)
+(*iGraphModeSetter*)
+
+
 iGraphModeSetter[Dynamic@state_]:= Row[{
   SetterBar[Dynamic@state["editorMode"], {"draw" -> "Draw", "edit" -> "Annotate"}]
 , Spacer @ 20
@@ -263,6 +268,10 @@ iGraphModeSetter[Dynamic@state_]:= Row[{
   , "#e=", PDynamic@state["eCounter"]    
 }, BaseStyle->{FontColor -> GrayLevel@.8}]
 }]
+
+
+(* ::Subsubsection::Closed:: *)
+(*iGraphMenu*)
 
 
 iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
@@ -319,6 +328,10 @@ menuButton // Attributes = {HoldRest}
 menuButton[args___]:=Button[args, Appearance->"FramedPalette"]
 
 
+(* ::Subsubsection::Closed:: *)
+(*layoutController*)
+
+
 layoutController[ Dynamic @ state_ ]:=PopupMenu[
   Dynamic[ state["GraphLayout"], geAction["SetLayout", Dynamic @ state, #]& ],
   $availableLayouts,
@@ -333,6 +346,11 @@ $availableLayouts = {"SpringElectricalEmbedding", "SpringEmbedding", \
 "GridEmbedding", "LinearEmbedding", "MultipartiteEmbedding", \
 "PlanarEmbedding", "StarEmbedding", "SpectralEmbedding", \
 "TutteEmbedding"};
+
+
+(* ::Subsubsection:: *)
+(*iGraphGraphicsPanel*)
+
 
 iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
   geGraphics @ Dynamic @ state
@@ -545,7 +563,7 @@ stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*graphics*)
 
 
@@ -576,6 +594,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
           }
         , PlotRange -> Dynamic @ range
         , ImageSize -> Dynamic @ graphicsSize 
+        , Prolog    -> state["Prolog"]
         ]
       , range = state[ "range"]
       ; graphicsSize = size = state["ImageSize"]
@@ -830,7 +849,7 @@ logAction[head_, state_, args___]:= With[
 
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Events*)
 
 
@@ -1193,8 +1212,11 @@ geAction["UpdateEdgesShapes", _ @ state_] := Module[{coordinates,edges,  vertexE
 ; geAction["UpdateRange", Dynamic @ state]
 ]
 
+
+
 (* ::Subsubsection:: *)
 (*SetLayout*)
+
 
 geAction["SetLayout", Dynamic @ state_, layout_String] := Module[{graphData, oldLayout = state["GraphLayout"]}
 
@@ -1269,6 +1291,7 @@ createAnnotatedGraph[<|vertex_,  annotatedVertices_, annotatedEdges_,"GraphLayou
 (* ::Subsubsubsection:: *)
 (*extractGraphPrimitives*)
 
+
 (* curved edges seem to always be Arrow@BezierCurve, with Arrowheads[0.] if needed *)
 
 extractGraphPrimitives // es6Decorate
@@ -1318,8 +1341,11 @@ encodeVertices[ <|vertex_|> ]:=Module[{vertexIds}
   ]
 ]
 
+
+
 (* ::Subsubsubsection::Closed:: *)
 (*extractVertexPrimitives*)
+
 
 extractVertexPrimitives // es6Decorate
 extractVertexPrimitives[<|normalGraphics_ |>]:= Flatten[
@@ -1334,6 +1360,7 @@ $vertexPrimitiveRules = {
 
 (* ::Subsubsubsection::Closed:: *)
 (*extractEdgePrimitives*)
+
 
 extractEdgePrimitives // es6Decorate
 
@@ -1412,6 +1439,7 @@ patchCurveNormal[ <| edgePrimitives_, hasGraphicsComplex_, coordinates_, vertexE
 
 (* ::Subsubsubsection::Closed:: *)
 (*addEdgesShapes*)
+
 
 (* main point is to remove Arrow end offset and to recognize Automatic / straight edges
    replacement is only helping with cases where original Graph had no GraphicsComplex and there
