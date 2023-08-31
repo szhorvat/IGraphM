@@ -125,7 +125,7 @@ symbolName = Function[s, SymbolName @ Unevaluated[s], HoldFirst];
 
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*IGGraphEditor*)
 
 
@@ -269,7 +269,7 @@ iGraphEditorPanel[Dynamic@state_] := Grid[{
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*iGraphModeSetter*)
 
 
@@ -293,14 +293,7 @@ iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
 
 iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
 { 
-  "edit" -> rawPanel @ Pane[
-      PDynamic @ If[
-        AssociationQ @ state["selectedObject"]
-      , PDynamic[dynamicLog["selectedObject"]; Grid @ MapApply[List] @ Normal @ state["selectedObject"]  ]
-      , "Click on object"
-      ]
-    , ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })
-    ]  
+  "edit" -> graphObjectPanel @ Dynamic @ state  
 , "draw" -> rawPanel @ Pane[
       Grid[{
           {"VertexLabels", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}, ImageSize->{{80, All}, All}]}
@@ -336,6 +329,41 @@ iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
 
 menuButton // Attributes = {HoldRest}
 menuButton[args___]:=Button[args, Appearance->"FramedPalette"]
+
+
+graphObjectPanel[ Dynamic @ state_ ]:= rawPanel @ PaneSelector[
+  { 
+    False -> "Click on object" 
+  , True ->   PDynamic[
+      dynamicLog["selectedObject"]
+    ; If[ state["selectedObject"] // KeyExistsQ["edge"]
+      , Grid @ MapApply[List] @ Normal @ state["selectedObject"]  
+      , vertexEditorPanel[ Dynamic @ state, state["selectedObject", "id"] ]
+      ]
+    ]
+  }
+, PDynamic @ AssociationQ @ state["selectedObject"]
+, ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })
+]
+    
+
+
+vertexEditorPanel[ Dynamic @ state_, id_ ]:= With[
+{ name := state["vertex", id, "name"]
+, pos  := state["vertex", id, "pos"] 
+}
+, Grid[{
+   { "Vertex id", id}
+ , { "Name"
+   , InputField[
+      Dynamic[name, {Automatic, IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["vCounter"]]&  }]
+     , Expression
+     ]
+    }
+  , {"Position", Dynamic @ NumberForm[ Chop@pos, {Infinity, 2 }]}
+  }, Alignment->{Left,Center}]
+]
+  
 
 
 (* ::Subsubsection::Closed:: *)
@@ -611,6 +639,10 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
 ] (* PlotRange->Dynamic@state["range"] updates at any unrelated event, vertex dragging included,
      this DynamicModule @ DynamicWrapper is here to address a bug. Why does it help? Because WRI.
    *)
+
+
+(* ::Subsubsection::Closed:: *)
+(*geGraphicsPrimitives*)
 
 
 geGraphicsPrimitives[ Dynamic @ state_ ]:= {
@@ -939,9 +971,6 @@ geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
 
 ]]
 
-geAction["SelectObject", Dynamic @ state_, v_Association]:= state["selectedObject"] = v
-geAction["UnselectObject", Dynamic @ state_]:= state["selectedObject"] = Null
-
 
 (* ::Subsubsection::Closed:: *)
 (*EdgeClicked*)
@@ -961,6 +990,14 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
 
 (* ::Subsection:: *)
 (*Actions*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*Annotate: SelectObject / UnselectObject*)
+
+
+geAction["SelectObject", Dynamic @ state_, v_Association]:= state["selectedObject"] = v
+geAction["UnselectObject", Dynamic @ state_]:= state["selectedObject"] = Null
 
 
 (* ::Subsubsection::Closed:: *)
