@@ -125,7 +125,7 @@ symbolName = Function[s, SymbolName @ Unevaluated[s], HoldFirst];
 
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*IGGraphEditor*)
 
 
@@ -287,7 +287,7 @@ iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
 }]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*iGraphMenu*)
 
 
@@ -525,7 +525,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*state helpers*)
 
 
@@ -641,7 +641,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
    *)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*geGraphicsPrimitives*)
 
 
@@ -649,6 +649,8 @@ geGraphicsPrimitives[ Dynamic @ state_ ]:= {
             geSnapGrid @ Dynamic @ state
             
           , geHighlightsPrimitives @ Dynamic @ state
+          
+          , geSelectedObjectPrimitives @ Dynamic @ state
           
           , PDynamic @ state["EdgeColor"]
           , geEdges @ Dynamic @ state
@@ -743,7 +745,7 @@ Module[
 
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*edges*)
 
 
@@ -757,7 +759,7 @@ Table[
 
 
 geEdgeShapeFunction[Dynamic @ state_, e_Association] := EventHandler[
-    edgeHoverWrapper @ edgeToPrimitive @ e /. Arrowheads[0.] -> Arrowheads[0.00001] (*patch #2748 :heart: *)    
+    edgeHoverWrapper @ edgeToPrimitive @ e    
   , { "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e]) }
   , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
   ]
@@ -785,7 +787,10 @@ If[ 12 < $VersionNumber < 13.2
 edgeToPrimitive[e_] := Module[{shapeFunction}
 
 , shapeFunction = If[ e["shape"] =!= Automatic
-  , Return[ e["shape"], Module ]
+  , Return[ 
+      e["shape"] /. Arrowheads[0.] -> Arrowheads[0.00001] (*patch #2748 :heart: *) 
+    , Module 
+    ]
   ]
 
 ; edgeTypeToPrimitive[ e["edge"] ][
@@ -831,13 +836,13 @@ snapGridPrimitives[state_]:= {
 
 
 (* ::Subsubsection::Closed:: *)
-(*selected*)
+(*highlight*)
 
 
 geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex"] }
 , { $potentialEdgeStyle,
     PDynamic[
-      dynamicLog["selection"];
+      dynamicLog["highlight"];
       If[
         stateHasSelectedVertex @ state
       , {  
@@ -851,6 +856,28 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
           }]
         }
       , {}
+      ]
+    ]
+}
+]
+
+
+(* ::Subsubsection:: *)
+(*selected*)
+
+
+geSelectedObjectPrimitives[Dynamic @ state_] := With[{ selO := state["selectedObject"] }
+, { 
+    PDynamic[
+      dynamicLog["selection"];
+      Which[
+        Not @ AssociationQ @ selO, {}
+      , KeyExistsQ["edge"] @ selO, { AbsoluteThickness @ $activeEdgeThickness, edgeToPrimitive @ selO}
+      , True
+      , {  
+          EdgeForm @ AbsoluteThickness[ 3 * $hoverVertexEdgeThickness ]
+        , Disk[DynamicLocation[selO["id"]], state[ "realVertexSize"]]         
+        }      
       ]
     ]
 }
