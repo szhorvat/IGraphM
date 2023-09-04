@@ -168,7 +168,7 @@ supportedGraphQ = MatchQ[_Graph];
 (*iGraphEditor*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*iGraphEditor*)
 
 
@@ -187,6 +187,7 @@ Interpretation[
     state = GraphToEditorState[graph, opt]
   , error = False
   , refresh
+  , view  
   }
 , refresh[] := Module[{temp}
   , Catch[
@@ -197,13 +198,17 @@ Interpretation[
     ; If[ AssociationQ @ temp, state = temp, Throw[ error = temp] ]
 
     ; iGraphEditorInitialization[state, error]  (*can throw*)  
+    
+    ; If[ Not @ error
+      , view = iGraphEditorPanel[Dynamic@state]
+      ]
     ]
   ]
 
 ; PaneSelector[
   {
     True -> Button[Dynamic @ error,  refresh[], BaseStyle -> 15]
-  , False -> Dynamic[Refresh[iGraphEditorPanel[Dynamic@state], None]]
+  , False -> Dynamic[view, TrackedSymbols:>{view}]
   }
   , Dynamic[ MatchQ[_Failure] @ error ]
   , ImageSize -> Automatic
@@ -214,6 +219,7 @@ Interpretation[
 
 , Initialization :> refresh[]
 , Deinitialization :> iGraphEditorDeinitialization[state]
+, UnsavedVariables :> {view}
 
 ]]
 
@@ -396,7 +402,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*State*)
 
 
@@ -525,7 +531,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*state helpers*)
 
 
@@ -605,7 +611,7 @@ stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 (*graphics*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*geGraphics*)
 
 
@@ -641,7 +647,7 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
    *)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*geGraphicsPrimitives*)
 
 
@@ -745,7 +751,7 @@ Module[
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*edges*)
 
 
@@ -862,7 +868,7 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*selected*)
 
 
@@ -1228,7 +1234,7 @@ smallestMissingInteger[list_List] := Block[{n = 1}
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*RemoveVertex*)
 
 
