@@ -129,8 +129,6 @@ symbolName = Function[s, SymbolName @ Unevaluated[s], HoldFirst];
 (*IGGraphEditor*)
 
 
-
-
 IGGraphEditor // Options = {
   "KeepVertexCoordinates" -> True (* bool *)
 , "CreateVertexSelects"   -> True (* bool *)
@@ -146,7 +144,7 @@ IGGraphEditor // Options = {
 , VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
-, ImageSize               -> 300
+, ImageSize               -> { 300, 300 }
 , Prolog                  -> {}
 };
 
@@ -493,15 +491,17 @@ GraphToEditorState[ opt:OptionsPattern[] ]:=Module[{graphOptions, otherOptions}
 
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
-  {graph,otherOptions,graphOptions,state}
+  {options, graph,otherOptions,graphOptions,state}
   
-, graphOptions = FilterRules[Flatten@{opt}, Options @ Graph]
-; otherOptions = Complement[Flatten@{opt}, graphOptions]
+, options = Normal @ <|IGGraphEditor // Options, opt |>
+
+; graphOptions = FilterRules[options, Options @ Graph]
+; otherOptions = Complement[options, graphOptions]
 
 ; graph = g
 ; (AnnotationValue[graph, #] = #2 )& @@@ graphOptions
 
-; state = <|IGGraphEditor // Options, opt |> // KeyMap[ToString]
+; state = <|options|> // KeyMap[ToString]
 
 ; state = <|
       state    
@@ -516,7 +516,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
   
 ; state["GraphLayout"]   = Automatic    
 ; state["DirectedEdges"] = Not @ UndirectedGraphQ @ graph
-; state["ImageSize"]     = propertyLookup[graph, ImageSize, { Automatic -> {300, 300}, n_?NumericQ :> {n,n} } ] 
+; state["ImageSize"]     = propertyLookup[graph, ImageSize,  { n_?NumericQ :> {n,n}} ] 
 
 ; state = stateSnapInit @ state
 ; state
@@ -538,7 +538,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*graphs helpers*)
 
 
@@ -549,7 +549,7 @@ propertyRulesValue[graph_, prop_]:=  propertyLookup[graph, prop, Except @ _List 
 
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*state helpers*)
 
 
@@ -671,7 +671,7 @@ createEdge[eId_String, edge:(e_[v1_String,  v2_String])] := <|
   |>
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*graphics*)
 
 
@@ -1000,7 +1000,7 @@ logAction[head_, state_, args___]:= With[
 
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Events*)
 
 
@@ -1086,7 +1086,7 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Actions*)
 
 
@@ -1648,7 +1648,7 @@ If[
 
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*helpers*)
 
 

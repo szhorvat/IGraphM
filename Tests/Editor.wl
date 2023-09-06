@@ -7,7 +7,7 @@ VerificationTest[
   {
     SetOptions[IGGraphEditor,ImageSize->200]
   , toState[][ "ImageSize"]
-  , SetOptions[IGGraphEditor,ImageSize->Automatic]
+  , SetOptions[IGGraphEditor,ImageSize->{ 300, 300 }]
   } [[2]]
 , {200, 200}
 , TestID -> "SetOptions"
