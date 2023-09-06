@@ -9,7 +9,7 @@ VerificationTest[
   , toState[][ "ImageSize"]
   , SetOptions[IGGraphEditor,ImageSize->Automatic]
   } [[2]]
-, 200
+, {200, 200}
 , TestID -> "SetOptions"
 ]
 
@@ -54,22 +54,9 @@ VerificationTest[
 
 
 VerificationTest[
-  #2-#&@@@config["range"] // Apply[#2-#&] // # < 10.^-15&
+  #2-#& @@@ config["range"] // Apply[#2-#&] // # < 10.^-15&
 , True
 , TestID -> "Path graph narrow range"
-]
-
-
-IGraphM`GraphEditor`PackagePrivate`extractEdgePrimitives@toState@Graph@{1->2,2->1}
-
-
-VerificationTest[
-  MatchQ[
-  IGraphM`GraphEditor`PackagePrivate`extractEdgePrimitives[toState@Graph@{1->2,2->1}]["rawEdges"]
-, {KeyValuePattern[{"id" -> _String, "primitive" -> Verbatim[Arrow][_BezierCurve,_]}]..}  
-]
-, True
-, TestID -> "extractEdgePrimitives"
 ]
 
 
@@ -81,3 +68,21 @@ VerificationTest[
 , Graph[{1, 2}, {}, {VertexCoordinates -> {{0.00001, -0.000030000000000000004}, {0.00001, -0.00001}}}]
 , TestID -> "Handling legacy typeset"
 ]
+
+
+graphState = toState[ Graph[{Labeled[Style[1,Red], "LABEL_1", Above],2}, {1->2}] ];
+
+VerificationTest[
+  graphState [["vertex",1, {"name", "styles", "labels"}]]
+, <|"name"->1,"styles"->{RGBColor[1, 0, 0]},"labels"->Placed["LABEL_1",Above]|>
+, TestID -> "vertex labels and styles"
+]
+
+VerificationTest[
+  graphState [["vertex",2, {"name", "styles", "labels"}]]
+, <|"name" -> 2, "styles" -> Missing["KeyAbsent", "styles"], "labels" -> Missing["KeyAbsent", "labels"]|>
+, TestID -> "no vertex labels and styles"
+]
+
+
+

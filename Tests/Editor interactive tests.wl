@@ -16,10 +16,10 @@ NotebookDelete@Cells@MessagesNotebook[]
 SetSelectedNotebook@MessagesNotebook[];
 SetSelectedNotebook@EvaluationNotebook[];
 FrontEndExecute[FrontEndToken["DeleteGeneratedCells"]]
-
 IGraphM`GraphEditor`PackagePrivate`$geDebug=True;
 IGraphM`GraphEditor`PackagePrivate`$logTimings=False;
 IGraphM`GraphEditor`PackagePrivate`$logDynamic=True;
+
 Get["IGraphM`"]
 IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
 
@@ -31,6 +31,12 @@ FileNameJoin[{NotebookDirectory[], "Editor.wl"}]//NotebookOpen
 
 
 SetOptions[IGGraphEditor, ImageSize->Automatic];
+
+
+IGGraphEditor[IGEmptyGraph[]]//ToBoxes
+
+
+IGEmptyGraph[]//InputForm
 
 
 (* ::Subsection:: *)
@@ -52,16 +58,30 @@ SetOptions[IGGraphEditor, ImageSize->Automatic];
 (*- Are curved edges redrawn @mouseUp?*)
 
 
-IGGraphEditor[Graph@{1\[UndirectedEdge]2},VertexSize->Small, "DirectedEdges"->True]
-
-
-Panel@Graphics[{
-Point[{0,0}],
-Inset[Button[Style["\[Congruent]",18],ContentPadding->False, Appearance->"FramedPalette"],
-{Right, Top}, {Right, Top}]
-}
+IGGraphEditor[
+  Graph@{1->2},
+  VertexSize -> Small, 
+  "DirectedEdges"->True,
+  "VertexColor" -> Red,
+  "ShowSidePanel" -> True  
 ]
 
+
+(* ::Input:: *)
+(*InputForm@Normal@Graph[{1, 2, 3, 4}, {Null, {{1, 2}, {2, 3}, {3, 4}}}, {FormatType -> TraditionalForm, VertexCoordinates -> {{0.17812499999999998`, 0.6773712169117063}, {0.55625, 0.42112121691170634`}, {0.7843749999999999, 0.8117462169117063}, {0.7999999999999999, 0.38362121691170636`}}}]*)
+
+
+Graph
+
+
+IGGraphEditor[
+  Graph@{1->2},  
+  Prolog -> {
+  Texture[img], 
+  Polygon[Scaled/@{{0,0},{0,1},{1,1},{1,0}},VertexTextureCoordinates->{{0,0},{0,1},{1,1},{1,0}}
+  ]
+ }
+]
 
 
 IGGraphEditor[Graph@{1->2,2->1},VertexSize->Small, "DirectedEdges"->True]
@@ -86,7 +106,7 @@ IGGraphEditor[ImageSize->100]
 ] }
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Different input graphs*)
 
 
