@@ -129,6 +129,8 @@ symbolName = Function[s, SymbolName @ Unevaluated[s], HoldFirst];
 (*IGGraphEditor*)
 
 
+
+
 IGGraphEditor // Options = {
   "KeepVertexCoordinates" -> True (* bool *)
 , "CreateVertexSelects"   -> True (* bool *)
@@ -140,6 +142,7 @@ IGGraphEditor // Options = {
 , "ShowSidePanel"         -> False
 , "VertexColor"           -> Gray
 , "EdgeColor"             -> Gray
+
 , VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
@@ -161,7 +164,7 @@ IGGraphEditor /:
 iGraphEditor // Options = Options @ IGGraphEditor;
 
 
-supportedGraphQ = MatchQ[_Graph];
+supportedGraphQ = GraphQ;
 
 
 (* ::Subsection:: *)
@@ -410,7 +413,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
 (*state version*)
 
 
-$stateVersion = 2;
+$stateVersion = 3;
 (*It does not change unless the structure of state association is changed.
   That implies new geActions etc won't be compatible with old state *)
 
@@ -476,51 +479,57 @@ standardizeOption[VertexLabels][val_] := Replace[val, Automatic -> "Name"]
 standardizeOption[_][val_] := val
 
 
-GraphToEditorState[ opt:OptionsPattern[] ]:=GraphToEditorState @ Association[ Options @ IGGraphEditor, opt ]
+Protect@$temporaryVertexForPreservingGraphOptions;
 
-GraphToEditorState[ opts_Association ] := Module[{state}
-, state = <|
-      "vertex"         -> <||>
-    , "edge"           -> <||>
-    , "selectedVertex" -> Null
-    , "version"        -> $stateVersion
-    , "GraphLayout"    -> Automatic
-    , optionsToConfig[opts]
-    , "vCounter"->0
-    , "eCounter" ->0
-    , "range" -> {{-1, 1}, {-1, 1}}
-    , "aspectRatio" -> 1
-    , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
-    , "editorMode" -> "draw"
-    , "selectedObject" -> Null
+GraphToEditorState[ opt:OptionsPattern[] ]:=Module[{graphOptions, otherOptions}
+, graphOptions = FilterRules[Flatten@{opt}, Options @ Graph]
+; otherOptions = Complement[Flatten@{opt}, graphOptions]
 
-  |>
-
-; state["ImageSize"] = state["ImageSize"] // Replace[ { Automatic -> 300, n_?NumericQ :> {n,n} } ] 
-
-; state = stateSnapInit @ state
-; state
-]
-
-
-
-optionsToConfig[options_Association] := KeyMap[ToString] @ options
-
+; GraphToEditorState[
+    Graph[{$temporaryVertexForPreservingGraphOptions}, {}, graphOptions] (* empty graph does not preserve options *)
+  , otherOptions
+  ]
+]  
 
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
-  {state}
+  {graph,otherOptions,graphOptions,state}
   
-, state = GraphToEditorState[<| Options @ IGGraphEditor, opt |>]
+, graphOptions = FilterRules[Flatten@{opt}, Options @ Graph]
+; otherOptions = Complement[Flatten@{opt}, graphOptions]
 
-; state["vertex"] = toStateVertices[state, g]
+; graph = g
+; (AnnotationValue[graph, #] = #2 )& @@@ graphOptions
 
-; state["edge"]   = toStateEdges[state, g]
+; state = <|IGGraphEditor // Options, opt |> // KeyMap[ToString]
 
-; state[ "vertexCommonStyles" ] = propertyCommonValue[g, VertexStyle]
+; state = <|
+      state    
+    , "version"        -> $stateVersion
+    , "selectedVertex" -> Null
+    , "range"          -> {{-1, 1}, {-1, 1}}
+    , "aspectRatio"    -> 1
+    , "inRangeQ"       -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
+    , "editorMode"     -> "draw"
+    , "selectedObject" -> Null   
+  |>
+  
+; state["GraphLayout"]   = Automatic    
+; state["DirectedEdges"] = Not @ UndirectedGraphQ @ graph
+; state["ImageSize"]     = propertyLookup[graph, ImageSize, { Automatic -> {300, 300}, n_?NumericQ :> {n,n} } ] 
+
+; state = stateSnapInit @ state
+; state
+
+; state["vertex"] = toStateVertices[state, graph]
+
+; state["edge"]   = toStateEdges[state, graph]
+
+; state[ "vertexCommonStyles" ] = propertyCommonValue[graph, VertexStyle]
 ; state[ "vCounter"] = Length @ state["vertex"]
 ; state[ "eCounter"] = Length @ state["edge"]
-; state[ "DirectedEdges"] = Not @ UndirectedGraphQ @ g
+
+
 
 ; geAction["UpdateRange", Dynamic @ state]
 
@@ -533,10 +542,10 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 (*graphs helpers*)
 
 
-propertyValue[graph_, prop_]:= PropertyValue[graph, prop] // Replace[ Except @ _List -> {}]
+propertyLookup[graph_, prop_, rules_: {}]:= AnnotationValue[graph, prop] // Replace[rules]
 
-propertyCommonValue[graph_, prop_]:= propertyValue[graph, prop] // DeleteCases[ _Rule]
-propertyRulesValue[graph_, prop_]:= propertyValue[graph, prop]  // DeleteCases[ Except @ _Rule]
+propertyCommonValue[graph_, prop_]:= propertyLookup[graph, prop, Except @ _List -> {}] // DeleteCases[ _Rule]
+propertyRulesValue[graph_, prop_]:=  propertyLookup[graph, prop, Except @ _List -> {}] // DeleteCases[ Except @ _Rule]
 
 
 
@@ -590,21 +599,23 @@ stateHandleNarrowRange[state_Association] := Module[
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*vertices*)
 
 
 toStateVertices[state_Association, g_Graph]:=Module[{v, pos, labels, styles}
 , v = VertexList[g]
+; If[ v === {$temporaryVertexForPreservingGraphOptions}, Return[<||>]]
+
 ; pos = GraphEmbedding @ g
 ; v = MapThread[createVertex, {v, pos}]
 
 ; v = Association[ #name -> # & /@ v ]
 
-; styles = PropertyValue[g, VertexStyle]  // Replace[ Except @ KeyValuePattern[{}] -> {}]
+; styles = propertyRulesValue[g, VertexStyle]
 ; (v[#, "styles"] = #2) & @@@ styles
 
-; labels = PropertyValue[g, VertexLabels] // Replace[ Except @ KeyValuePattern[{}] -> {}]
+; labels = propertyRulesValue[g, VertexLabels] 
 ; (v[#, "labels"] = #2) & @@@ labels
 
 ; v = Association @ Map[ (#id -> #) & ] @ Values @ v
