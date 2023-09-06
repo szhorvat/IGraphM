@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Package Export*)
 
 
@@ -168,7 +168,7 @@ supportedGraphQ = MatchQ[_Graph];
 (*iGraphEditor*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*iGraphEditor*)
 
 
@@ -402,7 +402,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*State*)
 
 
@@ -468,7 +468,7 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*to state*)
 
 
@@ -509,19 +509,17 @@ optionsToConfig[options_Association] := KeyMap[ToString] @ options
 
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
-  {state, v, e, pos }
-, v = VertexList[g]
-; pos = GraphEmbedding @ g
-; e = EdgeList[g]
+  {state}
+  
+, state = GraphToEditorState[<| Options @ IGGraphEditor, opt |>]
 
-; state = GraphToEditorState[<| Options @ IGGraphEditor, opt |>]
-
-; state["vertex"] = Association @ Map[ (#id -> #) & ] @ MapThread[createVertex, {v, pos}]
+; state["vertex"] = toStateVertices[state, g]
 
 ; state["edge"]   = toStateEdges[state, g]
 
-; state[ "vCounter"] = Length@v
-; state[ "eCounter"] = Length@e
+; state[ "vertexCommonStyles" ] = propertyCommonValue[g, VertexStyle]
+; state[ "vCounter"] = Length @ state["vertex"]
+; state[ "eCounter"] = Length @ state["edge"]
 ; state[ "DirectedEdges"] = Not @ UndirectedGraphQ @ g
 
 ; geAction["UpdateRange", Dynamic @ state]
@@ -531,8 +529,23 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsection:: *)
+(*graphs helpers*)
+
+
+propertyValue[graph_, prop_]:= PropertyValue[graph, prop] // Replace[ Except @ _List -> {}]
+
+propertyCommonValue[graph_, prop_]:= propertyValue[graph, prop] // DeleteCases[ _Rule]
+propertyRulesValue[graph_, prop_]:= propertyValue[graph, prop]  // DeleteCases[ Except @ _Rule]
+
+
+
+(* ::Subsection:: *)
 (*state helpers*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*snaps*)
 
 
 stateSnapInit[state_Association] := Module[{newState = state }
@@ -551,6 +564,10 @@ stateSnapInit[state_Association] := Module[{newState = state }
 
 stateGetAutomaticSnapStep[state_Association] :=
   Ceiling[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #)/ state["SnapDensity"]] & @@@ state["range"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*range*)
 
 
 stateHandleNarrowRange[state_Association] := Module[
@@ -573,6 +590,38 @@ stateHandleNarrowRange[state_Association] := Module[
 ]
 
 
+(* ::Subsubsection:: *)
+(*vertices*)
+
+
+toStateVertices[state_Association, g_Graph]:=Module[{v, pos, labels, styles}
+, v = VertexList[g]
+; pos = GraphEmbedding @ g
+; v = MapThread[createVertex, {v, pos}]
+
+; v = Association[ #name -> # & /@ v ]
+
+; styles = PropertyValue[g, VertexStyle]  // Replace[ Except @ KeyValuePattern[{}] -> {}]
+; (v[#, "styles"] = #2) & @@@ styles
+
+; labels = PropertyValue[g, VertexLabels] // Replace[ Except @ KeyValuePattern[{}] -> {}]
+; (v[#, "labels"] = #2) & @@@ labels
+
+; v = Association @ Map[ (#id -> #) & ] @ Values @ v
+; v
+]
+
+
+createVertex[name_, pos:{_, _}, styles_:{}, labels_:{}]:= <|"name" -> name, "id" -> CreateUUID[],  "pos" -> pos|>
+
+
+stateVertexList[state_Association] := Values @ state[["vertex", All, "name"]]
+
+
+(* ::Subsubsection::Closed:: *)
+(*edges*)
+
+
 toStateEdges[state_Association, graph_] := Module[{ }
 , edges = EdgeList @ graph
 ; vertexRules = (#name -> #id) & /@ Values @ state["vertex"]
@@ -580,9 +629,6 @@ toStateEdges[state_Association, graph_] := Module[{ }
 ; Association @ Map[ (#id -> #) & ] @ MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
 
 ]
-
-
-stateVertexList[state_Association] := Values @ state[["vertex", All, "name"]]
 
 
 stateEdgeList[state_Association] := state //
@@ -607,11 +653,18 @@ stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 ]
 
 
+createEdge[eId_String, edge:(e_[v1_String,  v2_String])] := <|
+    "id"    -> eId
+  , "edge" -> edge    
+  , "shape" -> Automatic
+  |>
+
+
 (* ::Subsection:: *)
 (*graphics*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*geGraphics*)
 
 
@@ -678,7 +731,7 @@ sidePanelToggler[ Dynamic @ state_ ]:= Inset[
             ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*vertex*)
 
 
@@ -718,7 +771,8 @@ Module[
   {graphics}
 
 , graphics = { {
-    EdgeForm @ AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
+    Directive @ Lookup[v, "styles", {}]
+  , EdgeForm @ AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
   , DynamicName[
       Disk[Dynamic[x], PDynamic@state["realVertexSize"]]
     , v["id"]
@@ -1100,6 +1154,8 @@ bounds = Lookup[  state, "coordinateBounds",
 (* I don't like when UI's aspect ration changes unless it was done explicitly by draggin Pane's resize control*)
 (* So we need to pad vertically or horizontally the minimal range in order to match ImageSize aspect ratio.*)
 
+adjustRangeToImageSize[ bounds_, size_?NumericQ]:= adjustRangeToImageSize[ bounds, {size, size}]
+
 adjustRangeToImageSize[ bounds: {{x1_, x2_}, {y1_, y2_}}, size: {w_, h_}]:= Module[
   {rangeRatio, sizeRatio, newWidth, newHeight, centerWidth, centerHeigth, x1p, x2p, y1p, y2p}
 
@@ -1234,7 +1290,7 @@ smallestMissingInteger[list_List] := Block[{n = 1}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*RemoveVertex*)
 
 
@@ -1338,7 +1394,7 @@ geAction["SetLayout", Dynamic @ state_, layout_String] := Module[{graphData, old
 ]
 
 
-(* ::Subsubsubsection:: *)
+(* ::Subsubsubsection::Closed:: *)
 (*stateCreateAndDestructureGraph*)
 
 
@@ -1383,7 +1439,7 @@ createAnnotatedGraph[<|vertex_,  annotatedVertices_, annotatedEdges_,"GraphLayou
 ]
 
 
-(* ::Subsubsubsection:: *)
+(* ::Subsubsubsection::Closed:: *)
 (*extractGraphPrimitives*)
 
 
@@ -1499,7 +1555,7 @@ standardizeEdge[e_UndirectedEdge]:=Sort @ e
 standardizeEdge[directed_[v1_, v2_]]:= {v1, v2}
 
 
-(* ::Subsubsubsection:: *)
+(* ::Subsubsubsection::Closed:: *)
 (*patchCurveNormal*)
 
 
@@ -1581,21 +1637,8 @@ If[
 
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*helpers*)
-
-
-$namePatt = _ ;
-
-
-createVertex[name:$namePatt, pos:{_, _}]:= <|"name" -> name, "id" -> CreateUUID[],  "pos" -> pos|>
-
-
-createEdge[eId_String, edge:(e_[v1_String,  v2_String])] := <|
-    "id"    -> eId
-  , "edge" -> edge    
-  , "shape" -> Automatic
-  |>
 
 
 ToKeyValue::usage = "ToKeyValue[symbol] is a small utility that generates \"symbol\" -> symbol which shortens association assembling.";
