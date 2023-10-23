@@ -138,8 +138,9 @@ IGGraphEditor // Options = {
 , "IndexGraph"            -> False (* bool *)
 , "PerformanceLimit"      -> 450   (* _Integer *)
 , "ShowSidePanel"         -> False
-, "VertexColor"           -> Gray
-, "EdgeColor"             -> Gray
+
+, VertexStyle           -> Gray
+, EdgeStyle             -> Gray
 
 , VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
@@ -165,7 +166,7 @@ iGraphEditor // Options = Options @ IGGraphEditor;
 supportedGraphQ = GraphQ;
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*iGraphEditor*)
 
 
@@ -440,7 +441,7 @@ geStateVersionCheck[___] :=
   Failure["GraphEditor", <|"MessageTemplate" -> IGGraphEditor::unknownState|>]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*from state*)
 
 
@@ -458,7 +459,13 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
   , Automatic
   ]
 
-; graph = Graph[ v, e, VertexCoordinates -> pos]
+
+
+; graph = Graph[ v, e
+  , VertexCoordinates -> pos
+  , VertexStyle       -> stateVertexStyle @ state 
+  , EdgeStyle         -> stateEdgeStyle @ state 
+  ]
 
 ; If[
     TrueQ @ state[ "IndexGraph"]
@@ -469,7 +476,7 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*to state*)
 
 
@@ -491,51 +498,97 @@ GraphToEditorState[ opt:OptionsPattern[] ]:=Module[{graphOptions, otherOptions}
 
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
-  {options, graph,otherOptions,graphOptions,state}
+  {defaultOptions,options, graph,otherOptions, graphOptions,state}
   
-, options = Normal @ <|IGGraphEditor // Options, opt |>
-
-; graphOptions = FilterRules[options, Options @ Graph]
+, options = Normal @ <| Options@IGGraphEditor, opt |>
+; defaultOptions = IGGraphEditor // Options
+; graphOptions = FilterRules[options, Options @ Graph] // DeleteCases[VertexStyle|EdgeStyle -> _]
 ; otherOptions = Complement[options, graphOptions]
 
 ; graph = g
 ; (AnnotationValue[graph, #] = #2 )& @@@ graphOptions
 
-; state = <|options|> // KeyMap[ToString]
+; state = <|defaultOptions, options|> // KeyMap[ToString]
 
 ; state = <|
       state    
     , "version"        -> $stateVersion
     , "selectedVertex" -> Null
-    , "range"          -> {{-1, 1}, {-1, 1}}
     , "aspectRatio"    -> 1
-    , "inRangeQ"       -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
     , "editorMode"     -> "draw"
     , "selectedObject" -> Null   
   |>
   
+; state["vertexBaseStyle"] = propertyCommonValue[graph, VertexStyle, Lookup[defaultOptions, VertexStyle]]
+; state["edgeBaseStyle"] = propertyCommonValue[graph, EdgeStyle, Lookup[defaultOptions, EdgeStyle]]
+  
 ; state["GraphLayout"]   = Automatic    
 ; state["DirectedEdges"] = Not @ UndirectedGraphQ @ graph
-; state["ImageSize"]     = propertyLookup[graph, ImageSize,  { n_?NumericQ :> {n,n}} ] 
+; state["ImageSize"]     = propertyLookup[graph, ImageSize,  { n_?NumericQ :> {n,n}, Automatic -> Lookup[defaultOptions, ImageSize]} ] 
 
 ; state = stateSnapInit @ state
-; state
 
 ; state["vertex"] = toStateVertices[state, graph]
+; state["vCounter"] = Length @ state["vertex"]
+
 
 ; state["edge"]   = toStateEdges[state, graph]
+; state["eCounter"] = Length @ state["edge"]
 
-; state[ "vertexCommonStyles" ] = propertyCommonValue[graph, VertexStyle]
-; state[ "vCounter"] = Length @ state["vertex"]
-; state[ "eCounter"] = Length @ state["edge"]
-
-
-
-; geAction["UpdateRange", Dynamic @ state]
-
+; state = stateRangeInit @ state
 
 ; state
 ]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*stateRangeInit*)
+
+
+stateRangeInit[state_]:=Module[{update, rangeProps}
+, update = <|
+    state
+  , "range" -> {{-1, 1}, {-1, 1}}
+  , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]  
+  |>
+  
+; update["coordinateBounds"] = calculateCoordinateBounds @ update
+
+; rangeProps = calculateRangePropertiesIfNeeded[update]
+                    
+
+; If[ ! AssociationQ @ rangeProps
+  ,  Return[update, Module] 
+  ]
+
+; update = <|update, rangeProps|>
+
+; update[  "realVertexSize" ] = calculateVertexSize @ update
+
+; update
+
+]
+
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*stateSnapInit*)
+
+
+stateSnapInit[state_Association] := Module[{newState = state }
+
+, newState["snap"] = newState["SnapToGrid"] =!= False
+
+; If[
+    ! newState["snap"]
+  , Return @ newState
+  ]  
+
+; newState["snapStep"] = calculateSnapStep @ newState
+; newState["vertex"] = <|#, "pos" -> Round[#pos, newState["snapStep"]] |>& /@ newState["vertex"]
+; newState
+]
+
 
 
 (* ::Subsection::Closed:: *)
@@ -544,12 +597,52 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 
 propertyLookup[graph_, prop_, rules_: {}]:= AnnotationValue[graph, prop] // Replace[rules]
 
-propertyCommonValue[graph_, prop_]:= propertyLookup[graph, prop, Except @ _List -> {}] // DeleteCases[ _Rule]
+propertyCommonValue[graph_, prop_, default_:Automatic]:= With[
+  { lookup = propertyLookup[graph, prop, Except @ _List -> {}] // DeleteCases[ _Rule]}
+  
+, If[ MatchQ[lookup, {_}]
+  , First @ lookup
+  , default
+  ]   
+]
+
 propertyRulesValue[graph_, prop_]:=  propertyLookup[graph, prop, Except @ _List -> {}] // DeleteCases[ Except @ _Rule]
 
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
+(*Getters*)
+
+
+getGraphEmbedding[state_]:= state[["vertex", All, "pos"]]
+
+
+stateVertexList[state_Association] := Values @ state[["vertex", All, "name"]]
+
+
+stateVertexStyle[state_] := Prepend[
+  state[["vertex"]] // Select[KeyExistsQ["styles"]] // Values // Map[#name -> #styles&]
+, state["vertexBaseStyle"]  
+]
+
+
+stateEdgeStyle[state_]:= Prepend[
+  state//Query[
+    "edge"
+  , Select[KeyExistsQ["styles"]] /* Values
+  , (#edge /. state[["vertex", All, "name"]]) -> #styles&
+  ]
+, state["edgeBaseStyle"]]
+
+
+stateEdgeList[state_Association] := state //
+ Query["edge", Values, (#edge /. state[["vertex", All, "name"]]) &]
+
+
+stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"]
+
+
+(* ::Subsection:: *)
 (*state helpers*)
 
 
@@ -557,26 +650,22 @@ propertyRulesValue[graph_, prop_]:=  propertyLookup[graph, prop, Except @ _List 
 (*snaps*)
 
 
-stateSnapInit[state_Association] := Module[{newState = state }
-
-, newState["snap"] = newState["SnapToGrid"] =!= False
-
-; If[
-    newState["snap"]
-  , newState["snapStep"] = stateGetAutomaticSnapStep @ newState
-  ; newState["vertex"] = <|#, "pos" -> Round[#pos, newState["snapStep"]] |>& /@ newState["vertex"]
-  ]
-
-; newState
+calculateSnapStep[state_Association] := Module[  { count , range}
+, count = state["SnapDensity"] 
+; range = state["range"] 
+; Ceiling[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #) / count] & @@@ range
 ]
-
-
-stateGetAutomaticSnapStep[state_Association] :=
-  Ceiling[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #)/ state["SnapDensity"]] & @@@ state["range"]
 
 
 (* ::Subsubsection::Closed:: *)
 (*range*)
+
+
+calculateCoordinateBounds[state_]:=CoordinateBounds[ getGraphEmbedding @ state  ] /. {} -> {{0,1},{0,1}}  
+
+
+(* ::Subsubsubsection:: *)
+(*stateHandleNarrowRange*)
 
 
 stateHandleNarrowRange[state_Association] := Module[
@@ -626,27 +715,30 @@ toStateVertices[state_Association, g_Graph]:=Module[{v, pos, labels, styles}
 createVertex[name_, pos:{_, _}, styles_:{}, labels_:{}]:= <|"name" -> name, "id" -> CreateUUID[],  "pos" -> pos|>
 
 
-stateVertexList[state_Association] := Values @ state[["vertex", All, "name"]]
-
-
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*edges*)
 
 
-toStateEdges[state_Association, graph_] := Module[{ }
+toStateEdges[state_Association, graph_] := Module[{labels,styles,replaceVertexNames,vertexRules,edges }
 , edges = EdgeList @ graph
 ; vertexRules = (#name -> #id) & /@ Values @ state["vertex"]
-; edges = Replace[edges, vertexRules , {2}]
-; Association @ Map[ (#id -> #) & ] @ MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
+; replaceVertexNames = Replace[#, vertexRules , {2}]&
+
+; edges = edges // replaceVertexNames
+
+; edges = MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
+
+; edges = Association[ #edge -> # & /@ edges ]
+
+; styles = propertyRulesValue[graph, EdgeStyle]  // Association // KeyMap[ Replace[#, vertexRules , {1}]& ]
+; (edges[#, "styles"] = #2) & @@@ Normal @ styles
+
+; labels = propertyRulesValue[graph, EdgeLabels] // Association //  KeyMap[ Replace[#, vertexRules , {1}]& ]
+; (edges[#, "labels"] = #2) & @@@ Normal @ labels
+
+; edges = Association @ Map[ (#id -> #) & ] @ Values @ edges
 
 ]
-
-
-stateEdgeList[state_Association] := state //
- Query["edge", Values, (#edge /. state[["vertex", All, "name"]]) &]
-
-
-stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"]
 
 
 stateHasSelectedVertex[state_Association] := StringQ @ state["selectedVertex"]
@@ -671,7 +763,7 @@ createEdge[eId_String, edge:(e_[v1_String,  v2_String])] := <|
   |>
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*graphics*)
 
 
@@ -722,11 +814,15 @@ geGraphicsPrimitives[ Dynamic @ state_ ]:= {
           
           , geSelectedObjectPrimitives @ Dynamic @ state
           
-          , PDynamic @ state["EdgeColor"]
-          , geEdges @ Dynamic @ state
+          , {
+              PDynamic @ state["edgeBaseStyle"]
+            , geEdges @ Dynamic @ state
+            }
           
-          , PDynamic @ state["VertexColor"]
-          , geVertices @ Dynamic @ state
+          , {
+              PDynamic @ state["vertexBaseStyle"]
+            , geVertices @ Dynamic @ state
+            }
           
           , sidePanelToggler @ Dynamic @ state
           }
@@ -742,7 +838,7 @@ sidePanelToggler[ Dynamic @ state_ ]:= Inset[
             ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*vertex*)
 
 
@@ -816,7 +912,7 @@ Module[
 
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*edges*)
 
 
@@ -830,7 +926,9 @@ Table[
 
 
 geEdgeShapeFunction[Dynamic @ state_, e_Association] := EventHandler[
-    edgeHoverWrapper @ edgeToPrimitive @ e    
+    { Directive @ Lookup[e, "styles", {}]
+    , edgeHoverWrapper @ edgeToPrimitive @ e    
+    }
   , { "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e]) }
   , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
   ]
@@ -841,6 +939,7 @@ edgeHoverWrapper[primitive_]:=  With[
     nef = $edgeThickness,
     aef = $activeEdgeThickness
   },{
+  
   AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
 , primitive
 }
@@ -1140,29 +1239,45 @@ geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
 (* bounds      = {{x1,x2}, {y1, y2}} = (plot)range*)
 (* boundig box = {{x1,y1}, {x2, y2}}*)
 geAction["UpdateRange", Dynamic @ state_, force_:False] := Module[
-  {newBounds, embedding, bounds }
+  {update,  bounds }
 
 
-, (*embedding = state // Query["vertex", All, "pos"]
+(*embedding = state // Query["vertex", All, "pos"]
 ; If[ Length[embedding ] < 1, Return[False, Module]]*)
 
-bounds = Lookup[  state, "coordinateBounds", 
-  state["coordinateBounds"] = CoordinateBounds[ state[["vertex", All, "pos"]]  ] /. {} -> {{0,1},{0,1}}
-]
+, update = calculateRangePropertiesIfNeeded[state, force]
+; If[ ! AssociationQ @ update,  Return[False, Module] ]
 
-; newBounds = handleDegeneratedRange @ respectVertexSize[ bounds , state["VertexSize"] ]
+; update // KeyValueMap[(state[#] = #2) & ]
 
-; If[ ! force && AllTrue[ Transpose @ newBounds, state["inRangeQ"]],  Return[False, Module]]
-
-
-; state["range"] = adjustRangeToImageSize[ newBounds, state["ImageSize"] ]
-
-; state[  "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[  "range"] ]
 ; geAction["UpdateVertexSize", Dynamic @ state] 
 ]
 
 
-(* I don't like when UI's aspect ration changes unless it was done explicitly by draggin Pane's resize control*)
+calculateRangePropertiesIfNeeded[state_, force_:False]:=Module[{bounds, update = <||>}
+, bounds = calculateMinimalBounds @ state 
+
+; If[ ! force && AllTrue[ Transpose @ bounds, state["inRangeQ"]]
+  ,  Return[False, Module]
+  ]
+
+; update["range"] = adjustRangeToImageSize[ bounds, state["ImageSize"] ]
+
+; update[  "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[  "range"] ]
+
+; update
+]
+
+
+calculateMinimalBounds[state_]:= Module[{bounds}
+  , bounds = calculateCoordinateBounds @ state
+  ; handleDegeneratedRange @ respectVertexSize[ 
+      bounds, state["VertexSize"] 
+  ]
+]
+
+
+(* I don't like when UI's aspect ratio changes unless it was done explicitly by draggin Pane's resize control*)
 (* So we need to pad vertically or horizontally the minimal range in order to match ImageSize aspect ratio.*)
 
 adjustRangeToImageSize[ bounds_, size_?NumericQ]:= adjustRangeToImageSize[ bounds, {size, size}]
@@ -1194,6 +1309,7 @@ adjustRangeToImageSize[ bounds: {{x1_, x2_}, {y1_, y2_}}, size: {w_, h_}]:= Modu
 
 ]
 
+
 respectVertexSize[bounds_, vertexSize_]:=With[
   { vs =  vertexSizeMultiplier @ vertexSize }
 , CoordinateBounds[ Transpose @ bounds, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
@@ -1220,13 +1336,16 @@ handleDegeneratedRange[range : {{xmin_, xmax_}, {ymin_, ymax_}}] := Module[{}
 (*UpdateVertexSize*)
 
 
-geAction["UpdateVertexSize", _ @ state_ ] := With[{ (* _ @ for interpretation bug fix *)
+geAction["UpdateVertexSize", _ @ state_ ] := state[  "realVertexSize" ] = calculateVertexSize @ state
+
+
+calculateVertexSize[state_]:=With[{ (* _ @ for interpretation bug fix *)
   boundingBox = Transpose @ state[ "range"]
 , sizeMultiplier = vertexSizeMultiplier @ state[ "VertexSize"]
 }
-, state[  "realVertexSize" ] = Norm[ boundingBox ] * sizeMultiplier
-
+, Norm[ boundingBox ] * sizeMultiplier
 ]
+
 
 vertexSizeMultiplier[vs_?NumericQ] := vs;
 vertexSizeMultiplier[vs_] := vs /. {
@@ -1648,7 +1767,7 @@ If[
 
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*helpers*)
 
 

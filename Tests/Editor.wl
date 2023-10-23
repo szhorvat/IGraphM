@@ -70,7 +70,12 @@ VerificationTest[
 ]
 
 
+(* ::Subsection:: *)
+(*VertexStyle, EdgeStyle and Style wrappers*)
+
+
 graphState = toState[ Graph[{Labeled[Style[1,Red], "LABEL_1", Above],2}, {1->2}] ];
+
 
 VerificationTest[
   graphState [["vertex",1, {"name", "styles", "labels"}]]
@@ -86,3 +91,45 @@ VerificationTest[
 
 
 
+graph= Graph[
+  {1, Style[2, Red],3}, 
+  { 1->2, Style[2->3, Orange], 3->1},
+  VertexStyle         -> Blue,
+  EdgeStyle           -> {(1->2) -> Dashed}(*,  
+  GraphHighlight      -> {3, 3->1},
+  GraphHighlightStyle -> {"Thick"}*)
+];
+
+
+(state = toState @ graph) ;
+
+
+VerificationTest[
+  state["vertexBaseStyle"]
+, RGBColor[0, 0, 1]
+, TestID -> "options > VertexStyle common"
+]
+
+VerificationTest[
+  state["edgeBaseStyle"]
+, EdgeStyle /. Options[IGGraphEditor]
+, TestID -> "options > EdgeStyle common default"
+]
+
+VerificationTest[
+  state["vertex"]  // Select[#name==2&] // First // #styles &
+, {RGBColor[1, 0, 0]}
+, TestID -> "options > vertex style wrapper"
+]
+
+VerificationTest[
+  state["edge"][[2]]["styles"]
+, {RGBColor[1, 0.5, 0]}
+, TestID -> "options > edge style wrapper"
+]
+
+VerificationTest[
+  state["edge"][[1]]["styles"]
+, Dashing[{Small, Small}]
+, TestID -> "options > EdgeStyle rules"
+]
