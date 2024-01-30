@@ -330,16 +330,16 @@ public:
 
     void bipartiteGameGNM(mint n1, mint n2, mint m, bool directed, bool bidirectional) {
         destroy();
-        igConstructorCheck(igraph_bipartite_game(
-                               &graph, nullptr, IGRAPH_ERDOS_RENYI_GNM,
-                               n1, n2, 0, m, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
+        igConstructorCheck(igraph_bipartite_game_gnm(
+                               &graph, nullptr,
+                               n1, n2, m, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
     }
 
     void bipartiteGameGNP(mint n1, mint n2, double p, bool directed, bool bidirectional) {
         destroy();
-        igConstructorCheck(igraph_bipartite_game(
-                               &graph, nullptr, IGRAPH_ERDOS_RENYI_GNP,
-                               n1, n2, p, 0, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
+        igConstructorCheck(igraph_bipartite_game_gnp(
+                               &graph, nullptr,
+                               n1, n2, p, directed, bidirectional ? IGRAPH_ALL : IGRAPH_OUT));
     }
 
     void erdosRenyiGNM(mint n, mint m, bool directed, bool loops) {
