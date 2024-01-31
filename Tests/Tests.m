@@ -7435,8 +7435,8 @@ MT[
 (* works only with simple graphs *)
 MT[
   IGAverageNeighborDegree[Graph[{1 <-> 2, 1 <-> 2}]],
-  $Failed,
-  {IGraphM::error}
+  {2, 2},
+  SameTest -> Equal
 ]
 
 
