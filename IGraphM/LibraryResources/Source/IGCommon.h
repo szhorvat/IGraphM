@@ -218,6 +218,9 @@ public:
     const igraph_bool_t *begin() const { return vec.stor_begin; }
     const igraph_bool_t *end() const { return vec.end; }
 
+    igraph_bool_t & operator [] (size_t i) { return begin()[i]; }
+    const igraph_bool_t & operator [] (size_t i) const { return begin()[i]; }
+
     void clear() { igraph_vector_bool_clear(&vec); }
     void resize(igraph_integer_t newsize) { igCheck(igraph_vector_bool_resize(&vec, newsize)); }
     void reserve(igraph_integer_t newsize) { igCheck(igraph_vector_bool_reserve(&vec, newsize)); }

@@ -144,15 +144,16 @@ public:
         igConstructorCheck(igraph_lcf_vector(&graph, n, &shifts, repeats));
     }
 
-    /* TODO support granular periodicity */
-    void makeLattice(mma::IntTensorRef dims, mint nei, bool directed, bool mutual, bool periodic) {
+    void makeLattice(mma::IntTensorRef dims, mint nei, bool directed, bool mutual, mma::IntTensorRef periodic) {
         igraph_vector_int_t igdims = igIntVectorView(dims);
-        igBoolVector p;
-        p.resize(dims.size());
-        igraph_vector_bool_fill(&p.vec, periodic);
+        igBoolVector igperiodic(periodic.length());
+
+        for (mint i=0; i < periodic.length(); i++) {
+            igperiodic[i] = (periodic[i] != 0);
+        }
 
         destroy();
-        igConstructorCheck(igraph_square_lattice(&graph, &igdims, nei, directed, mutual, &p.vec));
+        igConstructorCheck(igraph_square_lattice(&graph, &igdims, nei, directed, mutual, &igperiodic.vec));
     }
 
     void makeTriLattice(mma::IntTensorRef dims, bool directed, bool mutual) {

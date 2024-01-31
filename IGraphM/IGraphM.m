@@ -205,7 +205,7 @@ template = LTemplate["IGraphM",
         (* LFun["fromEdgeListML", LinkObject], *)
         LFun["realizeDegreeSequence", {{Integer, 1, "Constant"} (* outdeg *), {Integer, 1, "Constant"} (* indeg *), True|False (* loops *), True|False (* multi *), Integer (* method *)}, "Void"],
         LFun["fromLCF", {Integer, {Integer, 1, "Constant"}, Integer}, "Void"],
-        LFun["makeLattice", {{Integer, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), True|False (* periodic *)}, "Void"],
+        LFun["makeLattice", {{Integer, 1, "Constant"}, Integer (* nei *), True|False (* directed *), True|False (* mutual *), {Integer, 1, "Constant"} (* periodic *)}, "Void"],
         LFun["makeTriLattice", {{Integer, 1, "Constant"}, True|False (* directed *), True|False (* mutual *)}, "Void"],
         LFun["kautz", {Integer, Integer}, "Void"],
         LFun["tree", {Integer, Integer, True|False (* directed *)}, "Void"],

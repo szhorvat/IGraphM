@@ -308,9 +308,14 @@ PackageExport["IGSquareLattice"]
 IGSquareLattice::usage = "IGSquareLattice[{d1, d2, \[Ellipsis]}] generates a square grid graph of the given dimensions.";
 
 igSquareLattice[dims_, directed_, mutual_, radius_, periodic_, {opt___}] :=
-    catch@Block[{ig = igMakeEmpty[]},
-      check@ig@"makeLattice"[dims, radius, directed, mutual, periodic];
-      If[Length[dims] === 2 && Not@TrueQ[periodic],
+    catch@Block[{ig = igMakeEmpty[], p},
+      p = Which[
+        BooleanQ[periodic], ConstantArray[Boole[periodic], Length[dims]],
+        VectorQ[periodic, BooleanQ], Boole /@ periodic,
+        True, Message[IGSquareLattice::invopt, periodic, "Periodic", False]; ConstantArray[0, Length[dims]]
+      ];
+      check@ig@"makeLattice"[dims, radius, directed, mutual, p];
+      If[Length[dims] === 2 && Not@MemberQ[p, 1],
         applyGraphOpt[opt, GraphLayout -> {"GridEmbedding", "Dimension" -> dims}]@igToGraph[ig],
         applyGraphOpt[opt]@igToGraph[ig]
       ]
