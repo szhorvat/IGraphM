@@ -327,17 +327,6 @@ IGSquareLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGSquareLattice, Grap
     igSquareLattice[dims, OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Radius"], OptionValue["Periodic"], {opt}]
 
 
-(* TODO: remove eventually *)
-PackageExport["IGMakeLattice"]
-IGMakeLattice::usage = "IGMakeLattice[{d1, d2, \[Ellipsis]}] generates a square grid graph of the given dimensions. It is a synonym for IGSquareLattice";
-
-(* IGMakeLattice is now a synonym for IGSquareLattice, however, it needs to have its separate set of Options *)
-Options[IGMakeLattice] = { "Radius" -> 1, DirectedEdges -> False, "Mutual" -> False, "Periodic" -> False };
-SyntaxInformation[IGMakeLattice] = {"ArgumentsPattern" -> {_, OptionsPattern[]}, "OptionNames" -> optNames[IGMakeLattice, Graph]};
-IGMakeLattice[dims_?nonNegIntVecQ, opt : OptionsPattern[{IGMakeLattice, Graph}]] :=
-    igSquareLattice[dims, OptionValue[DirectedEdges], OptionValue["Mutual"], OptionValue["Radius"], OptionValue["Periodic"], {opt}]
-
-
 (***** Shorthand notation *****)
 
 PackageExport["IGShorthand"]
