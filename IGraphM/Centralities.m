@@ -302,14 +302,27 @@ IGEigenvectorCentrality[graph_?igGraphQ, opt : OptionsPattern[]] :=
     ]
 
 
+PackageExport["IGHITSScores"]
+IGHITSScores::usage = "IGHITSScores[graph] gives pairs of Kleinberg's hub and authority scores for each vertex.";
+
+igHITSScores[graph_, normalized_] :=
+    Block[{ig = igMake[graph]},
+      check@ig@"hitsScores"[normalized]
+    ]
+
+Options[IGHITSScores] = { "Normalized" -> True };
+SyntaxInformation[IGHITSScores] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
+IGHITSScores[graph_?igGraphQ, opt : OptionsPattern[]] :=
+    catch@igHITSScores[graph, OptionValue["Normalized"]]
+
 PackageExport["IGHubScore"]
 IGHubScore::usage = "IGHubScore[graph] gives Kleinberg's hub score for each vertex.";
 
 Options[IGHubScore] = { "Normalized" -> True };
 SyntaxInformation[IGHubScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGHubScore[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
-      sck@ig@"hubScore"[OptionValue["Normalized"]]
+    catch[
+      igHITSScores[graph, OptionValue["Normalized"]][[All, 1]]
     ]
 
 
@@ -319,8 +332,8 @@ IGAuthorityScore::usage = "IGAuthorityScore[graph] gives Kleinberg's authority s
 Options[IGAuthorityScore] = { "Normalized" -> True };
 SyntaxInformation[IGAuthorityScore] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 IGAuthorityScore[graph_?igGraphQ, opt : OptionsPattern[]] :=
-    Block[{ig = igMake[graph]},
-      sck@ig@"authorityScore"[OptionValue["Normalized"]]
+    catch[
+      igHITSScores[graph, OptionValue["Normalized"]][[All, 2]]
     ]
 
 

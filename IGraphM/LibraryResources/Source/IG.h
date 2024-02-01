@@ -742,32 +742,21 @@ public:
         return vector.makeMTensor();
     }
 
-    mma::RealTensorRef hubScore(bool normalized) const {
-        igVector vector;
+    mma::RealMatrixRef hitsScores(bool normalized) const {
+        igVector hub, authority;
         double value;
-        igraph_arpack_options_t options;
-        igraph_arpack_options_init(&options);
-        igCheck(igraph_hub_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
+        igCheck(igraph_hub_and_authority_scores(&graph, &hub.vec, &authority.vec, &value, normalized, passWeights(), NULL));
         if (value < -std::pow( std::numeric_limits<double>::epsilon(), 2.0/3 ) ) {
             std::ostringstream msg;
-            msg << "Hub score eigenvalue should be positive, actual eigenvalue is " << value << ". Possible convergence problem.";
+            msg << "HITS score eigenvalue should be positive, actual eigenvalue is " << value << ". Possible convergence problem.";
             mma::message(msg.str(), mma::M_WARNING);
         }
-        return vector.makeMTensor();
-    }
-
-    mma::RealTensorRef authorityScore(bool normalized) const {
-        igVector vector;
-        double value;
-        igraph_arpack_options_t options;
-        igraph_arpack_options_init(&options);
-        igCheck(igraph_authority_score(&graph, &vector.vec, &value, normalized, passWeights(), &options));
-        if (value < -std::pow( std::numeric_limits<double>::epsilon(), 2.0/3 ) ) {
-            std::ostringstream msg;
-            msg << "Authority score eigenvalue should be positive, actual eigenvalue is " << value << ". Possible convergence problem.";
-            mma::message(msg.str(), mma::M_WARNING);
+        auto res = mma::makeMatrix<double>(hub.length(), 2);
+        for (mint i=0; i < hub.length(); i++) {
+            res(i,0) = hub[i];
+            res(i,1) = authority[i];
         }
-        return vector.makeMTensor();
+        return res;
     }
 
     mma::RealTensorRef constraintScore() const {

@@ -306,8 +306,7 @@ template = LTemplate["IGraphM",
         LFun["personalizedPageRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *)}, {Real, 1}],
         LFun["personalizedLinkRank", {Integer (* method *), {Real, 1, "Constant"}, Real (* damping *), True|False (* directed *)}, {Real, 1}],
         LFun["eigenvectorCentrality", {True|False (* directed *), True|False (* normalized *)}, {Real, 1}],
-        LFun["hubScore", {True|False (* normalized *)}, {Real, 1}],
-        LFun["authorityScore", {True|False (* normalized *)}, {Real, 1}],
+        LFun["hitsScores", {True|False (* normalized *)}, {Real, 2}],
         LFun["constraintScore", {}, {Real, 1}],
 
         (* Centralization *)
