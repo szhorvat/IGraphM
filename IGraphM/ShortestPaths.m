@@ -19,15 +19,21 @@ IGDistanceMatrix::usage =
     "IGDistanceMatrix[graph, fromVertices] gives the shortest path lengths between from the given vertices to each vertex in graph.\n" <>
     "IGDistanceMatrix[graph, fromVertices, toVertices] gives the shortest path lengths between the given vertices in graph.";
 
-Options[IGDistanceMatrix] = {Method -> Automatic};
+Options[IGDistanceMatrix] = {
+  Method -> Automatic,
+  "Cutoff" -> Infinity
+};
+
 igDistanceMatrixMethods = <|
   "Unweighted" -> igDistanceMatrixUnweighted,
   "Dijkstra" -> igDistanceMatrixDijkstra,
   "BellmanFord" -> igDistanceMatrixBellmanFord,
-  "Johnson" -> igDistanceMatrixJohnson
+  "Johnson" -> igDistanceMatrixJohnson,
+  "FloydWarshall" -> igDistanceMatrixFloydWarshall
 |>;
 
 IGDistanceMatrix::bdmtd = "Value of option Method -> `` is not one of " <> ToString[Keys[igDistanceMatrixMethods], InputForm] <> ".";
+IGDistanceMatrix::cunimpl = "Distance cutoffs are not supported with the `` method.";
 
 SyntaxInformation[IGDistanceMatrix] = {"ArgumentsPattern" -> {_, OptionsPattern[]}};
 
@@ -49,27 +55,41 @@ IGDistanceMatrix[graph_?igGraphQ, from : (_List | All) : All, to : (_List | All)
           True, "Johnson"
         ]
       ];
-      igDistanceMatrixMethods[method][graph, vss[graph][from], vss[graph][to]]
+      igDistanceMatrixMethods[method][graph, vss[graph][from], vss[graph][to], OptionValue["Cutoff"]]
     ]
 
-igDistanceMatrixUnweighted[graph_, from_, to_] :=
+igDistanceMatrixUnweighted[graph_, from_, to_, cutoff_] :=
     Block[{ig = igMakeUnweighted[graph]},
-      Round@expectInfNaN@fixInfNaN@check@ig@"shortestPaths"[from, to]
+      Round@expectInfNaN@fixInfNaN@check@ig@"shortestPaths"[from, to, infToNeg[cutoff]]
     ]
 
-igDistanceMatrixDijkstra[graph_, from_, to_] :=
+igDistanceMatrixDijkstra[graph_, from_, to_, cutoff_] :=
     Block[{ig = igMake[graph]},
-      expectInfNaN@fixInfNaN@check@ig@"shortestPathsDijkstra"[from, to]
+      expectInfNaN@fixInfNaN@check@ig@"shortestPathsDijkstra"[from, to, infToNeg[cutoff]]
     ]
 
-igDistanceMatrixBellmanFord[graph_, from_, to_] :=
+igDistanceMatrixBellmanFord[graph_, from_, to_, cutoff_] :=
     Block[{ig = igMake[graph]},
-      expectInfNaN@fixInfNaN@check@ig@"shortestPathsBellmanFord"[from, to]
+      If[cutoff == Infinity,
+        expectInfNaN@fixInfNaN@check@ig@"shortestPathsBellmanFord"[from, to],
+        Message[IGDistanceMatrix::cunimpl, "Bellman-Ford"]; throw[$Failed]
+      ]
     ]
 
-igDistanceMatrixJohnson[graph_, from_, to_] :=
+igDistanceMatrixJohnson[graph_, from_, to_, cutoff_] :=
     Block[{ig = igMake[graph]},
-      expectInfNaN@fixInfNaN@check@ig@"shortestPathsJohnson"[from, to]
+      If[cutoff == Infinity,
+        expectInfNaN@fixInfNaN@check@ig@"shortestPathsJohnson"[from, to],
+        Message[IGDistanceMatrix::cunimpl, "Johnson"]; throw[$Failed]
+      ]
+    ]
+
+igDistanceMatrixFloydWarshall[graph_, from_, to_, cutoff_] :=
+    Block[{ig = igMake[graph]},
+      If[cutoff == Infinity,
+        expectInfNaN@fixInfNaN@check@ig@"shortestPathsJohnson"[from, to],
+        Message[IGDistanceMatrix::cunimpl, "Floyd-Warshall"]; throw[$Failed]
+      ]
     ]
 
 (***** Shortest path tree *****)

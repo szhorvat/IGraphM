@@ -383,7 +383,7 @@ template = LTemplate["IGraphM",
 
         (* Shortest paths *)
 
-        LFun["shortestPaths", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPaths", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *), Real (* cutoff *)}, {Real, 2}],
         LFun["shortestPathCounts", {}, {Real, 1}],
         LFun["shortestPathCounts2", {{Integer, 1, "Constant"} (* vertices *)}, {Real, 1}],
         LFun["neighborhoodSize", {{Integer, 1, "Constant"} (* vertices *), Integer (* mindist *), Integer (* maxdist *), Integer (* mode *)}, {Integer, 1}],
@@ -399,9 +399,10 @@ template = LTemplate["IGraphM",
         LFun["radius", {}, Real],
         LFun["eccentricity", {{Integer, 1, "Constant"}}, {Real, 1}],
 
-        LFun["shortestPathsDijkstra", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPathsDijkstra", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *), Real (* cutoff *)}, {Real, 2}],
         LFun["shortestPathsBellmanFord", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
         LFun["shortestPathsJohnson", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
+        LFun["shortestPathsFloydWarshall", {{Integer, 1, "Constant"} (* from *), {Integer, 1, "Constant"} (* to *)}, {Real, 2}],
 
         LFun["shortestPathTreeEdges", {Integer (* from *)}, {Integer, 1}],
         LFun["shortestPathTreeEdgesDijkstra", {Integer (* from *)}, {Integer, 1}],

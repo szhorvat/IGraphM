@@ -1433,27 +1433,27 @@ public:
 
     // Shortest paths
 
-    mma::RealMatrixRef shortestPaths(mma::IntTensorRef from, mma::IntTensorRef to) const {
+    mma::RealMatrixRef shortestPaths(mma::IntTensorRef from, mma::IntTensorRef to, double cutoff) const {
         igMatrix res;
         igraph_vector_int_t fromv = igIntVectorView(from);
         igraph_vector_int_t tov   = igIntVectorView(to);
-        igCheck(igraph_distances(
+        igCheck(igraph_distances_cutoff(
                     &graph, &res.mat,
                     from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
                     to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
-                    IGRAPH_OUT));
+                    IGRAPH_OUT, cutoff));
         return res.makeMTensor();
     }
 
-    mma::RealTensorRef shortestPathsDijkstra(mma::IntTensorRef from, mma::IntTensorRef to) const {
+    mma::RealTensorRef shortestPathsDijkstra(mma::IntTensorRef from, mma::IntTensorRef to, double cutoff) const {
         igMatrix res;
         igraph_vector_int_t fromv = igIntVectorView(from);
         igraph_vector_int_t tov   = igIntVectorView(to);
-        igCheck(igraph_distances_dijkstra(
+        igCheck(igraph_distances_dijkstra_cutoff(
                     &graph, &res.mat,
                     from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
                     to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
-                    passWeights(), IGRAPH_OUT));
+                    passWeights(), IGRAPH_OUT, cutoff));
         return res.makeMTensor();
     }
 
@@ -1478,6 +1478,18 @@ public:
                     from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
                     to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
                     passWeights()));
+        return res.makeMTensor();
+    }
+
+    mma::RealTensorRef shortestPathsFloydWarshall(mma::IntTensorRef from, mma::IntTensorRef to) const {
+        igMatrix res;
+        igraph_vector_int_t fromv = igIntVectorView(from);
+        igraph_vector_int_t tov   = igIntVectorView(to);
+        igCheck(igraph_distances_floyd_warshall(
+            &graph, &res.mat,
+            from.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&fromv),
+            to.length() == 0 ? igraph_vss_all() : igraph_vss_vector(&tov),
+            passWeights(), IGRAPH_OUT, IGRAPH_FLOYD_WARSHALL_AUTOMATIC));
         return res.makeMTensor();
     }
 
