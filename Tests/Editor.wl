@@ -110,6 +110,7 @@ VerificationTest[
 , TestID -> "options > VertexStyle common"
 ]
 
+
 VerificationTest[
   state["edgeBaseStyle"]
 , EdgeStyle /. Options[IGGraphEditor]
@@ -132,4 +133,22 @@ VerificationTest[
   state["edge"][[1]]["styles"]
 , Dashing[{Small, Small}]
 , TestID -> "options > EdgeStyle rules"
+]
+
+
+(* ::Subsection:: *)
+(*mixed graph end editors options*)
+
+
+VerificationTest[
+  toState[Graph[{1->2, 2->3, 3->1}], VertexStyle -> Red ]["vertexBaseStyle"]
+, RGBColor[1, 0, 0]
+, TestID -> "state : Graph[{1->2,2->3,3->1}],VertexStyle->Red]"
+]
+
+
+VerificationTest[
+  toState[Graph[{1->2, 2->3, 3->1}, VertexStyle -> Red] ]["vertexBaseStyle"]
+, RGBColor[1, 0, 0]
+, TestID -> "state : Graph[{1->2,2->3,3->1},VertexStyle->Red]]"
 ]

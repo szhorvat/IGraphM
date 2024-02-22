@@ -145,9 +145,15 @@ IGGraphEditor // Options = {
 , VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
-, ImageSize               -> { 300, 300 }
+, ImageSize               -> Automatic
 , Prolog                  -> {}
 };
+
+
+AutomaticOptions = <|
+  ImageSize -> {300, 300}
+|>
+
 
 
 SyntaxInformation[IGGraphEditor] = {"ArgumentsPattern" -> {_., OptionsPattern[]}};
@@ -166,7 +172,7 @@ iGraphEditor // Options = Options @ IGGraphEditor;
 supportedGraphQ = GraphQ;
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*iGraphEditor*)
 
 
@@ -295,7 +301,7 @@ iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
 }]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*iGraphMenu*)
 
 
@@ -306,8 +312,8 @@ iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
       Grid[{
           {"VertexLabels", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}, ImageSize->{{80, All}, All}]}
         , {"VertexSize", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large },ImageSize->{{80, All}, All}]}
-        , {"EdgeColor", ColorSetter[Dynamic @ state["EdgeColor"], ImageSize -> Tiny]}       
-        , {"VertexColor", ColorSetter[Dynamic @ state["VertexColor"], ImageSize -> Tiny]}       
+        , {"EdgeColor", ColorSetter[Dynamic @ state["edgeBaseStyle"], ImageSize -> Tiny]}       
+        , {"VertexColor", ColorSetter[Dynamic @ state["vertexBaseStyle"], ImageSize -> Tiny]}       
         , {}
         , {"SnapToGrid", Checkbox @ Dynamic[ state["SnapToGrid"], {Automatic, geAction["UpdateSnapState", Dynamic @ state]&}] }
         , {"Show snap grid", Checkbox[ Dynamic @ state["ShowSnapGrid"], Enabled -> PDynamic @ state["SnapToGrid"]] }
@@ -404,7 +410,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*State*)
 
 
@@ -441,7 +447,7 @@ geStateVersionCheck[___] :=
   Failure["GraphEditor", <|"MessageTemplate" -> IGGraphEditor::unknownState|>]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*from state*)
 
 
@@ -502,7 +508,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
   
 , options = Normal @ <| Options@IGGraphEditor, opt |>
 ; defaultOptions = IGGraphEditor // Options
-; graphOptions = FilterRules[options, Options @ Graph] // DeleteCases[VertexStyle|EdgeStyle -> _]
+; graphOptions = FilterRules[Flatten@{opt}, Options @ Graph] (*// DeleteCases[VertexStyle|EdgeStyle -> _]*)
 ; otherOptions = Complement[options, graphOptions]
 
 ; graph = g
@@ -524,7 +530,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
   
 ; state["GraphLayout"]   = Automatic    
 ; state["DirectedEdges"] = Not @ UndirectedGraphQ @ graph
-; state["ImageSize"]     = propertyLookup[graph, ImageSize,  { n_?NumericQ :> {n,n}, Automatic -> Lookup[defaultOptions, ImageSize]} ] 
+; state["ImageSize"]     = toStateImageSize @ graph 
 
 ; state = stateSnapInit @ state
 
@@ -539,6 +545,16 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 
 ; state
 ]
+
+
+toStateImageSize[graph_]:= Module[{fallBack}
+, fallBack = AutomaticOptions[ImageSize]
+; fallBack = ImageSize /. Options @ IGGraphEditor  // Replace[{ n_?NumericQ :> {n,n}, _ -> fallBack}]
+; propertyLookup[graph, ImageSize,  { n_?NumericQ :> {n,n}, _ -> fallBack} ] 
+]
+
+
+Options[IGGraphEditor, ImageSize]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -610,7 +626,7 @@ propertyRulesValue[graph_, prop_]:=  propertyLookup[graph, prop, Except @ _List 
 
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Getters*)
 
 
@@ -642,7 +658,7 @@ stateEdgeList[state_Association] := state //
 stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*state helpers*)
 
 
