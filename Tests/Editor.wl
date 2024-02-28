@@ -1,6 +1,8 @@
 (* ::Package:: *)
 
 toState = IGraphM`GraphEditor`PackagePrivate`GraphToEditorState;
+fromState = IGraphM`GraphEditor`PackagePrivate`GraphFromEditorState;
+action = IGraphM`GraphEditor`PackagePrivate`geAction;
 
 
 VerificationTest[
@@ -151,4 +153,112 @@ VerificationTest[
   toState[Graph[{1->2, 2->3, 3->1}, VertexStyle -> Red] ]["vertexBaseStyle"]
 , RGBColor[1, 0, 0]
 , TestID -> "state : Graph[{1->2,2->3,3->1},VertexStyle->Red]]"
+]
+
+
+(* ::Subsection:: *)
+(*edge tagged graphs*)
+
+
+(* ::Subsubsection:: *)
+(*edge tagged graph*)
+
+
+state = toState @ Graph[{ UndirectedEdge[1,2,"a"], UndirectedEdge[2,1], UndirectedEdge[2,3]}];
+
+
+graph = fromState @ state;
+
+VerificationTest[
+  EdgeList @ graph
+, {UndirectedEdge[1, 2, "a"], UndirectedEdge[2, 1, 1], UndirectedEdge[2, 3, 1]}
+, TestID -> "EdgeList@fromState@taggedGraphState"
+]
+
+
+VerificationTest[
+  state["isEdgeTaggedGraph"] // TrueQ
+, True
+, TestID -> "isEdgeTaggedGraph init"
+]
+
+
+VerificationTest[
+  state["edgeTagsMax"] == 1
+, True
+, TestID -> "edge tag max init"
+]
+
+
+VerificationTest[
+  state[["edge", All,"tag"]]
+, <|"e1" -> "a", "e2" -> 1, "e3" -> 1|>
+, TestID -> "state[[edge, All, tag ]]"
+]
+
+
+action["CreateEdge", Dynamic @ state,   Sequence @@ Keys @ state[["vertex", ;; 2 ]]];
+
+
+VerificationTest[
+  Values @ state[["edge", All, "tag"]]
+, { "a", 1, 1, 2 } 
+, TestID -> "create tagged edge"
+]
+
+
+graph = fromState @ state;
+
+VerificationTest[
+  EdgeList @ graph
+, {UndirectedEdge[1, 2, "a"], UndirectedEdge[2, 1, 1], UndirectedEdge[2, 3, 1], UndirectedEdge[1, 2, 2]}
+, TestID -> "EdgeList@fromState@taggedGraphState"
+]
+
+
+VerificationTest[
+  state["edgeTagsMax"] == 2
+, True
+, TestID -> "edge tag max after create edge"
+]
+
+
+(* ::Subsubsection:: *)
+(*not edge tagged graph*)
+
+
+state = toState @ Graph[{ UndirectedEdge[1,2], UndirectedEdge[2,1]}];
+VerificationTest[
+  { state["isEdgeTaggedGraph"] // TrueQ, Head@state["edgeTagsMax"]}
+, {False, Missing}
+, TestID -> "not tagged edge graph"
+]
+
+
+
+graph = fromState @ state;
+
+VerificationTest[
+  EdgeList @ graph
+, {UndirectedEdge[1, 2], UndirectedEdge[2, 1]}
+, TestID -> "EdgeList@fromState@taggedGraphState"
+]
+
+
+action["CreateEdge", Dynamic @ state,  Sequence @@ Keys @ state[["vertex"]]];
+
+
+VerificationTest[
+  { state["isEdgeTaggedGraph"] // TrueQ, Head@state["edgeTagsMax"]}
+, {False, Missing}
+, TestID -> "not tagged edge graph after new edge"
+]
+
+
+graph = fromState @ state;
+
+VerificationTest[
+  EdgeList @ graph
+, {UndirectedEdge[1, 2], UndirectedEdge[2, 1], UndirectedEdge[1,2]}
+, TestID -> "EdgeList@fromState@nonTaggedGraphState"
 ]

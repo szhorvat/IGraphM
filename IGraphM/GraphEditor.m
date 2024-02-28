@@ -301,7 +301,7 @@ iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
 }]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*iGraphMenu*)
 
 
@@ -410,7 +410,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*State*)
 
 
@@ -447,7 +447,7 @@ geStateVersionCheck[___] :=
   Failure["GraphEditor", <|"MessageTemplate" -> IGGraphEditor::unknownState|>]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*from state*)
 
 
@@ -522,9 +522,11 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
     , "selectedVertex" -> Null
     , "aspectRatio"    -> 1
     , "editorMode"     -> "draw"
-    , "selectedObject" -> Null   
+    , "selectedObject" -> Null       
   |>
   
+; {state, graph} = stateEdgeTagsInit[state, graph ]  
+
 ; state["vertexBaseStyle"] = propertyCommonValue[graph, VertexStyle, Lookup[defaultOptions, VertexStyle]]
 ; state["edgeBaseStyle"] = propertyCommonValue[graph, EdgeStyle, Lookup[defaultOptions, EdgeStyle]]
   
@@ -547,14 +549,36 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ]
 
 
+(* ::Subsubsubsection::Closed:: *)
+(*stateEdgeTagsInit*)
+
+
+stateEdgeTagsInit[state_Association, graph_]:=Module[{newState = state, newGraph}
+, newState = state
+; newState["isEdgeTaggedGraph"] = EdgeTaggedGraphQ @ graph
+
+; If[ Not @  newState["isEdgeTaggedGraph"]
+  , Return[ {newState, graph}, Module]
+  ]
+  
+  (*dirty way to fill missing tags if exist, and fix duplicate tags*)  
+; newGraph = EdgeTaggedGraph @ graph 
+
+; newState["edgeTagsMax"] = Max @ Prepend[0] @ Cases[_Integer] @ EdgeTags @ newGraph 
+  
+; {newState, newGraph}    
+]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*toStateImageSize*)
+
+
 toStateImageSize[graph_]:= Module[{fallBack}
 , fallBack = AutomaticOptions[ImageSize]
 ; fallBack = ImageSize /. Options @ IGGraphEditor  // Replace[{ n_?NumericQ :> {n,n}, _ -> fallBack}]
 ; propertyLookup[graph, ImageSize,  { n_?NumericQ :> {n,n}, _ -> fallBack} ] 
 ]
-
-
-Options[IGGraphEditor, ImageSize]
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -626,14 +650,17 @@ propertyRulesValue[graph_, prop_]:=  propertyLookup[graph, prop, Except @ _List 
 
 
 
-(* ::Subsection::Closed:: *)
-(*Getters*)
+(* ::Subsection:: *)
+(*state getters*)
 
 
-getGraphEmbedding[state_]:= state[["vertex", All, "pos"]]
+stateGraphEmbedding[state_]:= state[["vertex", All, "pos"]]
 
 
 stateVertexList[state_Association] := Values @ state[["vertex", All, "name"]]
+
+
+stateVertexNamesRules[state_Association]:= state[["vertex", All, "name"]]
 
 
 stateVertexStyle[state_] := Prepend[
@@ -651,14 +678,20 @@ stateEdgeStyle[state_]:= Prepend[
 , state["edgeBaseStyle"]]
 
 
-stateEdgeList[state_Association] := state //
- Query["edge", Values, (#edge /. state[["vertex", All, "name"]]) &]
+stateEdgeList[state_Association] := Module[{vertexRules, edges}
+, vertexRules = stateVertexNamesRules @ state
+; If[ 
+    TrueQ @ state["isEdgeTaggedGraph"]
+  , state // Query["edge", Values, Append[#edge /. vertexRules, #tag] &]
+  , state // Query["edge", Values, (#edge /. vertexRules) &]
+  ]
+]
 
 
 stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*state helpers*)
 
 
@@ -673,11 +706,11 @@ calculateSnapStep[state_Association] := Module[  { count , range}
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*range*)
 
 
-calculateCoordinateBounds[state_]:=CoordinateBounds[ getGraphEmbedding @ state  ] /. {} -> {{0,1},{0,1}}  
+calculateCoordinateBounds[state_]:=CoordinateBounds[ stateGraphEmbedding @ state  ] /. {} -> {{0,1},{0,1}}  
 
 
 (* ::Subsubsubsection:: *)
@@ -738,9 +771,11 @@ createVertex[name_, pos:{_, _}, styles_:{}, labels_:{}]:= <|"name" -> name, "id"
 toStateEdges[state_Association, graph_] := Module[{labels,styles,replaceVertexNames,vertexRules,edges }
 , edges = EdgeList @ graph
 ; vertexRules = (#name -> #id) & /@ Values @ state["vertex"]
+; 
+
 ; replaceVertexNames = Replace[#, vertexRules , {2}]&
 
-; edges = edges // replaceVertexNames
+; edges = MapAt[# /. vertexRules &, edges, {All, 1;;2}]
 
 ; edges = MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
 
@@ -772,11 +807,25 @@ stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 ]
 
 
-createEdge[eId_String, edge:(e_[v1_String,  v2_String])] := <|
+createEdge[eId_String, edge:(e_[v1_String,  v2_String, tag_:"MISSING_TAG"])] :=  <|
     "id"    -> eId
-  , "edge" -> edge    
+  , "edge" -> toStandardizedEdgeHead[e][v1,  v2]    
   , "shape" -> Automatic
+  , If[ tag === "MISSING_TAG"
+    , <||>
+    , "tag" -> tag
+    ]
   |>
+
+
+
+toStandardizedEdgeHead[DirectedEdge|Rule] = DirectedEdge
+toStandardizedEdgeHead[UndirectedEdge|TwoWayRule] = UndirectedEdge
+toStandardizedEdgeHead::argpatt = "Unknown edge head: ``"
+toStandardizedEdgeHead[ h_]:=Message[toStandardizedEdgeHead::argpatt, h]
+
+
+Optional
 
 
 (* ::Subsection:: *)
@@ -986,8 +1035,8 @@ edgeToPrimitive[e_] := Module[{shapeFunction}
 ]  
 
 
-edgeTypeToPrimitive[(Rule|DirectedEdge)[_,_]]=Arrow[{#,#2}]&
-edgeTypeToPrimitive[_[_, _]]=Line[{#,#2}]&
+edgeTypeToPrimitive[(Rule|DirectedEdge)[_,_, ___]]=Arrow[{#,#2}]&
+edgeTypeToPrimitive[_[_, _, ___]]=Line[{#,#2}]&
 
 
 
@@ -1115,7 +1164,7 @@ logAction[head_, state_, args___]:= With[
 
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Events*)
 
 
@@ -1201,7 +1250,7 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
 ]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Actions*)
 
 
@@ -1388,7 +1437,7 @@ geAction["Select", Dynamic @ state_, vId_String] := state["selectedVertex"] = vI
 geAction["Unselect", Dynamic @ state_] := state["selectedVertex"] = Null
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*AddVertex*)
 
 
@@ -1449,16 +1498,23 @@ geAction["RemoveVertex", Dynamic @ state_, v_] := With[{ id = v["id"]}
 ]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*CreateEdge*)
 
 
-geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := Module[{eId, type}
+geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := Module[{eId, type, newEdge}
+
 , eId = CreateUUID["e-"]
 
 ; type = If[state["DirectedEdges"], Rule, UndirectedEdge]
 
-; state["edge", eId ] = createEdge[eId,  type[selectedV, clickedV] ]
+; newEdge = createEdge[eId,  type[selectedV, clickedV] ]
+
+; If[ state["isEdgeTaggedGraph"]
+  , newEdge["tag"] = ++ state["edgeTagsMax"]
+  ]
+
+; state["edge", eId ] = newEdge
 ; state["eCounter"]++
 
 ; geAction["Unselect", Dynamic @ state]
