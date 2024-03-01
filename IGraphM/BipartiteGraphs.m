@@ -54,7 +54,7 @@ IGBipartitePartitions[graph_?igGraphQ, vertex_] :=
         Message[IGBipartitePartitions::nbipart];
         throw[$Failed]
       ];
-      Check[ind = VertexIndex[graph, vertex], throw[$Failed]];
+      ind = vs1[graph][vertex];
       {Pick[VertexList[graph], parts, parts[[ind]] ], Pick[VertexList[graph], parts, 1 - parts[[ind]] ]}
     ]
 

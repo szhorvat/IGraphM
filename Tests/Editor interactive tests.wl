@@ -175,17 +175,3 @@ IGGraphEditor[Graph[{1->2,2->3,3->1}]]
 
 Graph[{1->2,2->1,3->1}]//SimpleGraphQ
 
-
-test=ConstantArray["a", 10^4];
-
-
-test//ByteCount
-
-
-test2= <|"a" :> test, "b" :> test|>;
-
-
-test2//ByteCount
-
-
-{test,test}//ByteCount

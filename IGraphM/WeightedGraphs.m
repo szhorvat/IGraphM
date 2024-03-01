@@ -283,10 +283,7 @@ fastDelete[list_, inds_] := Part[list, Delete[Range@Length[list], Transpose@Deve
 SyntaxInformation[IGWeightedVertexDelete] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGWeightedVertexDelete[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
     catch@Module[{elist, emarker, vinds},
-      Check[
-        vinds = VertexIndex[g, #]& /@ DeleteDuplicates[vs],
-        throw[$Failed]
-      ];
+      vinds = vss1[g][DeleteDuplicates[vs]];
       elist = IGIndexEdgeList[g];
       emarker = igraphGlobal@"edgeListMarkWhenEitherPresent"[elist, vinds];
       Graph[
@@ -307,10 +304,7 @@ IGWeightedSubgraph::usage = "IGWeightedSubgraph[graph, {v1, v2, \[Ellipsis]}] re
 SyntaxInformation[IGWeightedSubgraph] = {"ArgumentsPattern" -> {_, _, OptionsPattern[]}, "OptionNames" -> optNames[Graph]};
 IGWeightedSubgraph[g_?igGraphQ, vs_List, opt : OptionsPattern[Graph]] :=
     catch@Module[{vinds, elist, emarker},
-      Check[
-        vinds = VertexIndex[g, #]& /@ DeleteDuplicates[vs],
-        throw[$Failed]
-      ];
+      vinds = vss1[g][DeleteDuplicates[vs]];
       elist = IGIndexEdgeList[g];
       emarker = igraphGlobal@"edgeListMarkWhenBothPresent"[elist, vinds];
       Graph[

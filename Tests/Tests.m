@@ -485,6 +485,74 @@ MT[
 
 
 (* ::Section::Closed:: *)
+(*Internal*)
+
+
+MTSection["Internal"]
+
+
+(* ::Subsubsection::Closed:: *)
+(*VertexIndex*)
+
+
+vig1 = Graph[{"a", "b"}, {"a" <-> "b"}];
+vig2 = Graph[{{"a", "b"}, "a", "b"}, {{"a", "b"} <-> "a", "a" <-> "b"}];
+
+
+MT[
+  IGraphM`PackageScope`vs[vig1] /@ {"a", "b"},
+  {0, 1}
+]
+
+
+MT[
+  IGraphM`PackageScope`catch[IGraphM`PackageScope`vs[vig1][{"a", "b"}]],
+  $Failed,
+  {IGraphM::invv}
+]
+
+
+MT[
+  IGraphM`PackageScope`vs[vig2] /@ {{"a", "b"}, "a", "b"},
+  {0, 1, 2}
+]
+
+
+MT[
+  IGraphM`PackageScope`vss[vig1][{"a", "b"}],
+  {0, 1}
+]
+
+MT[
+  IGraphM`PackageScope`vss[vig1][{"b"}],
+  {1}
+]
+
+
+MT[
+  IGraphM`PackageScope`vss[vig2][{"a", "b"}],
+  {1, 2}
+]
+
+MT[
+  IGraphM`PackageScope`vss[vig2][{"a", "b", {"a", "b"}}],
+  {1, 2, 0}
+]
+
+MT[
+  IGraphM`PackageScope`vss[vig2][{"b"}],
+  {2}
+]
+
+
+MT[
+  IGraphM`PackageScope`catch[IGraphM`PackageScope`vss[vig1][{{"a", "b"}}]],
+  $Failed,
+  {IGraphM::invv}
+]
+
+
+(* ::Section::Closed:: *)
 (*Undirected*)
 
 
@@ -1782,7 +1850,7 @@ MT[
 MT[
   IGRandomWalk[Graph[{"a" <-> "b"}], "x", 100],
   $Failed,
-  {VertexIndex::inv}
+  {IGraphM::invv}
 ]
 
 
@@ -2740,14 +2808,14 @@ MT[
 MT[
   IGSpanningTreeCount[Graph[{1 -> 2, 2 -> 1}], 3],
   $Failed,
-  {VertexIndex::inv}
+  {IGraphM::invv}
 ]
 
 
 MT[
   IGSpanningTreeCount[Graph[{1 <-> 2}], 3],
   $Failed,
-  {VertexIndex::inv}
+  {IGraphM::invv}
 ]
 
 
@@ -4920,7 +4988,7 @@ MT[
 MT[
   IGVertexSeparatorQ[IGEmptyGraph[], {1}],
   $Failed,
-  {VertexIndex::inv}
+  {IGraphM::invv}
 ]
 
 
@@ -5179,6 +5247,32 @@ MT[
 MT[
   IGCompareCommunities[c, c2],
   IGCompareCommunities[c2, c]
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Modularity*)
+
+
+MT[
+  IGModularity[Graph[{1 <-> 2, 2 <-> 3, 3 <-> 4, 4 <-> 1, 1 <-> 2, 3 <-> 3}], {{2, 3}, {1, 4}}],
+  -0.013888888888888784
+]
+
+MT[
+  IGModularityMatrix[Graph[{1 <-> 2, 2 <-> 3, 3 <-> 4, 4 <-> 1, 1 <-> 2, 3 <-> 3}]],
+  {{-0.75, 1.25, -1., 0.5}, {1.25, -0.75, 0., -0.5}, {-1., 0., 0.6666666666666667, 0.33333333333333337}, {0.5, -0.5, 0.33333333333333337, -0.3333333333333333}}
+]
+
+
+MT[
+  IGModularity[CycleGraph[4], {{2, 3}, {1, 4}}],
+  0.
+]
+
+MT[
+  IGModularityMatrix[CycleGraph[4]],
+  {{-0.5, 0.5, -0.5, 0.5}, {0.5, -0.5, 0.5, -0.5}, {-0.5, 0.5, -0.5, 0.5}, {0.5, -0.5, 0.5, -0.5}}
 ]
 
 
@@ -6783,10 +6877,52 @@ MT[
 
 
 MT[
+  IGCircleBetaSkeleton[bsPoints, 1],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {10 <-> 16, 3 <-> 16, 3 <-> 10, 3 <-> 8, 1 <-> 3, 1 <-> 16, 11 <-> 12, 8 <-> 9, 1 <-> 7, 3 <-> 5, 5 <-> 14, 4 <-> 13, 4 <-> 15, 9 <-> 15, 17 <-> 18, 18 <-> 19, 3 <-> 20, 5 <-> 8, 1 <-> 8, 10 <-> 20, 9 <-> 11, 2 <-> 6, 7 <-> 12, 5 <-> 20, 5 <-> 15, 4 <-> 17, 9 <-> 19, 6 <-> 12, 2 <-> 11, 13 <-> 17, 4 <-> 19}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
   IGCircleBetaSkeleton[bsPoints, 1.1],
   Graph@{10 <-> 16, 1 <-> 3, 11 <-> 12, 8 <-> 9, 1 <-> 7, 5 <-> 14, 4 <-> 13,
     4 <-> 15, 17 <-> 18, 18 <-> 19, 3 <-> 20, 10 <-> 20, 9 <-> 11,
     2 <-> 6, 7 <-> 12, 5 <-> 15, 2 <-> 11, 13 <-> 17, 4 <-> 19},
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 1.2],
+  IGCircleBetaSkeleton[bsPoints+1*^6, 1.2],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 1.5],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {10 <-> 16, 1 <-> 3, 4 <-> 15, 18 <-> 19, 9 <-> 11, 2 <-> 6, 5 <-> 15, 2 <-> 11}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 1.8],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {18 <-> 19, 9 <-> 11, 2 <-> 6, 5 <-> 15}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 2.5],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {18 <-> 19, 9 <-> 11}],
+  SameTest -> IGSameGraphQ
+]
+
+
+MT[
+  IGCircleBetaSkeleton[bsPoints, 4.61],
+  Graph[{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, {}],
   SameTest -> IGSameGraphQ
 ]
 

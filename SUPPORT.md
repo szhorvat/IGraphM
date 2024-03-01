@@ -53,4 +53,6 @@ IGraph/M is currently under development, and a few bugs are to be expected.  How
 
    * With Mathematica 13.1.0, evaluating cells may be very slow. [This is due to a bug in Mathematica's Front End.](https://mathematica.stackexchange.com/q/270894/12) One workaround is to disable command auto-completion.
 
+   * Versions 0.6.3 and 0.6.4, and possibly earlier, are known to crash when running the test suite using the specific combination of Mathematica 13.2.0 / macOS 13.1 / Apple Silicon. Other platforms are not affected. This crash is ultimately caused by Mathematica producing random numbers that are outside of the requested range. I believe this to be a bug in Mathematica 13.2.0, but I cannot produce a minimal example that proves it beyond doubt as the failure is very fickle, and occurs extremely rarely. Thus I cannot file an actionable bug report with WRI. If you encounter non-deterministic crashes, please report them. This particular issue can be worked around by switching to igraph's own random number generator using `IGSeedRandom[Method -> "igraph"]`.
+
    * See also https://github.com/szhorvat/IGraphM/issues

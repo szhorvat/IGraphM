@@ -61,7 +61,7 @@ PackageExport["IGGraphicalQ"]
 IGGraphicalQ::usage =
     "IGGraphicalQ[degrees] tests if degrees is the degree sequence of any simple undirected graph.\n" <>
     "IGGraphicalQ[indegrees, outdegrees] tests if indegrees with outdegrees is the degree sequence of any simple directed graph.\n" <>
-    "IGGraphicalQ[degrees, SelfLoops -> True] tests if degrees is the degree sequence of any undirected graph with at most one self-loop per vetrex.\n" <>
+    "IGGraphicalQ[degrees, SelfLoops -> True] tests if degrees is the degree sequence of any undirected graph with at most one self-loop per vertex.\n" <>
     "IGGraphicalQ[degrees, MultiEdges -> True] tests if degrees is the degree sequence of any undirected loop-free multigraph.";
 Options[IGGraphicalQ] = { SelfLoops -> False, MultiEdges -> False };
 SyntaxInformation[IGGraphicalQ] = {"ArgumentsPattern" -> {_, _., OptionsPattern[]}};

@@ -24,14 +24,28 @@ IGIndexEdgeList[graph_?igGraphQ] :=
     catch[1 + check@igraphGlobal@"incidenceToEdgeList"[IncidenceMatrix[graph], DirectedGraphQ[graph]]]
 
 
-(***** Simple tests *****)
+(***** Detecting duplicates *****)
 
-PackageExport["IGNullGraphQ"]
-IGNullGraphQ::usage = "IGNullGraphQ[graph] tests whether graph has no vertices.";
+PackageExport["IGCanonicalEdgeList"]
+IGCanonicalEdgeList::usage = "IGCanonicalEdgeList[edges] canonicalizes an edge list.";
 
-SyntaxInformation[IGNullGraphQ] = {"ArgumentsPattern" -> {_}};
-IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
-IGNullGraphQ[_] = False;
+SyntaxInformation[IGCanonicalEdgeList] = {"ArgumentsPattern" -> {_}};
+
+IGCanonicalEdgeList[edges_List] :=
+    catch@With[{el = Check[edges[[All, {1,2}]], throw[$Failed]]},
+      Internal`InheritedBlock[{UndirectedEdge},
+        SetAttributes[UndirectedEdge, Orderless];
+        Sort[el]
+      ]
+    ]
+
+
+PackageExport["IGCanonicalLabeledGraph"]
+IGCanonicalLabeledGraph::usage = "IGCanonicalLabeledGraph[graph] canonicalizes the vertex and edge lists of a graph while preserving vertex names.";
+
+SyntaxInformation[IGCanonicalLabeledGraph] = {"ArgumentsPattern" -> {_}};
+IGCanonicalLabeledGraph[graph_?GraphQ] :=
+    Graph[Sort@VertexList[graph], IGCanonicalEdgeList@EdgeList[graph]]
 
 
 PackageExport["IGSameGraphQ"]
@@ -49,6 +63,16 @@ IGSameGraphQ[g1_?GraphQ, g2_?GraphQ] :=
       ]
     ]
 IGSameGraphQ[_, _] := False (* return False when at least one argument is not a graph *)
+
+
+(***** Simple tests *****)
+
+PackageExport["IGNullGraphQ"]
+IGNullGraphQ::usage = "IGNullGraphQ[graph] tests whether graph has no vertices.";
+
+SyntaxInformation[IGNullGraphQ] = {"ArgumentsPattern" -> {_}};
+IGNullGraphQ[g_?GraphQ] := VertexCount[g] === 0
+IGNullGraphQ[_] = False;
 
 
 PackageExport["IGCompleteQ"]

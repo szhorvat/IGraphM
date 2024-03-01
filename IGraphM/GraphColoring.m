@@ -137,7 +137,7 @@ igKColoringHeuristic["LargestClique"][graph_] :=
       First@FindClique[g]
     ]
 igKColoringHeuristic[None][graph_] := {}
-igKColoringHeuristic[clique_List][graph_] := Check[VertexIndex[graph, #]& /@ clique, throw[$Failed]]
+igKColoringHeuristic[clique_List][graph_] := vss1[graph][clique]
 igKColoringHeuristic[_][graph_] := {}
 
 
