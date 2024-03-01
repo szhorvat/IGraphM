@@ -301,22 +301,31 @@ iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
 }]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*iGraphMenu*)
 
 
-iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
+iGraphMenu[Dynamic[state_]]:= With[
+  { 
+    vmodel = Dynamic[state[#], Function[val, geAction["SetProperty", Dynamic@state, #, val]] ]& 
+  }
+, Deploy@PaneSelector[
 { 
   "edit" -> graphObjectPanel @ Dynamic @ state  
 , "draw" -> rawPanel @ Pane[
       Grid[{
-          {"VertexLabels", PopupMenu[Dynamic@state["VertexLabels"], {None, "Name"}, ImageSize->{{80, All}, All}]}
+          { Button["Undo", geAction["Undo", Dynamic @ state],  Enabled -> state["history"]["canUndo", Dynamic] ],
+            Button["Redo", geAction["Redo", Dynamic @ state],  Enabled -> state["history"]["canRedo", Dynamic] ]
+          }
+        , {"VertexLabels", PopupMenu[vmodel @ "VertexLabels", {None, "Name"}, ImageSize->{{80, All}, All}]
+          }
         , {"VertexSize", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large },ImageSize->{{80, All}, All}]}
-        , {"EdgeColor", ColorSetter[Dynamic @ state["edgeBaseStyle"], ImageSize -> Tiny]}       
-        , {"VertexColor", ColorSetter[Dynamic @ state["vertexBaseStyle"], ImageSize -> Tiny]}       
+        , {"EdgeColor", ColorSetter[vmodel["edgeBaseStyle"], ImageSize -> Tiny]
+          }       
+        , {"VertexColor", ColorSetter[vmodel["vertexBaseStyle"], ImageSize -> Tiny]}       
         , {}
         , {"SnapToGrid", Checkbox @ Dynamic[ state["SnapToGrid"], {Automatic, geAction["UpdateSnapState", Dynamic @ state]&}] }
-        , {"Show snap grid", Checkbox[ Dynamic @ state["ShowSnapGrid"], Enabled -> PDynamic @ state["SnapToGrid"]] }
+        , {"Show snap grid", Checkbox[ vmodel["ShowSnapGrid"], Enabled -> PDynamic @ state["SnapToGrid"]] }
         , {"Snap density", PDynamic @ state["SnapDensity"] }
         , { menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],      
             SpanFromLeft
@@ -339,7 +348,7 @@ iGraphMenu[Dynamic[state_]]:= Deploy@PaneSelector[
 }
 , PDynamic @ state["editorMode"]
 , ImageSize->Automatic
-]
+]]
 
 menuButton // Attributes = {HoldRest}
 menuButton[args___]:=Button[args, Appearance->"FramedPalette"]
@@ -447,7 +456,7 @@ geStateVersionCheck[___] :=
   Failure["GraphEditor", <|"MessageTemplate" -> IGGraphEditor::unknownState|>]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*from state*)
 
 
@@ -531,6 +540,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ; state["edgeBaseStyle"] = propertyCommonValue[graph, EdgeStyle, Lookup[defaultOptions, EdgeStyle]]
   
 ; state["GraphLayout"]   = Automatic    
+
 ; state["DirectedEdges"] = Not @ UndirectedGraphQ @ graph
 ; state["ImageSize"]     = toStateImageSize @ graph 
 
@@ -544,6 +554,10 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 ; state["eCounter"] = Length @ state["edge"]
 
 ; state = stateRangeInit @ state
+
+; state["history"] = createHistory[]
+
+; state["history"]["save", state]
 
 ; state
 ]
@@ -650,7 +664,7 @@ propertyRulesValue[graph_, prop_]:=  propertyLookup[graph, prop, Except @ _List 
 
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*state getters*)
 
 
@@ -706,7 +720,7 @@ calculateSnapStep[state_Association] := Module[  { count , range}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*range*)
 
 
@@ -764,7 +778,7 @@ toStateVertices[state_Association, g_Graph]:=Module[{v, pos, labels, styles}
 createVertex[name_, pos:{_, _}, styles_:{}, labels_:{}]:= <|"name" -> name, "id" -> CreateUUID[],  "pos" -> pos|>
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*edges*)
 
 
@@ -977,7 +991,7 @@ Module[
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*edges*)
 
 
@@ -1120,51 +1134,6 @@ geSelectedObjectPrimitives[Dynamic @ state_] := With[{ selO := state["selectedOb
 
 
 (* ::Subsection::Closed:: *)
-(*Logging*)
-
-
-(* a debug feature, enabled by default till we have a first version*)
-
-$actionLevel = -1;
-
-If[
-  TrueQ @ $logDynamic
-, dynamicLog[msg_]:=Print[Style[Row[{"Updating :", msg}],Red]]
-]
-
-If[
-  TrueQ @ $geDebug
-
-, Module[{$inside = False}
-  , geAction /: SetDelayed[geAction[args___], rhs_] /; !TrueQ[$inside] := Block[
-      {$inside = True}
-    , geAction[a:PatternSequence[args]]:=Internal`InheritedBlock[{ $actionLevel = $actionLevel + 1}
-      , Module[{result, start = AbsoluteTime[]}
-        , logAction[a]
-        ; result = rhs
-        ; If[$logTimings, Print[StringJoin@ConstantArray["  ", $actionLevel], "timing: ", AbsoluteTime[] - start, "[s]"]]
-        ; result  
-        ]      
-      ]
-    ]
-  ]
-]
-
-logAction[head_, state_, args___]:= With[
-  { indent = StringJoin @ ConstantArray["- ", $actionLevel] } 
-, Print[          
-    Row[{ 
-      indent
-    , Style[head, Bold]
-    , ":"
-    , args
-    }, BaseStyle->LineBreakWithin->False]
-  ]
-]
-
-
-
-(* ::Subsection:: *)
 (*Events*)
 
 
@@ -1255,17 +1224,174 @@ geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
 
 
 (* ::Subsubsection::Closed:: *)
+(*Logging decorator*)
+
+
+(* a debug feature, enabled by default till we have a first version*)
+
+$actionLevel = -1;
+
+If[
+  TrueQ @ $logDynamic
+, dynamicLog[msg_]:=Print[Style[Row[{"Updating :", msg}],Red]]
+]
+
+Module[{$inside = False}
+  , geAction /: SetDelayed[geAction[args___], rhs_] /; !TrueQ[$inside] := Block[
+      {$inside = True}
+    , geAction[a:PatternSequence[args]]:=Internal`InheritedBlock[{ $actionLevel = $actionLevel + 1}
+      , Module[{result, start = AbsoluteTime[]}
+        , logAction[a]
+        ; result = rhs
+        ; logTimingFrom[start]
+        ; result  
+        ]      
+      ]
+    ]
+  ]
+
+If[ 
+  TrueQ @ $logTimings
+, logTimingFrom[start_]:= Print[StringJoin@ConstantArray["  ", $actionLevel], "timing: ", AbsoluteTime[] - start, "[s]"]
+]
+
+If[
+  TrueQ @ $geDebug 
+  ,
+logAction[head_, state_, args___]:= With[
+  { indent = StringJoin @ ConstantArray["- ", $actionLevel] } 
+, Print[          
+    Row[{ 
+      indent
+    , Style[head, Bold]
+    , ":"
+    , args
+    }, BaseStyle->LineBreakWithin->False]
+  ]
+]
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*history hanlder*)
+
+
+
+createHistory[config_:<||>]:=Module[{
+    history, maxLength = Lookup[config,"maxLength",10], undoStack={}, redoStack={},
+    canUndo, canRedo, currentState
+  }
+, canUndo:=Length @ undoStack >= 2
+; canRedo:=Length@redoStack>0
+; currentState:=undoStack[[1]]
+
+; history["canUndo", f_:(#&)]:= f @ canUndo
+; history["canRedo", f_:(#&)]:= f @ canRedo
+
+; history["save",state_]:=(
+    undoStack = Take[
+      Prepend[undoStack,state],
+      UpTo[maxLength]
+    ]
+  ; redoStack = {}
+  ; currentState
+  )
+  
+; history["undo"]:=Module[{lastState}
+  , If[!canUndo,Return[$Failed,Module]]
+  
+  ; {lastState ,undoStack}={First@undoStack,Rest@undoStack}
+  ; PrependTo[redoStack, lastState]
+  
+  ; currentState
+  ]
+  
+; history["redo"]:=Module[{state}
+  , If[!canRedo,Return[$Failed,Module]]
+  
+  ; {state ,redoStack}={First@redoStack,Rest@redoStack}
+  ; PrependTo[undoStack, state]
+  
+  ; currentState
+  ]
+  
+; history
+]
+
+
+
+(* ::Subsubsection:: *)
+(*Undo/Redo*)
+
+
+geAction["SaveState", Dynamic @ state_]:=  state["history"]["save", state]
+
+
+
+saveStateDecorator /: 
+SetDelayed[
+  saveStateDecorator @ geAction[name_, Dynamic[state_], args___]
+, rhs_
+]:=
+SetDelayed[ 
+  geAction[name, Dynamic[s:state], args]
+, # & [ 
+    rhs
+  , If[ $actionLevel == 0,  geAction["SaveState", Dynamic[s]]]
+  ]
+] 
+
+
+geAction["Undo", Dynamic @ state_ ]:= Module[{ newState }
+, newState = state["history"] @ "undo"
+; If[ Not @ AssociationQ @ newState, Return[Beep[], Module]]
+; geAction["RestoreState", Dynamic @ state, newState]
+]
+
+
+geAction["Redo", Dynamic @ state_ ]:= Module[{ newState }
+, newState = state["history"] @ "redo"
+; If[ Not @ AssociationQ @ newState, Return[Beep[], Module]]
+
+; geAction["RestoreState", Dynamic @ state, newState]  
+]
+
+
+geAction["RestoreState", Dynamic@state_, newState_]:= Module[{}
+, KeyValueMap[ 
+    (state[#] = #2 )& 
+  , KeyDrop[{"ShowSidePanel", "editorMode"}] @ newState 
+  ]
+  
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["vCounter"]]  
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["eCounter"]]
+]
+
+
+(* ::Subsubsection::Closed:: *)
 (*Annotate: SelectObject / UnselectObject*)
 
 
 geAction["SelectObject", Dynamic @ state_, v_Association]:= state["selectedObject"] = v
+
 geAction["UnselectObject", Dynamic @ state_]:= state["selectedObject"] = Null
 
 
 (* ::Subsubsection::Closed:: *)
+(*SetProperty*)
+
+
+saveStateDecorator @ 
+geAction["SetProperty", Dynamic@state_, prop_String, value_]:= (
+  state[prop] = value
+)
+
+
+(* ::Subsubsection:: *)
 (*UpdateVertexPosition*)
 
 
+saveStateDecorator @ 
 geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
   state["vertex", vId, "pos"] = pos
 ; state["GraphLayout"] = Automatic  
@@ -1282,6 +1408,7 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 (*UpdateSnapState*)
 
 
+saveStateDecorator @ 
 geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
 , modified = stateSnapInit @ state 
 ; state["snap"] = modified["snap"]
@@ -1297,12 +1424,13 @@ geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
 
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*UpdateRange*)
 
 
 (* bounds      = {{x1,x2}, {y1, y2}} = (plot)range*)
 (* boundig box = {{x1,y1}, {x2, y2}}*)
+saveStateDecorator @ 
 geAction["UpdateRange", Dynamic @ state_, force_:False] := Module[
   {update,  bounds }
 
@@ -1427,6 +1555,7 @@ vertexSizeMultiplier[vs_] := vs /. {
 (*Select*)
 
 
+
 geAction["Select", Dynamic @ state_, vId_String] := state["selectedVertex"] = vId;
 
 
@@ -1437,10 +1566,11 @@ geAction["Select", Dynamic @ state_, vId_String] := state["selectedVertex"] = vI
 geAction["Unselect", Dynamic @ state_] := state["selectedVertex"] = Null
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*AddVertex*)
 
 
+saveStateDecorator @ 
 geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}] := Module[{vertex, name}
 
 , name = Check[generateUniqueVertexName @ state, CreateUUID[]]
@@ -1465,6 +1595,7 @@ geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}] := Module[
   ]
 
 ; state[ "vCounter"]++
+
 ; vertex
 ]
 
@@ -1489,6 +1620,7 @@ smallestMissingInteger[list_List] := Block[{n = 1}
 (*RemoveVertex*)
 
 
+saveStateDecorator @ 
 geAction["RemoveVertex", Dynamic @ state_, v_] := With[{ id = v["id"]}
 , state["vertex"]  = KeyDrop[id] @ state["vertex"]
 ; state["edge"]    = Select[state["edge"], FreeQ[#edge, id] & ]
@@ -1498,10 +1630,11 @@ geAction["RemoveVertex", Dynamic @ state_, v_] := With[{ id = v["id"]}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*CreateEdge*)
 
 
+saveStateDecorator @ 
 geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := Module[{eId, type, newEdge}
 
 , eId = CreateUUID["e-"]
@@ -1526,6 +1659,7 @@ geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := M
 (*RemoveEdge*)
 
 
+saveStateDecorator @ 
 geAction["RemoveEdge", Dynamic @ state_, edge_Association] := (
   state["edge"] = KeyDrop[edge["id"]] @ state["edge"]
 ; geAction["UpdateEdgesShapes", Dynamic @ state]
@@ -1537,6 +1671,7 @@ geAction["RemoveEdge", Dynamic @ state_, edge_Association] := (
 (*ToggleEdgeType*)
 
 
+saveStateDecorator @ 
 geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge", edge["id"], "type"] }
 ,  type = nextEdgeType @ type
 ]
@@ -1571,6 +1706,7 @@ geAction["UpdateEdgesShapes", _ @ state_] := Module[{coordinates,edges,  vertexE
 (*SetLayout*)
 
 
+saveStateDecorator @ 
 geAction["SetLayout", Dynamic @ state_, layout_String] := Module[{graphData, oldLayout = state["GraphLayout"]}
 
 , If[ layout === oldLayout, Return @ Null ]
