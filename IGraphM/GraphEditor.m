@@ -1054,7 +1054,7 @@ edgeTypeToPrimitive[_[_, _, ___]]=Line[{#,#2}]&
 
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*snap grid*)
 
 
@@ -1062,6 +1062,7 @@ geSnapGrid[Dynamic @ state_] := With[{ selV := state["selectedVertex"] }
 , { $potentialEdgeStyle,
     PDynamic[
       dynamicLog["snap grid"];
+      state["range"];
       If[
         TrueQ @ state["ShowSnapGrid"] && Not @ MissingQ @ state["snapStep"] 
       , snapGridPrimitives @ state
@@ -1276,7 +1277,6 @@ logAction[head_, state_, args___]:= With[
 (*history hanlder*)
 
 
-
 createHistory[config_:<||>]:=Module[{
     history, maxLength = Lookup[config,"maxLength",10], undoStack={}, redoStack={},
     canUndo, canRedo, currentState
@@ -1320,7 +1320,7 @@ createHistory[config_:<||>]:=Module[{
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Undo/Redo*)
 
 
@@ -1404,7 +1404,7 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*UpdateSnapState*)
 
 
@@ -1553,7 +1553,6 @@ vertexSizeMultiplier[vs_] := vs /. {
 
 (* ::Subsubsection::Closed:: *)
 (*Select*)
-
 
 
 geAction["Select", Dynamic @ state_, vId_String] := state["selectedVertex"] = vId;
