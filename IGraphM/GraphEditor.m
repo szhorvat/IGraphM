@@ -283,7 +283,7 @@ iGraphEditorPanel[Dynamic@state_] := Grid[{
 
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*iGraphModeSetter*)
 
 
@@ -291,7 +291,13 @@ rawPanel = Panel[##, ImageMargins->{0,0}, FrameMargins->{0,0}]&
 
 
 iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
-  SetterBar[Dynamic@state["editorMode"], {"draw" -> "Draw", "edit" -> "Annotate"}]
+  SetterBar[
+    Dynamic[
+      state["editorMode"], 
+      geAction["SetEditorMode", Dynamic @ state, #]&
+    ]
+  , {"draw" -> "Draw", "edit" -> "Annotate"}
+  ]
 , Spacer @ 20
 , Row[{
     "#v=", PDynamic@state["vCounter"]
@@ -301,7 +307,7 @@ iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
 }]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*iGraphMenu*)
 
 
@@ -1054,7 +1060,7 @@ edgeTypeToPrimitive[_[_, _, ___]]=Line[{#,#2}]&
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*snap grid*)
 
 
@@ -1368,6 +1374,20 @@ geAction["RestoreState", Dynamic@state_, newState_]:= Module[{}
 ]
 
 
+(* ::Subsubsection:: *)
+(*SetEditorMode*)
+
+
+geAction["SetEditorMode", Dynamic @ state_, value:"draw"|"edit"]:=(
+  If[
+    value === "draw"
+  , geAction["UnselectObject", Dynamic @ state]
+  , geAction["Unselect", Dynamic @ state]
+  ]
+; state["editorMode"] = value
+)
+
+
 (* ::Subsubsection::Closed:: *)
 (*Annotate: SelectObject / UnselectObject*)
 
@@ -1387,7 +1407,7 @@ geAction["SetProperty", Dynamic@state_, prop_String, value_]:= (
 )
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateVertexPosition*)
 
 
@@ -1404,7 +1424,7 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateSnapState*)
 
 
@@ -1424,7 +1444,7 @@ geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*UpdateRange*)
 
 
