@@ -283,7 +283,7 @@ iGraphEditorPanel[Dynamic@state_] := Grid[{
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*iGraphModeSetter*)
 
 
@@ -307,7 +307,7 @@ iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
 }]
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*iGraphMenu*)
 
 
@@ -326,9 +326,14 @@ iGraphMenu[Dynamic[state_]]:= With[
         , {"VertexLabels", PopupMenu[vmodel @ "VertexLabels", {None, "Name"}, ImageSize->{{80, All}, All}]
           }
         , {"VertexSize", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large },ImageSize->{{80, All}, All}]}
-        , {"EdgeColor", ColorSetter[vmodel["edgeBaseStyle"], ImageSize -> Tiny]
-          }       
-        , {"VertexColor", ColorSetter[vmodel["vertexBaseStyle"], ImageSize -> Tiny]}       
+        , {"EdgeStyle"
+          , StyleDirectiveField[ vmodel["edgeBaseStyle"]
+            , Graphics[{#, InfiniteLine[{0,0},{1,1}]},ImageSize->15]& 
+            , Graphics[{#, InfiniteLine[{0,0},{1,1}]},ImageSize->50]& 
+            ]
+          }
+              
+        , {"VertexStyle", StyleDirectiveField[ vmodel["vertexBaseStyle"],Graphics[{#, Disk[]},ImageSize->15]&]}
         , {}
         , {"SnapToGrid", Checkbox @ Dynamic[ state["SnapToGrid"], {Automatic, geAction["UpdateSnapState", Dynamic @ state]&}] }
         , {"Show snap grid", Checkbox[ vmodel["ShowSnapGrid"], Enabled -> PDynamic @ state["SnapToGrid"]] }
@@ -425,7 +430,7 @@ iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*State*)
 
 
@@ -711,7 +716,7 @@ stateEdgeList[state_Association] := Module[{vertexRules, edges}
 stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*state helpers*)
 
 
@@ -899,15 +904,9 @@ geGraphicsPrimitives[ Dynamic @ state_ ]:= {
           
           , geSelectedObjectPrimitives @ Dynamic @ state
           
-          , {
-              PDynamic @ state["edgeBaseStyle"]
-            , geEdges @ Dynamic @ state
-            }
+          , geEdges @ Dynamic @ state            
           
-          , {
-              PDynamic @ state["vertexBaseStyle"]
-            , geVertices @ Dynamic @ state
-            }
+          , geVertices @ Dynamic @ state            
           
           , sidePanelToggler @ Dynamic @ state
           }
@@ -927,22 +926,27 @@ sidePanelToggler[ Dynamic @ state_ ]:= Inset[
 (*vertex*)
 
 
-geVertices[Dynamic @ state_] := DynamicModule[{vertexMoved}
-, DynamicWrapper[
-    PDynamic[
-      dynamicLog["vertices"]
-    ; Table[
-        geVertexShapeFunction[Dynamic@state, state[["vertex", pos ]] , Dynamic @ vertexMoved ]
-      , {pos, state["vCounter"] }
+geVertices[Dynamic @ state_] := {
+
+  PDynamic @ Directive @ state["vertexBaseStyle"]
+  
+, DynamicModule[{vertexMoved}
+  , DynamicWrapper[
+      PDynamic[
+        dynamicLog["vertices"]
+      ; Table[
+          geVertexShapeFunction[Dynamic@state, state[["vertex", pos ]] , Dynamic @ vertexMoved ]
+        , {pos, state["vCounter"] }
+        ]
       ]
+    , If[ ListQ @ vertexMoved
+      , geAction["UpdateVertexPosition", Dynamic @ state, ##& @@ vertexMoved] 
+      ; vertexMoved=Null
+      ]
+    , TrackedSymbols :> { vertexMoved }
     ]
-  , If[ ListQ @ vertexMoved
-    , geAction["UpdateVertexPosition", Dynamic @ state, ##& @@ vertexMoved] 
-    ; vertexMoved=Null
-    ]
-  , TrackedSymbols :> { vertexMoved }
   ]
-]
+}
 
 (* This should've been Dynamic @ Table only but I needed to add this 'listener' because 
    geAction comming from the ScheduledTask itself breaks DynamicModule variable system and
@@ -1001,13 +1005,16 @@ Module[
 (*edges*)
 
 
-geEdges[Dynamic @ state_] := PDynamic[
-dynamicLog["edges"];
-Table[
-  geEdgeShapeFunction[ Dynamic@state,  state[["edge"]][[ pos ]] ]
-, {pos, state["eCounter"]}
-]
-]
+geEdges[Dynamic @ state_] := {
+  PDynamic @ Directive @  state["edgeBaseStyle"]  
+, PDynamic[
+    dynamicLog["edges"];
+    Table[
+      geEdgeShapeFunction[ Dynamic@state,  state[["edge"]][[ pos ]] ]
+    , {pos, state["eCounter"]}
+    ]
+  ]
+}
 
 
 geEdgeShapeFunction[Dynamic @ state_, e_Association] := EventHandler[
@@ -1137,6 +1144,80 @@ geSelectedObjectPrimitives[Dynamic @ state_] := With[{ selO := state["selectedOb
       ]
     ]
 }
+]
+
+
+(* ::Subsection:: *)
+(*StyleDirectiveField*)
+
+
+StyleDirectiveField[
+  Dynamic[var_, submitFunction_:Automatic]
+, iconFunction_:Function[Graphics[{#, Disk[]}, ImageSize->20]]
+, previewFunction_:Function[Graphics[{#, Disk[]}, ImageSize->50]]
+]:=DynamicModule[
+  { styleBoxes, styleExpr , updateStyle, submit, launchDialog}
+  
+, (*styleBoxes = ToString[var, InputForm] // If[StringStartsQ["Directive"]@#, StringTake[#, {11, -2}], #]& *)
+  styleBoxes = ToBoxes @ var
+; styleExpr = var
+
+; updateStyle[boxes_]:= styleBoxes = ToBoxes @ (styleExpr = ToExpression @ boxes)
+
+; submit[value_]:= (
+    If[submitFunction === Automatic, var = value, submitFunction @ value]
+  ; NotebookClose[]
+  ); 
+
+
+
+; launchDialog[]:=CreateDialog[
+DynamicModule[{}, Column[{
+    
+    TextCell@"For quick implementation and flexibility you can edit your directives directly as code. \nEdit + [Enter] to preview changes."
+  , InputField[
+	      Dynamic[styleBoxes, {Automatic, updateStyle[#]&} ]
+	    , Boxes
+	    , ImageSize -> {Full, Automatic}
+	    , BaseStyle->{"Notebook","Input", 12}
+	    ]  
+  , Style["Preview:"]
+  , Pane[
+      previewFunction @ Dynamic @ styleExpr
+      , Full, Alignment->Center
+    ]
+  , Style["Examples: "]  
+  , Button[
+      ExpressionCell[RawBoxes@"Directive[Red, EdgeForm @ {Thick, Blue}]", "Input"]
+    , updateStyle @  "Directive[Red, EdgeForm @ {Thick, Blue}]"
+    , Appearance->"Palette", ImageSize->Automatic
+    ]
+  , Pane[
+  
+      Row[{
+        Button["Confirm", submit[styleExpr], Method->"Queued", ImageSize -> Automatic ],
+        Button["Cancel", NotebookClose[], Method->"Queued", ImageSize -> Automatic ]
+        }]
+    , Full, Alignment->Right
+    ]
+  
+  }, Spacings->.5, BaseStyle->{12, LineIndent->0, TextJustification->1}]
+  , InheritScope->True],
+  Modal->True,
+  WindowTitle->"EditStyles",
+  WindowSize->{400, 300},  
+  WindowFrameElements->All
+  ]
+  
+; Button[ 
+    iconFunction @ Dynamic @ var
+  , launchDialog[]
+  , Method->"Queued"
+  , BaseStyle->{ContentPadding->False, LineBreakWithin->False}
+  , Alignment->Left 
+  , Appearance->"Palette"
+  , ImageSize -> Automatic
+  ]
 ]
 
 
@@ -1374,7 +1455,7 @@ geAction["RestoreState", Dynamic@state_, newState_]:= Module[{}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*SetEditorMode*)
 
 
