@@ -250,6 +250,8 @@ template = LTemplate["IGraphM",
 
         LFun["wattsStrogatzGame", {Integer (* dim *), Integer (* size *), Integer (* radius *), Real (* p *), True|False (* loops *), True|False (* multiple *)}, "Void"],
 
+        LFun["chungLuGame", {{Real, 1, "Constant"} (* outWeights *), {Real, 1, "Constant"} (* inWeights *), True|False (* loops *), Integer (* variant *)}, "Void"],
+
         LFun["staticFitnessGame", {Integer (* edges *), {Real, 1, "Constant"} (* out-fitness *), {Real, 1, "Constant"} (* in-fitness *), True|False (* loops *), True|False (* multiple *)}, "Void"],
 
         LFun["staticPowerLawGame", {Integer (* n *), Integer (* m *), Real (* expOut *), Real (* expIn *), True|False (* loops *), True|False (* multiple *), True|False (* finiteSizeCorrection *)}, "Void"],

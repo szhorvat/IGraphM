@@ -229,6 +229,40 @@ IGWattsStrogatzGame[
     IGWattsStrogatzGame[n, p, {1, 2}, opt]
 
 
+PackageExport["IGChungLuGame"]
+IGChungLuGame::usage =
+    "IGChungLuGame[weights] generates a random undirected graph with approximate expected degrees weight.\n" <>
+    "IGChungLuGame[inweights, outweights] generates a random directed graph with approximate expected in- and out-degrees inweights and outweights.";
+
+igChungLuMethods = <|"Original" -> 0, "MaxEnt" -> 1, "NorrosReittu" -> 2|>;
+amendUsage[IGChungLuGame, "Available Method options: <*Keys[igChungLuMethods]*>."];
+
+Options[IGChungLuGame] = { SelfLoops -> False, Method -> "Original" };
+SyntaxInformation[IGChungLuGame] = {
+  "ArgumentsPattern" -> {_, _., OptionsPattern[]}, "OptionNames" -> optNames[IGChungLuGame, Graph]
+};
+IGChungLuGame[
+  weights_?nonNegVecQ, opt : OptionsPattern[{IGChungLuGame, Graph}]] :=
+    catch@Block[{ig = igMakeEmpty[]},
+      check@ig@"chungLuGame"[
+        Normal[weights], {},
+        OptionValue[SelfLoops],
+        Lookup[igChungLuMethods, OptionValue[Method], -1]
+      ];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+IGChungLuGame[
+  inweights_?nonNegVecQ, outweights_?nonNegVecQ, opt : OptionsPattern[{IGChungLuGame, Graph}]] :=
+    catch@Block[{ig = igMakeEmpty[]},
+      check@ig@"chungLuGame"[
+        Normal[outweights], Normal[inweights],
+        OptionValue[SelfLoops],
+        Lookup[igChungLuMethods, OptionValue[Method], -1]
+      ];
+      applyGraphOpt[opt]@igToGraph[ig]
+    ]
+
+
 PackageExport["IGStaticFitnessGame"]
 IGStaticFitnessGame::usage =
     "IGStaticFitnessGame[m, {f1, f2, \[Ellipsis]}] generates a random undirected graph with m edges where edge i <-> j is inserted with probability proportional to f_i\[Times]f_j.\n" <>

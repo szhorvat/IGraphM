@@ -414,6 +414,22 @@ public:
         igConstructorCheck(igraph_watts_strogatz_game(&graph, dim, size, radius, p, loops, multiple));
     }
 
+    void chungLuGame(mma::RealTensorRef outdeg, mma::RealTensorRef indeg, bool loops, mint method) {
+        destroy();
+        igraph_vector_t out_deg = igVectorView(outdeg);
+        igraph_vector_t in_deg = igVectorView(indeg);
+
+        igraph_chung_lu_t ig_method;
+        switch (method) {
+        case 0: ig_method = IGRAPH_CHUNG_LU_ORIGINAL; break;
+        case 1: ig_method = IGRAPH_CHUNG_LU_MAXENT; break;
+        case 2: ig_method = IGRAPH_CHUNG_LU_NR; break;
+        default: throw mma::LibraryError("Unknown Chung-Lu model variant.");
+        }
+
+        igConstructorCheck(igraph_chung_lu_game(&graph, &out_deg, indeg.size() == 0 ? nullptr : &in_deg, loops, ig_method));
+    }
+
     void staticFitnessGame(mint m /* edges */, mma::RealTensorRef fit_in_ten, mma::RealTensorRef fit_out_ten, bool loops, bool multiple) {
         destroy();
         igraph_vector_t fit_in = igVectorView(fit_in_ten);
