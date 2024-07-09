@@ -1,5 +1,38 @@
 ## Revision history for [IGraph/M](README.md)
 
+#### 0.7
+
+This release is based on igraph 0.10.
+
+Added:
+
+ - `IGChungLuGame[]` for sampling from the Chung–Lu model.
+ - `IGPseudoDiameter[]` and `IGFindPseudoDiameter[]` for finding the pseudo-diameter of graphs, and the associated path.
+ - `IGFundamentalCycles[]` for finding a fundamental cycle basis.
+ - `IGMinimumCycleBasis[]` for finding a minimum weight cycle basis.
+ - `IGSubsetBetweenness[]` and `IGSubsetEdgeBetweenness[]` for computing betweeness based on a subset of vertices.
+
+Breaking changes:
+
+ - IGraph/M now requires Mathematica 12.1 or later.
+
+Changes:
+
+ - `IGAverageNeighborDegree[]` now supports multigraphs.
+ - `IGDegreeSequenceGame[]` gained the `"EdgeSwitchingSimple"` method.
+
+Deprecated:
+
+ - `IGHubScore[]` and `IGAuthorityScore[]` are deprecated in favour of `IGHITSScores[]`.
+
+Removed:
+
+ - `IGMakeLattice[]` is removed. Use `IGSquareLattice[]` instead.
+
+Other:
+
+ - Improved performance for `IGBipartiteQ[]`.
+
 #### 0.6.5
 
 Other:
