@@ -205,7 +205,7 @@ public:
             return false;
 
         while (n > 0) {
-            // Remvove isolated vertices
+            // Remove isolated vertices
             while (d[h] == offset && n > 0) {
                 h--;
                 n--;
