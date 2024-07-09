@@ -19,7 +19,7 @@ IGDegreeSequenceGame::usage =
     "IGDegreeSequenceGame[indegrees, outdegrees] generates a directed random graph with the given in- and out-degree sequences.";
 
 Options[IGDegreeSequenceGame] = { Method -> "FastSimple" };
-igDegreeSequenceGameMethods = <|"ConfigurationModel" -> 0, "ConfigurationModelSimple"->3, "FastSimple"->1, "VigerLatapy"->2|>;
+igDegreeSequenceGameMethods = <|"ConfigurationModel" -> 0, "ConfigurationModelSimple" -> 3, "FastSimple" -> 1, "VigerLatapy" -> 2, "EdgeSwitchingSimple" -> 4|>;
 amendUsage[IGDegreeSequenceGame, "Available Method options: <*Keys[igDegreeSequenceGameMethods]*>."];
 igDegreeSequenceGameMethods = Join[
   igDegreeSequenceGameMethods,

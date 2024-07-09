@@ -297,6 +297,7 @@ public:
         case 1: ig_method = IGRAPH_DEGSEQ_FAST_HEUR_SIMPLE; break;
         case 2: ig_method = IGRAPH_DEGSEQ_VL; break;
         case 3: ig_method = IGRAPH_DEGSEQ_CONFIGURATION_SIMPLE; break;
+        case 4: ig_method = IGRAPH_DEGSEQ_EDGE_SWITCHING_SIMPLE; break;
         default: throw mma::LibraryError("degreeSequenceGame: unknown method option.");
         }
 
