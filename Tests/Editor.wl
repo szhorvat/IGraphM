@@ -8,7 +8,7 @@ action = IGraphM`GraphEditor`PackagePrivate`geAction;
 AppendTo[$ContextPath, "IGraphM`GraphEditor`PackagePrivate`"]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Basic tests*)
 
 
@@ -150,11 +150,12 @@ VerificationTest[
 
 
 graph= Graph[
-  {Tooltip[1, "will be preserved"], 
+  {Tooltip[1, "removed with a vertex"], 
     EventHandler[
       Button[
-        Tooltip[Style[2, Red], "removed with a vertex", TooltipDelay->10], 
-        Print["test click"]        
+        Tooltip[Style[2, Red], "will be preserved", TooltipDelay->10], 
+        Print["test click"],
+        Method -> "Queued"        
       ], 
       {"MouseClicked":>Print["test event handler"],
       "MouseClicked":> Print["mouse up"]},
@@ -171,13 +172,13 @@ graph= Graph[
 state = GraphToEditorState[graph];
 iGraphEditorInitialization[state, error];
 
-$testVertex = state[["vertex", 2]];
+$testVertex = state[["vertex", 1]];
 $testEdge = state[["edge", 2]];
 
 
 VerificationTest[
-  state["Annotations", $testVertex["id"] ]
-, <|Button -> HoldComplete[Print["test click"]], EventHandler -> {"MouseClicked" :> Print["test event handler"], "MouseClicked" :> Print["mouse up"]}, Tooltip -> "removed with a vertex"|>
+  Keys @ state["Annotations", state[["vertex", 2 , "id"]] ]
+, {Button,EventHandler,Tooltip}
 , TestID -> "vertex annotations creation"
 ]
 
@@ -228,12 +229,25 @@ VerificationTest[
   graphAfter = GraphFromEditorState @ state;
 { 
  AnnotationValue[{graphAfter, 1}, Tooltip]
-,AnnotationValue[{graphAfter, 4\[DirectedEdge]3}, Tooltip]
-,AnnotationValue[{graphAfter, 2}, Tooltip]
+, AnnotationValue[{graphAfter, 4\[DirectedEdge]3}, Tooltip]
+, AnnotationValue[{graphAfter, 2}, Tooltip]
+, AnnotationValue[{graphAfter, 2}, Button]
+, AnnotationValue[{graphAfter, 2}, EventHandler]
+
+
 }
-, {"will be preserved", "preserved edge tooltip", $Failed}
+, {
+    $Failed
+  ,  "preserved edge tooltip"
+  , "will be preserved"
+  , HoldComplete[Print["test click"], Method -> "Queued"]
+  , {"MouseClicked":>Print["test event handler"],"MouseClicked":>Print["mouse up"]}
+  }
 , TestID -> "perserving annotations"
 ]
+
+
+graphAfter
 
 
 (* ::Subsection:: *)
