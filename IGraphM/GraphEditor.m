@@ -1025,7 +1025,7 @@ Module[
         then I can't block MouseUp from firing*)
 ]]]
 
-$renderedWrappers = { Tooltip }
+$renderedWrappers = { Tooltip, StatusArea }
 
 getVertexWrapperFunction[state_Association, v_Association] := Module[{rules}
 
@@ -1060,7 +1060,7 @@ foldAnnotations[objAnnotations_Association]:= Module[{ entries, body}
 , entries = objAnnotations // KeyValueMap[List] // Reverse
 
 ; body = Fold[
-    constructAnnotationFunction
+    constructAnnotationFunction 
   , \[FormalX]
   , entries (* { {head, arg}...}*)
   ]
@@ -1070,6 +1070,8 @@ foldAnnotations[objAnnotations_Association]:= Module[{ entries, body}
 
 constructAnnotationFunction[arg_, {Button, HoldComplete[rest___]}]:= Button[arg, rest]
 constructAnnotationFunction[arg_, {head_, rest_}]:= head[arg, rest]
+
+
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1090,10 +1092,10 @@ geEdges[Dynamic @ state_] := {
 
 geEdgeShapeFunction[Dynamic @ state_, e_Association] := Module[{wrapper, styles}
 
-, wrapper = Check[getEdgeWrapperFunction[ state, v ], #&]
+, wrapper =  Check[getEdgeWrapperFunction[ state, e ], #&]
 ; styles = Directive @ Lookup[e, "styles", {}]
 
-EventHandler[
+; EventHandler[
     { styles, wrapper @ edgeHoverWrapper @ edgeToPrimitive @ e   }
   , { "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e]) }
   , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)

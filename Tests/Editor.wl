@@ -150,10 +150,13 @@ VerificationTest[
 
 
 graph= Graph[
-  {Tooltip[1, "removed with a vertex"], 
-    EventHandler[
+  {
+    StatusArea[ Tooltip[1, "removed with a vertex"], "removed status area"]
+  , EventHandler[
       Button[
-        Tooltip[Style[2, Red], "will be preserved", TooltipDelay->10], 
+        Tooltip[
+           StatusArea[Style[2, Red], "preserved status area"]
+        , "will be preserved", TooltipDelay->10], 
         Print["test click"],
         Method -> "Queued"        
       ], 
@@ -161,13 +164,18 @@ graph= Graph[
       "MouseClicked":> Print["mouse up"]},
       PassEventsDown->True,
       Method->"Queued"
-    ],
-    Style[3, Green],
-    4,
-    Hyperlink[Style[5, Blue], "https://www.google.com", AutoAction->True ],
-    PopupWindow[Style[6, Orange], Graphics @ Disk[]]
+    ]
+  , Style[3, Green]
+  , 4
+  , Hyperlink[Style[5, Blue], "https://www.google.com", AutoAction->True ]
+  , PopupWindow[Style[6, Orange], Graphics @ Disk[]]
   }, 
-  { 1->2, Tooltip[3->4, "tooltip removed with an edge"], Style[2->3, Orange], Tooltip[4 -> 3, "preserved edge tooltip"]},
+  { 
+    1->2
+  , StatusArea[Tooltip[3->4, "tooltip removed with an edge"], "removed status area"]
+  , Style[2->3, Orange]
+  , Tooltip[4 -> 3, "preserved edge tooltip"]
+  },
   VertexStyle         -> Blue,
   EdgeStyle           -> {(1->2) -> Dashed}
 ];
@@ -180,28 +188,28 @@ $testEdge = state[["edge", 2]];
 
 VerificationTest[
   Keys @ state["Annotations", state[["vertex", 2 , "id"]] ]
-, {Button,EventHandler,Tooltip}
+, {Button,EventHandler,StatusArea, Tooltip}
 , TestID -> "vertex annotations creation"
 ]
 
 
 VerificationTest[
   state["Annotations", $testEdge["edge"] ]
-, <|Tooltip -> "tooltip removed with an edge"|>
+, <|StatusArea -> "removed status area", Tooltip -> "tooltip removed with an edge"|>
 , TestID -> "edge annotations creation"
 ]
 
 
 VerificationTest[
   getVertexWrapperFunction[state, $testVertex ] @ "TEST V"
-, Tooltip["TEST V", "removed with a vertex"]
+, StatusArea[Tooltip["TEST V", "removed with a vertex"],"removed status area"]
 , TestID -> "vertex shape with wrappers"
 ]
 
 
 VerificationTest[
   getEdgeWrapperFunction[state, $testEdge] @ "TEST E"
-, Tooltip["TEST E", "tooltip removed with an edge"]
+, StatusArea[Tooltip["TEST E", "tooltip removed with an edge"], "removed status area"]
 , TestID -> "edge shape with wrappers"
 ]
 
@@ -230,7 +238,8 @@ VerificationTest[
 VerificationTest[
   graphAfter = GraphFromEditorState @ state;
 { 
- AnnotationValue[{graphAfter, 1}, Tooltip]
+  AnnotationValue[{graphAfter, 1}, Tooltip]
+, AnnotationValue[{graphAfter, 2}, StatusArea]
 , AnnotationValue[{graphAfter, 4\[DirectedEdge]3}, Tooltip]
 , AnnotationValue[{graphAfter, 2}, Tooltip]
 , AnnotationValue[{graphAfter, 2}, Button]
@@ -243,7 +252,8 @@ VerificationTest[
 }
 , {
     $Failed
-  ,  "preserved edge tooltip"
+  , "preserved status area"  
+  , "preserved edge tooltip"
   , "will be preserved"
   , HoldComplete[Print["test click"], Method -> "Queued"]
   , {"MouseClicked":>Print["test event handler"],"MouseClicked":>Print["mouse up"]}
@@ -254,7 +264,7 @@ VerificationTest[
 ]
 
 
-graphAfter
+
 
 
 AnnotationValue[{graphAfter, 6}, Button]
