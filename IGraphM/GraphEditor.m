@@ -474,7 +474,7 @@ geStateVersionCheck[___] :=
 GraphFromEditorState[state_Association] := GraphFromEditorState[geStateVersionCheck @ state, $stateVersion];
 
 
-GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
+GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph, vertexNameLookup, annotations}
 , v = stateVertexList @ state
 
 ; e = stateEdgeList @ state
@@ -485,12 +485,17 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
   , Automatic
   ]
 
-
+; vertexNameLookup = stateVertexNamesRules @ state
+; annotations =  Lookup[ state, "Annotations", <||>] //
+    KeyMap[ Replace[#, vertexNameLookup, {-1}]& ] // 
+    Map[Normal] //
+    Normal 
 
 ; graph = Graph[ v, e
   , VertexCoordinates -> pos
   , VertexStyle       -> stateVertexStyle @ state 
   , EdgeStyle         -> stateEdgeStyle @ state 
+  , AnnotationRules   -> annotations
   ]
 
 ; If[
@@ -549,6 +554,7 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 
 ; state["vertexBaseStyle"] = propertyCommonValue[graph, VertexStyle, Lookup[defaultOptions, VertexStyle]]
 ; state["edgeBaseStyle"] = propertyCommonValue[graph, EdgeStyle, Lookup[defaultOptions, EdgeStyle]]
+
   
 ; state["GraphLayout"]   = Automatic    
 
@@ -563,6 +569,8 @@ GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
 
 ; state["edge"]   = toStateEdges[state, graph]
 ; state["eCounter"] = Length @ state["edge"]
+
+; state["Annotations"] = toStateAnnotations[state, graph]
 
 ; state = stateRangeInit @ state
 
@@ -593,6 +601,21 @@ stateEdgeTagsInit[state_Association, graph_]:=Module[{newState = state, newGraph
   
 ; {newState, newGraph}    
 ]
+
+(* ::Subsubsubsection::Closed:: *)
+(*toStateAnnotations*)
+
+toStateAnnotations[state_Association, graph_Graph] := Module[{annotations, vertexRules}
+
+, annotations = (AnnotationRules /. Options[graph] /. AnnotationRules -> {})
+
+; annotations = annotations // Association // Map[Association]
+
+; vertexRules = stateVertexRules @ state
+
+; annotations // KeyMap[ Replace[#, vertexRules, {-1}]& ]
+]
+
 
 
 (* ::Subsubsubsection::Closed:: *)
@@ -683,6 +706,8 @@ stateGraphEmbedding[state_]:= state[["vertex", All, "pos"]]
 
 
 stateVertexList[state_Association] := Values @ state[["vertex", All, "name"]]
+
+stateVertexRules[state_Association]:= (#name -> #id) & /@ Values @ state["vertex"]
 
 
 stateVertexNamesRules[state_Association]:= state[["vertex", All, "name"]]
@@ -795,8 +820,7 @@ createVertex[name_, pos:{_, _}, styles_:{}, labels_:{}]:= <|"name" -> name, "id"
 
 toStateEdges[state_Association, graph_] := Module[{labels,styles,replaceVertexNames,vertexRules,edges }
 , edges = EdgeList @ graph
-; vertexRules = (#name -> #id) & /@ Values @ state["vertex"]
-; 
+; vertexRules = stateVertexRules @ state
 
 ; replaceVertexNames = Replace[#, vertexRules , {2}]&
 
@@ -964,13 +988,15 @@ With[ {
 DynamicModule[
   {x = v@"pos", task},
 Module[
-  {graphics}
+  {graphics, wrapper}
 
-, graphics = { {
+, wrapper = Check[getVertexWrapperFunction[ state, v ], #&]
+
+; graphics = { {
     Directive @ Lookup[v, "styles", {}]
   , EdgeForm @ AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
   , DynamicName[
-      Disk[Dynamic[x], PDynamic@state["realVertexSize"]]
+      wrapper @ Disk[Dynamic[x], PDynamic@state["realVertexSize"]]
     , v["id"]
     ]
   }
@@ -999,6 +1025,51 @@ Module[
         then I can't block MouseUp from firing*)
 ]]]
 
+$renderedWrappers = { Tooltip }
+
+getVertexWrapperFunction[state_Association, v_Association] := Module[{rules}
+
+, rules = state["Annotations"] @ v["id"]
+
+; annotationsToWrapperFunction @ rules
+
+]
+
+
+getEdgeWrapperFunction[state_Association, e_Association] := Module[{rules }
+
+, rules = state["Annotations"] @ e["edge"]
+
+; annotationsToWrapperFunction @ rules
+
+]
+
+annotationsToWrapperFunction[ _Missing ] = #&
+
+annotationsToWrapperFunction[ rules_ ]:= Module[{applicableRules}
+
+, applicableRules = KeySelect[rules, MemberQ[$renderedWrappers, #]& ]
+
+; If[ Length[applicableRules] == 0, Return[ #&, Module] ]
+
+; foldAnnotations @ applicableRules  
+]
+
+foldAnnotations[objAnnotations_Association]:= Module[{ entries, body}
+
+, entries = objAnnotations // KeyValueMap[List] // Reverse
+
+; body = Fold[
+    constructAnnotationFunction
+  , \[FormalX]
+  , entries (* { {head, arg}...}*)
+  ]
+
+; Function @@ { \[FormalX], body }
+]
+
+constructAnnotationFunction[arg_, {Button, HoldComplete[rest___]}]:= Button[arg, rest]
+constructAnnotationFunction[arg_, {head_, rest_}]:= head[arg, rest]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1017,14 +1088,17 @@ geEdges[Dynamic @ state_] := {
 }
 
 
-geEdgeShapeFunction[Dynamic @ state_, e_Association] := EventHandler[
-    { Directive @ Lookup[e, "styles", {}]
-    , edgeHoverWrapper @ edgeToPrimitive @ e    
-    }
+geEdgeShapeFunction[Dynamic @ state_, e_Association] := Module[{wrapper, styles}
+
+, wrapper = Check[getEdgeWrapperFunction[ state, v ], #&]
+; styles = Directive @ Lookup[e, "styles", {}]
+
+EventHandler[
+    { styles, wrapper @ edgeHoverWrapper @ edgeToPrimitive @ e   }
   , { "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e]) }
   , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
   ]
-
+]
 
 edgeHoverWrapper[primitive_]:=  With[
   {
@@ -1726,6 +1800,7 @@ geAction["RemoveVertex", Dynamic @ state_, v_] := With[{ id = v["id"]}
 ; state["edge"]    = Select[state["edge"], FreeQ[#edge, id] & ]
 ; state["vCounter"]--
 ; state["eCounter"] = Length @ state["edge"]
+; KeyDropFrom[ state["Annotations"], v["id"] ]
 ; If[ state["selectedVertex"] === id, geAction["Unselect", Dynamic @ state] ]
 ]
 
@@ -1764,6 +1839,7 @@ geAction["RemoveEdge", Dynamic @ state_, edge_Association] := (
   state["edge"] = KeyDrop[edge["id"]] @ state["edge"]
 ; geAction["UpdateEdgesShapes", Dynamic @ state]
 ; state["eCounter"]--  
+; KeyDropFrom[ state["Annotations"], edge["edge"] ]
 )
 
 

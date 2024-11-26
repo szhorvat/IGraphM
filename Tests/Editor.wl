@@ -5,6 +5,13 @@ fromState = IGraphM`GraphEditor`PackagePrivate`GraphFromEditorState;
 action = IGraphM`GraphEditor`PackagePrivate`geAction;
 
 
+AppendTo[$ContextPath, "IGraphM`GraphEditor`PackagePrivate`"]
+
+
+(* ::Subsection::Closed:: *)
+(*Basic tests*)
+
+
 VerificationTest[
   {
     SetOptions[IGGraphEditor,ImageSize->200]
@@ -72,7 +79,7 @@ VerificationTest[
 ]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*VertexStyle, EdgeStyle and Style wrappers*)
 
 
@@ -135,6 +142,97 @@ VerificationTest[
   state["edge"][[1]]["styles"]
 , Dashing[{Small, Small}]
 , TestID -> "options > EdgeStyle rules"
+]
+
+
+(* ::Subsection:: *)
+(*wrappers*)
+
+
+graph= Graph[
+  {Tooltip[1, "will be preserved"], 
+    EventHandler[
+      Button[
+        Tooltip[Style[2, Red], "removed with a vertex", TooltipDelay->10], 
+        Print["test click"]        
+      ], 
+      {"MouseClicked":>Print["test event handler"],
+      "MouseClicked":> Print["mouse up"]},
+      PassEventsDown->True,
+      Method->"Queued"
+    ],
+    Style[3, Green],
+    4
+  }, 
+  { 1->2, Tooltip[3->4, "tooltip removed with an edge"], Style[2->3, Orange], Tooltip[4 -> 3, "preserved edge tooltip"]},
+  VertexStyle         -> Blue,
+  EdgeStyle           -> {(1->2) -> Dashed}
+];
+state = GraphToEditorState[graph];
+iGraphEditorInitialization[state, error];
+
+$testVertex = state[["vertex", 2]];
+$testEdge = state[["edge", 2]];
+
+
+VerificationTest[
+  state["Annotations", $testVertex["id"] ]
+, <|Button -> HoldComplete[Print["test click"]], EventHandler -> {"MouseClicked" :> Print["test event handler"], "MouseClicked" :> Print["mouse up"]}, Tooltip -> "removed with a vertex"|>
+, TestID -> "vertex annotations creation"
+]
+
+
+VerificationTest[
+  state["Annotations", $testEdge["edge"] ]
+, <|Tooltip -> "tooltip removed with an edge"|>
+, TestID -> "edge annotations creation"
+]
+
+
+VerificationTest[
+  getVertexWrapperFunction[state, $testVertex ] @ "TEST V"
+, Tooltip["TEST V", "removed with a vertex"]
+, TestID -> "vertex shape with wrappers"
+]
+
+
+VerificationTest[
+  getEdgeWrapperFunction[state, $testEdge] @ "TEST E"
+, Tooltip["TEST E", "tooltip removed with an edge"]
+, TestID -> "edge shape with wrappers"
+]
+
+
+VerificationTest[
+  {
+    Head @ state["Annotations", $testVertex["id"] , Tooltip]
+  , geAction["RemoveVertex", Dynamic @ state, $testVertex ]
+  ; Head @ state["Annotations", $testVertex["id"], Tooltip]
+  }
+, {String, Missing}
+, TestID -> "remove vertex annotations @remove-vertex"
+]
+
+
+VerificationTest[
+  { Head @ state["Annotations", $testEdge["edge"], Tooltip ]
+  , geAction["RemoveEdge", Dynamic @ state, $testEdge ]
+  ; Head @ state["Annotations", $testEdge["edge"], Tooltip]
+  }
+, {String, Missing}
+, TestID -> "{state[\"Annotations\",$testEdge[\"edge\"]],geAction[\"RemoveEdge\",Dy..."
+]
+
+
+VerificationTest[
+  graphAfter = GraphFromEditorState @ state;
+{ 
+ AnnotationValue[{graphAfter, 1}, Tooltip]
+,AnnotationValue[{graphAfter, 4\[DirectedEdge]3}, Tooltip]
+,AnnotationValue[{graphAfter, 2}, Tooltip]
+}
+, {"will be preserved", "preserved edge tooltip", $Failed}
+, TestID -> "perserving annotations"
 ]
 
 
