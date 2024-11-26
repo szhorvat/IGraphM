@@ -163,7 +163,8 @@ graph= Graph[
       Method->"Queued"
     ],
     Style[3, Green],
-    4
+    4,
+    Hyperlink[Style[5, Blue], "https://www.google.com", AutoAction->True ]
   }, 
   { 1->2, Tooltip[3->4, "tooltip removed with an edge"], Style[2->3, Orange], Tooltip[4 -> 3, "preserved edge tooltip"]},
   VertexStyle         -> Blue,
@@ -233,6 +234,7 @@ VerificationTest[
 , AnnotationValue[{graphAfter, 2}, Tooltip]
 , AnnotationValue[{graphAfter, 2}, Button]
 , AnnotationValue[{graphAfter, 2}, EventHandler]
+, AnnotationValue[{graphAfter, 5}, Hyperlink]
 
 
 }
@@ -242,6 +244,7 @@ VerificationTest[
   , "will be preserved"
   , HoldComplete[Print["test click"], Method -> "Queued"]
   , {"MouseClicked":>Print["test event handler"],"MouseClicked":>Print["mouse up"]}
+  , "https://www.google.com"
   }
 , TestID -> "perserving annotations"
 ]
