@@ -164,7 +164,8 @@ graph= Graph[
     ],
     Style[3, Green],
     4,
-    Hyperlink[Style[5, Blue], "https://www.google.com", AutoAction->True ]
+    Hyperlink[Style[5, Blue], "https://www.google.com", AutoAction->True ],
+    PopupWindow[Style[6, Orange], Graphics @ Disk[]]
   }, 
   { 1->2, Tooltip[3->4, "tooltip removed with an edge"], Style[2->3, Orange], Tooltip[4 -> 3, "preserved edge tooltip"]},
   VertexStyle         -> Blue,
@@ -235,6 +236,8 @@ VerificationTest[
 , AnnotationValue[{graphAfter, 2}, Button]
 , AnnotationValue[{graphAfter, 2}, EventHandler]
 , AnnotationValue[{graphAfter, 5}, Hyperlink]
+, Head@ AnnotationValue[{graphAfter, 6}, Button] (*What's left from the PopupWindow*)
+
 
 
 }
@@ -245,9 +248,16 @@ VerificationTest[
   , HoldComplete[Print["test click"], Method -> "Queued"]
   , {"MouseClicked":>Print["test event handler"],"MouseClicked":>Print["mouse up"]}
   , "https://www.google.com"
+  , HoldComplete
   }
 , TestID -> "perserving annotations"
 ]
+
+
+graphAfter
+
+
+AnnotationValue[{graphAfter, 6}, Button]
 
 
 graphAfter
