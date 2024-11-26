@@ -16,10 +16,10 @@ NotebookDelete@Cells@MessagesNotebook[]
 SetSelectedNotebook@MessagesNotebook[];
 SetSelectedNotebook@EvaluationNotebook[];
 FrontEndExecute[FrontEndToken["DeleteGeneratedCells"]]
-
 IGraphM`GraphEditor`PackagePrivate`$geDebug=False;
 IGraphM`GraphEditor`PackagePrivate`$logTimings=False;
 IGraphM`GraphEditor`PackagePrivate`$logDynamic=False;
+
 Get["IGraphM`"]
 IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
 
@@ -27,7 +27,16 @@ IGraphM`GraphEditor`PackagePrivate`$gridLinesCount=25.;
 TestReport@FileNameJoin[{NotebookDirectory[], "Editor.wl"}]
 
 
+FileNameJoin[{NotebookDirectory[], "Editor.wl"}]//NotebookOpen
+
+
 SetOptions[IGGraphEditor, ImageSize->Automatic];
+
+
+IGGraphEditor[IGEmptyGraph[]]//ToBoxes
+
+
+IGEmptyGraph[]//InputForm
 
 
 (* ::Subsection:: *)
@@ -41,11 +50,36 @@ SetOptions[IGGraphEditor, ImageSize->Automatic];
 (* ::Text:: *)
 (*- Alt+Click build a graph*)
 (*- Evaluate output to create a graph*)
+(*    - pay attention, is the embedding the same after you drag a vertex and valuate the editor?*)
 (*- Drag outside of range should extend the range @mouseUp*)
 (*- Alt+click should not trigger orange resize frame, nor should discarding a potential edge.*)
 (*- Click on vertex should not trigger update vertex position*)
 (*- Hover over edge/vertex should thicken it.*)
 (*- Are curved edges redrawn @mouseUp?*)
+
+
+IGGraphEditor[
+  Graph@{DirectedEdge[1,2,"a"], 2->3, 3->1}  
+]
+
+
+IGGraphEditor[
+  Graph@{1->2, 2->3, 3->1},
+  VertexSize -> Small, 
+  "DirectedEdges"->True,
+  VertexStyle -> Red,
+  "ShowSidePanel" -> True  
+]
+
+
+IGGraphEditor[
+  Graph@{1->2},  
+  Prolog -> {
+  Texture[img], 
+  Polygon[Scaled/@{{0,0},{0,1},{1,1},{1,0}},VertexTextureCoordinates->{{0,0},{0,1},{1,1},{1,0}}
+  ]
+ }
+]
 
 
 IGGraphEditor[Graph@{1->2,2->1},VertexSize->Small, "DirectedEdges"->True]
@@ -63,7 +97,11 @@ IGGraphEditor[ImageSize->100]
 
 { IGGraphEditor[IGGraphAtlas[123]],
   IGGraphEditor[Graph[{1, 2}, {}]],
-  IGGraphEditor[Graph[{1, 2}, {1<->2}]] }
+  IGGraphEditor[Graph[{1, 2}, {1<->2}]],
+  IGGraphEditor[
+	Graph[{1->1, 1->1, 1->1, 2->2, 1->2, 1->2, 1->2, 2->3, 3->1}],
+	VertexLabels -> "Name"	
+] }
 
 
 (* ::Subsubsection:: *)
@@ -99,21 +137,20 @@ IGGraphEditor[GraphData["GreatRhombicosidodecahedralGraph"], VertexSize->Tiny]
 IGGraphEditor[ExampleData[{"NetworkGraph", "DolphinSocialNetwork"}], VertexSize->Tiny, ImageSize->555]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Vertex size*)
 
 
 IGGraphEditor[Graph@{1->2, 2->1}, VertexSize->#, ImageSize->200]& /@ {Tiny, Small, Medium, Large,0.2}
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Multi-edges*)
 
 
 IGGraphEditor[
 	Graph[{1->1, 1->1, 1->1, 2->2, 1->2, 1->2, 1->2, 2->3, 3->1}],
-	VertexLabels -> "Name",
-	ImageSize -> 800
+	VertexLabels -> "Name"	
 ]
 
 
@@ -138,11 +175,3 @@ IGGraphEditor[Graph[{1->2,2->3,3->1}]]
 
 Graph[{1->2,2->1,3->1}]//SimpleGraphQ
 
-
-MultigraphQ
-
-
-Names["*`$TrackedTargets"]
-
-
-IGraphM`PreciseTracking`PackagePrivate`$TrackedTargets

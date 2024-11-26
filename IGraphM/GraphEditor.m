@@ -1,5 +1,9 @@
 (* ::Package:: *)
 
+(* ::Subsection:: *)
+(*Package Export*)
+
+
 (* Mathematica Package *)
 (* Created by Mathematica plugin for IntelliJ IDEA *)
 
@@ -27,13 +31,98 @@ IGGraphEditor::unknownState = "Corrupted editor state.";
 IGGraphEditor::oldVer       = "You need to update IGraph/M to continue working with the data stored here.";
 IGGraphEditor::nofe         = "The graph editor requires a notebook interface.";
 
+IGGraphEditor::invLayout    = "Layout -> `` can't be used for this graph.";
+
 $narrowAspectRatioLimit = N @ GoldenRatio ^ 2; (* plot range will be adjusted if the initial calculated as is above this limit *)
 $vertexEdgeThickness = 0.5;
 $hoverVertexEdgeThickness = 2;
 $edgeThickness = 1;
 $activeEdgeThickness = 3;
 $potentialEdgeStyle = Directive[Purple, Dashed, Thick];
-$gridLinesCount = 30.;
+
+
+
+(* ::Subsection::Closed:: *)
+(*Helpers*)
+
+
+es6Decorate // Attributes={HoldAll};
+
+es6Decorate[f_Symbol]:=(
+
+  f /: SetDelayed[
+    f[ Verbatim[Association][spec__] ]
+    , rhs_
+  ]:=With[
+    { pattern    = es6ExtractPattern[spec]
+      , heldSymbols = es6ExtractSymbols[spec]
+      , heldValues  = es6ExtractValues[spec]
+    }
+    , es6Decorate[f, rhs, pattern, heldSymbols, heldValues]
+  ]
+);
+
+es6Decorate[foo_Symbol,rhs_,pattern_, Hold[symbols___], Hold[values___]]:=(
+  SetDelayed @@ Hold[
+    foo[$ES6asso:pattern],
+    Block[{symbols}, Unevaluated[rhs] /. Thread[{symbols}->{values}] ]
+  ]
+)
+
+es6ExtractPattern[spec__]:= KeyValuePattern[
+  es6PatternToPattern /@ {spec}
+]
+
+es6ExtractSymbols[spec__]:= Apply[Join][
+  es6PatternToHeldSymbol /@ {spec}
+]
+
+es6ExtractValues[spec__]:= Apply[Join][
+  es6PatternToHeldValue /@ {spec}
+]
+
+With[
+  { vPatt = Verbatim[Pattern]
+    , vOpt  = Verbatim[Optional]
+    , hPatt = HoldPattern
+  }
+  ,
+
+  (* a_ a_H *)
+  es6PatternToPattern[    hPatt @ vPatt[s_Symbol, b_Blank] ] := symbolName[s] -> b;
+  (* "a" \[Rule] b_ *)
+  es6PatternToPattern[    sym_String -> Except[_Optional] ]:= sym -> Blank[];
+  es6PatternToPattern[ ___ ] = Sequence[];
+
+
+
+  es6PatternToHeldSymbol[ hPatt @ vPatt[s_Symbol, _]      ] := Hold[s];
+  es6PatternToHeldSymbol[ hPatt @ vOpt[p_, _]      ] := es6PatternToHeldSymbol @ p;
+  es6PatternToHeldSymbol[ _String -> p_ ]:= es6PatternToHeldSymbol @ p;
+  es6PatternToHeldSymbol[ ___ ]:=Hold[];
+
+
+
+  (* s_ ==> ass["s"] *)
+  es6PatternToHeldValue[  hPatt @ vPatt[s_Symbol, _]      ] := With[{sym = symbolName@s}
+    , Hold @ $ES6asso @ sym
+  ];
+  (* s_:default ==> Lookup[asso, "s", default] *)
+  es6PatternToHeldValue[  hPatt @ vOpt[vPatt[s_Symbol, _Blank], default_] ] := With[{sym = symbolName@s}
+    , Hold @ Lookup[$ES6asso, sym, default]
+  ];
+  (* S \[Rule] s_ *)
+  es6PatternToHeldValue[ key_ -> hPatt @ vPatt[_, _Blank] ]:= Hold @ $ES6asso @ key;
+
+  (* S \[Rule] s_:default *)
+  es6PatternToHeldValue[ key_ -> hPatt @ vOpt[vPatt[_, _Blank], default_] ]:=
+    Hold @ Lookup[$ES6asso, key, default];
+  es6PatternToHeldValue[  ___     ] := Hold[];
+];
+
+symbolName = Function[s, SymbolName @ Unevaluated[s], HoldFirst];
+
+
 
 
 (* ::Subsection:: *)
@@ -44,13 +133,27 @@ IGGraphEditor // Options = {
   "KeepVertexCoordinates" -> True (* bool *)
 , "CreateVertexSelects"   -> True (* bool *)
 , "SnapToGrid"            -> False (* bool *)
+, "ShowSnapGrid"          -> False (* bool *)
+, "SnapDensity"           -> 30 (* _?NumberQ | {_, _}  [ approx grid lines / dimension]*)
 , "IndexGraph"            -> False (* bool *)
 , "PerformanceLimit"      -> 450   (* _Integer *)
+, "ShowSidePanel"         -> False
+
+, VertexStyle           -> Gray
+, EdgeStyle             -> Gray
+
 , VertexLabels            -> None (* | "Name" *)
 , VertexSize              -> Small (* Tiny | Small | Medium | Large | ratioToDiagonal_?NumericQ*)
 , DirectedEdges           -> False (* bool *)
-, ImageSize               -> 300
+, ImageSize               -> Automatic
+, Prolog                  -> {}
 };
+
+
+AutomaticOptions = <|
+  ImageSize -> {300, 300}
+|>
+
 
 
 SyntaxInformation[IGGraphEditor] = {"ArgumentsPattern" -> {_., OptionsPattern[]}};
@@ -66,10 +169,14 @@ IGGraphEditor /:
 iGraphEditor // Options = Options @ IGGraphEditor;
 
 
-supportedGraphQ = ! MixedGraphQ[#] && SimpleGraphQ[#]&;
+supportedGraphQ = GraphQ;
 
 
 (* ::Subsection:: *)
+(*iGraphEditor*)
+
+
+(* ::Subsubsection::Closed:: *)
 (*iGraphEditor*)
 
 
@@ -88,6 +195,7 @@ Interpretation[
     state = GraphToEditorState[graph, opt]
   , error = False
   , refresh
+  , view  
   }
 , refresh[] := Module[{temp}
   , Catch[
@@ -98,16 +206,17 @@ Interpretation[
     ; If[ AssociationQ @ temp, state = temp, Throw[ error = temp] ]
 
     ; iGraphEditorInitialization[state, error]  (*can throw*)  
+    
+    ; If[ Not @ error
+      , view = iGraphEditorPanel[Dynamic@state]
+      ]
     ]
   ]
 
 ; PaneSelector[
   {
     True -> Button[Dynamic @ error,  refresh[], BaseStyle -> 15]
-  , False -> Panel[
-      Dynamic[Refresh[iGraphEditorPanel[Dynamic@state], None]]
-    , FrameMargins -> 0, BaseStyle -> CacheGraphics->False
-    ]
+  , False -> Dynamic[view, TrackedSymbols:>{view}]
   }
   , Dynamic[ MatchQ[_Failure] @ error ]
   , ImageSize -> Automatic
@@ -118,6 +227,7 @@ Interpretation[
 
 , Initialization :> refresh[]
 , Deinitialization :> iGraphEditorDeinitialization[state]
+, UnsavedVariables :> {view}
 
 ]]
 
@@ -152,17 +262,199 @@ iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> 
 iGraphEditor[___] := Failure["GraphEditor", <|"Message" -> "Unknown input."|>]
 
 
-iGraphEditorPanel[Dynamic@state_] := EventHandler[
-    geGraphics @ Dynamic @ state
-  , "MouseClicked" :> (
-      geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]]
-    )
-  , PassEventsDown -> True
+(* ::Subsubsection::Closed:: *)
+(*iGraphEditorInitialization*)
+
+
+iGraphEditorInitialization // Attributes = {HoldAll}
+iGraphEditorInitialization[state_, error_]:=Module[
+  {perfFailure = editorFailure["Too many vertices and edges. Increase \"PerformanceLimit\" option to try anyway."]}
+  
+, If[
+    state[ "vCounter"] + state[ "eCounter"] > state[ "PerformanceLimit"]
+  , Throw[ error =  perfFailure ]
   ]
 
+; ToTrackedAssociation @ state
+  
+; geAction["UpdateVertexSize", Hold @ state]
+; geAction["UpdateEdgesShapes", Hold @ state]
+    (*(Hold) is there to workaround a bug with Interpretation's Initialization
+      which inserts evaluated Dynamic's arguments
+    *)
+    
+; {}
+]
+
+iGraphEditorDeinitialization // Attributes = {HoldAll}
+iGraphEditorDeinitialization[state_]:= StopTracking @ state
 
 
-(* ::Subsection:: *)
+(* ::Subsubsection::Closed:: *)
+(*iGraphEditorPanel*)
+
+
+iGraphEditorPanel[Dynamic@state_] := Grid[{
+  {
+    iGraphGraphicsPanel @ Dynamic @ state
+  , PDynamic @ If[ state["ShowSidePanel"], iGraphMenu @ Dynamic @ state  , Spacer[{0,0}]]
+  }
+, { 
+    PDynamic @ If[ state["ShowSidePanel"], iGraphModeSetter @ Dynamic @ state  , Spacer[{0,0}]]    
+  , SpanFromAbove 
+  }
+}, Alignment->{Left,Top}, Spacings->{.3,.3}]
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*iGraphModeSetter*)
+
+
+rawPanel = Panel[##, ImageMargins->{0,0}, FrameMargins->{0,0}]&
+
+
+iGraphModeSetter[Dynamic@state_]:= rawPanel @ Row[{
+  SetterBar[
+    Dynamic[
+      state["editorMode"], 
+      geAction["SetEditorMode", Dynamic @ state, #]&
+    ]
+  , {"draw" -> "Draw", "edit" -> "Annotate"}
+  ]
+, Spacer @ 20
+, Row[{
+    "#v=", PDynamic@state["vCounter"]
+    , Spacer @ 10
+  , "#e=", PDynamic@state["eCounter"]    
+}, BaseStyle->{FontColor -> GrayLevel@.8}]
+}]
+
+
+(* ::Subsubsection:: *)
+(*iGraphMenu*)
+
+
+iGraphMenu[Dynamic[state_]]:= With[
+  { 
+    vmodel = Dynamic[state[#], Function[val, geAction["SetProperty", Dynamic@state, #, val]] ]& 
+  }
+, Deploy@PaneSelector[
+{ 
+  "edit" -> graphObjectPanel @ Dynamic @ state  
+, "draw" -> rawPanel @ Pane[
+      Grid[{
+          { Button["Undo", geAction["Undo", Dynamic @ state],  Enabled -> state["history"]["canUndo", Dynamic] ],
+            Button["Redo", geAction["Redo", Dynamic @ state],  Enabled -> state["history"]["canRedo", Dynamic] ]
+          }
+        , {"VertexLabels", PopupMenu[vmodel @ "VertexLabels", {None, "Name"}, ImageSize->{{80, All}, All}]
+          }
+        , {"VertexSize", PopupMenu[Dynamic[ state["VertexSize"], {Automatic, geAction["UpdateVertexSize", Dynamic @ state]&}] , {Tiny , Small, Medium, Large },ImageSize->{{80, All}, All}]}
+        , {"EdgeStyle"
+          , StyleDirectiveField[ vmodel["edgeBaseStyle"]
+            , Graphics[{#, InfiniteLine[{0,0},{1,1}]},ImageSize->15]& 
+            , Graphics[{#, InfiniteLine[{0,0},{1,1}]},ImageSize->50]& 
+            ]
+          }
+              
+        , {"VertexStyle", StyleDirectiveField[ vmodel["vertexBaseStyle"],Graphics[{#, Disk[]},ImageSize->15]&]}
+        , {}
+        , {"SnapToGrid", Checkbox @ Dynamic[ state["SnapToGrid"], {Automatic, geAction["UpdateSnapState", Dynamic @ state]&}] }
+        , {"Show snap grid", Checkbox[ vmodel["ShowSnapGrid"], Enabled -> PDynamic @ state["SnapToGrid"]] }
+        , {"Snap density", PDynamic @ state["SnapDensity"] }
+        , { menuButton["Adjust range", geAction["UpdateRange", Dynamic @ state, True], Appearance->"FramedPalette"],      
+            SpanFromLeft
+          }
+        
+        , { "GraphLayout:", SpanFromLeft}  
+        , { layoutController @ Dynamic @ state, SpanFromLeft }  
+        
+        , {"UI Version", state["version"] }
+        , { menuButton["Copy state", CopyToClipboard @ RawBoxes @ ToBoxes @ Iconize @ state, Appearance->"FramedPalette"],      
+            SpanFromLeft
+          }
+        
+        
+        }
+      , Alignment -> {Left, Center}, Spacings -> {1,1}
+      ]
+    , FrameMargins -> 10
+    ]
+}
+, PDynamic @ state["editorMode"]
+, ImageSize->Automatic
+]]
+
+menuButton // Attributes = {HoldRest}
+menuButton[args___]:=Button[args, Appearance->"FramedPalette"]
+
+
+graphObjectPanel[ Dynamic @ state_ ]:= rawPanel @ PaneSelector[
+  { 
+    False -> "Click on object" 
+  , True ->   PDynamic[
+      dynamicLog["selectedObject"]
+    ; If[ state["selectedObject"] // KeyExistsQ["edge"]
+      , Grid @ MapApply[List] @ Normal @ state["selectedObject"]  
+      , vertexEditorPanel[ Dynamic @ state, state["selectedObject", "id"] ]
+      ]
+    ]
+  }
+, PDynamic @ AssociationQ @ state["selectedObject"]
+, ImageSize-> ({Automatic, PDynamic[state["ImageSize"][[2]]] })
+]
+    
+
+
+vertexEditorPanel[ Dynamic @ state_, id_ ]:= With[
+{ name := state["vertex", id, "name"]
+, pos  := state["vertex", id, "pos"] 
+}
+, Grid[{
+   { "Vertex id", id}
+ , { "Name"
+   , InputField[
+      Dynamic[name, {Automatic, IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["vCounter"]]&  }]
+     , Expression
+     ]
+    }
+  , {"Position", Dynamic @ NumberForm[ Chop@pos, {Infinity, 2 }]}
+  }, Alignment->{Left,Center}]
+]
+  
+
+
+(* ::Subsubsection::Closed:: *)
+(*layoutController*)
+
+
+layoutController[ Dynamic @ state_ ]:=PopupMenu[
+  Dynamic[ state["GraphLayout"], geAction["SetLayout", Dynamic @ state, #]& ],
+  $availableLayouts,
+  PDynamic @ state["GraphLayout"]
+]
+
+$availableLayouts = {"SpringElectricalEmbedding", "SpringEmbedding", \
+"HighDimensionalEmbedding", "LayeredEmbedding", \
+"LayeredDigraphEmbedding", "BalloonEmbedding", "RadialEmbedding", \
+"SpiralEmbedding", "BipartiteEmbedding", "CircularEmbedding", \
+"CircularMultipartiteEmbedding", "DiscreteSpiralEmbedding", \
+"GridEmbedding", "LinearEmbedding", "MultipartiteEmbedding", \
+"PlanarEmbedding", "StarEmbedding", "SpectralEmbedding", \
+"TutteEmbedding"};
+
+
+(* ::Subsubsection::Closed:: *)
+(*iGraphGraphicsPanel*)
+
+
+iGraphGraphicsPanel[Dynamic[state_]]:=Panel[
+  geGraphics @ Dynamic @ state
+, FrameMargins -> 0, BaseStyle -> CacheGraphics->False
+]
+
+
+(* ::Subsection::Closed:: *)
 (*State*)
 
 
@@ -170,7 +462,7 @@ iGraphEditorPanel[Dynamic@state_] := EventHandler[
 (*state version*)
 
 
-$stateVersion = 2;
+$stateVersion = 3;
 (*It does not change unless the structure of state association is changed.
   That implies new geActions etc won't be compatible with old state *)
 
@@ -206,7 +498,7 @@ geStateVersionCheck[___] :=
 GraphFromEditorState[state_Association] := GraphFromEditorState[geStateVersionCheck @ state, $stateVersion];
 
 
-GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
+GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph, vertexNameLookup, annotations}
 , v = stateVertexList @ state
 
 ; e = stateEdgeList @ state
@@ -217,7 +509,18 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
   , Automatic
   ]
 
-; graph = Graph[ v, e, VertexCoordinates -> pos]
+; vertexNameLookup = stateVertexNamesRules @ state
+; annotations =  Lookup[ state, "Annotations", <||>] //
+    KeyMap[ Replace[#, vertexNameLookup, {-1}]& ] // 
+    Map[Normal] //
+    Normal 
+
+; graph = Graph[ v, e
+  , VertexCoordinates -> pos
+  , VertexStyle       -> stateVertexStyle @ state 
+  , EdgeStyle         -> stateEdgeStyle @ state 
+  , AnnotationRules   -> annotations
+  ]
 
 ; If[
     TrueQ @ state[ "IndexGraph"]
@@ -228,7 +531,7 @@ GraphFromEditorState[state_, $stateVersion] := Module[{v, e, pos, graph}
 ]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*to state*)
 
 
@@ -236,57 +539,164 @@ standardizeOption[VertexLabels][val_] := Replace[val, Automatic -> "Name"]
 standardizeOption[_][val_] := val
 
 
-GraphToEditorState[ opt:OptionsPattern[] ]:=GraphToEditorState @ Association[ Options @ IGGraphEditor, opt ]
+Protect@$temporaryVertexForPreservingGraphOptions;
 
-GraphToEditorState[ opts_Association ] := Module[{state}
-, state = <|
-      "vertex"         -> <||>
-    , "edge"           -> <||>
-    , "selectedVertex" -> Null
-    , "version"        -> $stateVersion
-    , optionsToConfig[opts]
-    , "vCounter"->0
-    , "eCounter" ->0
-    , "range" -> {{-1, 1}, {-1, 1}}
-    , "aspectRatio" -> 1
-    , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]
-  |>
+GraphToEditorState[ opt:OptionsPattern[] ]:=Module[{graphOptions, otherOptions}
+, graphOptions = FilterRules[Flatten@{opt}, Options @ Graph]
+; otherOptions = Complement[Flatten@{opt}, graphOptions]
 
-; state = stateSnapInit @ state
-; state
-]
-
-
-
-optionsToConfig[options_Association] := KeyMap[ToString] @ options
-
+; GraphToEditorState[
+    Graph[{$temporaryVertexForPreservingGraphOptions}, {}, graphOptions] (* empty graph does not preserve options *)
+  , otherOptions
+  ]
+]  
 
 
 GraphToEditorState[g_Graph ? supportedGraphQ, opt:OptionsPattern[]] := Module[
-  {state, v, e, pos }
-, v = VertexList[g]
-; pos = GraphEmbedding @ g
-; e = EdgeList[g]
+  {defaultOptions,options, graph,otherOptions, graphOptions,state}
+  
+, options = Normal @ <| Options@IGGraphEditor, opt |>
+; defaultOptions = IGGraphEditor // Options
+; graphOptions = FilterRules[Flatten@{opt}, Options @ Graph] (*// DeleteCases[VertexStyle|EdgeStyle -> _]*)
+; otherOptions = Complement[options, graphOptions]
 
-; state = GraphToEditorState[<| Options @ IGGraphEditor, opt |>]
+; graph = g
+; (AnnotationValue[graph, #] = #2 )& @@@ graphOptions
 
-; state["vertex"] = Association @ Map[ (#id -> #) & ] @ MapThread[createVertex, {v, pos}]
+; state = <|defaultOptions, options|> // KeyMap[ToString]
 
-; state["edge"]   = toStateEdges[state, g]
+; state = <|
+      state    
+    , "version"        -> $stateVersion
+    , "selectedVertex" -> Null
+    , "aspectRatio"    -> 1
+    , "editorMode"     -> "draw"
+    , "selectedObject" -> Null       
+  |>
+  
+; {state, graph} = stateEdgeTagsInit[state, graph ]  
 
-; state[ "vCounter"] = Length@v
-; state[ "eCounter"] = Length@e
-; state[ "DirectedEdges"] = Not @ UndirectedGraphQ @ g
+; state["vertexBaseStyle"] = propertyCommonValue[graph, VertexStyle, Lookup[defaultOptions, VertexStyle]]
+; state["edgeBaseStyle"] = propertyCommonValue[graph, EdgeStyle, Lookup[defaultOptions, EdgeStyle]]
 
-; geAction["UpdateRange", Dynamic @ state]
+  
+; state["GraphLayout"]   = Automatic    
 
+; state["DirectedEdges"] = Not @ UndirectedGraphQ @ graph
+; state["ImageSize"]     = toStateImageSize @ graph 
+
+; state = stateSnapInit @ state
+
+; state["vertex"] = toStateVertices[state, graph]
+; state["vCounter"] = Length @ state["vertex"]
+
+
+; state["edge"]   = toStateEdges[state, graph]
+; state["eCounter"] = Length @ state["edge"]
+
+; state["Annotations"] = toStateAnnotations[state, graph]
+
+; state = stateRangeInit @ state
+
+; state["history"] = createHistory[]
+
+; state["history"]["save", state]
 
 ; state
 ]
 
 
-(* ::Subsubsection:: *)
-(*state helpers*)
+(* ::Subsubsubsection::Closed:: *)
+(*stateEdgeTagsInit*)
+
+
+stateEdgeTagsInit[state_Association, graph_]:=Module[{newState = state, newGraph}
+, newState = state
+; newState["isEdgeTaggedGraph"] = EdgeTaggedGraphQ @ graph
+
+; If[ Not @  newState["isEdgeTaggedGraph"]
+  , Return[ {newState, graph}, Module]
+  ]
+  
+  (*dirty way to fill missing tags if exist, and fix duplicate tags*)  
+; newGraph = EdgeTaggedGraph @ graph 
+
+; newState["edgeTagsMax"] = Max @ Prepend[0] @ Cases[_Integer] @ EdgeTags @ newGraph 
+  
+; {newState, newGraph}    
+]
+
+(* ::Subsubsubsection::Closed:: *)
+(*toStateAnnotations*)
+
+toStateAnnotations[state_Association, graph_Graph] := Module[{annotations, vertexRules}
+
+, annotations = (AnnotationRules /. Options[graph] /. AnnotationRules -> {})
+
+; annotations = annotations // Association // Map[Association]
+
+; vertexRules = stateVertexRules @ state
+
+; annotations // KeyMap[ Replace[#, vertexRules, {-1}]& ]
+]
+
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*toStateImageSize*)
+
+
+toStateImageSize[graph_]:= Module[{fallBack}
+, fallBack = AutomaticOptions[ImageSize]
+; fallBack = ImageSize /. Options @ IGGraphEditor  // Replace[{ n_?NumericQ :> {n,n}, _ -> fallBack}]
+; propertyLookup[graph, ImageSize,  { n_?NumericQ :> {n,n}, _ -> fallBack} ] 
+]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*stateRangeInit*)
+
+
+stateRangeInit[state_]:=Module[{update, rangeProps}
+, update = <|
+    state
+  , "range" -> {{-1, 1}, {-1, 1}}
+  , "inRangeQ" -> RegionMember[ Rectangle[{-1,-1}, {1, 1}]  ]  
+  |>
+  
+; update["coordinateBounds"] = calculateCoordinateBounds @ update
+
+; rangeProps = calculateRangePropertiesIfNeeded[update]
+                    
+
+; If[ ! AssociationQ @ rangeProps
+  ,  Return[update, Module] 
+  ]
+
+; update = <|update, rangeProps|>
+
+; update[  "realVertexSize" ] = calculateVertexSize @ update
+
+; update
+
+]
+
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*stateSnapInit*)
+
+logAction[head_, state_, args___]:= With[
+  { indent = StringJoin @ ConstantArray["- ", $actionLevel] } 
+, Print[          
+    Row[{ 
+      indent
+    , Style[head, Bold]
+    , ":"
+    , args
+    }, BaseStyle->LineBreakWithin->False]
+  ]
+]
 
 
 stateSnapInit[state_Association] := Module[{newState = state }
@@ -294,17 +704,103 @@ stateSnapInit[state_Association] := Module[{newState = state }
 , newState["snap"] = newState["SnapToGrid"] =!= False
 
 ; If[
-    newState["snap"]
-  , newState["snapStep"] = stateGetAutomaticSnapStep @ newState
-  ; newState["vertex"] = <|#, "pos" -> Round[#pos, newState["snapStep"]] |>& /@ newState["vertex"]
-  ]
+    ! newState["snap"]
+  , Return @ newState
+  ]  
 
+; newState["snapStep"] = calculateSnapStep @ newState
+; newState["vertex"] = <|#, "pos" -> Round[#pos, newState["snapStep"]] |>& /@ newState["vertex"]
 ; newState
 ]
 
 
-stateGetAutomaticSnapStep[state_Association] :=
-  Ceiling[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #)/ $gridLinesCount] & @@@ state["range"]
+
+(* ::Subsection::Closed:: *)
+(*graphs helpers*)
+
+
+propertyLookup[graph_, prop_, rules_: {}]:= AnnotationValue[graph, prop] // Replace[rules]
+
+propertyCommonValue[graph_, prop_, default_:Automatic]:= With[
+  { lookup = propertyLookup[graph, prop, Except @ _List -> {}] // DeleteCases[ _Rule]}
+  
+, If[ MatchQ[lookup, {_}]
+  , First @ lookup
+  , default
+  ]   
+]
+
+propertyRulesValue[graph_, prop_]:=  propertyLookup[graph, prop, Except @ _List -> {}] // DeleteCases[ Except @ _Rule]
+
+
+
+(* ::Subsection::Closed:: *)
+(*state getters*)
+
+
+stateGraphEmbedding[state_]:= state[["vertex", All, "pos"]]
+
+
+stateVertexList[state_Association] := Values @ state[["vertex", All, "name"]]
+
+stateVertexRules[state_Association]:= (#name -> #id) & /@ Values @ state["vertex"]
+
+
+stateVertexNamesRules[state_Association]:= state[["vertex", All, "name"]]
+
+
+stateVertexStyle[state_] := Prepend[
+  state[["vertex"]] // Select[KeyExistsQ["styles"]] // Values // Map[#name -> #styles&]
+, state["vertexBaseStyle"]  
+]
+
+
+stateEdgeStyle[state_]:= Prepend[
+  state//Query[
+    "edge"
+  , Select[KeyExistsQ["styles"]] /* Values
+  , (#edge /. state[["vertex", All, "name"]]) -> #styles&
+  ]
+, state["edgeBaseStyle"]]
+
+
+stateEdgeList[state_Association] := Module[{vertexRules, edges}
+, vertexRules = stateVertexNamesRules @ state
+; If[ 
+    TrueQ @ state["isEdgeTaggedGraph"]
+  , state // Query["edge", Values, Append[#edge /. vertexRules, #tag] &]
+  , state // Query["edge", Values, (#edge /. vertexRules) &]
+  ]
+]
+
+
+stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"]
+
+
+(* ::Subsection::Closed:: *)
+(*state helpers*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*snaps*)
+
+
+calculateSnapStep[state_Association] := Module[  { count , range}
+, count = state["SnapDensity"] 
+; range = state["range"] 
+; Ceiling[#, .5]*10^#2 & @@ MantissaExponent[(#2 - #) / count] & @@@ range
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*range*)
+
+
+calculateCoordinateBounds[state_]:=CoordinateBounds[ stateGraphEmbedding @ state  ] /. {} -> {{0,1},{0,1}}  
+
+
+(* ::Subsubsubsection:: *)
+(*stateHandleNarrowRange*)
 
 
 stateHandleNarrowRange[state_Association] := Module[
@@ -327,37 +823,101 @@ stateHandleNarrowRange[state_Association] := Module[
 ]
 
 
-toStateEdges[state_Association, graph_] := Module[{ }
+(* ::Subsubsection::Closed:: *)
+(*vertices*)
+
+
+toStateVertices[state_Association, g_Graph]:=Module[{v, pos, labels, styles}
+, v = VertexList[g]
+; If[ v === {$temporaryVertexForPreservingGraphOptions}, Return[<||>]]
+
+; pos = GraphEmbedding @ g
+; v = MapThread[createVertex, {v, pos}]
+
+; v = Association[ #name -> # & /@ v ]
+
+; styles = propertyRulesValue[g, VertexStyle]
+; (v[#, "styles"] = #2) & @@@ styles
+
+; labels = propertyRulesValue[g, VertexLabels] 
+; (v[#, "labels"] = #2) & @@@ labels
+
+; v = Association @ Map[ (#id -> #) & ] @ Values @ v
+; v
+]
+
+
+createVertex[name_, pos:{_, _}, styles_:{}, labels_:{}]:= <|"name" -> name, "id" -> CreateUUID[],  "pos" -> pos|>
+
+
+(* ::Subsubsection::Closed:: *)
+(*edges*)
+
+
+toStateEdges[state_Association, graph_] := Module[{labels,styles,replaceVertexNames,vertexRules,edges }
 , edges = EdgeList @ graph
-; vertexRules = (#name -> #id) & /@ Values @ state["vertex"]
-; edges = Replace[edges, vertexRules , {2}]
-; Association @ Map[ (#id -> #) & ] @ MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
+; vertexRules = stateVertexRules @ state
+
+; replaceVertexNames = Replace[#, vertexRules , {2}]&
+
+; edges = MapAt[# /. vertexRules &, edges, {All, 1;;2}]
+
+; edges = MapIndexed[createEdge["e"<>ToString@First@#2, #]&, edges]
+
+; edges = Association[ #edge -> # & /@ edges ]
+
+; styles = propertyRulesValue[graph, EdgeStyle]  // Association // KeyMap[ Replace[#, vertexRules , {1}]& ]
+; (edges[#, "styles"] = #2) & @@@ Normal @ styles
+
+; labels = propertyRulesValue[graph, EdgeLabels] // Association //  KeyMap[ Replace[#, vertexRules , {1}]& ]
+; (edges[#, "labels"] = #2) & @@@ Normal @ labels
+
+; edges = Association @ Map[ (#id -> #) & ] @ Values @ edges
 
 ]
 
 
-stateVertexList[state_Association] := Values @ state[["vertex", All, "name"]]
-
-
-stateEdgeList[state_Association] := state //
- Query["edge", Values, ((#type /. # /. state[["vertex", All, "name"]])) &]
-
-
-stateGraphEmbedding[state_Association] := state // Query["vertex", Values, "pos"]
-
-
 stateHasSelectedVertex[state_Association] := StringQ @ state["selectedVertex"]
 
+(*TODO: make it persist and update on relevant actions*)
+stateHasCurvedEdges[state_Association]:= Module[{edgeList, length}
 
-stateHasCurvedEdges[state_Association]:= state[ "DirectedEdges"] 
-(*TODO: obviously this needs to be more precise, this is a first approximation, at least until we support multigraphs*)
+, edgeList = state // Query["edge", Values, "edge"]
+
+; If[ MemberQ[ edgeList, _[ id_, id_ ] ], Return @ True]
+
+  (*are there multiple edges between the same pair of vertices? *)
+; state["eCounter"] != Length @ DeleteDuplicates[Sort /@ List @@@ edgeList]
+
+]
+
+
+createEdge[eId_String, edge:(e_[v1_String,  v2_String, tag_:"MISSING_TAG"])] :=  <|
+    "id"    -> eId
+  , "edge" -> toStandardizedEdgeHead[e][v1,  v2]    
+  , "shape" -> Automatic
+  , If[ tag === "MISSING_TAG"
+    , <||>
+    , "tag" -> tag
+    ]
+  |>
+
+
+
+toStandardizedEdgeHead[DirectedEdge|Rule] = DirectedEdge
+toStandardizedEdgeHead[UndirectedEdge|TwoWayRule] = UndirectedEdge
+toStandardizedEdgeHead::argpatt = "Unknown edge head: ``"
+toStandardizedEdgeHead[ h_]:=Message[toStandardizedEdgeHead::argpatt, h]
+
+
+Optional
 
 
 (* ::Subsection:: *)
 (*graphics*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*geGraphics*)
 
 
@@ -367,48 +927,95 @@ geGraphics[Dynamic @ state_ ] := DynamicModule[
     Pane[
       DynamicWrapper[
         Graphics[
-          DynamicNamespace @ {
-            geHighlightsPrimitives @ Dynamic @ state
-          , Gray
-          , geEdges @ Dynamic @ state
-          , geVertices @ Dynamic @ state
-          }
+          DynamicNamespace @ geGraphicsPrimitives @ Dynamic @ state 
         , PlotRange -> Dynamic @ range
         , ImageSize -> Dynamic @ graphicsSize 
+        , Prolog    -> state["Prolog"]
         ]
       , range = state[ "range"]
       ; graphicsSize = size = state["ImageSize"]
       , TrackedSymbols :> {state}
       ]
     , AppearanceElements -> {"ResizeArea"}  
-    , ImageSize -> Dynamic[
-        size
-      , (size = {1, 1/state["aspectRatio"]} * #[[1]] )&
-      ]
+    , ImageSize -> Dynamic[size]
     ]
-  , "MouseUp" :> (state["ImageSize"] = size)
+  , {
+      "MouseUp" :> If[ size != state["ImageSize"],  geAction["PaneResized", Dynamic @ state, size] ]      
+    , "MouseClicked" :> ( 
+        geAction["MouseClicked", Dynamic @ state, CurrentValue[{"MousePosition", "Graphics"}]] 
+      )    
+  }
   , PassEventsDown -> True
   ]
 
-] (* PlotRange->Dynamic@state["config... updates at any unrelated event, vertex dragging included,
+] (* PlotRange->Dynamic@state["range"] updates at any unrelated event, vertex dragging included,
      this DynamicModule @ DynamicWrapper is here to address a bug. Why does it help? Because WRI.
    *)
+
+
+(* ::Subsubsection::Closed:: *)
+(*geGraphicsPrimitives*)
+
+
+geGraphicsPrimitives[ Dynamic @ state_ ]:= {
+            geSnapGrid @ Dynamic @ state
+            
+          , geHighlightsPrimitives @ Dynamic @ state
+          
+          , geSelectedObjectPrimitives @ Dynamic @ state
+          
+          , geEdges @ Dynamic @ state            
+          
+          , geVertices @ Dynamic @ state            
+          
+          , sidePanelToggler @ Dynamic @ state
+          }
+
+
+sidePanelToggler[ Dynamic @ state_ ]:= Inset[
+              Button[
+                Style["\[Congruent]",18]
+              , state["ShowSidePanel"] = !state["ShowSidePanel"]
+              , ContentPadding->False, Appearance->"FramedPalette"
+              ]
+            , {Right, Top}, {Right, Top}
+            ]
 
 
 (* ::Subsubsection::Closed:: *)
 (*vertex*)
 
 
-geVertices[Dynamic @ state_] := PDynamic[
-dynamicLog["vertices"];
-Table[
-  geVertexShapeFunction[Dynamic@state, state[["vertex", pos ]]  ]
-, {pos, state["vCounter"] }
-]
-]
+geVertices[Dynamic @ state_] := {
+
+  PDynamic @ Directive @ state["vertexBaseStyle"]
+  
+, DynamicModule[{vertexMoved}
+  , DynamicWrapper[
+      PDynamic[
+        dynamicLog["vertices"]
+      ; Table[
+          geVertexShapeFunction[Dynamic@state, state[["vertex", pos ]] , Dynamic @ vertexMoved ]
+        , {pos, state["vCounter"] }
+        ]
+      ]
+    , If[ ListQ @ vertexMoved
+      , geAction["UpdateVertexPosition", Dynamic @ state, ##& @@ vertexMoved] 
+      ; vertexMoved=Null
+      ]
+    , TrackedSymbols :> { vertexMoved }
+    ]
+  ]
+}
+
+(* This should've been Dynamic @ Table only but I needed to add this 'listener' because 
+   geAction comming from the ScheduledTask itself breaks DynamicModule variable system and
+   DynamicModuleBox values wouldn't be updated resulting in the vertex possition being out of sync
+   after move up... Amd we need scheduled tasks becasue of other bug :heart:
+*)
 
 
-geVertexShapeFunction[Dynamic @ state_, v_Association] :=
+geVertexShapeFunction[Dynamic @ state_, v_Association, Dynamic @ vertexMoved_] :=
 With[ {
   nef = $vertexEdgeThickness
 , aef = $hoverVertexEdgeThickness
@@ -417,20 +1024,23 @@ With[ {
 DynamicModule[
   {x = v@"pos", task},
 Module[
-  {graphics}
+  {graphics, wrapper}
 
-, graphics = { {
-    EdgeForm @ AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
+, wrapper = Check[getVertexWrapperFunction[ state, v ], #&]
+
+; graphics = { {
+    Directive @ Lookup[v, "styles", {}]
+  , EdgeForm @ AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
   , DynamicName[
-      Disk[Dynamic[x], state["realVertexSize"]]
+      wrapper @ Disk[Dynamic[x], PDynamic@state["realVertexSize"]]
     , v["id"]
     ]
   }
-  , If[ (*TODO, this could be a separate collection, like vertex/edges, so it could be toggled 
+  , PDynamic@If[ (*TODO, this could be a separate collection, like vertex/edges, so it could be toggled 
           with lower overhead *)
       state["VertexLabels"] === "Name"
-    , Inset[v["name"], Offset[ {12, 12}, DynamicLocation[v["id"]]] ]
-    , Nothing
+    , Inset[v["name"], DynamicLocation@v["id"] + state["realVertexSize"]/1.2, {Left, Bottom} ]
+    , {}
     ]
   }
 
@@ -438,7 +1048,7 @@ Module[
 ; EventHandler[
     graphics,
     { "MouseClicked" :> (RemoveScheduledTask @ task; geAction["VertexClicked", Dynamic @ state, v] )
-    , "MouseUp"      :> (task = RunScheduledTask[ geAction["UpdateVertexPosition", Dynamic @ state, v["id"], x] , {0.1}])
+    , "MouseUp"      :> (task = RunScheduledTask[ vertexMoved = {v["id"], x} , {0.1}])
     , If[ state[ "snap"]
       , "MouseDragged" :> (x = Round[CurrentValue[{"MousePosition", "Graphics"}], step])
       , "MouseDragged" :> FEPrivate`Set[x , FrontEnd`CurrentValue[{"MousePosition", "Graphics"}] ]
@@ -447,8 +1057,56 @@ Module[
     PassEventsUp -> False
   ]
       (*ScheduledTask stuff is here to prevent MouseUp firing if MouseClicked is going to happen*)
-      (*I'd prefer clicked to be Queued but if I put it in an inner queued EventHandler then I can't block MouseUp from fireing*)
+      (*I'd prefer clicked to be Queued but if I put it in an inner queued EventHandler 
+        then I can't block MouseUp from firing*)
 ]]]
+
+$renderedWrappers = { Tooltip, StatusArea }
+
+getVertexWrapperFunction[state_Association, v_Association] := Module[{rules}
+
+, rules = state["Annotations"] @ v["id"]
+
+; annotationsToWrapperFunction @ rules
+
+]
+
+
+getEdgeWrapperFunction[state_Association, e_Association] := Module[{rules }
+
+, rules = state["Annotations"] @ e["edge"]
+
+; annotationsToWrapperFunction @ rules
+
+]
+
+annotationsToWrapperFunction[ _Missing ] = #&
+
+annotationsToWrapperFunction[ rules_ ]:= Module[{applicableRules}
+
+, applicableRules = KeySelect[rules, MemberQ[$renderedWrappers, #]& ]
+
+; If[ Length[applicableRules] == 0, Return[ #&, Module] ]
+
+; foldAnnotations @ applicableRules  
+]
+
+foldAnnotations[objAnnotations_Association]:= Module[{ entries, body}
+
+, entries = objAnnotations // KeyValueMap[List] // Reverse
+
+; body = Fold[
+    constructAnnotationFunction 
+  , \[FormalX]
+  , entries (* { {head, arg}...}*)
+  ]
+
+; Function @@ { \[FormalX], body }
+]
+
+constructAnnotationFunction[arg_, {Button, HoldComplete[rest___]}]:= Button[arg, rest]
+constructAnnotationFunction[arg_, {head_, rest_}]:= head[arg, rest]
+
 
 
 
@@ -456,34 +1114,43 @@ Module[
 (*edges*)
 
 
-geEdges[Dynamic @ state_] := PDynamic[
-dynamicLog["edges"];
-Table[
-  geEdgeShapeFunction[ Dynamic@state,  state[["edge"]][[ pos ]] ]
-, {pos, state["eCounter"]}
-]
-]
+geEdges[Dynamic @ state_] := {
+  PDynamic @ Directive @  state["edgeBaseStyle"]  
+, PDynamic[
+    dynamicLog["edges"];
+    Table[
+      geEdgeShapeFunction[ Dynamic@state,  state[["edge"]][[ pos ]] ]
+    , {pos, state["eCounter"]}
+    ]
+  ]
+}
 
 
-geEdgeShapeFunction[Dynamic @ state_, e_Association] := EventHandler[
-    edgeHoverWrapper @ edgeToPrimitive @ e      
+geEdgeShapeFunction[Dynamic @ state_, e_Association] := Module[{wrapper, styles}
+
+, wrapper =  Check[getEdgeWrapperFunction[ state, e ], #&]
+; styles = Directive @ Lookup[e, "styles", {}]
+
+; EventHandler[
+    { styles, wrapper @ edgeHoverWrapper @ edgeToPrimitive @ e   }
   , { "MouseClicked" :> (geAction["EdgeClicked", Dynamic @ state, e]) }
   , PassEventsUp -> False (* edgeclicked should not be followed by outer mouseclicked*)
   ]
-
+]
 
 edgeHoverWrapper[primitive_]:=  With[
   {
     nef = $edgeThickness,
     aef = $activeEdgeThickness
   },{
+  
   AbsoluteThickness @  Dynamic[ FEPrivate`If[  FrontEnd`CurrentValue["MouseOver"], aef, nef ] ]
 , primitive
 }
 ]
 
 
-If[ $VersionNumber > 12
+If[ 12 < $VersionNumber < 13.2
 , edgeHoverWrapper[primitive_Arrow]:=  Mouseover[
     {AbsoluteThickness @ $edgeThickness, primitive},
     {AbsoluteThickness @ $activeEdgeThickness, primitive}
@@ -491,30 +1158,66 @@ If[ $VersionNumber > 12
 ]
 
 
-edgeToPrimitive[e_] := If[
-  e["shape"] =!= Automatic
-, e["shape"]
-, edgeTypeToPrimitive[e["type"]
-][
-    DynamicLocation[e["v1"], Automatic],
-    DynamicLocation[e["v2"], Automatic]
+edgeToPrimitive[e_] := Module[{shapeFunction}
+
+, shapeFunction = If[ e["shape"] =!= Automatic
+  , Return[ 
+      e["shape"] /. Arrowheads[0.] -> Arrowheads[0.00001] (*patch #2748 :heart: *) 
+    , Module 
+    ]
   ]
-]
+
+; edgeTypeToPrimitive[ e["edge"] ][
+    DynamicLocation[e[["edge", 1]], Automatic],
+    DynamicLocation[e[["edge", 2]], Automatic]
+  ]
+]  
 
 
-edgeTypeToPrimitive["v1"->"v2"] = Arrow[{#,#2}]&
-edgeTypeToPrimitive["v2"->"v1"] = Arrow[{#2,#}]&
-edgeTypeToPrimitive[UndirectedEdge["v1", "v2"]] = Line[{#,#2}]&
+edgeTypeToPrimitive[(Rule|DirectedEdge)[_,_, ___]]=Arrow[{#,#2}]&
+edgeTypeToPrimitive[_[_, _, ___]]=Line[{#,#2}]&
+
 
 
 (* ::Subsubsection::Closed:: *)
-(*selected*)
+(*snap grid*)
+
+
+geSnapGrid[Dynamic @ state_] := With[{ selV := state["selectedVertex"] }
+, { $potentialEdgeStyle,
+    PDynamic[
+      dynamicLog["snap grid"];
+      state["range"];
+      If[
+        TrueQ @ state["ShowSnapGrid"] && Not @ MissingQ @ state["snapStep"] 
+      , snapGridPrimitives @ state
+      , {}
+      ]
+    ]
+}
+]
+
+snapGridPrimitives[state_]:= {
+  AbsolutePointSize[0.5], Gray,
+  Point @ Tuples @ MapThread[
+    Range[
+      Floor[#[[1]], #2],
+      Ceiling[#[[2]], #2],
+      #2
+      ] &
+    , {state["range"], state["snapStep"]}
+ ]
+}
+
+
+(* ::Subsubsection::Closed:: *)
+(*highlight*)
 
 
 geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex"] }
 , { $potentialEdgeStyle,
     PDynamic[
-      dynamicLog["selection"];
+      dynamicLog["highlight"];
       If[
         stateHasSelectedVertex @ state
       , {  
@@ -534,12 +1237,194 @@ geHighlightsPrimitives[Dynamic @ state_] := With[{ selV := state["selectedVertex
 ]
 
 
+(* ::Subsubsection::Closed:: *)
+(*selected*)
+
+
+geSelectedObjectPrimitives[Dynamic @ state_] := With[{ selO := state["selectedObject"] }
+, { 
+    PDynamic[
+      dynamicLog["selection"];
+      Which[
+        Not @ AssociationQ @ selO, {}
+      , KeyExistsQ["edge"] @ selO, { AbsoluteThickness @ $activeEdgeThickness, edgeToPrimitive @ selO}
+      , True
+      , {  
+          EdgeForm @ AbsoluteThickness[ 3 * $hoverVertexEdgeThickness ]
+        , Disk[DynamicLocation[selO["id"]], state[ "realVertexSize"]]         
+        }      
+      ]
+    ]
+}
+]
+
+
 (* ::Subsection:: *)
-(*UI Actions*)
+(*StyleDirectiveField*)
+
+
+StyleDirectiveField[
+  Dynamic[var_, submitFunction_:Automatic]
+, iconFunction_:Function[Graphics[{#, Disk[]}, ImageSize->20]]
+, previewFunction_:Function[Graphics[{#, Disk[]}, ImageSize->50]]
+]:=DynamicModule[
+  { styleBoxes, styleExpr , updateStyle, submit, launchDialog}
+  
+, (*styleBoxes = ToString[var, InputForm] // If[StringStartsQ["Directive"]@#, StringTake[#, {11, -2}], #]& *)
+  styleBoxes = ToBoxes @ var
+; styleExpr = var
+
+; updateStyle[boxes_]:= styleBoxes = ToBoxes @ (styleExpr = ToExpression @ boxes)
+
+; submit[value_]:= (
+    If[submitFunction === Automatic, var = value, submitFunction @ value]
+  ; NotebookClose[]
+  ); 
+
+
+
+; launchDialog[]:=CreateDialog[
+DynamicModule[{}, Column[{
+    
+    TextCell@"For quick implementation and flexibility you can edit your directives directly as code. \nEdit + [Enter] to preview changes."
+  , InputField[
+	      Dynamic[styleBoxes, {Automatic, updateStyle[#]&} ]
+	    , Boxes
+	    , ImageSize -> {Full, Automatic}
+	    , BaseStyle->{"Notebook","Input", 12}
+	    ]  
+  , Style["Preview:"]
+  , Pane[
+      previewFunction @ Dynamic @ styleExpr
+      , Full, Alignment->Center
+    ]
+  , Style["Examples: "]  
+  , Button[
+      ExpressionCell[RawBoxes@"Directive[Red, EdgeForm @ {Thick, Blue}]", "Input"]
+    , updateStyle @  "Directive[Red, EdgeForm @ {Thick, Blue}]"
+    , Appearance->"Palette", ImageSize->Automatic
+    ]
+  , Pane[
+  
+      Row[{
+        Button["Confirm", submit[styleExpr], Method->"Queued", ImageSize -> Automatic ],
+        Button["Cancel", NotebookClose[], Method->"Queued", ImageSize -> Automatic ]
+        }]
+    , Full, Alignment->Right
+    ]
+  
+  }, Spacings->.5, BaseStyle->{12, LineIndent->0, TextJustification->1}]
+  , InheritScope->True],
+  Modal->True,
+  WindowTitle->"EditStyles",
+  WindowSize->{400, 300},  
+  WindowFrameElements->All
+  ]
+  
+; Button[ 
+    iconFunction @ Dynamic @ var
+  , launchDialog[]
+  , Method->"Queued"
+  , BaseStyle->{ContentPadding->False, LineBreakWithin->False}
+  , Alignment->Left 
+  , Appearance->"Palette"
+  , ImageSize -> Automatic
+  ]
+]
+
+
+(* ::Subsection::Closed:: *)
+(*Events*)
 
 
 (* ::Subsubsection::Closed:: *)
-(*$geDebug*)
+(*PaneResized*)
+
+
+geAction["PaneResized", Dynamic @ state_, size_] := (
+  
+    state["ImageSize"] = size
+  ; geAction["UpdateRange", Dynamic @ state, True]  
+)
+
+
+(* ::Subsubsection::Closed:: *)
+(*MouseClicked*)
+
+
+geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
+
+, If[ 
+    state["editorMode"] === "edit"
+  , Return @ geAction["UnselectObject", Dynamic @ state]
+  ]
+
+; If[
+    Not @ CurrentValue["AltKey"]
+  , geAction["Unselect", Dynamic @ state]
+  ; Return[Null, Module]
+  ]
+
+; newV = geAction["AddVertex", Dynamic @ state, pos ]
+
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*VertexClicked*)
+
+
+geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
+  {  selectedV = state["selectedVertex"], clickedV = v["id"]}  
+, Module[
+  {wasAnySelected, wasThisSelected}  
+
+, If[ state["editorMode"] === "edit"
+  , Return @ geAction["SelectObject", Dynamic @ state, v]
+  ]
+
+; wasAnySelected  = stateHasSelectedVertex @ state
+; wasThisSelected = selectedV === clickedV
+
+; If[ TrueQ @ CurrentValue["AltKey"] && ! wasAnySelected
+  , Throw @ geAction["RemoveVertex", Dynamic @ state, v]
+  ]
+
+(*; If[ wasThisSelected
+  , Throw @ geAction["Unselect", Dynamic @ state]
+  ]*)
+
+; If[  wasAnySelected
+  , Throw @ geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]
+  ]
+
+; geAction["Select", Dynamic @ state, clickedV]
+
+]]
+
+
+(* ::Subsubsection::Closed:: *)
+(*EdgeClicked*)
+
+
+geAction["EdgeClicked", Dynamic @ state_, edge_Association] := Module[{}
+, If[ state["editorMode"] === "edit"
+  , Return @ geAction["SelectObject", Dynamic @ state, edge]
+  ]
+
+; If[
+    TrueQ @ CurrentValue["AltKey"]
+  , geAction["RemoveEdge", Dynamic@state, edge]
+  ]
+]
+
+
+(* ::Subsection:: *)
+(*Actions*)
+
+
+(* ::Subsubsection::Closed:: *)
+(*Logging decorator*)
 
 
 (* a debug feature, enabled by default till we have a first version*)
@@ -551,26 +1436,28 @@ If[
 , dynamicLog[msg_]:=Print[Style[Row[{"Updating :", msg}],Red]]
 ]
 
-If[
-  TrueQ @ $geDebug
-
-, geAction[args___] := (Beep[]; Print @ Framed @ InputForm @ {args})
-
-; Module[{$inside = False}
+Module[{$inside = False}
   , geAction /: SetDelayed[geAction[args___], rhs_] /; !TrueQ[$inside] := Block[
       {$inside = True}
     , geAction[a:PatternSequence[args]]:=Internal`InheritedBlock[{ $actionLevel = $actionLevel + 1}
       , Module[{result, start = AbsoluteTime[]}
         , logAction[a]
         ; result = rhs
-        ; If[$logTimings, Print[StringJoin@ConstantArray["  ", $actionLevel], "timing: ", AbsoluteTime[] - start, "[s]"]]
+        ; logTimingFrom[start]
         ; result  
         ]      
       ]
     ]
   ]
+
+If[ 
+  TrueQ @ $logTimings
+, logTimingFrom[start_]:= Print[StringJoin@ConstantArray["  ", $actionLevel], "timing: ", AbsoluteTime[] - start, "[s]"]
 ]
 
+If[
+  TrueQ @ $geDebug 
+  ,
 logAction[head_, state_, args___]:= With[
   { indent = StringJoin @ ConstantArray["- ", $actionLevel] } 
 , Print[          
@@ -582,14 +1469,145 @@ logAction[head_, state_, args___]:= With[
     }, BaseStyle->LineBreakWithin->False]
   ]
 ]
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*history hanlder*)
+
+
+createHistory[config_:<||>]:=Module[{
+    history, maxLength = Lookup[config,"maxLength",10], undoStack={}, redoStack={},
+    canUndo, canRedo, currentState
+  }
+, canUndo:=Length @ undoStack >= 2
+; canRedo:=Length@redoStack>0
+; currentState:=undoStack[[1]]
+
+; history["canUndo", f_:(#&)]:= f @ canUndo
+; history["canRedo", f_:(#&)]:= f @ canRedo
+
+; history["save",state_]:=(
+    undoStack = Take[
+      Prepend[undoStack,state],
+      UpTo[maxLength]
+    ]
+  ; redoStack = {}
+  ; currentState
+  )
+  
+; history["undo"]:=Module[{lastState}
+  , If[!canUndo,Return[$Failed,Module]]
+  
+  ; {lastState ,undoStack}={First@undoStack,Rest@undoStack}
+  ; PrependTo[redoStack, lastState]
+  
+  ; currentState
+  ]
+  
+; history["redo"]:=Module[{state}
+  , If[!canRedo,Return[$Failed,Module]]
+  
+  ; {state ,redoStack}={First@redoStack,Rest@redoStack}
+  ; PrependTo[undoStack, state]
+  
+  ; currentState
+  ]
+  
+; history
+]
+
+
+
+(* ::Subsubsection::Closed:: *)
+(*Undo/Redo*)
+
+
+geAction["SaveState", Dynamic @ state_]:=  state["history"]["save", state]
+
+
+
+saveStateDecorator /: 
+SetDelayed[
+  saveStateDecorator @ geAction[name_, Dynamic[state_], args___]
+, rhs_
+]:=
+SetDelayed[ 
+  geAction[name, Dynamic[s:state], args]
+, # & [ 
+    rhs
+  , If[ $actionLevel == 0,  geAction["SaveState", Dynamic[s]]]
+  ]
+] 
+
+
+geAction["Undo", Dynamic @ state_ ]:= Module[{ newState }
+, newState = state["history"] @ "undo"
+; If[ Not @ AssociationQ @ newState, Return[Beep[], Module]]
+; geAction["RestoreState", Dynamic @ state, newState]
+]
+
+
+geAction["Redo", Dynamic @ state_ ]:= Module[{ newState }
+, newState = state["history"] @ "redo"
+; If[ Not @ AssociationQ @ newState, Return[Beep[], Module]]
+
+; geAction["RestoreState", Dynamic @ state, newState]  
+]
+
+
+geAction["RestoreState", Dynamic@state_, newState_]:= Module[{}
+, KeyValueMap[ 
+    (state[#] = #2 )& 
+  , KeyDrop[{"ShowSidePanel", "editorMode"}] @ newState 
+  ]
+  
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["vCounter"]]  
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["eCounter"]]
+]
+
+
+(* ::Subsubsection::Closed:: *)
+(*SetEditorMode*)
+
+
+geAction["SetEditorMode", Dynamic @ state_, value:"draw"|"edit"]:=(
+  If[
+    value === "draw"
+  , geAction["UnselectObject", Dynamic @ state]
+  , geAction["Unselect", Dynamic @ state]
+  ]
+; state["editorMode"] = value
+)
+
+
+(* ::Subsubsection::Closed:: *)
+(*Annotate: SelectObject / UnselectObject*)
+
+
+geAction["SelectObject", Dynamic @ state_, v_Association]:= state["selectedObject"] = v
+
+geAction["UnselectObject", Dynamic @ state_]:= state["selectedObject"] = Null
+
+
+(* ::Subsubsection::Closed:: *)
+(*SetProperty*)
+
+
+saveStateDecorator @ 
+geAction["SetProperty", Dynamic@state_, prop_String, value_]:= (
+  state[prop] = value
+)
 
 
 (* ::Subsubsection::Closed:: *)
 (*UpdateVertexPosition*)
 
 
+saveStateDecorator @ 
 geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
   state["vertex", vId, "pos"] = pos
+; state["GraphLayout"] = Automatic  
 ; If[
     ! state["inRangeQ"] @ pos
   , geAction["UpdateRange", Dynamic @ state]
@@ -598,28 +1616,111 @@ geAction["UpdateVertexPosition", Dynamic @ state_, vId_String, pos: {_, _}] := (
 )
 
 
+
+(* ::Subsubsection::Closed:: *)
+(*UpdateSnapState*)
+
+
+saveStateDecorator @ 
+geAction["UpdateSnapState", Dynamic @ state_ ] := Module[{modified}
+, modified = stateSnapInit @ state 
+; state["snap"] = modified["snap"]
+; state["snapStep"] = modified["snapStep"]
+; If[ 
+    state["snap"]
+  , state["vertex"] = modified["vertex"]  
+  , state["ShowSnapGrid"] = False
+  ]
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["vCounter"]]  
+]
+
+
+
+
 (* ::Subsubsection::Closed:: *)
 (*UpdateRange*)
 
 
-geAction["UpdateRange", Dynamic @ state_] := Module[
-  {newBounds, vs }
-
-, embedding = state // Query["vertex", All, "pos"]
-; If[ Length[embedding ] < 1, Return[False, Module]]
-
-; vs = vertexSizeMultiplier @ state[ "VertexSize"]
-; newBounds = handleDegeneratedRange @ CoordinateBounds[ embedding, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
+(* bounds      = {{x1,x2}, {y1, y2}} = (plot)range*)
+(* boundig box = {{x1,y1}, {x2, y2}}*)
+saveStateDecorator @ 
+geAction["UpdateRange", Dynamic @ state_, force_:False] := Module[
+  {update,  bounds }
 
 
-; state[ "range"] = newBounds
-; state = stateHandleNarrowRange @ state
+(*embedding = state // Query["vertex", All, "pos"]
+; If[ Length[embedding ] < 1, Return[False, Module]]*)
 
-; state[  "aspectRatio"] = #/#2& @@ (#2-#& @@@ state[ "range"])
-; state[  "ImageSize" ] = {1, 1/state[  "aspectRatio"]} * If[ListQ@#, First@#,# /. Automatic -> 300]& @ state[ "ImageSize"] 
-; state[  "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[  "range"] ]
-; geAction["UpdateVertexSize", Dynamic @ state]
+, update = calculateRangePropertiesIfNeeded[state, force]
+; If[ ! AssociationQ @ update,  Return[False, Module] ]
+
+; update // KeyValueMap[(state[#] = #2) & ]
+
+; geAction["UpdateVertexSize", Dynamic @ state] 
 ]
+
+
+calculateRangePropertiesIfNeeded[state_, force_:False]:=Module[{bounds, update = <||>}
+, bounds = calculateMinimalBounds @ state 
+
+; If[ ! force && AllTrue[ Transpose @ bounds, state["inRangeQ"]]
+  ,  Return[False, Module]
+  ]
+
+; update["range"] = adjustRangeToImageSize[ bounds, state["ImageSize"] ]
+
+; update[  "inRangeQ" ] = RegionMember[ Rectangle @@ Transpose@ state[  "range"] ]
+
+; update
+]
+
+
+calculateMinimalBounds[state_]:= Module[{bounds}
+  , bounds = calculateCoordinateBounds @ state
+  ; handleDegeneratedRange @ respectVertexSize[ 
+      bounds, state["VertexSize"] 
+  ]
+]
+
+
+(* I don't like when UI's aspect ratio changes unless it was done explicitly by draggin Pane's resize control*)
+(* So we need to pad vertically or horizontally the minimal range in order to match ImageSize aspect ratio.*)
+
+adjustRangeToImageSize[ bounds_, size_?NumericQ]:= adjustRangeToImageSize[ bounds, {size, size}]
+
+adjustRangeToImageSize[ bounds: {{x1_, x2_}, {y1_, y2_}}, size: {w_, h_}]:= Module[
+  {rangeRatio, sizeRatio, newWidth, newHeight, centerWidth, centerHeigth, x1p, x2p, y1p, y2p}
+
+, rangeRatio = (y2-y1)/(x2-x1) (*degenerate case should be handled before*)
+; sizeRatio = h/w
+; If[ 
+    sizeRatio < rangeRatio (*pad horizontally*)
+
+  , newWidth = w/h (y2-y1)
+  ; centerWidth = .5 (x1+x2)
+  ; x1p = centerWidth - .5 newWidth
+  ; x2p = centerWidth + .5 newWidth
+  ; {y1p, y2p} = {y1, y2}
+
+  , newHeight = h/w (x2-x1)
+  ; centerHeigth = .5 (y2+y1)
+  ; y1p = centerHeigth - .5 newHeight
+  ; y2p = centerHeigth + .5 newHeight
+  ; {x1p, x2p} = {x1, x2}
+  ]
+  (* I guess 5y ago I could write a one line vector calculation but now...*)
+; {rangeRatio, sizeRatio, newWidth, newHeight, centerWidth, centerHeigth, x1p, x2p, y1p, y2p}
+  
+; {{x1p, x2p}, {y1p, y2p}}    
+
+]
+
+
+respectVertexSize[bounds_, vertexSize_]:=With[
+  { vs =  vertexSizeMultiplier @ vertexSize }
+, CoordinateBounds[ Transpose @ bounds, Scaled[ 2.5 Max[vs, 0.05 ] ] ]
+]
+
 
 handleDegeneratedRange[range : {{xmin_, xmax_}, {ymin_, ymax_}}] := Module[{}
 , If[ xmin != xmax && ymin != ymax
@@ -637,13 +1738,20 @@ handleDegeneratedRange[range : {{xmin_, xmax_}, {ymin_, ymax_}}] := Module[{}
 ]
 
 
-geAction["UpdateVertexSize", _ @ state_ ] := With[{ (* _ @ for interpretation bug fix *)
+(* ::Subsubsection::Closed:: *)
+(*UpdateVertexSize*)
+
+
+geAction["UpdateVertexSize", _ @ state_ ] := state[  "realVertexSize" ] = calculateVertexSize @ state
+
+
+calculateVertexSize[state_]:=With[{ (* _ @ for interpretation bug fix *)
   boundingBox = Transpose @ state[ "range"]
 , sizeMultiplier = vertexSizeMultiplier @ state[ "VertexSize"]
 }
-, state[  "realVertexSize" ] = Norm[ boundingBox ] * sizeMultiplier
-
+, Norm[ boundingBox ] * sizeMultiplier
 ]
+
 
 vertexSizeMultiplier[vs_?NumericQ] := vs;
 vertexSizeMultiplier[vs_] := vs /. {
@@ -654,58 +1762,6 @@ vertexSizeMultiplier[vs_] := vs /. {
 } /. Except[_?NumericQ] -> 0.05
 
 
-(* ::Subsubsection::Closed:: *)
-(*MouseClicked*)
-
-
-geAction["MouseClicked", Dynamic @ state_ , pos_] := Module[{newV}
-
-, If[
-    Not @ CurrentValue["AltKey"]
-  , geAction["Unselect", Dynamic @ state]
-  ; Return[Null, Module]
-  ]
-
-; newV = geAction["AddVertex", Dynamic @ state, pos ]
-
-]
-
-
-(* ::Subsubsection::Closed:: *)
-(*VertexClicked*)
-
-
-geAction["VertexClicked", Dynamic @ state_, v_Association] := Catch @ With[
-  {  selectedV = state["selectedVertex"], clickedV = v["id"]}
-
-, wasAnySelected  = stateHasSelectedVertex @ state
-; wasThisSelected = selectedV === clickedV
-
-; If[ TrueQ @ CurrentValue["AltKey"] && ! wasAnySelected
-  , Throw @ geAction["RemoveVertex", Dynamic @ state, v]
-  ]
-
-; If[ wasThisSelected
-  , Throw @ geAction["Unselect", Dynamic @ state]
-  ]
-
-; If[  wasAnySelected
-  , Throw @ geAction["CreateEdge", Dynamic @ state, selectedV, clickedV]
-  ]
-
-; geAction["Select", Dynamic @ state, clickedV]
-
-]
-
-
-(* ::Subsubsection::Closed:: *)
-(*EdgeClicked*)
-
-
-geAction["EdgeClicked", Dynamic @ state_, edge_Association] := If[
-  TrueQ @ CurrentValue["AltKey"]
-, geAction["RemoveEdge", Dynamic@state, edge]
-]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -726,17 +1782,16 @@ geAction["Unselect", Dynamic @ state_] := state["selectedVertex"] = Null
 (*AddVertex*)
 
 
+saveStateDecorator @ 
 geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}] := Module[{vertex, name}
 
-, state[ "vCounter"]++
-
-; name = Check[generateUniqueVertexName @ state, CreateUUID[]]
+, name = Check[generateUniqueVertexName @ state, CreateUUID[]]
 
 ; vertex = createVertex[name, pos]
 ; id = vertex["id"]
 
 ; If[ state["snap"]
-  , newV["pos"] = MapThread[Round, {vertex["pos"], state[ "snapStep"]} ]
+  , vertex["pos"] = MapThread[Round, {vertex["pos"], state[ "snapStep"]} ]
   ]
 
 ; state["vertex", id ] = vertex
@@ -750,6 +1805,8 @@ geAction["AddVertex", Dynamic @ state_, pos:{_?NumericQ, _?NumericQ}] := Module[
     state[ "CreateVertexSelects"]
   , geAction["Select", Dynamic @ state, id]
   ]
+
+; state[ "vCounter"]++
 
 ; vertex
 ]
@@ -775,11 +1832,13 @@ smallestMissingInteger[list_List] := Block[{n = 1}
 (*RemoveVertex*)
 
 
+saveStateDecorator @ 
 geAction["RemoveVertex", Dynamic @ state_, v_] := With[{ id = v["id"]}
 , state["vertex"]  = KeyDrop[id] @ state["vertex"]
-; state["edge"]    = DeleteCases[state["edge"], KeyValuePattern[{_ -> id}] ]
+; state["edge"]    = Select[state["edge"], FreeQ[#edge, id] & ]
 ; state["vCounter"]--
 ; state["eCounter"] = Length @ state["edge"]
+; KeyDropFrom[ state["Annotations"], v["id"] ]
 ; If[ state["selectedVertex"] === id, geAction["Unselect", Dynamic @ state] ]
 ]
 
@@ -788,18 +1847,20 @@ geAction["RemoveVertex", Dynamic @ state_, v_] := With[{ id = v["id"]}
 (*CreateEdge*)
 
 
-geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := Module[{eId, type}
-, If[
-    Not @ newEdgeAllowedQ[state, selectedV, clickedV]
-  , Beep[]
-  ; Message[IGGraphEditor::multiEdge]
-  ; Return[$Failed, Module]
+saveStateDecorator @ 
+geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := Module[{eId, type, newEdge}
+
+, eId = CreateUUID["e-"]
+
+; type = If[state["DirectedEdges"], Rule, UndirectedEdge]
+
+; newEdge = createEdge[eId,  type[selectedV, clickedV] ]
+
+; If[ state["isEdgeTaggedGraph"]
+  , newEdge["tag"] = ++ state["edgeTagsMax"]
   ]
-; eId = CreateUUID["e-"]
 
-; type =   If[state["DirectedEdges"], Rule, UndirectedEdge]
-
-; state["edge", eId ] = createEdge[eId,  type[selectedV, clickedV] ]
+; state["edge", eId ] = newEdge
 ; state["eCounter"]++
 
 ; geAction["Unselect", Dynamic @ state]
@@ -811,10 +1872,12 @@ geAction["CreateEdge", Dynamic @ state_, selectedV_String, clickedV_String] := M
 (*RemoveEdge*)
 
 
+saveStateDecorator @ 
 geAction["RemoveEdge", Dynamic @ state_, edge_Association] := (
   state["edge"] = KeyDrop[edge["id"]] @ state["edge"]
 ; geAction["UpdateEdgesShapes", Dynamic @ state]
 ; state["eCounter"]--  
+; KeyDropFrom[ state["Annotations"], edge["edge"] ]
 )
 
 
@@ -822,6 +1885,7 @@ geAction["RemoveEdge", Dynamic @ state_, edge_Association] := (
 (*ToggleEdgeType*)
 
 
+saveStateDecorator @ 
 geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge", edge["id"], "type"] }
 ,  type = nextEdgeType @ type
 ]
@@ -834,74 +1898,312 @@ geAction["ToggleEdgeType", Dynamic@state_, edge_] := With[{ type := state["edge"
 (*UpdateEdgesShapes*)
 
 
-geAction["UpdateEdgesShapes", _ @ state_] := Module[{primitives,  vertexEncoded, vertexList}
+geAction["UpdateEdgesShapes", _ @ state_] := Module[{coordinates,edges,  vertexEncoded, vertexList}
 
 , If[ ! stateHasCurvedEdges @ state, Return[False, Module]]
 
-; primitives = extractEdgePrimitives @ state
+; {edges, coordinates} = Lookup[stateCreateAndDestructureGraph @ state, {"edgePrimitives", "coordinates"}]
 
-; vertexList = state // Query["vertex", Values, "id"]
-; vertexEncoded = AssociationThread[
-    ArrayComponents[vertexList] -> Thread[DynamicLocation[vertexList, Automatic]]
-  ]
+; ( state["edge", #id, "shape" ] = #shape;  ) & /@ edges 
 
-; ( state["edge", #id, "shape"] = ToEdgeShapeFunction[#primitive, vertexEncoded] )& /@ primitives
 (* nested tracking is not supported yet so we need to manually trigger all edges update 
    we keep using eCounter for triggers because general mutations of .edges should not trigger updates *)
 ; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["eCounter"]]
+
+; state["coordinateBounds"] =  CoordinateBounds @ coordinates
+; geAction["UpdateRange", Dynamic @ state]
 ]
 
 
-extractEdgePrimitives[state_] := Module[{graph, vertexList, edgeList, embedding}
 
-, vertexList = state // Query["vertex", Values, "id"]
-; edgeList = state // Query["edge", Values, Tooltip[#type /. #,#id] &]
-; embedding = state // Query["vertex", Values, "pos"]
+(* ::Subsubsection::Closed:: *)
+(*SetLayout*)
 
-; graph = Graph[vertexList, edgeList, VertexCoordinates -> embedding]
 
-; Cases[
-    Normal @ ToExpression @ ToBoxes @ graph , #, Infinity
-  ]& /@ {
-    Tooltip[prim_, eId_, ___] :> <| "id" -> eId, "primitive" -> prim |>
-  , TooltipBox[prim_, eId_, ___] :> <| "id" -> ToExpression @ eId, "primitive" -> (prim /. ArrowBox -> Arrow /. BezierCurveBox -> BezierCurve) |>
-  } // Flatten
+saveStateDecorator @ 
+geAction["SetLayout", Dynamic @ state_, layout_String] := Module[{graphData, oldLayout = state["GraphLayout"]}
 
+, If[ layout === oldLayout, Return @ Null ]
+
+; state["GraphLayout"] = layout
+; graphData = stateCreateAndDestructureGraph @ state
+; If[ graphData === $Failed
+  , state["GraphLayout"] = oldLayout
+  ; Message[IGGraphEditor::invLayout, layout]
+  ; Return @ $Failed
+  ]
+
+; ( state["vertex", #id, "pos" ] = #pos;  ) & /@ graphData["vertexPrimitives"] 
+; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["vCounter"]]
+
+; If[ stateHasCurvedEdges @ state
+  , ( state["edge", #id, "shape" ] = #shape;  ) & /@ graphData["edgePrimitives"] 
+  ; IGraphM`PreciseTracking`PackagePrivate`UpdateTarget[state["eCounter"]]
+  ]
+
+; state["coordinateBounds"] =  CoordinateBounds @ graphData["coordinates"]
+; geAction["UpdateRange", Dynamic @ state, True]
 ]
 
 
-ToEdgeShapeFunction[p : {Arrowheads[0.], Arrow[b_BezierCurve, ___]}, vertexEncoded_] := {Arrowheads[0.], Arrow[b /. vertexEncoded]};
-ToEdgeShapeFunction[Arrow[b_BezierCurve, ___], vertexEncoded_] := Arrow[b /. vertexEncoded];
+(* ::Subsubsubsection::Closed:: *)
+(*stateCreateAndDestructureGraph*)
+
+
+stateCreateAndDestructureGraph[state_]:= Module[{processingData}
+
+, processingData = state
+; processingData["annotatedVertices"] = state // Query["vertex", Values, Tooltip[#id, #id]& ]
+; processingData["annotatedEdges"]    = state // Query["edge", Values, Tooltip[#edge, #id]& ]
+
+; processingData["annotatedGraph"] = createAnnotatedGraph @ processingData /. $Failed :> Return @ $Failed
+
+; processingData["graphGraphics"] = ToExpression @ ToBoxes @ processingData["annotatedGraph"]
+
+; extractGraphPrimitives @ processingData
+]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*createAnnotatedGraph*)
+
+
+createAnnotatedGraph // es6Decorate
+createAnnotatedGraph[<|vertex_,  annotatedVertices_, annotatedEdges_,"GraphLayout" -> gLayout_:Automatic|>]:= Module[
+  {layout, embedding, graph}
+, layout = gLayout
+; embedding = If[ 
+    Not @ StringQ @ layout 
+  , layout = Automatic
+  ; embedding = vertex // Query[Values, "pos"]
+  , embedding = Automatic
+  ]
+
+; graph = Graph[
+    annotatedVertices, annotatedEdges, GraphLayout -> layout, VertexCoordinates -> embedding
+  ]
+
+; If[ Not @ MatrixQ @ GraphEmbedding @ graph && Not @ EmptyGraphQ @ graph
+  , Return @ $Failed
+  ]  
+
+; graph  
+]
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*extractGraphPrimitives*)
+
+
+(* curved edges seem to always be Arrow@BezierCurve, with Arrowheads[0.] if needed *)
+
+extractGraphPrimitives // es6Decorate
+extractGraphPrimitives[<| graphGraphics_, edge_, vertex_ |>]:= Module[  {data}
+  
+, data = $ES6asso
+; data["normalGraphics"] = Normal @ graphGraphics
+; data["hasGraphicsComplex"] = Not @ FreeQ[graphGraphics, GraphicsComplex]
+
+
+
+; data["vertexPrimitives"] = extractVertexPrimitives @ data
+; data["vertexEncoded"] = encodeVertices @ data (* <| 1 -> DynamicLocation[`id`], ...|>*)
+
+; data["edgePrimitives"] = extractEdgePrimitives @ data (* shapes with numeric coordinates *)
+; data["edgePrimitives"] = patchEdgeIds @ data (* bug fix for duplicated ids *)
+
+; data["coordinates"] = extractAllCoordinates @ data
+
+
+; If[ data["hasGraphicsComplex"]
+  , data = patchCurveNormal @ data (*bug fix for not Normal @ Arrow @ BezierCurve *)   
+  ]
+
+; data["edgePrimitives"] = addEdgesShapes @ data (* e.shape /. {vertexPos -> DynLoc[vId], ...}*)
+
+; data
+]
+
+extractAllCoordinates // es6Decorate
+extractAllCoordinates[ <| graphGraphics_, hasGraphicsComplex_, vertexPrimitives_ |>]:= Module[
+  {}
+,  If[ hasGraphicsComplex
+   , Return @ First @ Cases[graphGraphics, Verbatim[GraphicsComplex][pts_, ___] :> pts, Infinity]  
+   ]
+
+; vertexPrimitives[[All, "pos"]] (*TODO: extract from edges as well, for curved stuff*)
+]
+
+
+encodeVertices // es6Decorate
+encodeVertices[ <|vertex_|> ]:=Module[{vertexIds}
+,  vertexIds = vertex // Query[ Values, "id"]
+
+;  AssociationThread[
+    ArrayComponents[vertexIds] -> Thread[DynamicLocation[vertexIds, Automatic]]
+  ]
+]
+
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*extractVertexPrimitives*)
+
+
+extractVertexPrimitives // es6Decorate
+extractVertexPrimitives[<|normalGraphics_ |>]:= Flatten[
+  Cases[ Normal @ normalGraphics , #, Infinity]& /@ $vertexPrimitiveRules
+]
+
+
+$vertexPrimitiveRules = { 
+  Tooltip[prim : Disk[pos_,___], vId_, ___] :> <| "id" -> vId, "pos" -> pos |>
+}  ;
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*extractEdgePrimitives*)
+
+
+extractEdgePrimitives // es6Decorate
+
+extractEdgePrimitives[<|normalGraphics_|>]:=Module[{}
+, Cases[  normalGraphics , #, Infinity]& /@ $edgePrimitiveRules // Flatten
+]
+
+
+$edgePrimitiveRules = { (*Don't remember why I have a rule for *Boxes*)
+  Tooltip[prim:Except[_Disk], eId_, ___] :> <| "id" -> eId, "primitive" -> prim |>
+, TooltipBox[prim:Except[_DiskBox], eId_, ___] :> <| "id" -> ToExpression @ eId, "primitive" -> (prim /. ArrowBox -> Arrow /. BezierCurveBox -> BezierCurve) |>
+}  ;
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*patchEdgeIds*)
+
+
+(* There is a bug that makes both edges in Graph[{Tooltip[1 -> 2, "A"], Tooltip[1 -> 2, "B"]} ]
+      labeled with a tooltip A, we need to handle this. *) 
+
+patchEdgeIds // es6Decorate
+patchEdgeIds[ <|edgePrimitives_, edge_|> ]:=Module[{edgesIdsCollections, patchEdgeId, patchedEdges}
+
+, edgesIdsCollections = Values @ edge // 
+    GroupBy[standardizeEdge@*Key["edge"] -> Key["id"]] // Values //
+    Map[#[[1]] -> # &] // 
+    Association (* <|e1 -> {e1, e2, e3}, ... |>*)
+
+
+; patchEdgeId[id_]:= With[{idCollection = edgesIdsCollections[id]}
+  , edgesIdsCollections[id] = Rest @ idCollection   
+  ; First @ idCollection
+  ]
+
+; MapAt[ patchEdgeId, edgePrimitives, {All, "id" }]
+]
+
+
+standardizeEdge[e_UndirectedEdge]:=Sort @ e
+standardizeEdge[directed_[v1_, v2_]]:= {v1, v2}
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*patchCurveNormal*)
+
+
+(* similar bug to this https://mathematica.stackexchange.com/q/105184/5478 
+   no need for cases where GraphicsComplex was not produced in the first place,
+   like for LinearEmbedding
+*)
+
+patchCurveNormal // es6Decorate
+
+patchCurveNormal[ <| edgePrimitives_, hasGraphicsComplex_, coordinates_, vertexEncoded_,  graphGraphics_|> ]:= Module[
+
+  {  data }
+  
+, data = $ES6asso
+; If[ Not @ hasGraphicsComplex, Return @ data]
+
+    
+; data["coordinatesRules"] = coordinates // AssociationThread[ArrayComponents[#, 1] -> #] &    
+; data["coordinatesRules"] = <|data["coordinatesRules"], vertexEncoded|>    
+
+; data["edgePrimitives"] = edgePrimitives /. 
+    Arrow[BezierCurve[a : {___}, opt___], r___] :> RuleCondition[
+    Arrow[BezierCurve[a /. data["coordinatesRules"], opt], r]
+  ] 
+  
+; data
+  
+]
+
+
+
+(* ::Subsubsubsection::Closed:: *)
+(*addEdgesShapes*)
+
+
+(* main point is to remove Arrow end offset and to recognize Automatic / straight edges
+   replacement is only helping with cases where original Graph had no GraphicsComplex and there
+   are still explicit coordinates at edge ends instead of _DynamicLocation
+*)
+
+addEdgesShapes // es6Decorate
+addEdgesShapes[ <|edgePrimitives_, vertexPrimitives_ |>]:= With[
+  { positionRules = #pos -> DynamicLocation[#id, Automatic] & /@ vertexPrimitives }
+
+, Map[
+    <|#, "shape" -> ToEdgeShapeFunction[#primitive, positionRules] |>& 
+  , edgePrimitives 
+  ]
+]
+
+
+ToEdgeShapeFunction[p : {Arrowheads[0.], Arrow[BezierCurve[pts_, opts___], ___]}, positionRules_] := {
+  Arrowheads[0.], Arrow[BezierCurve[pts /. positionRules, opts]]
+  };
+
+ToEdgeShapeFunction[Arrow[BezierCurve[pts_, opts___], ___], positionRules_] := Arrow[
+  BezierCurve[pts /. positionRules, opts]
+  ];
+
 ToEdgeShapeFunction[p_, ___] := Automatic;
+
+
+(* ::Subsubsection::Closed:: *)
+(*actions fallthrough*)
+
+
+(* This has to be here becasue of a weird specificity of args___ vs PatternSequence *)
+(* SetDelayed can't be used because it is decorated in debug mode *)
+If[
+  TrueQ @ $geDebug
+
+,  DownValues[geAction] = Append[ 
+     DownValues[geAction]
+   , HoldPattern[geAction[args___] ] :> (Beep[]; Print @ Framed @ InputForm @ {args})
+   ]
+
+]
+
 
 
 (* ::Section:: *)
 (*helpers*)
 
 
-$namePatt = _ ;
+ToKeyValue::usage = "ToKeyValue[symbol] is a small utility that generates \"symbol\" -> symbol which shortens association assembling.";
+
+ToKeyValue // Attributes = {HoldAll, Listable};
+
+ToKeyValue[sym_Symbol]:= SymbolToKeyName[sym] -> sym;
+
+ToKeyValue[Association[spec__Symbol] ]:= Association @ ToKeyValue @ {spec}
 
 
-createVertex[name:$namePatt, pos:{_, _}]:= <|"name" -> name, "id" -> CreateUUID[],  "pos" -> pos|>
+SymbolToKeyName::usage = "SymbolToKeyName[symbol_] generates symbol's symbol name and trims '$..nnn' if present";
 
+SymbolToKeyName // Attributes = {HoldAll};
 
-createEdge[eId_String, (e_[v1_String,  v2_String])] := <|
-    "v1"    -> v1
-  , "v2"    -> v2
-  , "id"    -> eId
-  , "type"  -> (e /. DirectedEdge -> Rule)["v1", "v2"]
-  , "shape" -> Automatic
-  |>
-
-
-newEdgeAllowedQ::usage = "Is supposed to test whether a new edge can be created";
-
-newEdgeAllowedQ[state_, v1_String, v2_String] := Module[{edges}
-, edges = Values @ state["edge"]
-; If[
-    state["DirectedEdges"]
-  , Not @ MemberQ[ edges , KeyValuePattern[{"v1" -> v1, "v2" -> v2, "type" -> ("v1"->"v2")}] ]
-  , Not @ MemberQ[ edges , KeyValuePattern[{ _   -> v1,  _   -> v2, "type" -> _UndirectedEdge}] ]
-  ]
-
-]
+SymbolToKeyName[sym_Symbol]:= StringTrim[SymbolName @ Unevaluated @ sym, "$".. ~~ DigitCharacter..];
