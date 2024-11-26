@@ -232,6 +232,30 @@ Interpretation[
 ]]
 
 
+iGraphEditorInitialization // Attributes = {HoldAll}
+iGraphEditorInitialization[state_, error_]:=Module[
+  {perfFailure = editorFailure["Too many vertices and edges. Increase \"PerformanceLimit\" option to try anyway."]}
+  
+, If[
+    state[ "vCounter"] + state[ "eCounter"] > state[ "PerformanceLimit"]
+  , Throw[ error =  perfFailure ]
+  ]
+
+; ToTrackedAssociation @ state
+  
+; geAction["UpdateVertexSize", Hold @ state]
+; geAction["UpdateEdgesShapes", Hold @ state]
+    (*(Hold) is there to workaround a bug with Interpretation's Initialization
+      which inserts evaluated Dynamic's arguments
+    *)
+    
+; {}
+]
+
+iGraphEditorDeinitialization // Attributes = {HoldAll}
+iGraphEditorDeinitialization[state_]:= StopTracking @ state
+
+
 iGraphEditor[_Graph, OptionsPattern[]] := Failure["GraphEditor", <|"Message" -> "The input graph must be simple and must not be mixed."|>]
 
 
@@ -661,6 +685,18 @@ stateRangeInit[state_]:=Module[{update, rangeProps}
 
 (* ::Subsubsubsection::Closed:: *)
 (*stateSnapInit*)
+
+logAction[head_, state_, args___]:= With[
+  { indent = StringJoin @ ConstantArray["- ", $actionLevel] } 
+, Print[          
+    Row[{ 
+      indent
+    , Style[head, Bold]
+    , ":"
+    , args
+    }, BaseStyle->LineBreakWithin->False]
+  ]
+]
 
 
 stateSnapInit[state_Association] := Module[{newState = state }
@@ -1742,7 +1778,7 @@ geAction["Select", Dynamic @ state_, vId_String] := state["selectedVertex"] = vI
 geAction["Unselect", Dynamic @ state_] := state["selectedVertex"] = Null
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*AddVertex*)
 
 
